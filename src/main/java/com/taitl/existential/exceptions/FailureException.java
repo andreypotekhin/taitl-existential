@@ -13,4 +13,13 @@ public class FailureException extends Exception
         super(message);
     }
 
+    public FailureException(Throwable cause)
+    {
+        super(cause);
+    }
+
+    public FailureException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
 }

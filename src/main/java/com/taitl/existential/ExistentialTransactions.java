@@ -19,6 +19,11 @@ public class ExistentialTransactions
         // Close transaction, remove from registry
     }
 
+    public void checkpoint(String tranID)
+    {
+        // same as commit()
+    }
+
     public void rollback(String tranID)
     {
         // TODO

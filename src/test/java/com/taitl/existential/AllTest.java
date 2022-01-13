@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.taitl.existential.exceptions.FailureException;
 import com.taitl.existential.exceptions.PredicateFailureException;
 import com.taitl.existential.model.House;
+import com.taitl.existential.test_data.TestData;
 
 class AllTest
 {
@@ -21,7 +22,7 @@ class AllTest
     void setUp() throws Exception
     {
         o = new All<>(h -> h.hasRoof());
-        house = new House();
+        house = new House(TestData.ADDRESS_EAST_ST);
     }
 
     @AfterEach

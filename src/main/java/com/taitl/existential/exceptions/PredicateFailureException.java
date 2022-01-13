@@ -8,11 +8,18 @@ public class PredicateFailureException extends FailureException
     {
     }
 
-    /*
-     * Bla
-     */
     public PredicateFailureException(String message)
     {
         super(message);
+    }
+
+    public PredicateFailureException(Throwable cause)
+    {
+        super(cause);
+    }
+
+    public PredicateFailureException(String message, Throwable cause)
+    {
+        super(message, cause);
     }
 }

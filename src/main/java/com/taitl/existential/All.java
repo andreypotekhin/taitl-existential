@@ -1,11 +1,24 @@
 package com.taitl.existential;
 
+import static com.taitl.existential.constants.Strings.ARG_CONDITION;
+import static com.taitl.existential.constants.Strings.ARG_PREDICATE;
+
 import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.FailureException;
 import com.taitl.existential.exceptions.PredicateFailureException;
 import com.taitl.existential.interfaces.Expression;
 
+/**
+ * Implements "For Any" (universal quantification) notation for reasoning about application entities. See library
+ * documentation for details.
+ * 
+ * @param <T>
+ *            The type (entity) to which expression applies
+ * 
+ * @author Andrey Potekhin
+ * @see Exists
+ */
 public class All<T> implements Expression<T>
 {
     Predicate<? super T> condition;
@@ -15,7 +28,7 @@ public class All<T> implements Expression<T>
     {
         if (predicate == null)
         {
-            throw new IllegalArgumentException("Argument 'predicate' should not be null");
+            throw new IllegalArgumentException(ARG_PREDICATE);
         }
         this.predicate = predicate;
     }
@@ -24,11 +37,11 @@ public class All<T> implements Expression<T>
     {
         if (condition == null)
         {
-            throw new IllegalArgumentException("Argument 'condition' should not be null");
+            throw new IllegalArgumentException(ARG_CONDITION);
         }
         if (predicate == null)
         {
-            throw new IllegalArgumentException("Argument 'predicate' should not be null");
+            throw new IllegalArgumentException(ARG_PREDICATE);
         }
         this.condition = condition;
         this.predicate = predicate;

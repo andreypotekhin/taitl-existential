@@ -1,7 +1,7 @@
 package com.taitl.existential.commons;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,7 +10,7 @@ public class Multimap<K, V>
     public static final String KEY_ARG = "Argument 'key' must not be null.";
     public static final String VALUE_ARG = "Argument 'value' must not be null.";
 
-    Map<K, Set<V>> storage = new HashMap<>();
+    Map<K, Set<V>> storage = new LinkedHashMap<>();
     int size = 0;
 
     /**
@@ -37,7 +37,7 @@ public class Multimap<K, V>
         {
             throw new IllegalArgumentException(VALUE_ARG);
         }
-        Set<V> set = storage.computeIfAbsent(key, k -> new HashSet<>());
+        Set<V> set = storage.computeIfAbsent(key, k -> new LinkedHashSet<>());
         if (set.isEmpty())
         {
             size++;
