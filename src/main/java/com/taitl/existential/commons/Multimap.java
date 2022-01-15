@@ -1,5 +1,8 @@
 package com.taitl.existential.commons;
 
+import static com.taitl.existential.constants.Strings.KEY_ARG;
+import static com.taitl.existential.constants.Strings.VALUE_ARG;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -7,9 +10,6 @@ import java.util.Set;
 
 public class Multimap<K, V>
 {
-    public static final String KEY_ARG = "Argument 'key' must not be null.";
-    public static final String VALUE_ARG = "Argument 'value' must not be null.";
-
     Map<K, Set<V>> storage = new LinkedHashMap<>();
     int size = 0;
 
@@ -37,14 +37,17 @@ public class Multimap<K, V>
         {
             throw new IllegalArgumentException(VALUE_ARG);
         }
-        Set<V> set = storage.computeIfAbsent(key, k -> new LinkedHashSet<>());
-        if (set.isEmpty())
+        synchronized(this)
         {
-            size++;
-            validateSize();
+            Set<V> set = storage.computeIfAbsent(key, k -> new LinkedHashSet<>());
+            if (set.isEmpty())
+            {
+                size++;
+                validateSize();
+            }
+            set.add(value);
+            return set;
         }
-        set.add(value);
-        return set;
     }
 
     public V remove(Object key, V value)
@@ -57,18 +60,21 @@ public class Multimap<K, V>
         {
             throw new IllegalArgumentException(VALUE_ARG);
         }
-        Set<V> set = storage.get(key);
-        if (set == null)
+        synchronized(this)
         {
-            return null;
+            Set<V> set = storage.get(key);
+            if (set == null)
+            {
+                return null;
+            }
+            boolean removed = set.remove(value);
+            if (removed && set.isEmpty())
+            {
+                size--;
+                validateSize();
+            }
+            return removed ? value : null;
         }
-        boolean removed = set.remove(value);
-        if (removed && set.isEmpty())
-        {
-            size--;
-            validateSize();
-        }
-        return removed ? value : null;
     }
 
     public boolean containsKey(K key)
@@ -89,8 +95,11 @@ public class Multimap<K, V>
 
     public void clear()
     {
-        storage.clear();
-        size = 0;
+        synchronized(this)
+        {
+            storage.clear();
+            size = 0;
+        }
     }
 
     protected void validateSize()
