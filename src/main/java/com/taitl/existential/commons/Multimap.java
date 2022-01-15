@@ -37,7 +37,7 @@ public class Multimap<K, V>
         {
             throw new IllegalArgumentException(VALUE_ARG);
         }
-        synchronized(this)
+        synchronized (this)
         {
             Set<V> set = storage.computeIfAbsent(key, k -> new LinkedHashSet<>());
             if (set.isEmpty())
@@ -60,7 +60,7 @@ public class Multimap<K, V>
         {
             throw new IllegalArgumentException(VALUE_ARG);
         }
-        synchronized(this)
+        synchronized (this)
         {
             Set<V> set = storage.get(key);
             if (set == null)
@@ -95,7 +95,7 @@ public class Multimap<K, V>
 
     public void clear()
     {
-        synchronized(this)
+        synchronized (this)
         {
             storage.clear();
             size = 0;

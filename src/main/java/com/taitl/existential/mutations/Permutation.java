@@ -1,4 +1,4 @@
-package com.taitl.existential;
+package com.taitl.existential.mutations;
 
 import static com.taitl.existential.constants.Strings.ARG_T0_T1;
 

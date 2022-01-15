@@ -1,4 +1,4 @@
-package com.taitl.existential.events;
+package com.taitl.existential.event_handlers;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;

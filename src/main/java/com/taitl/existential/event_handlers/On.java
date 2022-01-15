@@ -1,4 +1,4 @@
-package com.taitl.existential.events;
+package com.taitl.existential.event_handlers;
 
 import static com.taitl.existential.constants.Strings.ARG_CONDITION;
 import static com.taitl.existential.constants.Strings.ARG_PREDICATE;
