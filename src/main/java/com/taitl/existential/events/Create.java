@@ -10,12 +10,11 @@ package com.taitl.existential.events;
  * @author Andrey Potekhin
  * @param <T>
  *            Class of application entity
- * @see Create
+ * @see Change
  * @see Update
  * @see Upsert
  * @see Delete
  * @see Read
- * @see Change
  */
 public class Create<T> extends Event<T>
 {

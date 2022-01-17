@@ -1,8 +1,22 @@
 package com.taitl.existential;
 
+import com.taitl.existential.events.Event;
+
 public class ExistentialEvents
 {
-    public <T> void send(T event, String tranID)
+    public <T> void mutate(T t0, T t1, String tranID)
+    {
+    }
+
+    public <E> void entity(E entity, String tranID)
+    {
+    }
+
+    public <T> void read(T entity, String tranID)
+    {
+    }
+
+    public <T, E extends Event<T>> void send(E event, String tranID)
     {
         // Get transaction object
         // Care for scenario when tran not found

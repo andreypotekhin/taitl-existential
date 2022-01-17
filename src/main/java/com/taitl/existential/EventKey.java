@@ -1,57 +1,43 @@
 package com.taitl.existential;
 
-import com.taitl.existential.events.BiEvent;
-import com.taitl.existential.events.Event;
-
-/**
- * Implements a key for collections keyed by Event + Type.
- * 
- * The key consists of Event<T> class and Type<T> describing the entity class.
- * 
- * Examples: Doc, Read<Doc>, Create<Doc<Json>>
- * 
- * @author Andrey Potekhin
- * @see Event
- * @see BiEvent
- * @see Type
- */
-public class EventKey<T>
+public class EventKey
 {
-    String key;
+    protected String eventid;
 
-    EventKey(Event<T> e, Type type)
+    public EventKey(Object t)
     {
-        String eventClass = e.getClass().getSimpleName();
-        if ("Event".equals(eventClass))
-        {
-            // Generic 'Event' - use class name only, like 'Doc'
-            key = type.getTypeid();
-        }
-        else
-        {
-            // Use event + class name , like 'Create<Doc<Json>>'
-            key = eventClass + "<" + type.getTypeid() + ">";
-        }
+        eventid = t.getClass().getSimpleName();
     }
 
-    EventKey(Class<T> clz, Type type)
+    public <T> EventKey()
     {
-        String eventClass = clz.getSimpleName();
-        if ("Event".equals(eventClass))
-        {
-            // Generic 'Event' - use class name only, like 'Doc'
-            key = type.getTypeid();
-        }
-        else
-        {
-            // Use event + class name , like 'Create<Doc<Json>>'
-            key = eventClass + "<" + type.getTypeid() + ">";
-        }
+        eventid = ((T) null).getClass().getSimpleName();
     }
 
-    EventKey(BiEvent<T> e, Type type)
+    public int hashCode()
     {
-        String eventClass = e.getClass().getSimpleName();
-        key = eventClass + "<" + type.getTypeid() + ">";
+        return eventid.hashCode();
+    }
+
+    public boolean equals(EventKey other)
+    {
+        if (other == this)
+        {
+            return true;
+        }
+        if (other == null)
+        {
+            return false;
+        }
+        if (other.eventid == null)
+        {
+            return (this.eventid == null);
+        }
+        return other.eventid.equals(this.eventid);
+    }
+
+    public String toString()
+    {
+        return eventid;
     }
 }

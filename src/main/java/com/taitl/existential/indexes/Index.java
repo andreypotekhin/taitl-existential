@@ -4,6 +4,7 @@ import static com.taitl.existential.constants.Strings.KEY_ARG;
 import static com.taitl.existential.constants.Strings.VALUE_ARG;
 
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.taitl.existential.commons.Multimap;
@@ -11,6 +12,7 @@ import com.taitl.existential.commons.Multimap;
 public class Index<K, V>
 {
     Multimap<K, V> storage = new Multimap<K, V>();
+    Function<V, K> getKey;
 
     public Set<V> get(K k)
     {
@@ -86,5 +88,10 @@ public class Index<K, V>
     public Set<V> getObj(Object key)
     {
         return storage.get((K) key);
+    }
+
+    public void setGetKey(Function<V, K> getKey)
+    {
+        this.getKey = getKey;
     }
 }

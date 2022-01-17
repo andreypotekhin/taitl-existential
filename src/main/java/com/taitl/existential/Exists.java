@@ -1,43 +1,26 @@
 package com.taitl.existential;
 
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import com.taitl.existential.constants.Strings;
 import com.taitl.existential.indexes.Index;
 import com.taitl.existential.transactions.Transaction;
 
-public class Exists<V> implements Predicate<Transaction>
+public class Exists<V, K> implements Predicate<Transaction>
 {
-    Set<V> set;
-    Index<?, V> index;
+    String indexName;
+    K key;
     Predicate<Set<V>> predicate;
-    Object key;
+    BiPredicate<Set<V>, Transaction> bipredicate;
 
-    public Exists(Set<V> set)
+    public Exists(String index, K key)
     {
-        if (set == null)
-        {
-            throw new IllegalArgumentException(Strings.ARG_SET);
-        }
-        this.set = set;
+        this(index, key, (Predicate<Set<V>>) null);
     }
 
-    public Exists(Set<V> set, Predicate<Set<V>> predicate)
-    {
-        if (set == null)
-        {
-            throw new IllegalArgumentException(Strings.ARG_SET);
-        }
-        if (predicate == null)
-        {
-            throw new IllegalArgumentException(Strings.ARG_PREDICATE);
-        }
-        this.set = set;
-        this.predicate = predicate;
-    }
-
-    public <K> Exists(Index<K, V> index, K key)
+    public Exists(String index, K key, Predicate<Set<V>> predicate)
     {
         if (index == null)
         {
@@ -47,11 +30,12 @@ public class Exists<V> implements Predicate<Transaction>
         {
             throw new IllegalArgumentException(Strings.ARG_KEY);
         }
-        this.index = index;
+        this.indexName = index;
         this.key = key;
+        this.predicate = predicate;
     }
 
-    public <K> Exists(Index<K, V> index, K key, Predicate<Set<V>> predicate)
+    public Exists(String index, K key, BiPredicate<Set<V>, Transaction> bipredicate)
     {
         if (index == null)
         {
@@ -61,13 +45,9 @@ public class Exists<V> implements Predicate<Transaction>
         {
             throw new IllegalArgumentException(Strings.ARG_KEY);
         }
-        if (predicate == null)
-        {
-            throw new IllegalArgumentException(Strings.ARG_PREDICATE);
-        }
-        this.index = index;
+        this.indexName = index;
         this.key = key;
-        this.predicate = predicate;
+        this.bipredicate = bipredicate;
     }
 
     public boolean test(Transaction tran)
@@ -76,23 +56,25 @@ public class Exists<V> implements Predicate<Transaction>
         {
             throw new IllegalArgumentException(Strings.ARG_TRANSACTION);
         }
-        Set<V> values = null;
-        if (set != null)
+        Index<K, V> index = tran.indexes.get(indexName);
+        Set<V> values = index.get(key);
+        if (values == null)
         {
-            values = set;
+            return false;
         }
-        else if (index != null)
-        {
-            values = index.getObj(key);
-        }
+
         boolean result;
         if (predicate != null)
         {
             result = predicate.test(values);
         }
+        else if (bipredicate != null)
+        {
+            result = bipredicate.test(values, tran);
+        }
         else
         {
-            result = (values != null) && !values.isEmpty();
+            result = !values.isEmpty();
         }
         return result;
     }

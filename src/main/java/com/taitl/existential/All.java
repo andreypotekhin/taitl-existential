@@ -17,7 +17,7 @@ import com.taitl.existential.interfaces.Expression;
  *            The type (entity) to which expression applies
  * 
  * @author Andrey Potekhin
- * @see Exists
+ * @see Exists0
  */
 public class All<T> implements Expression<T>
 {

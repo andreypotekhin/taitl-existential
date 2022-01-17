@@ -8,9 +8,9 @@ import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.EventHandlerFailureException;
 import com.taitl.existential.exceptions.FailureException;
-import com.taitl.existential.interfaces.EventHandler;
+import com.taitl.existential.interfaces.EntityHandler;
 
-public class On<T> implements EventHandler<T>
+public class On<T> implements EntityHandler<T>
 {
     Predicate<? super T> condition;
     Consumer<? super T> action;
