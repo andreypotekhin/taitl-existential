@@ -1,4 +1,4 @@
-package com.taitl.existential;
+package com.taitl.existential.unused;
 
 import java.util.Set;
 import java.util.function.Predicate;

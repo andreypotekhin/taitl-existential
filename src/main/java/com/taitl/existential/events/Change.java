@@ -1,12 +1,12 @@
 package com.taitl.existential.events;
 
 /**
- * Indicates that entity was created, updated or deleted in the course of of current transaction.
+ * Indicates that entity was updated or about to be deleted in the course of current transaction.
  * 
- * Example: Change<Account> is raised when Account entity was created, updated or deleted in the course of current
- * transaction.
+ * Example: Write<Account> is raised when Account entity was updated or about to be deleted 
+ * in the course of current transaction.
  * 
- * Database analogs: INSERT, UPDATE or DELETE
+ * Database analogs: UPDATE, DELETE
  * 
  * @author Andrey Potekhin
  * @param <T>
@@ -14,9 +14,13 @@ package com.taitl.existential.events;
  * @see Create
  * @see Update
  * @see Upsert
+ * @see Event
  * @see Delete
  * @see Read
- * @see Change
+ * @see ReadAndLock
+ * @see Write
+ * @see Mutate
+ * @see Permutate
  */
 public class Change<T> extends Event<T>
 {

@@ -13,9 +13,12 @@ package com.taitl.existential.events;
  * @see Create
  * @see Update
  * @see Upsert
+ * @see Event
  * @see Delete
- * @see Read
- * @see Change
+ * @see ReadAndLock
+ * @see Write
+ * @see Mutate
+ * @see Permutate
  */
 public class Read<T> extends Event<T>
 {
@@ -24,3 +27,4 @@ public class Read<T> extends Event<T>
         super(t);
     }
 }
+

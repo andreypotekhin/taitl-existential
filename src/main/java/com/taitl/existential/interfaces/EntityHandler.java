@@ -1,6 +1,6 @@
 package com.taitl.existential.interfaces;
 
-import com.taitl.existential.exceptions.FailureException;
+import com.taitl.existential.exceptions.ExistentialException;
 
 /**
  * Base interface for Event handlers with side effects, such as On[E]<T>.
@@ -13,5 +13,5 @@ import com.taitl.existential.exceptions.FailureException;
  */
 public interface EntityHandler<T> extends EventHandler<T>
 {
-    void handle(T t) throws FailureException;
+    void handle(T t) throws ExistentialException;
 }

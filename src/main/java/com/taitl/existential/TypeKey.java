@@ -4,14 +4,16 @@ import com.taitl.existential.constants.Strings;
 
 /**
  * A string representing a type along with its generics, for example "Set<Car>".
- * 
- * This class is to offset the effects of Java type erasure, in scenarios where we need to know the generic qualifier. 
- * 
- * For types without generics, it corresponds to the short name of class (like "String"). If class is qualified with
- * generics, it corresponds to class short name with generic qualifier, like "Set<House>".
- * 
- * Examples: Class without generics: Class: Car, Type: "Car" Class with generics: Class: Set<House>, Type: "Set<House>"
- * 
+ * <p>
+ * This class is used to offset/negate the effects of Java type erasure, in scenarios where we need to know the generic qualifier. 
+ * <p>
+ * For the types without generics, it corresponds to the short name of the class (like "String").<br>
+ * For the types qualified with generics, it corresponds to class short name with generic qualifier, like {@code Set<House>}.
+ * <p>
+ * Examples: <br>
+ *   Class without generics: Class: Car, TypeKey: "Car"<br> 
+ *   Class with generics: Class: {@code Set<House>}, TypeKey: "{@code Set<House>}"
+ * <p>
  * @author Andrey Potekhin
  * @see EventHandlers
  */
@@ -49,17 +51,17 @@ public class TypeKey<T>
 
     public static <T> TypeKey<T> valueOf(Class<?> clz, String genericQualifier)
     {
-        return new TypeKey<T>(clz, genericQualifier);
+        return new TypeKey<>(clz, genericQualifier);
     }
 
     public static <T> TypeKey<T> valueOf(Class<?> clz)
     {
-        return new TypeKey<T>(clz, null);
+        return new TypeKey<>(clz, null);
     }
 
     public static <T> TypeKey<T> valueOf(String classNameQualifiedWithGenerics)
     {
-        return new TypeKey<T>(classNameQualifiedWithGenerics);
+        return new TypeKey<>(classNameQualifiedWithGenerics);
     }
 
     public int hashCode()
@@ -67,7 +69,7 @@ public class TypeKey<T>
         return typeid.hashCode();
     }
 
-    public boolean equals(TypeKey<T> other)
+    public boolean equals(Object other)
     {
         if (other == this)
         {
@@ -77,11 +79,16 @@ public class TypeKey<T>
         {
             return false;
         }
-        if (other.typeid == null)
+        if (!(other instanceof TypeKey<?>))
+        {
+            return false;
+        }
+        TypeKey<?> o = (TypeKey<?>)other; 
+        if (o.typeid == null)
         {
             return (this.typeid == null);
         }
-        return other.typeid.equals(this.typeid);
+        return o.typeid.equals(this.typeid);
     }
 
     public String toString()

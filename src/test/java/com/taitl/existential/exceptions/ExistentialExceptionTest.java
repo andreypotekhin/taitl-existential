@@ -6,9 +6,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class FailureExceptionTest
+class ExistentialExceptionTest
 {
-    FailureException o;
+    ExistentialException o;
 
     @BeforeEach
     void setUp() throws Exception
@@ -23,14 +23,14 @@ class FailureExceptionTest
     @Test
     void testFailureException()
     {
-        o = new FailureException();
+        o = new ExistentialException();
         assertEquals(null, o.getMessage());
     }
 
     @Test
     void testFailureExceptionString()
     {
-        o = new FailureException("My message");
+        o = new ExistentialException("My message");
         assertEquals("My message", o.getMessage());
     }
 

@@ -45,6 +45,7 @@
 		<exclude name="IfElseStmtsMustUseBraces"/>
 		<exclude name="CollapsibleIfStatements"/>
 		<exclude name="AtLeastOneConstructor"/>		
-		<exclude name="OnlyOneReturn"/>		
+		<exclude name="OnlyOneReturn"/>
+		<exclude name="ConfusingTernary"/>				
 	</rule>
 </ruleset>

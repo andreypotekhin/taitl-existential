@@ -13,9 +13,12 @@ package com.taitl.existential.events;
  * @see Create
  * @see Update
  * @see Upsert
- * @see Delete
+ * @see Event
  * @see Read
- * @see Change
+ * @see ReadAndLock
+ * @see Write
+ * @see Mutate
+ * @see Permutate
  */
 public class Delete<T> extends Event<T>
 {

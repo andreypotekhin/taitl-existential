@@ -13,8 +13,13 @@ package com.taitl.existential.events;
  * @see Change
  * @see Update
  * @see Upsert
+ * @see Event
  * @see Delete
  * @see Read
+ * @see ReadAndLock
+ * @see Write
+ * @see Mutate
+ * @see Permutate
  */
 public class Create<T> extends Event<T>
 {

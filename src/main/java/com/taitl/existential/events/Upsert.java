@@ -7,15 +7,19 @@ package com.taitl.existential.events;
  * 
  * Database analogs: INSERT, UPDATE
  * 
+ * 
  * @author Andrey Potekhin
  * @param <T>
  *            Class of application entity
  * @see Create
  * @see Update
- * @see Upsert
+ * @see Event
  * @see Delete
  * @see Read
- * @see Change
+ * @see ReadAndLock
+ * @see Write
+ * @see Mutate
+ * @see Permutate
  */
 public class Upsert<T> extends Event<T>
 {

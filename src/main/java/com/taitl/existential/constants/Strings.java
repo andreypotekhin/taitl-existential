@@ -18,6 +18,7 @@ public class Strings
     public static final String ARG_T = "Argument 't' should not be null";
     public static final String ARG_CLZ = "Argument 'clz' should not be null";
     public static final String ARG_OP = "Argument 'op' should not be null";
+    public static final String ARG_OP_FORMAT = "Argument 'op' should start with a slash ('/')";
     public static final String ARG_NAME = "Argument 'name' should not be null";
     public static final String ARG_EVENT_KEY = "Argument 'eventKey' should not be null";
 }

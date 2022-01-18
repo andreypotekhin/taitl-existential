@@ -11,8 +11,10 @@ import com.taitl.existential.commons.Multimap;
 
 public class Index<K, V>
 {
-    Multimap<K, V> storage = new Multimap<K, V>();
-    Function<V, K> getKey;
+    protected static final String REQUIRE_SET_GET_KEY = "To call this method, you need to call 'setGetKey()' first";
+
+    protected Multimap<K, V> storage = new Multimap<K, V>();
+    protected Function<V, K> getKey;
 
     public Set<V> get(K k)
     {
@@ -41,6 +43,19 @@ public class Index<K, V>
             throw new IllegalArgumentException(KEY_ARG);
         }
         return storage.put(k, v);
+    }
+
+    public Set<V> add(V v)
+    {
+        if (v == null)
+        {
+            throw new IllegalArgumentException(VALUE_ARG);
+        }
+        if (getKey == null)
+        {
+            throw new IllegalStateException(REQUIRE_SET_GET_KEY);
+        }
+        return storage.put(getKey.apply(v), v);
     }
 
     public V remove(K k, V v)

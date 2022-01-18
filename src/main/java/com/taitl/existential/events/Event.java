@@ -14,11 +14,14 @@ import com.taitl.existential.constants.Strings;
  * @param <T>
  *            Class of application entity
  * @see Create
+ * @see Write
+ * @see Delete
  * @see Update
  * @see Upsert
- * @see Delete
  * @see Read
- * @see Change
+ * @see ReadAndLock
+ * @see Mutate
+ * @see Permutate
  */
 public class Event<T>
 {

@@ -5,9 +5,10 @@ import static com.taitl.existential.constants.Strings.ARG_PREDICATE;
 
 import java.util.function.Predicate;
 
-import com.taitl.existential.exceptions.FailureException;
+import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.PredicateFailureException;
 import com.taitl.existential.interfaces.Expression;
+import com.taitl.existential.unused.Exists0;
 
 /**
  * Implements "For Any" (universal quantification) notation for reasoning about application entities. See library
@@ -47,7 +48,7 @@ public class All<T> implements Expression<T>
         this.predicate = predicate;
     }
 
-    public Object evaluate(T t) throws FailureException
+    public Object evaluate(T t) throws ExistentialException
     {
         if (condition == null || condition.test(t))
         {

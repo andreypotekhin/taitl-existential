@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.taitl.existential.exceptions.FailureException;
+import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.PredicateFailureException;
 import com.taitl.existential.model.House;
 import com.taitl.existential.test_data.TestData;
@@ -57,7 +57,7 @@ class AllTest
     }
 
     @Test
-    void testEvaluate() throws FailureException
+    void testEvaluate() throws ExistentialException
     {
         o.evaluate(house);
 

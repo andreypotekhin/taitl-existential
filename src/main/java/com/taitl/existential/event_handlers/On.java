@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.EventHandlerFailureException;
-import com.taitl.existential.exceptions.FailureException;
+import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.interfaces.EntityHandler;
 
 public class On<T> implements EntityHandler<T>
@@ -38,7 +38,7 @@ public class On<T> implements EntityHandler<T>
         this.action = action;
     }
 
-    public void handle(T t) throws FailureException
+    public void handle(T t) throws ExistentialException
     {
         if (condition == null || condition.test(t))
         {

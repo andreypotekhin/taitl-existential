@@ -11,11 +11,14 @@ package com.taitl.existential.events;
  * @param <T>
  *            Class of application entity
  * @see Create
- * @see Update
  * @see Upsert
+ * @see Event
  * @see Delete
  * @see Read
- * @see Change
+ * @see ReadAndLock
+ * @see Write
+ * @see Mutate
+ * @see Permutate
  */
 public class Update<T> extends Event<T>
 {

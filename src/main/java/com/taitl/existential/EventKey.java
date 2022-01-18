@@ -14,12 +14,17 @@ public class EventKey
         eventid = ((T) null).getClass().getSimpleName();
     }
 
+    public static EventKey valueOf(String s)
+    {
+        return new EventKey(s);
+    }
+
     public int hashCode()
     {
         return eventid.hashCode();
     }
 
-    public boolean equals(EventKey other)
+    public boolean equals(Object other)
     {
         if (other == this)
         {
@@ -29,11 +34,16 @@ public class EventKey
         {
             return false;
         }
-        if (other.eventid == null)
+        if (!(other instanceof EventKey))
+        {
+            return false;
+        }
+        EventKey o = (EventKey)other; 
+        if (o.eventid == null)
         {
             return (this.eventid == null);
         }
-        return other.eventid.equals(this.eventid);
+        return o.eventid.equals(this.eventid);
     }
 
     public String toString()

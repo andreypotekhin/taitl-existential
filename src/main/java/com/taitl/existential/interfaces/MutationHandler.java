@@ -1,6 +1,6 @@
 package com.taitl.existential.interfaces;
 
-import com.taitl.existential.exceptions.FailureException;
+import com.taitl.existential.exceptions.ExistentialException;
 
 /**
  * Base interface for BiEvent<T> handlers with side effects, such as OnMutate<T>.
@@ -13,5 +13,5 @@ import com.taitl.existential.exceptions.FailureException;
  */
 public interface MutationHandler<T> extends EventHandler<T>
 {
-    void handle(T t0, T t1) throws FailureException;
+    void handle(T t0, T t1) throws ExistentialException;
 }

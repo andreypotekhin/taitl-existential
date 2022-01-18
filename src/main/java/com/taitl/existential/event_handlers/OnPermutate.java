@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.EventHandlerFailureException;
-import com.taitl.existential.exceptions.FailureException;
+import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.interfaces.MutationHandler;
 
 public class OnPermutate<T> implements MutationHandler<T>
@@ -39,7 +39,7 @@ public class OnPermutate<T> implements MutationHandler<T>
         this.action = action;
     }
 
-    public void handle(T t0, T t1) throws FailureException
+    public void handle(T t0, T t1) throws ExistentialException
     {
         if (t0 == null && t1 == null)
         {
