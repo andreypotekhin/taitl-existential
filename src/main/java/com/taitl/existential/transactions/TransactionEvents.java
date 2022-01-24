@@ -23,7 +23,6 @@ public class TransactionEvents
 {
     Transaction tr;
     Set<String> eventTypes = new LinkedHashSet<>();
-    // TODO: replace 64 with context.eventSplitter.getMaxEventBit() + 1
     BitSet eventTypeMask = new BitSet(64);
 
     TransactionEvents(Transaction tr)

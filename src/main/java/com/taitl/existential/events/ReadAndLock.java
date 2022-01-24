@@ -1,5 +1,7 @@
 package com.taitl.existential.events;
 
+import com.taitl.existential.events.base.EntityEvent;
+
 /**
  * Indicates that entity was read with update lock (selected for update) in the course of of current transaction.
  * 
@@ -21,7 +23,7 @@ package com.taitl.existential.events;
  * @see Mutate
  * @see Permutate
  */
-public class ReadAndLock<T> extends Event<T>
+public class ReadAndLock<T> extends EntityEvent<T>
 {
     public ReadAndLock(T t)
     {

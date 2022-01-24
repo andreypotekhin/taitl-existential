@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.PredicateFailureException;
 import com.taitl.existential.interfaces.Expression;
-import com.taitl.existential.unused.Exists0;
 
 /**
  * Implements "For Any" (universal quantification) notation for reasoning about application entities. See library

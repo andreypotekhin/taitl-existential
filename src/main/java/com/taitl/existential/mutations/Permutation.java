@@ -22,7 +22,7 @@ public final class Permutation<T>
     public T t0;
     public T t1;
 
-    Permutation(T t0, T t1)
+    public Permutation(T t0, T t1)
     {
         if (t0 == null && t1 == null)
         {

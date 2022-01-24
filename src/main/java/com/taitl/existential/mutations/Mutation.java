@@ -20,7 +20,7 @@ public final class Mutation<T>
     public T t0;
     public T t1;
 
-    Mutation(T t0, T t1)
+    public Mutation(T t0, T t1)
     {
         if (t0 == null)
         {

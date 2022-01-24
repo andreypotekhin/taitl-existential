@@ -3,6 +3,8 @@ package com.taitl.existential.events;
 import static com.taitl.existential.constants.Strings.ARG_T0;
 import static com.taitl.existential.constants.Strings.ARG_T1;
 
+import com.taitl.existential.events.base.BiEvent;
+
 /**
  * Indicates a change that has happened to an application entity during current transaction.
  * 

@@ -21,7 +21,7 @@ public class OpKey
     public static final String ARG_OP_END_SLASH = "Argument 'op' cannot end with a slash ('/')";
 
     protected static final String SLASH = "/";
-    
+
     protected final String op;
 
     public OpKey(String op)
@@ -54,7 +54,7 @@ public class OpKey
     {
         return new OpKey(s);
     }
-    
+
     public boolean hasParent()
     {
         return op.lastIndexOf(SLASH) != 0;
@@ -75,11 +75,10 @@ public class OpKey
     {
         if (!hasParent())
         {
-            throw new IllegalStateException(String.format("OpKey '%s' has no parent key", op));            
+            throw new IllegalStateException(String.format("OpKey '%s' has no parent key", op));
         }
         return new OpKey(op.substring(0, op.lastIndexOf(SLASH)));
     }
-
 
     public int hashCode()
     {
@@ -100,7 +99,7 @@ public class OpKey
         {
             return false;
         }
-        OpKey o = (OpKey)other; 
+        OpKey o = (OpKey) other;
         if (o.op == null)
         {
             return (this.op == null);

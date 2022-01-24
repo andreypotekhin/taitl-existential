@@ -9,11 +9,6 @@ public class EventKey
         eventid = t.getClass().getSimpleName();
     }
 
-    public <T> EventKey()
-    {
-        eventid = ((T) null).getClass().getSimpleName();
-    }
-
     public static EventKey valueOf(String s)
     {
         return new EventKey(s);
@@ -38,7 +33,7 @@ public class EventKey
         {
             return false;
         }
-        EventKey o = (EventKey)other; 
+        EventKey o = (EventKey) other;
         if (o.eventid == null)
         {
             return (this.eventid == null);

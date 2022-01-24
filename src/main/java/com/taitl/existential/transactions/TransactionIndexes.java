@@ -18,13 +18,13 @@ public class TransactionIndexes
         this.tr = tr;
     }
 
-    public <K, V> Index<K, V> create(String name, Supplier<Index<K, V>> createIndex, Function<V, K> getKey)
+    public <K, V> Index<V, K> create(String name, Supplier<Index<V, K>> createIndex, Function<V, K> getKey)
     {
         if (name == null)
         {
             throw new IllegalArgumentException(Strings.ARG_NAME);
         }
-        Index<K, V> index = (createIndex != null) ? createIndex.get() : new Index<K, V>();
+        Index<V, K> index = (createIndex != null) ? createIndex.get() : new Index<>();
         if (getKey != null)
         {
             index.setGetKey(getKey);
@@ -40,19 +40,19 @@ public class TransactionIndexes
         return index;
     }
 
-    public <K, V> Index<K, V> create(String name, Supplier<Index<K, V>> createIndex)
+    public <V, K> Index<V, K> create(String name, Supplier<Index<V, K>> createIndex)
     {
         return create(name, createIndex, null);
     }
 
-    public <K, V> Index<K, V> create(String name)
+    public <V, K> Index<V, K> create(String name)
     {
         return create(name, null, null);
     }
 
     @SuppressWarnings("unchecked")
-    public <K, V> Index<K, V> get(String name)
+    public <V, K> Index<V, K> get(String name)
     {
-        return (Index<K, V>) indexes.get(name);
+        return (Index<V, K>) indexes.get(name);
     }
 }

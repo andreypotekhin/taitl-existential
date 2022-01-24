@@ -1,7 +1,7 @@
 package com.taitl.existential.commons;
 
-import static com.taitl.existential.constants.Strings.KEY_ARG;
-import static com.taitl.existential.constants.Strings.VALUE_ARG;
+import static com.taitl.existential.constants.Strings.ARG_KEY;
+import static com.taitl.existential.constants.Strings.ARG_VALUE;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -22,7 +22,7 @@ public class Multimap<K, V>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         return storage.get(key);
     }
@@ -31,11 +31,11 @@ public class Multimap<K, V>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         if (value == null)
         {
-            throw new IllegalArgumentException(VALUE_ARG);
+            throw new IllegalArgumentException(ARG_VALUE);
         }
         synchronized (this)
         {
@@ -54,11 +54,11 @@ public class Multimap<K, V>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         if (value == null)
         {
-            throw new IllegalArgumentException(VALUE_ARG);
+            throw new IllegalArgumentException(ARG_VALUE);
         }
         synchronized (this)
         {
@@ -81,7 +81,7 @@ public class Multimap<K, V>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         Set<V> values = storage.get(key);
         return values != null && !values.isEmpty();

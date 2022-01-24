@@ -2,6 +2,8 @@ package com.taitl.existential.events;
 
 import static com.taitl.existential.constants.Strings.ARG_T0_T1;
 
+import com.taitl.existential.events.base.BiEvent;
+
 /**
  * Indicates that an application entity has been created, changed or deleted during current transaction.
  * 

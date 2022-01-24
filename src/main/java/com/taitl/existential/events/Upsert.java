@@ -1,11 +1,13 @@
 package com.taitl.existential.events;
 
+import com.taitl.existential.events.base.EntityEvent;
+
 /**
  * Indicates that entity was created or updated in the course of of current transaction.
  * 
  * Example: Upsert<Account> is raised when Account entity was created or updated in the course of current transaction.
  * 
- * Database analogs: INSERT, UPDATE
+ * Database analogs: INSERT or UPDATE
  * 
  * 
  * @author Andrey Potekhin
@@ -21,7 +23,7 @@ package com.taitl.existential.events;
  * @see Mutate
  * @see Permutate
  */
-public class Upsert<T> extends Event<T>
+public class Upsert<T> extends EntityEvent<T>
 {
     public Upsert(T t)
     {

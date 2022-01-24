@@ -1,12 +1,14 @@
 package com.taitl.existential.events;
 
+import com.taitl.existential.events.base.EntityEvent;
+
 /**
  * Indicates that entity was updated or about to be deleted in the course of current transaction.
  * 
  * Example: Write<Account> is raised when Account entity was updated or about to be deleted 
  * in the course of current transaction.
  * 
- * Database analogs: UPDATE, DELETE
+ * Database analogs: INSERT or UPDATE
  * 
  * @author Andrey Potekhin
  * @param <T>
@@ -22,7 +24,7 @@ package com.taitl.existential.events;
  * @see Mutate
  * @see Permutate
  */
-public class Change<T> extends Event<T>
+public class Change<T> extends EntityEvent<T>
 {
     public Change(T t)
     {

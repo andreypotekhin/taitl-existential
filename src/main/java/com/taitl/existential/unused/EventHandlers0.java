@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.taitl.existential.commons.Multimap;
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.events.BiEvent;
+import com.taitl.existential.events.base.BiEvent;
 import com.taitl.existential.interfaces.EntityHandler;
 
 /**

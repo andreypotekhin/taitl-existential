@@ -1,5 +1,7 @@
 package com.taitl.existential.events;
 
+import com.taitl.existential.events.base.EntityEvent;
+
 /**
  * Indicates that entity was deleted in the course of of current transaction.
  * 
@@ -20,7 +22,7 @@ package com.taitl.existential.events;
  * @see Mutate
  * @see Permutate
  */
-public class Delete<T> extends Event<T>
+public class Delete<T> extends EntityEvent<T>
 {
     public Delete(T t)
     {

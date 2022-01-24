@@ -10,39 +10,40 @@ import com.taitl.existential.indexes.Index;
 
 /**
  * Implements a transaction object - a unit of processing within a context.
- * 
- * 'Transactions' in this library are not related to any database transactions, although when integrating, they assumed
- * to be aligned with ones, if you have such. They are simply markers of beginning and end of processing - a business
- * transaction, web request etc.
- * 
- * Transaction's end (a commit) serves as the point where we evaluate expressions, such as All and Exists, existing in
+ * <p>
+ * 'Transactions' in this library are not related to database transactions, although when integrating, they assumed
+ * to be aligned with ones, if you have such. They are simply markers of beginning and end of processing - of a 
+ * business transaction, web request etc.
+ * <p>
+ * Transaction's end (a commit) serves as the point where we evaluate expressions, such as All and Exists, defined in
  * the current Context as well as its parent Contexts.
- * 
- * Transaction object helps to store various data in the course of a transaction, and thus makes it possible for one
- * event handler to put some data in and another event handler use it.
- * 
- * TransactionIndexes
+ * <p>
+ * Transaction object helps to store various data, so it is possible to pass data from one event handler to another.
+ * <p>
+ * TransactionIndexes<p>
  *   When we encounter various events, such as objects creation or mutation, we could want to store some data about it.
  *   For instance, we may wish to create an index on entities, so that Exists<> expression might be evaluated in a
- *   performant way: <code>On<Cat>(c -> location_to_cats.put(c.location, c))</code>
- *
- * TransactionEvents
- *   Different contexts may be responsible for different types of events. To speed up the answer to question 'which events
- *   should be emitted by EventSplitter for this context', the set of relevant events (from the context as well as all its
+ *   performant way: {@code On<Cat>((c, tr) -> tr.index("location_to_cats").put(c.location, c))}
+ * <p>
+ * TransactionEvents<p>
+ *   Different contexts may be interested in different types of events. To speed up the answer to question 'which events
+ *   should be emitted by EventSplitter for this context', the set of relevant event types (from the context as well as all its
  *   parents) is created at transaction start and stored in Transaction object. This allows to avoid having to gather such
  *   info for each event from each involved context.
- *
- * Customizing (optional)
- *   To use custom classes for transactions, define them on different context levels, and ask so the system to provide 
- *   an appropriate instance for a business operation using Context.transactionFactory().
- *   For instance, for operation "/app/orders/update":
- *   For data relevant to all transactions, we can be define a custom class AppTransaction class.
- *   An OrdersTransaction class extending AppTransaction can be used for the transactions related to Orders module.
- *   If further customization is needed, one can also define OrdersUpdateTransaction class extending OrdersTransaction.
- *   Set up custom Transaction classes per context:
+ * <p>
+ * Customizing<p>
+ *   To use custom classes for transactions, define them on different context levels, and ask the system to provide 
+ *   an appropriate instance for a business operation using {@code Context.transactionFactory()}.<br>
+ *   For instance, for operation "/app/orders/update":<br>
+ *   For data relevant to all transactions, define a custom {@code AppTransaction } class.<br>
+ *   An {@code OrdersTransaction} class extending {@code AppTransaction } can be used for the transactions related to Orders module.<br>
+ *   If further customization is needed, one can also define {@code OrdersUpdateTransaction} class extending {@code OrdersTransaction}.<p>
+ *   Set up custom Transaction classes per context:<br>
+ *   <pre>{@code
  *   Contexts.get("/app").transactionFactory(() -> new AppTransaction())
  *   Contexts.get("/app/orders").transactionFactory(() -> new OrdersTransaction())
  *   Contexts.get("/app/orders/update").transactionFactory(() -> new OrdersUpdateTransaction())
+ *   }</pre>
  *   If custom transaction class is not defined for a context, the transaction class from its parent context will be used.
  * 
  * @author Andrey Potekhin

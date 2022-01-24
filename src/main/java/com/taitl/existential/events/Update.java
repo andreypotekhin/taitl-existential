@@ -1,5 +1,7 @@
 package com.taitl.existential.events;
 
+import com.taitl.existential.events.base.EntityEvent;
+
 /**
  * Indicates that entity was updated in the course of of current transaction.
  * 
@@ -20,7 +22,7 @@ package com.taitl.existential.events;
  * @see Mutate
  * @see Permutate
  */
-public class Update<T> extends Event<T>
+public class Update<T> extends EntityEvent<T>
 {
     public Update(T t)
     {

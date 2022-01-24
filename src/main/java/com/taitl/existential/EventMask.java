@@ -3,15 +3,16 @@ package com.taitl.existential;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.taitl.existential.events.BiEvent;
+import com.taitl.existential.constants.Strings;
 import com.taitl.existential.events.Create;
 import com.taitl.existential.events.Delete;
-import com.taitl.existential.events.Event;
 import com.taitl.existential.events.Mutate;
 import com.taitl.existential.events.Permutate;
 import com.taitl.existential.events.Read;
 import com.taitl.existential.events.Update;
 import com.taitl.existential.events.Upsert;
+import com.taitl.existential.events.base.BiEvent;
+import com.taitl.existential.events.base.Event;
 
 public class EventMask
 {
@@ -21,28 +22,19 @@ public class EventMask
 
     static
     {
-        assignBitToEventType(Event.class, 0);
-        assignBitToEventType(Create.class, 1);
-        assignBitToEventType(Update.class, 2);
-        assignBitToEventType(Upsert.class, 3);
-        assignBitToEventType(Delete.class, 4);
-        assignBitToEventType(Read.class, 5);
-        assignBitToEventType(BiEvent.class, 10);
-        assignBitToEventType(Mutate.class, 11);
-        assignBitToEventType(Permutate.class, 12);
+        registerEventType(TypeKey.valueOf(Event.class));
+        registerEventType(TypeKey.valueOf(Create.class));
+        registerEventType(TypeKey.valueOf(Update.class));
+        registerEventType(TypeKey.valueOf(Upsert.class));
+        registerEventType(TypeKey.valueOf(Delete.class));
+        registerEventType(TypeKey.valueOf(Read.class));
+        registerEventType(TypeKey.valueOf(BiEvent.class));
+        registerEventType(TypeKey.valueOf(Mutate.class));
+        registerEventType(TypeKey.valueOf(Permutate.class));
     }
 
     public EventMask()
     {
-        assignBitToEventType(Event.class, 0);
-        assignBitToEventType(Create.class, 1);
-        assignBitToEventType(Update.class, 2);
-        assignBitToEventType(Upsert.class, 3);
-        assignBitToEventType(Delete.class, 4);
-        assignBitToEventType(Read.class, 5);
-        assignBitToEventType(BiEvent.class, 10);
-        assignBitToEventType(Mutate.class, 11);
-        assignBitToEventType(Permutate.class, 12);
     }
 
     /**
@@ -65,7 +57,7 @@ public class EventMask
      * @param et EventKey, e.g. Create, Update, Delete, Read, Mutate, etc.
      * @return The number representing a bit position for this type in events bitmask
      */
-    public int getEventBit(EventKey et)
+    public static int getEventBit(EventKey et)
     {
         Integer result = eventBits.get(et.toString());
         if (result == null)
@@ -75,7 +67,7 @@ public class EventMask
         return result;
     }
 
-    public EventKey getEventType(int bit)
+    public static EventKey getEventType(int bit)
     {
         String result = eventTypes.get(bit);
         if (result == null)
@@ -91,35 +83,51 @@ public class EventMask
      * 
      * @return Maximum number of all event bits that can be returned by getEventBit()
      */
-    public int getMaxEventBit()
+    public static int getMaxEventBit()
     {
         return maxEventBit;
     }
 
-    protected static <T> void assignBitToEventType(Class<T> clz, int bit)
+    /**
+     * Registers a new event type in EventMask, making it possible to start using
+     * the new event in event handlers.
+     * <p>
+     * Example:<br>
+     * <pre>{@code 
+     *   // Define custom event type
+     *   class Receive<T> extends EntityEvent<T> ... 
+     *   // Register custom event type 
+     *   EventMask.registerEventType(TypeKey.valueOf(Receive.class))
+     *   // Declare custom event handler class
+     *   class OnReceive<T> extends On<T>  ...
+     *   // Use custom event in custom event handler
+     *   Contexts.get("/myapp/mymodule")
+     *     .handle(new OnReceive<Email>(e -> Slack.post(channel, e)));
+     * }</pre>
+     * 
+     * @param <T> Custom event type to register 
+     * @param type Typekey describing the new event, for instance, TypeKey.valueOf(MyEvent.class)
+     * @return The bit number for the newly registered event type
+     */
+    public static synchronized <T extends Event<?>> int registerEventType(TypeKey<T> type)
     {
-        if (!Event.class.isAssignableFrom(clz))
+        if (type == null)
         {
-            throw new IllegalArgumentException("Argument 'clz' must be a subclass of Event");
+            throw new IllegalArgumentException(Strings.ARG_TYPE);
         }
-        String typeKey = TypeKey.valueOf(clz).toString();
-        if (eventBits.containsKey(typeKey))
+        String typeString = type.toString();
+        if (eventBits.containsKey(typeString))
         {
-            throw new IllegalArgumentException(String.format("Event bit already assigned to class '%s'", typeKey));
+            throw new IllegalArgumentException(String.format("Event bit already assigned to class '%s'", type));
         }
-        Integer bitKey = Integer.valueOf(bit);
+        Integer bitKey = eventBits.size();
+        eventBits.put(typeString, bitKey);
+        maxEventBit = bitKey;
         if (eventTypes.containsKey(bitKey))
         {
-            throw new IllegalArgumentException(String.format("Event bit already assigned to bit '%d'", bitKey));
+            throw new IllegalArgumentException(String.format("Event type already assigned to bit '%d'", bitKey));
         }
-        synchronized (eventBits)
-        {
-            eventBits.put(typeKey, bitKey);
-            eventTypes.put(bitKey, typeKey);
-            if (maxEventBit < bit)
-            {
-                maxEventBit = bit;
-            }
-        }
+        eventTypes.put(bitKey, typeString);
+        return bitKey;
     }
 }

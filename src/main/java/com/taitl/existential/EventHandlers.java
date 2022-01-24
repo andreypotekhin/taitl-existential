@@ -1,7 +1,7 @@
 package com.taitl.existential;
 
-import static com.taitl.existential.constants.Strings.KEY_ARG;
-import static com.taitl.existential.constants.Strings.VALUE_ARG;
+import static com.taitl.existential.constants.Strings.ARG_KEY;
+import static com.taitl.existential.constants.Strings.ARG_VALUE;
 
 import java.util.Set;
 
@@ -53,7 +53,7 @@ public class EventHandlers<T>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         return storage.containsKey(key.toString());
     }
@@ -62,11 +62,11 @@ public class EventHandlers<T>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         if (value == null)
         {
-            throw new IllegalArgumentException(VALUE_ARG);
+            throw new IllegalArgumentException(ARG_VALUE);
         }
         return storage.put(key.toString(), value);
     }

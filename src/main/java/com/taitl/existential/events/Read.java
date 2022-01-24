@@ -1,5 +1,7 @@
 package com.taitl.existential.events;
 
+import com.taitl.existential.events.base.EntityEvent;
+
 /**
  * Indicates that entity was read (selected, loaded) in the course of of current transaction.
  * 
@@ -20,11 +22,10 @@ package com.taitl.existential.events;
  * @see Mutate
  * @see Permutate
  */
-public class Read<T> extends Event<T>
+public class Read<T> extends EntityEvent<T>
 {
     public Read(T t)
     {
         super(t);
     }
 }
-

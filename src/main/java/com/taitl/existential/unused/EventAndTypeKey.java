@@ -1,7 +1,7 @@
 package com.taitl.existential.unused;
 
-import com.taitl.existential.events.BiEvent;
-import com.taitl.existential.events.Event;
+import com.taitl.existential.events.base.BiEvent;
+import com.taitl.existential.events.base.Event;
 
 /**
  * Implements a key for collections keyed by Event + Type.

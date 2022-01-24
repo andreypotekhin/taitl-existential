@@ -1,46 +1,75 @@
 package com.taitl.existential.indexes;
 
-import static com.taitl.existential.constants.Strings.KEY_ARG;
-import static com.taitl.existential.constants.Strings.VALUE_ARG;
+import static com.taitl.existential.constants.Strings.ARG_CHECK;
+import static com.taitl.existential.constants.Strings.ARG_KEY;
+import static com.taitl.existential.constants.Strings.ARG_VALUE;
 
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.taitl.existential.commons.Multimap;
+import com.taitl.existential.constants.Strings;
 
-public class Index<K, V>
+public class Index<V, K>
 {
+    protected static final String ARG_GET_KEY = "Argument 'getKey' must not be null.";
     protected static final String REQUIRE_SET_GET_KEY = "To call this method, you need to call 'setGetKey()' first";
 
-    protected Multimap<K, V> storage = new Multimap<K, V>();
+    protected Multimap<K, V> storage = new Multimap<>();
     protected Function<V, K> getKey;
-
-    public Set<V> get(K k)
-    {
-        return storage.get(k);
+    
+    public Index(){}
+    
+    public Index(Function<V, K> getKey){ 
+        if (getKey == null)
+        {
+            throw new IllegalArgumentException(ARG_GET_KEY);
+        }
+        setGetKey(getKey); 
     }
 
-    public boolean contains(K k)
+    public Set<V> get(K key)
     {
-        return storage.containsKey(k);
+        if (key == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_KEY);
+        }
+        return storage.get(key);
     }
 
-    public boolean contains(K k, Predicate<Integer> checkCount)
+    public boolean contains(K key)
     {
-        Set<V> set = storage.get(k);
+        if (key == null)
+        {
+            throw new IllegalArgumentException(ARG_KEY);
+        }
+        return storage.containsKey(key);
+    }
+
+    public boolean contains(K key, Predicate<Set<V>> check)
+    {
+        if (key == null)
+        {
+            throw new IllegalArgumentException(ARG_KEY);
+        }
+        if (check == null)
+        {
+            throw new IllegalArgumentException(ARG_CHECK);
+        }
+        Set<V> set = storage.get(key);
         if (set == null || set.isEmpty())
         {
             return false;
         }
-        return checkCount.test(set.size());
+        return check.test(set);
     }
 
     public Set<V> add(K k, V v)
     {
         if (k == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         return storage.put(k, v);
     }
@@ -49,7 +78,7 @@ public class Index<K, V>
     {
         if (v == null)
         {
-            throw new IllegalArgumentException(VALUE_ARG);
+            throw new IllegalArgumentException(ARG_VALUE);
         }
         if (getKey == null)
         {
@@ -62,11 +91,11 @@ public class Index<K, V>
     {
         if (k == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         if (v == null)
         {
-            throw new IllegalArgumentException(VALUE_ARG);
+            throw new IllegalArgumentException(ARG_VALUE);
         }
         return storage.remove(k, v);
     }
@@ -75,15 +104,15 @@ public class Index<K, V>
     {
         if (k0 == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         if (k1 == null)
         {
-            throw new IllegalArgumentException(KEY_ARG);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         if (v == null)
         {
-            throw new IllegalArgumentException(VALUE_ARG);
+            throw new IllegalArgumentException(ARG_VALUE);
         }
         synchronized (this)
         {

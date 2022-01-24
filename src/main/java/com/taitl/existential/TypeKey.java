@@ -14,21 +14,18 @@ import com.taitl.existential.constants.Strings;
  *   Class without generics: Class: Car, TypeKey: "Car"<br> 
  *   Class with generics: Class: {@code Set<House>}, TypeKey: "{@code Set<House>}"
  * <p>
+ * - Why do we need to offset/negate Java type erasure? After all, Java compiler survives with it.<br>
+ * - Because we want ability to define an event handler or an expression on fully-qualified type. For
+ * instance, we might want to define different handlers depending on type of document: 
+ *   OnChange<Document<HTML>>(...)
+ *   OnChange<Document<JSON>>(...)
+ * <p>
  * @author Andrey Potekhin
  * @see EventHandlers
  */
 public class TypeKey<T>
 {
     protected String typeid;
-
-    // public TypeKey(T t, String genericQualifier)
-    // {
-    // if (t == null)
-    // {
-    // throw new IllegalArgumentException(Strings.ARG_T);
-    // }
-    // setTypeid(t.getClass(), genericQualifier);
-    // }
 
     public TypeKey(Class<?> clz, String genericQualifier)
     {
@@ -64,6 +61,16 @@ public class TypeKey<T>
         return new TypeKey<>(classNameQualifiedWithGenerics);
     }
 
+    public static <T> TypeKey<T> valueOf(T t, String genericQualifier)
+    {
+        return new TypeKey<>(t.getClass(), genericQualifier);
+    }
+    
+    public static <T> TypeKey<T> valueOf(T t)
+    {
+        return new TypeKey<>(t.getClass());
+    }
+    
     public int hashCode()
     {
         return typeid.hashCode();
@@ -83,7 +90,7 @@ public class TypeKey<T>
         {
             return false;
         }
-        TypeKey<?> o = (TypeKey<?>)other; 
+        TypeKey<?> o = (TypeKey<?>) other;
         if (o.typeid == null)
         {
             return (this.typeid == null);
