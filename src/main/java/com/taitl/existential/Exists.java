@@ -145,7 +145,7 @@ public class Exists<V, K> implements Predicate<Transaction>
         {
             throw new IllegalStateException(Strings.STATE_INDEX_NAME);
         }
-        Index<V, K> index = tran.indexes.get(indexName);
+        Index<K, V> index = tran.indexes.get(indexName);
         Set<V> vals = index.get(key);
         if (vals == null)
         {

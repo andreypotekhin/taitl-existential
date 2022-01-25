@@ -19,7 +19,7 @@ public class Location
         return loc.hashCode();
     }
 
-    public boolean equals(Location other)
+    public boolean equals(Object other)
     {
         if (other == this)
         {
@@ -29,15 +29,16 @@ public class Location
         {
             return false;
         }
-        if (other.loc == null)
+        Location o = (Location) other;
+        if (o.loc == null)
         {
             return (this.loc == null);
         }
-        return other.loc.equals(this.loc);
+        return o.loc.equals(this.loc);
     }
 
     public String toString()
     {
-        return "[loc=" + loc + "]";
+        return loc;
     }
 }

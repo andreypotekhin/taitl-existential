@@ -6,7 +6,7 @@ package com.taitl.existential;
  */
 public class EventQueue
 {
-//    addEvent(event, type, trans)    
-//    Event pop()    
-//    onEndTransaction(trans)
+    // addEvent(event, type, trans)
+    // Event pop()
+    // onEndTransaction(trans)
 }

@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +75,8 @@ class MultimapTest
     void testRemove()
     {
         assertThrows(IllegalArgumentException.class, () -> o.remove(null, GREY_CAT));
-        assertThrows(IllegalArgumentException.class, () -> o.remove(LOCATION_PARK, null));
+        assertThrows(IllegalArgumentException.class, () -> o.remove(LOCATION_PARK, (Cat) null));
+        assertThrows(IllegalArgumentException.class, () -> o.remove(LOCATION_PARK, (Predicate<Cat>) null));
 
         assertEquals(YELLOW_CAT, o.remove(LOCATION_PARK, YELLOW_CAT));
         assertEquals(1, o.get(LOCATION_PARK).size());

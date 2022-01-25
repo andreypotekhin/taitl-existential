@@ -11,22 +11,39 @@ import java.util.function.Predicate;
 import com.taitl.existential.commons.Multimap;
 import com.taitl.existential.constants.Strings;
 
-public class Index<V, K>
+/**
+ * Implement an index (mapping) of a key to a set of multiple values.
+ * <p>
+ * Note: null is not allowed neither as a key nor as a value. 
+ * 
+ * @author Andrey Potekhin
+ *
+ * @param <K>
+ * @param <V>
+ */
+public class Index<K, V>
 {
     protected static final String ARG_GET_KEY = "Argument 'getKey' must not be null.";
     protected static final String REQUIRE_SET_GET_KEY = "To call this method, you need to call 'setGetKey()' first";
+    private static final String ARG_KEY_CLASS = "Argument 'key' class '%s' does not match the key class '%s'"
+            + " reqired by this index.";
+    private static final String ARG_KEY_VALUE = "Argument 'k1' value '%s' does not match key value '%s'"
+            + " returned for object 'v' by 'getKey' function.";
 
     protected Multimap<K, V> storage = new Multimap<>();
     protected Function<V, K> getKey;
-    
-    public Index(){}
-    
-    public Index(Function<V, K> getKey){ 
+
+    public Index()
+    {
+    }
+
+    public Index(Function<V, K> getKey)
+    {
         if (getKey == null)
         {
             throw new IllegalArgumentException(ARG_GET_KEY);
         }
-        setGetKey(getKey); 
+        setGetKey(getKey);
     }
 
     public Set<V> get(K key)
@@ -47,13 +64,31 @@ public class Index<V, K>
         return storage.containsKey(key);
     }
 
-    public boolean contains(K key, Predicate<Set<V>> check)
+    public boolean contains(K key, V value)
     {
         if (key == null)
         {
             throw new IllegalArgumentException(ARG_KEY);
         }
-        if (check == null)
+        if (value == null)
+        {
+            throw new IllegalArgumentException(ARG_VALUE);
+        }
+        Set<V> set = storage.get(key);
+        if (set == null || set.isEmpty())
+        {
+            return false;
+        }
+        return set.contains(value);
+    }
+
+    public boolean contains(K key, Predicate<Set<V>> match)
+    {
+        if (key == null)
+        {
+            throw new IllegalArgumentException(ARG_KEY);
+        }
+        if (match == null)
         {
             throw new IllegalArgumentException(ARG_CHECK);
         }
@@ -62,7 +97,7 @@ public class Index<V, K>
         {
             return false;
         }
-        return check.test(set);
+        return match.test(set);
     }
 
     public Set<V> add(K k, V v)
@@ -82,11 +117,21 @@ public class Index<V, K>
         }
         if (getKey == null)
         {
-            throw new IllegalStateException(REQUIRE_SET_GET_KEY);
+            throw new IllegalArgumentException(REQUIRE_SET_GET_KEY);
         }
         return storage.put(getKey.apply(v), v);
     }
 
+    /**
+     * Removes key-value pair from multimap backing the index. 
+     * If there are other elements under the same key exist in the multimap, they remain intact.
+     * <p>
+     * Returns the value being removed, or null if value is not in index.
+     * 
+     * @param v Value to be removed
+     * @param k Key for the value
+     * @return The value being removed, or null if value is not in index 
+     */
     public V remove(K k, V v)
     {
         if (k == null)
@@ -98,6 +143,19 @@ public class Index<V, K>
             throw new IllegalArgumentException(ARG_VALUE);
         }
         return storage.remove(k, v);
+    }
+
+    public Set<V> remove(K k, Predicate<? super V> match)
+    {
+        if (k == null)
+        {
+            throw new IllegalArgumentException(ARG_KEY);
+        }
+        if (match == null)
+        {
+            throw new IllegalArgumentException(ARG_VALUE);
+        }
+        return storage.remove(k, match);
     }
 
     public void changeKey(K k0, K k1, V v)
@@ -113,6 +171,16 @@ public class Index<V, K>
         if (v == null)
         {
             throw new IllegalArgumentException(ARG_VALUE);
+        }
+        if (getKey != null)
+        {
+            K k = getKey.apply(v);
+            if (k1 != k)
+            {
+                throw new IllegalArgumentException(String.format(
+                        ARG_KEY_VALUE,
+                        k1, k));
+            }
         }
         synchronized (this)
         {
@@ -131,11 +199,31 @@ public class Index<V, K>
     @SuppressWarnings("unchecked")
     public Set<V> getObj(Object key)
     {
+        if (key == null)
+        {
+            throw new IllegalArgumentException(ARG_KEY);
+        }
+        if (storage.size() == 0)
+        {
+            return null;
+        }
+        Class<? extends K> keyClass = storage.getKeyClass();
+        if (!keyClass.isAssignableFrom(key.getClass()))
+        {
+            throw new IllegalArgumentException(String.format(
+                    ARG_KEY_CLASS,
+                    key.getClass().getSimpleName(), keyClass.getSimpleName()));
+        }
         return storage.get((K) key);
     }
 
     public void setGetKey(Function<V, K> getKey)
     {
         this.getKey = getKey;
+    }
+
+    public void clear()
+    {
+       storage.clear();
     }
 }

@@ -65,12 +65,12 @@ public class TypeKey<T>
     {
         return new TypeKey<>(t.getClass(), genericQualifier);
     }
-    
+
     public static <T> TypeKey<T> valueOf(T t)
     {
         return new TypeKey<>(t.getClass());
     }
-    
+
     public int hashCode()
     {
         return typeid.hashCode();

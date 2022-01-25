@@ -11,9 +11,4 @@ public class Address extends Location
     {
         return loc;
     }
-
-    public String toString()
-    {
-        return "[addr=" + loc + "]";
-    }
 }
