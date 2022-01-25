@@ -224,6 +224,6 @@ public class Index<K, V>
 
     public void clear()
     {
-       storage.clear();
+        storage.clear();
     }
 }
