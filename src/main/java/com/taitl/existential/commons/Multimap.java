@@ -144,7 +144,7 @@ public class Multimap<K, V>
             throw new IllegalStateException("Failure detected: size greater than storage size.");
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     public Class<? extends K> getKeyClass()
     {
@@ -152,7 +152,7 @@ public class Multimap<K, V>
         {
             throw new IllegalStateException("You can't call method getKeyClass() on an empty Multimap.");
         }
-        K result = storage.keySet().stream().findFirst().get(); 
+        K result = storage.keySet().stream().findFirst().get();
         return (Class<? extends K>) result.getClass();
     }
 }
