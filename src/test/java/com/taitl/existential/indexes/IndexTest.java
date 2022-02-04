@@ -1,5 +1,6 @@
 package com.taitl.existential.indexes;
 
+import static com.taitl.existential.commons.CollectionUtils.getFirst;
 import static com.taitl.existential.test_data.TestData.BLACK_CAT;
 import static com.taitl.existential.test_data.TestData.GREY_CAT;
 import static com.taitl.existential.test_data.TestData.LOCATION_GARDEN;
@@ -67,9 +68,9 @@ class IndexTest
     @Test
     void testGet()
     {
-        assertEquals(Set.of(GREY_CAT), cats_by_color.get("Grey"));
-        assertEquals(Set.of(YELLOW_CAT), cats_by_color.get("Yellow"));
-        assertEquals(Set.of(BLACK_CAT), cats_by_color.get("Black"));
+        assertEquals(GREY_CAT, getFirst(cats_by_color.get("Grey")));
+        assertEquals(YELLOW_CAT, getFirst(cats_by_color.get("Yellow")));
+        assertEquals(BLACK_CAT, getFirst(cats_by_color.get("Black")));
         assertNull(cats_by_color.get("non-existing"));
         assertThrows(IllegalArgumentException.class, () -> cats_by_color.get(null));
     }
@@ -134,8 +135,8 @@ class IndexTest
         assertTrue(cats_by_location.contains(LOCATION_PARK), "Assert the key still present");
         assertTrue(cats_by_location.contains(LOCATION_PARK, cats -> cats.contains(YELLOW_CAT)),
                 "Assert another value still present under key");
-        assertEquals(Set.of(YELLOW_CAT),
-                cats_by_location.remove(LOCATION_PARK, cat -> cat == YELLOW_CAT),
+        assertEquals(YELLOW_CAT,
+                getFirst(cats_by_location.remove(LOCATION_PARK, cat -> cat == YELLOW_CAT)),
                 "Remove another element from non-unique key");
         assertTrue(!cats_by_location.contains(LOCATION_PARK), "The key is not present anymore");
         assertNull(cats_by_color.remove("Non-existing-key", BLACK_CAT),
@@ -156,7 +157,7 @@ class IndexTest
     @Test
     void testGetObj()
     {
-        assertEquals(Set.of(GREY_CAT), cats_by_color.getObj("Grey"));
+        assertEquals(GREY_CAT, getFirst(cats_by_color.getObj("Grey")));
         assertThrows(IllegalArgumentException.class,
                 () -> cats_by_location.getObj(null));
         assertThrows(IllegalArgumentException.class,
@@ -164,7 +165,7 @@ class IndexTest
         cats_by_color.clear();
         assertNull(cats_by_color.getObj("Grey"));
         cats_by_color.add(ORANGE_CAT);
-        assertEquals(Set.of(ORANGE_CAT), cats_by_color.getObj("Orange"));
+        assertEquals(ORANGE_CAT, getFirst(cats_by_color.getObj("Orange")));
         assertThrows(IllegalArgumentException.class,
                 () -> cats_by_color.getObj(BLACK_CAT), "Wrong type of key");
     }

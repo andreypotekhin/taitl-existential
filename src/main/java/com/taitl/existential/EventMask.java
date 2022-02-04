@@ -90,7 +90,7 @@ public class EventMask
 
     /**
      * Registers a new event type in EventMask, making it possible to start using
-     * the new event in event handlers.
+     * the new event type in event handlers.
      * <p>
      * Example:<br>
      * <pre>{@code 

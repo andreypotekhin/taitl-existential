@@ -5,13 +5,14 @@ package com.taitl.existential;
  * <p>
  * Documentation: 
  *   https://github.com/andreypotekhin/taitl-existential
- * <p>
+ *  
  * @author Andrey Potekhin
  * @see ExistentialTransactions
  * @see ExistentialEvents
  */
 public class ExistentialLibrary
 {
-    public static ExistentialTransactions transactions = new ExistentialTransactions();
-    public static ExistentialEvents events = new ExistentialEvents();
+    public static ExistentialLibrary ex = new ExistentialLibrary();
+    public ExistentialTransactions transactions = new ExistentialTransactions();
+    public ExistentialEvents events = new ExistentialEvents();
 }
