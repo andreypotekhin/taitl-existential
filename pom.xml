@@ -23,6 +23,7 @@
 		<mockito-version>4.2.0</mockito-version>
 		<powermock-version>2.0.9</powermock-version>
 		<maven-checkstyle-plugin-version>3.1.2</maven-checkstyle-plugin-version>
+		<!-- maven-pmd-plugin 3.15.0 uses PMD 6.38.0  -->
 		<maven-pmd-plugin-version>3.15.0</maven-pmd-plugin-version>
 		<maven-jxr-plugin-version>3.1.1</maven-jxr-plugin-version>
 		<!-- Skip integration tests? -->
@@ -66,6 +67,101 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<!-- Auto-format source files -->
+				<groupId>net.revelc.code.formatter</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+				<version>${maven-formatter-plugin-version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<configFile>${project.basedir}/src/tools/configs/java-code-formatter/java-code-formatter.xml</configFile>
+					<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
+					<compilerSource>${maven.compiler.source}</compilerSource>
+					<compilerCompliance>${maven.compiler.source}</compilerCompliance>
+					<compilerTargetPlatform>${maven.compiler.target}</compilerTargetPlatform>
+					<excludes>
+						<exclude>com/any/generated/files/you/have/</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- Enforce coding style with Checkstyle -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven-checkstyle-plugin-version}</version>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<configLocation>src/tools/configs/checkstyle/checkstyle-java.xml</configLocation>
+							<encoding>UTF-8</encoding>
+							<consoleOutput>true</consoleOutput>
+							<sourceDirectory>${project.build.sourceDirectories}</sourceDirectory>
+							<violationSeverity>warning</violationSeverity>
+							<failsOnError>true</failsOnError>
+							<linkXRef>false</linkXRef>
+							<!-- Exclude Proof of Concept/Sandbox classes, Test Cases -->
+							<excludes>**/poc/**/*,**/sandbox/**/*,**/*test/**/*,**/*Test.*</excludes>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>9.2.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<!-- Perform static analysis with PMD -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>${maven-pmd-plugin-version}</version>
+				<executions>
+					<execution>
+						<id>pmd</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<rulesets>
+						<ruleset>src/tools/configs/pmd/pmd-ruleset.xml</ruleset>
+					</rulesets>
+					<printFailingErrors>true</printFailingErrors>
+					<linkXref>true</linkXref>
+					<sourceEncoding>utf-8</sourceEncoding>
+					<minimumTokens>100</minimumTokens>
+					<targetJdk>1.8</targetJdk>
+					<excludes>
+						<exclude>**/*Bean.java</exclude>
+						<exclude>**/generated/*.java</exclude>
+					</excludes>
+					<excludeRoots>
+						<excludeRoot>target/generated-sources/stubs</excludeRoot>
+					</excludeRoots>
+				</configuration>
+				<dependencies>
+					<dependency>
+					    <groupId>org.ow2.asm</groupId>
+					    <artifactId>asm</artifactId>
+					    <version>9.2</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin-version}</version>
@@ -87,28 +183,6 @@
 							<exclude>%regex[.*EndToEndTest.*]</exclude>
 						</excludes>
 					</configuration>
-				</configuration>
-			</plugin>
-			<plugin>
-				<!-- Include integration tests in 'integration-test' and 'verify' goals -->
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>${maven-failsafe-plugin-version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<skipTests>${skip-integration-tests}</skipTests>
-					<includes>
-						<include>**/integration/*.*</include>
-						<include>**/it/*.*</include>
-						<include>%regex[.*IT.*]</include>
-						<include>%regex[.*IntegrationTest.*]</include>
-					</includes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -178,60 +252,26 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<!-- Auto-format source files -->
-				<groupId>net.revelc.code.formatter</groupId>
-				<artifactId>formatter-maven-plugin</artifactId>
-				<version>${maven-formatter-plugin-version}</version>
+				<!-- Include integration tests in 'integration-test' and 'verify' goals -->
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven-failsafe-plugin-version}</version>
 				<executions>
 					<execution>
 						<goals>
-							<goal>format</goal>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
-					<configFile>${project.basedir}/src/tools/configs/java-code-formatter/java-code-formatter.xml</configFile>
-					<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
-					<compilerSource>${maven.compiler.source}</compilerSource>
-					<compilerCompliance>${maven.compiler.source}</compilerCompliance>
-					<compilerTargetPlatform>${maven.compiler.target}</compilerTargetPlatform>
-					<excludes>
-						<exclude>com/any/generated/files/you/have/</exclude>
-					</excludes>
+					<skipTests>${skip-integration-tests}</skipTests>
+					<includes>
+						<include>**/integration/*.*</include>
+						<include>**/it/*.*</include>
+						<include>%regex[.*IT.*]</include>
+						<include>%regex[.*IntegrationTest.*]</include>
+					</includes>
 				</configuration>
-			</plugin>
-			<plugin>
-				<!-- Enforce coding style with Checkstyle -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${maven-checkstyle-plugin-version}</version>
-				<executions>
-					<execution>
-						<id>validate</id>
-						<phase>validate</phase>
-						<configuration>
-							<configLocation>src/tools/configs/checkstyle/checkstyle-java.xml</configLocation>
-							<encoding>UTF-8</encoding>
-							<consoleOutput>true</consoleOutput>
-							<sourceDirectory>${project.build.sourceDirectories}</sourceDirectory>
-							<violationSeverity>warning</violationSeverity>
-							<failsOnError>true</failsOnError>
-							<linkXRef>false</linkXRef>
-							<!-- Exclude Proof of Concept/Sandbox classes, Test Cases -->
-							<excludes>**/poc/**/*,**/sandbox/**/*,**/*test/**/*,**/*Test.*</excludes>
-						</configuration>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>com.puppycrawl.tools</groupId>
-						<artifactId>checkstyle</artifactId>
-						<version>9.2.1</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 			<plugin>
 				<!-- Include all dependencies in the target jar -->
@@ -269,49 +309,16 @@
 					<show>public</show>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<!-- Allow cross-linking from error messages back to source files -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>${maven-jxr-plugin-version}</version>
+			</plugin>
 		</plugins>
 	</build>
 	<reporting>
 		<plugins>
-			<plugin>
-				<!-- Perform static analysis with PMD -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>${maven-pmd-plugin-version}</version>
-				<configuration>
-					<rulesets>
-						<ruleset>src/tools/configs/pmd/pmd-ruleset.xml</ruleset>
-					</rulesets>
-					<linkXref>true</linkXref>
-					<sourceEncoding>utf-8</sourceEncoding>
-					<minimumTokens>100</minimumTokens>
-					<targetJdk>1.5</targetJdk>
-					<excludes>
-						<exclude>**/*Bean.java</exclude>
-						<exclude>**/generated/*.java</exclude>
-					</excludes>
-					<excludeRoots>
-						<excludeRoot>target/generated-sources/stubs</excludeRoot>
-					</excludeRoots>
-				</configuration>
-				<reportSets>
-					<reportSet><!-- by default, id = "default" -->
-						<reports><!-- select non-aggregate reports -->
-							<report>pmd</report>
-							<report>cpd</report>
-						</reports>
-					</reportSet>
-					<reportSet><!-- aggregate reportSet, to define in poms having modules -->
-						<id>aggregate</id>
-						<inherited>false</inherited> <!-- don't run aggregate in child modules -->
-						<reports>
-							<report>aggregate-pmd</report>
-							<report>aggregate-cpd</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
 			<plugin>
 				<!-- Allow cross-linking from error messages back to source files -->
 				<groupId>org.apache.maven.plugins</groupId>

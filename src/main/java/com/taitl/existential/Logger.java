@@ -21,8 +21,8 @@ public class Logger
      * are output to std err, all other messages to std out. 
      * Override this method to customize behavior.
      * 
-     * Q: Why format parameter of log() method does not affect key-value pairs?
-     * A: Because we do not know in advance how many key-value pairs are passed in.
+     * Q: Why 'format' parameter does not affect the output of key-value pairs?
+     * A: Because we do not know in advance how many key-value pairs will be provided.
      * 
      * @param level
      * @param clz

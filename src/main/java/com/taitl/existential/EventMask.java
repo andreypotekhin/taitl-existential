@@ -33,10 +33,6 @@ public class EventMask
         registerEventType(TypeKey.valueOf(Permutate.class));
     }
 
-    public EventMask()
-    {
-    }
-
     /**
      * Returns the number of bit in bitmask for this event type.
      * The number can be used as index in bitmask.  
