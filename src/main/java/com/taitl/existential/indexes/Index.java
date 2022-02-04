@@ -9,12 +9,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.taitl.existential.commons.Multimap;
-import com.taitl.existential.constants.Strings;
 
 /**
  * Implement an index (mapping) of a key to a set of multiple values.
  * <p>
- * Note: null is not allowed neither as a key nor as a value. 
+ * Note: null is not allowed, neither as a key nor as a value. 
  * 
  * @author Andrey Potekhin
  *
@@ -50,7 +49,7 @@ public class Index<K, V>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_KEY);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         return storage.get(key);
     }

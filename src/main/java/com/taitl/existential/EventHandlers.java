@@ -6,7 +6,6 @@ import static com.taitl.existential.constants.Strings.ARG_VALUE;
 import java.util.Set;
 
 import com.taitl.existential.commons.Multimap;
-import com.taitl.existential.constants.Strings;
 import com.taitl.existential.interfaces.EntityHandler;
 import com.taitl.existential.interfaces.EventHandler;
 import com.taitl.existential.interfaces.MutationHandler;
@@ -39,7 +38,7 @@ public class EventHandlers<T>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_KEY);
+            throw new IllegalArgumentException(ARG_KEY);
         }
         Set<EventHandler<T>> result = storage.get(key.toString());
         if (result != null && result.isEmpty())
