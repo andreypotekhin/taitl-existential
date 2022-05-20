@@ -1,23 +1,22 @@
-package com.taitl.existential.event_handlers;
+package com.taitl.existential.handler.type;
 
 import static com.taitl.existential.constants.Strings.ARG_CONDITION;
 import static com.taitl.existential.constants.Strings.ARG_PREDICATE;
-import static com.taitl.existential.constants.Strings.ARG_T0;
-import static com.taitl.existential.constants.Strings.ARG_T1;
+import static com.taitl.existential.constants.Strings.ARG_T0_T1;
 
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.EventHandlerFailureException;
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.interfaces.BiEventHandlerWithSideEffects;
+import com.taitl.existential.handler.base.BiEventHandlerWithSideEffects;
 
-public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
+public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
 {
     Predicate<? super T> condition;
     BiConsumer<? super T, ? super T> action;
 
-    public OnMutate(BiConsumer<? super T, ? super T> action)
+    public OnTransit(BiConsumer<? super T, ? super T> action)
     {
         if (action == null)
         {
@@ -26,7 +25,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
         this.action = action;
     }
 
-    public OnMutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
+    public OnTransit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         if (condition == null)
         {
@@ -42,13 +41,9 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
 
     public void handle(T t0, T t1) throws ExistentialException
     {
-        if (t0 == null)
+        if (t0 == null && t1 == null)
         {
-            throw new IllegalArgumentException(ARG_T0);
-        }
-        if (t1 == null)
-        {
-            throw new IllegalArgumentException(ARG_T1);
+            throw new IllegalArgumentException(ARG_T0_T1);
         }
         if (condition == null || condition.test(t1))
         {

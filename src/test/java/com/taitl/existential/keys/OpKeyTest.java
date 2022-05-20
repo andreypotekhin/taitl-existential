@@ -1,9 +1,11 @@
-package com.taitl.existential;
+package com.taitl.existential.keys;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.taitl.existential.keys.OpKey;
 
 class OpKeyTest
 {

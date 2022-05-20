@@ -1,4 +1,4 @@
-package com.taitl.existential.commons;
+package com.taitl.existential.utilities;
 
 import java.util.Collection;
 import java.util.Optional;

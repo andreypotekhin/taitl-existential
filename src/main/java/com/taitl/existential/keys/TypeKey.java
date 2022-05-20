@@ -1,5 +1,6 @@
-package com.taitl.existential;
+package com.taitl.existential.keys;
 
+import com.taitl.existential.EventHandlers;
 import com.taitl.existential.constants.Strings;
 
 /**

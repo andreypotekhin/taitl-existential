@@ -1,29 +1,31 @@
 package com.taitl.existential;
 
 import com.taitl.existential.event.base.Event;
+import com.taitl.existential.exceptions.ExistentialException;
 
 public class ExistentialEvents
 {
-    public <T> void mutate(T t0, T t1, String tranID)
-    {
-    }
+	public <T, E extends Event<T>> void send(E event, String tranID) throws ExistentialException
+	{
+		// Get transaction object
+		// Care for scenario when tran is not found
+		// Split event into multiple
+		// Transition<House> -> On<House>, Mutate<House>, Transit<House>
+		// Depending on permutation type: OnCreate<House>, OnUpdate<House>, OnMutate<House>, OnDelete<House>
+		// Trigger event processing for events with side effects
+		// Store (postpone) event processing for events without side effects
+	}
 
-    public <E> void entity(E entity, String tranID)
-    {
-    }
+	public <T> void mutate(T t0, T t1, String tranID) throws ExistentialException
+	{
+	}
 
-    public <T> void read(T entity, String tranID)
-    {
-    }
+	public <E> void entity(E entity, String tranID) throws ExistentialException
+	{
+	}
 
-    public <T, E extends Event<T>> void send(E event, String tranID)
-    {
-        // Get transaction object
-        // Care for scenario when tran not found
-        // Split event into multiple
-        // Permutation<House> -> On<House>, Mutation<House>, Permutation<House>
-        // Depending on permutation type: OnUpdate<House>, OnMutate<House>, OnDelete<House>
-        // Trigger event processing chain for events with side effects
-        // Store (postpone) event processing chain for events without side effects
-    }
+	public <T> void read(T entity, String tranID) throws ExistentialException
+	{
+	}
+
 }

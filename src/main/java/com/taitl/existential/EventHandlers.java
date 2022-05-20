@@ -5,68 +5,69 @@ import static com.taitl.existential.constants.Strings.ARG_VALUE;
 
 import java.util.Set;
 
-import com.taitl.existential.commons.Multimap;
-import com.taitl.existential.interfaces.EventHandlerWithSideEffects;
-import com.taitl.existential.interfaces.EventHandler;
-import com.taitl.existential.interfaces.BiEventHandlerWithSideEffects;
+import com.taitl.existential.handler.base.BiEventHandlerWithSideEffects;
+import com.taitl.existential.handler.base.EventHandler;
+import com.taitl.existential.handler.base.EventHandlerWithSideEffects;
+import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.utilities.Multimap;
 
 /**
- * Multimap mapping of a type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
- * 
+ * A multimap mapping of a type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
+ *
  * Example: Doc<Json> -> Set<On[Е]<Doc<Json>>>
- * 
- * Example: 
+ *
+ * Example:
  *   Retrieve event handlers defined for type "Doc<Json>":
  *   Set<Handler> handlers = eventHandlers.get("Doc<Json>")
- * 
+ *
  * @author Andrey Potekhin
  * @see EventHandlerWithSideEffects
  * @see BiEventHandlerWithSideEffects
  */
 public class EventHandlers<T>
 {
-    Multimap<String, EventHandler<T>> storage = new Multimap<>();
+	Multimap<String, EventHandler<T>> storage = new Multimap<>();
 
-    /**
-     * Gets event handlers for the specified type.
-     * 
-     * @param key
-     *            TypeKey to search for.
-     * @return Set<EventHandler<T>>, or null if no handlers defined for the type.
-     */
-    public Set<EventHandler<T>> get(TypeKey<T> key)
-    {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
-        Set<EventHandler<T>> result = storage.get(key.toString());
-        if (result != null && result.isEmpty())
-        {
-            result = null;
-        }
-        return result;
-    }
+	/**
+	 * Gets event handlers for the specified type.
+	 *
+	 * @param key
+	 *            TypeKey to search for.
+	 * @return Set<EventHandler<T>>, or null if no handlers defined for the type.
+	 */
+	public Set<EventHandler<T>> get(TypeKey<T> key)
+	{
+		if (key == null)
+		{
+			throw new IllegalArgumentException(ARG_KEY);
+		}
+		Set<EventHandler<T>> result = storage.get(key.toString());
+		if (result != null && result.isEmpty())
+		{
+			result = null;
+		}
+		return result;
+	}
 
-    public boolean contains(TypeKey<T> key)
-    {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
-        return storage.containsKey(key.toString());
-    }
+	public boolean contains(TypeKey<T> key)
+	{
+		if (key == null)
+		{
+			throw new IllegalArgumentException(ARG_KEY);
+		}
+		return storage.containsKey(key.toString());
+	}
 
-    public Set<EventHandler<T>> put(TypeKey<T> key, EventHandler<T> value)
-    {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
-        if (value == null)
-        {
-            throw new IllegalArgumentException(ARG_VALUE);
-        }
-        return storage.put(key.toString(), value);
-    }
+	public Set<EventHandler<T>> put(TypeKey<T> key, EventHandler<T> value)
+	{
+		if (key == null)
+		{
+			throw new IllegalArgumentException(ARG_KEY);
+		}
+		if (value == null)
+		{
+			throw new IllegalArgumentException(ARG_VALUE);
+		}
+		return storage.put(key.toString(), value);
+	}
 }

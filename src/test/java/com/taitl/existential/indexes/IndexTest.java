@@ -1,12 +1,12 @@
 package com.taitl.existential.indexes;
 
-import static com.taitl.existential.commons.CollectionUtils.getFirst;
 import static com.taitl.existential.test_data.TestData.BLACK_CAT;
 import static com.taitl.existential.test_data.TestData.GREY_CAT;
 import static com.taitl.existential.test_data.TestData.LOCATION_GARDEN;
 import static com.taitl.existential.test_data.TestData.LOCATION_PARK;
 import static com.taitl.existential.test_data.TestData.ORANGE_CAT;
 import static com.taitl.existential.test_data.TestData.YELLOW_CAT;
+import static com.taitl.existential.utilities.CollectionUtils.getFirst;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;

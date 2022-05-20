@@ -12,10 +12,10 @@ import com.taitl.existential.event.type.Upsert;
 import com.taitl.existential.event.type.Write;
 
 /**
- * Indicates something that has happened to an application entity. Serves as base class to more specific events
+ * Indicates loading, access or change of an application entity. Serves as base class to more specific events
  * ({@code Create<T>, Update<T>,} etc.)
  * <p>
- * Example: {@code EntityEvent<Account>} is raised when Account entity was accessed or changed in the course of current transaction.
+ * Example: {@code EntityEvent<Account>} is emitted when Account entity was accessed or changed in the course of current transaction.
  * <p>
  * Database analogs: SELECT, INSERT, UPDATE or DELETE
  * <p>
@@ -34,14 +34,14 @@ import com.taitl.existential.event.type.Write;
  */
 public class EntityEvent<T> implements Event<T>
 {
-    public T t;
+	public T t;
 
-    public EntityEvent(T t)
-    {
-        if (t == null)
-        {
-            throw new IllegalArgumentException(Strings.ARG_T);
-        }
-        this.t = t;
-    }
+	public EntityEvent(T t)
+	{
+		if (t == null)
+		{
+			throw new IllegalArgumentException(Strings.ARG_T);
+		}
+		this.t = t;
+	}
 }

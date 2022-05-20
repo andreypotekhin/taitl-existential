@@ -24,9 +24,9 @@ import com.taitl.existential.event.base.EntityEvent;
  * @see Mutate
  * @see Transit
  */
-public class Deal<T> extends EntityEvent<T>
+public class Modify<T> extends EntityEvent<T>
 {
-    public Deal(T t)
+    public Modify(T t)
     {
         super(t);
     }

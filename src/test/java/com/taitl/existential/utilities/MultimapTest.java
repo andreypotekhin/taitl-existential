@@ -1,4 +1,4 @@
-package com.taitl.existential.commons;
+package com.taitl.existential.utilities;
 
 import static com.taitl.existential.test_data.TestData.BLACK_CAT;
 import static com.taitl.existential.test_data.TestData.GREY_CAT;
@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import com.taitl.existential.model.Cat;
 import com.taitl.existential.model.Location;
+import com.taitl.existential.utilities.Multimap;
 
 class MultimapTest
 {

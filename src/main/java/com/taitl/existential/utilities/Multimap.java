@@ -1,4 +1,4 @@
-package com.taitl.existential.commons;
+package com.taitl.existential.utilities;
 
 import static com.taitl.existential.constants.Strings.ARG_KEY;
 import static com.taitl.existential.constants.Strings.ARG_MATCH;
