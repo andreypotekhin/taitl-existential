@@ -1,6 +1,6 @@
-package com.taitl.existential.events;
+package com.taitl.existential.event.type;
 
-import com.taitl.existential.events.base.EntityEvent;
+import com.taitl.existential.event.base.EntityEvent;
 
 /**
  * Indicates that entity was created, updated or about to be deleted in the course of current transaction.
@@ -22,7 +22,7 @@ import com.taitl.existential.events.base.EntityEvent;
  * @see ReadAndLock
  * @see Write
  * @see Mutate
- * @see Permutate
+ * @see Transit
  */
 public class Deal<T> extends EntityEvent<T>
 {

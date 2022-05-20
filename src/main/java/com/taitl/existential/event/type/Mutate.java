@@ -1,9 +1,9 @@
-package com.taitl.existential.events;
+package com.taitl.existential.event.type;
 
 import static com.taitl.existential.constants.Strings.ARG_T0;
 import static com.taitl.existential.constants.Strings.ARG_T1;
 
-import com.taitl.existential.events.base.BiEvent;
+import com.taitl.existential.event.base.BiEvent;
 
 /**
  * Indicates a change that has happened to an application entity during current transaction.
@@ -22,7 +22,7 @@ import com.taitl.existential.events.base.BiEvent;
  * @param <T>
  *            Class of application entity
  * @see Event
- * @see Permutate
+ * @see Transit
  */
 public class Mutate<T> extends BiEvent<T>
 {

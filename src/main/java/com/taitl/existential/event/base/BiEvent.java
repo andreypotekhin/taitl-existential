@@ -1,14 +1,14 @@
-package com.taitl.existential.events.base;
+package com.taitl.existential.event.base;
 
-import com.taitl.existential.events.Create;
-import com.taitl.existential.events.Delete;
-import com.taitl.existential.events.Mutate;
-import com.taitl.existential.events.Permutate;
-import com.taitl.existential.events.Read;
-import com.taitl.existential.events.ReadAndLock;
-import com.taitl.existential.events.Update;
-import com.taitl.existential.events.Upsert;
-import com.taitl.existential.events.Write;
+import com.taitl.existential.event.type.Create;
+import com.taitl.existential.event.type.Delete;
+import com.taitl.existential.event.type.Mutate;
+import com.taitl.existential.event.type.Read;
+import com.taitl.existential.event.type.ReadAndLock;
+import com.taitl.existential.event.type.Transit;
+import com.taitl.existential.event.type.Update;
+import com.taitl.existential.event.type.Upsert;
+import com.taitl.existential.event.type.Write;
 
 /**
  * Indicates some change that happened to an application entity. Serves as base class to mutation events ({@code Mutate<T>,
@@ -32,7 +32,7 @@ import com.taitl.existential.events.Write;
  * @see ReadAndLock
  * @see Write
  * @see Mutate
- * @see Permutate
+ * @see Transit
  */
 public class BiEvent<T> implements Event<T>
 {

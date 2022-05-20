@@ -1,6 +1,6 @@
 package com.taitl.existential;
 
-import com.taitl.existential.events.base.Event;
+import com.taitl.existential.event.base.Event;
 
 public class ExistentialEvents
 {

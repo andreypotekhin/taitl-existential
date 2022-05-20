@@ -1,12 +1,12 @@
-package com.taitl.existential;
+package com.taitl.existential.logging;
 
 import java.io.PrintStream;
 
-import com.taitl.existential.Log.LogLevel;
+import com.taitl.existential.logging.Log.LogLevel;
 
 /**
  * Implements default logger for use by Log class.
- * 
+ *
  * @author Andrey Potekhin
  *
  */
@@ -18,12 +18,12 @@ public class Logger
 
     /**
      * Outputs a log message of the specified class and level. Messages of LEVEL_ERROR
-     * are output to std err, all other messages to std out. 
+     * are output to std err, all other messages to std out.
      * Override this method to customize behavior.
-     * 
+     *
      * Q: Why 'format' parameter does not affect the output of key-value pairs?
      * A: Because we do not know in advance how many key-value pairs will be provided.
-     * 
+     *
      * @param level
      * @param clz
      * @param format

@@ -7,15 +7,15 @@ import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.PredicateFailureException;
-import com.taitl.existential.interfaces.Expression;
+import com.taitl.existential.expressions.Expression;
 
 /**
  * Implements "For Any" (universal quantification) notation for reasoning about application entities. See library
  * documentation for details.
- * 
+ *
  * @param <T>
  *            The type (entity) to which expression applies
- * 
+ *
  * @author Andrey Potekhin
  * @see Exists0
  */

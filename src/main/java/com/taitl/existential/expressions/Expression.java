@@ -1,4 +1,4 @@
-package com.taitl.existential.interfaces;
+package com.taitl.existential.expressions;
 
 import com.taitl.existential.exceptions.ExistentialException;
 

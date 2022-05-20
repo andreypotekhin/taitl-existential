@@ -1,4 +1,4 @@
-package com.taitl.existential.events.base;
+package com.taitl.existential.event.base;
 
 import com.taitl.existential.constants.Strings;
 import com.taitl.existential.transactions.Transaction;

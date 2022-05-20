@@ -10,9 +10,9 @@ import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.EventHandlerFailureException;
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.interfaces.MutationHandler;
+import com.taitl.existential.interfaces.BiEventHandlerWithSideEffects;
 
-public class OnMutate<T> implements MutationHandler<T>
+public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
 {
     Predicate<? super T> condition;
     BiConsumer<? super T, ? super T> action;

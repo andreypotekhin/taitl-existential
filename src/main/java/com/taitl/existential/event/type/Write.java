@@ -1,6 +1,6 @@
-package com.taitl.existential.events;
+package com.taitl.existential.event.type;
 
-import com.taitl.existential.events.base.EntityEvent;
+import com.taitl.existential.event.base.EntityEvent;
 
 /**
  * Indicates that entity was created, updated or deleted in the course of of current transaction.
@@ -21,7 +21,7 @@ import com.taitl.existential.events.base.EntityEvent;
  * @see Read
  * @see ReadAndLock
  * @see Mutate
- * @see Permutate
+ * @see Transit
  */
 public class Write<T> extends EntityEvent<T>
 {

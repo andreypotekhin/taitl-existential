@@ -10,19 +10,19 @@ import static com.taitl.existential.constants.Strings.ARG_T0_T1;
  *
  * If t0 is null, this indicates a newly created object. If t1 is null, this indicates a deleted object (the object
  * about to be deleted as part of this transaction).
- * 
+ *
  * @param <T>
  *            Type of mutating object
- * 
+ *
  * @author Andrey Potekhin
  * @see Mutation
  */
-public final class Permutation<T>
+public final class Transition<T>
 {
     public T t0;
     public T t1;
 
-    public Permutation(T t0, T t1)
+    public Transition(T t0, T t1)
     {
         if (t0 == null && t1 == null)
         {

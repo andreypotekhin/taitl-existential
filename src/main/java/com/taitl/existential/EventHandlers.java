@@ -6,9 +6,9 @@ import static com.taitl.existential.constants.Strings.ARG_VALUE;
 import java.util.Set;
 
 import com.taitl.existential.commons.Multimap;
-import com.taitl.existential.interfaces.EntityHandler;
+import com.taitl.existential.interfaces.EventHandlerWithSideEffects;
 import com.taitl.existential.interfaces.EventHandler;
-import com.taitl.existential.interfaces.MutationHandler;
+import com.taitl.existential.interfaces.BiEventHandlerWithSideEffects;
 
 /**
  * Multimap mapping of a type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
@@ -20,8 +20,8 @@ import com.taitl.existential.interfaces.MutationHandler;
  *   Set<Handler> handlers = eventHandlers.get("Doc<Json>")
  * 
  * @author Andrey Potekhin
- * @see EntityHandler
- * @see MutationHandler
+ * @see EventHandlerWithSideEffects
+ * @see BiEventHandlerWithSideEffects
  */
 public class EventHandlers<T>
 {

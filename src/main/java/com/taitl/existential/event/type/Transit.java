@@ -1,8 +1,8 @@
-package com.taitl.existential.events;
+package com.taitl.existential.event.type;
 
 import static com.taitl.existential.constants.Strings.ARG_T0_T1;
 
-import com.taitl.existential.events.base.BiEvent;
+import com.taitl.existential.event.base.BiEvent;
 
 /**
  * Indicates that an application entity has been created, changed or deleted during current transaction.
@@ -25,9 +25,9 @@ import com.taitl.existential.events.base.BiEvent;
  * @see Event
  * @see Mutate
  */
-public class Permutate<T> extends BiEvent<T>
+public class Transit<T> extends BiEvent<T>
 {
-    public Permutate(T t0, T t1)
+    public Transit(T t0, T t1)
     {
         super(t0, t1);
         if (t0 == null && t1 == null)

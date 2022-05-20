@@ -13,7 +13,7 @@ import static com.taitl.existential.constants.Strings.ARG_T1;
  *            Type of mutating object
  * 
  * @author Andrey Potekhin
- * @see Permutation
+ * @see Transition
  */
 public final class Mutation<T>
 {

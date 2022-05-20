@@ -19,8 +19,10 @@ public class OpKey
 {
     public static final String ARG_OP_SINGLE_SLASH = "Argument 'op' cannot be a signle slash ('/')";
     public static final String ARG_OP_END_SLASH = "Argument 'op' cannot end with a slash ('/')";
+    public static final String ARG_OP_NO_WILDCARDS = "Argument 'op' cannot have wildcards ('*')";
 
     protected static final String SLASH = "/";
+    protected static final String WILDCARD = "*";
 
     protected final String op;
 
@@ -41,6 +43,10 @@ public class OpKey
         if (op.endsWith(SLASH))
         {
             throw new IllegalArgumentException(ARG_OP_END_SLASH);
+        }
+        if (op.contains(WILDCARD))
+        {
+            throw new IllegalArgumentException(ARG_OP_NO_WILDCARDS);
         }
         this.op = op;
     }
@@ -64,12 +70,12 @@ public class OpKey
      * Gets this key parent key, if any - a shortened key without the part starting with the last slash.
      * Throws IllegalStateException if this key is a top-level key (has no parent).
      * <p>
-     * Example: 
-     *   Key: "/app/orders/update" 
+     * Example:
+     *   Key: "/app/orders/update"
      *   Parent key: "/app/orders"
-     * <p>  
+     * <p>
      * @return A shortened key without the part starting with the last slash.
-     * @throws IllegalStateException if this key is a top-level key (has no parent).   
+     * @throws IllegalStateException if this key is a top-level key (has no parent).
      */
     public OpKey getParent()
     {

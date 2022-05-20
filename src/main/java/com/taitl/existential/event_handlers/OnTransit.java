@@ -9,14 +9,14 @@ import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.EventHandlerFailureException;
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.interfaces.MutationHandler;
+import com.taitl.existential.interfaces.BiEventHandlerWithSideEffects;
 
-public class OnPermutate<T> implements MutationHandler<T>
+public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
 {
     Predicate<? super T> condition;
     BiConsumer<? super T, ? super T> action;
 
-    public OnPermutate(BiConsumer<? super T, ? super T> action)
+    public OnTransit(BiConsumer<? super T, ? super T> action)
     {
         if (action == null)
         {
@@ -25,7 +25,7 @@ public class OnPermutate<T> implements MutationHandler<T>
         this.action = action;
     }
 
-    public OnPermutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
+    public OnTransit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         if (condition == null)
         {

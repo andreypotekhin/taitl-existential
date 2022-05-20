@@ -6,19 +6,19 @@ import java.util.Set;
 import javax.naming.Context;
 
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.events.Change;
-import com.taitl.existential.events.Create;
-import com.taitl.existential.events.Delete;
-import com.taitl.existential.events.Mutate;
-import com.taitl.existential.events.Permutate;
-import com.taitl.existential.events.Read;
-import com.taitl.existential.events.ReadAndLock;
-import com.taitl.existential.events.Update;
-import com.taitl.existential.events.Upsert;
-import com.taitl.existential.events.Write;
-import com.taitl.existential.events.base.BiEvent;
-import com.taitl.existential.events.base.EntityEvent;
-import com.taitl.existential.events.base.Event;
+import com.taitl.existential.event.base.BiEvent;
+import com.taitl.existential.event.base.EntityEvent;
+import com.taitl.existential.event.base.Event;
+import com.taitl.existential.event.type.Change;
+import com.taitl.existential.event.type.Create;
+import com.taitl.existential.event.type.Delete;
+import com.taitl.existential.event.type.Mutate;
+import com.taitl.existential.event.type.Read;
+import com.taitl.existential.event.type.ReadAndLock;
+import com.taitl.existential.event.type.Transit;
+import com.taitl.existential.event.type.Update;
+import com.taitl.existential.event.type.Upsert;
+import com.taitl.existential.event.type.Write;
 import com.taitl.existential.transactions.Transaction;
 
 /**
@@ -72,7 +72,7 @@ import com.taitl.existential.transactions.Transaction;
  * @see ReadAndLock
  * @see Write
  * @see Mutate
- * @see Permutate
+ * @see Transit
  */
 public class EventSplitter
 {
@@ -84,15 +84,15 @@ public class EventSplitter
         }
         Set<Event<T>> set = new LinkedHashSet<>();
         set.add(event);
-        if (event instanceof Permutate)
+        if (event instanceof Transit)
         {
-            splitPermutate((Permutate<T>) event, set);
+            splitPermutate((Transit<T>) event, set);
         }
 
         return set;
     }
 
-    protected <T> void splitPermutate(Permutate<T> perm, Set<Event<T>> set)
+    protected <T> void splitPermutate(Transit<T> perm, Set<Event<T>> set)
     {
         if (perm == null)
         {

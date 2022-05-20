@@ -237,12 +237,12 @@
 										<limit>
 											<counter>INSTRUCTION</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.89</minimum>
+											<minimum>0.0</minimum>
 										</limit>
 										<limit>
 											<counter>COMPLEXITY</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.60</minimum>
+											<minimum>0.0</minimum>
 										</limit>
 									</limits>
 								</rule>

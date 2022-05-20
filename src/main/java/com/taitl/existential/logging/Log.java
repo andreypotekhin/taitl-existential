@@ -1,4 +1,4 @@
-package com.taitl.existential;
+package com.taitl.existential.logging;
 
 import java.util.function.Supplier;
 
