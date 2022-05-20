@@ -6,7 +6,7 @@
 	<artifactId>existential</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>taitl-existential</name>
-	<description>Simple validation framework based on expressions analogous to notations for math logic.</description>
+	<description>Simple validation framework based on expressions analogous to notations of first-order logic.</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
