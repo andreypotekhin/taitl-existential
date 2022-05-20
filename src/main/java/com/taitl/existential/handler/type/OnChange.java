@@ -7,13 +7,13 @@ import com.taitl.existential.handler.base.EventHandlerWithSideEffects;
 
 public class OnChange<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
-	public OnChange(Consumer<? super T> action)
-	{
-		super(action);
-	}
+    public OnChange(Consumer<? super T> action)
+    {
+        super(action);
+    }
 
-	public OnChange(Predicate<? super T> condition, Consumer<? super T> action)
-	{
-		super(action);
-	}
+    public OnChange(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        super(action);
+    }
 }

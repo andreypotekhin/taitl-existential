@@ -34,14 +34,14 @@ import com.taitl.existential.event.type.Write;
  */
 public class EntityEvent<T> implements Event<T>
 {
-	public T t;
+    public T t;
 
-	public EntityEvent(T t)
-	{
-		if (t == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_T);
-		}
-		this.t = t;
-	}
+    public EntityEvent(T t)
+    {
+        if (t == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_T);
+        }
+        this.t = t;
+    }
 }

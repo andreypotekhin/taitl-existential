@@ -20,6 +20,7 @@ package com.taitl.existential.indexes;
  */
 public class Indexes
 {
-	// TODO:
-
+    // TODO:
+    // addIndex(Index<?, ?> index)
+    // T add(<T> elem)
 }

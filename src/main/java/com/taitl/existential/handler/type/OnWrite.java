@@ -7,13 +7,13 @@ import com.taitl.existential.handler.base.EventHandlerWithSideEffects;
 
 public class OnWrite<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
-	public OnWrite(Consumer<? super T> action)
-	{
-		super(action);
-	}
+    public OnWrite(Consumer<? super T> action)
+    {
+        super(action);
+    }
 
-	public OnWrite(Predicate<? super T> condition, Consumer<? super T> action)
-	{
-		super(action);
-	}
+    public OnWrite(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        super(action);
+    }
 }

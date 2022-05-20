@@ -14,6 +14,8 @@ package com.taitl.existential;
 public class Existential
 {
 	public static Existential ex = new Existential();
-	public static ExistentialTransactions transactions = new ExistentialTransactions();
-	public static ExistentialEvents events = new ExistentialEvents();
+	private ExistentialTransactions transactions = new ExistentialTransactions();
+	private ExistentialEvents events = new ExistentialEvents();
+	// TODO: ExistentialBehavior flags
+	// TODO: ExistentialContexts contexts
 }

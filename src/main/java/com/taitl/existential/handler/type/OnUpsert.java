@@ -7,13 +7,13 @@ import com.taitl.existential.handler.base.EventHandlerWithSideEffects;
 
 public class OnUpsert<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
-	public OnUpsert(Consumer<? super T> action)
-	{
-		super(action);
-	}
+    public OnUpsert(Consumer<? super T> action)
+    {
+        super(action);
+    }
 
-	public OnUpsert(Predicate<? super T> condition, Consumer<? super T> action)
-	{
-		super(action);
-	}
+    public OnUpsert(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        super(action);
+    }
 }

@@ -7,13 +7,13 @@ import com.taitl.existential.handler.base.EventHandlerWithSideEffects;
 
 public class OnCreate<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
-	public OnCreate(Consumer<? super T> action)
-	{
-		super(action);
-	}
+    public OnCreate(Consumer<? super T> action)
+    {
+        super(action);
+    }
 
-	public OnCreate(Predicate<? super T> condition, Consumer<? super T> action)
-	{
-		super(action);
-	}
+    public OnCreate(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        super(action);
+    }
 }

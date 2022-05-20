@@ -23,29 +23,29 @@ import com.taitl.existential.constants.Strings;
  */
 public class TransactionEvents
 {
-	Transaction tr;
-	Set<String> eventTypes = new LinkedHashSet<>();
-	BitSet eventTypeMask = new BitSet(64);
+    Transaction tr;
+    Set<String> eventTypes = new LinkedHashSet<>();
+    BitSet eventTypeMask = new BitSet(64);
 
-	TransactionEvents(Transaction tr)
-	{
-		this.tr = tr;
-	}
+    TransactionEvents(Transaction tr)
+    {
+        this.tr = tr;
+    }
 
-	void addEventType(EventKey eventKey)
-	{
-		if (eventKey == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_EVENT_KEY);
-		}
-		if (!eventTypes.contains(eventKey.toString()))
-		{
-			eventTypes.add(eventKey.toString());
-			// TODO
-			// int eventBit = context.еventSplitter.getEventBit(eventType);
-			// eventTypeMask.set(eventBit)
-		}
-	}
+    void addEventType(EventKey eventKey)
+    {
+        if (eventKey == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_EVENT_KEY);
+        }
+        if (!eventTypes.contains(eventKey.toString()))
+        {
+            eventTypes.add(eventKey.toString());
+            // TODO
+            // int eventBit = context.еventSplitter.getEventBit(eventType);
+            // eventTypeMask.set(eventBit)
+        }
+    }
 
-	// TODO: get set of relevant event types
+    // TODO: get set of relevant event types
 }
