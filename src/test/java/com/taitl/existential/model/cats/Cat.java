@@ -1,4 +1,4 @@
-package com.taitl.existential.model;
+package com.taitl.existential.model.cats;
 
 import java.util.Objects;
 

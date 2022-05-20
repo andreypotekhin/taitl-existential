@@ -1,8 +1,4 @@
-package com.taitl.existential.test_data;
-
-import com.taitl.existential.model.Address;
-import com.taitl.existential.model.Cat;
-import com.taitl.existential.model.Location;
+package com.taitl.existential.model.cats;
 
 public class TestData
 {

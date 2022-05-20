@@ -1,4 +1,4 @@
-package com.taitl.existential.model;
+package com.taitl.existential.model.cats;
 
 public class Location
 {

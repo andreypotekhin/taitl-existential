@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.PredicateFailureException;
-import com.taitl.existential.model.House;
-import com.taitl.existential.test_data.TestData;
+import com.taitl.existential.model.cats.House;
+import com.taitl.existential.model.cats.TestData;
 
 class AllTest
 {
