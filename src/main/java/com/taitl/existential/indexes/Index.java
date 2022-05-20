@@ -8,17 +8,20 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.taitl.existential.commons.Multimap;
+import com.taitl.existential.utilities.Multimap;
 
 /**
- * Implement an index (mapping) of a key to a set of multiple values.
+ * An indexing structure which provides performance for Exists<> expression.
+ * Implements an index (mapping) of a key to a set of multiple values.
  * <p>
- * Note: null is not allowed, neither as a key nor as a value. 
- * 
+ * Note: null is not allowed, neither as a key nor as a value.
+ *
  * @author Andrey Potekhin
  *
  * @param <K>
  * @param <V>
+ *
+ * @see Index
  */
 public class Index<K, V>
 {
@@ -122,14 +125,14 @@ public class Index<K, V>
     }
 
     /**
-     * Removes key-value pair from multimap backing the index. 
+     * Removes key-value pair from multimap backing the index.
      * If there are other elements under the same key exist in the multimap, they remain intact.
      * <p>
      * Returns the value being removed, or null if value is not in index.
-     * 
+     *
      * @param v Value to be removed
      * @param k Key for the value
-     * @return The value being removed, or null if value is not in index 
+     * @return The value being removed, or null if value is not in index
      */
     public V remove(K k, V v)
     {
@@ -190,7 +193,7 @@ public class Index<K, V>
 
     /**
      * In some scenarios, the exact type of key is not known. Provide a method to query by an Object key.
-     * 
+     *
      * @param key
      *            Object representing a key
      * @return Set of values stored under key

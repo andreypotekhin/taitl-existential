@@ -4,16 +4,16 @@ import static com.taitl.existential.constants.Strings.ARG_T0;
 import static com.taitl.existential.constants.Strings.ARG_T1;
 
 /**
- * Represents an object mutation that, unlike Permutation<T>, does not allow either 'from' nor 'to' state to be null.
- * 
+ * Represents an object mutation that, unlike Transition<T>, does not allow either 'from' nor 'to' state to be null.
+ *
  * t0 represents object data at the start of transaction (object initial state). t1 represents object data at the end of
- * transaction (object final state).
+ * transaction (object final state). Neither t0 nor t1 may be null.
  *
  * @param <T>
  *            Type of mutating object
- * 
+ *
  * @author Andrey Potekhin
- * @see Permutation
+ * @see Transition
  */
 public final class Mutation<T>
 {

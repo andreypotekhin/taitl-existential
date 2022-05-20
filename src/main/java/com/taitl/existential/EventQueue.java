@@ -1,12 +1,14 @@
 package com.taitl.existential;
 
+import com.taitl.existential.event.base.Event;
+import java.util.Set;
+import java.util.ArrayList;
+
 /**
- * Holds expression-related events (EntityEvent<T>, Mutation<T>, Permutation<T>) until transaction has ended.
- *
+ * Queues events (EntityEvent<T>, Mutation<T>, Transit<T>) for a duration of business transaction,
+ * to make them available for handling/processing when transaction is about to finish.
  */
-public class EventQueue
+public class EventQueue<T> extends ArrayList<Set<Event<T>>>
 {
-    // addEvent(event, type, trans)
-    // Event pop()
-    // onEndTransaction(trans)
+    // TODO:
 }

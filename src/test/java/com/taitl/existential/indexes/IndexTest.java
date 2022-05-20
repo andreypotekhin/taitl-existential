@@ -1,12 +1,12 @@
 package com.taitl.existential.indexes;
 
-import static com.taitl.existential.commons.CollectionUtils.getFirst;
-import static com.taitl.existential.test_data.TestData.BLACK_CAT;
-import static com.taitl.existential.test_data.TestData.GREY_CAT;
-import static com.taitl.existential.test_data.TestData.LOCATION_GARDEN;
-import static com.taitl.existential.test_data.TestData.LOCATION_PARK;
-import static com.taitl.existential.test_data.TestData.ORANGE_CAT;
-import static com.taitl.existential.test_data.TestData.YELLOW_CAT;
+import static com.taitl.existential.model.cats.TestData.BLACK_CAT;
+import static com.taitl.existential.model.cats.TestData.GREY_CAT;
+import static com.taitl.existential.model.cats.TestData.LOCATION_GARDEN;
+import static com.taitl.existential.model.cats.TestData.LOCATION_PARK;
+import static com.taitl.existential.model.cats.TestData.ORANGE_CAT;
+import static com.taitl.existential.model.cats.TestData.YELLOW_CAT;
+import static com.taitl.existential.utilities.CollectionUtils.getFirst;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -20,9 +20,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.taitl.existential.model.Cat;
-import com.taitl.existential.model.Location;
-import com.taitl.existential.test_data.TestData;
+import com.taitl.existential.model.cats.Cat;
+import com.taitl.existential.model.cats.Location;
+import com.taitl.existential.model.cats.TestData;
 
 class IndexTest
 {

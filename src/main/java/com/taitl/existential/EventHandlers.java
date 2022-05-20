@@ -5,23 +5,24 @@ import static com.taitl.existential.constants.Strings.ARG_VALUE;
 
 import java.util.Set;
 
-import com.taitl.existential.commons.Multimap;
-import com.taitl.existential.interfaces.EntityHandler;
-import com.taitl.existential.interfaces.EventHandler;
-import com.taitl.existential.interfaces.MutationHandler;
+import com.taitl.existential.handler.base.BiEventHandlerWithSideEffects;
+import com.taitl.existential.handler.base.EventHandler;
+import com.taitl.existential.handler.base.EventHandlerWithSideEffects;
+import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.utilities.Multimap;
 
 /**
- * Multimap mapping of a type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
- * 
+ * A multimap mapping of a type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
+ *
  * Example: Doc<Json> -> Set<On[Е]<Doc<Json>>>
- * 
- * Example: 
+ *
+ * Example:
  *   Retrieve event handlers defined for type "Doc<Json>":
  *   Set<Handler> handlers = eventHandlers.get("Doc<Json>")
- * 
+ *
  * @author Andrey Potekhin
- * @see EntityHandler
- * @see MutationHandler
+ * @see EventHandlerWithSideEffects
+ * @see BiEventHandlerWithSideEffects
  */
 public class EventHandlers<T>
 {
@@ -29,7 +30,7 @@ public class EventHandlers<T>
 
     /**
      * Gets event handlers for the specified type.
-     * 
+     *
      * @param key
      *            TypeKey to search for.
      * @return Set<EventHandler<T>>, or null if no handlers defined for the type.

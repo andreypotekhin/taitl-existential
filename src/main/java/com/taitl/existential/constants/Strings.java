@@ -29,4 +29,5 @@ public class Strings
     public static final String ARG_TYPE = "Argument 'type' should not be null";
     public static final String ARG_CHECK = "Argument 'check' should not be null";
     public static final String ARG_MATCH = "Argument 'match' must not be null";
+    public static final String ARG_NEED_TRANSIT_EVENT = "Please specify event of type Transit<>";
 }

@@ -12,7 +12,7 @@ import com.taitl.existential.indexes.Index;
  * Implements a transaction object - a unit of processing within a context.
  * <p>
  * 'Transactions' in this library are not related to database transactions, although when integrating, they assumed
- * to be aligned with ones, if you have such. They are simply markers of beginning and end of processing - of a 
+ * to be aligned with ones, if you have such. They are simply markers of beginning and end of processing - of a
  * business transaction, web request etc.
  * <p>
  * Transaction's end (a commit) serves as the point where we evaluate expressions, such as All and Exists, defined in
@@ -32,7 +32,7 @@ import com.taitl.existential.indexes.Index;
  *   info for each event from each involved context.
  * <p>
  * Customizing<p>
- *   To use custom classes for transactions, define them on different context levels, and ask the system to provide 
+ *   To use custom classes for transactions, define them on different context levels, and ask the system to provide
  *   an appropriate instance for a business operation using {@code Context.transactionFactory()}.<br>
  *   For instance, for operation "/app/orders/update":<br>
  *   For data relevant to all transactions, define a custom {@code AppTransaction } class.<br>
@@ -45,7 +45,7 @@ import com.taitl.existential.indexes.Index;
  *   Contexts.get("/app/orders/update").transactionFactory(() -> new OrdersUpdateTransaction())
  *   }</pre>
  *   If custom transaction class is not defined for a context, the transaction class from its parent context will be used.
- * 
+ *
  * @author Andrey Potekhin
  * @see Context
  * @see TransactionIndexes
@@ -54,33 +54,38 @@ import com.taitl.existential.indexes.Index;
  */
 public class Transaction
 {
-    public final UUID id;
-    public final String op;
+	public final UUID id;
+	public final String op;
 
-    public TransactionIndexes indexes = new TransactionIndexes(this);
-    public TransactionEvents events = new TransactionEvents(this);
+	public TransactionIndexes indexes = new TransactionIndexes(this);
+	public TransactionEvents events = new TransactionEvents(this);
 
-    public Transaction(String op)
-    {
-        if (op == null)
-        {
-            throw new IllegalArgumentException(Strings.ARG_OP);
-        }
-        this.op = op;
-        this.id = generateId();
-    }
+	public Transaction(String op)
+	{
+		if (op == null)
+		{
+			throw new IllegalArgumentException(Strings.ARG_OP);
+		}
+		this.op = op;
+		this.id = generateId();
+	}
 
-    public <K, V> Index<K, V> index(String name)
-    {
-        if (name == null)
-        {
-            throw new IllegalArgumentException(Strings.ARG_NAME);
-        }
-        return indexes.get(name);
-    }
+	public <K, V> Index<K, V> index(String name)
+	{
+		if (name == null)
+		{
+			throw new IllegalArgumentException(Strings.ARG_NAME);
+		}
+		return indexes.get(name);
+	}
 
-    protected UUID generateId()
-    {
-        return UUID.randomUUID();
-    }
+	protected UUID generateId()
+	{
+		return UUID.randomUUID();
+	}
+
+	/*
+	 * TODO: require(Axioms<T> axioms){ ... axioms.tran = this; ... } intent(Intents<T> intents) { ... intents.tran =
+	 * this; ... }
+	 */
 }

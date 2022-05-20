@@ -2,10 +2,10 @@ package com.taitl.existential.unused;
 
 import java.util.Set;
 
-import com.taitl.existential.commons.Multimap;
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.events.base.BiEvent;
-import com.taitl.existential.interfaces.EntityHandler;
+import com.taitl.existential.event.base.BiEvent;
+import com.taitl.existential.handler.base.EventHandlerWithSideEffects;
+import com.taitl.existential.utilities.Multimap;
 
 /**
  * Multimap mapping event key (Event E<T> + Type) to a set of corresponding event handlers: Set<On[E]<T>>
@@ -23,7 +23,7 @@ import com.taitl.existential.interfaces.EntityHandler;
  */
 public class EventHandlers0<T>
 {
-    Multimap<EventAndTypeKey<T>, EntityHandler<T>> storage = new Multimap<>();
+    Multimap<EventAndTypeKey<T>, EventHandlerWithSideEffects<T>> storage = new Multimap<>();
 
     /**
      * Gets event handlers for an event key (combination of Event E<T> + Type ).
@@ -32,13 +32,13 @@ public class EventHandlers0<T>
      *            EventKey to search for.
      * @return Set<EventHandler<>>, or null if no handlers defined for the key.
      */
-    public Set<EntityHandler<T>> getEventHandlers(EventAndTypeKey<T> key)
+    public Set<EventHandlerWithSideEffects<T>> getEventHandlers(EventAndTypeKey<T> key)
     {
         if (key == null)
         {
             throw new IllegalArgumentException(Strings.ARG_KEY);
         }
-        Set<EntityHandler<T>> result = storage.get(key);
+        Set<EventHandlerWithSideEffects<T>> result = storage.get(key);
         if (result != null && result.isEmpty())
         {
             result = null;
