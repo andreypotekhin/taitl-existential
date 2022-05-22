@@ -1,7 +1,9 @@
 package com.taitl.existential;
 
-import com.taitl.existential.event.base.Event;
 import java.util.Set;
+
+import com.taitl.existential.event.types.Event;
+
 import java.util.ArrayList;
 
 /**

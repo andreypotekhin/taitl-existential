@@ -1,14 +1,15 @@
 package com.taitl.existential.expressions;
 
+import com.taitl.existential.rules.Rule;
 import com.taitl.existential.exceptions.ExistentialException;
 
 /**
- * Base interface for validation expressions, such as All<T>, Exists<T>.
+ * Base interface for entity expressions, such as All<T>.
  *
  * @param <T>
- *            Type of event
+ *            Type of entity
  */
-public interface Expression<T>
+public interface Expression<T> extends Rule<T>
 {
     Object evaluate(T t) throws ExistentialException;
 }

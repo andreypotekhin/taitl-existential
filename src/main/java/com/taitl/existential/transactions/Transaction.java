@@ -1,11 +1,17 @@
 package com.taitl.existential.transactions;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.naming.Context;
 
+import com.taitl.existential.invariants.Invariants;
 import com.taitl.existential.EventSplitter;
 import com.taitl.existential.constants.Strings;
+import com.taitl.existential.expressions.Expression;
+import com.taitl.existential.handler.types.EventHandler;
+import com.taitl.existential.handlers.OnBegin;
+import com.taitl.existential.helper.Args;
 import com.taitl.existential.indexes.Index;
 
 /**
@@ -54,38 +60,104 @@ import com.taitl.existential.indexes.Index;
  */
 public class Transaction
 {
-	public final UUID id;
-	public final String op;
+    public final UUID id;
+    public final String op;
 
-	public TransactionIndexes indexes = new TransactionIndexes(this);
-	public TransactionEvents events = new TransactionEvents(this);
+    public TransactionIndexes indexes = new TransactionIndexes(this);
+    public TransactionEvents events = new TransactionEvents(this);
 
-	public Transaction(String op)
-	{
-		if (op == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_OP);
-		}
-		this.op = op;
-		this.id = generateId();
-	}
+    public Transaction(String op)
+    {
+        if (op == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_OP);
+        }
+        this.op = op;
+        this.id = generateId();
+    }
 
-	public <K, V> Index<K, V> index(String name)
-	{
-		if (name == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_NAME);
-		}
-		return indexes.get(name);
-	}
+    public <K, V> Index<K, V> index(String name)
+    {
+        if (name == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_NAME);
+        }
+        return indexes.get(name);
+    }
 
-	protected UUID generateId()
-	{
-		return UUID.randomUUID();
-	}
+    protected UUID generateId()
+    {
+        return UUID.randomUUID();
+    }
 
-	/*
-	 * TODO: require(Axioms<T> axioms){ ... axioms.tran = this; ... } intent(Intents<T> intents) { ... intents.tran =
-	 * this; ... }
-	 */
+    public <T> Transaction add(EventHandler<T> eh)
+    {
+        Args.cool(eh, "eh");
+        // TODO: add event handler to transaction and/or its context
+        // context.add(eh);
+        return this;
+    }
+
+    public <T> Transaction add(Expression<T> expr)
+    {
+        Args.cool(expr, "expr");
+        // TODO: add expression to transaction and/or its context
+        // context.add(expr);
+        return this;
+    }
+
+    /* Transaction-related methods */
+
+    /**
+     * Add OnBegin<Transaction> transaction handler.
+     *
+     * Example:
+     * Declare transaction member (curPilot) and initialize it in the
+     * beginning of transaction:
+     *    Contexts.get("/app/flight_school/pilots/update")
+     *        .transaction(() -> new Transaction(){
+     *          Pilot curPilot;
+     * 		 	{
+     * 			begin(params -> curPilot = (Pilot)params.get("pilot"))
+     * 			require(...);
+     * 			intents(...);
+     * 			}});
+     *
+     * @param action
+     * @return This object
+     */
+    public Transaction begin(Consumer<? super Transaction> action)
+    {
+        Args.cool(action, "action");
+        return add(new OnBegin<Transaction>(action));
+    }
+
+    /**
+     * Set up invariants/rules to be enforced on this transaction's business operation (Context).
+     *
+     * <pre>{@code
+     * Contexts.get("/app/flight_school")
+     *     .transaction(() -> new Transaction(){{
+     * 	      require(new Invariants<Pilot>() {{
+     *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
+     *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
+     * 	      }})
+     * 	      require(new Invariants< Cloud>() {{
+     *                all(cloud -> cloud.linings.contains(SILVER), "Every cloud has a silver lining");
+     * 	      }})
+     * }</pre>
+     *
+     * @param <T> Type parameter
+     * @param invariants Invariants (rules) that must be upkept
+     */
+    public <T> void require(Invariants<T> invariants)
+    {
+        invariants.setTransaction(this);
+        // TODO: store invariants so that parent Context could add them to itself
+    }
+
+    /**
+     * TODO: intents(Intents<T> intents) { ...
+     * intents.tran = this; ... }
+     */
 }

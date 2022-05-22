@@ -6,19 +6,19 @@ import java.util.Set;
 import javax.naming.Context;
 
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.event.base.BiEvent;
-import com.taitl.existential.event.base.EntityEvent;
-import com.taitl.existential.event.base.Event;
-import com.taitl.existential.event.type.Change;
-import com.taitl.existential.event.type.Create;
-import com.taitl.existential.event.type.Delete;
-import com.taitl.existential.event.type.Mutate;
-import com.taitl.existential.event.type.Read;
-import com.taitl.existential.event.type.ReadAndLock;
-import com.taitl.existential.event.type.Transit;
-import com.taitl.existential.event.type.Update;
-import com.taitl.existential.event.type.Upsert;
-import com.taitl.existential.event.type.Write;
+import com.taitl.existential.event.types.BiEvent;
+import com.taitl.existential.event.types.EntityEvent;
+import com.taitl.existential.event.types.Event;
+import com.taitl.existential.events.Change;
+import com.taitl.existential.events.Create;
+import com.taitl.existential.events.Delete;
+import com.taitl.existential.events.Mutate;
+import com.taitl.existential.events.Read;
+import com.taitl.existential.events.ReadAndLock;
+import com.taitl.existential.events.Transit;
+import com.taitl.existential.events.Update;
+import com.taitl.existential.events.Upsert;
+import com.taitl.existential.events.Write;
 import com.taitl.existential.transactions.Transaction;
 
 /**
@@ -26,13 +26,13 @@ import com.taitl.existential.transactions.Transaction;
  * of an event may be processed/handled separately.
  * <p>
  * For example, splits single transition {@code Transit<House>} into the following event set:<br>
- * {@code
+ * <pre>{@code
  *   On<House>
  *   Mutate<House>
  *   Transit<House>
  * }
- * <p>
- * Next, depending on type of transition (Create, Update, Delete), emits the following events :<br>
+ * </pre><p>
+ * Further, depending on type of transition (Create, Update, Delete), emits the following events :<br>
  *   Created: {@code Create<House>, Write<House>, Upsert<House> }<br>
  *   Updated: {@code Update<House>, Write<House>, Upsert<House>, Change<House>, Mutate<House> }<br>
  *   Deleted: {@code Delete<House>, Write<House>, Change<House>,  }<br>
@@ -79,82 +79,82 @@ import com.taitl.existential.transactions.Transaction;
  */
 public class EventSplitter
 {
-	public <T> Set<Event<T>> split(Event<T> event)
-	{
-		if (event == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_EVENT);
-		}
-		Set<Event<T>> set = new LinkedHashSet<>();
-		set.add(event);
-		if (event instanceof Transit)
-		{
-			splitTransit((Transit<T>) event, set);
-		}
-		else if (event instanceof Mutate)
-		{
-			throw new IllegalArgumentException(Strings.ARG_NEED_TRANSIT_EVENT);
-		}
-		// TODO: Mutate
-		// TODO: ReadAndLock
-		// TODO: other
+    public <T> Set<Event<T>> split(Event<T> event)
+    {
+        if (event == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_EVENT);
+        }
+        Set<Event<T>> set = new LinkedHashSet<>();
+        set.add(event);
+        if (event instanceof Transit)
+        {
+            splitTransit((Transit<T>) event, set);
+        }
+        else if (event instanceof Mutate)
+        {
+            throw new IllegalArgumentException(Strings.ARG_NEED_TRANSIT_EVENT);
+        }
+        // TODO: Mutate
+        // TODO: ReadAndLock
+        // TODO: other
 
-		return set;
-	}
+        return set;
+    }
 
-	protected <T> void splitTransit(Transit<T> transit, Set<Event<T>> set)
-	{
-		if (transit == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_PERM_KEY);
-		}
-		if (set == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_SET);
-		}
-		// Transit -> EntityEvent, Mutate, Transit
-		if (transit.t0 != null && transit.t1 != null)
-		{
-			set.add(new Mutate<>(transit.t0, transit.t1));
-		}
-		if (transit.t1 != null)
-		{
-			set.add(new EntityEvent<>(transit.t1));
-		}
-		// Create
-		if (transit.t0 == null)
-		{
-			set.add(new Create<>(transit.t1));
-			set.add(new Upsert<>(transit.t1));
-			set.add(new Write<>(transit.t1));
-		}
-		// Update
-		if (transit.t0 != null && transit.t1 != null)
-		{
-			set.add(new Change<>(transit.t0));
-			set.add(new Update<>(transit.t1));
-			set.add(new Upsert<>(transit.t1));
-			set.add(new Write<>(transit.t1));
-		}
-		// Delete
-		if (transit.t1 == null)
-		{
-			set.add(new Change<>(transit.t0));
-			set.add(new Delete<>(transit.t0));
-			set.add(new Write<>(transit.t0));
-		}
-	}
+    protected <T> void splitTransit(Transit<T> transit, Set<Event<T>> set)
+    {
+        if (transit == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_PERM_KEY);
+        }
+        if (set == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_SET);
+        }
+        // Transit -> EntityEvent, Mutate, Transit
+        if (transit.t0 != null && transit.t1 != null)
+        {
+            set.add(new Mutate<>(transit.t0, transit.t1));
+        }
+        if (transit.t1 != null)
+        {
+            set.add(new EntityEvent<>(transit.t1));
+        }
+        // Create
+        if (transit.t0 == null)
+        {
+            set.add(new Create<>(transit.t1));
+            set.add(new Upsert<>(transit.t1));
+            set.add(new Write<>(transit.t1));
+        }
+        // Update
+        if (transit.t0 != null && transit.t1 != null)
+        {
+            set.add(new Change<>(transit.t0));
+            set.add(new Update<>(transit.t1));
+            set.add(new Upsert<>(transit.t1));
+            set.add(new Write<>(transit.t1));
+        }
+        // Delete
+        if (transit.t1 == null)
+        {
+            set.add(new Change<>(transit.t0));
+            set.add(new Delete<>(transit.t0));
+            set.add(new Write<>(transit.t0));
+        }
+    }
 
-	protected <T> void splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> set)
-	{
-		if (event == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_EVENT);
-		}
-		if (set == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_SET);
-		}
-		set.add(new Read<>(event.t));
-	}
+    protected <T> void splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> set)
+    {
+        if (event == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_EVENT);
+        }
+        if (set == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_SET);
+        }
+        set.add(new Read<>(event.t));
+    }
 }

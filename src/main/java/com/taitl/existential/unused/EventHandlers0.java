@@ -3,9 +3,9 @@ package com.taitl.existential.unused;
 import java.util.Set;
 
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.event.base.BiEvent;
-import com.taitl.existential.handler.base.EventHandlerWithSideEffects;
-import com.taitl.existential.utilities.Multimap;
+import com.taitl.existential.event.types.BiEvent;
+import com.taitl.existential.handler.types.EventHandlerWithSideEffects;
+import com.taitl.existential.helper.Multimap;
 
 /**
  * Multimap mapping event key (Event E<T> + Type) to a set of corresponding event handlers: Set<On[E]<T>>

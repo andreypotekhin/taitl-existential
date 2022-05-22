@@ -3,6 +3,7 @@ package com.taitl.existential;
 /**
  * Main entry point into Existential library. See documentation on how to use.
  * <p>
+ *
  * Documentation:
  *   https://github.com/andreypotekhin/taitl-existential
  *
@@ -11,11 +12,11 @@ package com.taitl.existential;
  * @see ExistentialTransactions
  * @see ExistentialEvents
  */
-public class Existential
+public final class Existential
 {
-	public static Existential ex = new Existential();
-	private ExistentialTransactions transactions = new ExistentialTransactions();
-	private ExistentialEvents events = new ExistentialEvents();
-	// TODO: ExistentialBehavior flags
-	// TODO: ExistentialContexts contexts
+    public static Existential ex = new Existential();
+    public static ExistentialTransactions transactions = new ExistentialTransactions();
+    public static ExistentialEvents events = new ExistentialEvents();
+    public static ExistentialFlags flags = new ExistentialFlags();
+    // TODO: ExistentialContexts contexts
 }

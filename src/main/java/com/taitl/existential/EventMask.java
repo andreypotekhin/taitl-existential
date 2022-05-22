@@ -4,15 +4,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.event.base.BiEvent;
-import com.taitl.existential.event.base.Event;
-import com.taitl.existential.event.type.Create;
-import com.taitl.existential.event.type.Delete;
-import com.taitl.existential.event.type.Mutate;
-import com.taitl.existential.event.type.Read;
-import com.taitl.existential.event.type.Transit;
-import com.taitl.existential.event.type.Update;
-import com.taitl.existential.event.type.Upsert;
+import com.taitl.existential.event.types.BiEvent;
+import com.taitl.existential.event.types.Event;
+import com.taitl.existential.events.Create;
+import com.taitl.existential.events.Delete;
+import com.taitl.existential.events.Mutate;
+import com.taitl.existential.events.Read;
+import com.taitl.existential.events.Transit;
+import com.taitl.existential.events.Update;
+import com.taitl.existential.events.Upsert;
 import com.taitl.existential.keys.EventKey;
 import com.taitl.existential.keys.TypeKey;
 

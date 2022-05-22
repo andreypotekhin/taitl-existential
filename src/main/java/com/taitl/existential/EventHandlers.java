@@ -5,11 +5,11 @@ import static com.taitl.existential.constants.Strings.ARG_VALUE;
 
 import java.util.Set;
 
-import com.taitl.existential.handler.base.BiEventHandlerWithSideEffects;
-import com.taitl.existential.handler.base.EventHandler;
-import com.taitl.existential.handler.base.EventHandlerWithSideEffects;
+import com.taitl.existential.handler.types.BiEventHandlerWithSideEffects;
+import com.taitl.existential.handler.types.EventHandler;
+import com.taitl.existential.handler.types.EventHandlerWithSideEffects;
+import com.taitl.existential.helper.Multimap;
 import com.taitl.existential.keys.TypeKey;
-import com.taitl.existential.utilities.Multimap;
 
 /**
  * A multimap mapping of a type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
