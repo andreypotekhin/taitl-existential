@@ -1,34 +1,50 @@
 package com.taitl.existential;
 
+import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.exceptions.NotFoundException;
+import com.taitl.existential.helper.Args;
+import com.taitl.existential.op.trans.OpTran;
+import com.taitl.existential.op.trans.TransactionRegistry;
+
 public class ExistentialTransactions
 {
-    public String begin(String op)
-    {
-        // Create transaction object
-        // Assign unique ID
-        // Add to TranactionRegistry
-        return "DUMMY";
-    }
+	protected TransactionRegistry registry = new TransactionRegistry();
 
-    public void commit(String tranID)
-    {
-        // TODO
-        // Find transaction object in TranactionRegistry
-        // Care for scenarios when tran not found
-        // Commit transaction - evaluate validation expressions
-        // Close transaction, remove from registry
-    }
+	public String begin(String op) throws ExistentialException
+	{
+		Args.cool(op, "op");
+		OpTran opTran = registry.create(op);
+		return opTran.id.toString();
+	}
 
-    public void checkpoint(String tranID)
-    {
-        // same as commit()
-    }
+	public void commit(String tranID) throws ExistentialException
+	{
+		Args.cool(tranID, "tranID");
+		OpTran opTran = registry.get(tranID);
+		if (opTran == null)
+		{
+			throw new NotFoundException("Op transaction not found, id=" + tranID);
+		}
+		// TODO
 
-    public void rollback(String tranID)
-    {
-        // TODO
-        // Find transaction object in TranactionRegistry
-        // Care for scenarios when tran not found
-        // Close transaction, remove from registry
-    }
+		// Commit transactions - run handlers and evaluate validation expressions
+		// Close transactions, remove op transaction from registry
+	}
+
+	public void checkpoint(String tranID) throws ExistentialException
+	{
+		Args.cool(tranID, "tranID");
+		// same as commit()
+	}
+
+	public void rollback(String tranID) throws ExistentialException
+	{
+		Args.cool(tranID, "tranID");
+		// TODO
+		// Find op transaction in TranactionRegistry
+		// Care for scenarios when tran is not found
+		// Close transactions, remove op transaction from registry
+	}
+
+	// cleanup: Close transactions, remove op transaction from registry
 }

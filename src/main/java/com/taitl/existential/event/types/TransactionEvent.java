@@ -9,15 +9,15 @@ import com.taitl.existential.transactions.Transaction;
  *
  * @author Andrey Potekhin
  *
- * @param <Tr> Transaction type
+ * @param <T> Transaction type
  *
  * @see BeginTran<Tr>
  */
-public class TransactionEvent<Tr extends Transaction> implements Event<Tr>
+public class TransactionEvent<T extends Transaction> implements Event<T>
 {
-    public Tr tr;
+    public T tr;
 
-    public TransactionEvent(Tr tr)
+    public TransactionEvent(T tr)
     {
         if (tr == null)
         {

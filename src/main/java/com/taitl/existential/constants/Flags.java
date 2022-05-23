@@ -6,7 +6,7 @@ public class Flags
     public static final int FLAG_2 = 2;
     public static final int FLAG_3 = 4;
     public static final int FLAG_4 = 8;
-    public static final int FLAG_5 = 16;
+    public static final int BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS = 16;
     public static final int FLAG_6 = 32;
     public static final int FLAG_7 = 64;
     public static final int FLAG_8 = 128;

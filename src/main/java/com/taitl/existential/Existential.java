@@ -11,12 +11,16 @@ package com.taitl.existential;
  *
  * @see ExistentialTransactions
  * @see ExistentialEvents
+ * @see ExistentialFlags
+ * @see ExistentialContexts
+ * @see ExistentialAccess
  */
 public final class Existential
 {
-    public static Existential ex = new Existential();
-    public static ExistentialTransactions transactions = new ExistentialTransactions();
-    public static ExistentialEvents events = new ExistentialEvents();
-    public static ExistentialFlags flags = new ExistentialFlags();
-    // TODO: ExistentialContexts contexts
+	public static Existential ex = new Existential();
+	public static ExistentialTransactions transactions = new ExistentialTransactions();
+	public static ExistentialEvents events = new ExistentialEvents();
+	public static ExistentialFlags flags = new ExistentialFlags();
+	public static ExistentialContexts contexts = new ExistentialContexts();
+	public static ExistentialAccess access = new ExistentialAccess();
 }
