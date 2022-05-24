@@ -2,13 +2,11 @@
 
 Existential is a library allowing for use certain math-like notations to describe application logic. It implements two commonly used first-order logic quantifiers, ∀ ("for any") and ∃ ("exists"), allowing to create expressions about application entities (elements of the domain), and to guarantee that such expressions always hold true (propositions). For instance, the library allows to create constraints on a class field, constrains spanning multiple fields, rules for how object is allowed to change over time, and also govern relationships between entities of different types. Performance is achieved by only evaluating the expressions at specific points in time (and code), such as a transaction boundary, disregarding any repeat changes that may be happening to the entities between such points. Memory efficiency is achieved by using static and singleton objects where possible for storing the expressions, which lets reusing expression objects for multiple entities.
 
-Existential does not aim to provide means for derivation of new truths from what is already established; it is not aimed to automated proofing of theorems, nor for solving logical equations. It lets establish certain truths about program entities, and guarantees program failure (such as an exception) in case these truths are violated. It can be said that Existential allows for establishing a set of axioms about application entities.
-
 ## What it is not
 
-Existential does not aim to provide means for derivation of new truths from what is already established; it is not aimed to automated proofing of theorems, nor for solving logical equations. It lets establish certain truths about program entities, and guarantees program failure (such as an exception) in case these truths are violated. It can be said that Existential allows for establishing a set of rules about application entities.
+Existential does not aim to provide means for derivation of new truths from what is already established; it is not aimed to automated proofing of theorems, nor for solving logical equations. It lets establish certain truths about program entities, and guarantees program failure (such as an exception) in case these truths are violated.
 
-This library is not aiming to implement any non-trivial set of math logic notations. Rather, it implements a limited set of notations to provide expression language for reasoning about application entities, while focusing on performance and memory efficiency.
+This library is not aiming to implement any non-trivial set of mathematical logic notations. Rather, it provides a limited set of notations to allow for reasoning about application entities, and focuses on performance and memory efficiency.
 
 ## Formalisms
 
