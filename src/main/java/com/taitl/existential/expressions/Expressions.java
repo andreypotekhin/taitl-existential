@@ -1,6 +1,5 @@
-package com.taitl.existential.contexts;
+package com.taitl.existential.expressions;
 
-import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.helper.Args;
 
 /**

@@ -3,24 +3,25 @@ package com.taitl.existential;
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.NotFoundException;
 import com.taitl.existential.helper.Args;
-import com.taitl.existential.op.trans.OpTran;
-import com.taitl.existential.op.trans.TransactionRegistry;
+import com.taitl.existential.transactions.OpTransaction;
+import com.taitl.existential.transactions.OpTransactionRegistry;
 
 public class ExistentialTransactions
 {
-	protected TransactionRegistry registry = new TransactionRegistry();
+	protected OpTransactionRegistry registry = new OpTransactionRegistry();
 
 	public String begin(String op) throws ExistentialException
 	{
 		Args.cool(op, "op");
-		OpTran opTran = registry.create(op);
+		Existential.contexts.finalizeSetup();
+		OpTransaction opTran = registry.create(op);
 		return opTran.id.toString();
 	}
 
 	public void commit(String tranID) throws ExistentialException
 	{
 		Args.cool(tranID, "tranID");
-		OpTran opTran = registry.get(tranID);
+		OpTransaction opTran = registry.get(tranID);
 		if (opTran == null)
 		{
 			throw new NotFoundException("Op transaction not found, id=" + tranID);

@@ -23,4 +23,5 @@ public final class Existential
 	public static ExistentialFlags flags = new ExistentialFlags();
 	public static ExistentialContexts contexts = new ExistentialContexts();
 	public static ExistentialAccess access = new ExistentialAccess();
+	protected boolean finalized = false;
 }

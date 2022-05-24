@@ -11,19 +11,26 @@ import com.taitl.existential.helper.Args;
  */
 public class Instructions
 {
-    protected List<EventHandler<?>> instructions = new ArrayList<>();
+    protected List<Instruction<?>> instructions = new ArrayList<>();
+
+    public <T> Instructions add(Instruction<T> instruction)
+    {
+        Args.cool(instruction, "instruction");
+        instructions.add(instruction);
+        return this;
+    }
 
     public <T> Instructions add(EventHandler<T> eh)
     {
         Args.cool(eh, "eh");
-        instructions.add(eh);
+        instructions.add(new Instruction<>(eh));
         return this;
     }
 
     public <T> Instructions addAll(Instructions other)
     {
         Args.cool(other, "other");
-        for (EventHandler<?> instruction : other.instructions)
+        for (Instruction<?> instruction : other.instructions)
         {
             instructions.add(instruction);
         }

@@ -85,8 +85,6 @@ public class Exists<V, K> implements Predicate<Transaction>
         this.vbipredicate = bipredicate;
     }
 
-    // TODO: add constructors on Stream<V>
-
     public boolean test(Transaction tran)
     {
         Args.cool(tran, "tran");

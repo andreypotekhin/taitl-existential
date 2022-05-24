@@ -5,16 +5,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import com.taitl.existential.Configurable;
 import com.taitl.existential.EventSplitter;
 import com.taitl.existential.expressions.Expression;
+import com.taitl.existential.expressions.Expressions;
 import com.taitl.existential.handler.types.EventHandler;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.instructions.Instructions;
+import com.taitl.existential.invariants.Invariants;
 import com.taitl.existential.rules.Rule;
 import com.taitl.existential.transactions.Transaction;
 
-public class Context
+public class Context implements Configurable
 {
 	/**
 	 * Context name, e.g. "/app/flights", "/app/flights/update", "*update"
@@ -33,17 +36,17 @@ public class Context
 	 * Instructions - event handlers. Includes all event handlers (rules)
 	 * defined in this context.
 	 */
-	Instructions instructions = new Instructions();
+	protected Instructions instructions = new Instructions();
 
 	/**
 	 * Expressions, such as All<T>, defined in this context.
 	 */
-	Expressions expressions = new Expressions();
+	protected Expressions expressions = new Expressions();
 
 	/**
 	 * Factory for Transaction.
 	 */
-	List<Supplier<? extends Transaction>> transactionFactories = new ArrayList<>(1);
+	protected List<Supplier<? extends Transaction>> transactionFactories = new ArrayList<>(1);
 	{
 		transactionFactories.add(() -> new Transaction());
 	}
@@ -51,7 +54,8 @@ public class Context
 	/**
 	 * Factory for EventSplitter.
 	 */
-	Supplier<? extends EventSplitter> eventSplitterFactory = Contexts.eventSplitterFactory;
+	protected Supplier<? extends EventSplitter> eventSplitterFactory =
+			Contexts.eventSplitterFactory;
 
 	// Set<String> initializedFrom = new HashSet<>();
 
@@ -126,7 +130,7 @@ public class Context
 	 */
 	public List<Transaction> createTransactions()
 	{
-		State.verify(!transactionFactories.isEmpty(), "transactionFactories size must not be 0");
+		State.verify(!transactionFactories.isEmpty(), "transactionFactories must not be empty");
 		List<Transaction> result = new ArrayList<>(transactionFactories.size());
 		for (Supplier<? extends Transaction> supplier : transactionFactories)
 		{
@@ -136,6 +140,8 @@ public class Context
 		}
 		return result;
 	}
+
+	/* Methods for Configurable interface */
 
 	public <T> Context add(EventHandler<T> eh)
 	{
@@ -150,6 +156,41 @@ public class Context
 		expressions.add(expr);
 		return this;
 	}
+
+	public Context add(Context other)
+	{
+		Args.cool(other, "other");
+		instructions.addAll(other.instructions);
+		expressions.addAll(other.expressions);
+		return this;
+	}
+
+	/**
+	 * Set up invariants/rules to be enforced for business operation defined by this context.
+	 *
+	 * <pre>{@code
+	 * Contexts.get("/app/flight_school")
+	 *     .context(() -> new Context(){{
+	 * 	      require(new Invariants<Pilot>() {{
+	 *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
+	 *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
+	 * 	      }})
+	 * 	      require(new Invariants< Cloud>() {{
+	 *                all(cloud -> cloud.linings.contains(SILVER), "Every cloud has a silver lining");
+	 * 	      }})
+	 * }</pre>
+	 *
+	 * @param <T> Type parameter
+	 * @param invariants Invariants (rules) that must be upkept
+	 */
+	public <T> void require(Invariants<T> invariants)
+	{
+		Args.cool(invariants, "invariants");
+		instructions.addAll(invariants.instructions);
+		expressions.addAll(invariants.expressions);
+	}
+
+	/* Parent context */
 
 	public boolean hasParent()
 	{

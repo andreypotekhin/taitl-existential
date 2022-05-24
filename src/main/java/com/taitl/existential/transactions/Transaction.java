@@ -3,18 +3,19 @@ package com.taitl.existential.transactions;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import com.taitl.existential.invariants.Invariants;
+import com.taitl.existential.Configurable;
 import com.taitl.existential.EventSplitter;
 import com.taitl.existential.constants.Strings;
 import com.taitl.existential.contexts.Context;
-import com.taitl.existential.contexts.Expressions;
-import com.taitl.existential.instructions.Instructions;
 import com.taitl.existential.expressions.Expression;
+import com.taitl.existential.expressions.Expressions;
 import com.taitl.existential.handler.types.EventHandler;
 import com.taitl.existential.handlers.OnBegin;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.indexes.Index;
+import com.taitl.existential.instructions.Instructions;
+import com.taitl.existential.invariants.Invariants;
 
 /**
  * Implements a transaction object - a unit of processing within a context.
@@ -60,7 +61,7 @@ import com.taitl.existential.indexes.Index;
  * @see TransactionEvents
  * @see EventSplitter
  */
-public class Transaction
+public class Transaction implements Configurable
 {
 	public final UUID id;
 	public String op;
@@ -183,13 +184,17 @@ public class Transaction
 	public <T> void require(Invariants<T> invariants)
 	{
 		Args.cool(invariants, "invariants");
-		/*
-		 * if (!invariants.initialized()) { invariants.setTransaction(this); } else {
-		 * Args.require(invariants.getTransaction() == this,
-		 * "Argument 'invariants' must belong to same transaction");
-		 *
-		 * }
-		 */
+		Transaction tr = invariants.getTransaction();
+
+		if (tr == null)
+		{
+			invariants.setTransaction(this);
+		}
+		else
+		{
+			Args.require(tr == this, "Argument 'invariants' must belong to same transaction");
+		}
+
 		instructions.addAll(invariants.instructions);
 		expressions.addAll(invariants.expressions);
 	}
