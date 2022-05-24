@@ -25,52 +25,52 @@ In the further examples, the *new* keyword is dropped in front of All and Exists
 
 For any object of type X, a predicate (boolean expression) is always true
 
-∀ x ∈ X ⊤(x)                                           All<X>(x -> *predicate(x)*)
+∀ x ∈ X ⊤(x)                                           All\<X\>(x -> *predicate(x)*)
 
 Here, *predicate*() is any boolean function, for example (x != null), x.hasParent() and the like.
 
 For any object of type X which satisfies some condition, a predicate is always true
 
-∀ x ∈ X | *condition(x)* ⊤(x)                     All<X>(x -> *condition(x), x* -> *predicate(x)*)
+∀ x ∈ X | *condition(x)* ⊤(x)                     All\<X\>(x -> *condition(x), x* -> *predicate(x)*)
 
 For any object of type X which has been changed during business transaction, the predicate is always true
 
-∀ x0 ∈ X0, x1 ∈ X1 ⊤(x0, x1)                 All<Mutation<X>>((x0, x1) -> *predicate(x0, x1)*)
+∀ x0 ∈ X0, x1 ∈ X1 ⊤(x0, x1)                 All\<Mutation\<X\>\>((x0, x1) -> *predicate(x0, x1)*)
 
 Here, X0 is the data at the start of business transaction (initial state); X1 is the data at the end of transaction (result state). x0 is entity's initial state, x1 is its final (before save) state. Mutation<X> indicates that we are describing a change of an entity of type X. If Mutation is of type Transition, then one of x0, x1 may be null. In such case, if x0 is null, this indicates x is a new object created as the part of transaction. If x1 is null, it indicates x is the object being deleted as part of transaction.
 
 Same as above when x0, x1 must also satisfy some condition:
 
-∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ⊤(x0, x1)  All<Mutation<X>>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> *predicate(x0, x1)*)
+∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ⊤(x0, x1)  All\<Mutation\<X\>\>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> *predicate(x0, x1)*)
 
 ## Establishing Existence
 
 An object of type X exists for which a predicate is true
 
-∃ x ∈ X ⊤(x)                                              Exists<X>(coll, *predicate(x*))
+∃ x ∈ X ⊤(x)                                              Exists\<X\>(coll, *predicate(x*))
 
 Here *coll* is a collection of type X where we should look for objects to establish existence. There should be at least one object in this collection which satisfies the predicate. This scans through whole collection, so we'll describe more performant approach next.
 
 More efficiently, use an *index* to determine existence: an object of type X of key k exists in an index where predicate is true
 
-∃ x ∈ X, ⊤(x)                                              Exists<X>(index, key(x), *predicate(x*))
+∃ x ∈ X, ⊤(x)                                              Exists\<X\>(index, key(x), *predicate(x*))
 
 This uses an *index* for performance, instead of scanning through collection.
 
 For any object of type X an object of type Y exists where predicate is true
 
-∀ x ∈ X ∃ y ∈ Y ⊤(y, x)                              All<X>(x -> new Exists<Y>(coll, *predicate(y, x*)))
+∀ x ∈ X ∃ y ∈ Y ⊤(y, x)                              All\<X\>(x -> new Exists\<Y\>(coll, *predicate(y, x*)))
 
 Here c*oll* here is a collection of type Y where we should look to find at least one object that satisfies the predicate.
 
-For any object of type X which satisifies a condition an object of type Y exists for which predicate is true
+For any object of type X which satisfies a condition an object of type Y exists for which predicate is true
 
-∀ x ∈ X | *condition(x)* ∃ y ∈ Y ⊤(y, x)         All<X>(x -> *condition(x), x* -> new Exists<Y>(coll, *predicate(y, x*)))
+∀ x ∈ X | *condition(x)* ∃ y ∈ Y ⊤(y, x)         All\<X\>(x -> *condition(x), x* -> new Exists\<Y\>(coll, *predicate(y, x*)))
 
 For any object of type X which has been changed, an object of type Y exists for which predicate is true
 
-∀ x0 ∈ X0, x1 ∈ X1 ∃ y ∈ Y ⊤(y, t0, t1)      All<Mutation<X>((x0, x1) -> new Exists<Y>(coll, *predicate(y, x0, x1*)))
+∀ x0 ∈ X0, x1 ∈ X1 ∃ y ∈ Y ⊤(y, t0, t1)      All\<Mutation\<X\>\>((x0, x1) -> new Exists\<Y\>(coll, *predicate(y, x0, x1*)))
 
 Same as above when x0, x1 must also satisfy some condition
 
-∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ∃ y ∈ Y ⊤(y, x0, x1)   All<Mutation<X>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> new Exists<Y>(coll, *predicate(p, x0, x1*)))
+∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ∃ y ∈ Y ⊤(y, x0, x1)   All\<Mutation\<X\>\>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> new Exists\<Y\>(coll, *predicate(p, x0, x1*)))
