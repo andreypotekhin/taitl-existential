@@ -8,41 +8,40 @@ Existential does not aim to provide means for derivation of new truths from what
 
 Existential does not aim to provide means for derivation of new truths from what is already established; it is not aimed to automated proofing of theorems, nor for solving logical equations. It lets establish certain truths about program entities, and guarantees program failure (such as an exception) in case these truths are violated. It can be said that Existential allows for establishing a set of rules about application entities.
 
-## Out of Scope
-
 This library is not aiming to implement any non-trivial set of math logic notations. Rather, it implements a limited set of notations to provide expression language for reasoning about application entities, while focusing on performance and memory efficiency.
 
 ## Formalisms
 
-∀ == "For Any" (aka universal quantification) 
-∃ == "Exists" (aka existential quantification) 
-∈ == "Element of" (member of a set) 
-| = "Such as" (aka set comprehension) 
-P == logical predicate (boolean expression) 
-⊤ == "Truth", a logical predicate (boolean expression) always rendering true 
-In the further examples, the *new* keyword is dropped in front of Any for brevity. Java/Groovy must use new to create objects. Other languages (Kotlin, Go) can do without *new*. 
+∀ == "For Any" (aka universal quantification)  
+∃ == "Exists" (aka existential quantification)  
+∈ == "Element of" (member of a set)  
+| = "Such as" (aka set comprehension)   
+P == logical predicate (boolean expression)  
+⊤ == "Truth", a logical predicate (boolean expression) always rendering true  
+
+In the further examples, the *new* keyword is dropped in front of All and Exists for brevity. Java/Groovy must use *new* to create objects. Other languages (Kotlin, Go) can do without *new*. 
 
 ## Establishing Truth
 
 For any object of type X, a predicate (boolean expression) is always true
 
-∀ x ∈ X ⊤(x)                                           **All<X>(x -> *predicate(x)*)
+∀ x ∈ X ⊤(x)                                           All<X>(x -> *predicate(x)*)
 
 Here, *predicate*() is any boolean function, for example (x != null), x.hasParent() and the like.
 
 For any object of type X which satisfies some condition, a predicate is always true
 
-∀ x ∈ X | *condition(x)* ⊤(x)                     **All<X>(x -> *condition(x), x* -> *predicate(x)*)
+∀ x ∈ X | *condition(x)* ⊤(x)                     All<X>(x -> *condition(x), x* -> *predicate(x)*)
 
 For any object of type X which has been changed during business transaction, the predicate is always true
 
-∀ x0 ∈ X0, x1 ∈ X1 ⊤(x0, x1)                 **All<Mutation<X>>((x0, x1) -> *predicate(x0, x1)*)
+∀ x0 ∈ X0, x1 ∈ X1 ⊤(x0, x1)                 All<Mutation<X>>((x0, x1) -> *predicate(x0, x1)*)
 
 Here, X0 is the data at the start of business transaction (initial state); X1 is the data at the end of transaction (result state). x0 is entity's initial state, x1 is its final (before save) state. Mutation<X> indicates that we are describing a change of an entity of type X. If Mutation is of type Transition, then one of x0, x1 may be null. In such case, if x0 is null, this indicates x is a new object created as the part of transaction. If x1 is null, it indicates x is the object being deleted as part of transaction.
 
 Same as above when x0, x1 must also satisfy some condition:
 
-∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ⊤(x0, x1) ** All<Mutation<X>>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> *predicate(x0, x1)*)
+∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ⊤(x0, x1)  All<Mutation<X>>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> *predicate(x0, x1)*)
 
 ## Establishing Existence
 
