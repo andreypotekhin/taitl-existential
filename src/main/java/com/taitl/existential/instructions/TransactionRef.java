@@ -13,13 +13,13 @@ import com.taitl.existential.transactions.Transaction;
  */
 public class TransactionRef<T> extends Instruction<T>
 {
-	protected Transaction tran;
+    protected Transaction tran;
 
-	public TransactionRef(Transaction tran)
-	{
-		super();
-		Args.cool(tran, "tran");
-		this.tran = tran;
-		this.type = InstructionType.REF;
-	}
+    public TransactionRef(Transaction tran)
+    {
+        super();
+        Args.cool(tran, "tran");
+        this.tran = tran;
+        this.type = InstructionType.REF;
+    }
 }

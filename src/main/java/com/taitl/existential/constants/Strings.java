@@ -31,4 +31,9 @@ public class Strings
     public static final String ARG_CHECK = "Argument 'check' should not be null";
     public static final String ARG_MATCH = "Argument 'match' must not be null";
     public static final String ARG_NEED_TRANSIT_EVENT = "Please specify event of type Transit<>";
+    public static final String ARG_OP_SINGLE_SLASH = "Argument 'op' cannot be a signle slash ('/')";
+    public static final String ARG_OP_END_SLASH = "Argument 'op' cannot end with a slash ('/')";
+    public static final String ARG_OP_NO_WILDCARDS = "Argument 'op' cannot have wildcards ('*')";
+    public static final String SLASH = "/";
+    public static final String WILDCARD = "*";
 }

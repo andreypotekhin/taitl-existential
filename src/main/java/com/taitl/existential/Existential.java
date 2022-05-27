@@ -17,11 +17,11 @@ package com.taitl.existential;
  */
 public final class Existential
 {
-	public static Existential ex = new Existential();
-	public static ExistentialTransactions transactions = new ExistentialTransactions();
-	public static ExistentialEvents events = new ExistentialEvents();
-	public static ExistentialFlags flags = new ExistentialFlags();
-	public static ExistentialContexts contexts = new ExistentialContexts();
-	public static ExistentialAccess access = new ExistentialAccess();
-	protected boolean finalized = false;
+    public static Existential ex = new Existential();
+    public static ExistentialTransactions transactions = new ExistentialTransactions();
+    public static ExistentialEvents events = new ExistentialEvents();
+    public static ExistentialFlags flags = new ExistentialFlags();
+    public static ExistentialContexts contexts = new ExistentialContexts();
+    public static ExistentialAccess access = new ExistentialAccess();
+    protected boolean finalized = false;
 }

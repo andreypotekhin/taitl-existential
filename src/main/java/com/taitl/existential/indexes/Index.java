@@ -160,7 +160,16 @@ public class Index<K, V>
         return storage.remove(k, match);
     }
 
-    public void changeKey(K k0, K k1, V v)
+    /**
+     * Reinsert a value under a different key.
+     * Used when key is a field in value object, and that
+     * field has updated.
+     *  
+     * @param k0 Old key
+     * @param k1 New key
+     * @param v Value
+     */
+    public void rekey(K k0, K k1, V v)
     {
         if (k0 == null)
         {

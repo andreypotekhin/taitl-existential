@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
+import com.taitl.existential.keys.OpKey;
 
 /**
  * Defines an Operation Transaction - a set of Transaction objects relevant
@@ -29,21 +30,30 @@ import com.taitl.existential.helper.State;
  */
 public class OpTransaction
 {
-	public UUID id;
-	String op;
-	List<Transaction> transactions = new ArrayList<>();
+    public UUID id;
+    String op;
+    List<Transaction> transactions = new ArrayList<>();
 
-	public OpTransaction(String op, UUID id)
-	{
-		Args.cool(op, "op", id, "id");
-		this.op = op;
-		this.id = id;
-	}
+    public OpTransaction(String op, UUID id)
+    {
+        Args.cool(op, "op", id, "id");
+        OpKey.requireValidName(op);
+        this.op = op;
+        this.id = id;
+    }
 
-	public void addTransaction(Transaction tr)
-	{
-		Args.cool(tr, "tr");
-		State.verify(!transactions.contains(tr), "This transactions is already added");
-		transactions.add(tr);
-	}
+    public void addTransaction(Transaction tr)
+    {
+        Args.cool(tr, "tr");
+        State.verify(!transactions.contains(tr), "This transactions is already added");
+        transactions.add(tr);
+    }
+
+    // TODO begin()
+    // commit()
+    // Commit transactions - run handlers and evaluate validation expressions
+    // Close transactions, remove op transaction from registry
+
+    // rollback()
+
 }

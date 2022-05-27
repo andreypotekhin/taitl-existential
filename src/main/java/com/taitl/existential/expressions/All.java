@@ -20,41 +20,41 @@ import com.taitl.existential.exceptions.PredicateFailureException;
  */
 public class All<T> implements Expression<T>
 {
-	Predicate<? super T> condition;
-	Predicate<? super T> predicate;
+    Predicate<? super T> condition;
+    Predicate<? super T> predicate;
 
-	public All(Predicate<? super T> predicate)
-	{
-		if (predicate == null)
-		{
-			throw new IllegalArgumentException(ARG_PREDICATE);
-		}
-		this.predicate = predicate;
-	}
+    public All(Predicate<? super T> predicate)
+    {
+        if (predicate == null)
+        {
+            throw new IllegalArgumentException(ARG_PREDICATE);
+        }
+        this.predicate = predicate;
+    }
 
-	public All(Predicate<? super T> condition, Predicate<? super T> predicate)
-	{
-		if (condition == null)
-		{
-			throw new IllegalArgumentException(ARG_CONDITION);
-		}
-		if (predicate == null)
-		{
-			throw new IllegalArgumentException(ARG_PREDICATE);
-		}
-		this.condition = condition;
-		this.predicate = predicate;
-	}
+    public All(Predicate<? super T> condition, Predicate<? super T> predicate)
+    {
+        if (condition == null)
+        {
+            throw new IllegalArgumentException(ARG_CONDITION);
+        }
+        if (predicate == null)
+        {
+            throw new IllegalArgumentException(ARG_PREDICATE);
+        }
+        this.condition = condition;
+        this.predicate = predicate;
+    }
 
-	public Object evaluate(T t) throws ExistentialException
-	{
-		if (condition == null || condition.test(t))
-		{
-			if (!predicate.test(t))
-			{
-				throw new PredicateFailureException();
-			}
-		}
-		return null;
-	}
+    public Object evaluate(T t) throws ExistentialException
+    {
+        if (condition == null || condition.test(t))
+        {
+            if (!predicate.test(t))
+            {
+                throw new PredicateFailureException();
+            }
+        }
+        return null;
+    }
 }

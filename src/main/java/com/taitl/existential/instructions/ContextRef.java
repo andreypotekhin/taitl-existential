@@ -13,13 +13,13 @@ import com.taitl.existential.helper.Args;
  */
 public class ContextRef<T> extends Instruction<T>
 {
-	protected Context context;
+    protected Context context;
 
-	public ContextRef(Context context)
-	{
-		super();
-		Args.cool(context, "context");
-		this.context = context;
-		this.type = InstructionType.REF;
-	}
+    public ContextRef(Context context)
+    {
+        super();
+        Args.cool(context, "context");
+        this.context = context;
+        this.type = InstructionType.REF;
+    }
 }

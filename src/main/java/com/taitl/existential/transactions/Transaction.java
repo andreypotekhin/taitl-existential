@@ -63,144 +63,144 @@ import com.taitl.existential.invariants.Invariants;
  */
 public class Transaction implements Configurable
 {
-	public final UUID id;
-	public String op;
+    public final UUID id;
+    public String op;
 
-	public TransactionIndexes indexes = new TransactionIndexes(this);
-	public TransactionEvents events = new TransactionEvents(this);
-	public Context context;
+    public TransactionIndexes indexes = new TransactionIndexes(this);
+    public TransactionEvents events = new TransactionEvents(this);
+    public Context context;
 
-	/**
-	 * Instructions - event handlers. Includes all event handlers (rules)
-	 * defined in this context.
-	 */
-	public Instructions instructions = new Instructions();
+    /**
+     * Instructions - event handlers. Includes all event handlers (rules)
+     * defined in this context.
+     */
+    public Instructions instructions = new Instructions();
 
-	/**
-	 * Expressions, such as All<T>, defined in this context.
-	 */
-	public Expressions expressions = new Expressions();
+    /**
+     * Expressions, such as All<T>, defined in this context.
+     */
+    public Expressions expressions = new Expressions();
 
-	public Transaction()
-	{
-		this.op = "undefined";
-		this.id = generateId();
-	}
+    public Transaction()
+    {
+        this.op = "undefined";
+        this.id = generateId();
+    }
 
-	public Transaction(String op)
-	{
-		if (op == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_OP);
-		}
-		this.op = op;
-		this.id = generateId();
-	}
+    public Transaction(String op)
+    {
+        if (op == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_OP);
+        }
+        this.op = op;
+        this.id = generateId();
+    }
 
-	public <K, V> Index<K, V> index(String name)
-	{
-		if (name == null)
-		{
-			throw new IllegalArgumentException(Strings.ARG_NAME);
-		}
-		return indexes.get(name);
-	}
+    public <K, V> Index<K, V> index(String name)
+    {
+        if (name == null)
+        {
+            throw new IllegalArgumentException(Strings.ARG_NAME);
+        }
+        return indexes.get(name);
+    }
 
-	protected UUID generateId()
-	{
-		return UUID.randomUUID();
-	}
+    protected UUID generateId()
+    {
+        return UUID.randomUUID();
+    }
 
-	public Context getContext()
-	{
-		State.cool(context, "context");
-		return context;
-	}
+    public Context getContext()
+    {
+        State.cool(context, "context");
+        return context;
+    }
 
-	public void setContext(Context context)
-	{
-		Args.cool(context, "context");
-		this.context = context;
-	}
+    public void setContext(Context context)
+    {
+        Args.cool(context, "context");
+        this.context = context;
+    }
 
-	public <T> Transaction add(EventHandler<T> eh)
-	{
-		Args.cool(eh, "eh");
-		instructions.add(eh);
-		return this;
-	}
+    public <T> Transaction add(EventHandler<T> eh)
+    {
+        Args.cool(eh, "eh");
+        instructions.add(eh);
+        return this;
+    }
 
-	public <T> Transaction add(Expression<T> expr)
-	{
-		Args.cool(expr, "expr");
-		expressions.add(expr);
-		return this;
-	}
+    public <T> Transaction add(Expression<T> expr)
+    {
+        Args.cool(expr, "expr");
+        expressions.add(expr);
+        return this;
+    }
 
-	/* Transaction-related methods */
+    /* Transaction-related methods */
 
-	/**
-	 * Add OnBegin<Transaction> transaction handler.
-	 *
-	 * Example:
-	 * Declare transaction member (curPilot) and initialize it in the
-	 * beginning of transaction:
-	 *    Contexts.get("/app/flight_school/pilots/update")
-	 *        .transaction(() -> new Transaction(){
-	 *          Pilot curPilot;
-	 * 		 	{
-	 * 			begin(params -> curPilot = (Pilot)params.get("pilot"))
-	 * 			require(...);
-	 * 			intents(...);
-	 * 			}});
-	 *
-	 * @param action
-	 * @return This object
-	 */
-	public Transaction begin(Consumer<? super Transaction> action)
-	{
-		Args.cool(action, "action");
-		return add(new OnBegin<Transaction>(action));
-	}
+    /**
+     * Add OnBegin<Transaction> transaction handler.
+     *
+     * Example:
+     * Declare transaction member (curPilot) and initialize it in the
+     * beginning of transaction:
+     *    Contexts.get("/app/flight_school/pilots/update")
+     *        .transaction(() -> new Transaction(){
+     *          Pilot curPilot;
+     * 		 	{
+     * 			begin(params -> curPilot = (Pilot)params.get("pilot"))
+     * 			require(...);
+     * 			intents(...);
+     * 			}});
+     *
+     * @param action
+     * @return This object
+     */
+    public Transaction begin(Consumer<? super Transaction> action)
+    {
+        Args.cool(action, "action");
+        return add(new OnBegin<Transaction>(action));
+    }
 
-	/**
-	 * Set up invariants/rules to be enforced on this transaction's business operation (Context).
-	 *
-	 * <pre>{@code
-	 * Contexts.get("/app/flight_school")
-	 *     .transaction(() -> new Transaction(){{
-	 * 	      require(new Invariants<Pilot>() {{
-	 *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
-	 *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-	 * 	      }})
-	 * 	      require(new Invariants< Cloud>() {{
-	 *                all(cloud -> cloud.linings.contains(SILVER), "Every cloud has a silver lining");
-	 * 	      }})
-	 * }</pre>
-	 *
-	 * @param <T> Type parameter
-	 * @param invariants Invariants (rules) that must be upkept
-	 */
-	public <T> void require(Invariants<T> invariants)
-	{
-		Args.cool(invariants, "invariants");
-		Transaction tr = invariants.getTransaction();
+    /**
+     * Set up invariants/rules to be enforced on this transaction's business operation (Context).
+     *
+     * <pre>{@code
+     * Contexts.get("/app/flight_school")
+     *     .transaction(() -> new Transaction(){{
+     * 	      require(new Invariants<Pilot>() {{
+     *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
+     *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
+     * 	      }})
+     * 	      require(new Invariants< Cloud>() {{
+     *                all(cloud -> cloud.linings.contains(SILVER), "Every cloud has a silver lining");
+     * 	      }})
+     * }</pre>
+     *
+     * @param <T> Type parameter
+     * @param invariants Invariants (rules) that must be upkept
+     */
+    public <T> void require(Invariants<T> invariants)
+    {
+        Args.cool(invariants, "invariants");
+        Transaction tr = invariants.getTransaction();
 
-		if (tr == null)
-		{
-			invariants.setTransaction(this);
-		}
-		else
-		{
-			Args.require(tr == this, "Argument 'invariants' must belong to same transaction");
-		}
+        if (tr == null)
+        {
+            invariants.setTransaction(this);
+        }
+        else
+        {
+            Args.require(tr == this, "Argument 'invariants' must belong to same transaction");
+        }
 
-		instructions.addAll(invariants.instructions);
-		expressions.addAll(invariants.expressions);
-	}
+        instructions.addAll(invariants.instructions);
+        expressions.addAll(invariants.expressions);
+    }
 
-	/**
-	 * TODO: intents(Intents<T> intents) { ...
-	 * intents.tran = this; ... }
-	 */
+    /**
+     * TODO: intents(Intents<T> intents) { ...
+     * intents.tran = this; ... }
+     */
 }
