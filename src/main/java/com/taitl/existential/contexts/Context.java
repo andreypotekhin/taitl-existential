@@ -193,7 +193,7 @@ public class Context implements Configurable
      * @param <T> Type parameter
      * @param invariants Invariants (rules) that must be upkept
      */
-    public <T> void require(Invariants<T> invariants)
+    public <T> void verify(Invariants<T> invariants)
     {
         Args.cool(invariants, "invariants");
         instructions.addAll(invariants.instructions);
