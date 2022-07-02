@@ -13,6 +13,13 @@ public class ExistentialFlags
 
     private int flags;
 
+    protected Existential ex;
+
+    public ExistentialFlags(Existential ex)
+    {
+        this.ex = ex;
+    }
+
     public void on(int flag)
     {
         Args.require(flag > 0, ARG_FLAG_MIN);

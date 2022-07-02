@@ -104,18 +104,18 @@ public class OpContext
      * Example:
      *   Contexts.configure("/app/docs/update")                <-- OpContext
      *     .context(() -> new Context(){{           <-- Custom context
-     *        require(new Invariants<Document<JSON>>() {{
+     *        require(new Invariant<Document<JSON>>() {{
      *             write(doc -> doc.verify());
      *             all(doc -> doc.verified());
      *        }});
-     *        require(new Invariants<Document<HTML>>() {{
+     *        require(new Invariant<Document<HTML>>() {{
      *             all(doc -> doc.fullyLoaded());
      *        }});
-     *        intents(new Intents<Document<JSON>>() {{
+     *        intent(new Intent<Document<JSON>>() {{
      *             read();
      *             write();
      *        }});
-     *        intents(new Intents<Document<HTML>>() {{
+     *        intent(new Intent<Document<HTML>>() {{
      *             read();
      *        }});
      *    }})

@@ -8,7 +8,7 @@ import com.taitl.existential.transactions.Transaction;
 
 /**
  * A path-like representation of a business operation, serving as a key for finding
- * the appropriate Context as well as all its parent Contexts.
+ * appropriate Contexts, including wildcard and parent Contexts.
  *
  * Example:
  * "/app/orders/update"
@@ -16,8 +16,9 @@ import com.taitl.existential.transactions.Transaction;
  * "/" - root context (parent to all contexts)
  * "/app/* /update" - wildcard context
  *
- * Context key cannot end with a slash. Wildcard character (*) is allowed.
-
+ * Context key cannot end with a slash.
+ * Wildcard character (*) is allowed in context key.
+ *
  * @author Andrey Potekhin
  *
  * @see Context

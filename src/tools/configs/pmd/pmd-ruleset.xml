@@ -10,6 +10,7 @@
 	<exclude-pattern>.*Test.*</exclude-pattern>
 	<rule ref="category/java/bestpractices.xml">
 		<exclude name="AvoidUsingHardCodedIP" />
+		<exclude name="AvoidReassigningParameters" />
 		<exclude name="UnusedFormalParameter" />
 		<exclude name="UnusedLocalVariable" />
 		<exclude name="UnusedPrivateField" />

@@ -6,6 +6,13 @@ import com.taitl.existential.keys.TypeKey;
 
 public class ExistentialEvents
 {
+    protected Existential ex;
+
+    public ExistentialEvents(Existential ex)
+    {
+        this.ex = ex;
+    }
+
     public <T> void send(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
         Args.require(!(t0 == null || t1 == null), "One of t0, t1 must not be null");

@@ -9,13 +9,19 @@ import com.taitl.existential.transactions.OpTransactionRegistry;
 
 public class ExistentialTransactions
 {
+    protected Existential ex;
     protected OpTransactionRegistry registry = new OpTransactionRegistry();
+
+    public ExistentialTransactions(Existential ex)
+    {
+        this.ex = ex;
+    }
 
     public String begin(String op) throws ExistentialException
     {
         Args.cool(op, "op");
         OpKey.requireValidName(op);
-        Existential.contexts.finalizeSetup();
+        ex.contexts.finalizeSetup();
         OpTransaction opTran = registry.create(op);
         return opTran.id.toString();
     }

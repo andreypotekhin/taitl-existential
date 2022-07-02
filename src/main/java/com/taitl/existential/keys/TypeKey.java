@@ -2,25 +2,29 @@ package com.taitl.existential.keys;
 
 import com.taitl.existential.EventHandlers;
 import com.taitl.existential.constants.Strings;
+import com.taitl.existential.helper.Args;
+
+import static com.taitl.existential.constants.Strings.SLASH;
 
 /**
- * A string representing a type along with its generics, for example "Set<Car>".
+ * A string representing a type along with its generics, for example "Set<Car>".<p>
  * <p>
- * This class is used to offset/negate the effects of Java type erasure, in scenarios where we need to know the generic qualifier. 
+ * This class is used to overcome effects of Java type erasure, in scenarios where we need to know the generic qualifier.<p>
  * <p>
  * For the types without generics, it corresponds to the short name of the class (like "String").<br>
- * For the types qualified with generics, it corresponds to class short name with generic qualifier, like {@code Set<House>}.
+ * For the types qualified with generics, it corresponds to class short name with generic qualifier, like {@code Set<House>}.<p>
  * <p>
  * Examples: <br>
- *   Class without generics: Class: Car, TypeKey: "Car"<br> 
- *   Class with generics: Class: {@code Set<House>}, TypeKey: "{@code Set<House>}"
+ * Classes without generics: Class: Car, TypeKey: string "Car"<br>
+ * Classes with generics: Class: {@code Set<House>}, TypeKey: string "{@code Set<House>}"<br>
  * <p>
- * - Why do we need to offset/negate Java type erasure? After all, Java compiler survives with it.<br>
- * - Because we want ability to define an event handler or an expression on fully-qualified type. For
- * instance, we might want to define different handlers depending on type of document: 
- *   OnChange<Document<HTML>>(...)
- *   OnChange<Document<JSON>>(...)
+ * Q: Why do we need to overcome Java type erasure? After all, Java compiler survives with it?<br>
+ * A: Because we want ability to define event handlers on a distinct fully-qualified type. For
+ * instance, we might want to different handlers for different types of a document:
+ * OnChange<Document<HTML>>(...)
+ * OnChange<Document<JSON>>(...)
  * <p>
+ *
  * @author Andrey Potekhin
  * @see EventHandlers
  */
@@ -28,33 +32,54 @@ public class TypeKey<T>
 {
     protected String typeid;
 
+    /**
+     * Constructs a TypeKey from a class without generics.
+     * Example: TypeKey("Car")
+     *
+     * @param clz Class to construct TypeKey from
+     */
+    public TypeKey(Class<?> clz)
+    {
+        setTypeid(clz, "");
+    }
+
+    /**
+     * Constructs a TypeKey from a class and a generic qualifier.
+     * Example: TypeKey(Document.class, "JSON")
+     *
+     * @param clz              Class to construct TypeKey from, like Document.class
+     * @param genericQualifier Generic qualifier, like {@code "JSON"}
+     */
     public TypeKey(Class<?> clz, String genericQualifier)
     {
-        if (clz == null)
-        {
-            throw new IllegalArgumentException(Strings.ARG_CLZ);
-        }
+        Args.cool(clz, "clz", genericQualifier, "genericQualifier");
+        Args.require(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
         setTypeid(clz, genericQualifier);
     }
 
-    public TypeKey(Class<?> clz)
-    {
-        this(clz, null);
-    }
-
+    /**
+     * Constructs a TypeKey from a class and a generic qualifier.
+     * Example: {@code TypeKey("Document<JSON>")}
+     *
+     * @param classNameQualifiedWithGenerics Class name qualified with generics, like {@code "Document<JSON>"}
+     */
     public TypeKey(String classNameQualifiedWithGenerics)
     {
+        Args.cool(classNameQualifiedWithGenerics, "classNameQualifiedWithGenerics");
+        Args.require(!classNameQualifiedWithGenerics.isBlank(),
+                "Argument 'classNameQualifiedWithGenerics' cannot be blank");
+        requireValidTypeKey(classNameQualifiedWithGenerics);
         typeid = classNameQualifiedWithGenerics;
+    }
+
+    public static <T> TypeKey<T> valueOf(Class<?> clz)
+    {
+        return new TypeKey<>(clz, "");
     }
 
     public static <T> TypeKey<T> valueOf(Class<?> clz, String genericQualifier)
     {
         return new TypeKey<>(clz, genericQualifier);
-    }
-
-    public static <T> TypeKey<T> valueOf(Class<?> clz)
-    {
-        return new TypeKey<>(clz, null);
     }
 
     public static <T> TypeKey<T> valueOf(String classNameQualifiedWithGenerics)
@@ -106,21 +131,36 @@ public class TypeKey<T>
 
     protected void setTypeid(Class<?> clz, String genericQualifier)
     {
-        if (clz == null)
+        Args.cool(clz, "clz", genericQualifier, "genericQualifier");
+        String className = clz.getSimpleName();
+        if (genericQualifier.isEmpty())
         {
-            throw new IllegalArgumentException(Strings.ARG_CLZ);
-        }
-        if (genericQualifier == null || genericQualifier.isEmpty())
-        {
-            typeid = clz.getSimpleName();
+            typeid = className;
         }
         else if (genericQualifier.startsWith("<") && genericQualifier.endsWith(">"))
         {
-            typeid = clz.getSimpleName() + genericQualifier;
+            typeid = className + genericQualifier;
         }
         else
         {
-            typeid = clz.getSimpleName() + "<" + genericQualifier + ">";
+            typeid = className + "<" + genericQualifier + ">";
+        }
+        requireValidTypeKey(typeid);
+    }
+
+    protected static void requireValidTypeKey(String key)
+    {
+        Args.cool(key, "class name");
+        key = key.trim();
+        Args.require(!key.isBlank(), "Class name cannot be blank");
+        if (key.contains("<") || key.contains(">"))
+        {
+            Args.require(key.contains("<") && key.contains(">"),
+                    "Class name must be of proper format: 'Class<GenericQualifier>'");
+            int leftBracket = key.indexOf("<");
+            int rightBracket = key.lastIndexOf(">");
+            Args.require(leftBracket < rightBracket, "Right bracket must not come before left bracket");
+            requireValidTypeKey(key.substring(leftBracket + 1, rightBracket));
         }
     }
 }

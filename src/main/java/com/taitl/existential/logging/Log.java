@@ -8,7 +8,7 @@ public final class Log
     public enum LogLevel
     {
         LEVEL_TRACE, LEVEL_DEBUG, LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR
-    };
+    }
 
     private static Logger logger = new Logger();
     private static LogLevel logLevel = LogLevel.LEVEL_WARNING;

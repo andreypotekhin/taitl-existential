@@ -26,7 +26,7 @@ import com.taitl.existential.helper.State;
 import com.taitl.existential.instructions.Instructions;
 import com.taitl.existential.transactions.Transaction;
 
-public class Invariants<T>
+public class Invariant<T>
 {
     /**
      * Parent Transaction object, if any.
@@ -49,61 +49,61 @@ public class Invariants<T>
 
     /* Event handler methods */
 
-    public Invariants<T> on(Consumer<? super T> action)
+    public Invariant<T> on(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new On<T>(action));
     }
 
-    public Invariants<T> change(Consumer<? super T> action)
+    public Invariant<T> change(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnChange<T>(action));
     }
 
-    public Invariants<T> delete(Consumer<? super T> action)
+    public Invariant<T> delete(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnDelete<T>(action));
     }
 
-    public Invariants<T> modify(Consumer<? super T> action)
+    public Invariant<T> modify(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnModify<T>(action));
     }
 
-    public Invariants<T> mutate(BiConsumer<? super T, ? super T> action)
+    public Invariant<T> mutate(BiConsumer<? super T, ? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnMutate<T>(action));
     }
 
-    public Invariants<T> read(Consumer<? super T> action)
+    public Invariant<T> read(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnRead<T>(action));
     }
 
-    public Invariants<T> readAndLock(Consumer<? super T> action)
+    public Invariant<T> readAndLock(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnReadAndLock<T>(action));
     }
 
-    public Invariants<T> transit(BiConsumer<? super T, ? super T> action)
+    public Invariant<T> transit(BiConsumer<? super T, ? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnTransit<T>(action));
     }
 
-    public Invariants<T> update(Consumer<? super T> action)
+    public Invariant<T> update(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnUpdate<T>(action));
     }
 
-    public Invariants<T> upsert(Consumer<? super T> action)
+    public Invariant<T> upsert(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnUpsert<T>(action));
@@ -111,14 +111,14 @@ public class Invariants<T>
 
     /* Add event handlers and expressions */
 
-    protected Invariants<T> add(EventHandler<T> eh)
+    protected Invariant<T> add(EventHandler<T> eh)
     {
         Args.cool(eh, "eh");
         instructions.add(eh);
         return this;
     }
 
-    public Invariants<T> add(Expression<T> expr)
+    public Invariant<T> add(Expression<T> expr)
     {
         Args.cool(expr, "expr");
         expressions.add(expr);
@@ -127,14 +127,14 @@ public class Invariants<T>
 
     /* Expression methods */
 
-    public Invariants<T> all(Predicate<? super T> predicate)
+    public Invariant<T> all(Predicate<? super T> predicate)
     {
         Args.cool(predicate, "predicate");
         add(new All<T>(predicate));
         return this;
     }
 
-    public Invariants<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
+    public Invariant<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
     {
         Args.cool(predicate, "predicate");
         add(new All<T>(condition, predicate));

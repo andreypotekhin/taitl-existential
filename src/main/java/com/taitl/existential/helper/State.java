@@ -4,12 +4,10 @@ package com.taitl.existential.helper;
  * Lightweight checks for method in-conditions.
  * Throws IllegalStateException if in-condition is not met.
  *
- * This class just throws an exception. If more processing needed,
- * for instance, notifying or logging, consider Debug.verify().
- *
  * @author Andrey Potekhin
  *
  * @see Args
+ * @see Outcome
  */
 public class State
 {
@@ -26,7 +24,7 @@ public class State
      * Throws IllegalStateException if method outcome is null.
      *
      * Example:
-     * return Outcome.cool(result, 'result')
+     * return State.cool(result, 'result')
      *
      * @return Returns argument 'o', for fluency
      */

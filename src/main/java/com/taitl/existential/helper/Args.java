@@ -4,12 +4,10 @@ package com.taitl.existential.helper;
  * Lightweight checking/validations for method arguments.
  * Throws IllegalArgumentException if a condition is not met.
  *
- * This class just throws an exception. If more processing needed,
- * for instance, notifying an observer, consider Debug.require().
- *
  * @author Andrey Potekhin
  *
  * @see State
+ * @see Outcome
  */
 public class Args
 {
@@ -38,7 +36,7 @@ public class Args
     /**
      * Throws IllegalArgumentException if method argument is null.
      */
-    public static void cool(Object... args)
+    public static void cool(Object o, String argName, Object... args)
     {
         if (args == null)
         {

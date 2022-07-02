@@ -7,12 +7,18 @@ import com.taitl.existential.helper.State;
 
 public class ExistentialContexts
 {
+    protected Existential ex;
     protected OpContextRegistry registry = new OpContextRegistry();
+
+    public ExistentialContexts(Existential ex)
+    {
+        this.ex = ex;
+    }
 
     public OpContext configure(String op)
     {
         Args.cool(op, "op");
-        State.verify(!Existential.ex.finalized,
+        State.verify(!ex.finalized,
                 "Cannot call this method because setup has already been finalized");
         return registry.getcreate(op);
     }
@@ -27,17 +33,17 @@ public class ExistentialContexts
      */
     public void finalizeSetup()
     {
-        if (!Existential.ex.finalized)
+        if (!ex.finalized)
         {
             synchronized (Existential.class)
             {
-                Existential.ex.finalized = true;
+                ex.finalized = true;
 
                 // Now that we finalized set up of rules and event handlers
                 // we'll create custom contexts for all OpContexts that
                 // exist context registry. This will result in a call to each
                 // and every require(), intent() method of each custom context,
-                // and therefore create instances of each Invariants, Intents
+                // and therefore create instances of each Invariant, Intent
                 // provided during the setup.
                 registry.createContexts();
             }

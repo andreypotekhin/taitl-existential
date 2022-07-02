@@ -14,7 +14,7 @@ import com.taitl.existential.handler.types.EventHandler;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.instructions.Instructions;
-import com.taitl.existential.invariants.Invariants;
+import com.taitl.existential.invariants.Invariant;
 import com.taitl.existential.rules.Rule;
 import com.taitl.existential.transactions.Transaction;
 
@@ -89,17 +89,17 @@ public class Context implements Configurable
      * Example:
      *   Contexts.get("/app/school")
      *     .transaction(() -> new Transaction(){{
-     *        require(new Invariants<Student>() {{
+     *        require(new Invariant<Student>() {{
      *             all(student -> student.awake());
      *        }});
-     *        require(new Invariants<Teacher>() {{
+     *        require(new Invariant<Teacher>() {{
      *             all(teacher -> teacher.notOnLeave());
      *        }});
-     *        intents(new Intents<Student>() {{
+     *        intent(new Intent<Student>() {{
      *             read();
      *             write();
      *        }});
-     *        intents(new Intents<Teacher>() {{
+     *        intent(new Intent<Teacher>() {{
      *             read();
      *        }});
      *    }})
@@ -181,23 +181,23 @@ public class Context implements Configurable
      * <pre>{@code
      * Contexts.get("/app/flight_school")
      *     .context(() -> new Context(){{
-     * 	      require(new Invariants<Pilot>() {{
+     * 	      require(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      * 	      }})
-     * 	      require(new Invariants< Cloud>() {{
+     * 	      require(new Invariant< Cloud>() {{
      *                all(cloud -> cloud.linings.contains(SILVER), "Every cloud has a silver lining");
      * 	      }})
      * }</pre>
      *
      * @param <T> Type parameter
-     * @param invariants Invariants (rules) that must be upkept
+     * @param invariant Invariant (rules) that must be upkept
      */
-    public <T> void verify(Invariants<T> invariants)
+    public <T> void require(Invariant<T> invariant)
     {
-        Args.cool(invariants, "invariants");
-        instructions.addAll(invariants.instructions);
-        expressions.addAll(invariants.expressions);
+        Args.cool(invariant, "invariant");
+        instructions.addAll(invariant.instructions);
+        expressions.addAll(invariant.expressions);
     }
 
     /* Parent context */

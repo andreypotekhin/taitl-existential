@@ -5,7 +5,7 @@ package com.taitl.existential;
  * <p>
  *
  * Documentation:
- *   https://github.com/andreypotekhin/taitl-existential
+ *   <a href="https://github.com/andreypotekhin/taitl-existential">Existential</a>
  *
  * @author Andrey Potekhin
  *
@@ -17,11 +17,10 @@ package com.taitl.existential;
  */
 public final class Existential
 {
-    public static Existential ex = new Existential();
-    public static ExistentialTransactions transactions = new ExistentialTransactions();
-    public static ExistentialEvents events = new ExistentialEvents();
-    public static ExistentialFlags flags = new ExistentialFlags();
-    public static ExistentialContexts contexts = new ExistentialContexts();
-    public static ExistentialAccess access = new ExistentialAccess();
-    protected boolean finalized = false;
+    public ExistentialTransactions transactions = new ExistentialTransactions(this);
+    public ExistentialEvents events = new ExistentialEvents(this);
+    public ExistentialFlags flags = new ExistentialFlags(this);
+    public ExistentialContexts contexts = new ExistentialContexts(this);
+    public ExistentialAccess access = new ExistentialAccess(this);
+    public boolean finalized = false;
 }

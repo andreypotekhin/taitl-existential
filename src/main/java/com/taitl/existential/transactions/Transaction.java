@@ -15,7 +15,7 @@ import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.indexes.Index;
 import com.taitl.existential.instructions.Instructions;
-import com.taitl.existential.invariants.Invariants;
+import com.taitl.existential.invariants.Invariant;
 
 /**
  * Implements a transaction object - a unit of processing within a context.
@@ -140,19 +140,21 @@ public class Transaction implements Configurable
     /* Transaction-related methods */
 
     /**
-     * Add OnBegin<Transaction> transaction handler.
+     * Add OnBegin<Transaction> handler.
      *
      * Example:
      * Declare transaction member (curPilot) and initialize it in the
      * beginning of transaction:
+     * <pre>{@code
      *    Contexts.get("/app/flight_school/pilots/update")
      *        .transaction(() -> new Transaction(){
      *          Pilot curPilot;
      * 		 	{
-     * 			begin(params -> curPilot = (Pilot)params.get("pilot"))
-     * 			require(...);
-     * 			intents(...);
+     * 			    begin(params -> curPilot = (Pilot)params.get("pilot"))
+     * 			    require(...);
+     * 			    intent(...);
      * 			}});
+     * }</pre>
      *
      * @param action
      * @return This object
@@ -169,11 +171,11 @@ public class Transaction implements Configurable
      * <pre>{@code
      * Contexts.get("/app/flight_school")
      *     .transaction(() -> new Transaction(){{
-     * 	      require(new Invariants<Pilot>() {{
+     * 	      require(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      * 	      }})
-     * 	      require(new Invariants< Cloud>() {{
+     * 	      require(new Invariant< Cloud>() {{
      *                all(cloud -> cloud.linings.contains(SILVER), "Every cloud has a silver lining");
      * 	      }})
      * }</pre>
@@ -181,26 +183,26 @@ public class Transaction implements Configurable
      * @param <T> Type parameter
      * @param invariants Invariants (rules) that must be upkept
      */
-    public <T> void verify(Invariants<T> invariants)
+    public <T> void require(Invariant<T> invariant)
     {
-        Args.cool(invariants, "invariants");
-        Transaction tr = invariants.getTransaction();
+        Args.cool(invariant, "invariant");
+        Transaction tr = invariant.getTransaction();
 
         if (tr == null)
         {
-            invariants.setTransaction(this);
+            invariant.setTransaction(this);
         }
         else
         {
-            Args.require(tr == this, "Argument 'invariants' must belong to same transaction");
+            Args.require(tr == this, "Argument 'invariant' must belong to same transaction");
         }
 
-        instructions.addAll(invariants.instructions);
-        expressions.addAll(invariants.expressions);
+        instructions.addAll(invariant.instructions);
+        expressions.addAll(invariant.expressions);
     }
 
     /**
-     * TODO: intents(Intents<T> intents) { ...
-     * intents.tran = this; ... }
+     * TODO: intent(Intent<T> intent) { ...
+     * intent.tran = this; ... }
      */
 }

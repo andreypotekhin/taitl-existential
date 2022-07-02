@@ -3,6 +3,7 @@ package com.taitl.existential.contexts;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.taitl.existential.EventSplitter;
 import com.taitl.existential.helper.Args;
@@ -76,7 +77,7 @@ public class Contexts
             }
         }
         State.verify(result != null, "result member should not be null");
-        return result.stream().toList();
+        return result.stream().collect(Collectors.toList());
     }
 
     /* Factories for customizing the contexts. */
