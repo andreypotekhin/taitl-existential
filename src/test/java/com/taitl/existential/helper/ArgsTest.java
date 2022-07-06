@@ -23,6 +23,12 @@ class ArgsTest
             Args.cool(o, "arg1", o, "arg2");
         });
         assertThrows(IllegalArgumentException.class, () -> {
+            Args.cool(o, "arg1", null);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            Args.cool(null, "arg1", o, "arg2");
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
             Args.cool(o, "arg1", null, "arg2");
         });
         assertThat(assertThrows(IllegalArgumentException.class, () -> {

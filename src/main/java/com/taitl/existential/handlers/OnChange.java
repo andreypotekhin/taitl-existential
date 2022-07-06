@@ -14,6 +14,6 @@ public class OnChange<T> extends On<T> implements EventHandlerWithSideEffects<T>
 
     public OnChange(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        super(action);
+        super(condition, action);
     }
 }

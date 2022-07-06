@@ -46,6 +46,7 @@ public class OpTransaction
     {
         Args.cool(tr, "tr");
         State.verify(!transactions.contains(tr), "This transactions is already added");
+        tr.op = op;
         transactions.add(tr);
     }
 

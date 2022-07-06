@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.PredicateFailureException;
+import com.taitl.existential.helper.Args;
 
 /**
  * Implements "For Any" (universal quantification) notation for reasoning about application entities. See library
@@ -22,28 +23,34 @@ public class All<T> implements Expression<T>
 {
     Predicate<? super T> condition;
     Predicate<? super T> predicate;
+    String description = null;
 
     public All(Predicate<? super T> predicate)
     {
-        if (predicate == null)
-        {
-            throw new IllegalArgumentException(ARG_PREDICATE);
-        }
+        Args.cool(predicate, "predicate");
         this.predicate = predicate;
+    }
+
+    public All(Predicate<? super T> predicate, String description)
+    {
+        Args.cool(predicate, "predicate", description, "description");
+        this.predicate = predicate;
+        this.description = description;
     }
 
     public All(Predicate<? super T> condition, Predicate<? super T> predicate)
     {
-        if (condition == null)
-        {
-            throw new IllegalArgumentException(ARG_CONDITION);
-        }
-        if (predicate == null)
-        {
-            throw new IllegalArgumentException(ARG_PREDICATE);
-        }
+        Args.cool(condition, "condition", predicate, "predicate");
         this.condition = condition;
         this.predicate = predicate;
+    }
+
+    public All(Predicate<? super T> condition, Predicate<? super T> predicate, String description)
+    {
+        Args.cool(condition, "condition", predicate, "predicate", description, "description");
+        this.condition = condition;
+        this.predicate = predicate;
+        this.description = description;
     }
 
     public Object evaluate(T t) throws ExistentialException
@@ -52,9 +59,14 @@ public class All<T> implements Expression<T>
         {
             if (!predicate.test(t))
             {
-                throw new PredicateFailureException();
+                throw new PredicateFailureException(description());
             }
         }
         return null;
+    }
+
+    public String description()
+    {
+        return description == null ? "" : description;
     }
 }

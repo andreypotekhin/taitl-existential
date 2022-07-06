@@ -35,6 +35,11 @@ public class ExistentialContexts
     {
         if (!ex.finalized)
         {
+            if (isEmpty())
+            {
+                throw new IllegalStateException("You need to configure at least one context");
+            }
+
             synchronized (Existential.class)
             {
                 ex.finalized = true;
@@ -48,5 +53,10 @@ public class ExistentialContexts
                 registry.createContexts();
             }
         }
+    }
+
+    public boolean isEmpty()
+    {
+        return registry.isEmpty();
     }
 }

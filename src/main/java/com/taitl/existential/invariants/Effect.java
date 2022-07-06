@@ -1,11 +1,5 @@
 package com.taitl.existential.invariants;
 
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-
 import com.taitl.existential.expressions.All;
 import com.taitl.existential.expressions.Exists;
 import com.taitl.existential.expressions.Expression;
@@ -18,7 +12,13 @@ import com.taitl.existential.instructions.Instructions;
 import com.taitl.existential.rules.RuleSet;
 import com.taitl.existential.transactions.Transaction;
 
-public class Invariant<T> implements RuleSet<T>
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
+public class Effect<T> implements RuleSet<T>
 {
     /**
      * Parent Transaction object, if any.
@@ -41,79 +41,91 @@ public class Invariant<T> implements RuleSet<T>
 
     /* Event handler methods */
 
-    public Invariant<T> on(Consumer<? super T> action)
+    public Effect<T> on(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new On<T>(action));
     }
 
-    public Invariant<T> create(Predicate<? super T> condition)
+    public Effect<T> create(Consumer<? super T> action)
     {
-        Args.cool(condition, "condition");
-        return add(new OnCreate<T>(condition, null));
+        Args.cool(action, "action");
+        return add(new OnCreate<T>(action));
     }
 
-    public Invariant<T> create(Predicate<? super T> condition, String description)
+    public Effect<T> create(Consumer<? super T> action, String description)
     {
-        Args.cool(condition, "condition", description, "description");
-        return add(new OnCreate<T>(condition, null, description));
+        Args.cool(action, "action", description, "description");
+        return add(new OnCreate<T>(action, description));
     }
 
-    public Invariant<T> change(Consumer<? super T> action)
+    public Effect<T> create(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnCreate<T>(condition, action));
+    }
+
+    public Effect<T> create(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnCreate<T>(condition, action, description));
+    }
+
+    public Effect<T> change(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnChange<T>(action));
     }
 
-    public Invariant<T> delete(Consumer<? super T> action)
+    public Effect<T> delete(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnDelete<T>(action));
     }
 
-    public Invariant<T> modify(Consumer<? super T> action)
+    public Effect<T> modify(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnModify<T>(action));
     }
 
-    public Invariant<T> mutate(BiConsumer<? super T, ? super T> action)
+    public Effect<T> mutate(BiConsumer<? super T, ? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnMutate<T>(action));
     }
 
-    public Invariant<T> read(Consumer<? super T> action)
+    public Effect<T> read(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnRead<T>(action));
     }
 
-    public Invariant<T> readAndLock(Consumer<? super T> action)
+    public Effect<T> readAndLock(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnReadAndLock<T>(action));
     }
 
-    public Invariant<T> write(Consumer<? super T> action)
+    public Effect<T> write(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnWrite<T>(action));
     }
 
-    public Invariant<T> transit(BiConsumer<? super T, ? super T> action)
+    public Effect<T> transit(BiConsumer<? super T, ? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnTransit<T>(action));
     }
 
-    public Invariant<T> update(Consumer<? super T> action)
+    public Effect<T> update(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnUpdate<T>(action));
     }
 
-    public Invariant<T> upsert(Consumer<? super T> action)
+    public Effect<T> upsert(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnUpsert<T>(action));
@@ -121,14 +133,14 @@ public class Invariant<T> implements RuleSet<T>
 
     /* Add event handlers and expressions */
 
-    protected Invariant<T> add(EventHandler<T> eh)
+    protected Effect<T> add(EventHandler<T> eh)
     {
         Args.cool(eh, "eh");
         instructions.add(eh);
         return this;
     }
 
-    public Invariant<T> add(Expression<T> expr)
+    public Effect<T> add(Expression<T> expr)
     {
         Args.cool(expr, "expr");
         expressions.add(expr);
@@ -137,28 +149,28 @@ public class Invariant<T> implements RuleSet<T>
 
     /* Expression methods */
 
-    public Invariant<T> all(Predicate<? super T> predicate)
+    public Effect<T> all(Predicate<? super T> predicate)
     {
         Args.cool(predicate, "predicate");
         add(new All<T>(predicate));
         return this;
     }
 
-    public Invariant<T> all(Predicate<? super T> predicate, String description)
+    public Effect<T> all(Predicate<? super T> predicate, String description)
     {
         Args.cool(predicate, "predicate");
         add(new All<T>(predicate, description));
         return this;
     }
 
-    public Invariant<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
+    public Effect<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
     {
         Args.cool(predicate, "predicate");
         add(new All<T>(condition, predicate));
         return this;
     }
 
-    public Invariant<T> all(Predicate<? super T> condition, Predicate<? super T> predicate, String description)
+    public Effect<T> all(Predicate<? super T> condition, Predicate<? super T> predicate, String description)
     {
         Args.cool(condition, "condition", predicate, "predicate", description, "description");
         add(new All<T>(condition, predicate, description));

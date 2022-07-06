@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import com.taitl.existential.Configurable;
+import com.taitl.existential.interfaces.Configurable;
 import com.taitl.existential.EventSplitter;
 import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.expressions.Expressions;
@@ -14,6 +14,7 @@ import com.taitl.existential.handler.types.EventHandler;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.instructions.Instructions;
+import com.taitl.existential.invariants.Effect;
 import com.taitl.existential.invariants.Invariant;
 import com.taitl.existential.rules.Rule;
 import com.taitl.existential.transactions.Transaction;
@@ -198,6 +199,13 @@ public class Context implements Configurable
         Args.cool(invariant, "invariant");
         instructions.addAll(invariant.instructions);
         expressions.addAll(invariant.expressions);
+    }
+
+    public <T> void require(Effect<T> effect)
+    {
+        Args.cool(effect, "effect");
+        instructions.addAll(effect.instructions);
+        expressions.addAll(effect.expressions);
     }
 
     /* Parent context */

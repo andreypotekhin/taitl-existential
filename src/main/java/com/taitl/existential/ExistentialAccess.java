@@ -1,6 +1,7 @@
 package com.taitl.existential;
 
 import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.keys.TypeKey;
 
 public class ExistentialAccess
 {
@@ -11,7 +12,15 @@ public class ExistentialAccess
         this.ex = ex;
     }
 
+    public <T> void read(T entity, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+    }
+
     public <T> void read(T entity, String tranID) throws ExistentialException
+    {
+    }
+
+    public <T> void write(T entity, TypeKey<T> type, String tranID) throws ExistentialException
     {
     }
 

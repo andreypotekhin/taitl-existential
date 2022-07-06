@@ -14,6 +14,6 @@ public class OnDelete<T> extends On<T> implements EventHandlerWithSideEffects<T>
 
     public OnDelete(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        super(action);
+        super(condition, action);
     }
 }

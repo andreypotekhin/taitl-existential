@@ -47,6 +47,10 @@ public class Args
             throw new IllegalArgumentException(
                     String.format(ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH, "args"));
         }
+        if (o == null)
+        {
+            throw new IllegalArgumentException(String.format(ARGUMENT_MUST_NOT_BE_NULL, argName));
+        }
         for (int i = 0; i < args.length; i += 2)
         {
             if (args[i] == null)

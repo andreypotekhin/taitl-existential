@@ -14,6 +14,8 @@ import com.taitl.existential.expressions.All;
 import com.taitl.existential.model.cats.House;
 import com.taitl.existential.model.cats.TestData;
 
+import java.util.function.Predicate;
+
 class AllTest
 {
     All<House> o;
@@ -33,7 +35,7 @@ class AllTest
     }
 
     @Test
-    void testConstructorOneParam()
+    void constructWithPredicate()
     {
         o = new All<>(h -> h.hasRoof());
         assertNull(o.condition);
@@ -44,7 +46,7 @@ class AllTest
     }
 
     @Test
-    void testConstructorTwoParams()
+    void constructWithConditionAndPredicate()
     {
         o = new All<>(h -> true, h -> h.hasRoof());
         assertNotNull(o.condition);
@@ -53,12 +55,24 @@ class AllTest
             new All<House>(null, h -> h.hasRoof());
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            new All<House>(h -> true, null);
+            new All<House>(h -> true, (Predicate) null);
         });
     }
 
     @Test
-    void testEvaluate() throws ExistentialException
+    void constructWithDescription()
+    {
+        o = new All<>(h -> true, h -> h.hasRoof(), "description");
+        assertNotNull(o.condition);
+        assertNotNull(o.predicate);
+        assertNotNull(o.description);
+        assertThrows(IllegalArgumentException.class, () -> {
+            new All<House>(h -> true, h -> h.hasRoof(), null);
+        });
+    }
+
+    @Test
+    void evaluate() throws ExistentialException
     {
         o.evaluate(house);
 

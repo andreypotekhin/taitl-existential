@@ -34,7 +34,7 @@ public class OpTransactionRegistry
 
         synchronized (reg)
         {
-            reg.put(op, o);
+            reg.put(o.id.toString(), o);
         }
         return o;
     }

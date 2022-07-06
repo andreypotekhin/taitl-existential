@@ -14,6 +14,6 @@ public class OnBegin<T extends Transaction> extends On<T>
 
     public OnBegin(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        super(action);
+        super(condition, action);
     }
 }

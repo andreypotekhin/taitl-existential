@@ -12,4 +12,6 @@ import com.taitl.existential.exceptions.ExistentialException;
 public interface Expression<T> extends Rule<T>
 {
     Object evaluate(T t) throws ExistentialException;
+
+    String description();
 }

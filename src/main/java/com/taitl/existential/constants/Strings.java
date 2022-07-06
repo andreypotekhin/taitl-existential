@@ -36,4 +36,5 @@ public class Strings
     public static final String ARG_OP_NO_WILDCARDS = "Argument 'op' cannot have wildcards ('*')";
     public static final String SLASH = "/";
     public static final String WILDCARD = "*";
+    public static final String CONDITION_NOT_MET = "The specified condition not met";
 }

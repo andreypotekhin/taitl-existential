@@ -67,4 +67,9 @@ public class OpContextRegistry
     {
         reg.entrySet().stream().forEach(e -> e.getValue().createSubcontexts());
     }
+
+    public boolean isEmpty()
+    {
+        return reg.isEmpty();
+    }
 }

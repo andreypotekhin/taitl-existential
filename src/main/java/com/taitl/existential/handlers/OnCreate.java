@@ -12,8 +12,18 @@ public class OnCreate<T> extends On<T> implements EventHandlerWithSideEffects<T>
         super(action);
     }
 
+    public OnCreate(Consumer<? super T> action, String description)
+    {
+        super(action, description);
+    }
+
     public OnCreate(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        super(action);
+        super(condition, action);
+    }
+
+    public OnCreate(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        super(condition, action, description);
     }
 }

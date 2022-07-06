@@ -3,7 +3,7 @@ package com.taitl.existential.transactions;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import com.taitl.existential.Configurable;
+import com.taitl.existential.interfaces.Configurable;
 import com.taitl.existential.EventSplitter;
 import com.taitl.existential.constants.Strings;
 import com.taitl.existential.contexts.Context;
@@ -15,6 +15,7 @@ import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.indexes.Index;
 import com.taitl.existential.instructions.Instructions;
+import com.taitl.existential.invariants.Effect;
 import com.taitl.existential.invariants.Invariant;
 
 /**
@@ -199,6 +200,24 @@ public class Transaction implements Configurable
 
         instructions.addAll(invariant.instructions);
         expressions.addAll(invariant.expressions);
+    }
+
+    public <T> void require(Effect<T> effect)
+    {
+        Args.cool(effect, "effect");
+        Transaction tr = effect.getTransaction();
+
+        if (tr == null)
+        {
+            effect.setTransaction(this);
+        }
+        else
+        {
+            Args.require(tr == this, "Argument 'effect' must belong to same transaction");
+        }
+
+        instructions.addAll(effect.instructions);
+        expressions.addAll(effect.expressions);
     }
 
     /**

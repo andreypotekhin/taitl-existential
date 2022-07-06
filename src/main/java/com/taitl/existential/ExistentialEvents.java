@@ -15,7 +15,7 @@ public class ExistentialEvents
 
     public <T> void send(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        Args.require(!(t0 == null || t1 == null), "One of t0, t1 must not be null");
+        Args.require(t0 != null || t1 != null, "One of t0, t1 must not be null");
         // Get transaction object
         // Care for scenario when tran is not found
         // Split event into multiple using EventSplitter
