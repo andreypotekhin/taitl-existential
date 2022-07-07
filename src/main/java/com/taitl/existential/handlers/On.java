@@ -63,14 +63,6 @@ public class On<T> implements EventHandler<T>
 
         if (condition == null || condition.test(t))
         {
-            // if (action instanceof Predicate) {
-            // // This is an event handler without side effects.
-            // // Check the condition and throw an exception if it is not met.
-            // if (!condition.test(t)) {
-            // throw new EventHandlerFailureException(description != null ? description() :
-            // CONDITION_NOT_MET);
-            // }
-            // } else {
             try
             {
                 action.accept(t);
@@ -79,7 +71,6 @@ public class On<T> implements EventHandler<T>
             {
                 throw new EventHandlerFailureException(e);
             }
-            // }
         }
     }
 

@@ -41,16 +41,10 @@ public class Invariant<T> implements RuleSet<T>
 
     /* Event handler methods */
 
-    public Invariant<T> on(Consumer<? super T> action)
-    {
-        Args.cool(action, "action");
-        return add(new On<T>(action));
-    }
-
-    public Invariant<T> create(Predicate<? super T> condition)
+    public Invariant<T> on(Predicate<? super T> condition, String description)
     {
         Args.cool(condition, "condition");
-        return add(new OnCreate<T>(condition, null));
+        return add(new On<T>(condition, null, description));
     }
 
     public Invariant<T> create(Predicate<? super T> condition, String description)
@@ -59,64 +53,76 @@ public class Invariant<T> implements RuleSet<T>
         return add(new OnCreate<T>(condition, null, description));
     }
 
-    public Invariant<T> change(Consumer<? super T> action)
+    public Invariant<T> change(Predicate<? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnChange<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnChange<T>(condition, null, description));
     }
 
-    public Invariant<T> delete(Consumer<? super T> action)
+    public Invariant<T> delete(Predicate<? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnDelete<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnDelete<T>(condition, null, description));
     }
 
-    public Invariant<T> modify(Consumer<? super T> action)
+    public Invariant<T> modify(Predicate<? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnModify<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnModify<T>(condition, null, description));
     }
 
-    public Invariant<T> mutate(BiConsumer<? super T, ? super T> action)
+    public Invariant<T> mutate(Predicate<? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnMutate<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnMutate<T>(condition, null, description));
     }
 
-    public Invariant<T> read(Consumer<? super T> action)
+    public Invariant<T> mutate(BiPredicate<? super T, ? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnRead<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnMutate<T>(condition, null, description));
     }
 
-    public Invariant<T> readAndLock(Consumer<? super T> action)
+    public Invariant<T> read(Predicate<? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnReadAndLock<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnRead<T>(condition, null, description));
     }
 
-    public Invariant<T> write(Consumer<? super T> action)
+    public Invariant<T> readAndLock(Predicate<? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnWrite<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnReadAndLock<T>(condition, null, description));
     }
 
-    public Invariant<T> transit(BiConsumer<? super T, ? super T> action)
+    public Invariant<T> write(Predicate<? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnTransit<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnWrite<T>(condition, null, description));
     }
 
-    public Invariant<T> update(Consumer<? super T> action)
+    public Invariant<T> transit(Predicate<? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnUpdate<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnTransit<T>(condition, null, description));
     }
 
-    public Invariant<T> upsert(Consumer<? super T> action)
+    public Invariant<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
-        Args.cool(action, "action");
-        return add(new OnUpsert<T>(action));
+        Args.cool(condition, "condition");
+        return add(new OnTransit<T>(condition, null, description));
+    }
+
+    public Invariant<T> update(Predicate<? super T> condition, String description)
+    {
+        Args.cool(condition, "condition");
+        return add(new OnUpdate<T>(condition, null, description));
+    }
+
+    public Invariant<T> upsert(Predicate<? super T> condition, String description)
+    {
+        Args.cool(condition, "condition");
+        return add(new OnUpsert<T>(condition, null, description));
     }
 
     /* Add event handlers and expressions */
@@ -137,24 +143,10 @@ public class Invariant<T> implements RuleSet<T>
 
     /* Expression methods */
 
-    public Invariant<T> all(Predicate<? super T> predicate)
-    {
-        Args.cool(predicate, "predicate");
-        add(new All<T>(predicate));
-        return this;
-    }
-
     public Invariant<T> all(Predicate<? super T> predicate, String description)
     {
         Args.cool(predicate, "predicate");
         add(new All<T>(predicate, description));
-        return this;
-    }
-
-    public Invariant<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
-    {
-        Args.cool(predicate, "predicate");
-        add(new All<T>(condition, predicate));
         return this;
     }
 

@@ -41,7 +41,7 @@ class UserCanConfigureLibrary
     void configure()
     {
         ex.contexts.configure(op)
-                .context(() -> new Context(op) {
+                .context(new Context(op) {
                     {
                         require(new Invariant<Cat>() {
                             {
@@ -55,6 +55,35 @@ class UserCanConfigureLibrary
                         });
                     }
                 });
+    }
+
+    void configureWithBuilders()
+    {
+        ex.contexts.configure(op)
+                .context()
+                .invariant(Cat.class)
+                .create(c -> "Black".equals(c.color), "Cats are born black")
+                .done()
+                .effect(Cat.class)
+                .create(c -> c.location = new Location("Park"), "Set location for all new cats")
+                .done()
+                .build();
+    }
+
+    void configureMixingFluentAndBuilders()
+    {
+        ex.contexts.configure(op)
+                .context()
+                .invariant(Cat.class)
+                .create(c -> "Black".equals(c.color), "Cats are born black")
+                .done()
+                .require(new Effect<Cat>() {
+                    {
+                        create(c -> c.location = new Location("Park"), "Set location for all new cats");
+                    }
+                })
+                .done()
+                .build();
     }
 
     @Test
@@ -90,14 +119,25 @@ class UserCanConfigureLibrary
     }
 
     @Test
-    @DisplayName("User can configure the library using builder style")
+    @DisplayName("User can configure the library using builders")
     void configureLibraryUsingConfigBuilder() throws Exception
     {
         assertDoesNotThrow(() -> {
-            // TODO:
-            configure();
+            configureWithBuilders();
             String tran = ex.transactions.begin(op);
             ex.events.send(cat, tran);
         });
     }
+
+    @Test
+    @DisplayName("User can configure the library mixing fluent style and builders")
+    void configureLibraryMixingFluentAndBuilders() throws Exception
+    {
+        assertDoesNotThrow(() -> {
+            configureMixingFluentAndBuilders();
+            String tran = ex.transactions.begin(op);
+            ex.events.send(cat, tran);
+        });
+    }
+
 }

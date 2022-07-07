@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import com.taitl.existential.config.builders.ConfigBuilder;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.keys.ContextKey;
+import com.taitl.existential.transactions.Transaction;
 
 /**
  * Defines an Operational Context - a set of Context objects relevant
@@ -37,6 +39,9 @@ public class OpContext
 {
     protected static final Supplier<? extends Context> DEFAULT_CONTEXT_FACTORY =
             () -> new Context("undefined");
+
+    protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
+            () -> new Transaction("undefined");
 
     /**
      * Name of context matching business operation, e.g. "/app/docs/update",
@@ -76,10 +81,12 @@ public class OpContext
      * The order of factories is important: execution order of rules follows
      * the order of factories, which follows the order of context() method calls.
      */
-    Set<Supplier<? extends Context>> contextFactories = new LinkedHashSet<>(1);
-    {
-        contextFactories.add(DEFAULT_CONTEXT_FACTORY);
-    }
+    // Set<Supplier<? extends Context>> contextFactories = new LinkedHashSet<>(1);
+    // {
+    // contextFactories.add(DEFAULT_CONTEXT_FACTORY);
+    // }
+    protected Supplier<? extends Context> contextFactory = DEFAULT_CONTEXT_FACTORY;
+    protected Supplier<? extends Transaction> transactionFactory = DEFAULT_TRANSACTION_FACTORY;
 
     /**
      * Constructs OpContext object with specified name.
@@ -103,7 +110,7 @@ public class OpContext
      *
      * Example:
      *   Contexts.configure("/app/docs/update")                <-- OpContext
-     *     .context(() -> new Context(){{           <-- Custom context
+     *     .context(new Context(){{           <-- Custom context
      *        require(new Invariant<Document<JSON>>() {{
      *             write(doc -> doc.verify());
      *             all(doc -> doc.verified());
@@ -126,25 +133,58 @@ public class OpContext
      *  custom rules in different parts of application (e.g. in multiple
      *  classes/components).
      */
-    public OpContext context(Supplier<? extends Context> supplier)
+    public OpContext context(Context context)
     {
-        if (contextFactories.size() == 1)
-        {
-            if (contextFactories.contains(DEFAULT_CONTEXT_FACTORY))
-            {
-                // Replace default context factory
-                contextFactories.remove(DEFAULT_CONTEXT_FACTORY);
-            }
-        }
-        // Guard against multiple calls to .context() with same arguments,
+        // Guard against multiple calls to .context() with same argument,
         // for instance, if such call exists somewhere in the middle of
         // ordinary request processing (e.g. in a controller)
-        if (!contextFactories.contains(supplier))
+        if (!contexts.contains(contexts))
         {
-            // TODO: test for different suppliers to not replace each other
-            contextFactories.add(supplier);
+            // TODO: test for different contexts to not replace each other
+            contexts.add(context);
         }
         return this;
+    }
+
+    // public OpContext context(Supplier<? extends Context> supplier)
+    // {
+    // if (contextFactories.size() == 1)
+    // {
+    // if (contextFactories.contains(DEFAULT_CONTEXT_FACTORY))
+    // {
+    // // Replace default context factory
+    // contextFactories.remove(DEFAULT_CONTEXT_FACTORY);
+    // }
+    // }
+    // // Guard against multiple calls to .context() with same arguments,
+    // // for instance, if such call exists somewhere in the middle of
+    // // ordinary request processing (e.g. in a controller)
+    // if (!contextFactories.contains(supplier))
+    // {
+    // // TODO: test for different suppliers to not replace each other
+    // contextFactories.add(supplier);
+    // }
+    // return this;
+    // }
+
+    /**
+     * Create ConfigBuilder for Context class.
+     *
+     * @return ConfigBuilder for Context class
+     */
+    public ConfigBuilder context()
+    {
+        return new ConfigBuilder(this, ConfigBuilder.TargetType.TYPE_CONTEXT);
+    }
+
+    /**
+     * Create ConfigBuilder for transaction.
+     *
+     * @return ConfigBuilder for transaction
+     */
+    public ConfigBuilder transaction()
+    {
+        return new ConfigBuilder(this, ConfigBuilder.TargetType.TYPE_TRANSACTION);
     }
 
     /**
@@ -176,16 +216,18 @@ public class OpContext
      */
     public void createSubcontexts()
     {
-        State.verify(!contextFactories.isEmpty(), "contextFactories must not be empty");
-        State.verify(!contexts.isEmpty(), "Field 'contexts' must not be empty");
-        for (Context context : contexts)
-        {
-            for (Supplier<? extends Context> supplier : contextFactories)
-            {
-                Context custom = supplier.get();
-                context.add(custom);
-            }
-        }
+        // Already created
+
+        // State.verify(!contextFactories.isEmpty(), "contextFactories must not be empty");
+        // State.verify(!contexts.isEmpty(), "Field 'contexts' must not be empty");
+        // for (Context context : contexts)
+        // {
+        // for (Supplier<? extends Context> supplier : contextFactories)
+        // {
+        // Context custom = supplier.get();
+        // context.add(custom);
+        // }
+        // }
     }
 
     /*
@@ -194,4 +236,51 @@ public class OpContext
      * ArrayList<>(contextFactories.size()); for (Supplier<? extends Context> supplier :
      * contextFactories) { Context cont = supplier.get(); result.add(cont); } return result; }
      */
+
+    /**
+     * Specify a context factory for this operation.
+     *
+     * @param supplier Custom context factory
+     * @return This
+     */
+    public OpContext factory(Supplier<? extends Context> supplier)
+    {
+        Args.cool(supplier, "supplier");
+        contextFactory = supplier;
+        return this;
+    }
+
+    /**
+     * Specify a transaction factory for this operation.
+     *
+     * @param supplier Custom transaction factory
+     * @return This
+     *
+     */
+    public OpContext transactionFactory(Supplier<? extends Transaction> supplier)
+    {
+        Args.cool(supplier, "supplier");
+        transactionFactory = supplier;
+        return this;
+    }
+
+    /**
+     * Creates a new Context instance for this operation.
+     *
+     * @return Context instance
+     */
+    public Context createContextInstance()
+    {
+        return contextFactory.get();
+    }
+
+    /**
+     * Creates a new Transaction instance for this operation.
+     *
+     * @return Transaction instance
+     */
+    public Transaction createTransactionInstance()
+    {
+        return transactionFactory.get();
+    }
 }

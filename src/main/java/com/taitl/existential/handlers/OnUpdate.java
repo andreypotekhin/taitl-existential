@@ -12,8 +12,18 @@ public class OnUpdate<T> extends On<T> implements EventHandlerWithSideEffects<T>
         super(action);
     }
 
+    public OnUpdate(Consumer<? super T> action, String description)
+    {
+        super(action, description);
+    }
+
     public OnUpdate(Predicate<? super T> condition, Consumer<? super T> action)
     {
         super(action);
+    }
+
+    public OnUpdate(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        super(condition, action, description);
     }
 }

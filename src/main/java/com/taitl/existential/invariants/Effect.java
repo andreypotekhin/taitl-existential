@@ -47,6 +47,24 @@ public class Effect<T> implements RuleSet<T>
         return add(new On<T>(action));
     }
 
+    public Effect<T> on(Consumer<? super T> action, String description)
+    {
+        Args.cool(action, "action");
+        return add(new On<T>(action, description));
+    }
+
+    public Effect<T> on(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new On<T>(condition, action));
+    }
+
+    public Effect<T> on(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new On<T>(condition, action));
+    }
+
     public Effect<T> create(Consumer<? super T> action)
     {
         Args.cool(action, "action");
@@ -77,10 +95,46 @@ public class Effect<T> implements RuleSet<T>
         return add(new OnChange<T>(action));
     }
 
+    public Effect<T> change(Consumer<? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnChange<T>(action, description));
+    }
+
+    public Effect<T> change(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnChange<T>(condition, action));
+    }
+
+    public Effect<T> change(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnChange<T>(condition, action, description));
+    }
+
     public Effect<T> delete(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnDelete<T>(action));
+    }
+
+    public Effect<T> delete(Consumer<? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnDelete<T>(action, description));
+    }
+
+    public Effect<T> delete(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnDelete<T>(condition, action));
+    }
+
+    public Effect<T> delete(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnDelete<T>(condition, action, description));
     }
 
     public Effect<T> modify(Consumer<? super T> action)
@@ -89,10 +143,59 @@ public class Effect<T> implements RuleSet<T>
         return add(new OnModify<T>(action));
     }
 
+    public Effect<T> modify(Consumer<? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnModify<T>(action, description));
+    }
+
+    public Effect<T> modify(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnModify<T>(condition, action));
+    }
+
+    public Effect<T> modify(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnModify<T>(condition, action, description));
+    }
+
     public Effect<T> mutate(BiConsumer<? super T, ? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnMutate<T>(action));
+    }
+
+    public Effect<T> mutate(BiConsumer<? super T, ? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnMutate<T>(action, description));
+    }
+
+    public Effect<T> mutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnMutate<T>(condition, action));
+    }
+
+    public Effect<T> mutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnMutate<T>(condition, action, description));
+    }
+
+    public Effect<T> mutate(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnMutate<T>(condition, action));
+    }
+
+    public Effect<T> mutate(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action,
+            String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnMutate<T>(condition, action, description));
     }
 
     public Effect<T> read(Consumer<? super T> action)
@@ -101,10 +204,46 @@ public class Effect<T> implements RuleSet<T>
         return add(new OnRead<T>(action));
     }
 
+    public Effect<T> read(Consumer<? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnRead<T>(action, description));
+    }
+
+    public Effect<T> read(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnRead<T>(condition, action));
+    }
+
+    public Effect<T> read(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnRead<T>(condition, action, description));
+    }
+
     public Effect<T> readAndLock(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnReadAndLock<T>(action));
+    }
+
+    public Effect<T> readAndLock(Consumer<? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnReadAndLock<T>(action, description));
+    }
+
+    public Effect<T> readAndLock(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnReadAndLock<T>(condition, action));
+    }
+
+    public Effect<T> readAndLock(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnReadAndLock<T>(condition, action, description));
     }
 
     public Effect<T> write(Consumer<? super T> action)
@@ -113,10 +252,60 @@ public class Effect<T> implements RuleSet<T>
         return add(new OnWrite<T>(action));
     }
 
+    public Effect<T> write(Consumer<? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnWrite<T>(action, description));
+    }
+
+    public Effect<T> write(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnWrite<T>(condition, action));
+    }
+
+    public Effect<T> write(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnWrite<T>(condition, action, description));
+    }
+
     public Effect<T> transit(BiConsumer<? super T, ? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnTransit<T>(action));
+    }
+
+    public Effect<T> transit(BiConsumer<? super T, ? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnTransit<T>(action, description));
+    }
+
+    public Effect<T> transit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnTransit<T>(condition, action));
+    }
+
+    public Effect<T> transit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action,
+            String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnTransit<T>(condition, action, description));
+    }
+
+    public Effect<T> transit(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnTransit<T>(condition, action));
+    }
+
+    public Effect<T> transit(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action,
+            String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnTransit<T>(condition, action, description));
     }
 
     public Effect<T> update(Consumer<? super T> action)
@@ -125,10 +314,46 @@ public class Effect<T> implements RuleSet<T>
         return add(new OnUpdate<T>(action));
     }
 
+    public Effect<T> update(Consumer<? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnUpdate<T>(action, description));
+    }
+
+    public Effect<T> update(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnUpdate<T>(condition, action));
+    }
+
+    public Effect<T> update(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnUpdate<T>(condition, action, description));
+    }
+
     public Effect<T> upsert(Consumer<? super T> action)
     {
         Args.cool(action, "action");
         return add(new OnUpsert<T>(action));
+    }
+
+    public Effect<T> upsert(Consumer<? super T> action, String description)
+    {
+        Args.cool(action, "action", description, "description");
+        return add(new OnUpsert<T>(action, description));
+    }
+
+    public Effect<T> upsert(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        Args.cool(condition, "condition", action, "action");
+        return add(new OnUpsert<T>(condition, action));
+    }
+
+    public Effect<T> upsert(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        Args.cool(condition, "condition", action, "action", description, "description");
+        return add(new OnUpsert<T>(condition, action, description));
     }
 
     /* Add event handlers and expressions */
@@ -147,72 +372,8 @@ public class Effect<T> implements RuleSet<T>
         return this;
     }
 
-    /* Expression methods */
-
-    public Effect<T> all(Predicate<? super T> predicate)
-    {
-        Args.cool(predicate, "predicate");
-        add(new All<T>(predicate));
-        return this;
-    }
-
-    public Effect<T> all(Predicate<? super T> predicate, String description)
-    {
-        Args.cool(predicate, "predicate");
-        add(new All<T>(predicate, description));
-        return this;
-    }
-
-    public Effect<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
-    {
-        Args.cool(predicate, "predicate");
-        add(new All<T>(condition, predicate));
-        return this;
-    }
-
-    public Effect<T> all(Predicate<? super T> condition, Predicate<? super T> predicate, String description)
-    {
-        Args.cool(condition, "condition", predicate, "predicate", description, "description");
-        add(new All<T>(condition, predicate, description));
-        return this;
-    }
-
-    public <V, K> Exists<V, K> exists(String indexName, K key)
-    {
-        Args.cool(indexName, "indexName", key, "key");
-        return new Exists<V, K>(indexName, key);
-    }
-
-    public <V, K> Exists<V, K> exists(String indexName, K key, Predicate<Set<V>> predicate)
-    {
-        Args.cool(indexName, "indexName", key, "key", predicate, "predicate");
-        return new Exists<V, K>(indexName, key, predicate);
-    }
-
-    public <V, K> Exists<V, K> exists(String indexName, K key,
-            BiPredicate<Set<V>, Transaction> bipredicate)
-    {
-        Args.cool(indexName, "indexName", key, "key", bipredicate, "bipredicate");
-        return new Exists<V, K>(indexName, key, bipredicate);
-    }
-
-    public <V, K> Exists<V, K> exists(Set<V> values, Predicate<Set<V>> predicate)
-    {
-        Args.cool(values, "values", predicate, "predicate");
-        return new Exists<V, K>(values, predicate, 0);
-    }
-
-    public <V, K> Exists<V, K> exists(Set<V> values, BiPredicate<Set<V>, Transaction> bipredicate)
-    {
-        Args.cool(values, "values", bipredicate, "bipredicate");
-        return new Exists<V, K>(values, bipredicate, 0);
-    }
-
     /* Other methods */
 
-    /*
-     * public boolean initialized() { return tran != null; }
-     */
     public Transaction getTransaction()
     {
         State.cool(tran, "tran");
