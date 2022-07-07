@@ -1,6 +1,8 @@
 package com.taitl.existential.handlers;
 
 import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.EventHandlerFailureException;
@@ -14,12 +16,21 @@ import static com.taitl.existential.constants.Strings.*;
 public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
 {
     Predicate<? super T> condition;
+    BiPredicate<? super T, ? super T> bicondition;
     BiConsumer<? super T, ? super T> action;
+    String description = null;
 
     public OnMutate(BiConsumer<? super T, ? super T> action)
     {
         Args.cool(action, "action");
         this.action = action;
+    }
+
+    public OnMutate(BiConsumer<? super T, ? super T> action, String description)
+    {
+        Args.cool(action, "action");
+        this.action = action;
+        this.description = description;
     }
 
     public OnMutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
@@ -29,11 +40,35 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
         this.action = action;
     }
 
-    public OnMutate(Predicate<? super T> condition)
+    public OnMutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
     {
-        Args.cool(condition, "condition");
+        Args.cool(condition, "condition", action, "action", description, "description");
         this.condition = condition;
+        this.action = action;
+        this.description = description;
     }
+
+    public OnMutate(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action)
+    {
+        Args.cool(bicondition, "bicondition", action, "action");
+        this.bicondition = bicondition;
+        this.action = action;
+    }
+
+    public OnMutate(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action,
+            String description)
+    {
+        Args.cool(bicondition, "bicondition", action, "action", description, "description");
+        this.bicondition = bicondition;
+        this.action = action;
+        this.description = description;
+    }
+
+    // public OnMutate(Predicate<? super T> condition)
+    // {
+    // Args.cool(condition, "condition");
+    // this.condition = condition;
+    // }
 
     public void handle(T t0, T t1) throws ExistentialException
     {
@@ -64,5 +99,10 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
                 throw new EventHandlerFailureException(e);
             }
         }
+    }
+
+    public String description()
+    {
+        return description == null ? "" : description;
     }
 }

@@ -12,8 +12,18 @@ public class OnUpsert<T> extends On<T> implements EventHandlerWithSideEffects<T>
         super(action);
     }
 
+    public OnUpsert(Consumer<? super T> action, String description)
+    {
+        super(action, description);
+    }
+
     public OnUpsert(Predicate<? super T> condition, Consumer<? super T> action)
     {
         super(action);
+    }
+
+    public OnUpsert(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        super(condition, action, description);
     }
 }

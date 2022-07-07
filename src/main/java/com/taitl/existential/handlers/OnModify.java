@@ -12,8 +12,18 @@ public class OnModify<T> extends On<T> implements EventHandlerWithSideEffects<T>
         super(action);
     }
 
+    public OnModify(Consumer<? super T> action, String description)
+    {
+        super(action, description);
+    }
+
     public OnModify(Predicate<? super T> condition, Consumer<? super T> action)
     {
         super(condition, action);
+    }
+
+    public OnModify(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        super(condition, action, description);
     }
 }

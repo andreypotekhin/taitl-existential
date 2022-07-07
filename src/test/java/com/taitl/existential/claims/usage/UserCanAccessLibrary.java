@@ -40,7 +40,7 @@ class UserCanAccessLibrary
     void configure()
     {
         ex.contexts.configure(op)
-                .context(() -> new Context(op) {
+                .context(new Context(op) {
                     {
                         require(new Invariant<Cat>() {
                             {

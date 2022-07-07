@@ -1,5 +1,6 @@
 package com.taitl.existential.handler.types;
 
+import com.taitl.existential.interfaces.Describable;
 import com.taitl.existential.rules.Rule;
 
 /**
@@ -8,6 +9,6 @@ import com.taitl.existential.rules.Rule;
  * @param <T>
  *            Type of entity
  */
-public interface EventHandler<T> extends Rule<T>
+public interface EventHandler<T> extends Rule<T>, Describable
 {
 }
