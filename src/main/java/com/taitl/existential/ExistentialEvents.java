@@ -4,7 +4,9 @@ import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.keys.TypeKey;
 
-public class ExistentialEvents
+import java.io.Closeable;
+
+public class ExistentialEvents implements Closeable
 {
     protected Existential ex;
 
@@ -58,4 +60,8 @@ public class ExistentialEvents
      *
      * public <E> void entity(E event, String tranID) throws ExistentialException { }
      */
+
+    public void close()
+    {
+    }
 }

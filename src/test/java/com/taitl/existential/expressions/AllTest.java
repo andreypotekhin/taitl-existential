@@ -25,7 +25,7 @@ class AllTest
     void setUp() throws Exception
     {
         o = new All<>(h -> h.hasRoof());
-        house = new House(TestData.ADDRESS_EAST_ST);
+        house = new House("Gray", TestData.ADDRESS_EAST_ST);
     }
 
     @AfterEach

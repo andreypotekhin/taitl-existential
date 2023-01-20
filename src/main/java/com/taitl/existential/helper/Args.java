@@ -1,5 +1,7 @@
 package com.taitl.existential.helper;
 
+import static com.taitl.existential.constants.Strings.*;
+
 /**
  * Lightweight checking/validations for method arguments.
  * Throws IllegalArgumentException if a condition is not met.
@@ -11,10 +13,6 @@ package com.taitl.existential.helper;
  */
 public class Args
 {
-    protected static final String ARGUMENT_MUST_NOT_BE_NULL = "Argument '%s' must not be null";
-    protected static final String ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH =
-            "Argument '%s' must be of even length";
-
     /**
      * Protected constructor for an utility class.
      */
@@ -71,4 +69,33 @@ public class Args
             throw new IllegalArgumentException(message);
         }
     }
+
+    public static void require(boolean condition, String message, Object... args)
+    {
+        if (args.length % 2 != 0)
+        {
+            throw new IllegalArgumentException(
+                    String.format(ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH, "args"));
+        }
+        if (!condition)
+        {
+            throw new IllegalArgumentException(message);
+        }
+        for (int i = 0; i < args.length; i += 2)
+        {
+            switch (args[i])
+            {
+            case Boolean b:
+                if (!b)
+                {
+                    throw new IllegalArgumentException(String.valueOf(args[i + 1]));
+                }
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        String.format(ARGUMENT_MUST_BE_BOOLEAN, i));
+            }
+        }
+    }
+
 }

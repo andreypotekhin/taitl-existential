@@ -3,10 +3,12 @@ package com.taitl.existential;
 import com.taitl.existential.constants.Flags;
 import com.taitl.existential.helper.Args;
 
+import java.io.Closeable;
+
 /**
  * Behavior flags for configuring Existential library.
  */
-public class ExistentialFlags
+public class ExistentialFlags implements Closeable
 {
     private static final String ARG_FLAG_MIN = "Argument 'flag' must be greater than zero";
     private static final String ARG_FLAG_MAX = "Argument 'flag' must be no greater than max flag";
@@ -51,5 +53,9 @@ public class ExistentialFlags
     public boolean get(int flag)
     {
         return (flags & flag) != 0;
+    }
+
+    public void close()
+    {
     }
 }

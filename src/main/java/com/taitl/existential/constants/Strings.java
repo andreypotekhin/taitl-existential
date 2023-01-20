@@ -37,4 +37,12 @@ public class Strings
     public static final String SLASH = "/";
     public static final String WILDCARD = "*";
     public static final String CONDITION_NOT_MET = "The specified condition not met";
+    public static final String ARGUMENT_MUST_NOT_BE_NULL = "Argument '%s' must not be null";
+    public static final String ARGUMENT_MUST_BE_BOOLEAN = "Argument '%s' must be boolean expression";
+    public static final String ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH =
+            "Argument '%s' must be of even length";
+    public static final String VALUE_MUST_NOT_BE_NULL = "Value '%s' must not be null";
+    public static final String VALUE_MUST_BE_BOOLEAN = "Value '%s' must be boolean expression";
+    public static final String VALUE_ARRAY_MUST_BE_EVEN_LENGTH =
+            "Value '%s' must be of even length";
 }

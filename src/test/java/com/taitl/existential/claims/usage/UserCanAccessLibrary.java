@@ -1,12 +1,9 @@
 package com.taitl.existential.claims.usage;
 
 import com.taitl.existential.Existential;
-import com.taitl.existential.contexts.Context;
-import com.taitl.existential.invariants.Effect;
-import com.taitl.existential.invariants.Invariant;
+import com.taitl.existential.constants.Flags;
 import com.taitl.existential.keys.TypeKey;
 import com.taitl.existential.model.cats.Cat;
-import com.taitl.existential.model.cats.Location;
 import com.taitl.existential.model.cats.TestData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +12,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserCanAccessLibrary
 {
     Existential ex;
     String op;
+    CatsTests fix;
     Cat cat;
 
     @BeforeEach
@@ -28,6 +27,7 @@ class UserCanAccessLibrary
     {
         ex = new Existential();
         op = "/api/cats";
+        fix = new CatsTests(ex, op);
         cat = new Cat(TestData.BLACK_CAT.color(), TestData.BLACK_CAT.location());
     }
 
@@ -39,21 +39,7 @@ class UserCanAccessLibrary
 
     void configure()
     {
-        ex.contexts.configure(op)
-                .context(new Context(op) {
-                    {
-                        require(new Invariant<Cat>() {
-                            {
-                                create(c -> "Black".equals(c.color), "Cats are born black");
-                            }
-                        });
-                        require(new Effect<Cat>() {
-                            {
-                                create(c -> c.location = new Location("Park"), "Set location for all new cats");
-                            }
-                        });
-                    }
-                });
+        fix.configure();
     }
 
     @Test
@@ -63,6 +49,17 @@ class UserCanAccessLibrary
         configure();
         String tran = ex.transactions.begin(op);
         ex.transactions.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can change library options programmatically ")
+    void changeLibraryOptions() throws Exception
+    {
+        assertThat(ex.flags.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
+        ex.flags.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+        assertThat(ex.flags.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
+        ex.flags.toggle(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+        assertThat(ex.flags.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
     }
 
     @Test
@@ -87,7 +84,15 @@ class UserCanAccessLibrary
     }
 
     @Test
-    @DisplayName("User can rollback transaction")
+    @DisplayName("User can begin transaction")
+    void begin() throws Exception
+    {
+        configure();
+        String tran = ex.transactions.begin(op);
+    }
+
+    @Test
+    @DisplayName("User can commit transaction")
     void commit() throws Exception
     {
         configure();
@@ -132,7 +137,6 @@ class UserCanAccessLibrary
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             ex.transactions.begin(op);
-            configure();
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 }

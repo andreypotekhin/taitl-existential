@@ -1,4 +1,4 @@
-package com.taitl.existential.claims.configuration;
+package com.taitl.existential.claims.usage;
 
 import com.taitl.existential.Existential;
 import com.taitl.existential.contexts.Context;
@@ -15,30 +15,20 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class UserCanConfigureLibrary
+class CatsTests
 {
-    Existential ex;
-    String op;
-    Cat cat;
+    public Existential ex;
+    public String op;
 
-    @BeforeEach
-    void setup()
+    public CatsTests(Existential ex, String op)
     {
-        ex = new Existential();
-        op = "/api/cats";
-        cat = new Cat(TestData.BLACK_CAT.color(), TestData.BLACK_CAT.location());
+        this.ex = ex;
+        this.op = op;
     }
 
-    @AfterEach
-    void cleanup()
-    {
-        ex.close();
-    }
-
-    void configure()
+    public void configure()
     {
         ex.contexts.configure(op)
                 .context(new Context(op) {
@@ -57,7 +47,7 @@ class UserCanConfigureLibrary
                 });
     }
 
-    void configureWithBuilders()
+    public void configureWithBuilders()
     {
         ex.contexts.configure(op)
                 .context()
@@ -70,7 +60,7 @@ class UserCanConfigureLibrary
                 .build();
     }
 
-    void configureMixingFluentAndBuilders()
+    public void configureMixingFluentAndBuilders()
     {
         ex.contexts.configure(op)
                 .context()
@@ -85,59 +75,4 @@ class UserCanConfigureLibrary
                 .done()
                 .build();
     }
-
-    @Test
-    @DisplayName("User must configure the library before use")
-    void sendEventsToUnconfiguredLibrary() throws Exception
-    {
-        assertThat(assertThrows(IllegalStateException.class, () -> {
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
-        }).getMessage(), containsString("You need to configure at least one context"));
-    }
-
-    @Test
-    @DisplayName("User can configure the library")
-    void configureLibrary() throws Exception
-    {
-        assertDoesNotThrow(() -> {
-            configure();
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
-        });
-    }
-
-    @Test
-    @DisplayName("User can configure the library using fluent style")
-    void configureLibraryUsingFluentStyle() throws Exception
-    {
-        assertDoesNotThrow(() -> {
-            configure();
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
-        });
-    }
-
-    @Test
-    @DisplayName("User can configure the library using builders")
-    void configureLibraryUsingConfigBuilder() throws Exception
-    {
-        assertDoesNotThrow(() -> {
-            configureWithBuilders();
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
-        });
-    }
-
-    @Test
-    @DisplayName("User can configure the library mixing fluent style and builders")
-    void configureLibraryMixingFluentAndBuilders() throws Exception
-    {
-        assertDoesNotThrow(() -> {
-            configureMixingFluentAndBuilders();
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
-        });
-    }
-
 }

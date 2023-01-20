@@ -7,7 +7,9 @@ import com.taitl.existential.keys.OpKey;
 import com.taitl.existential.transactions.OpTransaction;
 import com.taitl.existential.transactions.OpTransactionRegistry;
 
-public class ExistentialTransactions
+import java.io.Closeable;
+
+public class ExistentialTransactions implements Closeable
 {
     protected Existential ex;
     protected OpTransactionRegistry registry = new OpTransactionRegistry();
@@ -55,4 +57,8 @@ public class ExistentialTransactions
     }
 
     // cleanup: Close transactions, remove op transaction from registry
+
+    public void close()
+    {
+    }
 }

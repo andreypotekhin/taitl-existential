@@ -5,7 +5,9 @@ import com.taitl.existential.contexts.OpContext;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 
-public class ExistentialContexts
+import java.io.Closeable;
+
+public class ExistentialContexts implements Closeable
 {
     protected Existential ex;
     protected OpContextRegistry registry = new OpContextRegistry();
@@ -58,5 +60,9 @@ public class ExistentialContexts
     public boolean isEmpty()
     {
         return registry.isEmpty();
+    }
+
+    public void close()
+    {
     }
 }
