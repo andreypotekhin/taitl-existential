@@ -176,6 +176,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin-version}</version>
                 <configuration>
+                    <!-- Prevent 'preview features are not enabled' error -->
+                    <argLine>--enable-preview</argLine>
                     <!-- Exclude integration and end-to-end tests from 'validate', 'compile'
                         and 'test' goals - they are part of 'integration-test' and 'verify' goals
                         defined later for Failsafe plugin -->
