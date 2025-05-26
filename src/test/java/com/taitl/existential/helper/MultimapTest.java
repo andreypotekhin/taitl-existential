@@ -1,11 +1,11 @@
 package com.taitl.existential.helper;
 
-import static com.taitl.existential.model.cats.TestData.BLACK_CAT;
-import static com.taitl.existential.model.cats.TestData.GREY_CAT;
-import static com.taitl.existential.model.cats.TestData.LOCATION_GARDEN;
-import static com.taitl.existential.model.cats.TestData.LOCATION_PARK;
-import static com.taitl.existential.model.cats.TestData.ORANGE_CAT;
-import static com.taitl.existential.model.cats.TestData.YELLOW_CAT;
+import static com.taitl.existential.examples.night_city.model.TestData.BLACK_CAT;
+import static com.taitl.existential.examples.night_city.model.TestData.GREY_CAT;
+import static com.taitl.existential.examples.night_city.model.TestData.LOCATION_GARDEN;
+import static com.taitl.existential.examples.night_city.model.TestData.LOCATION_PARK;
+import static com.taitl.existential.examples.night_city.model.TestData.ORANGE_CAT;
+import static com.taitl.existential.examples.night_city.model.TestData.YELLOW_CAT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,9 +18,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.taitl.existential.helper.Multimap;
-import com.taitl.existential.model.cats.Cat;
-import com.taitl.existential.model.cats.Location;
+import com.taitl.existential.examples.night_city.model.Cat;
+import com.taitl.existential.examples.night_city.model.Location;
 
 class MultimapTest
 {

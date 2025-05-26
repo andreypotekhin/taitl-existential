@@ -1,4 +1,4 @@
-package com.taitl.existential.model.cats;
+package com.taitl.existential.examples.night_city.model;
 
 public class House extends Building
 {

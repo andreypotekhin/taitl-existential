@@ -1,13 +1,8 @@
 package com.taitl.existential.claims.usage;
 
 import com.taitl.existential.Existential;
-import com.taitl.existential.contexts.Context;
-import com.taitl.existential.invariants.Effect;
-import com.taitl.existential.invariants.Invariant;
-import com.taitl.existential.keys.TypeKey;
-import com.taitl.existential.model.cats.Cat;
-import com.taitl.existential.model.cats.Location;
-import com.taitl.existential.model.cats.TestData;
+import com.taitl.existential.examples.night_city.model.Cat;
+import com.taitl.existential.examples.night_city.model.TestData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,8 +55,8 @@ class UserCanConfigureLibrary
     void sendEventsToUnconfiguredLibrary() throws Exception
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
+            String tran = ex.begin(op);
+            ex.emit(cat, tran);
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 
@@ -71,8 +66,8 @@ class UserCanConfigureLibrary
     {
         assertDoesNotThrow(() -> {
             configure();
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
+            String tran = ex.begin(op);
+            ex.emit(cat, tran);
         });
     }
 
@@ -82,8 +77,8 @@ class UserCanConfigureLibrary
     {
         assertDoesNotThrow(() -> {
             configure();
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
+            String tran = ex.begin(op);
+            ex.emit(cat, tran);
         });
     }
 
@@ -93,8 +88,8 @@ class UserCanConfigureLibrary
     {
         assertDoesNotThrow(() -> {
             configureWithBuilders();
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
+            String tran = ex.begin(op);
+            ex.emit(cat, tran);
         });
     }
 
@@ -104,8 +99,8 @@ class UserCanConfigureLibrary
     {
         assertDoesNotThrow(() -> {
             configureMixingFluentAndBuilders();
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
+            String tran = ex.begin(op);
+            ex.emit(cat, tran);
         });
     }
 

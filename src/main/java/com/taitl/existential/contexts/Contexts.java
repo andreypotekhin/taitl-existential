@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.taitl.existential.EventSplitter;
+import com.taitl.existential.event.splitter.EventSplitter;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.Multimap;
 import com.taitl.existential.helper.State;

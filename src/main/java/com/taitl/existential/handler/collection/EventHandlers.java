@@ -1,4 +1,4 @@
-package com.taitl.existential;
+package com.taitl.existential.handler.collection;
 
 import static com.taitl.existential.constants.Strings.ARG_KEY;
 import static com.taitl.existential.constants.Strings.ARG_VALUE;

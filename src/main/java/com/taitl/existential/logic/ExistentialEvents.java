@@ -1,5 +1,6 @@
-package com.taitl.existential;
+package com.taitl.existential.logic;
 
+import com.taitl.existential.*;
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.keys.TypeKey;
@@ -15,7 +16,7 @@ public class ExistentialEvents implements Closeable
         this.ex = ex;
     }
 
-    public <T> void send(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void emit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
         Args.require(t0 != null || t1 != null, "One of t0, t1 must not be null");
         // Get transaction object
@@ -28,7 +29,7 @@ public class ExistentialEvents implements Closeable
         // Store (postpone) event processing for events without side effects
     }
 
-    public <T> void send(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void emit(T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
     }
 
@@ -37,7 +38,7 @@ public class ExistentialEvents implements Closeable
      * deducted at run time - that is, if entity class is not generic.
      * Do not use for generic classes, such as Document<T> and the like.
      */
-    public <T> void send(T t0, T t1, String tranID) throws ExistentialException
+    public <T> void emit(T t0, T t1, String tranID) throws ExistentialException
     {
     }
 
@@ -46,7 +47,7 @@ public class ExistentialEvents implements Closeable
      * deducted at run time - that is, if entity class is not generic.
      * Do not use for generic classes, such as Document<T> and the like.
      */
-    public <T> void send(T t, String tranID) throws ExistentialException
+    public <T> void emit(T t, String tranID) throws ExistentialException
     {
     }
 

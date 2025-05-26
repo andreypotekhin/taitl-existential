@@ -1,4 +1,4 @@
-package com.taitl.existential;
+package com.taitl.existential.event.queue;
 
 import java.util.Set;
 

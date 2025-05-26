@@ -43,10 +43,10 @@ public class ConfigBuilder
         for(RuleSet ruleSet : ruleSets) {
             switch(ruleSet){
                 case Invariant invariant:
-                    configurable.require(invariant);
+                    configurable.ensure(invariant);
                     break;
                 case Effect effect:
-                    configurable.require(effect);
+                    configurable.cause(effect);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + ruleSet);

@@ -7,13 +7,13 @@ import com.taitl.existential.invariants.Invariant;
 
 public interface Configurable
 {
-    // TODO: intent(Intent<T> intent);
+    <T> void ensure(Invariant<T> invariant);
 
-    <T> void require(Invariant<T> invariant);
-
-    <T> void require(Effect<T> effect);
+    <T> void cause(Effect<T> effect);
 
     <T> Configurable add(EventHandler<T> eh);
 
     <T> Configurable add(Expression<T> expr);
+
+    // TODO: allow/deny(Intent<T> intent);
 }

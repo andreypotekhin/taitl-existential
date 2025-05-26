@@ -1,5 +1,6 @@
-package com.taitl.existential;
+package com.taitl.existential.logic;
 
+import com.taitl.existential.*;
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.keys.TypeKey;
 

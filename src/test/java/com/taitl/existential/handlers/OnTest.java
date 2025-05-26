@@ -1,14 +1,10 @@
 package com.taitl.existential.handlers;
 
 import com.taitl.existential.exceptions.EventHandlerFailureException;
-import com.taitl.existential.expressions.All;
-import com.taitl.existential.model.cats.Cat;
-import com.taitl.existential.model.cats.TestData;
+import com.taitl.existential.examples.night_city.model.Cat;
+import com.taitl.existential.examples.night_city.model.TestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;

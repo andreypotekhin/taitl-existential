@@ -3,8 +3,8 @@ package com.taitl.existential.claims.usage;
 import com.taitl.existential.Existential;
 import com.taitl.existential.constants.Flags;
 import com.taitl.existential.keys.TypeKey;
-import com.taitl.existential.model.cats.Cat;
-import com.taitl.existential.model.cats.TestData;
+import com.taitl.existential.examples.night_city.model.Cat;
+import com.taitl.existential.examples.night_city.model.TestData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,19 +47,19 @@ class UserCanAccessLibrary
     void accessLibrary() throws Exception
     {
         configure();
-        String tran = ex.transactions.begin(op);
-        ex.transactions.commit(tran);
+        String tran = ex.begin(op);
+        ex.commit(tran);
     }
 
     @Test
     @DisplayName("User can change library options programmatically ")
     void changeLibraryOptions() throws Exception
     {
-        assertThat(ex.flags.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
-        ex.flags.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
-        assertThat(ex.flags.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
-        ex.flags.toggle(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
-        assertThat(ex.flags.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
+        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
+        ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
+        ex.toggle(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
     }
 
     @Test
@@ -67,9 +67,9 @@ class UserCanAccessLibrary
     void sendEntityEvent() throws Exception
     {
         configure();
-        String tran = ex.transactions.begin(op);
-        ex.events.send(null, cat, new TypeKey<Cat>(Cat.class), tran);
-        ex.transactions.commit(tran);
+        String tran = ex.begin(op);
+        ex.emit(null, cat, new TypeKey<Cat>(Cat.class), tran);
+        ex.commit(tran);
     }
 
     @Test
@@ -77,10 +77,10 @@ class UserCanAccessLibrary
     void recordEntityAccess() throws Exception
     {
         configure();
-        String tran = ex.transactions.begin(op);
-        ex.access.read(cat, new TypeKey<Cat>(Cat.class), tran);
-        ex.access.write(cat, tran);
-        ex.transactions.commit(tran);
+        String tran = ex.begin(op);
+        ex.read(cat, new TypeKey<Cat>(Cat.class), tran);
+        ex.write(cat, tran);
+        ex.commit(tran);
     }
 
     @Test
@@ -88,7 +88,7 @@ class UserCanAccessLibrary
     void begin() throws Exception
     {
         configure();
-        String tran = ex.transactions.begin(op);
+        String tran = ex.begin(op);
     }
 
     @Test
@@ -96,9 +96,9 @@ class UserCanAccessLibrary
     void commit() throws Exception
     {
         configure();
-        String tran = ex.transactions.begin(op);
-        ex.events.send(cat, tran);
-        ex.transactions.commit(tran);
+        String tran = ex.begin(op);
+        ex.emit(cat, tran);
+        ex.commit(tran);
     }
 
     @Test
@@ -106,9 +106,9 @@ class UserCanAccessLibrary
     void rollback() throws Exception
     {
         configure();
-        String tran = ex.transactions.begin(op);
-        ex.events.send(cat, tran);
-        ex.transactions.rollback(tran);
+        String tran = ex.begin(op);
+        ex.emit(cat, tran);
+        ex.rollback(tran);
     }
 
     @Test
@@ -116,9 +116,9 @@ class UserCanAccessLibrary
     void checkpoint() throws Exception
     {
         configure();
-        String tran = ex.transactions.begin(op);
-        ex.events.send(cat, tran);
-        ex.transactions.checkpoint(tran);
+        String tran = ex.begin(op);
+        ex.emit(cat, tran);
+        ex.checkpoint(tran);
     }
 
     @Test
@@ -126,8 +126,8 @@ class UserCanAccessLibrary
     void sendEventsToUnconfiguredLibrary() throws Exception
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
-            String tran = ex.transactions.begin(op);
-            ex.events.send(cat, tran);
+            String tran = ex.begin(op);
+            ex.emit(cat, tran);
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 
@@ -136,7 +136,7 @@ class UserCanAccessLibrary
     void sendEventsToLibraryBeforeItIsConfigured() throws Exception
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
-            ex.transactions.begin(op);
+            ex.begin(op);
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 }

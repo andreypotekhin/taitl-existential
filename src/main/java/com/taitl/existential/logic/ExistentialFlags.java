@@ -1,5 +1,6 @@
-package com.taitl.existential;
+package com.taitl.existential.logic;
 
+import com.taitl.existential.*;
 import com.taitl.existential.constants.Flags;
 import com.taitl.existential.helper.Args;
 

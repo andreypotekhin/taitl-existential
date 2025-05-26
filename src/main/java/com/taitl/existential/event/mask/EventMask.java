@@ -1,4 +1,4 @@
-package com.taitl.existential;
+package com.taitl.existential.event.mask;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

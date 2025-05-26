@@ -1,5 +1,6 @@
-package com.taitl.existential;
+package com.taitl.existential.logic;
 
+import com.taitl.existential.*;
 import com.taitl.existential.contexts.OpContextRegistry;
 import com.taitl.existential.contexts.OpContext;
 import com.taitl.existential.helper.Args;
@@ -20,7 +21,7 @@ public class ExistentialContexts implements Closeable
     public OpContext configure(String op)
     {
         Args.cool(op, "op");
-        State.verify(!ex.finalized,
+        State.verify(!ex.configured(),
                 "Cannot call this method because setup has already been finalized");
         return registry.getcreate(op);
     }
@@ -35,7 +36,7 @@ public class ExistentialContexts implements Closeable
      */
     public void finalizeSetup()
     {
-        if (!ex.finalized)
+        if (!ex.configured())
         {
             if (isEmpty())
             {
@@ -44,7 +45,7 @@ public class ExistentialContexts implements Closeable
 
             synchronized (Existential.class)
             {
-                ex.finalized = true;
+                ex.configured(true);
 
                 // Now that we finalized set up of rules and event handlers
                 // we'll create custom contexts for all OpContexts that

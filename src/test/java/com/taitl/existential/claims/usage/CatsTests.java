@@ -4,16 +4,9 @@ import com.taitl.existential.Existential;
 import com.taitl.existential.contexts.Context;
 import com.taitl.existential.invariants.Effect;
 import com.taitl.existential.invariants.Invariant;
-import com.taitl.existential.keys.TypeKey;
-import com.taitl.existential.model.cats.Cat;
-import com.taitl.existential.model.cats.Location;
-import com.taitl.existential.model.cats.TestData;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.taitl.existential.examples.night_city.model.Cat;
+import com.taitl.existential.examples.night_city.model.Location;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -30,15 +23,15 @@ class CatsTests
 
     public void configure()
     {
-        ex.contexts.configure(op)
+        ex.configure(op)
                 .context(new Context(op) {
                     {
-                        require(new Invariant<Cat>() {
+                        ensure(new Invariant<Cat>() {
                             {
                                 create(c -> "Black".equals(c.color), "Cats are born black");
                             }
                         });
-                        require(new Effect<Cat>() {
+                        cause(new Effect<Cat>() {
                             {
                                 create(c -> c.location = new Location("Park"), "Set location for all new cats");
                             }
@@ -49,7 +42,7 @@ class CatsTests
 
     public void configureWithBuilders()
     {
-        ex.contexts.configure(op)
+        ex.configure(op)
                 .context()
                 .invariant(Cat.class)
                 .create(c -> "Black".equals(c.color), "Cats are born black")
@@ -62,7 +55,7 @@ class CatsTests
 
     public void configureMixingFluentAndBuilders()
     {
-        ex.contexts.configure(op)
+        ex.configure(op)
                 .context()
                 .invariant(Cat.class)
                 .create(c -> "Black".equals(c.color), "Cats are born black")

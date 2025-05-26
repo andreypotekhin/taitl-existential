@@ -1,5 +1,6 @@
-package com.taitl.existential;
+package com.taitl.existential.logic;
 
+import com.taitl.existential.*;
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.NotFoundException;
 import com.taitl.existential.helper.Args;
@@ -23,7 +24,7 @@ public class ExistentialTransactions implements Closeable
     {
         Args.cool(op, "op");
         OpKey.requireValidName(op);
-        ex.contexts.finalizeSetup();
+        ex.contexts().finalizeSetup();
         OpTransaction opTran = registry.create(op);
         return opTran.id.toString();
     }

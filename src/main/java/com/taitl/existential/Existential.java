@@ -1,10 +1,9 @@
 package com.taitl.existential;
 
-import com.taitl.existential.constants.Flags;
 import com.taitl.existential.contexts.OpContext;
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.helper.Args;
 import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.logic.*;
 
 import java.io.Closeable;
 
@@ -25,13 +24,14 @@ import java.io.Closeable;
  */
 public final class Existential implements Closeable
 {
-    public ExistentialTransactions transactions = new ExistentialTransactions(this);
-    public ExistentialEvents events = new ExistentialEvents(this);
-    public ExistentialFlags flags = new ExistentialFlags(this);
-    public ExistentialContexts contexts = new ExistentialContexts(this);
-    public ExistentialAccess access = new ExistentialAccess(this);
-    public boolean finalized = false;
-    public boolean closed = false;
+    private ExistentialTransactions transactions = new ExistentialTransactions(this);
+    private ExistentialEvents events = new ExistentialEvents(this);
+    private ExistentialFlags flags = new ExistentialFlags(this);
+    private ExistentialContexts contexts = new ExistentialContexts(this);
+    private ExistentialAccess access = new ExistentialAccess(this);
+
+    private boolean configured = false;
+    private boolean closed = false;
 
     public OpContext configure(String op)
     {
@@ -58,24 +58,24 @@ public final class Existential implements Closeable
         transactions.rollback(tranID);
     }
 
-    public <T> void send(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void emit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        events.send(t0, t1, type, tranID);
+        events.emit(t0, t1, type, tranID);
     }
 
-    public <T> void send(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void emit(T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        events.send(t, type, tranID);
+        events.emit(t, type, tranID);
     }
 
-    public <T> void send(T t0, T t1, String tranID) throws ExistentialException
+    public <T> void emit(T t0, T t1, String tranID) throws ExistentialException
     {
-        events.send(t0, t1, tranID);
+        events.emit(t0, t1, tranID);
     }
 
-    public <T> void send(T t, String tranID) throws ExistentialException
+    public <T> void emit(T t, String tranID) throws ExistentialException
     {
-        events.send(t, tranID);
+        events.emit(t, tranID);
     }
 
     public <T> void read(T entity, TypeKey<T> type, String tranID) throws ExistentialException
@@ -129,5 +129,20 @@ public final class Existential implements Closeable
             access.close();
             closed = true;
         }
+    }
+
+    public void configured(boolean b)
+    {
+        configured = b;
+    }
+
+    public boolean configured()
+    {
+        return configured;
+    }
+
+    public ExistentialContexts contexts()
+    {
+        return contexts;
     }
 }

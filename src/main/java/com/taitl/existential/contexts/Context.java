@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import com.taitl.existential.interfaces.Configurable;
-import com.taitl.existential.EventSplitter;
+import com.taitl.existential.event.splitter.EventSplitter;
 import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.expressions.Expressions;
 import com.taitl.existential.handler.types.EventHandler;
@@ -90,17 +90,17 @@ public class Context implements Configurable
      * Example:
      *   Contexts.get("/app/school")
      *     .transaction(() -> new Transaction(){{
-     *        require(new Invariant<Student>() {{
+     *        ensure(new Invariant<Student>() {{
      *             all(student -> student.awake());
      *        }});
-     *        require(new Invariant<Teacher>() {{
+     *        ensure(new Invariant<Teacher>() {{
      *             all(teacher -> teacher.notOnLeave());
      *        }});
-     *        intent(new Intent<Student>() {{
+     *        allow(new Intent<Student>() {{
      *             read();
      *             write();
      *        }});
-     *        intent(new Intent<Teacher>() {{
+     *        allow(new Intent<Teacher>() {{
      *             read();
      *        }});
      *    }})
@@ -182,26 +182,23 @@ public class Context implements Configurable
      * <pre>{@code
      * Contexts.get("/app/flight_school")
      *     .context(() -> new Context(){{
-     * 	      require(new Invariant<Pilot>() {{
+     * 	      ensure(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     * 	      }})
-     * 	      require(new Invariant< Cloud>() {{
-     *                all(cloud -> cloud.linings.contains(SILVER), "Every cloud has a silver lining");
      * 	      }})
      * }</pre>
      *
      * @param <T> Type parameter
      * @param invariant Invariant (rules) that must be upkept
      */
-    public <T> void require(Invariant<T> invariant)
+    public <T> void ensure(Invariant<T> invariant)
     {
         Args.cool(invariant, "invariant");
         instructions.addAll(invariant.instructions);
         expressions.addAll(invariant.expressions);
     }
 
-    public <T> void require(Effect<T> effect)
+    public <T> void cause(Effect<T> effect)
     {
         Args.cool(effect, "effect");
         instructions.addAll(effect.instructions);

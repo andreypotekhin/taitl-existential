@@ -10,9 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.PredicateFailureException;
-import com.taitl.existential.expressions.All;
-import com.taitl.existential.model.cats.House;
-import com.taitl.existential.model.cats.TestData;
+import com.taitl.existential.examples.night_city.model.House;
+import com.taitl.existential.examples.night_city.model.TestData;
 
 import java.util.function.Predicate;
 

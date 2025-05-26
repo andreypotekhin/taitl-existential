@@ -1,10 +1,6 @@
 package com.taitl.existential.keys;
 
-import com.taitl.existential.EventHandlers;
-import com.taitl.existential.constants.Strings;
 import com.taitl.existential.helper.Args;
-
-import static com.taitl.existential.constants.Strings.SLASH;
 
 /**
  * A string representing a type along with its generics, for example "Set<Car>".<p>
@@ -26,7 +22,7 @@ import static com.taitl.existential.constants.Strings.SLASH;
  * <p>
  *
  * @author Andrey Potekhin
- * @see EventHandlers
+ * @see com.taitl.existential.EventHandlers
  */
 public class TypeKey<T>
 {

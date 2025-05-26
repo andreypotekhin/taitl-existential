@@ -1,4 +1,4 @@
-package com.taitl.existential;
+package com.taitl.existential.event.splitter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

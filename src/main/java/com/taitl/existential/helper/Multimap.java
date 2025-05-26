@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
+/**
+ * Maps key to a set of values
+ */
 public class Multimap<K, V>
 {
     protected Map<K, Set<V>> storage = new LinkedHashMap<>();

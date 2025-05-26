@@ -4,7 +4,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import com.taitl.existential.interfaces.Configurable;
-import com.taitl.existential.EventSplitter;
+import com.taitl.existential.event.splitter.EventSplitter;
 import com.taitl.existential.constants.Strings;
 import com.taitl.existential.contexts.Context;
 import com.taitl.existential.expressions.Expression;
@@ -172,19 +172,16 @@ public class Transaction implements Configurable
      * <pre>{@code
      * Contexts.get("/app/flight_school")
      *     .transaction(() -> new Transaction(){{
-     * 	      require(new Invariant<Pilot>() {{
+     * 	      ensure(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     * 	      }})
-     * 	      require(new Invariant< Cloud>() {{
-     *                all(cloud -> cloud.linings.contains(SILVER), "Every cloud has a silver lining");
      * 	      }})
      * }</pre>
      *
      * @param <T> Type parameter
      * @param invariants Invariants (rules) that must be upkept
      */
-    public <T> void require(Invariant<T> invariant)
+    public <T> void ensure(Invariant<T> invariant)
     {
         Args.cool(invariant, "invariant");
         Transaction tr = invariant.getTransaction();
@@ -202,7 +199,7 @@ public class Transaction implements Configurable
         expressions.addAll(invariant.expressions);
     }
 
-    public <T> void require(Effect<T> effect)
+    public <T> void cause(Effect<T> effect)
     {
         Args.cool(effect, "effect");
         Transaction tr = effect.getTransaction();
