@@ -1,12 +1,10 @@
 package com.taitl.existential.contexts;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
 
-import com.taitl.existential.config.builders.ConfigBuilder;
+import com.taitl.existential.builders.ConfigBuilder;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.keys.ContextKey;

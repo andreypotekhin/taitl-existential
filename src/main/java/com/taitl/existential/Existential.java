@@ -1,15 +1,16 @@
 package com.taitl.existential;
 
 import com.taitl.existential.contexts.OpContext;
+import com.taitl.existential.creator.*;
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.keys.TypeKey;
 import com.taitl.existential.logic.*;
 
 import java.io.Closeable;
+import java.util.function.*;
 
 /**
- * Main entry point into Existential library. See documentation on how to use.
- * <p>
+ * Main entry point into Existential library.
  *
  * Documentation:
  *   <a href="https://github.com/andreypotekhin/taitl-existential">Existential</a>
@@ -29,7 +30,6 @@ public final class Existential implements Closeable
     private ExistentialFlags flags = new ExistentialFlags(this);
     private ExistentialContexts contexts = new ExistentialContexts(this);
     private ExistentialAccess access = new ExistentialAccess(this);
-
     private boolean configured = false;
     private boolean closed = false;
 
@@ -116,6 +116,16 @@ public final class Existential implements Closeable
     public boolean get(int flag)
     {
         return flags.get(flag);
+    }
+
+    public static <T> void inject(Class<T> cls, Supplier<? extends T> supplier)
+    {
+        Creator.inject(cls, supplier);
+    }
+
+    public static <T> void uninject(Class<T> cls)
+    {
+        Creator.uninject(cls);
     }
 
     public void close()

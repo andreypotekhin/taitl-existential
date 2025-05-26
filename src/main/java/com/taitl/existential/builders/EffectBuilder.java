@@ -1,7 +1,5 @@
-package com.taitl.existential.config.builders;
+package com.taitl.existential.builders;
 
-import com.taitl.existential.handlers.OnCreate;
-import com.taitl.existential.handlers.OnMutate;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.invariants.Effect;
 

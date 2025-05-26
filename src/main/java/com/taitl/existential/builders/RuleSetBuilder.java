@@ -1,4 +1,4 @@
-package com.taitl.existential.config.builders;
+package com.taitl.existential.builders;
 
 import com.taitl.existential.rules.RuleSet;
 
