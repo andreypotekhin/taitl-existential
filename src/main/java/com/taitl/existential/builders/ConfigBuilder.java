@@ -3,7 +3,7 @@ package com.taitl.existential.builders;
 import com.taitl.existential.contexts.OpContext;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.interfaces.Configurable;
-import com.taitl.existential.invariants.Effect;
+import com.taitl.existential.effects.Effect;
 import com.taitl.existential.invariants.Invariant;
 import com.taitl.existential.rules.RuleSet;
 
@@ -43,7 +43,7 @@ public class ConfigBuilder
         for(RuleSet ruleSet : ruleSets) {
             switch(ruleSet){
                 case Invariant invariant:
-                    configurable.ensure(invariant);
+                    configurable.enforce(invariant);
                     break;
                 case Effect effect:
                     configurable.cause(effect);

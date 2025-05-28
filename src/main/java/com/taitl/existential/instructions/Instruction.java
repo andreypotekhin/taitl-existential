@@ -1,7 +1,7 @@
 package com.taitl.existential.instructions;
 
 import com.taitl.existential.expressions.Expression;
-import com.taitl.existential.handler.types.EventHandler;
+import com.taitl.existential.handlers.types.EventHandler;
 import com.taitl.existential.helper.Args;
 
 public class Instruction<T>

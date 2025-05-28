@@ -2,9 +2,10 @@ package com.taitl.existential.claims.usage;
 
 import com.taitl.existential.Existential;
 import com.taitl.existential.constants.Flags;
+import com.taitl.existential.examples.night_city.tests.*;
 import com.taitl.existential.keys.TypeKey;
 import com.taitl.existential.examples.night_city.model.Cat;
-import com.taitl.existential.examples.night_city.model.TestData;
+import com.taitl.existential.examples.night_city.data.CityTestData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,7 @@ class UserCanAccessLibrary
 {
     Existential ex;
     String op;
-    CatsTests fix;
+    CityTests fixt;
     Cat cat;
 
     @BeforeEach
@@ -27,8 +28,8 @@ class UserCanAccessLibrary
     {
         ex = new Existential();
         op = "/api/cats";
-        fix = new CatsTests(ex, op);
-        cat = new Cat(TestData.BLACK_CAT.color(), TestData.BLACK_CAT.location());
+        fixt = new CityTests(ex, op);
+        cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
     }
 
     @AfterEach
@@ -39,7 +40,7 @@ class UserCanAccessLibrary
 
     void configure()
     {
-        fix.configure();
+        fixt.configure();
     }
 
     @Test
@@ -68,7 +69,17 @@ class UserCanAccessLibrary
     {
         configure();
         String tran = ex.begin(op);
-        ex.emit(null, cat, new TypeKey<Cat>(Cat.class), tran);
+        ex.event(null, cat, tran);
+        ex.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can send entity event using a type key")
+    void sendEntityEventWithTypeKey() throws Exception
+    {
+        configure();
+        String tran = ex.begin(op);
+        ex.event(null, cat, new TypeKey<Cat>(Cat.class), tran);
         ex.commit(tran);
     }
 
@@ -97,7 +108,7 @@ class UserCanAccessLibrary
     {
         configure();
         String tran = ex.begin(op);
-        ex.emit(cat, tran);
+        ex.event(cat, tran);
         ex.commit(tran);
     }
 
@@ -107,7 +118,7 @@ class UserCanAccessLibrary
     {
         configure();
         String tran = ex.begin(op);
-        ex.emit(cat, tran);
+        ex.event(cat, tran);
         ex.rollback(tran);
     }
 
@@ -117,8 +128,8 @@ class UserCanAccessLibrary
     {
         configure();
         String tran = ex.begin(op);
-        ex.emit(cat, tran);
-        ex.checkpoint(tran);
+        ex.event(cat, tran);
+        ex.check(tran);
     }
 
     @Test
@@ -127,7 +138,7 @@ class UserCanAccessLibrary
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             String tran = ex.begin(op);
-            ex.emit(cat, tran);
+            ex.event(cat, tran);
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 

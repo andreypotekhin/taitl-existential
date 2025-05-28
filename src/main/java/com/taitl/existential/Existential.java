@@ -1,13 +1,12 @@
 package com.taitl.existential;
 
-import com.taitl.existential.contexts.OpContext;
-import com.taitl.existential.creator.*;
-import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.keys.TypeKey;
-import com.taitl.existential.logic.*;
-
-import java.io.Closeable;
+import java.io.*;
 import java.util.function.*;
+import com.taitl.existential.contexts.*;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.keys.*;
+import com.taitl.exlogic.creator.*;
+import com.taitl.exlogic.existential.*;
 
 /**
  * Main entry point into Existential library.
@@ -48,9 +47,9 @@ public final class Existential implements Closeable
         transactions.commit(tranID);
     }
 
-    public void checkpoint(String tranID) throws ExistentialException
+    public void check(String tranID) throws ExistentialException
     {
-        transactions.checkpoint(tranID);
+        transactions.check(tranID);
     }
 
     public void rollback(String tranID) throws ExistentialException
@@ -58,24 +57,24 @@ public final class Existential implements Closeable
         transactions.rollback(tranID);
     }
 
-    public <T> void emit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void event(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        events.emit(t0, t1, type, tranID);
+        events.event(t0, t1, type, tranID);
     }
 
-    public <T> void emit(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void event(T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        events.emit(t, type, tranID);
+        events.event(t, type, tranID);
     }
 
-    public <T> void emit(T t0, T t1, String tranID) throws ExistentialException
+    public <T> void event(T t0, T t1, String tranID) throws ExistentialException
     {
-        events.emit(t0, t1, tranID);
+        events.event(t0, t1, tranID);
     }
 
-    public <T> void emit(T t, String tranID) throws ExistentialException
+    public <T> void event(T t, String tranID) throws ExistentialException
     {
-        events.emit(t, tranID);
+        events.event(t, tranID);
     }
 
     public <T> void read(T entity, TypeKey<T> type, String tranID) throws ExistentialException
@@ -121,11 +120,6 @@ public final class Existential implements Closeable
     public static <T> void inject(Class<T> cls, Supplier<? extends T> supplier)
     {
         Creator.inject(cls, supplier);
-    }
-
-    public static <T> void uninject(Class<T> cls)
-    {
-        Creator.uninject(cls);
     }
 
     public void close()

@@ -2,8 +2,6 @@ package com.taitl.existential.exceptions;
 
 public class PredicateFailureException extends ExistentialException
 {
-    private static final long serialVersionUID = 1L;
-
     public PredicateFailureException()
     {
     }

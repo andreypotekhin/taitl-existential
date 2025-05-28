@@ -2,12 +2,11 @@ package com.taitl.existential.handlers;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import com.taitl.existential.exceptions.EventHandlerFailureException;
+import com.taitl.existential.exceptions.EventHandlerExecutionException;
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.handler.types.BiEventHandlerWithSideEffects;
+import com.taitl.existential.handlers.types.BiEventHandlerWithSideEffects;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 
@@ -82,7 +81,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             // Check the condition and throw an exception if it is not met.
             if (!condition.test(t1))
             {
-                throw new EventHandlerFailureException(CONDITION_NOT_MET);
+                throw new EventHandlerExecutionException(CONDITION_NOT_MET);
             }
 
             return;
@@ -96,7 +95,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             }
             catch (Exception e)
             {
-                throw new EventHandlerFailureException(e);
+                throw new EventHandlerExecutionException(e);
             }
         }
     }

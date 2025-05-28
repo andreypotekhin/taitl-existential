@@ -7,17 +7,17 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import com.taitl.existential.interfaces.Configurable;
-import com.taitl.existential.event.splitter.EventSplitter;
 import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.expressions.Expressions;
-import com.taitl.existential.handler.types.EventHandler;
+import com.taitl.existential.handlers.types.EventHandler;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.instructions.Instructions;
-import com.taitl.existential.invariants.Effect;
+import com.taitl.existential.effects.Effect;
 import com.taitl.existential.invariants.Invariant;
 import com.taitl.existential.rules.Rule;
 import com.taitl.existential.transactions.Transaction;
+import com.taitl.exlogic.events.split.*;
 
 public class Context implements Configurable
 {
@@ -191,7 +191,7 @@ public class Context implements Configurable
      * @param <T> Type parameter
      * @param invariant Invariant (rules) that must be upkept
      */
-    public <T> void ensure(Invariant<T> invariant)
+    public <T> void enforce(Invariant<T> invariant)
     {
         Args.cool(invariant, "invariant");
         instructions.addAll(invariant.instructions);

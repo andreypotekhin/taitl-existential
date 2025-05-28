@@ -1,8 +1,8 @@
 package com.taitl.existential.handlers;
 
-import com.taitl.existential.exceptions.EventHandlerFailureException;
+import com.taitl.existential.exceptions.*;
 import com.taitl.existential.examples.night_city.model.Cat;
-import com.taitl.existential.examples.night_city.model.TestData;
+import com.taitl.existential.examples.night_city.data.CityTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ class OnTest
     void setup()
     {
         on = new On<>(c -> "Black".equals(c.color));
-        cat = new Cat(TestData.BLACK_CAT.color(), TestData.BLACK_CAT.location());
+        cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
     }
 
     @Test
@@ -29,7 +29,7 @@ class OnTest
     {
         cat.color = "White";
         on = new On<>(c -> "Black".equals(c.color), null, "Cats are black");
-        assertThat(assertThrows(EventHandlerFailureException.class, () -> {
+        assertThat(assertThrows(ConditionNotMetException.class, () -> {
             on.handle(cat);
         }).getMessage(), containsString("Cats are black"));
         assertThat(cat.color, is("White"));

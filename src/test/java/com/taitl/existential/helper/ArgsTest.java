@@ -1,11 +1,10 @@
 package com.taitl.existential.helper;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
 
 class ArgsTest
 {

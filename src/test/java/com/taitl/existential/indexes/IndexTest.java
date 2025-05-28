@@ -1,12 +1,7 @@
 package com.taitl.existential.indexes;
 
 import static com.taitl.existential.helper.CollectionUtils.getFirst;
-import static com.taitl.existential.examples.night_city.model.TestData.BLACK_CAT;
-import static com.taitl.existential.examples.night_city.model.TestData.GREY_CAT;
-import static com.taitl.existential.examples.night_city.model.TestData.LOCATION_GARDEN;
-import static com.taitl.existential.examples.night_city.model.TestData.LOCATION_PARK;
-import static com.taitl.existential.examples.night_city.model.TestData.ORANGE_CAT;
-import static com.taitl.existential.examples.night_city.model.TestData.YELLOW_CAT;
+import static com.taitl.existential.examples.night_city.data.CityTestData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -22,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import com.taitl.existential.examples.night_city.model.Cat;
 import com.taitl.existential.examples.night_city.model.Location;
-import com.taitl.existential.examples.night_city.model.TestData;
+import com.taitl.existential.examples.night_city.data.CityTestData;
 
 class IndexTest
 {
@@ -60,7 +55,7 @@ class IndexTest
         cats_by_location.add(BLACK_CAT);
         assertTrue(cats_by_location.contains(LOCATION_GARDEN));
         cats_by_color = new Index<>(c -> c.location.toString());
-        cats_by_color.add(TestData.ORANGE_CAT);
+        cats_by_color.add(CityTestData.ORANGE_CAT);
         assertTrue(cats_by_color.contains("Garden"));
         assertThrows(IllegalArgumentException.class, () -> new Index<>(null));
     }
@@ -118,9 +113,10 @@ class IndexTest
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(null, BLACK_CAT));
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(LOCATION_PARK, null));
         Index<String, Cat> index_without_get_index_function = new Index<>();
-        index_without_get_index_function.add("Grey", TestData.GREY_CAT);
-        assertTrue(index_without_get_index_function.contains("Grey", TestData.GREY_CAT));
-        assertThrows(IllegalArgumentException.class, () -> index_without_get_index_function.add(TestData.ORANGE_CAT));
+        index_without_get_index_function.add("Grey", CityTestData.GREY_CAT);
+        assertTrue(index_without_get_index_function.contains("Grey", CityTestData.GREY_CAT));
+        assertThrows(IllegalArgumentException.class,
+                () -> index_without_get_index_function.add(CityTestData.ORANGE_CAT));
     }
 
     @Test

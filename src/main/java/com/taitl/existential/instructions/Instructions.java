@@ -3,7 +3,7 @@ package com.taitl.existential.instructions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.taitl.existential.handler.types.EventHandler;
+import com.taitl.existential.handlers.types.EventHandler;
 import com.taitl.existential.helper.Args;
 
 /**

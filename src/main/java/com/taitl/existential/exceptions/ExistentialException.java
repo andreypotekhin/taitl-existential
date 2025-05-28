@@ -2,8 +2,6 @@ package com.taitl.existential.exceptions;
 
 public class ExistentialException extends Exception
 {
-    private static final long serialVersionUID = 1L;
-
     public ExistentialException()
     {
     }

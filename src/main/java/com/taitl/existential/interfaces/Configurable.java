@@ -1,13 +1,13 @@
 package com.taitl.existential.interfaces;
 
 import com.taitl.existential.expressions.Expression;
-import com.taitl.existential.handler.types.EventHandler;
-import com.taitl.existential.invariants.Effect;
+import com.taitl.existential.handlers.types.EventHandler;
+import com.taitl.existential.effects.Effect;
 import com.taitl.existential.invariants.Invariant;
 
 public interface Configurable
 {
-    <T> void ensure(Invariant<T> invariant);
+    <T> void enforce(Invariant<T> invariant);
 
     <T> void cause(Effect<T> effect);
 

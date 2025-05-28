@@ -2,8 +2,7 @@ package com.taitl.existential.handlers;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-
-import com.taitl.existential.handler.types.EventHandlerWithSideEffects;
+import com.taitl.existential.handlers.types.*;
 
 public class OnChange<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {

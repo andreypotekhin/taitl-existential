@@ -1,17 +1,14 @@
 package com.taitl.existential.handlers;
 
-import static com.taitl.existential.constants.Strings.ARG_CONDITION;
-import static com.taitl.existential.constants.Strings.ARG_PREDICATE;
 import static com.taitl.existential.constants.Strings.ARG_T0_T1;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import com.taitl.existential.exceptions.EventHandlerFailureException;
+import com.taitl.existential.exceptions.EventHandlerExecutionException;
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.handler.types.BiEventHandlerWithSideEffects;
+import com.taitl.existential.handlers.types.BiEventHandlerWithSideEffects;
 import com.taitl.existential.helper.Args;
 
 public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
@@ -91,7 +88,7 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
             }
             catch (Exception e)
             {
-                throw new EventHandlerFailureException(e);
+                throw new EventHandlerExecutionException(e);
             }
         }
     }

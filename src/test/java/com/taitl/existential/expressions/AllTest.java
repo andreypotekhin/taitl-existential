@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.exceptions.PredicateFailureException;
 import com.taitl.existential.examples.night_city.model.House;
-import com.taitl.existential.examples.night_city.model.TestData;
+import com.taitl.existential.examples.night_city.data.CityTestData;
 
 import java.util.function.Predicate;
 
@@ -24,7 +24,7 @@ class AllTest
     void setUp() throws Exception
     {
         o = new All<>(h -> h.hasRoof());
-        house = new House("Gray", TestData.ADDRESS_EAST_ST);
+        house = new House("Gray", CityTestData.ADDRESS_EAST_ST);
     }
 
     @AfterEach

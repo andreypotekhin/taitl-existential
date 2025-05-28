@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.taitl.existential.constants.Strings;
 import com.taitl.existential.event.types.BiEvent;
-import com.taitl.existential.handler.types.EventHandlerWithSideEffects;
+import com.taitl.existential.handlers.types.EventHandlerWithSideEffects;
 import com.taitl.existential.helper.Multimap;
 
 /**

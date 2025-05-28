@@ -1,7 +1,7 @@
 package com.taitl.existential.builders;
 
 import com.taitl.existential.helper.Args;
-import com.taitl.existential.invariants.Effect;
+import com.taitl.existential.effects.Effect;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;

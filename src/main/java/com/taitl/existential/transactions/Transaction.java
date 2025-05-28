@@ -4,18 +4,17 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 import com.taitl.existential.interfaces.Configurable;
-import com.taitl.existential.event.splitter.EventSplitter;
 import com.taitl.existential.constants.Strings;
 import com.taitl.existential.contexts.Context;
 import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.expressions.Expressions;
-import com.taitl.existential.handler.types.EventHandler;
+import com.taitl.existential.handlers.types.EventHandler;
 import com.taitl.existential.handlers.OnBegin;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.indexes.Index;
 import com.taitl.existential.instructions.Instructions;
-import com.taitl.existential.invariants.Effect;
+import com.taitl.existential.effects.Effect;
 import com.taitl.existential.invariants.Invariant;
 
 /**
@@ -179,9 +178,9 @@ public class Transaction implements Configurable
      * }</pre>
      *
      * @param <T> Type parameter
-     * @param invariants Invariants (rules) that must be upkept
+     * @param invariants Invariants (rules) that must be upheld
      */
-    public <T> void ensure(Invariant<T> invariant)
+    public <T> void enforce(Invariant<T> invariant)
     {
         Args.cool(invariant, "invariant");
         Transaction tr = invariant.getTransaction();

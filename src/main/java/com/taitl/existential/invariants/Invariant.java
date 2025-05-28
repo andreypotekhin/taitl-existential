@@ -1,17 +1,15 @@
 package com.taitl.existential.invariants;
 
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.taitl.existential.expressions.All;
 import com.taitl.existential.expressions.Exists;
 import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.expressions.Expressions;
-import com.taitl.existential.handler.types.EventHandler;
 import com.taitl.existential.handlers.*;
+import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.instructions.Instructions;

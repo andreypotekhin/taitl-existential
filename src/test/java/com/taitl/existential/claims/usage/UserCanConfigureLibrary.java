@@ -2,7 +2,8 @@ package com.taitl.existential.claims.usage;
 
 import com.taitl.existential.Existential;
 import com.taitl.existential.examples.night_city.model.Cat;
-import com.taitl.existential.examples.night_city.model.TestData;
+import com.taitl.existential.examples.night_city.data.CityTestData;
+import com.taitl.existential.examples.night_city.tests.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,7 @@ class UserCanConfigureLibrary
 {
     Existential ex;
     String op;
-    CatsTests fix;
+    CityTests fixt;
     Cat cat;
 
     @BeforeEach
@@ -25,8 +26,8 @@ class UserCanConfigureLibrary
     {
         ex = new Existential();
         op = "/api/cats";
-        fix = new CatsTests(ex, op);
-        cat = new Cat(TestData.BLACK_CAT.color(), TestData.BLACK_CAT.location());
+        fixt = new CityTests(ex, op);
+        cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
     }
 
     @AfterEach
@@ -37,17 +38,17 @@ class UserCanConfigureLibrary
 
     void configure()
     {
-        fix.configure();
+        fixt.configure();
     }
 
     void configureWithBuilders()
     {
-        fix.configureWithBuilders();
+        fixt.configureWithBuilders();
     }
 
     void configureMixingFluentAndBuilders()
     {
-        fix.configureMixingFluentAndBuilders();
+        fixt.configureMixingFluentAndBuilders();
     }
 
     @Test
@@ -56,7 +57,7 @@ class UserCanConfigureLibrary
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             String tran = ex.begin(op);
-            ex.emit(cat, tran);
+            ex.event(cat, tran);
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 
@@ -67,7 +68,7 @@ class UserCanConfigureLibrary
         assertDoesNotThrow(() -> {
             configure();
             String tran = ex.begin(op);
-            ex.emit(cat, tran);
+            ex.event(cat, tran);
         });
     }
 
@@ -78,7 +79,7 @@ class UserCanConfigureLibrary
         assertDoesNotThrow(() -> {
             configure();
             String tran = ex.begin(op);
-            ex.emit(cat, tran);
+            ex.event(cat, tran);
         });
     }
 
@@ -89,7 +90,7 @@ class UserCanConfigureLibrary
         assertDoesNotThrow(() -> {
             configureWithBuilders();
             String tran = ex.begin(op);
-            ex.emit(cat, tran);
+            ex.event(cat, tran);
         });
     }
 
@@ -100,7 +101,7 @@ class UserCanConfigureLibrary
         assertDoesNotThrow(() -> {
             configureMixingFluentAndBuilders();
             String tran = ex.begin(op);
-            ex.emit(cat, tran);
+            ex.event(cat, tran);
         });
     }
 

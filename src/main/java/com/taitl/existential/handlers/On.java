@@ -3,19 +3,16 @@ package com.taitl.existential.handlers;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import com.taitl.existential.exceptions.EventHandlerFailureException;
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.handler.types.EventHandler;
+import com.taitl.existential.handlers.types.EventHandler;
 import com.taitl.existential.helper.Args;
-import com.taitl.existential.helper.State;
-
-import static com.taitl.existential.constants.Strings.*;
+import com.taitl.exlogic.handlers.execution.*;
 
 public class On<T> implements EventHandler<T>
 {
-    Predicate<? super T> condition;
-    Consumer<? super T> action;
-    String description = null;
+    public Predicate<? super T> condition;
+    public Consumer<? super T> action;
+    public String description = null;
 
     public On(Consumer<? super T> action)
     {
@@ -47,31 +44,18 @@ public class On<T> implements EventHandler<T>
 
     public void handle(T t) throws ExistentialException
     {
-        if (action == null)
-        {
-            State.cool(condition, "condition");
+        // TODO: invoke and handle execute logic in a separate flow,
+        // avoiding exposing this class to implementation logic
+        // This class is to remain lightweight 'recording purpose' class
+        ExecuteEventHandler.handle(this, t);
+    }
 
-            // This is an event handler without side effects.
-            // Check the condition and throw an exception if it is not met.
-            if (!condition.test(t))
-            {
-                throw new EventHandlerFailureException(description != null ? description() : CONDITION_NOT_MET);
-            }
-
-            return;
-        }
-
-        if (condition == null || condition.test(t))
-        {
-            try
-            {
-                action.accept(t);
-            }
-            catch (Exception e)
-            {
-                throw new EventHandlerFailureException(e);
-            }
-        }
+    /**
+     * Has side effects?
+     */
+    public boolean immutable()
+    {
+        return action == null;
     }
 
     public String description()
