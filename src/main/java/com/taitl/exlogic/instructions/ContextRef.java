@@ -1,4 +1,4 @@
-package com.taitl.existential.instructions;
+package com.taitl.exlogic.instructions;
 
 import com.taitl.existential.contexts.Context;
 import com.taitl.existential.helper.Args;

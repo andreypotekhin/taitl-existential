@@ -1,39 +1,41 @@
-package com.taitl.exlogic.existential;
+package com.taitl.exlogic.execution;
 
+import java.io.*;
 import com.taitl.existential.*;
-import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.exceptions.NotFoundException;
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.keys.OpKey;
-import com.taitl.existential.transactions.OpTransaction;
-import com.taitl.existential.transactions.OpTransactionRegistry;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.helper.*;
+import com.taitl.existential.keys.*;
+import com.taitl.exlogic.existential.*;
+import com.taitl.exlogic.transaction.*;
+import com.taitl.exlogic.transaction.registry.*;
 
-import java.io.Closeable;
-
-public class ExistentialTransactions implements Closeable
+public class Executions implements Closeable
 {
+    protected ExistentialExecution ee;
     protected Existential ex;
-    protected OpTransactionRegistry registry = new OpTransactionRegistry();
+    protected RuntimeTransactionRegistry registry = new RuntimeTransactionRegistry();
+    protected CreateRuntimeTransaction createRuntimeTransaction;
 
-    public ExistentialTransactions(Existential ex)
+    public Executions(ExistentialExecution ee)
     {
-        this.ex = ex;
+        this.ee = ee;
+        this.ex = ee.ex();
+        this.createRuntimeTransaction = new CreateRuntimeTransaction(this);
     }
 
     public String begin(String op) throws ExistentialException
     {
         Args.cool(op, "op");
-        OpKey.requireValidName(op);
-        ex.contexts().finalizeSetup();
-        OpTransaction opTran = registry.create(op);
-        return opTran.id.toString();
+        OpKey.validate(op);
+        RuntimeTransaction tr = createRuntimeTransaction.call(op);
+        return tr.id.toString();
     }
 
     public void commit(String tranID) throws ExistentialException
     {
         Args.cool(tranID, "tranID");
-        OpTransaction opTran = registry.get(tranID);
-        if (opTran == null)
+        RuntimeTransaction tr = registry.get(tranID);
+        if (tr == null)
         {
             throw new NotFoundException("Op transaction not found, id=" + tranID);
         }
@@ -59,8 +61,18 @@ public class ExistentialTransactions implements Closeable
     }
 
     // cleanup: Close transactions, remove op transaction from registry
-
     public void close()
     {
+        registry.clear();
+    }
+
+    public Existential ex()
+    {
+        return ex;
+    }
+
+    public RuntimeTransactionRegistry registry()
+    {
+        return registry;
     }
 }

@@ -1,4 +1,4 @@
-package com.taitl.existential.unused;
+package com.taitl.exlogic.unused;
 
 import com.taitl.existential.constants.Strings;
 

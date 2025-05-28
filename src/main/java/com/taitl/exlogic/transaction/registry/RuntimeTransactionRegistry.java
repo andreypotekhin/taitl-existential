@@ -1,28 +1,26 @@
-package com.taitl.existential.transactions;
+package com.taitl.exlogic.transaction.registry;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import com.taitl.existential.contexts.Context;
-import com.taitl.existential.contexts.Contexts;
-import com.taitl.existential.exceptions.NotFoundException;
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.keys.OpKey;
+import java.util.*;
+import com.taitl.existential.contexts.*;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.helper.*;
+import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
+import com.taitl.exlogic.transaction.*;
 
 /**
  * TransactionRegistry creates OpTrans and holds references to them
  * for the duration of a business transaction.
  */
-public class OpTransactionRegistry
+public class RuntimeTransactionRegistry
 {
-    protected Map<String, OpTransaction> reg = new LinkedHashMap<>();
+    protected Map<String, RuntimeTransaction> reg = new LinkedHashMap<>();
 
-    public OpTransaction create(String op)
+    public RuntimeTransaction create(String op)
     {
         Args.cool(op, "op");
-        OpKey.requireValidName(op);
-        OpTransaction o = new OpTransaction(op, generateId());
+        OpKey.validate(op);
+        RuntimeTransaction o = new RuntimeTransaction(op, generateId());
 
         for (Context context : Contexts.getcreate(op))
         {
@@ -39,10 +37,10 @@ public class OpTransactionRegistry
         return o;
     }
 
-    public OpTransaction get(String id) throws NotFoundException
+    public RuntimeTransaction get(String id) throws NotFoundException
     {
         Args.cool(id, "id");
-        OpTransaction o = reg.get(id);
+        RuntimeTransaction o = reg.get(id);
         if (o == null)
         {
             throw new NotFoundException("Transaction not found, id=" + id);
@@ -50,10 +48,10 @@ public class OpTransactionRegistry
         return o;
     }
 
-    public OpTransaction remove(String id) throws NotFoundException
+    public RuntimeTransaction remove(String id) throws NotFoundException
     {
         Args.cool(id, "id");
-        OpTransaction o = reg.get(id);
+        RuntimeTransaction o = reg.get(id);
         if (o == null)
         {
             throw new NotFoundException("Transaction not found, id=" + id);
@@ -63,6 +61,14 @@ public class OpTransactionRegistry
             reg.remove(id);
         }
         return o;
+    }
+
+    public void clear()
+    {
+        synchronized (reg)
+        {
+            reg.clear();
+        }
     }
 
     protected UUID generateId()

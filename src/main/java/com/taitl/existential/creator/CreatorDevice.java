@@ -1,4 +1,4 @@
-package com.taitl.exlogic.creator;
+package com.taitl.existential.creator;
 
 import java.util.*;
 import java.util.function.*;
@@ -156,19 +156,5 @@ public class CreatorDevice
                 "Cannot make injection for class " + cls.getCanonicalName() +
                         " because create() or singleton() were already called for it");
         suppliers.put(cls.getCanonicalName(), supplier);
-    }
-
-    /**
-     * Removes the supplier function for the specified class.
-     *
-     * @param <T> Type to supply
-     * @param cls The class for which to remove the supplier
-     */
-    public <T> void uninject(Class<T> cls)
-    {
-        cool(cls, "cls");
-        verify(hasSupplier(cls),
-                "No injection found for class " + cls.getCanonicalName());
-        suppliers.remove(cls.getCanonicalName());
     }
 }

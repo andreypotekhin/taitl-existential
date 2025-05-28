@@ -1,6 +1,6 @@
 package com.taitl.existential.events;
 
-import com.taitl.existential.event.types.EntityEvent;
+import com.taitl.existential.events.types.EntityEvent;
 
 /**
  * Indicates that entity was deleted in the course of of current transaction.

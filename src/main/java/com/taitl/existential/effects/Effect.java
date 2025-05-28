@@ -6,7 +6,7 @@ import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
-import com.taitl.existential.instructions.Instructions;
+import com.taitl.exlogic.instructions.Instructions;
 import com.taitl.existential.rules.RuleSet;
 import com.taitl.existential.transactions.Transaction;
 

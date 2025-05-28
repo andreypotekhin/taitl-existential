@@ -1,11 +1,9 @@
 package com.taitl.existential;
 
 import java.io.*;
-import java.util.function.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
-import com.taitl.exlogic.creator.*;
 import com.taitl.exlogic.existential.*;
 
 /**
@@ -16,7 +14,7 @@ import com.taitl.exlogic.existential.*;
  *
  * @author Andrey Potekhin
  *
- * @see ExistentialTransactions
+ * @see ExistentialExecution
  * @see ExistentialEvents
  * @see ExistentialFlags
  * @see ExistentialContexts
@@ -24,11 +22,12 @@ import com.taitl.exlogic.existential.*;
  */
 public final class Existential implements Closeable
 {
-    private ExistentialTransactions transactions = new ExistentialTransactions(this);
+    private ExistentialExecution transactions = new ExistentialExecution(this);
     private ExistentialEvents events = new ExistentialEvents(this);
     private ExistentialFlags flags = new ExistentialFlags(this);
     private ExistentialContexts contexts = new ExistentialContexts(this);
     private ExistentialAccess access = new ExistentialAccess(this);
+
     private boolean configured = false;
     private boolean closed = false;
 
@@ -117,11 +116,6 @@ public final class Existential implements Closeable
         return flags.get(flag);
     }
 
-    public static <T> void inject(Class<T> cls, Supplier<? extends T> supplier)
-    {
-        Creator.inject(cls, supplier);
-    }
-
     public void close()
     {
         if (!closed)
@@ -148,5 +142,10 @@ public final class Existential implements Closeable
     public ExistentialContexts contexts()
     {
         return contexts;
+    }
+
+    public ExistentialExecution transactions()
+    {
+        return transactions;
     }
 }

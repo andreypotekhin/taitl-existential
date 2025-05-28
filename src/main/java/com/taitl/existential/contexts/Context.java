@@ -12,7 +12,7 @@ import com.taitl.existential.expressions.Expressions;
 import com.taitl.existential.handlers.types.EventHandler;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
-import com.taitl.existential.instructions.Instructions;
+import com.taitl.exlogic.instructions.Instructions;
 import com.taitl.existential.effects.Effect;
 import com.taitl.existential.invariants.Invariant;
 import com.taitl.existential.rules.Rule;

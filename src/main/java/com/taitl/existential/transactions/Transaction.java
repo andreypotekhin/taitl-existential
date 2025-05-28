@@ -13,7 +13,7 @@ import com.taitl.existential.handlers.OnBegin;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
 import com.taitl.existential.indexes.Index;
-import com.taitl.existential.instructions.Instructions;
+import com.taitl.exlogic.instructions.Instructions;
 import com.taitl.existential.effects.Effect;
 import com.taitl.existential.invariants.Invariant;
 
@@ -171,7 +171,7 @@ public class Transaction implements Configurable
      * <pre>{@code
      * Contexts.get("/app/flight_school")
      *     .transaction(() -> new Transaction(){{
-     * 	      ensure(new Invariant<Pilot>() {{
+     * 	      enforce(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      * 	      }})
@@ -217,7 +217,7 @@ public class Transaction implements Configurable
     }
 
     /**
-     * TODO: intent(Intent<T> intent) { ...
+     * TODO: allow(Intent<T> intent) { ...
      * intent.tran = this; ... }
      */
 }

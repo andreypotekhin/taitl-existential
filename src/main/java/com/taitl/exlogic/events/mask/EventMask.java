@@ -4,8 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.event.types.BiEvent;
-import com.taitl.existential.event.types.Event;
+import com.taitl.existential.events.types.BiEvent;
+import com.taitl.existential.events.types.Event;
 import com.taitl.existential.events.Create;
 import com.taitl.existential.events.Delete;
 import com.taitl.existential.events.Mutate;

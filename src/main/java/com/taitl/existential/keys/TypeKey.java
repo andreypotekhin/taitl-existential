@@ -21,7 +21,6 @@ import com.taitl.existential.helper.Args;
  * OnChange<Document<JSON>>(...)
  * <p>
  *
- * @author Andrey Potekhin
  * @see com.taitl.existential.EventHandlers
  */
 public class TypeKey<T>

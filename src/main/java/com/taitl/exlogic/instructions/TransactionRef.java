@@ -1,4 +1,4 @@
-package com.taitl.existential.instructions;
+package com.taitl.exlogic.instructions;
 
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.transactions.Transaction;

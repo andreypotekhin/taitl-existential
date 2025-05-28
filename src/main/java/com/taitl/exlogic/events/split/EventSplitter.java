@@ -6,9 +6,9 @@ import java.util.Set;
 import javax.naming.Context;
 
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.event.types.BiEvent;
-import com.taitl.existential.event.types.EntityEvent;
-import com.taitl.existential.event.types.Event;
+import com.taitl.existential.events.types.BiEvent;
+import com.taitl.existential.events.types.EntityEvent;
+import com.taitl.existential.events.types.Event;
 import com.taitl.existential.events.Change;
 import com.taitl.existential.events.Create;
 import com.taitl.existential.events.Delete;

@@ -1,12 +1,9 @@
-package com.taitl.existential.transactions;
+package com.taitl.exlogic.transaction;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.helper.State;
-import com.taitl.existential.keys.OpKey;
+import java.util.*;
+import com.taitl.existential.helper.*;
+import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
 /**
  * Defines an Operation Transaction - a set of Transaction objects relevant
@@ -28,16 +25,16 @@ import com.taitl.existential.keys.OpKey;
  * the order of transactions is same as the order of declaration of its transaction
  * factories.
  */
-public class OpTransaction
+public class RuntimeTransaction
 {
     public UUID id;
     String op;
     List<Transaction> transactions = new ArrayList<>();
 
-    public OpTransaction(String op, UUID id)
+    public RuntimeTransaction(String op, UUID id)
     {
         Args.cool(op, "op", id, "id");
-        OpKey.requireValidName(op);
+        OpKey.validate(op);
         this.op = op;
         this.id = id;
     }

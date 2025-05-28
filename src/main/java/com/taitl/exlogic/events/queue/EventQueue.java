@@ -2,7 +2,7 @@ package com.taitl.exlogic.events.queue;
 
 import java.util.Set;
 
-import com.taitl.existential.event.types.Event;
+import com.taitl.existential.events.types.Event;
 
 import java.util.ArrayList;
 

@@ -1,9 +1,9 @@
-package com.taitl.existential.unused;
+package com.taitl.exlogic.unused;
 
 import java.util.Set;
 
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.event.types.BiEvent;
+import com.taitl.existential.events.types.BiEvent;
 import com.taitl.existential.handlers.types.EventHandlerWithSideEffects;
 import com.taitl.existential.helper.Multimap;
 

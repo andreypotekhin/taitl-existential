@@ -14,7 +14,6 @@ import com.taitl.existential.transactions.Transaction;
  * <p>
  * Example: "/app/orders/update"
  * <p>
- * @author Andrey Potekhin
  *
  * @see Context
  * @see Transaction
@@ -25,7 +24,7 @@ public class OpKey
 
     public OpKey(String op)
     {
-        requireValidName(op);
+        validate(op);
         this.op = op.trim();
     }
 
@@ -49,7 +48,7 @@ public class OpKey
         return op.contains(WILDCARD);
     }
 
-    public static void requireValidName(String op)
+    public static void validate(String op)
     {
         Args.cool(op, "op");
         op = op.trim();

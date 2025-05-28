@@ -1,4 +1,4 @@
-package com.taitl.existential.instructions;
+package com.taitl.exlogic.instructions;
 
 import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.handlers.types.EventHandler;

@@ -19,8 +19,6 @@ import com.taitl.existential.transactions.Transaction;
  * Context key cannot end with a slash.
  * Wildcard character (*) is allowed in context key.
  *
- * @author Andrey Potekhin
- *
  * @see Context
  * @see Transaction
  */

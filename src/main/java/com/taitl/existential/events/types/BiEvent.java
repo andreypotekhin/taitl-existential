@@ -1,4 +1,4 @@
-package com.taitl.existential.event.types;
+package com.taitl.existential.events.types;
 
 import com.taitl.existential.events.Create;
 import com.taitl.existential.events.Delete;

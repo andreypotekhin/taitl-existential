@@ -64,7 +64,7 @@ class UserCanAccessLibrary
     }
 
     @Test
-    @DisplayName("User can send entity event to library")
+    @DisplayName("User can send an entity event to library")
     void sendEntityEvent() throws Exception
     {
         configure();
@@ -74,7 +74,7 @@ class UserCanAccessLibrary
     }
 
     @Test
-    @DisplayName("User can send entity event using a type key")
+    @DisplayName("User can send an entity event using a type key")
     void sendEntityEventWithTypeKey() throws Exception
     {
         configure();
@@ -86,6 +86,17 @@ class UserCanAccessLibrary
     @Test
     @DisplayName("User can record access to entity")
     void recordEntityAccess() throws Exception
+    {
+        configure();
+        String tran = ex.begin(op);
+        ex.read(cat, tran);
+        ex.write(cat, tran);
+        ex.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can record access to entity using type key")
+    void recordEntityAccessWithTypeKey() throws Exception
     {
         configure();
         String tran = ex.begin(op);

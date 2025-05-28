@@ -1,4 +1,4 @@
-package com.taitl.exlogic.creator;
+package com.taitl.existential.creator;
 
 import java.util.function.*;
 import com.taitl.existential.helper.*;
@@ -12,23 +12,24 @@ import com.taitl.existential.helper.*;
  * 2. Customize class instantiation by calling inject() method.
  * 3. For even greater effect, subclass CreatorDevice. 
  *   Comes handy when mocking components for unit tests.
- * 4. Integrate a third party dependency injection library
+ * 4. Integrate a third party dependency injection library/framework
  * behind Creator facade, again by providing custom CreatorDevice.
  * 
  * Usage (per use case):
- * 1. Creator.singleton(AppDevice.class); Creator.create(LogDevice.class);
- * 2. Creator.inject(com.taitl.helper.devices.LogDevice.class, () -> new com.my.LogDevice());
- * 3. Creator.setDevice(myCreatorDevice)
- * 4. Creator.setDevice(myThirdPartyAdapter)
+ * 1. Creator.create(LogDevice.class);
+ * 2. Creator.inject(com.company.log.LogDevice.class, () -> new com.my.LogDevice());
+ * 3. Creator.setDevice(myCreatorDevice) -- set custom CreatorDevice
+ * 4. Creator.setDevice(myThirdPartyAdapter) -- integrate third party injection framework
  *
  * Why:
  * Q: Is this class a kind of 'God' antipattern?
- * A: No - it does not deal with concrete classes, therefore does not
- * refer/encompass  concrete business logic.
+ * A: No - it only deals with classes through reflection, so does not
+ * depend on any application classes or business logic.
  * Q: Is injection by reflection not performant?
- * A: We reserve this to less performance-critical code. For more
- * performance-critical code, you are welcome to use other approaches
- * to injection, or directly instantiate the classes.
+ * A: We reserve this to less performance-critical code, for instance,
+ * for the one-time execution during application startup. For more
+ * performance-critical code, you are welcome to use other approaches,
+ * or directly instantiate the classes.
  */
 public class Creator
 {
@@ -111,17 +112,5 @@ public class Creator
     public static <T> void inject(Class<T> cls, Supplier<? extends T> supplier)
     {
         device().inject(cls, supplier);
-    }
-
-    /**
-     * Removes supplier function for the specified class.
-     * Throws IllegalStateException if supplier function was set for this class.
-     *
-     * @param <T>      Type to supply
-     * @param cls      The class to get supplier for
-     */
-    public static <T> void uninject(Class<T> cls)
-    {
-        device().uninject(cls);
     }
 }
