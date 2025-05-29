@@ -155,35 +155,16 @@ public class Invariant<T> implements RuleSet<T>
         return this;
     }
 
-    // public <V, K> Exists<V, K> exists(String indexName, K key)
-    // {
-    // Args.cool(indexName, "indexName", key, "key");
-    // return new Exists<V, K>(indexName, key);
-    // }
-    //
-    // public <V, K> Exists<V, K> exists(String indexName, K key, Predicate<Set<V>> predicate)
-    // {
-    // Args.cool(indexName, "indexName", key, "key", predicate, "predicate");
-    // return new Exists<V, K>(indexName, key, predicate);
-    // }
-    //
-    // public <V, K> Exists<V, K> exists(String indexName, K key,
-    // BiPredicate<Set<V>, Transaction> bipredicate)
-    // {
-    // Args.cool(indexName, "indexName", key, "key", bipredicate, "bipredicate");
-    // return new Exists<V, K>(indexName, key, bipredicate);
-    // }
-
-    public <V, K> Exists<V, K> exists(Set<V> values, Predicate<Set<V>> predicate)
+    public <T> Exists<T> exists(Set<T> values, Predicate<Set<T>> predicate)
     {
         Args.cool(values, "values", predicate, "predicate");
-        return new Exists<V, K>(values, predicate, 0);
+        return new Exists<T>(values, predicate, 0);
     }
 
-    public <V, K> Exists<V, K> exists(Set<V> values, BiPredicate<Set<V>, Transaction> bipredicate)
+    public <T> Exists<T> exists(Set<T> values, BiPredicate<Set<T>, Transaction> bipredicate)
     {
         Args.cool(values, "values", bipredicate, "bipredicate");
-        return new Exists<V, K>(values, bipredicate, 0);
+        return new Exists<T>(values, bipredicate, 0);
     }
 
     /* Other methods */
