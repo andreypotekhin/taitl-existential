@@ -7,7 +7,7 @@ import com.taitl.existential.transactions.Transaction;
 
 /**
  * A path-like representation of a business operation, serving as a key for finding
- * the appropriate Context as well as all its parent Contexts.
+ * the matching Contexts (op Context, its parent Contexts, any matching wildcard Contexts).
  *
  * Op key cannot be a single slash (/), cannot end with a slash. Wildcard character (*)
  * is not allowed in op key.

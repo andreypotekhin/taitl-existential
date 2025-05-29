@@ -1,6 +1,7 @@
-package com.taitl.existential.events.types;
+package com.taitl.exlogic.unused;
 
 import com.taitl.existential.constants.Strings;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.transactions.Transaction;
 
 /**

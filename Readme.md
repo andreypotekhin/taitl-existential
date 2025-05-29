@@ -45,7 +45,7 @@ For any object of type X, a predicate (boolean expression) is always true:
 
 ∀ x ∈ X ⊤(x)                                           All\<X\>(x -> *predicate(x)*)
 
-Here, *predicate*() is any boolean function, for example (x != null), x.hasParent() and the like.
+Here, *predicate*() is any boolean function.
 
 For any object of type X which satisfies a condition, a predicate is always true:
 

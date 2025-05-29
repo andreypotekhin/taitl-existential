@@ -70,3 +70,4 @@ public class All<T> implements Expression<T>
         return description == null ? "" : description;
     }
 }
+

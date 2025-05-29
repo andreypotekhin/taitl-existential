@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class OnTest
 {
-
     On<Cat> on;
     Cat cat;
 
