@@ -6,7 +6,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.taitl.existential.constants.Strings;
-import com.taitl.existential.indexes.Index;
+import com.taitl.exlogic.unused.indexes.Index;
 
 public class TransactionIndexes
 {

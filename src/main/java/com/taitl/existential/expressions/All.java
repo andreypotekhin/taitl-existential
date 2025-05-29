@@ -10,8 +10,8 @@ import com.taitl.existential.exceptions.PredicateFailureException;
 import com.taitl.existential.helper.Args;
 
 /**
- * Implements "For Any" (universal quantification) notation for reasoning about application entities. See library
- * documentation for details.
+ * Implements "For Any" (universal quantification) notation for reasoning about application entities.
+ * See library documentation for details.
  *
  * @param <T>
  *            Entity type T to which the expression applies, or a mutation of an entity type
@@ -70,4 +70,3 @@ public class All<T> implements Expression<T>
         return description == null ? "" : description;
     }
 }
-

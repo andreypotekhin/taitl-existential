@@ -1,4 +1,4 @@
-package com.taitl.existential.indexes;
+package com.taitl.exlogic.unused.indexes;
 
 /**
  * A composition of indexes which provides Index-like interface to multiple indexes.

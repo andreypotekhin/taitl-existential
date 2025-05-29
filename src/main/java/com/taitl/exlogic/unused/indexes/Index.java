@@ -1,4 +1,4 @@
-package com.taitl.existential.indexes;
+package com.taitl.exlogic.unused.indexes;
 
 import static com.taitl.existential.constants.Strings.ARG_CHECK;
 import static com.taitl.existential.constants.Strings.ARG_KEY;

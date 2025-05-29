@@ -22,7 +22,7 @@ public class Invariant<T> implements RuleSet<T>
      * Parent Transaction object, if any.
      *
      * This field is null for invariants that are not declared on
-     * transaction level, e.g. for invariants declared at a context.
+     * transaction level, e.g. for invariants declared at a Context.
      */
     private Transaction tran;
 
@@ -155,24 +155,24 @@ public class Invariant<T> implements RuleSet<T>
         return this;
     }
 
-    public <V, K> Exists<V, K> exists(String indexName, K key)
-    {
-        Args.cool(indexName, "indexName", key, "key");
-        return new Exists<V, K>(indexName, key);
-    }
-
-    public <V, K> Exists<V, K> exists(String indexName, K key, Predicate<Set<V>> predicate)
-    {
-        Args.cool(indexName, "indexName", key, "key", predicate, "predicate");
-        return new Exists<V, K>(indexName, key, predicate);
-    }
-
-    public <V, K> Exists<V, K> exists(String indexName, K key,
-            BiPredicate<Set<V>, Transaction> bipredicate)
-    {
-        Args.cool(indexName, "indexName", key, "key", bipredicate, "bipredicate");
-        return new Exists<V, K>(indexName, key, bipredicate);
-    }
+    // public <V, K> Exists<V, K> exists(String indexName, K key)
+    // {
+    // Args.cool(indexName, "indexName", key, "key");
+    // return new Exists<V, K>(indexName, key);
+    // }
+    //
+    // public <V, K> Exists<V, K> exists(String indexName, K key, Predicate<Set<V>> predicate)
+    // {
+    // Args.cool(indexName, "indexName", key, "key", predicate, "predicate");
+    // return new Exists<V, K>(indexName, key, predicate);
+    // }
+    //
+    // public <V, K> Exists<V, K> exists(String indexName, K key,
+    // BiPredicate<Set<V>, Transaction> bipredicate)
+    // {
+    // Args.cool(indexName, "indexName", key, "key", bipredicate, "bipredicate");
+    // return new Exists<V, K>(indexName, key, bipredicate);
+    // }
 
     public <V, K> Exists<V, K> exists(Set<V> values, Predicate<Set<V>> predicate)
     {
