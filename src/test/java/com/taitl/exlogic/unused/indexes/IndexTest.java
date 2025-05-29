@@ -1,4 +1,4 @@
-package com.taitl.existential.indexes;
+package com.taitl.exlogic.unused.indexes;
 
 import static com.taitl.existential.helper.CollectionUtils.getFirst;
 import static com.taitl.existential.examples.night_city.data.CityTestData.*;

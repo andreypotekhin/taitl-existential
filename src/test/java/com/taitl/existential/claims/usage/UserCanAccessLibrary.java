@@ -1,20 +1,17 @@
 package com.taitl.existential.claims.usage;
 
-import com.taitl.existential.Existential;
-import com.taitl.existential.constants.Flags;
+import com.taitl.existential.*;
+import com.taitl.existential.constants.*;
+import com.taitl.existential.examples.night_city.data.*;
+import com.taitl.existential.examples.night_city.model.*;
 import com.taitl.existential.examples.night_city.tests.*;
-import com.taitl.existential.keys.TypeKey;
-import com.taitl.existential.examples.night_city.model.Cat;
-import com.taitl.existential.examples.night_city.data.CityTestData;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.taitl.existential.keys.*;
+import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserCanAccessLibrary
 {

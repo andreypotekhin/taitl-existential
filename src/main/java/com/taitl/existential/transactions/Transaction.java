@@ -183,11 +183,11 @@ public class Transaction implements Configurable
     public <T> void enforce(Invariant<T> invariant)
     {
         Args.cool(invariant, "invariant");
-        Transaction tr = invariant.getTransaction();
+        Transaction tr = invariant.transaction();
 
         if (tr == null)
         {
-            invariant.setTransaction(this);
+            invariant.transaction(this);
         }
         else
         {

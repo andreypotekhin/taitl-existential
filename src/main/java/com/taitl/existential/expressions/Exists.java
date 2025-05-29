@@ -10,11 +10,11 @@ import com.taitl.existential.transactions.Transaction;
 public class Exists<V> implements Predicate<Transaction>
 {
     Collection<V> coll;
-    Set<V> values;
+    // Set<V> values;
     Predicate<Collection<V>> cpredicate;
     BiPredicate<Collection<V>, Transaction> cbipredicate;
-    Predicate<Set<V>> spredicate;
-    BiPredicate<Set<V>, Transaction> sbipredicate;
+    // Predicate<Set<V>> spredicate;
+    // BiPredicate<Set<V>, Transaction> sbipredicate;
     Predicate<V> vpredicate;
     BiPredicate<V, Transaction> vbipredicate;
 
@@ -46,48 +46,49 @@ public class Exists<V> implements Predicate<Transaction>
         this.cbipredicate = bipredicate;
     }
 
-    public Exists(Set<V> values, Predicate<V> predicate)
-    {
-        Args.cool(values, "values", predicate, "predicate");
-        this.values = values;
-        this.vpredicate = predicate;
-    }
-
-    public Exists(Set<V> values, BiPredicate<V, Transaction> bipredicate)
-    {
-        Args.cool(values, "values", bipredicate, "bipredicate");
-        this.values = values;
-        this.vbipredicate = bipredicate;
-    }
-
-    public Exists(Set<V> values, Predicate<Set<V>> predicate, int placeholder)
-    {
-        Args.cool(values, "values", predicate, "predicate");
-        this.values = values;
-        this.spredicate = predicate;
-    }
-
-    public Exists(Set<V> values, BiPredicate<Set<V>, Transaction> bipredicate, int placeholder)
-    {
-        Args.cool(values, "values", bipredicate, "bipredicate");
-        this.values = values;
-        this.sbipredicate = bipredicate;
-    }
-
+    // public Exists(Set<V> values, Predicate<V> predicate)
+    // {
+    // Args.cool(values, "values", predicate, "predicate");
+    // this.values = values;
+    // this.vpredicate = predicate;
+    // }
+    //
+    // public Exists(Set<V> values, BiPredicate<V, Transaction> bipredicate)
+    // {
+    // Args.cool(values, "values", bipredicate, "bipredicate");
+    // this.values = values;
+    // this.vbipredicate = bipredicate;
+    // }
+    //
+    // public Exists(Set<V> values, Predicate<Set<V>> predicate, int placeholder)
+    // {
+    // Args.cool(values, "values", predicate, "predicate");
+    // this.values = values;
+    // this.spredicate = predicate;
+    // }
+    //
+    // public Exists(Set<V> values, BiPredicate<Set<V>, Transaction> bipredicate, int placeholder)
+    // {
+    // Args.cool(values, "values", bipredicate, "bipredicate");
+    // this.values = values;
+    // this.sbipredicate = bipredicate;
+    // }
+    //
     public boolean test(Transaction tran)
     {
-        if (coll != null)
-        {
-            return testOnColl(tran);
-        }
-        else if (values != null)
-        {
-            return testOnSet(tran);
-        }
-        else
-        {
-            throw new IllegalStateException("Neither collection nor set is defined");
-        }
+        return testOnColl(tran);
+        // if (coll != null)
+        // {
+        // return testOnColl(tran);
+        // }
+        // else if (values != null)
+        // {
+        // return testOnSet(tran);
+        // }
+        // else
+        // {
+        // throw new IllegalStateException("Neither collection nor set is defined");
+        // }
     }
 
     public boolean testOnColl(Transaction tran)
@@ -95,11 +96,11 @@ public class Exists<V> implements Predicate<Transaction>
         Args.cool(tran, "tran");
         State.cool(coll, "values");
         boolean result;
-        if (spredicate != null)
+        if (cpredicate != null)
         {
             result = cpredicate.test(coll);
         }
-        else if (sbipredicate != null)
+        else if (cbipredicate != null)
         {
             result = cbipredicate.test(coll, tran);
         }
@@ -125,42 +126,42 @@ public class Exists<V> implements Predicate<Transaction>
         return result;
     }
 
-    public boolean testOnSet(Transaction tran)
-    {
-        Args.cool(tran, "tran");
-        State.cool(values, "values");
-        boolean result;
-        if (spredicate != null)
-        {
-            result = spredicate.test(values);
-        }
-        else if (sbipredicate != null)
-        {
-            result = sbipredicate.test(values, tran);
-        }
-        else if (values.isEmpty())
-        {
-            result = false;
-        }
-        else
-        {
-            result = false;
-            for (V value : values)
-            {
-                if (vpredicate != null)
-                {
-                    result = vpredicate.test(value);
-                }
-                else if (vbipredicate != null)
-                {
-                    result = vbipredicate.test(value, tran);
-                }
-                if (result)
-                {
-                    break;
-                }
-            }
-        }
-        return result;
-    }
+    // public boolean testOnSet(Transaction tran)
+    // {
+    // Args.cool(tran, "tran");
+    // State.cool(values, "values");
+    // boolean result;
+    // if (spredicate != null)
+    // {
+    // result = spredicate.test(values);
+    // }
+    // else if (sbipredicate != null)
+    // {
+    // result = sbipredicate.test(values, tran);
+    // }
+    // else if (values.isEmpty())
+    // {
+    // result = false;
+    // }
+    // else
+    // {
+    // result = false;
+    // for (V value : values)
+    // {
+    // if (vpredicate != null)
+    // {
+    // result = vpredicate.test(value);
+    // }
+    // else if (vbipredicate != null)
+    // {
+    // result = vbipredicate.test(value, tran);
+    // }
+    // if (result)
+    // {
+    // break;
+    // }
+    // }
+    // }
+    // return result;
+    // }
 }

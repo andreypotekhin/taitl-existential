@@ -1,6 +1,6 @@
 package com.taitl.existential.invariants;
 
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -155,30 +155,40 @@ public class Invariant<T> implements RuleSet<T>
         return this;
     }
 
-    public <T> Exists<T> exists(Set<T> values, Predicate<Set<T>> predicate)
+    public <T> Exists<T> exists(Collection<T> values, Predicate<T> predicate)
     {
         Args.cool(values, "values", predicate, "predicate");
-        return new Exists<T>(values, predicate, 0);
+        return new Exists<T>(values, predicate);
     }
 
-    public <T> Exists<T> exists(Set<T> values, BiPredicate<Set<T>, Transaction> bipredicate)
+    public <T> Exists<T> exists(Collection<T> values, BiPredicate<T, Transaction> bipredicate)
     {
         Args.cool(values, "values", bipredicate, "bipredicate");
-        return new Exists<T>(values, bipredicate, 0);
+        return new Exists<T>(values, bipredicate);
+    }
+
+    public <T> Exists<T> exists(Collection<T> values, Predicate<Collection<T>> predicate, int placeholder)
+    {
+        Args.cool(values, "values", predicate, "predicate");
+        return new Exists<T>(values, predicate, placeholder);
+    }
+
+    public <T> Exists<T> exists(Collection<T> values, BiPredicate<Collection<T>, Transaction> bipredicate,
+            int placeholder)
+    {
+        Args.cool(values, "values", bipredicate, "bipredicate");
+        return new Exists<T>(values, bipredicate, placeholder);
     }
 
     /* Other methods */
 
-    /*
-     * public boolean initialized() { return tran != null; }
-     */
-    public Transaction getTransaction()
+    public Transaction transaction()
     {
         State.cool(tran, "tran");
         return tran;
     }
 
-    public void setTransaction(Transaction tr)
+    public void transaction(Transaction tr)
     {
         Args.cool(tr, "tr");
         tran = tr;
