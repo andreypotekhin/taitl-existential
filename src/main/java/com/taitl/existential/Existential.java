@@ -1,9 +1,9 @@
 package com.taitl.existential;
 
 import java.io.*;
-import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.ops.*;
 import com.taitl.exlogic.existential.*;
 
 /**
@@ -17,23 +17,23 @@ import com.taitl.exlogic.existential.*;
  * @see ExistentialExecution
  * @see ExistentialEvents
  * @see ExistentialFlags
- * @see ExistentialContexts
+ * @see ExistentialOps
  * @see ExistentialAccess
  */
 public final class Existential implements Closeable
 {
+    private ExistentialAccess access = new ExistentialAccess(this);
     private ExistentialExecution transactions = new ExistentialExecution(this);
     private ExistentialEvents events = new ExistentialEvents(this);
     private ExistentialFlags flags = new ExistentialFlags(this);
-    private ExistentialContexts contexts = new ExistentialContexts(this);
-    private ExistentialAccess access = new ExistentialAccess(this);
+    private ExistentialOps ops = new ExistentialOps(this);
 
     private boolean configured = false;
     private boolean closed = false;
 
-    public OpContext configure(String op)
+    public Op op(String op)
     {
-        return contexts.configure(op);
+        return ops.configure(op);
     }
 
     public String begin(String op) throws ExistentialException
@@ -123,7 +123,7 @@ public final class Existential implements Closeable
             transactions.close();
             events.close();
             flags.close();
-            contexts.close();
+            ops.close();
             access.close();
             closed = true;
         }
@@ -139,9 +139,9 @@ public final class Existential implements Closeable
         return configured;
     }
 
-    public ExistentialContexts contexts()
+    public ExistentialOps contexts()
     {
-        return contexts;
+        return ops;
     }
 
     public ExistentialExecution transactions()

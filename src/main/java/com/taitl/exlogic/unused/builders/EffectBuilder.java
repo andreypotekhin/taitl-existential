@@ -1,4 +1,4 @@
-package com.taitl.existential.builders;
+package com.taitl.exlogic.unused.builders;
 
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.effects.Effect;

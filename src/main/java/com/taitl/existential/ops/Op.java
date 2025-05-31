@@ -1,39 +1,27 @@
-package com.taitl.existential.contexts;
+package com.taitl.existential.ops;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
-import com.taitl.existential.builders.ConfigBuilder;
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.helper.State;
-import com.taitl.existential.keys.ContextKey;
-import com.taitl.existential.transactions.Transaction;
+import java.util.*;
+import java.util.function.*;
+import com.taitl.existential.contexts.*;
+import com.taitl.existential.helper.*;
+import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
+import com.taitl.exlogic.unused.builders.*;
 
 /**
- * Defines an Operational Context - a set of Context objects relevant
- * to a single business operation.
+ * Defines a single business Operation as a set of Context objects 
+ * configured with constraints, invariants, intents, qualifiers and effects.
  *
- * There may be multiple OpContexts which may apply to a business operation: main
- * context as well as wildcard contexts. They are stored separately from each
- * other in OpContextRegistry.
+ * Multiple Contexts which may apply to same a business operation: the main
+ * context, all its parent contexts, as well as any matching wildcard contexts.
+ * They are stored separately from each other in the OpRegistry.
  *
- * For each OpContext, the user may also create several custom Context objects,
- * by repeatedly calling .context() method to specify a context factory and
- * the rules (invariants and intents) that apply. So within one OpContext
- * there are several smaller Contexts.
+ * The contexts are stored in the order of being declared. Within each context,
+ * the transactions are stored in the order transaction factories are declared.
  *
- * This class's job is to hold instances of all these contexts.
- *
- * The Context may declare entity event handlers, which result in side effects,
- * so the order of the contexts is important.
- *
- * The order of contexts follows the order of declaration of their corresponding
- * contexts (contexts which are applicable to business operation). Within each context,
- * the order of transactions is same as the order of declaration of its transaction
- * factories.
+ * @author Andrey Potekhin
  */
-public class OpContext
+public class Op
 {
     protected static final Supplier<? extends Context> DEFAULT_CONTEXT_FACTORY =
             () -> new Context("undefined");
@@ -87,27 +75,27 @@ public class OpContext
     protected Supplier<? extends Transaction> transactionFactory = DEFAULT_TRANSACTION_FACTORY;
 
     /**
-     * Constructs OpContext object with specified name.
+     * Constructs Op object with specified name.
      * Examples: "/app/docs/update", "/app/docs/*"
      *
      * @param name Name of context
      */
-    public OpContext(String name)
+    public Op(String name)
     {
         Args.cool(name, "op");
-        ContextKey.requireValidName(name);
+        ContextKey.validate(name);
         this.name = name.trim();
     }
 
     /**
-     * Associate a custom Context class with OpContext.
+     * Associate a custom Context class with Op.
      *
-     * Associating a custom Context with OpContext allows to define
+     * Associating a custom Context with Op allows to define
      * rules, such as invariants and intents, for the context using
      * an instance of a custom context class.
      *
      * Example:
-     *   Contexts.configure("/app/docs/update")                <-- OpContext
+     *   Contexts.configure("/app/docs/update")                <-- Op
      *     .context(new Context(){{           <-- Custom context
      *        ensure(new Invariant<Document<JSON>>() {{
      *             write(doc -> doc.verify());
@@ -131,7 +119,7 @@ public class OpContext
      *  custom rules in different parts of application (e.g. in multiple
      *  classes/components).
      */
-    public OpContext context(Context context)
+    public Op context(Context context)
     {
         // Guard against multiple calls to .context() with same argument,
         // for instance, if such call exists somewhere in the middle of
@@ -144,29 +132,8 @@ public class OpContext
         return this;
     }
 
-    // public OpContext context(Supplier<? extends Context> supplier)
-    // {
-    // if (contextFactories.size() == 1)
-    // {
-    // if (contextFactories.contains(DEFAULT_CONTEXT_FACTORY))
-    // {
-    // // Replace default context factory
-    // contextFactories.remove(DEFAULT_CONTEXT_FACTORY);
-    // }
-    // }
-    // // Guard against multiple calls to .context() with same arguments,
-    // // for instance, if such call exists somewhere in the middle of
-    // // ordinary request processing (e.g. in a controller)
-    // if (!contextFactories.contains(supplier))
-    // {
-    // // TODO: test for different suppliers to not replace each other
-    // contextFactories.add(supplier);
-    // }
-    // return this;
-    // }
-
     /**
-     * Create ConfigBuilder for Context class.
+     * Create ConfigBuilder for a context.
      *
      * @return ConfigBuilder for Context class
      */
@@ -176,7 +143,7 @@ public class OpContext
     }
 
     /**
-     * Create ConfigBuilder for transaction.
+     * Create ConfigBuilder for a transaction.
      *
      * @return ConfigBuilder for transaction
      */
@@ -186,8 +153,8 @@ public class OpContext
     }
 
     /**
-     * Adds Context instance to OpContext.
-     * Called by OpContextRegistry.create(op).
+     * Adds Context instance to Op.
+     * Called by OpRegistry.create(op).
      *
      * @param cont Context to add
      */
@@ -195,14 +162,14 @@ public class OpContext
     {
         Args.cool(cont, "cont");
         State.verify(!contexts.contains(cont), "This context is already added");
-        ContextKey key = new ContextKey(cont.name);
-        State.verify(name.equals(key.name), "This context is already added");
+        ContextKey key = ContextKey.from(cont.name());
+        State.verify(!name.equals(key.toString()), "Can't add context to itself");
         contexts.add(cont);
         // instructions.add(new ContextRef(cont));
     }
 
     /**
-     * For each Context within OpContext, create instances of custom
+     * For each Context within Op, create instances of custom
      * Contexts using provided context factories, and add them separately
      * to each Context.add().
      *
@@ -215,25 +182,7 @@ public class OpContext
     public void createSubcontexts()
     {
         // Already created
-
-        // State.verify(!contextFactories.isEmpty(), "contextFactories must not be empty");
-        // State.verify(!contexts.isEmpty(), "Field 'contexts' must not be empty");
-        // for (Context context : contexts)
-        // {
-        // for (Supplier<? extends Context> supplier : contextFactories)
-        // {
-        // Context custom = supplier.get();
-        // context.add(custom);
-        // }
-        // }
     }
-
-    /*
-     * public List<Context> createContexts() { State.verify(!contextFactories.isEmpty(),
-     * "contextFactories must not be empty"); List<Context> result = new
-     * ArrayList<>(contextFactories.size()); for (Supplier<? extends Context> supplier :
-     * contextFactories) { Context cont = supplier.get(); result.add(cont); } return result; }
-     */
 
     /**
      * Specify a context factory for this operation.
@@ -241,7 +190,7 @@ public class OpContext
      * @param supplier Custom context factory
      * @return This
      */
-    public OpContext factory(Supplier<? extends Context> supplier)
+    public Op factory(Supplier<? extends Context> supplier)
     {
         Args.cool(supplier, "supplier");
         contextFactory = supplier;
@@ -255,7 +204,7 @@ public class OpContext
      * @return This
      *
      */
-    public OpContext transactionFactory(Supplier<? extends Transaction> supplier)
+    public Op transactionFactory(Supplier<? extends Transaction> supplier)
     {
         Args.cool(supplier, "supplier");
         transactionFactory = supplier;

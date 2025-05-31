@@ -151,7 +151,7 @@
                     <printFailingErrors>true</printFailingErrors>
                     <sourceEncoding>utf-8</sourceEncoding>
                     <minimumTokens>100</minimumTokens>
-                    <targetJdk>1.8</targetJdk>
+                    <targetJdk>17</targetJdk>
                     <excludes>
                         <exclude>**/*Bean.java</exclude>
                         <exclude>**/generated/*.java</exclude>

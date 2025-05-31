@@ -1,14 +1,12 @@
-package com.taitl.existential.builders;
+package com.taitl.exlogic.unused.builders;
 
-import com.taitl.existential.contexts.OpContext;
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.interfaces.Configurable;
-import com.taitl.existential.effects.Effect;
-import com.taitl.existential.invariants.Invariant;
-import com.taitl.existential.rules.RuleSet;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import com.taitl.existential.effects.*;
+import com.taitl.existential.helper.*;
+import com.taitl.existential.interfaces.*;
+import com.taitl.existential.invariants.*;
+import com.taitl.existential.ops.*;
+import com.taitl.existential.rules.*;
 
 public class ConfigBuilder
 {
@@ -18,11 +16,11 @@ public class ConfigBuilder
     }
 
     TargetType type;
-    OpContext parent;
+    Op parent;
     List<RuleSetBuilder> ruleSetBuilders;
     List<RuleSet> ruleSets;
 
-    public ConfigBuilder(OpContext parentContext, TargetType type)
+    public ConfigBuilder(Op parentContext, TargetType type)
     {
         this.type = type;
         this.parent = parentContext;
@@ -58,24 +56,40 @@ public class ConfigBuilder
 
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
     {
-        InvariantBuilder ib = new InvariantBuilder(this);
+        Args.cool(cls, "cls");
+        InvariantBuilder<T> ib = new InvariantBuilder<>(this);
         ruleSetBuilders.add(ib);
         return ib;
     }
 
+    public <T> ConfigBuilder invariant(Invariant<T> invariant)
+    {
+        Args.cool(invariant, "invariant");
+        ruleSets.add(invariant);
+        return this;
+    }
+
     public <T> EffectBuilder<T> effect(Class<T> cls)
     {
-        EffectBuilder eb = new EffectBuilder(this);
+        Args.cool(cls, "cls");
+        EffectBuilder<T> eb = new EffectBuilder<>(this);
         ruleSetBuilders.add(eb);
         return eb;
     }
 
-    public <T> ConfigBuilder require(RuleSet<T> ruleSet)
+    public <T> ConfigBuilder effect(Effect<T> effect)
     {
-        Args.cool(ruleSet, "ruleSet");
-        ruleSets.add(ruleSet);
+        Args.cool(effect, "effect");
+        ruleSets.add(effect);
         return this;
     }
+
+    // public <T> ConfigBuilder require(RuleSet<T> ruleSet)
+    // {
+    // Args.cool(ruleSet, "ruleSet");
+    // ruleSets.add(ruleSet);
+    // return this;
+    // }
 
     // TODO: intent()
 

@@ -1,4 +1,4 @@
-package com.taitl.existential.builders;
+package com.taitl.exlogic.unused.builders;
 
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.invariants.Invariant;
@@ -107,7 +107,7 @@ public class InvariantBuilder<T> implements RuleSetBuilder<T>
         return this;
     }
 
-    public Invariant build()
+    public Invariant<T> build()
     {
         return target;
     }

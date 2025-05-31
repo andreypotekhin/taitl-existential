@@ -2,6 +2,7 @@ package com.taitl.existential.expressions;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
@@ -10,6 +11,7 @@ import com.taitl.existential.transactions.Transaction;
 public class Exists<V> implements Predicate<Transaction>
 {
     Collection<V> coll;
+    Stream<V> stream; // TODO
     // Set<V> values;
     Predicate<Collection<V>> cpredicate;
     BiPredicate<Collection<V>, Transaction> cbipredicate;

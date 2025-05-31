@@ -25,7 +25,7 @@ class UserCanAccessLibrary
     {
         ex = new Existential();
         op = "/api/cats";
-        fixt = new CityTests(ex, op);
+        fixt = new CityTests(ex);
         cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
     }
 

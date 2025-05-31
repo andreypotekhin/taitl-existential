@@ -6,16 +6,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import com.taitl.existential.creator.*;
+import com.taitl.existential.examples.night_city.model.*;
 import com.taitl.existential.interfaces.Configurable;
 import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.expressions.Expressions;
 import com.taitl.existential.handlers.types.EventHandler;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
+import com.taitl.existential.rules.*;
 import com.taitl.exlogic.instructions.Instructions;
 import com.taitl.existential.effects.Effect;
 import com.taitl.existential.invariants.Invariant;
-import com.taitl.existential.rules.Rule;
 import com.taitl.existential.transactions.Transaction;
 import com.taitl.exlogic.events.split.*;
 
@@ -35,7 +37,7 @@ public class Context implements Configurable
      */
     protected Context parent;
 
-    Set<Rule<?>> rules; // Do we need this?
+    Set<RuleSet<?>> ruleSets = new LinkedHashSet<>();
 
     /**
      * Instructions - event handlers. Includes all event handlers (rules)
@@ -90,10 +92,10 @@ public class Context implements Configurable
      * Example:
      *   Contexts.get("/app/school")
      *     .transaction(() -> new Transaction(){{
-     *        ensure(new Invariant<Student>() {{
+     *        enforce(new Invariant<Student>() {{
      *             all(student -> student.awake());
      *        }});
-     *        ensure(new Invariant<Teacher>() {{
+     *        enforce(new Invariant<Teacher>() {{
      *             all(teacher -> teacher.notOnLeave());
      *        }});
      *        allow(new Intent<Student>() {{
@@ -177,16 +179,43 @@ public class Context implements Configurable
     }
 
     /**
+     * Set up invariants/rules to be enforced for the business operation defined by this context.
+     *
+     * <pre>{@code
+     * Contexts.get("/app/flight_school")
+     *     .context(() -> new Context(){{
+     * 	      invariant(Pilot.class)
+     *                .all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
+     *                .transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
+     * 	      )
+     * }</pre>
+     *
+     * @param <T> Type parameter
+     * @param invariant Invariant (rules) that must be upkept
+     */
+    public <T> Invariant<T> invariant(Class<T> cls)
+    {
+        @SuppressWarnings("unchecked")
+        Invariant<T> result = (Invariant<T>) Creator.create(Invariant.class);
+        ruleSets.add(result); // BUG: This has no effect
+        return result;
+    }
+
+    /**
      * Set up invariants/rules to be enforced for business operation defined by this context.
      *
      * <pre>{@code
      * Contexts.get("/app/flight_school")
      *     .context(() -> new Context(){{
-     * 	      ensure(new Invariant<Pilot>() {{
+     * 	      enforce(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      * 	      }})
      * }</pre>
+     *
+     * Warning: the above code implicitly stores a pointer to the enclosing class
+     * inside the Invariant object, which may lead to memory leaks. As an alternative,
+     * use the {@link #invariant(Class)} method to create an independent Invariant object.
      *
      * @param <T> Type parameter
      * @param invariant Invariant (rules) that must be upkept
@@ -194,10 +223,38 @@ public class Context implements Configurable
     public <T> void enforce(Invariant<T> invariant)
     {
         Args.cool(invariant, "invariant");
+        ruleSets.add(invariant);
         instructions.addAll(invariant.instructions);
         expressions.addAll(invariant.expressions);
     }
 
+    public <T> Effect<T> effect(Class<T> cls)
+    {
+        @SuppressWarnings("unchecked")
+        Effect<T> result = (Effect<T>) Creator.create(Effect.class);
+        ruleSets.add(result); // BUG: This has no effect
+        return result;
+    }
+
+    /**
+     * Set up invariants/rules to be enforced for business operation defined by this context.
+     *
+     * <pre>{@code
+     * Contexts.get("/app/flight_school")
+     *     .context(() -> new Context(){{
+     * 	      cause(new Effect<Pilot>() {{
+     *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
+     *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
+     * 	      }})
+     * }</pre>
+     *
+     * Warning: the above code implicitly stores a pointer to the enclosing class
+     * inside the Effect object, which may lead to memory leaks. As an alternative,
+     * use the {@link #effect(Class)} method to create an independent Effect object.
+     *
+     * @param <T> Type parameter
+     * @param invariant Invariant (rules) that must be upkept
+     */
     public <T> void cause(Effect<T> effect)
     {
         Args.cool(effect, "effect");
@@ -237,4 +294,9 @@ public class Context implements Configurable
      * public boolean initializedFromCustomTransaction(Transaction tr) { return
      * initializedFrom.contains(tr.getClass().getName()); }
      */
+
+    public String name()
+    {
+        return name;
+    }
 }

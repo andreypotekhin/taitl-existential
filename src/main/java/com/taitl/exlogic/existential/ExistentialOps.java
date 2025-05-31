@@ -1,24 +1,21 @@
 package com.taitl.exlogic.existential;
 
+import java.io.*;
 import com.taitl.existential.*;
-import com.taitl.existential.contexts.OpContextRegistry;
-import com.taitl.existential.contexts.OpContext;
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.helper.State;
+import com.taitl.existential.ops.*;
+import com.taitl.existential.helper.*;
 
-import java.io.Closeable;
-
-public class ExistentialContexts implements Closeable
+public class ExistentialOps implements Closeable
 {
     protected Existential ex;
-    protected OpContextRegistry registry = new OpContextRegistry();
+    protected OpRegistry registry = new OpRegistry();
 
-    public ExistentialContexts(Existential ex)
+    public ExistentialOps(Existential ex)
     {
         this.ex = ex;
     }
 
-    public OpContext configure(String op)
+    public Op configure(String op)
     {
         Args.cool(op, "op");
         State.verify(!ex.configured(),
