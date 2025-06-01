@@ -1,11 +1,13 @@
 package com.taitl.exlogic.transaction.registry;
 
 import java.util.*;
+import com.taitl.existential.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.helper.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
+import com.taitl.exlogic.existential.*;
 import com.taitl.exlogic.transaction.*;
 
 /**
@@ -14,7 +16,13 @@ import com.taitl.exlogic.transaction.*;
  */
 public class RuntimeTransactionRegistry
 {
+    protected ExistentialExecution exec;
     protected Map<String, RuntimeTransaction> reg = new LinkedHashMap<>();
+
+    public RuntimeTransactionRegistry(ExistentialExecution exec)
+    {
+        this.exec = exec;
+    }
 
     public RuntimeTransaction create(String op)
     {
@@ -22,7 +30,7 @@ public class RuntimeTransactionRegistry
         OpKey.validate(op);
         RuntimeTransaction o = new RuntimeTransaction(op, generateId());
 
-        for (Context context : Contexts.getcreate(op))
+        for (Context context : exec.ex().contexts().createContexts(op))
         {
             for (Transaction tr : context.createTransactions())
             {
@@ -30,7 +38,7 @@ public class RuntimeTransactionRegistry
             }
         }
 
-        synchronized (reg)
+        synchronized (this)
         {
             reg.put(o.id.toString(), o);
         }
@@ -56,7 +64,7 @@ public class RuntimeTransactionRegistry
         {
             throw new NotFoundException("Transaction not found, id=" + id);
         }
-        synchronized (reg)
+        synchronized (this)
         {
             reg.remove(id);
         }
@@ -65,7 +73,7 @@ public class RuntimeTransactionRegistry
 
     public void clear()
     {
-        synchronized (reg)
+        synchronized (this)
         {
             reg.clear();
         }

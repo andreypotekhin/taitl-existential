@@ -7,6 +7,8 @@ import com.taitl.existential.invariants.Invariant;
 
 public interface Configurable
 {
+    void name(String name);
+
     <T> void enforce(Invariant<T> invariant);
 
     <T> void cause(Effect<T> effect);

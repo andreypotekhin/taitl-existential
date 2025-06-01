@@ -15,21 +15,24 @@ public class ConfigBuilder
         TYPE_CONTEXT, TYPE_TRANSACTION
     }
 
-    TargetType type;
     Op parent;
+    String name;
+    TargetType type;
     List<RuleSetBuilder> ruleSetBuilders;
     List<RuleSet> ruleSets;
 
-    public ConfigBuilder(Op parentContext, TargetType type)
+    public ConfigBuilder(Op parentContext, String name, TargetType type)
     {
-        this.type = type;
         this.parent = parentContext;
+        this.name = name;
+        this.type = type;
         this.ruleSetBuilders = new ArrayList<>();
         this.ruleSets = new ArrayList<RuleSet>();
     }
 
     public Configurable build() {
         Configurable configurable = createInstance();
+        configurable.name(name);
 
         // TODO: bug! this code pushes all objects built with builders
         // after the ones built with a direct call to require()

@@ -12,12 +12,13 @@ import com.taitl.exlogic.transaction.registry.*;
 public class Executions implements Closeable
 {
     protected ExistentialExecution ee;
-    protected RuntimeTransactionRegistry registry = new RuntimeTransactionRegistry();
+    protected RuntimeTransactionRegistry registry;
     protected CreateRuntimeTransaction createRuntimeTransaction;
 
     public Executions(ExistentialExecution ee)
     {
         this.ee = ee;
+        this.registry = new RuntimeTransactionRegistry(ee);
         this.createRuntimeTransaction = new CreateRuntimeTransaction(this);
     }
 

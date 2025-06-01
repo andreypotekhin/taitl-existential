@@ -1,9 +1,11 @@
 package com.taitl.existential;
 
 import java.io.*;
+import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.ops.*;
+import com.taitl.exlogic.contexts.*;
 import com.taitl.exlogic.existential.*;
 
 /**
@@ -139,9 +141,14 @@ public final class Existential implements Closeable
         return configured;
     }
 
-    public ExistentialOps contexts()
+    public ExistentialOps ops()
     {
         return ops;
+    }
+
+    public Contexts contexts()
+    {
+        return ops.contexts();
     }
 
     public ExistentialExecution transactions()

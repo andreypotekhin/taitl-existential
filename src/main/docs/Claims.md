@@ -49,8 +49,10 @@ User can't configure a transaction without defining any rules  (constraints) in 
 When configuring, user can call .context() and .transaction() in any order
 User can specify a predicate, not only a handler, to process an event.
 User can create a context with a wildcard in its op path
-User can not create a transaction with a wildcard in its path - only concrete op paths are allowed
-All wildcard contexts whose path expression matches current op participate in validation 
+User can not create a transaction with a wildcard in its op path - only concrete op paths are allowed
+All wildcard contexts whose path matches current op participate in its validation
+User can define an op with a wildcard in its op path
+All wildcard ops matching the current context participate in its validation
 
 #### Execution workflow
 (We call an 'exectuion' what happens between beginning and ending of a transaction)
@@ -116,20 +118,20 @@ Optionally, user can confgure the library to require a description for each cons
 
 #### Universal Qualifier
 
-User can create an invariant for an entity class using the 'All' qualifier 
-User can restrict the 'All' qualifier to only apply to certain entities, by specifying a condition
-User can define the 'All' qualifier on an entity class
-User can define the 'All' qualifier on an entity mutation class (Mutation<T>)
+User can create an invariant for an entity class using the 'All' quantifier 
+User can restrict the 'All' quantifier to only apply to certain entities, by specifying a condition
+User can define the 'All' quantifier on an entity class
+User can define the 'All' quantifier on an entity mutation class (Mutation<T>)
 
 #### Existence Qualifier
 
-User can create an invariant on an entity class using the 'Exist' qualifier
+User can create an invariant on an entity class using the 'Exist' quantifier
 User can require entity existence when certain condition is met (same class, within entity class code)
 User can require entity existence when certain condition is met (different classes, outside entity class code)
-User can specify 'Exists' qualifier as a parameter to the 'All' qualifier, thus creating All-Exists invariant
-User can define the 'Exist' qualifier on a collection
-User can define the 'Exist' qualifier on a stream
-User can specify a transaction object for the 'Exist' qualifier
+User can specify 'Exists' quantifier as a parameter to the 'All' quantifier, thus creating All-Exists invariant
+User can define the 'Exist' quantifier on a collection
+User can define the 'Exist' quantifier on a stream
+User can specify a transaction object for the 'Exist' quantifier
 
 ### Intents
 

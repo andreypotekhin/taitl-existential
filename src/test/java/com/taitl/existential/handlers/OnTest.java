@@ -1,8 +1,8 @@
 package com.taitl.existential.handlers;
 
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.examples.night_city.model.Cat;
-import com.taitl.existential.examples.night_city.data.CityTestData;
+import com.taitl.examples.night_city.model.Cat;
+import com.taitl.examples.night_city.data.CityTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package com.taitl.exlogic.unused.indexes;
 
+import static com.taitl.examples.night_city.data.CityTestData.*;
 import static com.taitl.existential.helper.CollectionUtils.getFirst;
-import static com.taitl.existential.examples.night_city.data.CityTestData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -11,14 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.taitl.exlogic.unused.indexes.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.taitl.existential.examples.night_city.model.Cat;
-import com.taitl.existential.examples.night_city.model.Location;
-import com.taitl.existential.examples.night_city.data.CityTestData;
+import com.taitl.examples.night_city.model.Cat;
+import com.taitl.examples.night_city.model.Location;
+import com.taitl.examples.night_city.data.CityTestData;
 
 class IndexTest
 {
@@ -114,8 +113,8 @@ class IndexTest
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(null, BLACK_CAT));
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(LOCATION_PARK, null));
         Index<String, Cat> index_without_get_index_function = new Index<>();
-        index_without_get_index_function.add("Grey", CityTestData.GREY_CAT);
-        assertTrue(index_without_get_index_function.contains("Grey", CityTestData.GREY_CAT));
+        index_without_get_index_function.add("Grey", GREY_CAT);
+        assertTrue(index_without_get_index_function.contains("Grey", GREY_CAT));
         assertThrows(IllegalArgumentException.class,
                 () -> index_without_get_index_function.add(CityTestData.ORANGE_CAT));
     }

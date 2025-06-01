@@ -2,13 +2,16 @@ package com.taitl.exlogic.existential;
 
 import java.io.*;
 import com.taitl.existential.*;
+import com.taitl.existential.contexts.*;
 import com.taitl.existential.ops.*;
 import com.taitl.existential.helper.*;
+import com.taitl.exlogic.contexts.*;
 
 public class ExistentialOps implements Closeable
 {
     protected Existential ex;
-    protected OpRegistry registry = new OpRegistry();
+    protected OpRegistry registry = new OpRegistry(this);
+    protected Contexts contexts = new Contexts();
 
     public ExistentialOps(Existential ex)
     {
@@ -31,7 +34,7 @@ public class ExistentialOps implements Closeable
      * From this point, we stop accepting new contexts, custom transactions,
      * rules and handlers, to be able to freely cache for best performance.
      */
-    public void finalizeSetup()
+    public void finalise()
     {
         if (!ex.configured())
         {
@@ -50,7 +53,7 @@ public class ExistentialOps implements Closeable
                 // and every require(), intent() method of each custom context,
                 // and therefore create instances of each Invariant, Intent
                 // provided during the setup.
-                registry.createContexts();
+                registry.createSubcontexts();
             }
         }
     }
@@ -62,5 +65,15 @@ public class ExistentialOps implements Closeable
 
     public void close()
     {
+    }
+
+    public Existential ex()
+    {
+        return ex;
+    }
+
+    public Contexts contexts()
+    {
+        return contexts;
     }
 }

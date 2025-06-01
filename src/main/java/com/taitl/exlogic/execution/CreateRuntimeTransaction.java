@@ -19,7 +19,7 @@ public class CreateRuntimeTransaction
     {
         Args.cool(op, "op");
         OpKey.validate(op);
-        executions.ex().contexts().finalizeSetup();
+        executions.ex().ops().finalise();
         return executions.registry().create(op);
     }
 }

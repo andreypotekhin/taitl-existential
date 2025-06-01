@@ -78,11 +78,25 @@ public class Creator
     }
 
     /**
+     * Creates a new instance of the specified class, optionally using constructor parameters.
+     *
+     * @param <T>        Type to provide
+     * @param cls        Class instance to create
+     * @param paramTypes Parameter types for the constructor
+     * @param initargs   Arguments for the constructor
+     * @return Newly created instance
+     */
+    public static <T> T create(Class<T> cls, Class<?>[] paramTypes, Object... initargs)
+    {
+        return device().create(cls, paramTypes, initargs);
+    }
+
+    /**
      * Creates new instance of the specified class.
      *
      * @param <T> Type to provide
      * @param cls The class to create and instance of
-     * @return Newly created instance of the specified class
+     * @return Newly created instance
      */
     public static <T> T create(Class<T> cls)
     {

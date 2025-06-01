@@ -1,10 +1,10 @@
 package com.taitl.existential.claims.usage;
 
+import com.taitl.examples.night_city.data.*;
+import com.taitl.examples.night_city.model.*;
+import com.taitl.examples.night_city.tests.*;
 import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
-import com.taitl.existential.examples.night_city.data.*;
-import com.taitl.existential.examples.night_city.model.*;
-import com.taitl.existential.examples.night_city.tests.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
 

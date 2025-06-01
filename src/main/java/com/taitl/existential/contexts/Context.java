@@ -1,25 +1,18 @@
 package com.taitl.existential.contexts;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
-
+import java.util.*;
+import java.util.function.*;
 import com.taitl.existential.creator.*;
-import com.taitl.existential.examples.night_city.model.*;
-import com.taitl.existential.interfaces.Configurable;
-import com.taitl.existential.expressions.Expression;
-import com.taitl.existential.expressions.Expressions;
-import com.taitl.existential.handlers.types.EventHandler;
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.helper.State;
+import com.taitl.existential.effects.*;
+import com.taitl.existential.expressions.*;
+import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.helper.*;
+import com.taitl.existential.interfaces.*;
+import com.taitl.existential.invariants.*;
 import com.taitl.existential.rules.*;
-import com.taitl.exlogic.instructions.Instructions;
-import com.taitl.existential.effects.Effect;
-import com.taitl.existential.invariants.Invariant;
-import com.taitl.existential.transactions.Transaction;
+import com.taitl.existential.transactions.*;
 import com.taitl.exlogic.events.split.*;
+import com.taitl.exlogic.instructions.*;
 
 public class Context implements Configurable
 {
@@ -54,17 +47,10 @@ public class Context implements Configurable
      * Factory for Transaction.
      */
     protected Set<Supplier<? extends Transaction>> transactionFactories = new LinkedHashSet<>(1);
+
     {
         transactionFactories.add(DEFAULT_TRANSACTION_FACTORY);
     }
-
-    /**
-     * Factory for EventSplitter.
-     */
-    protected Supplier<? extends EventSplitter> eventSplitterFactory =
-            Contexts.eventSplitterFactory;
-
-    // Set<String> initializedFrom = new HashSet<>();
 
     public Context(String name)
     {
@@ -90,29 +76,29 @@ public class Context implements Configurable
      * allowing to carry over information between the rules.
      *
      * Example:
-     *   Contexts.get("/app/school")
-     *     .transaction(() -> new Transaction(){{
-     *        enforce(new Invariant<Student>() {{
-     *             all(student -> student.awake());
-     *        }});
-     *        enforce(new Invariant<Teacher>() {{
-     *             all(teacher -> teacher.notOnLeave());
-     *        }});
-     *        allow(new Intent<Student>() {{
-     *             read();
-     *             write();
-     *        }});
-     *        allow(new Intent<Teacher>() {{
-     *             read();
-     *        }});
-     *    }})
+     * Contexts.get("/app/school")
+     * .transaction(() -> new Transaction(){{
+     * enforce(new Invariant<Student>() {{
+     * all(student -> student.awake());
+     * }});
+     * enforce(new Invariant<Teacher>() {{
+     * all(teacher -> teacher.notOnLeave());
+     * }});
+     * allow(new Intent<Student>() {{
+     * read();
+     * write();
+     * }});
+     * allow(new Intent<Teacher>() {{
+     * read();
+     * }});
+     * }})
      *
-     *  This method is a multi-entry method which allows creating multiple
-     *  transaction factories when called sequentially. The reason to have
-     *  multiple transaction factories is to be able to create multiple
-     *  custom transactions, for instance, when code similar to the above
-     *  appears more than once in different parts of your application (e.g.
-     *  this code is split among multiple classes).
+     * This method is a multi-entry method which allows creating multiple
+     * transaction factories when called sequentially. The reason to have
+     * multiple transaction factories is to be able to create multiple
+     * custom transactions, for instance, when code similar to the above
+     * appears more than once in different parts of your application (e.g.
+     * this code is split among multiple classes).
      */
     public Context transaction(Supplier<? extends Transaction> supplier)
     {
@@ -190,7 +176,7 @@ public class Context implements Configurable
      * 	      )
      * }</pre>
      *
-     * @param <T> Type parameter
+     * @param <T>       Type parameter
      * @param invariant Invariant (rules) that must be upkept
      */
     public <T> Invariant<T> invariant(Class<T> cls)
@@ -210,14 +196,14 @@ public class Context implements Configurable
      * 	      enforce(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     * 	      }})
+     *          }})
      * }</pre>
      *
      * Warning: the above code implicitly stores a pointer to the enclosing class
      * inside the Invariant object, which may lead to memory leaks. As an alternative,
      * use the {@link #invariant(Class)} method to create an independent Invariant object.
      *
-     * @param <T> Type parameter
+     * @param <T>       Type parameter
      * @param invariant Invariant (rules) that must be upkept
      */
     public <T> void enforce(Invariant<T> invariant)
@@ -245,14 +231,14 @@ public class Context implements Configurable
      * 	      cause(new Effect<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     * 	      }})
+     *          }})
      * }</pre>
      *
      * Warning: the above code implicitly stores a pointer to the enclosing class
      * inside the Effect object, which may lead to memory leaks. As an alternative,
      * use the {@link #effect(Class)} method to create an independent Effect object.
      *
-     * @param <T> Type parameter
+     * @param <T>       Type parameter
      * @param invariant Invariant (rules) that must be upkept
      */
     public <T> void cause(Effect<T> effect)
@@ -274,15 +260,9 @@ public class Context implements Configurable
         return parent;
     }
 
-    /**
-     * Set EventSplitter factory
-     *
-     * @param supplier EventSplitter supplier
-     */
-    public void eventSplitter(Supplier<? extends EventSplitter> supplier)
+    public void parent(Context parent)
     {
-        Args.cool(supplier, "supplier");
-        eventSplitterFactory = supplier;
+        this.parent = parent;
     }
 
     /*
@@ -298,5 +278,10 @@ public class Context implements Configurable
     public String name()
     {
         return name;
+    }
+
+    public void name(String name)
+    {
+        this.name = name;
     }
 }

@@ -17,5 +17,5 @@ Example of custom indentation:
          .create(c -> "Black".equals(c.color), "Cats are born black")
        .done()
 ```
-To avoid automatic removal of indents, adjust formatter settings:
-Changes: **Settings | Editor | Code Style | Formatter | Wrapping & Braces | Chained Method Calls | Keep builder method indents **
+To avoid automatic removal of indents, adjust formatter settings: Keep builder method indents
+Problem: no effect: **Settings | Editor | Code Style | Formatter | Wrapping & Braces | Chained Method Calls | Keep builder method indents **

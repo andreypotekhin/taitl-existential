@@ -220,4 +220,9 @@ public class Transaction implements Configurable
      * TODO: allow(Intent<T> intent) { ...
      * intent.tran = this; ... }
      */
+
+    public void name(String name)
+    {
+        this.op = name;
+    }
 }

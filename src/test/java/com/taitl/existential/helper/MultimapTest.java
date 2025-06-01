@@ -2,10 +2,10 @@ package com.taitl.existential.helper;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.existential.examples.night_city.model.*;
+import com.taitl.examples.night_city.model.*;
 import org.junit.jupiter.api.*;
 
-import static com.taitl.existential.examples.night_city.data.CityTestData.*;
+import static com.taitl.examples.night_city.data.CityTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MultimapTest

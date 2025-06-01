@@ -3,7 +3,10 @@ package com.taitl.existential.creator;
 import java.util.*;
 import java.util.function.*;
 
+import com.taitl.existential.helper.*;
+
 import static com.taitl.existential.helper.Args.cool;
+import static com.taitl.existential.helper.Args.require;
 import static com.taitl.existential.helper.State.verify;
 
 /**
@@ -73,6 +76,67 @@ public class CreatorDevice
         synchronized (singletons)
         {
             return (T) singletons.computeIfAbsent(className, key -> result);
+        }
+    }
+
+    /**
+     * Creates a new instance of the specified class, optionally using constructor parameters.
+     *
+     * @param <T>        Type to provide
+     * @param cls        Class instance to create
+     * @param paramTypes Parameter types for the constructor
+     * @param initargs   Arguments for the constructor
+     * @return Newly created instance
+     */
+    public <T> T create(Class<T> cls, Class<?>[] paramTypes, Object... initargs)
+    {
+        cool(cls, "cls");
+        if (paramTypes == null || initargs == null)
+        {
+            require(paramTypes == null && initargs == null,
+                    "If paramTypes is specified, initargs must also be specified");
+        }
+
+        String className = cls.getCanonicalName();
+        Supplier<? extends T> supplier = getSupplier(cls);
+
+        if (supplier != null)
+        {
+            // Assuming the supplier can handle parameterized constructors
+            if (supplier instanceof BiFunction<?, ?, ?>)
+            {
+                @SuppressWarnings("unchecked")
+                BiFunction<Class<?>[], Object[], T> paramSupplier = (BiFunction<Class<?>[], Object[], T>) supplier;
+                T result = paramSupplier.apply(paramTypes, initargs);
+                created.add(className);
+                return result;
+            }
+            else
+            {
+                T result = supplier.get();
+                created.add(className);
+                return result;
+            }
+        }
+
+        try
+        {
+            T result;
+            if (paramTypes == null || initargs == null)
+            {
+                result = cls.getDeclaredConstructor().newInstance();
+            }
+            else
+            {
+                result = cls.getDeclaredConstructor(paramTypes).newInstance(initargs);
+            }
+            created.add(className);
+            return result;
+        }
+        catch (ReflectiveOperationException e)
+        {
+            throw new IllegalArgumentException(
+                    "Could not create an instance of class " + className, e);
         }
     }
 

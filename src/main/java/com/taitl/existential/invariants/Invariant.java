@@ -1,20 +1,15 @@
 package com.taitl.existential.invariants;
 
 import java.util.*;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-
-import com.taitl.existential.expressions.All;
-import com.taitl.existential.expressions.Exists;
-import com.taitl.existential.expressions.Expression;
-import com.taitl.existential.expressions.Expressions;
+import java.util.function.*;
+import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.helper.State;
-import com.taitl.exlogic.instructions.Instructions;
-import com.taitl.existential.rules.RuleSet;
-import com.taitl.existential.transactions.Transaction;
+import com.taitl.existential.helper.*;
+import com.taitl.existential.quantifiers.*;
+import com.taitl.existential.rules.*;
+import com.taitl.existential.transactions.*;
+import com.taitl.exlogic.instructions.*;
 
 public class Invariant<T> implements RuleSet<T>
 {

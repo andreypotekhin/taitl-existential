@@ -1,9 +1,9 @@
 package com.taitl.existential.claims.usage;
 
+import com.taitl.examples.night_city.tests.*;
 import com.taitl.existential.Existential;
-import com.taitl.existential.examples.night_city.model.Cat;
-import com.taitl.existential.examples.night_city.data.CityTestData;
-import com.taitl.existential.examples.night_city.tests.*;
+import com.taitl.examples.night_city.model.Cat;
+import com.taitl.examples.night_city.data.CityTestData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,6 +39,11 @@ class UserCanConfigureLibrary
     void configure()
     {
         fixt.configure();
+    }
+
+    void configureWithInnerClasses()
+    {
+        fixt.configureWithInnerClasses();
     }
 
     void configureWithBuilders()
@@ -77,7 +82,7 @@ class UserCanConfigureLibrary
     void configureLibraryUsingFluentStyle() throws Exception
     {
         assertDoesNotThrow(() -> {
-            configure();
+            configureWithInnerClasses();
             String tran = ex.begin(op);
             ex.event(cat, tran);
         });
