@@ -5,17 +5,17 @@ import com.taitl.existential.helper.*;
 import com.taitl.existential.keys.*;
 import com.taitl.exlogic.transaction.*;
 
-public class CreateRuntimeTransaction
+public class CreateOpRun
 {
     Executions executions;
 
-    public CreateRuntimeTransaction(Executions executions)
+    public CreateOpRun(Executions executions)
     {
         Args.cool(executions, "execution");
         this.executions = executions;
     }
 
-    public RuntimeTransaction call(String op) throws ExistentialException
+    public OpRun call(String op) throws ExistentialException
     {
         Args.cool(op, "op");
         OpKey.validate(op);

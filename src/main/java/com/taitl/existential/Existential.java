@@ -1,7 +1,6 @@
 package com.taitl.existential;
 
 import java.io.*;
-import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.ops.*;
@@ -35,7 +34,7 @@ public final class Existential implements Closeable
 
     public Op op(String op)
     {
-        return ops.configure(op);
+        return ops.get(op);
     }
 
     public String begin(String op) throws ExistentialException

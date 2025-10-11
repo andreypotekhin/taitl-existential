@@ -25,13 +25,14 @@ import com.taitl.existential.transactions.*;
  * the order of transactions is same as the order of declaration of its transaction
  * factories.
  */
-public class RuntimeTransaction
+public class OpRun
 {
     public UUID id;
     String op;
     List<Transaction> transactions = new ArrayList<>();
+    // TODO: Add collections for events, immediates, validations.
 
-    public RuntimeTransaction(String op, UUID id)
+    public OpRun(String op, UUID id)
     {
         Args.cool(op, "op", id, "id");
         OpKey.validate(op);

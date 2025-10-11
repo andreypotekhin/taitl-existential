@@ -6,12 +6,13 @@ import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.helper.*;
+import com.taitl.existential.interfaces.*;
 import com.taitl.existential.quantifiers.*;
 import com.taitl.existential.rules.*;
 import com.taitl.existential.transactions.*;
 import com.taitl.exlogic.instructions.*;
 
-public class Invariant<T> implements RuleSet<T>
+public class Invariant<T> implements RuleSet<T>, Constraint<T>
 {
     /**
      * Parent Transaction object, if any.

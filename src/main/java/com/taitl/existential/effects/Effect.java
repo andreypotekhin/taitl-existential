@@ -6,6 +6,7 @@ import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
+import com.taitl.existential.interfaces.*;
 import com.taitl.exlogic.instructions.Instructions;
 import com.taitl.existential.rules.RuleSet;
 import com.taitl.existential.transactions.Transaction;
@@ -15,7 +16,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class Effect<T> implements RuleSet<T>
+public class Effect<T> implements RuleSet<T>, Immediate<T>
 {
     /**
      * Parent Transaction object, if any.

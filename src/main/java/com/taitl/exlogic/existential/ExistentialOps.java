@@ -2,7 +2,6 @@ package com.taitl.exlogic.existential;
 
 import java.io.*;
 import com.taitl.existential.*;
-import com.taitl.existential.contexts.*;
 import com.taitl.existential.ops.*;
 import com.taitl.existential.helper.*;
 import com.taitl.exlogic.contexts.*;
@@ -18,7 +17,7 @@ public class ExistentialOps implements Closeable
         this.ex = ex;
     }
 
-    public Op configure(String op)
+    public Op get(String op)
     {
         Args.cool(op, "op");
         State.verify(!ex.configured(),
@@ -48,8 +47,8 @@ public class ExistentialOps implements Closeable
                 ex.configured(true);
 
                 // Now that we finalized set up of rules and event handlers
-                // we'll create custom contexts for all OpContexts that
-                // exist context registry. This will result in a call to each
+                // we'll create custom contexts for all Contexts that
+                // exist in context registry. This will result in a call to each
                 // and every require(), intent() method of each custom context,
                 // and therefore create instances of each Invariant, Intent
                 // provided during the setup.

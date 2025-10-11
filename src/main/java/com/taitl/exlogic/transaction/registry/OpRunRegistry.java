@@ -1,7 +1,6 @@
 package com.taitl.exlogic.transaction.registry;
 
 import java.util.*;
-import com.taitl.existential.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.helper.*;
@@ -11,24 +10,25 @@ import com.taitl.exlogic.existential.*;
 import com.taitl.exlogic.transaction.*;
 
 /**
- * TransactionRegistry creates OpTrans and holds references to them
+ * OpRunRegistry creates OpTrans and holds references to them
  * for the duration of a business transaction.
+ * TODO: We don't need this class if just return OpRun object to caller of op.start()
  */
-public class RuntimeTransactionRegistry
+public class OpRunRegistry
 {
     protected ExistentialExecution exec;
-    protected Map<String, RuntimeTransaction> reg = new LinkedHashMap<>();
+    protected Map<String, OpRun> reg = new LinkedHashMap<>();
 
-    public RuntimeTransactionRegistry(ExistentialExecution exec)
+    public OpRunRegistry(ExistentialExecution exec)
     {
         this.exec = exec;
     }
 
-    public RuntimeTransaction create(String op)
+    public OpRun create(String op)
     {
         Args.cool(op, "op");
         OpKey.validate(op);
-        RuntimeTransaction o = new RuntimeTransaction(op, generateId());
+        OpRun o = new OpRun(op, generateId());
 
         for (Context context : exec.ex().contexts().createContexts(op))
         {
@@ -45,10 +45,10 @@ public class RuntimeTransactionRegistry
         return o;
     }
 
-    public RuntimeTransaction get(String id) throws NotFoundException
+    public OpRun get(String id) throws NotFoundException
     {
         Args.cool(id, "id");
-        RuntimeTransaction o = reg.get(id);
+        OpRun o = reg.get(id);
         if (o == null)
         {
             throw new NotFoundException("Transaction not found, id=" + id);
@@ -56,10 +56,10 @@ public class RuntimeTransactionRegistry
         return o;
     }
 
-    public RuntimeTransaction remove(String id) throws NotFoundException
+    public OpRun remove(String id) throws NotFoundException
     {
         Args.cool(id, "id");
-        RuntimeTransaction o = reg.get(id);
+        OpRun o = reg.get(id);
         if (o == null)
         {
             throw new NotFoundException("Transaction not found, id=" + id);

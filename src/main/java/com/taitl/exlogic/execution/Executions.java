@@ -12,28 +12,28 @@ import com.taitl.exlogic.transaction.registry.*;
 public class Executions implements Closeable
 {
     protected ExistentialExecution ee;
-    protected RuntimeTransactionRegistry registry;
-    protected CreateRuntimeTransaction createRuntimeTransaction;
+    protected OpRunRegistry registry;
+    protected CreateOpRun createOpRun;
 
     public Executions(ExistentialExecution ee)
     {
         this.ee = ee;
-        this.registry = new RuntimeTransactionRegistry(ee);
-        this.createRuntimeTransaction = new CreateRuntimeTransaction(this);
+        this.registry = new OpRunRegistry(ee);
+        this.createOpRun = new CreateOpRun(this);
     }
 
     public String begin(String op) throws ExistentialException
     {
         Args.cool(op, "op");
         OpKey.validate(op);
-        RuntimeTransaction tr = createRuntimeTransaction.call(op);
+        OpRun tr = createOpRun.call(op);
         return tr.id.toString();
     }
 
     public void commit(String tranID) throws ExistentialException
     {
         Args.cool(tranID, "tranID");
-        RuntimeTransaction tr = registry.get(tranID);
+        OpRun tr = registry.get(tranID);
         if (tr == null)
         {
             throw new NotFoundException("Op transaction not found, id=" + tranID);
@@ -70,7 +70,7 @@ public class Executions implements Closeable
         return ee.ex();
     }
 
-    public RuntimeTransactionRegistry registry()
+    public OpRunRegistry registry()
     {
         return registry;
     }

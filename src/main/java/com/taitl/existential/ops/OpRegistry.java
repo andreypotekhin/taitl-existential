@@ -10,7 +10,7 @@ import com.taitl.existential.keys.*;
 import com.taitl.exlogic.existential.*;
 
 /**
- * OpRegistry holds references to OpContexts.
+ * OpRegistry holds references to Ops, keyed by op name.
  */
 public class OpRegistry
 {
