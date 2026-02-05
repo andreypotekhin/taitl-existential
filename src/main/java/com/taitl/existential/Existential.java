@@ -32,7 +32,7 @@ public final class Existential implements Closeable
     private boolean configured = false;
     private boolean closed = false;
 
-    public Op op(String op)
+    public OpConfig configure(String op)
     {
         return ops.get(op);
     }

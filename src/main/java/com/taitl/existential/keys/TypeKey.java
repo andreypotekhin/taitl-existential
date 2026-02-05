@@ -1,6 +1,7 @@
 package com.taitl.existential.keys;
 
 import com.taitl.existential.helper.Args;
+import com.taitl.exlogic.handlers.collection.*;
 
 /**
  * A string representing a type along with its generics, for example "Set<Car>".<p>
@@ -21,7 +22,7 @@ import com.taitl.existential.helper.Args;
  * OnChange<Document<JSON>>(...)
  * <p>
  *
- * @see com.taitl.existential.EventHandlers
+ * @see EventHandlers
  */
 public class TypeKey<T>
 {

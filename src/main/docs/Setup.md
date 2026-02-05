@@ -11,7 +11,7 @@ By default, Java formatter removes custom indentation on chained calls.
 This may get in the way of readability when configuring with builders.
 Example of custom indentation:
 ```java
-  ex.configure("/api/cats")
+  Ex.configure("/api/cats")
     .context()
        .invariant(Cat.class)
          .create(c -> "Black".equals(c.color), "Cats are born black")

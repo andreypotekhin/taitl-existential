@@ -1,12 +1,9 @@
 package com.taitl.existential.ops;
 
 import java.util.*;
-import java.util.stream.*;
 import com.taitl.existential.contexts.*;
-import com.taitl.existential.creator.*;
 import com.taitl.existential.exceptions.NotFoundException;
 import com.taitl.existential.helper.*;
-import com.taitl.existential.keys.*;
 import com.taitl.exlogic.existential.*;
 
 /**
@@ -15,17 +12,17 @@ import com.taitl.exlogic.existential.*;
 public class OpRegistry
 {
     protected ExistentialOps ops;
-    protected Map<String, Op> reg = new LinkedHashMap<>();
+    protected Map<String, OpConfig> reg = new LinkedHashMap<>();
 
     public OpRegistry(ExistentialOps ops)
     {
         this.ops = ops;
     }
 
-    public Op create(String name)
+    public OpConfig create(String name)
     {
         Args.cool(name, "name");
-        Op o = new Op(name);
+        OpConfig o = new OpConfig(name);
         synchronized (this)
         {
             for (Context context : ops.ex().contexts().createContexts(name))
@@ -42,10 +39,10 @@ public class OpRegistry
         return reg.containsKey(id);
     }
 
-    public Op get(String id) throws NotFoundException
+    public OpConfig get(String id) throws NotFoundException
     {
         Args.cool(id, "id");
-        Op o = reg.get(id);
+        OpConfig o = reg.get(id);
         if (o == null)
         {
             throw new NotFoundException("Context not found, id=" + id);
@@ -53,17 +50,17 @@ public class OpRegistry
         return o;
     }
 
-    public Op getcreate(String id)
+    public OpConfig getcreate(String id)
     {
         Args.cool(id, "id");
-        Op o = reg.get(id);
+        OpConfig o = reg.get(id);
         return (o != null) ? o : create(id);
     }
 
-    public Op remove(String id) throws NotFoundException
+    public OpConfig remove(String id) throws NotFoundException
     {
         Args.cool(id, "id");
-        Op o = reg.get(id);
+        OpConfig o = reg.get(id);
         if (o == null)
         {
             throw new NotFoundException("Context not found, id=" + id);

@@ -15,8 +15,6 @@ import com.taitl.existential.constants.Strings;
  * relevant events (from the context as well from all its parents) is created at transaction start and stored in the
  * Transaction object. This allows to avoid having to gather such info for each event from each involved context.
  *
- * @author Andrey Potekhin
- *
  * @see Transaction
  *
  * TODO: Move to Context?

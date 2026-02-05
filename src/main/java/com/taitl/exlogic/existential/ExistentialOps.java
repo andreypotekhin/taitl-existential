@@ -17,7 +17,7 @@ public class ExistentialOps implements Closeable
         this.ex = ex;
     }
 
-    public Op get(String op)
+    public OpConfig get(String op)
     {
         Args.cool(op, "op");
         State.verify(!ex.configured(),

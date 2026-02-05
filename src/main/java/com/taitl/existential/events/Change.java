@@ -10,19 +10,8 @@ import com.taitl.existential.events.types.EntityEvent;
  * 
  * Database analog: UPDATE
  * 
- * @author Andrey Potekhin
  * @param <T>
  *            Class of application entity
- * @see Create
- * @see Update
- * @see Upsert
- * @see Event
- * @see Delete
- * @see Read
- * @see ReadAndLock
- * @see Write
- * @see Mutate
- * @see Transit
  */
 public class Change<T> extends EntityEvent<T>
 {

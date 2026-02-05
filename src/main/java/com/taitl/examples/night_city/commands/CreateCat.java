@@ -6,18 +6,11 @@ import com.taitl.existential.exceptions.*;
 
 public class CreateCat
 {
-    Existential ex;
-
-    public CreateCat(Existential ex)
-    {
-        this.ex = ex;
-    }
-
     public void call()
             throws ExistentialException
     {
-        String tranID = ex.begin("/api/cats/create");
-        ex.event(null, CityTestData.GREY_CAT, tranID);
-        ex.commit(tranID);
+        String tranID = Ex.begin("/api/cats/create");
+        Ex.event(null, CityTestData.GREY_CAT, tranID);
+        Ex.commit(tranID);
     }
 }

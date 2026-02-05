@@ -18,10 +18,8 @@ import com.taitl.exlogic.unused.builders.*;
  *
  * The contexts are stored in the order of being declared. Within each context,
  * the transactions are stored in the order transaction factories are declared.
- *
- * @author Andrey Potekhin
  */
-public class Op
+public class OpConfig
 {
     protected static final Supplier<? extends Context> DEFAULT_CONTEXT_FACTORY =
             () -> new Context("undefined");
@@ -76,7 +74,7 @@ public class Op
      *
      * @param name Name of context
      */
-    public Op(String name)
+    public OpConfig(String name)
     {
         Args.cool(name, "op");
         ContextKey.validate(name);
@@ -100,7 +98,7 @@ public class Op
      * for the context using an instance of a custom context class.
      *
      * Example:
-     *   Contexts.configure("/app/docs/update")                <-- Op
+     *   Ex.configure("/app/docs/update")                <-- OpConfig
      *     .context(new Context(){{           <-- Custom context
      *        ensure(new Invariant<Document<JSON>>() {{
      *             write(doc -> doc.verify());
@@ -124,7 +122,7 @@ public class Op
      *  custom rules in different parts of application (e.g. in multiple
      *  classes/components).
      */
-    public Op context(Context context)
+    public OpConfig context(Context context)
     {
         // Guard against multiple calls to .context() with same argument,
         // for instance, if such call exists somewhere in the middle of
@@ -169,7 +167,7 @@ public class Op
      * @param supplier Custom context factory
      * @return This
      */
-    public Op contextFactory(Supplier<? extends Context> supplier)
+    public OpConfig contextFactory(Supplier<? extends Context> supplier)
     {
         Args.cool(supplier, "supplier");
         contextFactory = supplier;
@@ -183,7 +181,7 @@ public class Op
      * @return This
      *
      */
-    public Op transactionFactory(Supplier<? extends Transaction> supplier)
+    public OpConfig transactionFactory(Supplier<? extends Transaction> supplier)
     {
         Args.cool(supplier, "supplier");
         transactionFactory = supplier;

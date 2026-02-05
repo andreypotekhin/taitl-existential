@@ -3,7 +3,7 @@ package com.taitl.existential.events;
 import static com.taitl.existential.constants.Strings.ARG_T0;
 import static com.taitl.existential.constants.Strings.ARG_T1;
 
-import com.taitl.existential.events.types.BiEvent;
+import com.taitl.existential.events.types.*;
 
 /**
  * Indicates a change that has happened to an application entity during current transaction.
@@ -18,7 +18,6 @@ import com.taitl.existential.events.types.BiEvent;
  * 
  * Database analog: UPDATE
  * 
- * @author Andrey Potekhin
  * @param <T>
  *            Class of application entity
  * @see Event

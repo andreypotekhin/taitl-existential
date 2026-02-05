@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserCanAccessLibrary
 {
     Existential ex;
+    Existential prev;
     String op;
     CityTests fixt;
     Cat cat;
@@ -24,14 +25,16 @@ class UserCanAccessLibrary
     void setup()
     {
         ex = new Existential();
+        prev = Ex.instance(ex);
         op = "/api/cats";
-        fixt = new CityTests(ex);
+        fixt = new CityTests();
         cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
     }
 
     @AfterEach
     void cleanup()
     {
+        Ex.instance(prev);
         ex.close();
     }
 

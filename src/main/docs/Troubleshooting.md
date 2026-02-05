@@ -9,7 +9,7 @@ Causing code:
 ```java
 public void configure()
 {
-  ex.configure("/api/cats")
+  Ex.configure("/api/cats")
       .context(new Context("/api/cats") {{
           enforce(new Invariant<Cat>() {{
               create(c -> "Black".equals(c.color), "Cats are born black");
@@ -25,7 +25,7 @@ Workaround 1: Adjust PMD rules
 
 Workaround 2: Use configure-with-builders style:
 ```java
-  ex.configure("/api/cats")
+  Ex.configure("/api/cats")
     .context()
        .invariant(Cat.class)
          .create(c -> "Black".equals(c.color), "Cats are born black")

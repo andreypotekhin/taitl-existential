@@ -15,13 +15,13 @@ public class ConfigBuilder
         TYPE_CONTEXT, TYPE_TRANSACTION
     }
 
-    Op parent;
+    OpConfig parent;
     String name;
     TargetType type;
     List<RuleSetBuilder> ruleSetBuilders;
     List<RuleSet> ruleSets;
 
-    public ConfigBuilder(Op parentContext, String name, TargetType type)
+    public ConfigBuilder(OpConfig parentContext, String name, TargetType type)
     {
         this.parent = parentContext;
         this.name = name;

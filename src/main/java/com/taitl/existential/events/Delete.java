@@ -9,18 +9,8 @@ import com.taitl.existential.events.types.EntityEvent;
  * 
  * Database analog: DELETE
  * 
- * @author Andrey Potekhin
  * @param <T>
  *            Class of application entity
- * @see Create
- * @see Update
- * @see Upsert
- * @see Event
- * @see Read
- * @see ReadAndLock
- * @see Write
- * @see Mutate
- * @see Transit
  */
 public class Delete<T> extends EntityEvent<T>
 {

@@ -6,8 +6,6 @@ import static com.taitl.existential.constants.Strings.*;
  * Lightweight checks for method in-conditions.
  * Throws IllegalStateException if in-condition is not met.
  *
- * @author Andrey Potekhin
- *
  * @see Args
  * @see Outcome
  */

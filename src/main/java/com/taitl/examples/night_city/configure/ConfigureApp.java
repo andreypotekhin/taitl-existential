@@ -1,4 +1,4 @@
-package com.taitl.examples.night_city.commands.configure;
+package com.taitl.examples.night_city.configure;
 
 import com.taitl.examples.night_city.model.*;
 import com.taitl.existential.*;
@@ -8,16 +8,9 @@ import com.taitl.existential.invariants.*;
 
 public class ConfigureApp
 {
-    public Existential ex;
-
-    public ConfigureApp(Existential ex)
-    {
-        this.ex = ex;
-    }
-
     public void configure()
     {
-        ex.op("/api/cats")
+        Ex.configure("/api/cats")
                 .context(new Context("/api/cats/create") {
                     {
                         invariant(Cat.class)
@@ -27,7 +20,7 @@ public class ConfigureApp
                     }
                 });
         // TODO:
-        // ex.op("/api/houses")
+        // ex.configure("/api/houses")
         // .context(new Context("/api/houses/create") {
         // { can't build house on North st.
         // .context(new Context("/api/houses/update") {
@@ -38,7 +31,7 @@ public class ConfigureApp
 
     public void configureWithInnerClasses()
     {
-        ex.op("/api/cats")
+        Ex.configure("/api/cats")
                 .context(new Context("/api/cats/create") {
                     {
                         enforce(new Invariant<Cat>() {
@@ -57,7 +50,7 @@ public class ConfigureApp
 
     public void configureWithBuilders()
     {
-        ex.op("/api/cats")
+        Ex.configure("/api/cats")
                 .context("/api/cats/create")
                 .invariant(Cat.class)
                 .create(c -> "Black".equals(c.color), "Cats are born black")
@@ -70,7 +63,7 @@ public class ConfigureApp
 
     public void configureMixingFluentAndBuilders()
     {
-        ex.op("/api/cats")
+        Ex.configure("/api/cats")
                 .context("/api/cats/create")
                 .invariant(Cat.class)
                 .create(c -> "Black".equals(c.color), "Cats are born black")

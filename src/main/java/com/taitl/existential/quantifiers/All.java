@@ -17,8 +17,6 @@ import com.taitl.existential.helper.Args;
  * @param <T>
  *            Entity type T to which the expression applies, or a mutation of an entity type
  *            (Mutation<T>, Transition<T>)
- *
- * @author Andrey Potekhin
  */
 public class All<T> implements Expression<T>
 {

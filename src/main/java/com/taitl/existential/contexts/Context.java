@@ -165,7 +165,7 @@ public class Context implements Configurable
     }
 
     /**
-     * Set up invariants/rules to be enforced for the business operation defined by this context.
+     * Set invariants/rules to be enforced for business operation defined by this context.
      *
      * <pre>{@code
      * Contexts.get("/app/flight_school")
@@ -173,11 +173,11 @@ public class Context implements Configurable
      * 	      invariant(Pilot.class)
      *                .all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                .transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     * 	      )
+     * 	      }})
      * }</pre>
      *
-     * @param <T>       Type parameter
-     * @param invariant Invariant (rules) that must be upkept
+     * @param <T> Type parameter
+     * @param cls Class for which we define the invariant
      */
     public <T> Invariant<T> invariant(Class<T> cls)
     {
@@ -188,7 +188,7 @@ public class Context implements Configurable
     }
 
     /**
-     * Set up invariants/rules to be enforced for business operation defined by this context.
+     * Set invariants/rules to be enforced business operation defined by this context.
      *
      * <pre>{@code
      * Contexts.get("/app/flight_school")
@@ -223,18 +223,17 @@ public class Context implements Configurable
     }
 
     /**
-     * Set up invariants/rules to be enforced for business operation defined by this context.
+     * Set effects for business operation defined by this context.
      *
      * <pre>{@code
      * Contexts.get("/app/flight_school")
      *     .context(() -> new Context(){{
      * 	      cause(new Effect<Pilot>() {{
-     *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      *          }})
      * }</pre>
      *
-     * Warning: the above code implicitly stores a pointer to the enclosing class
+     * Warning: the above code implicitly stores a pointer to the enclosing class instance
      * inside the Effect object, which may lead to memory leaks. As an alternative,
      * use the {@link #effect(Class)} method to create an independent Effect object.
      *

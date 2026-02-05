@@ -9,20 +9,8 @@ import com.taitl.existential.events.types.EntityEvent;
  *
  * Database analogs: UPDATE or DELETE
  *
- *
- * @author Andrey Potekhin
  * @param <T>
  *            Class of application entity
- * @see Event
- * @see Create
- * @see Update
- * @see Upsert
- * @see Delete
- * @see Read
- * @see ReadAndLock
- * @see Write
- * @see Mutate
- * @see Transit
  */
 // TODO: is this event needed? Should we just use Update instead of Update, Upsert, Modify and
 // Change?

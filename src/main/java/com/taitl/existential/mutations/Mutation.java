@@ -12,7 +12,6 @@ import static com.taitl.existential.constants.Strings.ARG_T1;
  * @param <T>
  *            Type of mutating object
  *
- * @author Andrey Potekhin
  * @see Transition
  */
 public final class Mutation<T>

@@ -1,7 +1,7 @@
 package com.taitl.existential.claims.usage;
 
 import com.taitl.examples.night_city.tests.*;
-import com.taitl.existential.Existential;
+import com.taitl.existential.*;
 import com.taitl.examples.night_city.model.Cat;
 import com.taitl.examples.night_city.data.CityTestData;
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class UserCanConfigureLibrary
 {
     Existential ex;
+    Existential prev;
     String op;
     CityTests fixt;
     Cat cat;
@@ -25,14 +26,16 @@ class UserCanConfigureLibrary
     void setup()
     {
         ex = new Existential();
+        prev = Ex.instance(ex);
         op = "/api/cats";
-        fixt = new CityTests(ex);
+        fixt = new CityTests();
         cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
     }
 
     @AfterEach
     void cleanup()
     {
+        Ex.instance(prev);
         ex.close();
     }
 

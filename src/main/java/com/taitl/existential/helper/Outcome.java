@@ -6,8 +6,6 @@ import static com.taitl.existential.constants.Strings.*;
  * Lightweight checks for method post-conditions.
  * Throws RuntimeException if post-condition is not met.
  *
- * @author Andrey Potekhin
- *
  * @see Args
  * @see State
  */

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.taitl.existential.keys.OpKey;
 
-class OpKeyTest
+class OpConfigKeyTest
 {
     final String op = "/app/module/op";
     OpKey o;

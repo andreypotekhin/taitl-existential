@@ -6,8 +6,6 @@ import static com.taitl.existential.constants.Strings.*;
  * Lightweight checking/validations for method arguments.
  * Throws IllegalArgumentException if a condition is not met.
  *
- * @author Andrey Potekhin
- *
  * @see State
  * @see Outcome
  */

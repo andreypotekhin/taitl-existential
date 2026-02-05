@@ -5,12 +5,10 @@ import com.taitl.examples.night_city.data.*;
 
 public class AppCommands
 {
-    Existential ex;
     public CreateCat createCat;
 
-    public AppCommands(Existential ex)
+    public AppCommands()
     {
-        this.ex = ex;
-        this.createCat = new CreateCat(ex);
+        this.createCat = new CreateCat();
     }
 }

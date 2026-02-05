@@ -12,6 +12,7 @@ import com.taitl.existential.handlers.types.EventHandler;
 import com.taitl.existential.handlers.OnBegin;
 import com.taitl.existential.helper.Args;
 import com.taitl.existential.helper.State;
+import com.taitl.exlogic.events.split.*;
 import com.taitl.exlogic.unused.indexes.Index;
 import com.taitl.exlogic.instructions.Instructions;
 import com.taitl.existential.effects.Effect;
@@ -55,7 +56,6 @@ import com.taitl.existential.invariants.Invariant;
  *   }</pre>
  *   If custom transaction class is not defined for a context, the transaction class from its parent context will be used.
  *
- * @author Andrey Potekhin
  * @see Context
  * @see TransactionIndexes
  * @see TransactionEvents
