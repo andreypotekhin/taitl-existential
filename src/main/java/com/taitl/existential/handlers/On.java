@@ -1,12 +1,10 @@
 package com.taitl.existential.handlers;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-
-import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.handlers.types.EventHandler;
-import com.taitl.existential.helper.Args;
-import com.taitl.exlogic.handlers.execution.*;
+import java.util.function.*;
+import com.taitl.ex.logic.execution.*;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.helper.*;
 
 public class On<T> implements EventHandler<T>
 {

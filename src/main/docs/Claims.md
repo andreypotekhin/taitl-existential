@@ -1,17 +1,18 @@
 ## Claims / User Stories
 
-Ths is the list of claims made by Existential library - 
-the things that stated (claimed) in somewhere in the library documents.
+This is the list of claims made by Existential library - 
+things that are stated (claimed) in library documents.
 
 As user stories, claim statements may be prefixed with 'The user can...' ('The user can't...' for negative claims).
-Claims are baked by test cases in src/test/claims. The (+) signs below indicate the ones for which test cases exist. 
+Claims are baked by test cases in src/test/claims. The (+) signs below indicate the ones covered by tests. 
 
 ### Library
 
 +User can access the library as an object from client code
 User can independently configure and use multiple instances of Existential library
-Within an instance of Existential library, the user can configure multiple operation contexts
-Within an operation context, the user can configure multiple transactions
+Within an instance of Existential library, the user can configure multiple operations
+Within an operation configuration, the user can configure multiple operation contexts
+Within an operation context, the user can configure multiple transactionLogic
 
 #### Library configuration
 
@@ -33,10 +34,17 @@ User can configure constraints on classes, such as application entities
 +User can roll back a transaction
 +User can't send events to library which hasn't been configured
 
+#### Lifecycle phases
+The library usage falls into configuration, execution and validation phases
+During configuration phase, user defines rules (constraints, intents) for contexts and transactionLogic
+During execution phase, user begins and ends transactionLogic, and sends events to the library
+During validation phase, the library checks the constraints
+The validation phase happens at transaction end (commit) or at checkpoints
+
 #### Configuration workflow
 
 User can configure the rules (constraints) with custom contexts
-User can configure the rules (constraints) with custom transactions
+User can configure the rules (constraints) with custom transactionLogic
 Rules from parent context affect child contexts
 Rules defined in parent context execute before the ones defined in child context
 A transaction is associated with a context
@@ -55,23 +63,29 @@ User can define an op with a wildcard in its op path
 All wildcard ops matching the current context participate in its validation
 
 #### Execution workflow
-(We call an 'exectuion' what happens between beginning and ending of a transaction)
+(We call an 'execution' what happens between beginning and end of a transaction)
+
+Pre-conditions are checked at the beginning of transaction.
+Intents are checked immediately (in the middle of transaction).
+Constraints are checked at the end of transaction.
+Constraints are also checked at checkpoints.
 
 ##### Events
 
-User can emit an event into the library, indicating entity access or modification
-Successive events (for same entity and event type combination) are considered a single event
+User can emit/record an event, such as entity access or modification
+Multiple equal events (e.g. same entity + event type) (successive or not) are considered to be (have same effect) as single event
 User can't send any events before the library is configured
-User can't send any events before the transaction has begun
+User can't send any events before the transaction has started
 User can't send any events after transaction has been committed/rolled back
+User can't modify configurations (e.g. create invariants) after sending any event
 
 #### Validation workflow
-(Validation is the process of checking the constraints)
+(Validation is the process of checking the constraints at transaction commit or checkpoint)
 
-Validation automatically starts upon transaction commit
-Separate transactions are validated independently (even if transactions are nested)
-Only the events reported during transaction are considered during its validation 
-Validation is carried out by applying event handlers for each reported event to its entity
+Validation automatically starts upon transaction commit or checkpoint
+Separate transactionLogic are validated independently (even if these transactionLogic are nested)
+Only the events reported during transaction are considered for validation 
+Validation is carried out by applying event handlers for each reported event to its corresponding entity
 The order of execution of event handlers follows the order of their definition during configuration phase
 
 ### Constraints
@@ -137,41 +151,41 @@ User can specify a transaction object for the 'Exist' quantifier
 
 User can define 'allow' intent on event type and entity class
 User can define 'deny' intent on event type and entity class
-User can declare a combination of event type and entity class as protected, thus requiring intents to be declared 
+User can declare a combination of event type and entity class as 'protected', thus requiring intents to be declared 
 System validates the intents at validation phase along with other constraints.
 
 ### Events
 
 #### Custom Event
 
-User can define custom event type
-User can define an event handler for custom event type
-User can declare a constraint based on custom event type (Context)
-User can declare a constraint based on custom event type (Transaction)
-User can customize event splitter to emit the custom event
-System should invoke the custom event handler when validating custom event
+User can define a custom event type
+User can define event handler for custom event type
+User can create a constraint based on custom event type (Context)
+User can create a constraint based on custom event type (Transaction)
+User can customize event splitter to emit events of custom type
+System invokes custom event handler upon encountering custom event
 
 ### Housekeeping
 
 #### Caching
 
-Intermediate data structures are cached between transactions
+Intermediate data structures are cached between transactionLogic
 Intermediate data structures are cached between contexts
 
 #### Transaction Cleanup
 
-Resources taken during transaction are released upon its completion
-This applies to transaction resources, as well as reported events
+Resources taken during transaction are released upon its completion (commit or rollback)
+The above applies to transaction resources as well as reported events
 
 #### Global Cleanup
 
-System ensures that transactions are recycled
+System ensures that all transactionLogic and their resources are recycled
 System ensures that rules, such as constraints, invariants, intents are recycled
-System ensures that memory leaks are reported (Log memory leaks, e.g. when the calling app shuts down)
+System ensures that any memory leaks are reported (Log memory leaks, e.g. when the calling app shuts down)
 
 ### Maven 
 
-User can add the library as a dependency to their project using Maven-based dependency resolution. 
+User can add the Library as a dependency to their project using Maven-based dependency resolution. 
 Requirements: Maven Central account
 
 ### Appendix
@@ -180,13 +194,13 @@ Requirements: Maven Central account
 
 #### Indexing
 
-User can create an in-transaction index to pass info between the rules
-User can create an out-of-transaction index to pass information between the rules
-User pass information between the rules using an in-transaction index
-User pass information between the rules using an out-of-transaction index
+User can create in-transaction index to pass info between the rules
+User can create out-of-transaction index to pass information between the rules
+User can pass information between the rules using an in-transaction index
+User can pass information between the rules using an out-of-transaction index
 User can use an index to speed up evaluation of Existence expression
 
 #### Side Effects
 
-User can automate side effects, such as setting a field to a default value on all objects (of same entity type)
-that are loaded into transaction.
+User can automate side effects, such as setting a field to a default value on all objects of certain type
+that participate in a transaction.

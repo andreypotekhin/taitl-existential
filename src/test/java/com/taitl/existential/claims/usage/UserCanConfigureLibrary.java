@@ -1,9 +1,9 @@
 package com.taitl.existential.claims.usage;
 
-import com.taitl.examples.night_city.tests.*;
+import com.taitl.ex.examples.night_city.tests.*;
 import com.taitl.existential.*;
-import com.taitl.examples.night_city.model.Cat;
-import com.taitl.examples.night_city.data.CityTestData;
+import com.taitl.ex.examples.night_city.model.Cat;
+import com.taitl.ex.examples.night_city.data.CityTestData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,14 +44,14 @@ class UserCanConfigureLibrary
         fixt.configure();
     }
 
-    void configureWithInnerClasses()
+    void configureWithClasses()
     {
-        fixt.configureWithInnerClasses();
+        fixt.configureWithClasses();
     }
 
-    void configureWithBuilders()
+    void configureWithInstances()
     {
-        fixt.configureWithBuilders();
+        fixt.configureWithInstances();
     }
 
     void configureMixingFluentAndBuilders()
@@ -61,7 +61,7 @@ class UserCanConfigureLibrary
 
     @Test
     @DisplayName("User must configure the library before use")
-    void sendEventsToUnconfiguredLibrary() throws Exception
+    void sendEventsToUnconfiguredLibrary()
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             String tran = ex.begin(op);
@@ -71,7 +71,7 @@ class UserCanConfigureLibrary
 
     @Test
     @DisplayName("User can configure the library")
-    void configureLibrary() throws Exception
+    void configureLibrary()
     {
         assertDoesNotThrow(() -> {
             configure();
@@ -82,10 +82,10 @@ class UserCanConfigureLibrary
 
     @Test
     @DisplayName("User can configure the library using fluent style")
-    void configureLibraryUsingFluentStyle() throws Exception
+    void configureLibraryUsingFluentStyle()
     {
         assertDoesNotThrow(() -> {
-            configureWithInnerClasses();
+            configureWithInstances();
             String tran = ex.begin(op);
             ex.event(cat, tran);
         });
@@ -93,10 +93,10 @@ class UserCanConfigureLibrary
 
     @Test
     @DisplayName("User can configure the library using builders")
-    void configureLibraryUsingConfigBuilder() throws Exception
+    void configureLibraryUsingConfigBuilder()
     {
         assertDoesNotThrow(() -> {
-            configureWithBuilders();
+            configureWithClasses();
             String tran = ex.begin(op);
             ex.event(cat, tran);
         });
@@ -104,7 +104,7 @@ class UserCanConfigureLibrary
 
     @Test
     @DisplayName("User can configure the library mixing fluent style and builders")
-    void configureLibraryMixingFluentAndBuilders() throws Exception
+    void configureLibraryMixingFluentAndBuilders()
     {
         assertDoesNotThrow(() -> {
             configureMixingFluentAndBuilders();

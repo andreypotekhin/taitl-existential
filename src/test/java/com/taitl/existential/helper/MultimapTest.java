@@ -2,10 +2,10 @@ package com.taitl.existential.helper;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.examples.night_city.model.*;
+import com.taitl.ex.examples.night_city.model.*;
 import org.junit.jupiter.api.*;
 
-import static com.taitl.examples.night_city.data.CityTestData.*;
+import static com.taitl.ex.examples.night_city.data.CityTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MultimapTest
@@ -14,7 +14,7 @@ class MultimapTest
     Set<Cat> cats;
 
     @BeforeEach
-    void setUp() throws Exception
+    void setUp()
     {
         o = new Multimap<Location, Cat>();
         o.put(LOCATION_PARK, GREY_CAT);
@@ -22,7 +22,7 @@ class MultimapTest
     }
 
     @AfterEach
-    void tearDown() throws Exception
+    void tearDown()
     {
         o = null;
     }

@@ -1,8 +1,8 @@
 package com.taitl.existential.handlers;
 
 import com.taitl.existential.exceptions.*;
-import com.taitl.examples.night_city.model.Cat;
-import com.taitl.examples.night_city.data.CityTestData;
+import com.taitl.ex.examples.night_city.model.Cat;
+import com.taitl.ex.examples.night_city.data.CityTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ class OnTest
     }
 
     @Test
-    void handleExpression() throws Exception
+    void handleExpression()
     {
         cat.color = "White";
         on = new On<>(c -> "Black".equals(c.color), null, "Cats are black");

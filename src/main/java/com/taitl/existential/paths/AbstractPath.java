@@ -15,7 +15,7 @@ import static com.taitl.existential.constants.Strings.*;
  * "/app/orders/update"
  * "/app/orders" - parent context of the above context
  * "/" - root context (parent to all contexts)
- * "/app/* /update" - wildcard context
+ * "/app/*a/update" - wildcard context
  *
  * Context key cannot end with a slash.
  * Wildcard character (*) is allowed in context key.

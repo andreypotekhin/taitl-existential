@@ -1,6 +1,6 @@
 package com.taitl.exlogic.unused.indexes;
 
-import static com.taitl.examples.night_city.data.CityTestData.*;
+import static com.taitl.ex.examples.night_city.data.CityTestData.*;
 import static com.taitl.existential.helper.CollectionUtils.getFirst;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -11,13 +11,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import com.taitl.ex.logic.unused.indexes.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.taitl.examples.night_city.model.Cat;
-import com.taitl.examples.night_city.model.Location;
-import com.taitl.examples.night_city.data.CityTestData;
+import com.taitl.ex.examples.night_city.model.Cat;
+import com.taitl.ex.examples.night_city.model.Location;
+import com.taitl.ex.examples.night_city.data.CityTestData;
 
 class IndexTest
 {
@@ -26,7 +27,7 @@ class IndexTest
     Cat cat;
 
     @BeforeEach
-    void setUp() throws Exception
+    void setUp()
     {
         cats_by_color = new Index<>(c -> c.color);
         cats_by_color.add(GREY_CAT);
@@ -40,7 +41,7 @@ class IndexTest
     }
 
     @AfterEach
-    void tearDown() throws Exception
+    void tearDown()
     {
         cats_by_color = null;
     }

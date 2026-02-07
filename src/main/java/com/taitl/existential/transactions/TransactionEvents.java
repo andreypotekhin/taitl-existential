@@ -1,11 +1,8 @@
 package com.taitl.existential.transactions;
 
-import java.util.BitSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import com.taitl.existential.keys.EventKey;
-import com.taitl.existential.constants.Strings;
+import java.util.*;
+import com.taitl.existential.constants.*;
+import com.taitl.existential.keys.*;
 
 /**
  * Stores all event types for which some rule is defined in a Transaction or Context.

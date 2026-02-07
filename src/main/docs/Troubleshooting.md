@@ -6,12 +6,12 @@ Error: "[INFO] PMD Failure: [class] :22 Rule:DoubleBraceInitialization Priority:
 Cause: Default PMD rules frown on double-brace initialization.  
 Ref: https://pmd.github.io/pmd/pmd_rules_java_bestpractices.html#doublebraceinitialization
 Causing code:  
-```java
+```
 public void configure()
 {
   Ex.configure("/api/cats")
       .context(new Context("/api/cats") {{
-          enforce(new Invariant<Cat>() {{
+          invariant(new Invariant<Cat>() {{
               create(c -> "Black".equals(c.color), "Cats are born black");
           }});
           ...
@@ -24,7 +24,7 @@ Workaround 1: Adjust PMD rules
 ```
 
 Workaround 2: Use configure-with-builders style:
-```java
+```
   Ex.configure("/api/cats")
     .context()
        .invariant(Cat.class)

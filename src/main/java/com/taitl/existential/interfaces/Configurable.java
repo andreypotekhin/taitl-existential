@@ -9,13 +9,14 @@ public interface Configurable
 {
     void name(String name);
 
-    <T> void enforce(Invariant<T> invariant);
+    <T> void invariant(Invariant<T> invariant);
 
-    <T> void cause(Effect<T> effect);
+    <T> void effect(Effect<T> effect);
 
     <T> Configurable add(EventHandler<T> eh);
 
     <T> Configurable add(Expression<T> expr);
 
     // TODO: allow/deny(Intent<T> intent);
+    // TODO: on/off(int flag);
 }

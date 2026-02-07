@@ -2,6 +2,7 @@ package com.taitl.existential.invariants;
 
 import java.util.*;
 import java.util.function.*;
+import com.taitl.ex.domain.instructions.*;
 import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
@@ -10,15 +11,13 @@ import com.taitl.existential.interfaces.*;
 import com.taitl.existential.quantifiers.*;
 import com.taitl.existential.rules.*;
 import com.taitl.existential.transactions.*;
-import com.taitl.exlogic.instructions.*;
 
 public class Invariant<T> implements RuleSet<T>, Constraint<T>
 {
     /**
-     * Parent Transaction object, if any.
-     *
-     * This field is null for invariants that are not declared on
-     * transaction level, e.g. for invariants declared at a Context.
+     * Parent Transaction, if any.
+     * This field is null for the invariants that are not declared on
+     * transaction level, e.g. for invariants the declared at a Context.
      */
     private Transaction tran;
 

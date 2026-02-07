@@ -11,12 +11,12 @@ class ExistentialExceptionTest
     ExistentialException o;
 
     @BeforeEach
-    void setUp() throws Exception
+    void setUp()
     {
     }
 
     @AfterEach
-    void tearDown() throws Exception
+    void tearDown()
     {
     }
 

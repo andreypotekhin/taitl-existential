@@ -1,12 +1,9 @@
 package com.taitl.existential.quantifiers;
 
-import static com.taitl.existential.constants.Strings.ARG_CONDITION;
-import static com.taitl.existential.constants.Strings.ARG_PREDICATE;
-
 import java.util.function.Predicate;
 
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.exceptions.PredicateFailureException;
+import com.taitl.existential.exceptions.PredicateFailure;
 import com.taitl.existential.expressions.*;
 import com.taitl.existential.helper.Args;
 
@@ -58,7 +55,7 @@ public class All<T> implements Expression<T>
         {
             if (!predicate.test(t))
             {
-                throw new PredicateFailureException(description());
+                throw new PredicateFailure(description());
             }
         }
         return null;

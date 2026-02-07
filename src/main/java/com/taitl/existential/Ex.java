@@ -1,21 +1,23 @@
 package com.taitl.existential;
 
+import com.taitl.ex.domain.contexts.*;
+import com.taitl.ex.logic.existential.*;
+import com.taitl.existential.configuration.builders.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
-import com.taitl.existential.ops.*;
-import com.taitl.exlogic.contexts.*;
-import com.taitl.exlogic.existential.*;
 
-import static com.taitl.existential.helper.Args.cool;
+import static com.taitl.existential.helper.Args.*;
 
 /**
  * Static facade into Existential library.
  * Holds instance of Existential class, to which it delegates all calls.
- * Note: this class is only a convenience / shorthand. You pay for this
- * convenience by assuming only a single Existential instance per JVM
- * (ok for most applications, but may be an issue if you're writing a library).
+ * Note: this class is only a convenience / shorthand for accessing the methods
+ * of Existential class.
+ * You pay for this convenience by assuming only a single Existential instance per JVM.
+ * This is ok for most applications, but may become an issue if you're writing library code.
+ *
  * Usage:
- * Ex.config("api/resource")...
+ * Ex.configure("api/resource").context("api/resource/create")...
  *
  * Documentation:
  *   <a href="https://github.com/andreypotekhin/taitl-existential">Existential</a>
@@ -52,7 +54,7 @@ public final class Ex
         return prevInstance;
     }
 
-    public static OpConfig configure(String op)
+    public static ConfigBuilder configure(String op)
     {
         return instance().configure(op);
     }
@@ -152,7 +154,7 @@ public final class Ex
         return instance().configured();
     }
 
-    public static ExistentialOps ops()
+    public static ExistentialConfigs ops()
     {
         return instance().ops();
     }
@@ -162,7 +164,7 @@ public final class Ex
         return instance().contexts();
     }
 
-    public static ExistentialExecution transactions()
+    public static ExistentialTransactions transactions()
     {
         return instance().transactions();
     }

@@ -9,9 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.exceptions.PredicateFailureException;
-import com.taitl.examples.night_city.model.House;
-import com.taitl.examples.night_city.data.CityTestData;
+import com.taitl.existential.exceptions.PredicateFailure;
+import com.taitl.ex.examples.night_city.model.House;
+import com.taitl.ex.examples.night_city.data.CityTestData;
 
 import java.util.function.Predicate;
 
@@ -21,14 +21,14 @@ class AllTest
     House house;
 
     @BeforeEach
-    void setUp() throws Exception
+    void setUp()
     {
         o = new All<>(h -> h.hasRoof());
         house = new House("Gray", CityTestData.ADDRESS_EAST_ST);
     }
 
     @AfterEach
-    void tearDown() throws Exception
+    void tearDown()
     {
         o = null;
     }
@@ -80,7 +80,7 @@ class AllTest
 
         // Fail on predicate (second parm) not true
         o = new All<>(h -> true, h -> !h.hasRoof());
-        assertThrows(PredicateFailureException.class, () -> {
+        assertThrows(PredicateFailure.class, () -> {
             o.evaluate(house);
         });
 
@@ -91,7 +91,7 @@ class AllTest
         // Fail on passed-in object not fitting the predicate
         o = new All<>(h -> true, h -> h.hasRoof());
         house.hasRoof = false;
-        assertThrows(PredicateFailureException.class, () -> {
+        assertThrows(PredicateFailure.class, () -> {
             o.evaluate(house);
         });
     }

@@ -1,8 +1,8 @@
 package com.taitl.existential.claims.usage;
 
-import com.taitl.examples.night_city.data.*;
-import com.taitl.examples.night_city.model.*;
-import com.taitl.examples.night_city.tests.*;
+import com.taitl.ex.examples.night_city.data.*;
+import com.taitl.ex.examples.night_city.model.*;
+import com.taitl.ex.examples.night_city.tests.*;
 import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.keys.*;
@@ -54,7 +54,7 @@ class UserCanAccessLibrary
 
     @Test
     @DisplayName("User can change library options programmatically ")
-    void changeLibraryOptions() throws Exception
+    void changeLibraryOptions()
     {
         assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
         ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
@@ -145,7 +145,7 @@ class UserCanAccessLibrary
 
     @Test
     @DisplayName("User can't sent events to library which hasn't been configured")
-    void sendEventsToUnconfiguredLibrary() throws Exception
+    void sendEventsToUnconfiguredLibrary()
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             String tran = ex.begin(op);
@@ -155,7 +155,7 @@ class UserCanAccessLibrary
 
     @Test
     @DisplayName("User can't sent events to library before it is configured")
-    void sendEventsToLibraryBeforeItIsConfigured() throws Exception
+    void sendEventsToLibraryBeforeItIsConfigured()
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             ex.begin(op);

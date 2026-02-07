@@ -1,7 +1,7 @@
 package com.taitl.existential.keys;
 
-import com.taitl.existential.helper.Args;
-import com.taitl.exlogic.handlers.collection.*;
+import com.taitl.ex.domain.handlers.*;
+import com.taitl.existential.helper.*;
 
 /**
  * A string representing a type along with its generics, for example "Set<Car>".<p>

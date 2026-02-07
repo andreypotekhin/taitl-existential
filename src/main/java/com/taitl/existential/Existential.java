@@ -1,11 +1,11 @@
 package com.taitl.existential;
 
 import java.io.*;
+import com.taitl.ex.domain.contexts.*;
+import com.taitl.ex.logic.existential.*;
+import com.taitl.existential.configuration.builders.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
-import com.taitl.existential.ops.*;
-import com.taitl.exlogic.contexts.*;
-import com.taitl.exlogic.existential.*;
 
 /**
  * Main entry point into Existential library.
@@ -15,24 +15,24 @@ import com.taitl.exlogic.existential.*;
  *
  * @author Andrey Potekhin
  *
- * @see ExistentialExecution
+ * @see ExistentialTransactions
  * @see ExistentialEvents
  * @see ExistentialFlags
- * @see ExistentialOps
+ * @see ExistentialConfigs
  * @see ExistentialAccess
  */
 public final class Existential implements Closeable
 {
     private ExistentialAccess access = new ExistentialAccess(this);
-    private ExistentialExecution transactions = new ExistentialExecution(this);
+    private ExistentialTransactions transactions = new ExistentialTransactions(this);
     private ExistentialEvents events = new ExistentialEvents(this);
     private ExistentialFlags flags = new ExistentialFlags(this);
-    private ExistentialOps ops = new ExistentialOps(this);
+    private ExistentialConfigs ops = new ExistentialConfigs(this);
 
     private boolean configured = false;
     private boolean closed = false;
 
-    public OpConfig configure(String op)
+    public ConfigBuilder configure(String op)
     {
         return ops.get(op);
     }
@@ -140,7 +140,7 @@ public final class Existential implements Closeable
         return configured;
     }
 
-    public ExistentialOps ops()
+    public ExistentialConfigs ops()
     {
         return ops;
     }
@@ -150,7 +150,7 @@ public final class Existential implements Closeable
         return ops.contexts();
     }
 
-    public ExistentialExecution transactions()
+    public ExistentialTransactions transactions()
     {
         return transactions;
     }

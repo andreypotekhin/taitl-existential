@@ -2,7 +2,8 @@ package com.taitl.existential.contexts;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.existential.creator.*;
+import com.taitl.ex.domain.instructions.*;
+import com.taitl.ex.logic.creator.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.types.*;
@@ -11,13 +12,11 @@ import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
 import com.taitl.existential.rules.*;
 import com.taitl.existential.transactions.*;
-import com.taitl.exlogic.events.split.*;
-import com.taitl.exlogic.instructions.*;
 
 public class Context implements Configurable
 {
     protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
-            () -> new Transaction();
+            () -> Creator.create(Transaction.class);
 
     /**
      * Context name, e.g. "/app/flights", "/app/flights/update", "*update"
@@ -73,15 +72,15 @@ public class Context implements Configurable
      * an instance of custom transaction class.
      *
      * Custom transaction may declare its own member fields, thus
-     * allowing to carry over information between the rules.
+     * allowing to carry over information between rules/event handlers.
      *
      * Example:
-     * Contexts.get("/app/school")
+     * Ex.contexts().get("/app/school")
      * .transaction(() -> new Transaction(){{
-     * enforce(new Invariant<Student>() {{
+     * invariant(new Invariant<Student>() {{
      * all(student -> student.awake());
      * }});
-     * enforce(new Invariant<Teacher>() {{
+     * invariant(new Invariant<Teacher>() {{
      * all(teacher -> teacher.notOnLeave());
      * }});
      * allow(new Intent<Student>() {{
@@ -112,7 +111,11 @@ public class Context implements Configurable
         }
         // Guard against multiple calls to .transaction() with same arguments,
         // for instance, if such call exists somewhere in the middle of
-        // ordinary request processing (e.g. in a controller).
+        // ordinary request processing (e.g. in a web controller).
+        //
+        // BUG: This check relies on Supplier's equals() method, which may not work as expected
+        // for lambda expressions. In that case, it may be necessary to use a different approach
+        // to avoid adding duplicate factories.
         if (!transactionFactories.contains(supplier))
         {
             // TODO: test for different factories to not replace each other
@@ -140,7 +143,9 @@ public class Context implements Configurable
         return result;
     }
 
-    /* Methods for Configurable interface */
+    /*
+     * Implement Configurable
+     */
 
     public <T> Context add(EventHandler<T> eh)
     {
@@ -168,7 +173,7 @@ public class Context implements Configurable
      * Set invariants/rules to be enforced for business operation defined by this context.
      *
      * <pre>{@code
-     * Contexts.get("/app/flight_school")
+     * Ex.contexts().get("/app/flight_school")
      *     .context(() -> new Context(){{
      * 	      invariant(Pilot.class)
      *                .all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
@@ -191,9 +196,9 @@ public class Context implements Configurable
      * Set invariants/rules to be enforced business operation defined by this context.
      *
      * <pre>{@code
-     * Contexts.get("/app/flight_school")
+     * Ex.contexts().get("/app/flight_school")
      *     .context(() -> new Context(){{
-     * 	      enforce(new Invariant<Pilot>() {{
+     * 	      invariant(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      *          }})
@@ -206,7 +211,7 @@ public class Context implements Configurable
      * @param <T>       Type parameter
      * @param invariant Invariant (rules) that must be upkept
      */
-    public <T> void enforce(Invariant<T> invariant)
+    public <T> void invariant(Invariant<T> invariant)
     {
         Args.cool(invariant, "invariant");
         ruleSets.add(invariant);
@@ -226,9 +231,9 @@ public class Context implements Configurable
      * Set effects for business operation defined by this context.
      *
      * <pre>{@code
-     * Contexts.get("/app/flight_school")
+     * Ex.contexts().get("/app/flight_school")
      *     .context(() -> new Context(){{
-     * 	      cause(new Effect<Pilot>() {{
+     * 	      effect(new Effect<Pilot>() {{
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      *          }})
      * }</pre>
@@ -240,7 +245,7 @@ public class Context implements Configurable
      * @param <T>       Type parameter
      * @param invariant Invariant (rules) that must be upkept
      */
-    public <T> void cause(Effect<T> effect)
+    public <T> void effect(Effect<T> effect)
     {
         Args.cool(effect, "effect");
         instructions.addAll(effect.instructions);
