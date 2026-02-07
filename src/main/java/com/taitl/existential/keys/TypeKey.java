@@ -1,7 +1,7 @@
 package com.taitl.existential.keys;
 
+import com.taitl.ex.common.helper.*;
 import com.taitl.ex.domain.handlers.*;
-import com.taitl.existential.helper.*;
 
 /**
  * A string representing a type along with its generics, for example "Set<Car>".<p>
@@ -48,8 +48,8 @@ public class TypeKey<T>
      */
     public TypeKey(Class<?> clz, String genericQualifier)
     {
-        Args.cool(clz, "clz", genericQualifier, "genericQualifier");
-        Args.require(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
+        Args.sane(clz, "clz", genericQualifier, "genericQualifier");
+        Args.check(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
         setTypeid(clz, genericQualifier);
     }
 
@@ -61,8 +61,8 @@ public class TypeKey<T>
      */
     public TypeKey(String classNameQualifiedWithGenerics)
     {
-        Args.cool(classNameQualifiedWithGenerics, "classNameQualifiedWithGenerics");
-        Args.require(!classNameQualifiedWithGenerics.isBlank(),
+        Args.sane(classNameQualifiedWithGenerics, "classNameQualifiedWithGenerics");
+        Args.check(!classNameQualifiedWithGenerics.isBlank(),
                 "Argument 'classNameQualifiedWithGenerics' cannot be blank");
         requireValidTypeKey(classNameQualifiedWithGenerics);
         typeid = classNameQualifiedWithGenerics;
@@ -127,7 +127,7 @@ public class TypeKey<T>
 
     protected void setTypeid(Class<?> clz, String genericQualifier)
     {
-        Args.cool(clz, "clz", genericQualifier, "genericQualifier");
+        Args.sane(clz, "clz", genericQualifier, "genericQualifier");
         String className = clz.getSimpleName();
         if (genericQualifier.isEmpty())
         {
@@ -146,16 +146,16 @@ public class TypeKey<T>
 
     protected static void requireValidTypeKey(String key)
     {
-        Args.cool(key, "class name");
+        Args.sane(key, "class name");
         key = key.trim();
-        Args.require(!key.isBlank(), "Class name cannot be blank");
+        Args.check(!key.isBlank(), "Class name cannot be blank");
         if (key.contains("<") || key.contains(">"))
         {
-            Args.require(key.contains("<") && key.contains(">"),
+            Args.check(key.contains("<") && key.contains(">"),
                     "Class name must be of proper format: 'Class<GenericQualifier>'");
             int leftBracket = key.indexOf("<");
             int rightBracket = key.lastIndexOf(">");
-            Args.require(leftBracket < rightBracket, "Right bracket must not come before left bracket");
+            Args.check(leftBracket < rightBracket, "Right bracket must not come before left bracket");
             requireValidTypeKey(key.substring(leftBracket + 1, rightBracket));
         }
     }

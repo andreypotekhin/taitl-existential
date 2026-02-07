@@ -2,6 +2,7 @@ package com.taitl.existential.helper;
 
 import java.util.*;
 import java.util.function.*;
+import com.taitl.ex.common.helper.*;
 import com.taitl.ex.examples.night_city.model.*;
 import org.junit.jupiter.api.*;
 

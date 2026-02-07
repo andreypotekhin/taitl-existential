@@ -1,8 +1,9 @@
 package com.taitl.ex.domain.instructions;
 
-import com.taitl.existential.expressions.Expression;
-import com.taitl.existential.handlers.types.EventHandler;
-import com.taitl.existential.helper.Args;
+import com.taitl.existential.expressions.*;
+import com.taitl.existential.handlers.types.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 public class Instruction<T>
 {
@@ -17,14 +18,14 @@ public class Instruction<T>
 
     public Instruction(EventHandler<T> handler)
     {
-        Args.cool(handler, "handler");
+        sane(handler, "handler");
         this.handler = handler;
         this.type = InstructionType.HANDLER;
     }
 
     public Instruction(Expression<T> expression)
     {
-        Args.cool(expression, "expression");
+        sane(expression, "expression");
         this.expression = expression;
         this.type = InstructionType.EXPRESSION;
     }

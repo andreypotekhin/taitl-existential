@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.taitl.existential.helper.Multimap;
+import com.taitl.ex.common.helper.Multimap;
 
 /**
  * An indexing structure which provides performance for Exists<> expression.

@@ -3,10 +3,10 @@ package com.taitl.existential.quantifiers;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
+import com.taitl.ex.common.helper.*;
+import com.taitl.existential.transactions.*;
 
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.helper.State;
-import com.taitl.existential.transactions.Transaction;
+import static com.taitl.ex.common.helper.Args.*;
 
 public class Exists<V> implements Predicate<Transaction>
 {
@@ -22,28 +22,28 @@ public class Exists<V> implements Predicate<Transaction>
 
     public Exists(Collection<V> coll, Predicate<V> predicate)
     {
-        Args.cool(coll, "coll", predicate, "predicate");
+        sane(coll, "coll", predicate, "predicate");
         this.coll = coll;
         this.vpredicate = predicate;
     }
 
     public Exists(Collection<V> coll, BiPredicate<V, Transaction> bipredicate)
     {
-        Args.cool(coll, "coll", bipredicate, "bipredicate");
+        sane(coll, "coll", bipredicate, "bipredicate");
         this.coll = coll;
         this.vbipredicate = bipredicate;
     }
 
     public Exists(Collection<V> coll, Predicate<Collection<V>> predicate, int placeholder)
     {
-        Args.cool(coll, "coll", predicate, "predicate");
+        sane(coll, "coll", predicate, "predicate");
         this.coll = coll;
         this.cpredicate = predicate;
     }
 
     public Exists(Collection<V> coll, BiPredicate<Collection<V>, Transaction> bipredicate, int placeholder)
     {
-        Args.cool(coll, "coll", bipredicate, "bipredicate");
+        sane(coll, "coll", bipredicate, "bipredicate");
         this.coll = coll;
         this.cbipredicate = bipredicate;
     }
@@ -95,7 +95,7 @@ public class Exists<V> implements Predicate<Transaction>
 
     public boolean testOnColl(Transaction tran)
     {
-        Args.cool(tran, "tran");
+        sane(tran, "tran");
         State.cool(coll, "values");
         boolean result;
         if (cpredicate != null)

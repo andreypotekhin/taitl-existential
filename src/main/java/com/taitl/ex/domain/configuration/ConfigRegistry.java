@@ -1,11 +1,11 @@
 package com.taitl.ex.domain.configuration;
 
 import java.util.*;
-import com.taitl.ex.logic.existential.*;
-import com.taitl.existential.configuration.builders.*;
+import com.taitl.ex.common.helper.*;
+import com.taitl.ex.domain.existential.*;
+import com.taitl.existential.builders.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.helper.*;
 
 /**
  * ConfigRegistry holds references to ConfigBuilders, keyed by op name.
@@ -22,11 +22,11 @@ public class ConfigRegistry
 
     public ConfigBuilder create(String name)
     {
-        Args.cool(name, "name");
+        Args.sane(name, "name");
         ConfigBuilder o = new ConfigBuilder(name);
         synchronized (this)
         {
-            for (Context context : ops.ex().contexts().createContexts(name))
+            for (Context context : ops.ex().contexts().getContexts(name))
             {
                 o.addContext(context);
             }
@@ -42,7 +42,7 @@ public class ConfigRegistry
 
     public ConfigBuilder get(String id) throws NotFoundException
     {
-        Args.cool(id, "id");
+        Args.sane(id, "id");
         ConfigBuilder o = registry.get(id);
         if (o == null)
         {
@@ -53,14 +53,14 @@ public class ConfigRegistry
 
     public ConfigBuilder getcreate(String id)
     {
-        Args.cool(id, "id");
+        Args.sane(id, "id");
         ConfigBuilder o = registry.get(id);
         return (o != null) ? o : create(id);
     }
 
     public ConfigBuilder remove(String id) throws NotFoundException
     {
-        Args.cool(id, "id");
+        Args.sane(id, "id");
         ConfigBuilder o = registry.get(id);
         if (o == null)
         {

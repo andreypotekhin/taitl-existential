@@ -1,8 +1,6 @@
 package com.taitl.ex.logic.unused;
 
 import java.util.function.*;
-import com.taitl.existential.handlers.*;
-import com.taitl.existential.helper.*;
 import com.taitl.existential.invariants.*;
 
 public interface CreateInvariant<T>

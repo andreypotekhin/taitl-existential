@@ -1,10 +1,10 @@
 package com.taitl.existential.paths;
 
 import com.taitl.existential.contexts.*;
-import com.taitl.existential.helper.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
+import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
@@ -49,12 +49,12 @@ public class ConcretePath
 
     public static void validate(String op)
     {
-        Args.cool(op, "op");
+        sane(op, "op");
         op = op.trim();
-        Args.require(op.startsWith(SLASH), "Argument 'op' should start with a slash ('/')");
-        Args.require(!SLASH.equals(op), ARG_OP_SINGLE_SLASH);
-        Args.require(!op.endsWith(SLASH), "Argument 'op' should not end with a slash ('/')");
-        Args.require(!op.contains(WILDCARD), ARG_OP_NO_WILDCARDS);
+        check(op.startsWith(SLASH), "Argument 'op' should start with a slash ('/')");
+        check(!SLASH.equals(op), ARG_OP_SINGLE_SLASH);
+        check(!op.endsWith(SLASH), "Argument 'op' should not end with a slash ('/')");
+        check(!op.contains(WILDCARD), ARG_OP_NO_WILDCARDS);
     }
 
     /**

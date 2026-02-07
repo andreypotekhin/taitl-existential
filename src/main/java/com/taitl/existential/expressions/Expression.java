@@ -1,7 +1,7 @@
 package com.taitl.existential.expressions;
 
-import com.taitl.existential.rules.Rule;
-import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.evaluables.*;
+import com.taitl.existential.exceptions.*;
 
 /**
  * Base interface for entity expressions, such as All<T>.
@@ -9,7 +9,7 @@ import com.taitl.existential.exceptions.ExistentialException;
  * @param <T>
  *            Type of entity
  */
-public interface Expression<T> extends Rule<T>
+public interface Expression<T> extends Ev<T>
 {
     Object evaluate(T t) throws ExistentialException;
 

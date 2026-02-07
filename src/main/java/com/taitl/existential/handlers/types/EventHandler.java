@@ -1,7 +1,7 @@
 package com.taitl.existential.handlers.types;
 
-import com.taitl.existential.interfaces.Describable;
-import com.taitl.existential.rules.Rule;
+import com.taitl.existential.evaluables.*;
+import com.taitl.existential.interfaces.*;
 
 /**
  * Base interface for event handlers with side effects, such as OnUpdate<Entity>, OnMutate<Entity>.
@@ -9,6 +9,6 @@ import com.taitl.existential.rules.Rule;
  * @param <T>
  *            Type of entity
  */
-public interface EventHandler<T> extends Rule<T>, Describable
+public interface EventHandler<T> extends Ev<T>, Describable
 {
 }

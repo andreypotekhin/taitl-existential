@@ -1,7 +1,8 @@
 package com.taitl.ex.domain.instructions;
 
-import com.taitl.existential.contexts.Context;
-import com.taitl.existential.helper.Args;
+import com.taitl.existential.contexts.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Implements a reference to a set of instructions elsewhere.
@@ -18,7 +19,7 @@ public class ContextRef<T> extends Instruction<T>
     public ContextRef(Context context)
     {
         super();
-        Args.cool(context, "context");
+        sane(context, "context");
         this.context = context;
         this.type = InstructionType.REF;
     }

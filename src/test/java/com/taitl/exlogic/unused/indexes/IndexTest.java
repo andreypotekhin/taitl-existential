@@ -1,7 +1,7 @@
 package com.taitl.exlogic.unused.indexes;
 
 import static com.taitl.ex.examples.night_city.data.CityTestData.*;
-import static com.taitl.existential.helper.CollectionUtils.getFirst;
+import static com.taitl.ex.common.helper.CollectionUtils.getFirst;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;

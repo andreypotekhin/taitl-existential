@@ -1,20 +1,19 @@
 package com.taitl.ex.domain.contexts;
 
 import java.util.*;
-import com.taitl.ex.logic.contexts.*;
-import com.taitl.ex.logic.creator.*;
+import com.taitl.ex.common.helper.*;
+import com.taitl.ex.logic.configuration.actions.*;
 import com.taitl.existential.contexts.*;
-import com.taitl.existential.helper.*;
 
 public class Contexts
 {
     /**
-     * Known contexts. New contexts are created by call to createContexts().
+     * All known contexts, keyed by op name.
+     * New contexts are created by call to createContexts().
      */
     public Multimap<String, Context> allContexts = new Multimap<>();
 
-    protected CreateContexts createContexts = Creator.create(CreateContexts.class,
-            new Class[] { Contexts.class }, this);
+    protected BuildContexts buildContexts = new BuildContexts(this);
 
     /**
      * Get, or create if missing, the contexts for business operation name.
@@ -31,8 +30,13 @@ public class Contexts
      * "/"
      * of which it will return the top one ("/app/flights/update")
      */
-    public List<Context> createContexts(String op)
+    public List<Context> getContexts(String op)
     {
-        return createContexts.createContextsRecursively(op);
+        Set<Context> result = allContexts.get(op);
+        if (result != null && !result.isEmpty())
+        {
+            return new ArrayList<>(result);
+        }
+        return buildContexts.buildContextsRecursively(op);
     }
 }

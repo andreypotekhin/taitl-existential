@@ -1,12 +1,13 @@
 package com.taitl.ex.domain.execution;
 
 import java.util.*;
-import com.taitl.ex.logic.existential.*;
+import com.taitl.ex.domain.existential.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.helper.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * OpRunRegistry creates OpRuns and holds references to them
@@ -25,11 +26,11 @@ public class OpRunRegistry
 
     public OpRun create(String op)
     {
-        Args.cool(op, "op");
+        sane(op, "op");
         OpKey.validate(op);
         OpRun o = new OpRun(op, generateId());
 
-        for (Context context : exec.ex().contexts().createContexts(op))
+        for (Context context : exec.ex().contexts().getContexts(op))
         {
             for (Transaction tr : context.createTransactions())
             {
@@ -46,7 +47,7 @@ public class OpRunRegistry
 
     public OpRun get(String id) throws NotFoundException
     {
-        Args.cool(id, "id");
+        sane(id, "id");
         OpRun o = reg.get(id);
         if (o == null)
         {
@@ -57,7 +58,7 @@ public class OpRunRegistry
 
     public OpRun remove(String id) throws NotFoundException
     {
-        Args.cool(id, "id");
+        sane(id, "id");
         OpRun o = reg.get(id);
         if (o == null)
         {

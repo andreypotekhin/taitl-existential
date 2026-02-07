@@ -1,10 +1,11 @@
 package com.taitl.existential.handlers;
 
 import java.util.function.*;
-import com.taitl.ex.logic.execution.*;
+import com.taitl.ex.logic.execution.actions.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
-import com.taitl.existential.helper.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 public class On<T> implements EventHandler<T>
 {
@@ -14,27 +15,27 @@ public class On<T> implements EventHandler<T>
 
     public On(Consumer<? super T> action)
     {
-        Args.cool(action, "action");
+        sane(action, "action");
         this.action = action;
     }
 
     public On(Consumer<? super T> action, String description)
     {
-        Args.cool(action, "action", description, "description");
+        sane(action, "action", description, "description");
         this.action = action;
         this.description = description;
     }
 
     public On(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        Args.cool(condition, "condition", action, "action");
+        sane(condition, "condition", action, "action");
         this.condition = condition;
         this.action = action;
     }
 
     public On(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
-        Args.cool(condition, "condition", description, "description");
+        sane(condition, "condition", description, "description");
         this.condition = condition;
         this.action = action;
         this.description = description;

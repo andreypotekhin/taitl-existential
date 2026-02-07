@@ -1,9 +1,11 @@
 package com.taitl.ex.domain.execution;
 
 import java.util.*;
-import com.taitl.existential.helper.*;
+import com.taitl.ex.common.helper.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Defines an Operation Transaction - a set of Transaction objects relevant
@@ -34,7 +36,7 @@ public class OpRun
 
     public OpRun(String op, UUID id)
     {
-        Args.cool(op, "op", id, "id");
+        sane(op, "op", id, "id");
         OpKey.validate(op);
         this.op = op;
         this.id = id;
@@ -42,7 +44,7 @@ public class OpRun
 
     public void addTransaction(Transaction tr)
     {
-        Args.cool(tr, "tr");
+        sane(tr, "tr");
         State.verify(!transactions.contains(tr), "This transactions is already added");
         tr.op = op;
         transactions.add(tr);

@@ -2,7 +2,8 @@ package com.taitl.existential.transactions;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.ex.domain.events.split.*;
+import com.taitl.ex.common.helper.*;
+import com.taitl.ex.domain.events.*;
 import com.taitl.ex.domain.instructions.*;
 import com.taitl.ex.logic.unused.indexes.*;
 import com.taitl.existential.constants.*;
@@ -11,9 +12,10 @@ import com.taitl.existential.effects.*;
 import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.transaction_handlers.*;
 import com.taitl.existential.handlers.types.*;
-import com.taitl.existential.helper.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Implements a transaction object - a unit of processing within a context.
@@ -117,20 +119,20 @@ public class Transaction implements Configurable
 
     public void setContext(Context context)
     {
-        Args.cool(context, "context");
+        sane(context, "context");
         this.context = context;
     }
 
     public <T> Transaction add(EventHandler<T> eh)
     {
-        Args.cool(eh, "eh");
+        sane(eh, "eh");
         instructions.add(eh);
         return this;
     }
 
     public <T> Transaction add(Expression<T> expr)
     {
-        Args.cool(expr, "expr");
+        sane(expr, "expr");
         expressions.add(expr);
         return this;
     }
@@ -158,7 +160,7 @@ public class Transaction implements Configurable
      */
     public Transaction begin(Consumer<? super Transaction> action)
     {
-        Args.cool(action, "action");
+        sane(action, "action");
         return add(new OnBegin<Transaction>(action));
     }
 
@@ -179,7 +181,7 @@ public class Transaction implements Configurable
      */
     public <T> void invariant(Invariant<T> invariant)
     {
-        Args.cool(invariant, "invariant");
+        sane(invariant, "invariant");
         Transaction tr = invariant.transaction();
 
         if (tr == null)
@@ -188,7 +190,7 @@ public class Transaction implements Configurable
         }
         else
         {
-            Args.require(tr == this, "Argument 'invariant' must belong to same transaction");
+            check(tr == this, "Argument 'invariant' must belong to same transaction");
         }
 
         instructions.addAll(invariant.instructions);
@@ -197,7 +199,7 @@ public class Transaction implements Configurable
 
     public <T> void effect(Effect<T> effect)
     {
-        Args.cool(effect, "effect");
+        sane(effect, "effect");
         Transaction tr = effect.getTransaction();
 
         if (tr == null)
@@ -206,7 +208,7 @@ public class Transaction implements Configurable
         }
         else
         {
-            Args.require(tr == this, "Argument 'effect' must belong to same transaction");
+            check(tr == this, "Argument 'effect' must belong to same transaction");
         }
 
         instructions.addAll(effect.instructions);

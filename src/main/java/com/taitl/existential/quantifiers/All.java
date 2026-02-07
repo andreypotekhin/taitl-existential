@@ -1,11 +1,10 @@
 package com.taitl.existential.quantifiers;
 
-import java.util.function.Predicate;
-
-import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.exceptions.PredicateFailure;
+import java.util.function.*;
+import com.taitl.existential.exceptions.*;
 import com.taitl.existential.expressions.*;
-import com.taitl.existential.helper.Args;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Implements "For Any" (universal quantification) notation for reasoning about application entities.
@@ -23,27 +22,27 @@ public class All<T> implements Expression<T>
 
     public All(Predicate<? super T> predicate)
     {
-        Args.cool(predicate, "predicate");
+        sane(predicate, "predicate");
         this.predicate = predicate;
     }
 
     public All(Predicate<? super T> predicate, String description)
     {
-        Args.cool(predicate, "predicate", description, "description");
+        sane(predicate, "predicate", description, "description");
         this.predicate = predicate;
         this.description = description;
     }
 
     public All(Predicate<? super T> condition, Predicate<? super T> predicate)
     {
-        Args.cool(condition, "condition", predicate, "predicate");
+        sane(condition, "condition", predicate, "predicate");
         this.condition = condition;
         this.predicate = predicate;
     }
 
     public All(Predicate<? super T> condition, Predicate<? super T> predicate, String description)
     {
-        Args.cool(condition, "condition", predicate, "predicate", description, "description");
+        sane(condition, "condition", predicate, "predicate", description, "description");
         this.condition = condition;
         this.predicate = predicate;
         this.description = description;

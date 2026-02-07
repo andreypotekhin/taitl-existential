@@ -1,5 +1,6 @@
 package com.taitl.existential.helper;
 
+import com.taitl.ex.common.helper.*;
 import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -14,22 +15,22 @@ class ArgsTest
     void cool()
     {
         assertDoesNotThrow(() -> {
-            Args.cool(o, "arg");
+            Args.sane(o, "arg");
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            Args.cool(null, "arg");
+            Args.sane(null, "arg");
         });
         assertDoesNotThrow(() -> {
-            Args.cool(o, "arg1", o, "arg2");
+            Args.sane(o, "arg1", o, "arg2");
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            Args.cool(null, "arg1", o, "arg2");
+            Args.sane(null, "arg1", o, "arg2");
         });
         assertThrows(IllegalArgumentException.class, () -> {
-            Args.cool(o, "arg1", null, "arg2");
+            Args.sane(o, "arg1", null, "arg2");
         });
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            Args.cool(o, "arg1", false);
+            Args.sane(o, "arg1", false);
         }).getMessage(), containsString("must be of even length"));
     }
 
@@ -37,28 +38,28 @@ class ArgsTest
     void require()
     {
         assertDoesNotThrow(() -> {
-            Args.require(true, "message");
+            Args.check(true, "message");
         });
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            Args.require(false, "message");
+            Args.check(false, "message");
         }).getMessage(), is("message"));
         assertDoesNotThrow(() -> {
-            Args.require(true, "msg1", true, "msg2");
+            Args.check(true, "msg1", true, "msg2");
         });
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            Args.require(false, "msg1", o, "msg2");
+            Args.check(false, "msg1", o, "msg2");
         }).getMessage(), is("msg1"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            Args.require(true, "msg1", false, "msg2");
+            Args.check(true, "msg1", false, "msg2");
         }).getMessage(), is("msg2"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            Args.require(true, "msg1", true);
+            Args.check(true, "msg1", true);
         }).getMessage(), containsString("must be of even length"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            Args.require(true, "msg1", o, "msg2");
+            Args.check(true, "msg1", o, "msg2");
         }).getMessage(), containsString("must be boolean"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            Args.require(true, "msg1", false);
+            Args.check(true, "msg1", false);
         }).getMessage(), containsString("must be of even length"));
     }
 }

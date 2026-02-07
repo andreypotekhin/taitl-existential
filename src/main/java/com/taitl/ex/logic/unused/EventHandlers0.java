@@ -5,7 +5,7 @@ import java.util.Set;
 import com.taitl.existential.constants.Strings;
 import com.taitl.existential.events.types.BiEvent;
 import com.taitl.existential.handlers.types.EventHandlerWithSideEffects;
-import com.taitl.existential.helper.Multimap;
+import com.taitl.ex.common.helper.Multimap;
 
 /**
  * Multimap mapping event key (Event E<T> + Type) to a set of corresponding event handlers: Set<On[E]<T>>

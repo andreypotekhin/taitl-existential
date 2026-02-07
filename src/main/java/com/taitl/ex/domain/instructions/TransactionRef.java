@@ -1,7 +1,8 @@
 package com.taitl.ex.domain.instructions;
 
-import com.taitl.existential.helper.Args;
-import com.taitl.existential.transactions.Transaction;
+import com.taitl.existential.transactions.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Implements a reference to a set of instructions elsewhere.
@@ -18,7 +19,7 @@ public class TransactionRef<T> extends Instruction<T>
     public TransactionRef(Transaction tran)
     {
         super();
-        Args.cool(tran, "tran");
+        sane(tran, "tran");
         this.tran = tran;
         this.type = InstructionType.REF;
     }

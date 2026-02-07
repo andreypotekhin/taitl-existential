@@ -1,10 +1,10 @@
 package com.taitl.existential.paths;
 
 import com.taitl.existential.contexts.*;
-import com.taitl.existential.helper.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
+import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
@@ -32,7 +32,7 @@ public class AbstractPath
 
     public AbstractPath(String path)
     {
-        Args.cool(path, "name");
+        sane(path, "name");
         validate(path);
         this.path = path.trim();
     }
@@ -44,7 +44,7 @@ public class AbstractPath
 
     public static AbstractPath valueOf(String s)
     {
-        Args.cool(s, "s");
+        sane(s, "s");
         return new AbstractPath(s);
     }
 
@@ -60,10 +60,10 @@ public class AbstractPath
 
     public static void validate(String name)
     {
-        Args.cool(name, "name");
+        sane(name, "name");
         name = name.trim();
-        Args.require(name.startsWith(SLASH), "Argument 'name' should start with a slash ('/')");
-        Args.require(name.length() == 1 || !name.endsWith(SLASH),
+        check(name.startsWith(SLASH), "Argument 'name' should start with a slash ('/')");
+        check(name.length() == 1 || !name.endsWith(SLASH),
                 "Argument 'name' should not end with a slash ('/')");
     }
 

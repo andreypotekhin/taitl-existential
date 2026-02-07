@@ -1,8 +1,8 @@
 package com.taitl.ex.domain.handlers;
 
 import java.util.*;
+import com.taitl.ex.common.helper.*;
 import com.taitl.existential.handlers.types.*;
-import com.taitl.existential.helper.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.existential.constants.Strings.*;

@@ -1,12 +1,12 @@
 package com.taitl.existential;
 
 import com.taitl.ex.domain.contexts.*;
-import com.taitl.ex.logic.existential.*;
-import com.taitl.existential.configuration.builders.*;
+import com.taitl.ex.domain.existential.*;
+import com.taitl.existential.builders.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 
-import static com.taitl.existential.helper.Args.*;
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Static facade into Existential library.
@@ -48,7 +48,7 @@ public final class Ex
      */
     public static Existential instance(Existential instance)
     {
-        cool(instance, "instance");
+        sane(instance, "instance");
         Existential prevInstance = InstanceHolder.instance;
         InstanceHolder.instance = instance;
         return prevInstance;

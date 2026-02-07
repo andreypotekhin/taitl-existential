@@ -2,8 +2,8 @@ package com.taitl.existential;
 
 import java.io.*;
 import com.taitl.ex.domain.contexts.*;
-import com.taitl.ex.logic.existential.*;
-import com.taitl.existential.configuration.builders.*;
+import com.taitl.ex.domain.existential.*;
+import com.taitl.existential.builders.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 

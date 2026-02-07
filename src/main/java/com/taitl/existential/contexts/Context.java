@@ -2,16 +2,18 @@ package com.taitl.existential.contexts;
 
 import java.util.*;
 import java.util.function.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.common.helper.*;
 import com.taitl.ex.domain.instructions.*;
-import com.taitl.ex.logic.creator.*;
 import com.taitl.existential.effects.*;
+import com.taitl.existential.evaluables.*;
 import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.types.*;
-import com.taitl.existential.helper.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
-import com.taitl.existential.rules.*;
 import com.taitl.existential.transactions.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 public class Context implements Configurable
 {
@@ -29,7 +31,7 @@ public class Context implements Configurable
      */
     protected Context parent;
 
-    Set<RuleSet<?>> ruleSets = new LinkedHashSet<>();
+    Set<Evs<?>> evs = new LinkedHashSet<>();
 
     /**
      * Instructions - event handlers. Includes all event handlers (rules)
@@ -53,13 +55,13 @@ public class Context implements Configurable
 
     public Context(String name)
     {
-        Args.cool(name, "name");
+        sane(name, "name");
         this.name = name;
     }
 
     public Context(String name, Context parent)
     {
-        Args.cool(name, "name", parent, "parent");
+        sane(name, "name", parent, "parent");
         this.name = name;
         this.parent = parent;
     }
@@ -149,21 +151,21 @@ public class Context implements Configurable
 
     public <T> Context add(EventHandler<T> eh)
     {
-        Args.cool(eh, "eh");
+        sane(eh, "eh");
         instructions.add(eh);
         return this;
     }
 
     public <T> Context add(Expression<T> expr)
     {
-        Args.cool(expr, "expr");
+        sane(expr, "expr");
         expressions.add(expr);
         return this;
     }
 
     public Context add(Context other)
     {
-        Args.cool(other, "other");
+        sane(other, "other");
         instructions.addAll(other.instructions);
         expressions.addAll(other.expressions);
         return this;
@@ -188,7 +190,7 @@ public class Context implements Configurable
     {
         @SuppressWarnings("unchecked")
         Invariant<T> result = (Invariant<T>) Creator.create(Invariant.class);
-        ruleSets.add(result); // BUG: This has no effect
+        evs.add(result); // BUG: This has no effect
         return result;
     }
 
@@ -213,8 +215,8 @@ public class Context implements Configurable
      */
     public <T> void invariant(Invariant<T> invariant)
     {
-        Args.cool(invariant, "invariant");
-        ruleSets.add(invariant);
+        sane(invariant, "invariant");
+        evs.add(invariant);
         instructions.addAll(invariant.instructions);
         expressions.addAll(invariant.expressions);
     }
@@ -223,7 +225,7 @@ public class Context implements Configurable
     {
         @SuppressWarnings("unchecked")
         Effect<T> result = (Effect<T>) Creator.create(Effect.class);
-        ruleSets.add(result); // BUG: This has no effect
+        evs.add(result); // BUG: This has no effect
         return result;
     }
 
@@ -247,7 +249,7 @@ public class Context implements Configurable
      */
     public <T> void effect(Effect<T> effect)
     {
-        Args.cool(effect, "effect");
+        sane(effect, "effect");
         instructions.addAll(effect.instructions);
         expressions.addAll(effect.expressions);
     }
