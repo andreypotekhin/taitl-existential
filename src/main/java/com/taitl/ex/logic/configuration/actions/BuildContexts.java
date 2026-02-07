@@ -3,7 +3,7 @@ package com.taitl.ex.logic.configuration.actions;
 import java.util.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.ex.domain.contexts.*;
+import com.taitl.ex.core.contexts.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.keys.*;
 

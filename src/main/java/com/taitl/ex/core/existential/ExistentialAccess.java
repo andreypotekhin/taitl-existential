@@ -1,4 +1,4 @@
-package com.taitl.ex.domain.existential;
+package com.taitl.ex.core.existential;
 
 import com.taitl.existential.*;
 import com.taitl.existential.exceptions.ExistentialException;

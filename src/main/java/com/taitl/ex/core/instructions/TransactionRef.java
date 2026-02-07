@@ -1,4 +1,4 @@
-package com.taitl.ex.domain.instructions;
+package com.taitl.ex.core.instructions;
 
 import com.taitl.existential.transactions.*;
 

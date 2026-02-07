@@ -1,4 +1,4 @@
-package com.taitl.ex.domain.events;
+package com.taitl.ex.core.events;
 
 import java.util.*;
 import com.taitl.existential.events.types.*;

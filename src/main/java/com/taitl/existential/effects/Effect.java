@@ -2,7 +2,7 @@ package com.taitl.existential.effects;
 
 import java.util.function.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.ex.domain.instructions.*;
+import com.taitl.ex.core.instructions.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.*;

@@ -1,7 +1,7 @@
-package com.taitl.ex.domain.execution;
+package com.taitl.ex.core.execution;
 
 import java.util.*;
-import com.taitl.ex.domain.existential.*;
+import com.taitl.ex.core.existential.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;

@@ -1,4 +1,4 @@
-package com.taitl.ex.domain.contexts;
+package com.taitl.ex.core.contexts;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;

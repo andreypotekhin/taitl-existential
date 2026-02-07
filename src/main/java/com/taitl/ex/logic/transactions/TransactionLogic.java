@@ -2,8 +2,8 @@ package com.taitl.ex.logic.transactions;
 
 import java.io.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.ex.domain.execution.*;
-import com.taitl.ex.domain.existential.*;
+import com.taitl.ex.core.execution.*;
+import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.execution.actions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.exceptions.*;

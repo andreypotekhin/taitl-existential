@@ -1,16 +1,17 @@
-package com.taitl.existential.transactions;
+package com.taitl.ex.core.transactions;
 
 import java.util.*;
 import java.util.function.*;
 import com.taitl.ex.logic.unused.indexes.*;
 import com.taitl.existential.constants.*;
+import com.taitl.existential.transactions.*;
 
 public class TransactionIndexes
 {
     Transaction tr;
     Map<String, Index<?, ?>> indexes = new LinkedHashMap<>();
 
-    TransactionIndexes(Transaction tr)
+    public TransactionIndexes(Transaction tr)
     {
         this.tr = tr;
     }

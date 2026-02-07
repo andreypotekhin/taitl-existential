@@ -1,4 +1,4 @@
-package com.taitl.ex.domain.handlers;
+package com.taitl.ex.core.handlers;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;

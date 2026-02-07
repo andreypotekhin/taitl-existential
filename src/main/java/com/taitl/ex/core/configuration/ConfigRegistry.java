@@ -1,8 +1,8 @@
-package com.taitl.ex.domain.configuration;
+package com.taitl.ex.core.configuration;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.ex.domain.existential.*;
+import com.taitl.ex.core.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;

@@ -2,9 +2,9 @@ package com.taitl.existential.transactions;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.ex.common.helper.*;
-import com.taitl.ex.domain.events.*;
-import com.taitl.ex.domain.instructions.*;
+import com.taitl.ex.core.events.*;
+import com.taitl.ex.core.instructions.*;
+import com.taitl.ex.core.transactions.*;
 import com.taitl.ex.logic.unused.indexes.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.contexts.*;
@@ -16,6 +16,7 @@ import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Implements a transaction object - a unit of processing within a context.
@@ -65,9 +66,6 @@ public class Transaction implements Configurable
 {
     public final UUID id;
     public String op;
-
-    public TransactionIndexes indexes = new TransactionIndexes(this);
-    public TransactionEvents events = new TransactionEvents(this);
     public Context context;
 
     /**
@@ -81,11 +79,8 @@ public class Transaction implements Configurable
      */
     public Expressions expressions = new Expressions();
 
-    public Transaction()
-    {
-        this.op = "undefined";
-        this.id = generateId();
-    }
+    TransactionIndexes indexes = new TransactionIndexes(this);
+    TransactionEvents events = new TransactionEvents(this);
 
     public Transaction(String op)
     {
@@ -113,7 +108,7 @@ public class Transaction implements Configurable
 
     public Context getContext()
     {
-        State.cool(context, "context");
+        cool(context, "context");
         return context;
     }
 

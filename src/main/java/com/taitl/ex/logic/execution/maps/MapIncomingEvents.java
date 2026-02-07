@@ -1,6 +1,6 @@
 package com.taitl.ex.logic.execution.maps;
 
-import com.taitl.ex.domain.events.*;
+import com.taitl.ex.core.events.*;
 
 /**
  * Maps an incoming macro-event to a set of basic, fine-grained events that

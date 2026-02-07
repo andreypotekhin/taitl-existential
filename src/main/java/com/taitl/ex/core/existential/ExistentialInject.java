@@ -1,4 +1,4 @@
-package com.taitl.ex.domain.existential;
+package com.taitl.ex.core.existential;
 
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;

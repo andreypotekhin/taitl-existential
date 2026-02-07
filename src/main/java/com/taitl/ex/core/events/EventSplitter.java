@@ -1,4 +1,4 @@
-package com.taitl.ex.domain.events;
+package com.taitl.ex.core.events;
 
 import javax.naming.*;
 import java.util.*;

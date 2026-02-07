@@ -1,8 +1,9 @@
-package com.taitl.existential.transactions;
+package com.taitl.ex.core.transactions;
 
 import java.util.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
 /**
  * Stores all event types for which some rule is defined in a Transaction or Context.
@@ -22,7 +23,7 @@ public class TransactionEvents
     Set<String> eventTypes = new LinkedHashSet<>();
     BitSet eventTypeMask = new BitSet(64);
 
-    TransactionEvents(Transaction tr)
+    public TransactionEvents(Transaction tr)
     {
         this.tr = tr;
     }
