@@ -5,6 +5,7 @@ import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -24,6 +25,13 @@ public class ExistentialTransactions implements Closeable
         sane(op, "op");
         OpKey.validate(op);
         return transactionLogic.begin(op);
+    }
+
+    public String begin(String op, Transaction custom) throws ExistentialException
+    {
+        sane(op, "op");
+        OpKey.validate(op);
+        return transactionLogic.begin(op, custom);
     }
 
     public void commit(String tranID) throws ExistentialException

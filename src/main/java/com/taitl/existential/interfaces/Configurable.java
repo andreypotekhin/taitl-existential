@@ -6,7 +6,7 @@ import com.taitl.existential.invariants.*;
 
 public interface Configurable
 {
-    void name(String name);
+    void op(String op);
 
     <T> void invariant(Invariant<T> invariant);
 

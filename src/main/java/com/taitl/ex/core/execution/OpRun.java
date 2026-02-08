@@ -32,7 +32,6 @@ public class OpRun
     public UUID id;
     String op;
     List<Transaction> transactions = new ArrayList<>();
-    // TODO: Add collections for events, immediates, validations.
 
     public OpRun(String op, UUID id)
     {

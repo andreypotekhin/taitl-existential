@@ -13,7 +13,7 @@ import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class Invariant<T> implements Evs<T>, Constraint<T>
+public class Invariant<T> implements Evs<T>, Constraints<T>
 {
     /**
      * Parent Transaction, if any.

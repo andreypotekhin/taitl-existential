@@ -10,21 +10,23 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * OpRunRegistry creates OpRuns and holds references to them
+ * OpRunRegistry creates OpRuns and holds references to them (keyed by OpRun UUID string)
  * for the duration of a business transaction.
- * TODO: We don't need this class if just return OpRun object to caller of op.start()
+ * TODO: We don't need this class if just return OpRun object to the caller of op.start()
  */
 public class OpRunRegistry
 {
-    protected ExistentialTransactions exec;
+    /** OpRun Id to OpRun */
     protected Map<String, OpRun> reg = new LinkedHashMap<>();
+
+    protected ExistentialTransactions exec;
 
     public OpRunRegistry(ExistentialTransactions exec)
     {
         this.exec = exec;
     }
 
-    public OpRun create(String op)
+    public OpRun create(String op, Transaction custom)
     {
         sane(op, "op");
         OpKey.validate(op);
@@ -32,10 +34,12 @@ public class OpRunRegistry
 
         for (Context context : exec.ex().contexts().getContexts(op))
         {
-            Transaction tr = context.createTransaction();
-            o.addTransaction(tr);
+            o.addTransaction(context.createTransaction());
         }
-
+        if (custom != null)
+        {
+            o.addTransaction(custom);
+        }
         synchronized (this)
         {
             reg.put(o.id.toString(), o);

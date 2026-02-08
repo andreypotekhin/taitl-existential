@@ -1,12 +1,14 @@
 package com.taitl.ex.logic.transactions;
 
 import java.io.*;
+import com.taitl.ex.common.helper.*;
 import com.taitl.ex.core.execution.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.execution.actions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -27,7 +29,15 @@ public class TransactionLogic implements Closeable
     {
         sane(op, "op");
         OpKey.validate(op);
-        OpRun tr = createOpRun.call(op);
+        OpRun tr = createOpRun.call(op, null);
+        return tr.id.toString();
+    }
+
+    public String begin(String op, Transaction custom) throws ExistentialException
+    {
+        sane(op, "op");
+        OpKey.validate(op);
+        OpRun tr = createOpRun.call(op, custom);
         return tr.id.toString();
     }
 
@@ -35,18 +45,16 @@ public class TransactionLogic implements Closeable
     {
         sane(tranID, "tranID");
         OpRun tr = registry.get(tranID);
-        if (tr == null)
-        {
-            throw new NotFoundException("Op transaction not found, id=" + tranID);
-        }
+        State.verify(tr != null, "Transaction not found, id=" + tranID);
         // TODO
         // Commit transactions - run handlers and evaluate validation expressions
-        // Close transactions, remove op transaction from registry
+        // Close transactions, remove OpRun from the registry
     }
 
     public void check(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
+        // TODO
         // Run verification logic.
         // same as commit()
     }
@@ -57,13 +65,7 @@ public class TransactionLogic implements Closeable
         // TODO
         // Locate transaction in TransactionRegistry
         // Care for scenarios when tran is not found
-        // Close transactions, remove op transaction from registry
-    }
-
-    // cleanup: Close transactions, remove op transaction from registry
-    public void close()
-    {
-        registry.clear();
+        // Close transactions, remove OpRun from the registry
     }
 
     public Existential ex()
@@ -74,5 +76,11 @@ public class TransactionLogic implements Closeable
     public OpRunRegistry registry()
     {
         return registry;
+    }
+
+    /** Close on exit */
+    public void close()
+    {
+        registry.clear();
     }
 }

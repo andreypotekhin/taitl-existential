@@ -5,6 +5,7 @@ import com.taitl.ex.core.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -62,6 +63,11 @@ public final class Ex
     public static String begin(String op) throws ExistentialException
     {
         return instance().begin(op);
+    }
+
+    public static String begin(String op, Transaction custom) throws ExistentialException
+    {
+        return instance().begin(op, custom);
     }
 
     public static void commit(String tranID) throws ExistentialException

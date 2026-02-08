@@ -1,4 +1,4 @@
-package com.taitl.existential.effects;
+package com.taitl.existential.transactions;
 
 import java.util.*;
 import java.util.function.*;
@@ -8,12 +8,11 @@ import com.taitl.ex.core.instructions.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.transaction_handlers.*;
 import com.taitl.existential.interfaces.*;
-import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Holds handlers for transaction events, such as Begin, Commit, Rollback.
+ * Holds handlers for transaction lifecycle events, such as Begin, Commit, Rollback.
  */
 public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
 {

@@ -6,6 +6,6 @@ package com.taitl.existential.interfaces;
  * @param <T>
  *            Type of entity
  */
-public interface Constraint<T>
+public interface Constraints<T>
 {
 }

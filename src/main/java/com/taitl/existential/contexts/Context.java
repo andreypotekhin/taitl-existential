@@ -159,7 +159,7 @@ public class Context implements Configurable
      *
      * Associating a custom Transaction with Context allows to define
      * rules, such as invariants and intents, for the context using
-     * an instance of custom transaction class.
+     * an instance of a custom transaction class.
      *
      * Custom transaction may declare its own member fields, thus
      * allowing to carry over information between rules/event handlers.
@@ -206,7 +206,7 @@ public class Context implements Configurable
     public Transaction createTransaction()
     {
         Transaction tr = transactionFactory.get();
-        tr.setContext(this);
+        tr.context(this);
         return tr;
     }
 
@@ -242,8 +242,8 @@ public class Context implements Configurable
         return name;
     }
 
-    public void name(String name)
+    public void op(String op)
     {
-        this.name = name;
+        this.name = op;
     }
 }

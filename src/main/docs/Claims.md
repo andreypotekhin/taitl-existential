@@ -12,7 +12,7 @@ Claims are baked by test cases in src/test/claims. The (+) signs below indicate 
 User can independently configure and use multiple instances of Existential library
 Within an instance of Existential library, the user can configure multiple operations
 Within an operation configuration, the user can configure multiple operation contexts
-Within an operation context, the user can configure multiple transactionLogic
+Within an operation context, the user can configure multiple transactions
 
 #### Library configuration
 
@@ -36,35 +36,47 @@ User can configure constraints on classes, such as application entities
 
 #### Lifecycle phases
 The library usage falls into configuration, execution and validation phases
-During configuration phase, user defines rules (constraints, intents) for contexts and transactionLogic
-During execution phase, user begins and ends transactionLogic, and sends events to the library
+During configuration phase, user defines rules (constraints, intents) for contexts and transactions
+During execution phase, user begins and ends transactions, and sends events to the library
 During validation phase, the library checks the constraints
 The validation phase happens at transaction end (commit) or at checkpoints
 
 #### Configuration workflow
 
-User can configure the rules (constraints) with custom contexts
-User can configure the rules (constraints) with custom transactionLogic
-Rules from parent context affect child contexts
-Rules defined in parent context execute before the ones defined in child context
-A transaction is associated with a context
-User can't configure a context without defining any rules (constraints) in it
-User can't configure a transaction without defining any rules  (constraints) in it
-?User can specify a custom factory for creation of Contexts
-?User can specify a one-time custom factory to produce a single instance of Context
-?User can specify a custom factory for creation of Transactions
-?User can specify a one-time custom factory to produce a single instance of Transaction
-When configuring, user can call .context() and .transaction() in any order
-User can specify a predicate, not only a handler, to process an event.
-User can create a context with a wildcard in its op path
-User can not create a transaction with a wildcard in its op path - only concrete op paths are allowed
-All wildcard contexts whose path matches current op participate in its validation
+##### Configuring contexts
+
+User can configure the rules (constraints) with custom context
+Rules from parent context apply to child contexts
+Rules from parent context execute before the rules from child context
+User can specify a custom factory for creation of all Contexts
+User can specify a custom factory for creation a specific Context
+User can't configure a context without defining any rules
+
+##### Wildcard contexts
+
 User can define an op with a wildcard in its op path
+User can create a context with a wildcard in its op path
+All wildcard contexts whose path matches current op participate in its validation
 All wildcard ops matching the current context participate in its validation
+
+##### Custom transactions
+
+User can not create a transaction with a wildcard in its op path - only concrete op paths are allowed
+User can configure the rules (constraints) with custom transaction factory per context
+User can configure the rules (constraints) with custom transaction object per transaction run
+User can't configure a transaction without defining any rules
+User can specify a custom factory for creation of transactions in a context
+User can specify a Transaction instance to use in a transaction
+
+##### Configuring rules and constraints
+
+User can specify a predicate for an event.
+User can specify a handler (side effect) for an event.
 
 #### Execution workflow
 (We call an 'execution' what happens between beginning and end of a transaction)
 
+Execution transaction is associated with a context, its parent contexts, and any configured transaction factories/instances.
 Pre-conditions are checked at the beginning of transaction.
 Intents are checked immediately (in the middle of transaction).
 Constraints are checked at the end of transaction.
@@ -73,19 +85,20 @@ Constraints are also checked at checkpoints.
 ##### Events
 
 User can emit/record an event, such as entity access or modification
-Multiple equal events (e.g. same entity + event type) (successive or not) are considered to be (have same effect) as single event
+Multiple equal events (e.g. same entity + event type) (successive or not) are considered to be (have same effect) as a single such event
 User can't send any events before the library is configured
 User can't send any events before the transaction has started
 User can't send any events after transaction has been committed/rolled back
-User can't modify configurations (e.g. create invariants) after sending any event
+User can't modify configurations (e.g. create invariants) after sending first event
+  - Except for specifying custom Transaction object for transaction run.
 
 #### Validation workflow
 (Validation is the process of checking the constraints at transaction commit or checkpoint)
 
 Validation automatically starts upon transaction commit or checkpoint
-Separate transactionLogic are validated independently (even if these transactionLogic are nested)
+Separate transactions are validated independently (even if these transactions are nested)
 Only the events reported during transaction are considered for validation 
-Validation is carried out by applying event handlers for each reported event to its corresponding entity
+The validation is carried out by applying event handlers for each reported event to its corresponding entity
 The order of execution of event handlers follows the order of their definition during configuration phase
 
 ### Constraints
@@ -156,20 +169,21 @@ System validates the intents at validation phase along with other constraints.
 
 ### Events
 
-#### Custom Event
+#### Custom Event Types
 
 User can define a custom event type
 User can define event handler for custom event type
 User can create a constraint based on custom event type (Context)
 User can create a constraint based on custom event type (Transaction)
-User can customize event splitter to emit events of custom type
-System invokes custom event handler upon encountering custom event
+User can customize event splitter to emit events of custom event type
+User can send/record custom event from application code
+The system invokes custom event handler upon encountering the custom event
 
 ### Housekeeping
 
 #### Caching
 
-Intermediate data structures are cached between transactionLogic
+Intermediate data structures are cached between transactions
 Intermediate data structures are cached between contexts
 
 #### Transaction Cleanup
@@ -179,7 +193,7 @@ The above applies to transaction resources as well as reported events
 
 #### Global Cleanup
 
-System ensures that all transactionLogic and their resources are recycled
+System ensures that all transactions and their resources are recycled
 System ensures that rules, such as constraints, invariants, intents are recycled
 System ensures that any memory leaks are reported (Log memory leaks, e.g. when the calling app shuts down)
 

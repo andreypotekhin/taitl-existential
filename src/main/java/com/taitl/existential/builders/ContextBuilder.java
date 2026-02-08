@@ -1,11 +1,12 @@
 package com.taitl.existential.builders;
 
 import java.util.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 public class ContextBuilder
 {
@@ -15,15 +16,15 @@ public class ContextBuilder
     }
 
     ConfigBuilder parent;
-    String name;
+    String op;
     TargetType type;
     List<EvsBuilder> evsBuilders;
     List<Evs> evsList;
 
-    public ContextBuilder(ConfigBuilder parentConfig, String name, TargetType type)
+    public ContextBuilder(ConfigBuilder parentConfig, String op, TargetType type)
     {
         this.parent = parentConfig;
-        this.name = name;
+        this.op = op;
         this.type = type;
         this.evsBuilders = new ArrayList<>();
         this.evsList = new ArrayList<>();
@@ -32,7 +33,7 @@ public class ContextBuilder
     public Configurable build()
     {
         Configurable configurable = createInstance();
-        configurable.name(name);
+        configurable.op(op);
 
         // TODO: bug! this code pushes all objects built with builders
         // after the ones built with a direct call to require()
@@ -63,7 +64,7 @@ public class ContextBuilder
 
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
     {
-        Args.sane(cls, "cls");
+        sane(cls, "cls");
         InvariantBuilder<T> ib = new InvariantBuilder<>(this);
         evsBuilders.add(ib);
         return ib;
@@ -71,14 +72,14 @@ public class ContextBuilder
 
     public <T> ContextBuilder invariant(Invariant<T> invariant)
     {
-        Args.sane(invariant, "invariant");
+        sane(invariant, "invariant");
         evsList.add(invariant);
         return this;
     }
 
     public <T> EffectBuilder<T> effect(Class<T> cls)
     {
-        Args.sane(cls, "cls");
+        sane(cls, "cls");
         EffectBuilder<T> eb = new EffectBuilder<>(this);
         evsBuilders.add(eb);
         return eb;
@@ -86,17 +87,10 @@ public class ContextBuilder
 
     public <T> ContextBuilder effect(Effect<T> effect)
     {
-        Args.sane(effect, "effect");
+        sane(effect, "effect");
         evsList.add(effect);
         return this;
     }
-
-    // public <T> ConfigBuilder require(RuleSet<T> ruleSet)
-    // {
-    // Args.cool(ruleSet, "ruleSet");
-    // ruleSets.add(ruleSet);
-    // return this;
-    // }
 
     // TODO: transaction()
     // TODO: intent()

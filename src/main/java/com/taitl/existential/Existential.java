@@ -6,6 +6,7 @@ import com.taitl.ex.core.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
 /**
  * Main entry point into Existential library.
@@ -40,6 +41,11 @@ public final class Existential implements Closeable
     public String begin(String op) throws ExistentialException
     {
         return transactions.begin(op);
+    }
+
+    public String begin(String op, Transaction custom) throws ExistentialException
+    {
+        return transactions.begin(op, custom);
     }
 
     public void commit(String tranID) throws ExistentialException

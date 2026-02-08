@@ -2,10 +2,12 @@ package com.taitl.existential.builders;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
+
+import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Defines a single business Operation as a set of Context objects 
@@ -17,6 +19,8 @@ import com.taitl.existential.transactions.*;
  *
  * The contexts are stored in the order of being declared. Within each context,
  * the transactions are stored in the order transaction factories are declared.
+ *
+ * // TODO: TransactionBuilder, TrancycleBuilder, IntentBuilder
  */
 public class ConfigBuilder
 {
@@ -24,7 +28,7 @@ public class ConfigBuilder
             () -> new Context("undefined");
 
     protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
-            () -> new Transaction("undefined");
+            () -> new Transaction("undefined", "undefined");
 
     /**
      * Name of context matching business operation, e.g. "/app/docs/update",
@@ -38,25 +42,6 @@ public class ConfigBuilder
      * (e.g. "/app/docs/*")
      */
     List<Context> contexts = new ArrayList<>();
-
-    /**
-     * Main context is the one with name matching op name, e.g. "/apps/docs/update"
-     * All other contexts are wildcard contexts.
-     */
-    // Context mainContext;
-
-    /**
-     * Instructions - event handlers. Includes all event handlers (rules)
-     * defined in all contexts.
-     * TODO: add ContextRef instruction to each context
-     */
-    // protected Instructions instructions = new Instructions();
-
-    /**
-     * Expressions, such as All<T>, defined in all contexts.
-     * TODO: add ContextRef instruction to each context
-     */
-    // protected Expressions expressions = new Expressions();
 
     /**
      * Factories for Context class. There is one default factory. Additional
@@ -75,7 +60,7 @@ public class ConfigBuilder
      */
     public ConfigBuilder(String name)
     {
-        Args.sane(name, "op");
+        sane(name, "op");
         ContextKey.validate(name);
         this.name = name.trim();
     }
@@ -168,7 +153,7 @@ public class ConfigBuilder
      */
     public ConfigBuilder contextFactory(Supplier<? extends Context> supplier)
     {
-        Args.sane(supplier, "supplier");
+        sane(supplier, "supplier");
         contextFactory = supplier;
         return this;
     }
@@ -182,7 +167,7 @@ public class ConfigBuilder
      */
     public ConfigBuilder transactionFactory(Supplier<? extends Transaction> supplier)
     {
-        Args.sane(supplier, "supplier");
+        sane(supplier, "supplier");
         transactionFactory = supplier;
         return this;
     }
@@ -215,11 +200,10 @@ public class ConfigBuilder
      */
     public void addContext(Context cont)
     {
-        Args.sane(cont, "cont");
-        State.verify(!contexts.contains(cont), "This context is already added");
+        sane(cont, "cont");
+        verify(!contexts.contains(cont), "This context is already added");
         ContextKey key = ContextKey.from(cont.name());
-        State.verify(!name.equals(key.toString()), "Can't add context to itself");
+        verify(!name.equals(key.toString()), "Can't add context to itself");
         contexts.add(cont);
-        // instructions.add(new ContextRef(cont));
     }
 }
