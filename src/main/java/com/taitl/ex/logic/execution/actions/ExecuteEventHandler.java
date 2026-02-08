@@ -1,8 +1,9 @@
 package com.taitl.ex.logic.execution.actions;
 
-import com.taitl.ex.common.helper.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;
+
+import static com.taitl.ex.common.helper.State.*;
 
 public class ExecuteEventHandler
 {
@@ -11,7 +12,7 @@ public class ExecuteEventHandler
         // TODO: Replace with TRUTH predicate and disallow null action
         if (handler.immutable())
         {
-            State.cool(handler.condition, "condition");
+            cool(handler.condition, "condition");
 
             if (!handler.condition.test(t))
             {

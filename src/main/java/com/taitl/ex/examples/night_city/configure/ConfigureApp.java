@@ -29,18 +29,18 @@ public class ConfigureApp
         // { can't delete house where exists a Being
     }
 
-    public void configureWithClasses()
-    {
-        Ex.configure("/api/cats")
-                .context(new Context("/api/cats/create") {
-                    {
-                        invariant(Cat.class)
-                                .create(c -> "Black".equals(c.color), "Cats are born black");
-                        effect(Cat.class)
-                                .create(c -> c.location = new Location("Park"), "Set location for all new cats");
-                    }
-                });
-    }
+    // public void configureWithClasses()
+    // {
+    // Ex.configure("/api/cats")
+    // .context(new Context("/api/cats/create") {
+    // {
+    // invariant(Cat.class)
+    // .create(c -> "Black".equals(c.color), "Cats are born black");
+    // effect(Cat.class)
+    // .create(c -> c.location = new Location("Park"), "Set location for all new cats");
+    // }
+    // });
+    // }
 
     public void configureWithInstances()
     {

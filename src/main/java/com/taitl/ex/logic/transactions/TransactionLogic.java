@@ -1,13 +1,14 @@
 package com.taitl.ex.logic.transactions;
 
 import java.io.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.ex.core.execution.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.execution.actions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 public class TransactionLogic implements Closeable
 {
@@ -24,7 +25,7 @@ public class TransactionLogic implements Closeable
 
     public String begin(String op) throws ExistentialException
     {
-        Args.sane(op, "op");
+        sane(op, "op");
         OpKey.validate(op);
         OpRun tr = createOpRun.call(op);
         return tr.id.toString();
@@ -32,7 +33,7 @@ public class TransactionLogic implements Closeable
 
     public void commit(String tranID) throws ExistentialException
     {
-        Args.sane(tranID, "tranID");
+        sane(tranID, "tranID");
         OpRun tr = registry.get(tranID);
         if (tr == null)
         {
@@ -45,14 +46,14 @@ public class TransactionLogic implements Closeable
 
     public void check(String tranID) throws ExistentialException
     {
-        Args.sane(tranID, "tranID");
+        sane(tranID, "tranID");
         // Run verification logic.
         // same as commit()
     }
 
     public void rollback(String tranID) throws ExistentialException
     {
-        Args.sane(tranID, "tranID");
+        sane(tranID, "tranID");
         // TODO
         // Locate transaction in TransactionRegistry
         // Care for scenarios when tran is not found

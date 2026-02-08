@@ -18,12 +18,13 @@ public class Contexts
     /**
      * Get, or create if missing, the contexts for business operation name.
      * Operation name is a non-wildcarded, for instance, "/app/flights/update"
-     * When wildcard contexts are defined, multiple contexts may match
+     * When parent or wildcard contexts are defined, multiple contexts may match
      * a single operation: "/app/flights/update", "/app/flights", "/app/*"
-     * Create the new context if no matching context exist.
-     * Create all parent contexts if context is not a root content (/).
+     * Creates a new Context object if no matching context already exist.
+     * Creates all parent Context object if this context is not a root context (/).
      *
-     * Example: createContexts("/app/flights/update") will create these three contexts:
+     * Example: createContexts("/app/flights/update") will create these three contexts,
+     * tied by parent-child relationship:
      * "/app/flights/update"
      * "/app/flights"
      * "/app"

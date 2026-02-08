@@ -74,11 +74,6 @@ public class Transaction implements Configurable
      */
     public Instructions instructions = new Instructions();
 
-    /**
-     * Expressions, such as All<T>, defined in this context.
-     */
-    // public Expressions expressions = new Expressions();
-
     TransactionIndexes indexes = new TransactionIndexes(this);
     TransactionEvents events = new TransactionEvents(this);
 
@@ -120,7 +115,6 @@ public class Transaction implements Configurable
     {
         sane(invariant, "invariant");
         Transaction tr = invariant.transaction();
-
         if (tr == null)
         {
             invariant.transaction(this);
@@ -129,17 +123,13 @@ public class Transaction implements Configurable
         {
             check(tr == this, "Argument 'invariant' must belong to same transaction");
         }
-
-        evs.add(invariant);
-        instructions.addAll(invariant.instructions);
-        // expressions.addAll(invariant.expressions);
+        add(invariant);
     }
 
     public <T> void effect(Effect<T> effect)
     {
         sane(effect, "effect");
         Transaction tr = effect.getTransaction();
-
         if (tr == null)
         {
             effect.setTransaction(this);
@@ -148,10 +138,7 @@ public class Transaction implements Configurable
         {
             check(tr == this, "Argument 'effect' must belong to same transaction");
         }
-
-        evs.add(effect);
-        instructions.addAll(effect.instructions);
-        // expressions.addAll(effect.expressions);
+        add(effect);
     }
 
     /**
@@ -173,16 +160,10 @@ public class Transaction implements Configurable
      *
      * @return This object
      */
-    // public Transaction begin(Consumer<? super Transaction> action)
-    // {
-    // sane(action, "action");
-    // return add(new OnBegin<Transaction>(action));
-    // }
     public <T extends Transaction> void cycle(Trancycle<T> cycle)
     {
         sane(cycle, "cycle");
         Transaction tr = cycle.getTransaction();
-
         if (tr == null)
         {
             cycle.setTransaction(this);
@@ -191,32 +172,18 @@ public class Transaction implements Configurable
         {
             check(tr == this, "Argument 'cycle' must belong to same transaction");
         }
-
-        evs.add(cycle);
-        instructions.addAll(cycle.instructions);
+        add(cycle);
     }
 
-    public <T> Transaction add(Evs<T> evs)
+    /*
+     * Implement Configurable
+     */
+    public <T> void add(Evs<T> evs)
     {
         sane(evs, "evs");
         this.evs.add(evs);
         instructions.addAll(evs);
-        return this;
     }
-
-    // public <T> Transaction add(EventHandler<T> eh)
-    // {
-    // sane(eh, "eh");
-    // instructions.add(eh);
-    // return this;
-    // }
-    //
-    // public <T> Transaction add(Expression<T> expr)
-    // {
-    // sane(expr, "expr");
-    // expressions.add(expr);
-    // return this;
-    // }
 
     /**
      * TODO: allow(Intent<T> intent) { ...

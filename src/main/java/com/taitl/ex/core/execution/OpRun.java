@@ -45,7 +45,7 @@ public class OpRun
     public void addTransaction(Transaction tr)
     {
         sane(tr, "tr");
-        State.verify(!transactions.contains(tr), "This transactions is already added");
+        State.verify(!transactions.contains(tr), "This transaction is already added");
         tr.op = op;
         transactions.add(tr);
     }

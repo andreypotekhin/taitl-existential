@@ -16,10 +16,10 @@ public class CityTests
         configureApp.configureWithInstances();
     }
 
-    public void configureWithClasses()
-    {
-        configureApp.configureWithClasses();
-    }
+    // public void configureWithClasses()
+    // {
+    // configureApp.configureWithClasses();
+    // }
 
     public void configureMixingFluentAndBuilders()
     {

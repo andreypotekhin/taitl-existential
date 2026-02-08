@@ -3,7 +3,6 @@ package com.taitl.existential.contexts;
 import java.util.*;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.ex.core.instructions.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
@@ -39,18 +38,9 @@ public class Context implements Configurable
     protected Instructions instructions = new Instructions();
 
     /**
-     * Expressions, such as All<T>, defined in this context.
+     * Transaction factory
      */
-    // protected Expressions expressions = new Expressions();
-
-    /**
-     * Factory for Transaction.
-     */
-    protected Set<Supplier<? extends Transaction>> transactionFactories = new LinkedHashSet<>(1);
-
-    {
-        transactionFactories.add(DEFAULT_TRANSACTION_FACTORY);
-    }
+    protected Supplier<? extends Transaction> transactionFactory = DEFAULT_TRANSACTION_FACTORY;
 
     public Context(String name)
     {
@@ -80,16 +70,16 @@ public class Context implements Configurable
      * @param <T> Type parameter
      * @param cls Class for which we define the invariant
      */
-    public <T> Invariant<T> invariant(Class<T> cls)
-    {
-        @SuppressWarnings("unchecked")
-        Invariant<T> result = (Invariant<T>) Creator.create(Invariant.class);
-        evs.add(result); // BUG: This has no effect
-        return result;
-    }
+    // public <T> Invariant<T> invariant(Class<T> cls)
+    // {
+    // @SuppressWarnings("unchecked")
+    // Invariant<T> result = (Invariant<T>) Creator.create(Invariant.class);
+    // evs.add(result); // BUG: This has no effect
+    // return result;
+    // }
 
     /**
-     * Set invariants/rules to be enforced business operation defined by this context.
+     * Set invariants/rules to be enforced for the business operation defined by this context.
      *
      * <pre>{@code
      * Ex.contexts().get("/app/flight_school")
@@ -110,18 +100,16 @@ public class Context implements Configurable
     public <T> void invariant(Invariant<T> invariant)
     {
         sane(invariant, "invariant");
-        evs.add(invariant);
-        instructions.addAll(invariant.instructions);
-        // expressions.addAll(invariant.expressions);
+        add(invariant);
     }
 
-    public <T> Effect<T> effect(Class<T> cls)
-    {
-        @SuppressWarnings("unchecked")
-        Effect<T> result = (Effect<T>) Creator.create(Effect.class);
-        evs.add(result); // BUG: This has no effect
-        return result;
-    }
+    // public <T> Effect<T> effect(Class<T> cls)
+    // {
+    // @SuppressWarnings("unchecked")
+    // Effect<T> result = (Effect<T>) Creator.create(Effect.class);
+    // evs.add(result); // BUG: This has no effect
+    // return result;
+    // }
 
     /**
      * Set effects for business operation defined by this context.
@@ -144,43 +132,25 @@ public class Context implements Configurable
     public <T> void effect(Effect<T> effect)
     {
         sane(effect, "effect");
-        evs.add(effect);
-        instructions.addAll(effect.instructions);
-        // expressions.addAll(effect.expressions);
+        add(effect);
     }
 
     /*
      * Implement Configurable
      */
 
-    public <T> Context add(Evs<T> evs)
+    public <T> void add(Evs<T> evs)
     {
         sane(evs, "ev");
         this.evs.add(evs);
         instructions.addAll(evs);
-        return this;
     }
-
-    // public <T> Context add(EventHandler<T> eh)
-    // {
-    // sane(eh, "eh");
-    // instructions.add(eh);
-    // return this;
-    // }
-    //
-    // public <T> Context add(Expression<T> expr)
-    // {
-    // sane(expr, "expr");
-    // expressions.add(expr);
-    // return this;
-    // }
 
     public Context add(Context other)
     {
         sane(other, "other");
         evs.addAll(other.evs);
         instructions.addAll(other.instructions);
-        // expressions.addAll(other.expressions);
         return this;
     }
 
@@ -218,29 +188,12 @@ public class Context implements Configurable
      * custom transactions, for instance, when code similar to the above
      * appears more than once in different parts of your application (e.g.
      * this code is split among multiple classes).
+     * @deprecated Having doubts
      */
     public Context transaction(Supplier<? extends Transaction> supplier)
     {
-        if (transactionFactories.size() == 1)
-        {
-            if (transactionFactories.contains(DEFAULT_TRANSACTION_FACTORY))
-            {
-                // Replace default transaction factory
-                transactionFactories.remove(DEFAULT_TRANSACTION_FACTORY);
-            }
-        }
-        // Guard against multiple calls to .transaction() with same arguments,
-        // for instance, if such call exists somewhere in the middle of
-        // ordinary request processing (e.g. in a web controller).
-        //
-        // BUG: This check relies on Supplier's equals() method, which may not work as expected
-        // for lambda expressions. In that case, it may be necessary to use a different approach
-        // to avoid adding duplicate factories.
-        if (!transactionFactories.contains(supplier))
-        {
-            // TODO: test for different factories to not replace each other
-            transactionFactories.add(supplier);
-        }
+        sane(supplier, "supplier");
+        transactionFactory = supplier;
         return this;
     }
 
@@ -250,17 +203,11 @@ public class Context implements Configurable
      *
      * @return List of Transaction objects
      */
-    public List<Transaction> createTransactions()
+    public Transaction createTransaction()
     {
-        State.verify(!transactionFactories.isEmpty(), "transactionFactories must not be empty");
-        List<Transaction> result = new ArrayList<>(transactionFactories.size());
-        for (Supplier<? extends Transaction> supplier : transactionFactories)
-        {
-            Transaction tr = supplier.get();
-            tr.setContext(this);
-            result.add(tr);
-        }
-        return result;
+        Transaction tr = transactionFactory.get();
+        tr.setContext(this);
+        return tr;
     }
 
     /* Parent context */

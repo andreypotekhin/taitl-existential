@@ -13,7 +13,7 @@ public interface Configurable
     <T> void effect(Effect<T> effect);
 
     // <T> Configurable add(Ev<T> ev);
-    <T> Configurable add(Evs<T> ev);
+    <T> void add(Evs<T> ev);
 
     // <T> Configurable add(EventHandler<T> eh);
     //

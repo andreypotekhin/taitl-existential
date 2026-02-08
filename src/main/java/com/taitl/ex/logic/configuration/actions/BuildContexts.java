@@ -2,10 +2,12 @@ package com.taitl.ex.logic.configuration.actions;
 
 import java.util.*;
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.ex.core.contexts.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.keys.*;
+
+import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 public class BuildContexts
 {
@@ -36,7 +38,7 @@ public class BuildContexts
      */
     public List<Context> buildContextsRecursively(String op)
     {
-        Args.sane(op, "op");
+        sane(op, "op");
         OpKey opKey = new OpKey(op);
         Set<Context> result = parent.allContexts.get(op);
         if (result == null || result.isEmpty())
@@ -45,7 +47,7 @@ public class BuildContexts
             if (opKey.hasParent())
             {
                 List<Context> parents = buildContextsRecursively(opKey.getParent().toString());
-                State.verify(parents.size() <= 1, // Does this make sense?
+                verify(parents.size() <= 1, // Does this make sense?
                         "A context can only have zero or one parent");
                 if (!parents.isEmpty())
                 {
@@ -61,7 +63,7 @@ public class BuildContexts
                 }
             }
         }
-        State.verify(result != null, "result member should not be null");
+        verify(result != null, "result member should not be null");
         return new ArrayList<>(result);
     }
 }

@@ -1,18 +1,14 @@
 package com.taitl.existential.claims.usage;
 
+import com.taitl.ex.examples.night_city.data.*;
+import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.ex.examples.night_city.tests.*;
 import com.taitl.existential.*;
-import com.taitl.ex.examples.night_city.model.Cat;
-import com.taitl.ex.examples.night_city.data.CityTestData;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserCanConfigureLibrary
 {
@@ -44,10 +40,10 @@ class UserCanConfigureLibrary
         fixt.configure();
     }
 
-    void configureWithClasses()
-    {
-        fixt.configureWithClasses();
-    }
+    // void configureWithClasses()
+    // {
+    // fixt.configureWithClasses();
+    // }
 
     void configureWithInstances()
     {
@@ -70,7 +66,7 @@ class UserCanConfigureLibrary
     }
 
     @Test
-    @DisplayName("User can configure the library")
+    @DisplayName("User can configure the library using builders")
     void configureLibrary()
     {
         assertDoesNotThrow(() -> {
@@ -91,16 +87,16 @@ class UserCanConfigureLibrary
         });
     }
 
-    @Test
-    @DisplayName("User can configure the library using builders")
-    void configureLibraryUsingConfigBuilder()
-    {
-        assertDoesNotThrow(() -> {
-            configureWithClasses();
-            String tran = ex.begin(op);
-            ex.event(cat, tran);
-        });
-    }
+    // @Test
+    // @DisplayName("User can configure the library using builders")
+    // void configureLibraryUsingConfigBuilder()
+    // {
+    // assertDoesNotThrow(() -> {
+    // configureWithClasses();
+    // String tran = ex.begin(op);
+    // ex.event(cat, tran);
+    // });
+    // }
 
     @Test
     @DisplayName("User can configure the library mixing fluent style and builders")

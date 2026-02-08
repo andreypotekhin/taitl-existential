@@ -32,10 +32,8 @@ public class OpRunRegistry
 
         for (Context context : exec.ex().contexts().getContexts(op))
         {
-            for (Transaction tr : context.createTransactions())
-            {
-                o.addTransaction(tr);
-            }
+            Transaction tr = context.createTransaction();
+            o.addTransaction(tr);
         }
 
         synchronized (this)
