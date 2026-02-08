@@ -1,46 +1,26 @@
-package com.taitl.existential.claims.usage;
+package com.taitl.existential.claims.library_usage;
 
-import com.taitl.ex.examples.night_city.data.*;
 import com.taitl.ex.examples.night_city.model.*;
-import com.taitl.ex.examples.night_city.tests.*;
-import com.taitl.existential.*;
-import com.taitl.existential.constants.*;
+import com.taitl.existential.claims.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserCanAccessLibrary
+class UserCanUseLibrary extends ClaimBase
 {
-    Existential ex;
-    Existential prev;
-    String op;
-    CityTests fixt;
-    Cat cat;
-
     @BeforeEach
-    void setup()
+    public void setup()
     {
-        ex = new Existential();
-        prev = Ex.instance(ex);
-        op = "/api/cats";
-        fixt = new CityTests();
-        cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
+        super.setup();
     }
 
     @AfterEach
-    void cleanup()
+    public void cleanup()
     {
-        Ex.instance(prev);
-        ex.close();
-    }
-
-    void configure()
-    {
-        fixt.configure();
+        super.cleanup();
     }
 
     @Test
@@ -50,17 +30,6 @@ class UserCanAccessLibrary
         configure();
         String tran = ex.begin(op);
         ex.commit(tran);
-    }
-
-    @Test
-    @DisplayName("User can change library options programmatically ")
-    void changeLibraryOptions()
-    {
-        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
-        ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
-        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
-        ex.toggle(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
-        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
     }
 
     @Test
@@ -134,18 +103,18 @@ class UserCanAccessLibrary
     }
 
     @Test
-    @DisplayName("User can use checkpoint to pre-commit transaction")
+    @DisplayName("User can use checkpoint to manually trigger validation")
     void checkpoint() throws Exception
     {
         configure();
         String tran = ex.begin(op);
         ex.event(cat, tran);
-        ex.check(tran);
+        ex.checkpoint(tran);
     }
 
     @Test
     @DisplayName("User can't sent events to library which hasn't been configured")
-    void sendEventsToUnconfiguredLibrary()
+    void sendingEventsToUnconfiguredLibrary()
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             String tran = ex.begin(op);
@@ -154,8 +123,8 @@ class UserCanAccessLibrary
     }
 
     @Test
-    @DisplayName("User can't sent events to library before it is configured")
-    void sendEventsToLibraryBeforeItIsConfigured()
+    @DisplayName("User can't sent events to library before it has been configured")
+    void sendingEventsToLibraryBeforeItIsConfigured()
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             ex.begin(op);

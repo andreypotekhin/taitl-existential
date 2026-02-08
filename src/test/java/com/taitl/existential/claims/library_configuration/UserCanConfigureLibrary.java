@@ -1,49 +1,27 @@
-package com.taitl.existential.claims.usage;
+package com.taitl.existential.claims.library_configuration;
 
-import com.taitl.ex.examples.night_city.data.*;
-import com.taitl.ex.examples.night_city.model.*;
-import com.taitl.ex.examples.night_city.tests.*;
-import com.taitl.existential.*;
+import com.taitl.existential.claims.*;
+import com.taitl.existential.constants.*;
 import org.junit.jupiter.api.*;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserCanConfigureLibrary
+class UserCanConfigureLibrary extends ClaimBase
 {
-    Existential ex;
-    Existential prev;
-    String op;
-    CityTests fixt;
-    Cat cat;
-
     @BeforeEach
-    void setup()
+    public void setup()
     {
-        ex = new Existential();
-        prev = Ex.instance(ex);
-        op = "/api/cats";
-        fixt = new CityTests();
-        cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
+        super.setup();
     }
 
     @AfterEach
-    void cleanup()
+    public void cleanup()
     {
-        Ex.instance(prev);
-        ex.close();
+        super.cleanup();
     }
-
-    void configure()
-    {
-        fixt.configure();
-    }
-
-    // void configureWithClasses()
-    // {
-    // fixt.configureWithClasses();
-    // }
 
     void configureWithInstances()
     {
@@ -53,6 +31,17 @@ class UserCanConfigureLibrary
     void configureMixingFluentAndBuilders()
     {
         fixt.configureMixingFluentAndBuilders();
+    }
+
+    @Test
+    @DisplayName("User can change library configuration options programmatically ")
+    void changeLibraryOptions()
+    {
+        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
+        ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
+        ex.toggle(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
     }
 
     @Test
@@ -87,16 +76,16 @@ class UserCanConfigureLibrary
         });
     }
 
-    // @Test
-    // @DisplayName("User can configure the library using builders")
-    // void configureLibraryUsingConfigBuilder()
-    // {
-    // assertDoesNotThrow(() -> {
-    // configureWithClasses();
-    // String tran = ex.begin(op);
-    // ex.event(cat, tran);
-    // });
-    // }
+    @Test
+    @DisplayName("User can configure the library using builders")
+    void configureLibraryUsingConfigBuilder()
+    {
+        assertDoesNotThrow(() -> {
+            configure();
+            String tran = ex.begin(op);
+            ex.event(cat, tran);
+        });
+    }
 
     @Test
     @DisplayName("User can configure the library mixing fluent style and builders")

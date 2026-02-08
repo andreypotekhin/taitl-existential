@@ -53,9 +53,9 @@ public final class Existential implements Closeable
         transactions.commit(tranID);
     }
 
-    public void check(String tranID) throws ExistentialException
+    public void checkpoint(String tranID) throws ExistentialException
     {
-        transactions.check(tranID);
+        transactions.checkpoint(tranID);
     }
 
     public void rollback(String tranID) throws ExistentialException

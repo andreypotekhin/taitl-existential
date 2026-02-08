@@ -51,7 +51,7 @@ public class TransactionLogic implements Closeable
         // Close transactions, remove OpRun from the registry
     }
 
-    public void check(String tranID) throws ExistentialException
+    public void checkpoint(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
         // TODO

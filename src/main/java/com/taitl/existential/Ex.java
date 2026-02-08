@@ -75,9 +75,9 @@ public final class Ex
         instance().commit(tranID);
     }
 
-    public static void check(String tranID) throws ExistentialException
+    public static void checkpoint(String tranID) throws ExistentialException
     {
-        instance().check(tranID);
+        instance().checkpoint(tranID);
     }
 
     public static void rollback(String tranID) throws ExistentialException

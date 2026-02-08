@@ -1,9 +1,10 @@
 package com.taitl.ex.core.existential;
 
 import java.io.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Behavior flags for configuring Existential library.
@@ -24,22 +25,22 @@ public class ExistentialFlags implements Closeable
 
     public void on(int flag)
     {
-        Args.check(flag > 0, ARG_FLAG_MIN);
-        Args.check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
+        check(flag > 0, ARG_FLAG_MIN);
+        check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
         flags |= flag;
     }
 
     public void off(int flag)
     {
-        Args.check(flag > 0, ARG_FLAG_MIN);
-        Args.check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
+        check(flag > 0, ARG_FLAG_MIN);
+        check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
         flags &= ~flag;
     }
 
     public void toggle(int flag)
     {
-        Args.check(flag > 0, ARG_FLAG_MIN);
-        Args.check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
+        check(flag > 0, ARG_FLAG_MIN);
+        check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
         if ((flags & flag) != 0)
         {
             off(flag);

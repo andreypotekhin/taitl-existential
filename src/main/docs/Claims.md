@@ -1,23 +1,65 @@
 ## Claims / User Stories
 
-This is the list of claims made by Existential library - 
-things that are stated (claimed) in library documents.
+This is the list of claims made by Existential library - things that are stated (claimed) in library documents.
+As user stories, the claim statements may be prefixed with 'The user can...' (or 'The user can't...').
+The claims are backed by test cases in src/test/claims. The (+) signs indicate the ones already covered by tests. 
 
-As user stories, claim statements may be prefixed with 'The user can...' ('The user can't...' for negative claims).
-Claims are baked by test cases in src/test/claims. The (+) signs below indicate the ones covered by tests. 
+### Terminology
+
+Op: a business operation. Op name: business operation name, such as "/api/user/update" 
+Path: OS path-like notation for Op names 
+  - Abstract path can contain wildcards, such as "/api/*/update"
+  - Concrete path doesn't contain wildcards
+Evaluable: anything that can be evaluated
+Expression: an Evaluable that evaluates to a value
+Predicate: an Expression that evaluates to a boolean
+Invariant: a list of Predicate expressions
+Statement: an Evaluable that does not necessarily return a value
+Effect: a list of Statements
+Intent: a list of Statements for controlling access to entities, e.g. loading an entity from persistent store  
+Rule: a general term for invariants, effects and intents
+Event: an application or library event, such as: 
+  - modifying an entity (e.g. Update<User>) 
+  - accessing an entity (e.g. Read<User>)
+  - starting or committing a transaction (e.g. Begin<Transaction>) and the like
+  - Events are sent to the library by calling event() method
+  - Access events are sent to the library by calling read() and write()
+  - Transaction events are automatically sent to the library when initiating or completing a transaction (begin(), commit(), rollback(), checkpoint() methods)
+Context: a set of rules (constraints, effects, intents) associated with a business operation 
+  - A Context uses Op name to associate with an Op 
+  - A Context can be defined with a wildcard Op name
+  - Parent context is any Context whose name matches, without being equal to, Context's name
+  - Matching context is any wildard context whose name matches, without being equal to, Context's name
+  - The rules from parent apply to child contexts
+  - The rules from matching contexts apply to matched contexts
+Transaction: a set of rules (constraints, effects, intents) associated with a Context
+  Transactions are more dynamic than the Contexts, allowing to use local scope (method parameters,
+  local variables) and members of the defining class (for anonimous nested classes) in event handlers' code
+Library Transaction: a unit of execution in the library, associated with an Op name
+  - Association with an Op name allows to select the relevant a Context and Transactions
+  - For each relevant Context and Transactions, their configured rules are evaluated during transaction
+  - Rules are evaluated at the end of transaction (commit or checkpoint), unless explicitly assigned to an earlier stage
+  - In case of a constraint violation, exception is raised and constraint violations are reported
+Quantifier: a logical expression, such as All or Exists
+Mutation: an event that records both before- and after- states of an entity 
+Transition: a Mutation that can have a null in before- or after- state (but not in both) 
+  - The null in 'before' state indicates creation of an entity
+  - The null in 'after' state indicates deletion of an entity
+  - Both 'before' and 'after' states being non-null indicates a change (mutation) of an entity
 
 ### Library
 
 +User can access the library as an object from client code
 User can independently configure and use multiple instances of Existential library
-Within an instance of Existential library, the user can configure multiple operations
-Within an operation configuration, the user can configure multiple operation contexts
-Within an operation context, the user can configure multiple transactions
+Within an instance of Existential library, the user can configure multiple business operations
+Within a business operation configuration, the user can configure multiple operation contexts
+Within an operation context, the user can configure multiple rules such as invariants, effects and intents
 
 #### Library configuration
 
-+User can change library configuration and options programmatically
-User can affect library behavior by setting behavioral flags
++User can change library configuration options programmatically
++User can affect library behavior by setting behavioral flags
++User must configure the library before use
 User can configure library options using a config file
 User can configure library options using a classpath resource
 User can specify the config file with an environment variable
@@ -25,81 +67,105 @@ The initial version of the config file is auto-created or otherwise available
 
 #### Library usage
 
-User can configure constraints on classes, such as application entities
+User can configure rules for a class
+User can configure access rules for a class
+User can configure transaction lifecycle rules for a class
 +User can send events to the library for the purpose of recording entity access and modifications 
 +User can record access to an entity, such the fact that entity was loaded (read) from storage, modified, or saved
-+User can record entity modifications, such the fact that entity was created or changed 
-+User can begin a transaction
++User can record entity modifications, such the fact that entity was created or changed
+User can't send any events outside a transaction 
++User can start a transaction
 +User can commit a transaction
 +User can roll back a transaction
+User can initiate a checkpont 
 +User can't send events to library which hasn't been configured
 
-#### Lifecycle phases
+#### Library lifecycle phases
 The library usage falls into configuration, execution and validation phases
-During configuration phase, user defines rules (constraints, intents) for contexts and transactions
-During execution phase, user begins and ends transactions, and sends events to the library
-During validation phase, the library checks the constraints
-The validation phase happens at transaction end (commit) or at checkpoints
+In configuration phase, the user defines rules - constraints, effects - using contexts and transactions
+In execution phase, user begins and ends transactions and sends events to the library
+In execution phase, the library executes execution time side effects 
+The validation triggers at transaction commit, or at a checkpoint
+In validation phase, the library evaluates all applicable constraints and reports violations
+In validation phase, the library executes validation time side effects 
+
+### Workflows
 
 #### Configuration workflow
 
 ##### Configuring contexts
 
 User can configure the rules (constraints) with custom context
-Rules from parent context apply to child contexts
-Rules from parent context execute before the rules from child context
+Contexts are keyed by business op name - an OS path-like string describing business operation and its parents 
+The rules from parent context apply to child contexts
+The rules from parent context execute before the rules of child context
 User can specify a custom factory for creation of all Contexts
-User can specify a custom factory for creation a specific Context
+User can specify a custom factory for creation a Context for specific op
 User can't configure a context without defining any rules
 
 ##### Wildcard contexts
 
-User can define an op with a wildcard in its op path
-User can create a context with a wildcard in its op path
-All wildcard contexts whose path matches current op participate in its validation
-All wildcard ops matching the current context participate in its validation
+User can define a Context for an op with a wildcard in its name
+All wildcard contexts whose path match a concrete op participate in its validation
+All wildcard contexts matching the currently evaluated context participate in its validation
 
-##### Custom transactions
+##### Configuring transactions
 
-User can not create a transaction with a wildcard in its op path - only concrete op paths are allowed
-User can configure the rules (constraints) with custom transaction factory per context
+User can configure invariants, effects and intents on a Transaction object
 User can configure the rules (constraints) with custom transaction object per transaction run
-User can't configure a transaction without defining any rules
-User can specify a custom factory for creation of transactions in a context
-User can specify a Transaction instance to use in a transaction
+User can specify a custom factory for creation of transactions in a Context
+Transaction factory from parent Context is used for child Contexts, unless overridden in the child Context
 
-##### Configuring rules and constraints
+##### Custom transaction
 
-User can specify a predicate for an event.
-User can specify a handler (side effect) for an event.
+User can specify an instance of Transaction class to use in a library transaction
+  Rationale: be able to configure the rules based on dynamic information, such as web request parameters  
+  Code: This is done by specifying Transaction instance as parameter to Ex.begin() method
+
+##### Configuring Constraints
+
+User can specify an invariant (predicate) for a class event
+User can specify an invariant (predicate) for transaction lifecycle event (begin, commit, rollback)
+
+##### Configuring Effects
+
+User can specify side effect (event handler) for a class event
+User can specify side effect for transaction lifecycle event (begin, commit, rollback)
+
+##### Configuring Intents
+
+##### Configuring Custom Events
 
 #### Execution workflow
-(We call an 'execution' what happens between beginning and end of a transaction)
 
-Execution transaction is associated with a context, its parent contexts, and any configured transaction factories/instances.
-Pre-conditions are checked at the beginning of transaction.
-Intents are checked immediately (in the middle of transaction).
-Constraints are checked at the end of transaction.
-Constraints are also checked at checkpoints.
+Execution phase starts upon beginning and ends upon end of a library transaction
+The execution transaction is associated with a context, its parent contexts, and any configured Transaction factories and instances
+The pre-conditions are checked at the beginning of transaction
+Execution-time Effects are executed immediately upon trigger event
+Execution-time Constraints are checked immediately upon trigger event
+Execution-time Intents are checked immediately upon trigger event
 
-##### Events
+#### Validation workflow
 
-User can emit/record an event, such as entity access or modification
+Validation phase starts upon transaction commit or checkpoint
+Separate transactions are validated independently (even if these transactions are nested)
+Only the events reported during transaction are considered for validation for that transaction
+The order of execution of Effects, Constraints and Intents follows the order of their definition
+Validation-time Effects are executed by applying event handlers for each reported event to its corresponding entity
+Validation-time Constraints are evaluated and violations added to validation report
+Validation-time Intents are checked similarly to the constraints
+
+### Contexts
+
+### Events
+
+User can emit (record) a class event, such as accessing or modifying entity
 Multiple equal events (e.g. same entity + event type) (successive or not) are considered to be (have same effect) as a single such event
 User can't send any events before the library is configured
 User can't send any events before the transaction has started
 User can't send any events after transaction has been committed/rolled back
 User can't modify configurations (e.g. create invariants) after sending first event
-  - Except for specifying custom Transaction object for transaction run.
-
-#### Validation workflow
-(Validation is the process of checking the constraints at transaction commit or checkpoint)
-
-Validation automatically starts upon transaction commit or checkpoint
-Separate transactions are validated independently (even if these transactions are nested)
-Only the events reported during transaction are considered for validation 
-The validation is carried out by applying event handlers for each reported event to its corresponding entity
-The order of execution of event handlers follows the order of their definition during configuration phase
+- Except for specifying custom Transaction object for transaction run
 
 ### Constraints
 
@@ -160,14 +226,14 @@ User can define the 'Exist' quantifier on a collection
 User can define the 'Exist' quantifier on a stream
 User can specify a transaction object for the 'Exist' quantifier
 
+### Effects
+
 ### Intents
 
 User can define 'allow' intent on event type and entity class
 User can define 'deny' intent on event type and entity class
 User can declare a combination of event type and entity class as 'protected', thus requiring intents to be declared 
 System validates the intents at validation phase along with other constraints.
-
-### Events
 
 #### Custom Event Types
 
@@ -202,19 +268,18 @@ System ensures that any memory leaks are reported (Log memory leaks, e.g. when t
 User can add the Library as a dependency to their project using Maven-based dependency resolution. 
 Requirements: Maven Central account
 
-### Appendix
-
-### Out of scope / Not used
-
 #### Indexing
 
 User can create in-transaction index to pass info between the rules
 User can create out-of-transaction index to pass information between the rules
-User can pass information between the rules using an in-transaction index
-User can pass information between the rules using an out-of-transaction index
 User can use an index to speed up evaluation of Existence expression
 
 #### Side Effects
 
 User can automate side effects, such as setting a field to a default value on all objects of certain type
 that participate in a transaction.
+
+### Appendix
+
+### Out of scope / Not used
+

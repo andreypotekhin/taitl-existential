@@ -188,7 +188,6 @@ public class Context implements Configurable
      * custom transactions, for instance, when code similar to the above
      * appears more than once in different parts of your application (e.g.
      * this code is split among multiple classes).
-     * @deprecated Having doubts
      */
     public Context transaction(Supplier<? extends Transaction> supplier)
     {

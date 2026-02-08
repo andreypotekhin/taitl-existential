@@ -1,10 +1,11 @@
 package com.taitl.ex.core.existential;
 
 import java.io.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.existential.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 public class ExistentialEvents implements Closeable
 {
@@ -17,15 +18,16 @@ public class ExistentialEvents implements Closeable
 
     public <T> void event(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        Args.check(t0 != null || t1 != null, "One of t0, t1 must not be null");
+        check(t0 != null || t1 != null, "One of t0, t1 must not be null");
         // Get transaction object
-        // Care for scenario when tran is not found
-        // Split event into multiple using EventSplitter
+        // Address the case when tran is not found
+        // Split event into multiple events using EventSplitter
         // Transition<House> -> On<House>, Mutate<House>, Transit<House>
         // Depending on mutation type: OnCreate<House>, OnUpdate<House>, OnMutate<House>,
         // OnDelete<House>
         // Trigger event processing for events with side effects
-        // Store (postpone) event processing for events without side effects
+        // Postpone event processing for events without side effects:
+        // Add event to event field
     }
 
     public <T> void event(T t, TypeKey<T> type, String tranID) throws ExistentialException

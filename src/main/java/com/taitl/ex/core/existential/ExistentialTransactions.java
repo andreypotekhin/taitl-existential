@@ -40,10 +40,10 @@ public class ExistentialTransactions implements Closeable
         transactionLogic.commit(tranID);
     }
 
-    public void check(String tranID) throws ExistentialException
+    public void checkpoint(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
-        transactionLogic.check(tranID);
+        transactionLogic.checkpoint(tranID);
     }
 
     public void rollback(String tranID) throws ExistentialException
