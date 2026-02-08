@@ -12,11 +12,9 @@ import com.taitl.existential.events.Upsert;
 import com.taitl.existential.events.Write;
 
 /**
- * Indicates the fact of reading, accessing or changing an application entity.
- * Serves as base class to more specific events ({@code Create<T>, Update<T>,} etc.)
- *
+ * Indicates the fact of creating, accessing, changing or deleting an entity.
+ * Serves as base class to specific events ({@code Create<T>, Update<T>,} etc.)
  * Example: {@code EntityEvent<Account>} is emitted when Account entity was accessed or changed in the course of current transaction.
- *
  * Database analogs: SELECT, INSERT, UPDATE or DELETE
  *
  * @param <T>

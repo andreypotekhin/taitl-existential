@@ -1,46 +1,59 @@
 package com.taitl.ex.core.instructions;
 
 import java.util.*;
-import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.evaluables.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Container for EventHandlers, such as OnRead<T1>, OnUpdate<T2>.
- * // TODO: implements Evs<?>
+ * Container (list) of evaluables, such as OnRead<T1>, OnUpdate<T2>.
  */
 public class Instructions
 {
-    // TODO:refactor to List<Ev>
-    protected List<Instruction<?>> instructions = new ArrayList<>();
+    List<Ev<?>> instructions = new ArrayList<>();
 
-    public <T> Instructions add(Instruction<T> instruction)
+    // public <T> Instructions add(Instruction<T> instruction)
+    // {
+    // sane(instruction, "instruction");
+    // instructions.add(instruction);
+    // return this;
+    // }
+
+    public <T> Instructions add(Ev<T> ev)
     {
-        sane(instruction, "instruction");
-        instructions.add(instruction);
+        sane(ev, "ev");
+        instructions.add(ev);
         return this;
     }
 
-    // TODO:refactor to Ev<T>
-    public <T> Instructions add(EventHandler<T> eh)
+    // public <T> Instructions add(EventHandler<T> eh)
+    // {
+    // sane(eh, "eh");
+    // instructions.add(new Instruction<>(eh));
+    // return this;
+    // }
+
+    public <T> Instructions addAll(Evs<T> other)
     {
-        sane(eh, "eh");
-        instructions.add(new Instruction<>(eh));
+        sane(other, "other");
+        instructions.addAll(other.list());
         return this;
     }
 
     public <T> Instructions addAll(Instructions other)
     {
         sane(other, "other");
-        for (Instruction<?> instruction : other.instructions)
-        {
-            instructions.add(instruction);
-        }
+        instructions.addAll(other.instructions);
         return this;
     }
 
     public boolean isEmpty()
     {
         return instructions.isEmpty();
+    }
+
+    public List<Ev<?>> list()
+    {
+        return instructions;
     }
 }

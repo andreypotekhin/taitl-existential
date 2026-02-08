@@ -1,7 +1,6 @@
 package com.taitl.existential.transactions;
 
 import java.util.*;
-import java.util.function.*;
 import com.taitl.ex.core.events.*;
 import com.taitl.ex.core.instructions.*;
 import com.taitl.ex.core.transactions.*;
@@ -9,9 +8,7 @@ import com.taitl.ex.logic.unused.indexes.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.effects.*;
-import com.taitl.existential.expressions.*;
-import com.taitl.existential.handlers.transaction_handlers.*;
-import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
 
@@ -68,6 +65,9 @@ public class Transaction implements Configurable
     public String op;
     public Context context;
 
+    // TODO: split by stage (execution, validation)
+    List<Evs<?>> evs = new ArrayList<>();
+
     /**
      * Instructions - event handlers. Includes all event handlers (rules)
      * defined in this context.
@@ -77,7 +77,7 @@ public class Transaction implements Configurable
     /**
      * Expressions, such as All<T>, defined in this context.
      */
-    public Expressions expressions = new Expressions();
+    // public Expressions expressions = new Expressions();
 
     TransactionIndexes indexes = new TransactionIndexes(this);
     TransactionEvents events = new TransactionEvents(this);
@@ -99,64 +99,6 @@ public class Transaction implements Configurable
             throw new IllegalArgumentException(Strings.ARG_NAME);
         }
         return indexes.get(name);
-    }
-
-    protected UUID generateId()
-    {
-        return UUID.randomUUID();
-    }
-
-    public Context getContext()
-    {
-        cool(context, "context");
-        return context;
-    }
-
-    public void setContext(Context context)
-    {
-        sane(context, "context");
-        this.context = context;
-    }
-
-    public <T> Transaction add(EventHandler<T> eh)
-    {
-        sane(eh, "eh");
-        instructions.add(eh);
-        return this;
-    }
-
-    public <T> Transaction add(Expression<T> expr)
-    {
-        sane(expr, "expr");
-        expressions.add(expr);
-        return this;
-    }
-
-    /* Transaction-related methods */
-
-    /**
-     * Add OnBegin<Transaction> handler.
-     *
-     * Example:
-     * Declare transaction member (curPilot) and initialize it at the start of transaction:
-     * <pre>{@code
-     *    Ex.contexts().get("/app/flight_school/pilots/update")
-     *        .transaction(() -> new Transaction(){
-     *          Pilot curPilot;
-     * 		 	{
-     * 			    begin(params -> curPilot = (Pilot)params.get("pilot"))
-     * 			    require(...);
-     * 			    intent(...);
-     * 			}});
-     * }</pre>
-     *
-     * @param action
-     * @return This object
-     */
-    public Transaction begin(Consumer<? super Transaction> action)
-    {
-        sane(action, "action");
-        return add(new OnBegin<Transaction>(action));
     }
 
     /**
@@ -188,8 +130,9 @@ public class Transaction implements Configurable
             check(tr == this, "Argument 'invariant' must belong to same transaction");
         }
 
+        evs.add(invariant);
         instructions.addAll(invariant.instructions);
-        expressions.addAll(invariant.expressions);
+        // expressions.addAll(invariant.expressions);
     }
 
     public <T> void effect(Effect<T> effect)
@@ -206,9 +149,74 @@ public class Transaction implements Configurable
             check(tr == this, "Argument 'effect' must belong to same transaction");
         }
 
+        evs.add(effect);
         instructions.addAll(effect.instructions);
-        expressions.addAll(effect.expressions);
+        // expressions.addAll(effect.expressions);
     }
+
+    /**
+     * Add OnBegin<Transaction> handler.
+     *
+     * Example:
+     * Declare transaction member (curPilot) and initialize it at the start of transaction:
+     * <pre>{@code
+     *    Ex.contexts().get("/app/flight_school/pilots/update")
+     *        .transaction(() -> new Transaction(){
+     *          Pilot curPilot;
+     * 		 	{
+     * 			    begin(params -> curPilot = (Pilot)params.get("pilot"))
+     * 			    access(...);
+     * 			    invariant(...);
+     * 			    intent(...);
+     * 			}});
+     * }</pre>
+     *
+     * @return This object
+     */
+    // public Transaction begin(Consumer<? super Transaction> action)
+    // {
+    // sane(action, "action");
+    // return add(new OnBegin<Transaction>(action));
+    // }
+    public <T extends Transaction> void cycle(Trancycle<T> cycle)
+    {
+        sane(cycle, "cycle");
+        Transaction tr = cycle.getTransaction();
+
+        if (tr == null)
+        {
+            cycle.setTransaction(this);
+        }
+        else
+        {
+            check(tr == this, "Argument 'cycle' must belong to same transaction");
+        }
+
+        evs.add(cycle);
+        instructions.addAll(cycle.instructions);
+    }
+
+    public <T> Transaction add(Evs<T> evs)
+    {
+        sane(evs, "evs");
+        this.evs.add(evs);
+        instructions.addAll(evs);
+        return this;
+    }
+
+    // public <T> Transaction add(EventHandler<T> eh)
+    // {
+    // sane(eh, "eh");
+    // instructions.add(eh);
+    // return this;
+    // }
+    //
+    // public <T> Transaction add(Expression<T> expr)
+    // {
+    // sane(expr, "expr");
+    // expressions.add(expr);
+    // return this;
+    // }
 
     /**
      * TODO: allow(Intent<T> intent) { ...
@@ -218,5 +226,22 @@ public class Transaction implements Configurable
     public void name(String name)
     {
         this.op = name;
+    }
+
+    protected UUID generateId()
+    {
+        return UUID.randomUUID();
+    }
+
+    public Context getContext()
+    {
+        cool(context, "context");
+        return context;
+    }
+
+    public void setContext(Context context)
+    {
+        sane(context, "context");
+        this.context = context;
     }
 }

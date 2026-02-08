@@ -2,12 +2,11 @@ package com.taitl.existential.invariants;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 import com.taitl.ex.common.helper.*;
 import com.taitl.ex.core.instructions.*;
 import com.taitl.existential.evaluables.*;
-import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.*;
-import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.quantifiers.*;
 import com.taitl.existential.transactions.*;
@@ -32,7 +31,7 @@ public class Invariant<T> implements Evs<T>, Constraint<T>
     /**
      * Expressions, such as All<T>, defined in this context.
      */
-    public Expressions expressions = new Expressions();
+    // public Expressions expressions = new Expressions();
 
     /* Event handler methods */
 
@@ -120,22 +119,6 @@ public class Invariant<T> implements Evs<T>, Constraint<T>
         return add(new OnUpsert<T>(condition, null, description));
     }
 
-    /* Add event handlers and expressions */
-
-    protected Invariant<T> add(EventHandler<T> eh)
-    {
-        sane(eh, "eh");
-        instructions.add(eh);
-        return this;
-    }
-
-    public Invariant<T> add(Expression<T> expr)
-    {
-        sane(expr, "expr");
-        expressions.add(expr);
-        return this;
-    }
-
     /* Expression methods */
 
     public Invariant<T> all(Predicate<? super T> predicate, String description)
@@ -189,5 +172,30 @@ public class Invariant<T> implements Evs<T>, Constraint<T>
     {
         sane(tr, "tr");
         tran = tr;
+    }
+
+    /* Implementation */
+
+    protected Invariant<T> add(Ev<T> ev)
+    {
+        sane(ev, "eh");
+        instructions.add(ev);
+        return this;
+    }
+
+    // public Invariant<T> add(Expression<T> expr)
+    // {
+    // sane(expr, "expr");
+    // expressions.add(expr);
+    // return this;
+    // }
+
+    @SuppressWarnings("unchecked")
+    public List<Ev<T>> list()
+    {
+        return instructions.list()
+                .stream()
+                .map(e -> (Ev<T>) e)
+                .collect(Collectors.<Ev<T>> toList());
     }
 }

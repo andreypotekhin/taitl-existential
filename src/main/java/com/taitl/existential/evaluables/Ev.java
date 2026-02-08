@@ -1,7 +1,7 @@
 package com.taitl.existential.evaluables;
 
 /**
- * Marker interface for anything evaluable, such as event handlers (OnUpdate<Entity>) and expressions (All<Entity>).
+ * Marker interface for anything evaluable, such as expressions (All<Entity>) and event handlers (OnUpdate<Entity>).
  *
  * @param <T>
  *            Type of entity
