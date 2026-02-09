@@ -8,4 +8,8 @@ package com.taitl.existential.evaluables;
  */
 public interface Ev<T>
 {
+    default void accept(Evaluator visitor)
+    {
+        visitor.visit(this);
+    }
 }

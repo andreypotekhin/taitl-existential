@@ -26,7 +26,7 @@ class UserCantUseUnconfiguredLibrary extends ClaimBase
     }
 
     @Test
-    @DisplayName("User can't sent events to library which hasn't been configured")
+    @DisplayName("User can't send events if no rules has been configured")
     void sendingEventsToUnconfiguredLibrary()
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
@@ -36,7 +36,7 @@ class UserCantUseUnconfiguredLibrary extends ClaimBase
     }
 
     @Test
-    @DisplayName("User can't sent events to library before it has been configured")
+    @DisplayName("User can't send events if no rules has been configured")
     void sendingEventsToLibraryBeforeItIsConfigured()
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {

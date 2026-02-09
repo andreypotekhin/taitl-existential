@@ -133,6 +133,7 @@ public final class Existential implements Closeable
             flags.close();
             ops.close();
             access.close();
+            init.close();
             closed = true;
         }
     }

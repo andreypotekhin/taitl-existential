@@ -1,12 +1,13 @@
 package com.taitl.ex.core.existential;
 
+import java.io.*;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.existential.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.transactions.*;
 
-public class ExistentialInit
+public class ExistentialInit implements Closeable
 {
     protected Existential ex;
 
@@ -24,5 +25,10 @@ public class ExistentialInit
     public static <T> void inject(Class<T> cls, Supplier<? extends T> supplier)
     {
         Creator.inject(cls, supplier);
+    }
+
+    // Deinitialize library instance
+    public void close()
+    {
     }
 }

@@ -50,8 +50,9 @@ Transition: a Mutation that can have a null in before- or after- state (but not 
 
 ### Library
 
-+User can access the library as an object from client code
-User can independently configure and use multiple instances of Existential library
++User can access the library using static facade
++User can access the library using a singleton
+User can independently configure and use multiple instances of the library
 Within an instance of Existential library, the user can configure multiple business operations
 Within a business operation configuration, the user can configure multiple operation contexts
 Within an operation context, the user can configure multiple rules such as invariants, effects and intents
@@ -64,21 +65,21 @@ Within an operation context, the user can configure multiple rules such as invar
 User can configure library options using a config file
 User can configure library options using a classpath resource
 User can specify the config file with an environment variable
-The initial version of the config file is auto-created or otherwise available
+Initial version of the config file is auto-created or otherwise available
 
 #### Library usage
 
-User can configure rules for a class
++User can configure class rules
 User can configure access rules for a class
 User can configure transaction lifecycle rules for a class
 +User can start a transaction
 +User can commit a transaction
 +User can roll back a transaction
-User can initiate a checkpont
-+User can send events to the library to record entity modification
-+User can send events to the library to record entity access 
-User can't send any events outside a transaction 
-+User can't send events to the library if no rules has been configured
++User can initiate transaction checkpont
++User can send events to record entity modification
++User can send events to record entity access 
+User can't send events outside a transaction 
++User can't send events if no rules has been configured
 
 #### Library lifecycle phases
 The library usage falls into configuration, execution and validation phases

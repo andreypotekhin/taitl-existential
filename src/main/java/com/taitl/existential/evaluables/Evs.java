@@ -8,7 +8,15 @@ import java.util.*;
  *
  * @param <T> Type parameter
  */
-public interface Evs<T>
+public interface Evs<T> extends Ev<T>
 {
     List<Ev<T>> list();
+
+    default void accept(Evaluator evaluator)
+    {
+        for (Ev<T> ev : list())
+        {
+            ev.accept(evaluator);
+        }
+    }
 }

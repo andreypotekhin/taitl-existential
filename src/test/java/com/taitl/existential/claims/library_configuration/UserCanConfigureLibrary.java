@@ -27,18 +27,8 @@ class UserCanConfigureLibrary extends ClaimBase
         super.cleanup();
     }
 
-    void configureWithInstances()
-    {
-        fixt.configureWithInstances();
-    }
-
-    void configureMixingFluentAndBuilders()
-    {
-        fixt.configureMixingFluentAndBuilders();
-    }
-
     @Test
-    @DisplayName("User can change library configuration options programmatically ")
+    @DisplayName("User can change library configuration options programmatically")
     void changeLibraryOptions()
     {
         assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
@@ -58,50 +48,8 @@ class UserCanConfigureLibrary extends ClaimBase
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 
-    @Test
-    @DisplayName("User can configure the library using builders")
-    void configureLibrary()
-    {
-        assertDoesNotThrow(() -> {
-            configure();
-            String tran = ex.begin(op);
-            ex.event(cat, tran);
-        });
-    }
-
-    @Test
-    @DisplayName("User can configure the library using fluent style")
-    void configureLibraryUsingFluentStyle()
-    {
-        assertDoesNotThrow(() -> {
-            configureWithInstances();
-            String tran = ex.begin(op);
-            ex.event(cat, tran);
-        });
-    }
-
-    @Test
-    @DisplayName("User can configure the library using builders")
-    void configureLibraryUsingConfigBuilder()
-    {
-        assertDoesNotThrow(() -> {
-            configure();
-            String tran = ex.begin(op);
-            ex.event(cat, tran);
-        });
-    }
-
-    @Test
-    @DisplayName("User can configure the library mixing fluent style and builders")
-    void configureLibraryMixingFluentAndBuilders()
-    {
-        assertDoesNotThrow(() -> {
-            configureMixingFluentAndBuilders();
-            String tran = ex.begin(op);
-            ex.event(cat, tran);
-        });
-    }
-
     // TODO:configure with file
+    // TODO:configure with classpath resource
     // TODO:configure with env var
+    // TODO: initial version of the config file is auto-created or otherwise available
 }

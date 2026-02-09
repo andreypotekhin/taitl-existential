@@ -1,5 +1,6 @@
 package com.taitl.existential.claims.library;
 
+import com.taitl.existential.*;
 import com.taitl.existential.claims.*;
 import org.junit.jupiter.api.*;
 
@@ -18,8 +19,16 @@ class UserCanAccessLibrary extends ClaimBase
     }
 
     @Test
-    @DisplayName("User can access library")
-    void accessLibrary() throws Exception
+    @DisplayName("User can access library using static facade")
+    void accessLibraryWithStaticFacade() throws Exception
+    {
+        String tran = Ex.begin(op);
+        Ex.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can access library using a singleton")
+    void accessLibraryWithSingleton() throws Exception
     {
         String tran = ex.begin(op);
         ex.commit(tran);
