@@ -8,11 +8,17 @@ import static com.taitl.ex.common.helper.Args.*;
 public class InvariantBuilder<T> implements EvsBuilder<T>
 {
     ContextBuilder parent;
+    TransactionBuilder parent2;
     Invariant<T> target = new Invariant<>();
 
     public InvariantBuilder(ContextBuilder parent)
     {
         this.parent = parent;
+    }
+
+    public InvariantBuilder(TransactionBuilder parent2)
+    {
+        this.parent2 = parent2;
     }
 
     public InvariantBuilder<T> create(Predicate<? super T> condition, String description)
@@ -114,5 +120,10 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     public ContextBuilder done()
     {
         return parent;
+    }
+
+    public TransactionBuilder doneTran()
+    {
+        return parent2;
     }
 }

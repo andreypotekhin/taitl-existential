@@ -8,11 +8,17 @@ import static com.taitl.ex.common.helper.Args.*;
 public class EffectBuilder<T> implements EvsBuilder<T>
 {
     ContextBuilder parent;
+    TransactionBuilder parent2;
     Effect<T> target = new Effect<>();
 
     public EffectBuilder(ContextBuilder parent)
     {
         this.parent = parent;
+    }
+
+    public EffectBuilder(TransactionBuilder parent2)
+    {
+        this.parent2 = parent2;
     }
 
     public EffectBuilder<T> create(Consumer<? super T> action)
@@ -364,5 +370,10 @@ public class EffectBuilder<T> implements EvsBuilder<T>
     public ContextBuilder done()
     {
         return parent;
+    }
+
+    public TransactionBuilder doneTran()
+    {
+        return parent2;
     }
 }

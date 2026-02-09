@@ -65,7 +65,7 @@ public class ConfigBuilder
      */
     public ContextBuilder context(String name)
     {
-        return new ContextBuilder(this, name, ContextBuilder.TargetType.TYPE_CONTEXT);
+        return new ContextBuilder(this, name);
     }
 
     /**
@@ -117,10 +117,10 @@ public class ConfigBuilder
      *
      * @return ConfigBuilder for transaction
      */
-    public ContextBuilder transaction(String name)
-    {
-        return new ContextBuilder(this, name, ContextBuilder.TargetType.TYPE_TRANSACTION);
-    }
+    // public ContextBuilder transaction(String name)
+    // {
+    // return new TransactionBuilder(this, name);
+    // }
 
     /**
      * For each Context within Op, create instances of custom

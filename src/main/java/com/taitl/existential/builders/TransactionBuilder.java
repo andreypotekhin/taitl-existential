@@ -1,9 +1,6 @@
 package com.taitl.existential.builders;
 
 import java.util.*;
-import java.util.function.*;
-import com.taitl.ex.common.creator.*;
-import com.taitl.existential.contexts.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;
@@ -11,26 +8,25 @@ import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class ContextBuilder
+public class TransactionBuilder
 {
-    ConfigBuilder parent;
+    ContextBuilder parent;
     String op;
     List<EvsBuilder> evsBuilders;
     List<Evs> evsList;
-    Supplier<? extends Transaction> transactionFactory = Creator.getSupplier(Transaction.class);
 
-    public ContextBuilder(ConfigBuilder parentConfig, String op)
+    public TransactionBuilder(ContextBuilder parentContext, String op)
     {
-        this.parent = parentConfig;
+        this.parent = parentContext;
         this.op = op;
         this.evsBuilders = new ArrayList<>();
         this.evsList = new ArrayList<>();
     }
 
-    public Context build()
+    public Transaction build()
     {
-        Context context = createInstance();
-        context.op(op);
+        Transaction tr = createInstance();
+        tr.op(op);
 
         // TODO: bug! this code pushes all objects built with builders
         // invariant(Class) after the ones built with invariant(Invariant)
@@ -44,11 +40,11 @@ public class ContextBuilder
         {
             if (evs instanceof Invariant invariant)
             {
-                context.invariant(invariant);
+                tr.invariant(invariant);
             }
             else if (evs instanceof Effect effect)
             {
-                context.effect(effect);
+                tr.effect(effect);
             }
             else
             {
@@ -56,8 +52,7 @@ public class ContextBuilder
             }
         }
 
-        context.transaction(transactionFactory);
-        return context;
+        return tr;
     }
 
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
@@ -68,7 +63,7 @@ public class ContextBuilder
         return ib;
     }
 
-    public <T> ContextBuilder invariant(Invariant<T> invariant)
+    public <T> TransactionBuilder invariant(Invariant<T> invariant)
     {
         sane(invariant, "invariant");
         evsList.add(invariant);
@@ -83,39 +78,23 @@ public class ContextBuilder
         return eb;
     }
 
-    public <T> ContextBuilder effect(Effect<T> effect)
+    public <T> TransactionBuilder effect(Effect<T> effect)
     {
         sane(effect, "effect");
         evsList.add(effect);
         return this;
     }
 
+    // TODO: transaction()
     // TODO: intent()
 
-    public ContextBuilder transaction(Supplier<? extends Transaction> supplier)
-    {
-        sane(supplier, "supplier");
-        transactionFactory = supplier;
-        return this;
-    }
-
-    public TransactionBuilder transaction(String name)
-    {
-        return new TransactionBuilder(this, name);
-    }
-
-    public ContextBuilder done()
-    {
-        return this;
-    }
-
-    Context createInstance()
-    {
-        return parent.createContextInstance();
-    }
-
-    Transaction createTransactionInstance()
+    protected Transaction createInstance()
     {
         return parent.createTransactionInstance();
+    }
+
+    public TransactionBuilder done()
+    {
+        return this;
     }
 }
