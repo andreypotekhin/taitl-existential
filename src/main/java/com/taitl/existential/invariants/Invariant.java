@@ -2,9 +2,6 @@ package com.taitl.existential.invariants;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.*;
-import com.taitl.ex.common.helper.*;
-import com.taitl.ex.core.instructions.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.interfaces.*;
@@ -12,21 +9,21 @@ import com.taitl.existential.quantifiers.*;
 import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 public class Invariant<T> implements Evs<T>, Constraints<T>
 {
     /**
      * Parent Transaction, if any.
      * This field is null for the invariants that are not declared on
-     * transaction level, e.g. for invariants the declared at a Context.
+     * transaction level, e.g. for the invariants the declared in a Context.
      */
-    private Transaction tran;
+    Transaction tran;
 
     /**
-     * Instructions - event handlers. Includes all event handlers (rules)
-     * defined in this context.
+     * Entity event handlers
      */
-    public Instructions instructions = new Instructions();
+    List<Ev<T>> evs = new ArrayList<>();
 
     /**
      * Expressions, such as All<T>, defined in this context.
@@ -164,7 +161,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
 
     public Transaction transaction()
     {
-        State.cool(tran, "tran");
+        cool(tran, "tran");
         return tran;
     }
 
@@ -179,23 +176,12 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     protected Invariant<T> add(Ev<T> ev)
     {
         sane(ev, "eh");
-        instructions.add(ev);
+        evs.add(ev);
         return this;
     }
 
-    // public Invariant<T> add(Expression<T> expr)
-    // {
-    // sane(expr, "expr");
-    // expressions.add(expr);
-    // return this;
-    // }
-
-    @SuppressWarnings("unchecked")
     public List<Ev<T>> list()
     {
-        return instructions.list()
-                .stream()
-                .map(e -> (Ev<T>) e)
-                .collect(Collectors.<Ev<T>> toList());
+        return evs;
     }
 }

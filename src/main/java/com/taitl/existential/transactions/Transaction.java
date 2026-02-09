@@ -64,7 +64,7 @@ import static com.taitl.ex.common.helper.State.*;
  * @see EventSplitter
  * TODO: TransactionBuilder
  */
-public class Transaction implements Configurable
+public class Transaction implements Configurable, Evaluatable
 {
     public final UUID id;
     public String op;
@@ -184,6 +184,11 @@ public class Transaction implements Configurable
         sane(evs, "evs");
         this.evs.add(evs);
         instructions.addAll(evs);
+    }
+
+    public List<Evs<?>> evs()
+    {
+        return evs;
     }
 
     /**

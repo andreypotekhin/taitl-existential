@@ -12,26 +12,12 @@ public class Instructions
 {
     List<Ev<?>> instructions = new ArrayList<>();
 
-    // public <T> Instructions add(Instruction<T> instruction)
-    // {
-    // sane(instruction, "instruction");
-    // instructions.add(instruction);
-    // return this;
-    // }
-
     public <T> Instructions add(Ev<T> ev)
     {
         sane(ev, "ev");
         instructions.add(ev);
         return this;
     }
-
-    // public <T> Instructions add(EventHandler<T> eh)
-    // {
-    // sane(eh, "eh");
-    // instructions.add(new Instruction<>(eh));
-    // return this;
-    // }
 
     public <T> Instructions addAll(Evs<T> other)
     {

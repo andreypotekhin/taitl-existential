@@ -2,11 +2,8 @@ package com.taitl.existential.effects;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.ex.core.instructions.*;
 import com.taitl.existential.evaluables.*;
-import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.transactions.*;
@@ -17,15 +14,15 @@ public class Effect<T> implements Evs<T>, Immediate<T>
 {
     /**
      * Parent Transaction object, if any.
-     * This field is null for invariants that are not declared on
-     * transaction level, e.g. for the effects declared at a context.
+     * This field is null for effects that are not declared on
+     * transaction level, e.g. for the effects declared in a context.
      */
-    private Transaction tran;
+    Transaction tran;
 
     /**
-     * Instructions - event handlers.
+     * Entity event handlers
      */
-    public Instructions instructions = new Instructions();
+    List<Ev<T>> evs = new ArrayList<>();
 
     /**
      * Expressions, such as All<T>, defined in this context.
@@ -354,14 +351,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>
     protected Effect<T> add(Ev<T> ev)
     {
         sane(ev, "eh");
-        instructions.add(ev);
-        return this;
-    }
-
-    public Effect<T> add(Expression<T> expr)
-    {
-        sane(expr, "expr");
-        // expressions.add(expr);
+        evs.add(ev);
         return this;
     }
 
@@ -379,12 +369,8 @@ public class Effect<T> implements Evs<T>, Immediate<T>
         tran = tr;
     }
 
-    @SuppressWarnings("unchecked")
     public List<Ev<T>> list()
     {
-        return instructions.list()
-                .stream()
-                .map(e -> (Ev<T>) e)
-                .collect(Collectors.<Ev<T>> toList());
+        return evs;
     }
 }

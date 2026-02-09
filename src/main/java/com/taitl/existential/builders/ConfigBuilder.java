@@ -20,19 +20,9 @@ import static com.taitl.ex.common.helper.State.*;
  *
  * The contexts are stored in the order of being declared. Within each context,
  * the transactions are stored in the order transaction factories are declared.
- *
- * // TODO: TransactionBuilder, TrancycleBuilder, IntentBuilder
  */
 public class ConfigBuilder
 {
-    protected static final Supplier<? extends Context> DEFAULT_CONTEXT_FACTORY =
-            // () -> new Context("undefined");
-            Creator.getSupplier(Context.class);
-
-    protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
-            // () -> new Transaction("undefined", "undefined");
-            Creator.getSupplier(Transaction.class);
-
     /**
      * Name of business operation, e.g. "/app/docs/update",
      * or a wildcard name, "/app/docs/*"
@@ -52,8 +42,8 @@ public class ConfigBuilder
      * The order of factories is important: execution order of rules follows
      * the order of factories, which follows the order of context() method calls.
      */
-    protected Supplier<? extends Context> contextFactory = DEFAULT_CONTEXT_FACTORY;
-    protected Supplier<? extends Transaction> transactionFactory = DEFAULT_TRANSACTION_FACTORY;
+    protected Supplier<? extends Context> contextFactory = Creator.getSupplier(Context.class);
+    protected Supplier<? extends Transaction> transactionFactory = Creator.getSupplier(Transaction.class);
 
     /**
      * Constructs Config object with specified name.

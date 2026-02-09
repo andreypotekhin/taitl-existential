@@ -12,10 +12,8 @@ import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class Context implements Configurable
+public class Context implements Configurable, Evaluatable
 {
-    // protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
-    // () -> new Transaction("undefined", "undefined");
     protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
             Creator.getSupplier(Transaction.class);
 
@@ -98,25 +96,6 @@ public class Context implements Configurable
         add(effect);
     }
 
-    /*
-     * Implement Configurable
-     */
-
-    public <T> void add(Evs<T> evs)
-    {
-        sane(evs, "ev");
-        this.evs.add(evs);
-        instructions.addAll(evs);
-    }
-
-    public Context add(Context other)
-    {
-        sane(other, "other");
-        evs.addAll(other.evs);
-        instructions.addAll(other.instructions);
-        return this;
-    }
-
     /**
      * Associate a custom Transaction with Context.
      *
@@ -157,16 +136,42 @@ public class Context implements Configurable
      * This method is called by TransactionRegistry.create().
      * @return List of Transaction objects
      */
-    public Transaction createTransaction()
+    // public Transaction createTransaction()
+    // {
+    // Transaction tr = transactionFactory.get();
+    // tr.op(name);
+    // tr.name(name);
+    // tr.context(this);
+    // return tr;
+    // }
+
+    /*
+     * Implement Configurable
+     */
+
+    public <T> void add(Evs<T> evs)
     {
-        Transaction tr = transactionFactory.get();
-        tr.op(name);
-        tr.name(name);
-        tr.context(this);
-        return tr;
+        sane(evs, "ev");
+        this.evs.add(evs);
+        instructions.addAll(evs);
     }
 
-    /* Parent context */
+    public Context add(Context other)
+    {
+        sane(other, "other");
+        evs.addAll(other.evs);
+        instructions.addAll(other.instructions);
+        return this;
+    }
+
+    public List<Evs<?>> evs()
+    {
+        return evs;
+    }
+
+    /*
+     * Attributes
+     */
 
     public boolean hasParent()
     {
@@ -201,5 +206,10 @@ public class Context implements Configurable
     public void op(String op)
     {
         this.name = op;
+    }
+
+    public Supplier<? extends Transaction> transactionFactory()
+    {
+        return transactionFactory;
     }
 }

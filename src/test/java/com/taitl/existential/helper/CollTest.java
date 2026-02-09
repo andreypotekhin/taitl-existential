@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CollectionUtilsTest
+class CollTest
 {
     @Test
     void getFirst()
@@ -15,6 +15,6 @@ class CollectionUtilsTest
         coll.add("a");
         coll.add("b");
         coll.add("c");
-        assertEquals("a", CollectionUtils.getFirst(coll));
+        assertEquals("a", Coll.getFirst(coll));
     }
 }

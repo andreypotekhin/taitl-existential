@@ -12,13 +12,8 @@ public interface Configurable
 
     <T> void effect(Effect<T> effect);
 
-    // <T> Configurable add(Ev<T> ev);
-    <T> void add(Evs<T> ev);
-
-    // <T> Configurable add(EventHandler<T> eh);
-    //
-    // <T> Configurable add(Expression<T> expr);
-
     // TODO: allow/deny(Intent<T> intent);
     // TODO: on/off(int flag);
+
+    <T> void add(Evs<T> ev);
 }

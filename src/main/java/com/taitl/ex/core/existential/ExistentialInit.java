@@ -27,7 +27,7 @@ public class ExistentialInit implements Closeable
         Creator.inject(cls, supplier);
     }
 
-    // Deinitialize library instance
+    // Deinit library instance
     public void close()
     {
     }

@@ -1,9 +1,8 @@
 package com.taitl.ex.common.helper;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
-public class CollectionUtils
+public class Coll
 {
     public static <T> T getFirst(Collection<T> coll)
     {

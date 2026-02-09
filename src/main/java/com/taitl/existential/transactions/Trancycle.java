@@ -2,9 +2,7 @@ package com.taitl.existential.transactions;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.ex.core.instructions.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.transaction_handlers.*;
 import com.taitl.existential.interfaces.*;
@@ -18,15 +16,15 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
 {
     /**
      * Parent Transaction object, if any.
-     * This field is null for handlers that are not declared on
-     * transaction level, e.g. declared at a context.
+     * This field is null for trancycles that are not declared on
+     * transaction level, e.g. declared in a context.
      */
-    private Transaction tran;
+    Transaction tran;
 
     /**
-     * Event handlers.
+     * Transaction event handlers
      */
-    public Instructions instructions = new Instructions();
+    List<Ev<T>> evs = new ArrayList<>();
 
     /* Event handler methods */
 
@@ -107,7 +105,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
     protected Trancycle<T> add(Ev<T> ev)
     {
         sane(ev, "eh");
-        instructions.add(ev);
+        evs.add(ev);
         return this;
     }
 
@@ -125,12 +123,8 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
         tran = tr;
     }
 
-    @SuppressWarnings("unchecked")
     public List<Ev<T>> list()
     {
-        return instructions.list()
-                .stream()
-                .map(e -> (Ev<T>) e)
-                .collect(Collectors.<Ev<T>> toList());
+        return evs;
     }
 }

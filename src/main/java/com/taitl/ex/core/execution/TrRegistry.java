@@ -1,7 +1,9 @@
 package com.taitl.ex.core.execution;
 
 import java.util.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
+import com.taitl.ex.logic.configuration.actions.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
@@ -12,7 +14,7 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * TrRegistry creates Trs and holds references to them (keyed by Tr UUID string)
  * for the duration of a business transaction.
- * TODO: We don't need this class if just return Tr object to the caller of op.start()
+ * TODO: We don't need this class if we'll just return Tr object to the caller of begin()
  */
 public class TrRegistry
 {
@@ -20,6 +22,7 @@ public class TrRegistry
     protected Map<String, Tr> reg = new LinkedHashMap<>();
 
     protected ExistentialTransactions exec;
+    CreateTransaction createTransaction = Creator.singleton(CreateTransaction.class);
 
     public TrRegistry(ExistentialTransactions exec)
     {
@@ -34,7 +37,8 @@ public class TrRegistry
 
         for (Context context : exec.ex().contexts().getContexts(op))
         {
-            o.addTransaction(context.createTransaction());
+            Transaction tr = createTransaction.call(context);
+            o.addTransaction(tr);
         }
         if (custom != null)
         {

@@ -1,24 +1,15 @@
 package com.taitl.exlogic.unused.indexes;
 
-import static com.taitl.ex.examples.night_city.data.CityTestData.*;
-import static com.taitl.ex.common.helper.CollectionUtils.getFirst;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Set;
-import java.util.function.Predicate;
-
+import java.util.*;
+import java.util.function.*;
+import com.taitl.ex.examples.night_city.data.*;
+import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.ex.logic.unused.indexes.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import com.taitl.ex.examples.night_city.model.Cat;
-import com.taitl.ex.examples.night_city.model.Location;
-import com.taitl.ex.examples.night_city.data.CityTestData;
+import static com.taitl.ex.common.helper.Coll.*;
+import static com.taitl.ex.examples.night_city.data.CityTestData.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class IndexTest
 {
