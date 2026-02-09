@@ -125,6 +125,11 @@ public final class Ex
         instance().write(entity, tranID);
     }
 
+    public static boolean get(int flag)
+    {
+        return instance().get(flag);
+    }
+
     public static void on(int flag)
     {
         instance().on(flag);
@@ -135,14 +140,9 @@ public final class Ex
         instance().off(flag);
     }
 
-    public static void toggle(int flag)
+    public static boolean toggle(int flag)
     {
-        instance().toggle(flag);
-    }
-
-    public static boolean get(int flag)
-    {
-        return instance().get(flag);
+        return instance().toggle(flag);
     }
 
     public static void close()

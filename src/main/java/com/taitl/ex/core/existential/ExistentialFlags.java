@@ -37,7 +37,7 @@ public class ExistentialFlags implements Closeable
         flags &= ~flag;
     }
 
-    public void toggle(int flag)
+    public boolean toggle(int flag)
     {
         check(flag > 0, ARG_FLAG_MIN);
         check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
@@ -49,6 +49,7 @@ public class ExistentialFlags implements Closeable
         {
             on(flag);
         }
+        return (flags & flag) != 0;
     }
 
     public boolean get(int flag)

@@ -14,8 +14,10 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class Context implements Configurable
 {
+    // protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
+    // () -> new Transaction("undefined", "undefined");
     protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
-            () -> Creator.create(Transaction.class);
+            Creator.getSupplier(Transaction.class);
 
     /**
      * Context name, e.g. "/app/flights", "/app/flights/update", "*update"
@@ -56,29 +58,6 @@ public class Context implements Configurable
     }
 
     /**
-     * Set invariants/rules to be enforced for business operation defined by this context.
-     *
-     * <pre>{@code
-     * Ex.contexts().get("/app/flight_school")
-     *     .context(() -> new Context(){{
-     * 	      invariant(Pilot.class)
-     *                .all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
-     *                .transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     * 	      }})
-     * }</pre>
-     *
-     * @param <T> Type parameter
-     * @param cls Class for which we define the invariant
-     */
-    // public <T> Invariant<T> invariant(Class<T> cls)
-    // {
-    // @SuppressWarnings("unchecked")
-    // Invariant<T> result = (Invariant<T>) Creator.create(Invariant.class);
-    // evs.add(result); // BUG: This has no effect
-    // return result;
-    // }
-
-    /**
      * Set invariants/rules to be enforced for the business operation defined by this context.
      *
      * <pre>{@code
@@ -90,10 +69,6 @@ public class Context implements Configurable
      *          }})
      * }</pre>
      *
-     * Warning: the above code implicitly stores a pointer to the enclosing class
-     * inside the Invariant object, which may lead to memory leaks. As an alternative,
-     * use the {@link #invariant(Class)} method to create an independent Invariant object.
-     *
      * @param <T>       Type parameter
      * @param invariant Invariant (rules) that must be upkept
      */
@@ -102,14 +77,6 @@ public class Context implements Configurable
         sane(invariant, "invariant");
         add(invariant);
     }
-
-    // public <T> Effect<T> effect(Class<T> cls)
-    // {
-    // @SuppressWarnings("unchecked")
-    // Effect<T> result = (Effect<T>) Creator.create(Effect.class);
-    // evs.add(result); // BUG: This has no effect
-    // return result;
-    // }
 
     /**
      * Set effects for business operation defined by this context.
@@ -121,10 +88,6 @@ public class Context implements Configurable
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      *          }})
      * }</pre>
-     *
-     * Warning: the above code implicitly stores a pointer to the enclosing class instance
-     * inside the Effect object, which may lead to memory leaks. As an alternative,
-     * use the {@link #effect(Class)} method to create an independent Effect object.
      *
      * @param <T>       Type parameter
      * @param invariant Invariant (rules) that must be upkept
@@ -181,13 +144,6 @@ public class Context implements Configurable
      * read();
      * }});
      * }})
-     *
-     * This method is a multi-entry method which allows creating multiple
-     * transaction factories when called sequentially. The reason to have
-     * multiple transaction factories is to be able to create multiple
-     * custom transactions, for instance, when code similar to the above
-     * appears more than once in different parts of your application (e.g.
-     * this code is split among multiple classes).
      */
     public Context transaction(Supplier<? extends Transaction> supplier)
     {
@@ -199,12 +155,13 @@ public class Context implements Configurable
     /**
      * Create instances of custom transactions for a Context.
      * This method is called by TransactionRegistry.create().
-     *
      * @return List of Transaction objects
      */
     public Transaction createTransaction()
     {
         Transaction tr = transactionFactory.get();
+        tr.op(name);
+        tr.name(name);
         tr.context(this);
         return tr;
     }

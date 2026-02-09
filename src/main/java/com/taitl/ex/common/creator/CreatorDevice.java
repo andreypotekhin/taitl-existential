@@ -96,17 +96,22 @@ public class CreatorDevice
 
         String className = cls.getCanonicalName();
         Supplier<? extends T> supplier = getSupplier(cls);
+        boolean parameterized = (paramTypes != null && initargs != null);
 
         if (supplier != null)
         {
-            // Assuming the supplier can handle parameterized constructors
-            if (supplier instanceof BiFunction<?, ?, ?>)
+            if (parameterized)
             {
-                @SuppressWarnings("unchecked")
-                BiFunction<Class<?>[], Object[], T> paramSupplier = (BiFunction<Class<?>[], Object[], T>) supplier;
-                T result = paramSupplier.apply(paramTypes, initargs);
-                created.add(className);
-                return result;
+                // Supplier can handle parameterized constructors?
+                if (supplier instanceof BiFunction<?, ?, ?>)
+                {
+                    @SuppressWarnings("unchecked")
+                    BiFunction<Class<?>[], Object[], T> paramSupplier = (BiFunction<Class<?>[], Object[], T>) supplier;
+                    T result = paramSupplier.apply(paramTypes, initargs);
+                    created.add(className);
+                    return result;
+                }
+                // Else fall through to default processing
             }
             else
             {

@@ -24,6 +24,7 @@ import com.taitl.existential.transactions.*;
  */
 public final class Existential implements Closeable
 {
+    private ExistentialInit init = new ExistentialInit(this);
     private ExistentialAccess access = new ExistentialAccess(this);
     private ExistentialTransactions transactions = new ExistentialTransactions(this);
     private ExistentialEvents events = new ExistentialEvents(this);
@@ -103,6 +104,11 @@ public final class Existential implements Closeable
         access.write(entity, tranID);
     }
 
+    public boolean get(int flag)
+    {
+        return flags.get(flag);
+    }
+
     public void on(int flag)
     {
         flags.on(flag);
@@ -113,14 +119,9 @@ public final class Existential implements Closeable
         flags.off(flag);
     }
 
-    public void toggle(int flag)
+    public boolean toggle(int flag)
     {
-        flags.toggle(flag);
-    }
-
-    public boolean get(int flag)
-    {
-        return flags.get(flag);
+        return flags.toggle(flag);
     }
 
     public void close()

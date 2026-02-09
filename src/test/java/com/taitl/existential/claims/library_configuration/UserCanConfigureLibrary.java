@@ -11,6 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserCanConfigureLibrary extends ClaimBase
 {
+    {
+        autoConfigure = false;
+    }
+
     @BeforeEach
     public void setup()
     {

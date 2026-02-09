@@ -10,27 +10,27 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * OpRunRegistry creates OpRuns and holds references to them (keyed by OpRun UUID string)
+ * TrRegistry creates Trs and holds references to them (keyed by Tr UUID string)
  * for the duration of a business transaction.
- * TODO: We don't need this class if just return OpRun object to the caller of op.start()
+ * TODO: We don't need this class if just return Tr object to the caller of op.start()
  */
-public class OpRunRegistry
+public class TrRegistry
 {
-    /** OpRun Id to OpRun */
-    protected Map<String, OpRun> reg = new LinkedHashMap<>();
+    /** Tr id to Tr */
+    protected Map<String, Tr> reg = new LinkedHashMap<>();
 
     protected ExistentialTransactions exec;
 
-    public OpRunRegistry(ExistentialTransactions exec)
+    public TrRegistry(ExistentialTransactions exec)
     {
         this.exec = exec;
     }
 
-    public OpRun create(String op, Transaction custom)
+    public Tr create(String op, Transaction custom)
     {
         sane(op, "op");
         OpKey.validate(op);
-        OpRun o = new OpRun(op, generateId());
+        Tr o = new Tr(op, generateId());
 
         for (Context context : exec.ex().contexts().getContexts(op))
         {
@@ -47,10 +47,10 @@ public class OpRunRegistry
         return o;
     }
 
-    public OpRun get(String id) throws NotFoundException
+    public Tr get(String id) throws NotFoundException
     {
         sane(id, "id");
-        OpRun o = reg.get(id);
+        Tr o = reg.get(id);
         if (o == null)
         {
             throw new NotFoundException("Transaction not found, id=" + id);
@@ -58,10 +58,10 @@ public class OpRunRegistry
         return o;
     }
 
-    public OpRun remove(String id) throws NotFoundException
+    public Tr remove(String id) throws NotFoundException
     {
         sane(id, "id");
-        OpRun o = reg.get(id);
+        Tr o = reg.get(id);
         if (o == null)
         {
             throw new NotFoundException("Transaction not found, id=" + id);

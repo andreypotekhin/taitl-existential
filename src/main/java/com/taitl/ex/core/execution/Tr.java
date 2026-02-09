@@ -10,30 +10,20 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * Defines an Operation Transaction - a set of Transaction objects relevant
  * for a single business operation.
- *
- * There may be multiple Contexts which apply to a business operation (parent-child
- * contexts as well as wildcard contexts). Each context may create one or several
- * Transaction objects, depending on the number of custom Transaction factories
- * specified in it.
- *
- * This class's job is to hold all Transaction objects created by these various
- * contexts, as well as multiple ones created by any of them.
- *
- * The Transactions may declare entity event handlers, which result in side effects,
- * so the order of transactions is important.
- *
+ * There may be multiple Contexts that apply to a business operation (parent-child
+ * contexts as well as matching wildcard contexts).
+ * This class's job is to hold Transaction objects created by these various
+ * contexts.
  * The order of transactions follows the order of declaration of their corresponding
- * contexts (contexts which are applicable to business operation). Within each context,
- * the order of transactions is same as the order of declaration of its transaction
- * factories.
+ * contexts (contexts which are applicable to business operation).
  */
-public class OpRun
+public class Tr
 {
     public UUID id;
     String op;
     List<Transaction> transactions = new ArrayList<>();
 
-    public OpRun(String op, UUID id)
+    public Tr(String op, UUID id)
     {
         sane(op, "op", id, "id");
         OpKey.validate(op);

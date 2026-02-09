@@ -1,11 +1,12 @@
 package com.taitl.ex.core.configuration;
 
 import java.util.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * ConfigRegistry holds references to ConfigBuilders, keyed by op name.
@@ -22,7 +23,7 @@ public class ConfigRegistry
 
     public ConfigBuilder create(String name)
     {
-        Args.sane(name, "name");
+        sane(name, "name");
         ConfigBuilder o = new ConfigBuilder(name);
         synchronized (this)
         {
@@ -42,7 +43,7 @@ public class ConfigRegistry
 
     public ConfigBuilder get(String id) throws NotFoundException
     {
-        Args.sane(id, "id");
+        sane(id, "id");
         ConfigBuilder o = registry.get(id);
         if (o == null)
         {
@@ -53,14 +54,14 @@ public class ConfigRegistry
 
     public ConfigBuilder getcreate(String id)
     {
-        Args.sane(id, "id");
+        sane(id, "id");
         ConfigBuilder o = registry.get(id);
         return (o != null) ? o : create(id);
     }
 
     public ConfigBuilder remove(String id) throws NotFoundException
     {
-        Args.sane(id, "id");
+        sane(id, "id");
         ConfigBuilder o = registry.get(id);
         if (o == null)
         {

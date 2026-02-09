@@ -36,10 +36,11 @@ Transaction: a set of rules (constraints, effects, intents) associated with a Co
   Transactions are more dynamic than the Contexts, allowing to use local scope (method parameters,
   local variables) and members of the defining class (for anonimous nested classes) in event handlers' code
 Library Transaction: a unit of execution in the library, associated with an Op name
-  - Association with an Op name allows to select the relevant a Context and Transactions
-  - For each relevant Context and Transactions, their configured rules are evaluated during transaction
-  - Rules are evaluated at the end of transaction (commit or checkpoint), unless explicitly assigned to an earlier stage
-  - In case of a constraint violation, exception is raised and constraint violations are reported
+  - Association with an Op name allows to select relevant Contexts and Transactions for evaluation
+  - Transaction lifecycle is triggered by calling begin(), ending with commit(), rollback(), optional checkpoint()
+  - For each relevant Context and Transactions, their configured rules are evaluated
+  - The rules are evaluated at the end of transaction (commit or checkpoint), unless assigned to an earlier stage
+  - In case of a constraint violation, an exception is raised and constraint violations are reported
 Quantifier: a logical expression, such as All or Exists
 Mutation: an event that records both before- and after- states of an entity 
 Transition: a Mutation that can have a null in before- or after- state (but not in both) 
@@ -70,22 +71,21 @@ The initial version of the config file is auto-created or otherwise available
 User can configure rules for a class
 User can configure access rules for a class
 User can configure transaction lifecycle rules for a class
-+User can send events to the library for the purpose of recording entity access and modifications 
-+User can record access to an entity, such the fact that entity was loaded (read) from storage, modified, or saved
-+User can record entity modifications, such the fact that entity was created or changed
-User can't send any events outside a transaction 
 +User can start a transaction
 +User can commit a transaction
 +User can roll back a transaction
-User can initiate a checkpont 
-+User can't send events to library which hasn't been configured
+User can initiate a checkpont
++User can send events to the library to record entity modification
++User can send events to the library to record entity access 
+User can't send any events outside a transaction 
++User can't send events to the library if no rules has been configured
 
 #### Library lifecycle phases
 The library usage falls into configuration, execution and validation phases
 In configuration phase, the user defines rules - constraints, effects - using contexts and transactions
 In execution phase, user begins and ends transactions and sends events to the library
 In execution phase, the library executes execution time side effects 
-The validation triggers at transaction commit, or at a checkpoint
+The validation phase triggers upon transaction commit, or at a checkpoint
 In validation phase, the library evaluates all applicable constraints and reports violations
 In validation phase, the library executes validation time side effects 
 
@@ -95,19 +95,21 @@ In validation phase, the library executes validation time side effects
 
 ##### Configuring contexts
 
-User can configure the rules (constraints) with custom context
-Contexts are keyed by business op name - an OS path-like string describing business operation and its parents 
-The rules from parent context apply to child contexts
-The rules from parent context execute before the rules of child context
+User can configure the rules (constraints) on a class with a custom Context
+Contexts are keyed by op name 
+The rules from parent contexts apply to child context
+The rules from parent contexts execute before the rules of child contexts
 User can specify a custom factory for creation of all Contexts
 User can specify a custom factory for creation a Context for specific op
 User can't configure a context without defining any rules
 
 ##### Wildcard contexts
 
-User can define a Context for an op with a wildcard in its name
-All wildcard contexts whose path match a concrete op participate in its validation
-All wildcard contexts matching the currently evaluated context participate in its validation
+User can define a Context for an op name with a wildcard in it
+The wildcard contexts whose path match a concrete op participate in its validation
+The wildcard contexts matching the currently evaluated context participate in its validation
+The rules from matching contexts apply to context
+The rules from matching contexts execute before the rules of context
 
 ##### Configuring transactions
 

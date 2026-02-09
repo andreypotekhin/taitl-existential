@@ -10,14 +10,15 @@ public class ConfigureApp
 {
     public void configure()
     {
+        // @formatter:off
         Ex.configure("/api/cats")
-                .context("/api/cats/create")
+            .context("/api/cats/create")
                 .invariant(Cat.class)
-                .create(c -> "Black".equals(c.color), "Cats are born black")
-                .done()
+                    .create(c -> "Black".equals(c.color), "Cats are born black")
+                    .done()
                 .effect(Cat.class)
-                .create(c -> c.location = new Location("Park"), "Set location for all new cats")
-                .done()
+                    .create(c -> c.location = new Location("Park"), "Set location for all new cats")
+                    .done()
                 .build();
         // TODO:
         // ex.configure("/api/houses")
@@ -27,6 +28,7 @@ public class ConfigureApp
         // { can't move house where there is a Being
         // .context(new Context("/api/houses/delete") {
         // { can't delete house where exists a Being
+        // @formatter:on
     }
 
     // public void configureWithClasses()

@@ -2,6 +2,7 @@ package com.taitl.existential.builders;
 
 import java.util.*;
 import java.util.function.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -25,13 +26,15 @@ import static com.taitl.ex.common.helper.State.*;
 public class ConfigBuilder
 {
     protected static final Supplier<? extends Context> DEFAULT_CONTEXT_FACTORY =
-            () -> new Context("undefined");
+            // () -> new Context("undefined");
+            Creator.getSupplier(Context.class);
 
     protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
-            () -> new Transaction("undefined", "undefined");
+            // () -> new Transaction("undefined", "undefined");
+            Creator.getSupplier(Transaction.class);
 
     /**
-     * Name of context matching business operation, e.g. "/app/docs/update",
+     * Name of business operation, e.g. "/app/docs/update",
      * or a wildcard name, "/app/docs/*"
      */
     String name;
@@ -202,8 +205,8 @@ public class ConfigBuilder
     {
         sane(cont, "cont");
         verify(!contexts.contains(cont), "This context is already added");
-        ContextKey key = ContextKey.from(cont.name());
-        verify(!name.equals(key.toString()), "Can't add context to itself");
+        // ContextKey key = ContextKey.from(cont.name());
+        // verify(!name.equals(key.toString()), "Can't add context to itself");
         contexts.add(cont);
     }
 }

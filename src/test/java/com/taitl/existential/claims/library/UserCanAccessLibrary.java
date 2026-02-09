@@ -21,7 +21,6 @@ class UserCanAccessLibrary extends ClaimBase
     @DisplayName("User can access library")
     void accessLibrary() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
         ex.commit(tran);
     }

@@ -1,7 +1,6 @@
 package com.taitl.ex.logic.transactions;
 
 import java.io.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.ex.core.execution.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.execution.actions.*;
@@ -11,25 +10,26 @@ import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 public class TransactionLogic implements Closeable
 {
     protected ExistentialTransactions ee;
-    protected OpRunRegistry registry;
-    protected CreateOpRun createOpRun;
+    protected TrRegistry registry;
+    protected CreateTr createTr;
 
     public TransactionLogic(ExistentialTransactions ee)
     {
         this.ee = ee;
-        this.registry = new OpRunRegistry(ee);
-        this.createOpRun = new CreateOpRun(this);
+        this.registry = new TrRegistry(ee);
+        this.createTr = new CreateTr(this);
     }
 
     public String begin(String op) throws ExistentialException
     {
         sane(op, "op");
         OpKey.validate(op);
-        OpRun tr = createOpRun.call(op, null);
+        Tr tr = createTr.call(op, null);
         return tr.id.toString();
     }
 
@@ -37,18 +37,18 @@ public class TransactionLogic implements Closeable
     {
         sane(op, "op");
         OpKey.validate(op);
-        OpRun tr = createOpRun.call(op, custom);
+        Tr tr = createTr.call(op, custom);
         return tr.id.toString();
     }
 
     public void commit(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
-        OpRun tr = registry.get(tranID);
-        State.verify(tr != null, "Transaction not found, id=" + tranID);
+        Tr tr = registry.get(tranID);
+        verify(tr != null, "Transaction not found, id=" + tranID);
         // TODO
         // Commit transactions - run handlers and evaluate validation expressions
-        // Close transactions, remove OpRun from the registry
+        // Close transactions, remove Tr from the registry
     }
 
     public void checkpoint(String tranID) throws ExistentialException
@@ -65,7 +65,7 @@ public class TransactionLogic implements Closeable
         // TODO
         // Locate transaction in TransactionRegistry
         // Care for scenarios when tran is not found
-        // Close transactions, remove OpRun from the registry
+        // Close transactions, remove Tr from the registry
     }
 
     public Existential ex()
@@ -73,7 +73,7 @@ public class TransactionLogic implements Closeable
         return ee.ex();
     }
 
-    public OpRunRegistry registry()
+    public TrRegistry registry()
     {
         return registry;
     }

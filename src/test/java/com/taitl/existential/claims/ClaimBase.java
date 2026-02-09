@@ -12,6 +12,7 @@ public class ClaimBase
     protected String op;
     protected CityTests fixt;
     protected Cat cat;
+    protected boolean autoConfigure = true;
 
     protected void setup()
     {
@@ -20,6 +21,10 @@ public class ClaimBase
         op = "/api/cats";
         fixt = new CityTests();
         cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
+        if (autoConfigure)
+        {
+            configure();
+        }
     }
 
     protected void cleanup()

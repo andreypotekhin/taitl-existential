@@ -5,9 +5,10 @@ import com.taitl.existential.claims.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
 
 class UserCanUseLibrary extends ClaimBase
 {
@@ -27,7 +28,6 @@ class UserCanUseLibrary extends ClaimBase
     @DisplayName("User can access library")
     void accessLibrary() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
         ex.commit(tran);
     }
@@ -36,7 +36,6 @@ class UserCanUseLibrary extends ClaimBase
     @DisplayName("User can send an entity event to library")
     void sendEntityEvent() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
         ex.event(null, cat, tran);
         ex.commit(tran);
@@ -46,7 +45,6 @@ class UserCanUseLibrary extends ClaimBase
     @DisplayName("User can send an entity event using a type key")
     void sendEntityEventWithTypeKey() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
         ex.event(null, cat, new TypeKey<Cat>(Cat.class), tran);
         ex.commit(tran);
@@ -56,7 +54,6 @@ class UserCanUseLibrary extends ClaimBase
     @DisplayName("User can record access to entity")
     void recordEntityAccess() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
         ex.read(cat, tran);
         ex.write(cat, tran);
@@ -67,7 +64,6 @@ class UserCanUseLibrary extends ClaimBase
     @DisplayName("User can record access to entity using type key")
     void recordEntityAccessWithTypeKey() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
         ex.read(cat, new TypeKey<Cat>(Cat.class), tran);
         ex.write(cat, tran);
@@ -78,15 +74,14 @@ class UserCanUseLibrary extends ClaimBase
     @DisplayName("User can begin transaction")
     void begin() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
+        assertThat(tran, is(not(emptyString())));
     }
 
     @Test
     @DisplayName("User can commit transaction")
     void commit() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
         ex.event(cat, tran);
         ex.commit(tran);
@@ -96,7 +91,6 @@ class UserCanUseLibrary extends ClaimBase
     @DisplayName("User can rollback transaction")
     void rollback() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
         ex.event(cat, tran);
         ex.rollback(tran);
@@ -106,28 +100,8 @@ class UserCanUseLibrary extends ClaimBase
     @DisplayName("User can use checkpoint to manually trigger validation")
     void checkpoint() throws Exception
     {
-        configure();
         String tran = ex.begin(op);
         ex.event(cat, tran);
         ex.checkpoint(tran);
-    }
-
-    @Test
-    @DisplayName("User can't sent events to library which hasn't been configured")
-    void sendingEventsToUnconfiguredLibrary()
-    {
-        assertThat(assertThrows(IllegalStateException.class, () -> {
-            String tran = ex.begin(op);
-            ex.event(cat, tran);
-        }).getMessage(), containsString("You need to configure at least one context"));
-    }
-
-    @Test
-    @DisplayName("User can't sent events to library before it has been configured")
-    void sendingEventsToLibraryBeforeItIsConfigured()
-    {
-        assertThat(assertThrows(IllegalStateException.class, () -> {
-            ex.begin(op);
-        }).getMessage(), containsString("You need to configure at least one context"));
     }
 }

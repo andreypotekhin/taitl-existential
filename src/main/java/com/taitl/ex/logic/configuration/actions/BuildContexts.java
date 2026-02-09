@@ -44,6 +44,7 @@ public class BuildContexts
         if (result == null || result.isEmpty())
         {
             Context context = Creator.create(Context.class, new Class[] { String.class }, op);
+            verify(context.name().equals(op), "Context name should be the same as op");
             if (opKey.hasParent())
             {
                 List<Context> parents = buildContextsRecursively(opKey.getParent().toString());
