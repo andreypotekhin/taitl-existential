@@ -1,6 +1,7 @@
 package com.taitl.existential.builders;
 
 import java.util.*;
+import java.util.function.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;
@@ -23,7 +24,7 @@ public class TransactionBuilder
         this.evsList = new ArrayList<>();
     }
 
-    public Transaction build()
+    public ContextBuilder build()
     {
         Transaction tr = createInstance();
         tr.op(op);
@@ -52,7 +53,8 @@ public class TransactionBuilder
             }
         }
 
-        return tr;
+        parent.transaction(() -> tr);
+        return parent;
     }
 
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
@@ -85,16 +87,66 @@ public class TransactionBuilder
         return this;
     }
 
-    // TODO: transaction()
+    public <T extends Transaction> TransactionBuilder cycle(Trancycle<T> cycle)
+    {
+        sane(cycle, "cycle");
+        evsList.add(cycle);
+        return this;
+    }
+
     // TODO: intent()
 
-    protected Transaction createInstance()
+    public <T extends Transaction> TransactionBuilder begin(Consumer<? super T> action)
     {
-        return parent.createTransactionInstance();
+        sane(action, "action");
+        cycle(new Trancycle<T>() {
+            {
+                begin(action);
+            }
+        });
+        return this;
+    }
+
+    public <T extends Transaction> TransactionBuilder commit(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        cycle(new Trancycle<T>() {
+            {
+                commit(action);
+            }
+        });
+        return this;
+    }
+
+    public <T extends Transaction> TransactionBuilder rollback(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        cycle(new Trancycle<T>() {
+            {
+                rollback(action);
+            }
+        });
+        return this;
+    }
+
+    public <T extends Transaction> TransactionBuilder checkpoint(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        cycle(new Trancycle<T>() {
+            {
+                checkpoint(action);
+            }
+        });
+        return this;
     }
 
     public TransactionBuilder done()
     {
         return this;
+    }
+
+    protected Transaction createInstance()
+    {
+        return parent.createTransactionInstance();
     }
 }

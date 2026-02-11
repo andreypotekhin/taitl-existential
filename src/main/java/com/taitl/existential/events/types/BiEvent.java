@@ -1,26 +1,14 @@
 package com.taitl.existential.events.types;
 
-import com.taitl.existential.events.Create;
-import com.taitl.existential.events.Delete;
-import com.taitl.existential.events.Mutate;
-import com.taitl.existential.events.Read;
-import com.taitl.existential.events.ReadAndLock;
-import com.taitl.existential.events.Transit;
-import com.taitl.existential.events.Update;
-import com.taitl.existential.events.Upsert;
-import com.taitl.existential.events.Write;
+import com.taitl.existential.events.*;
 
 /**
- * Indicates some change that happened to an application entity, recording
- * both its initial state and the final state.
- * Serves as base class to mutation events ({@code Mutate<T>, Transit<T>})
- *
- * Unlike {@code Event<T>} class, provides initial and final entity states for the transaction.
- *
- * Initial state (t0): entity state in the beginning of transaction<br>
- * Final state (t1): entity state in the end of transaction<br>
- *
- * Example: BiEvent<Account> is created when Account entity was changed in the course of a transaction.
+ * Indicates change event on an entity, recording entities both initial and final states.
+ * Serves as base class to the mutation events ({@code Mutate<T>, Transit<T>}).
+ * Unlike {@code Event<T>} class, provides the initial and final states of its entity.
+ * The initial state (t0) is entity state at the beginning of transaction.
+ * The final state (t1) is entity state at the end of transaction.
+ * Example: BiEvent<Account> is sent when an Account entity gets changed in the course of transaction.
  *
  * @param <T>
  *            Class of application entity

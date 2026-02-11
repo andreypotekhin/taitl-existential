@@ -7,6 +7,7 @@ import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 public class CreateTr
 {
@@ -22,7 +23,7 @@ public class CreateTr
     {
         sane(op, "op");
         OpKey.validate(op);
-        transactionLogic.ex().ops().finalise();
+        verify(transactionLogic.ex().configured(), "You should call configs().done() first");
         return transactionLogic.registry().create(op, custom);
     }
 }

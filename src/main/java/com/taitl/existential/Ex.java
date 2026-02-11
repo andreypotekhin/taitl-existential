@@ -162,7 +162,7 @@ public final class Ex
 
     public static ExistentialConfigs ops()
     {
-        return instance().ops();
+        return instance().configs();
     }
 
     public static Contexts contexts()

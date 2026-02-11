@@ -76,6 +76,30 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
         return add(new OnCommit<T>(condition, action, description));
     }
 
+    public Trancycle<T> checkpoint(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        return add(new OnCheckpoint<T>(action));
+    }
+
+    public Trancycle<T> checkpoint(Consumer<? super T> action, String description)
+    {
+        sane(action, "action", description, "description");
+        return add(new OnCheckpoint<T>(action, description));
+    }
+
+    public Trancycle<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        sane(condition, "condition", action, "action");
+        return add(new OnCheckpoint<T>(condition, action));
+    }
+
+    public Trancycle<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        sane(condition, "condition", action, "action", description, "description");
+        return add(new OnCheckpoint<T>(condition, action, description));
+    }
+
     public Trancycle<T> rollback(Consumer<? super T> action)
     {
         sane(action, "action");
@@ -100,31 +124,31 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
         return add(new OnRollback<T>(condition, action, description));
     }
 
-    /* Add event handlers and expressions */
+    /* Evs implementation */
 
-    protected Trancycle<T> add(Ev<T> ev)
+    public Trancycle<T> add(Ev<T> ev)
     {
         sane(ev, "eh");
         evs.add(ev);
         return this;
     }
 
-    /* Other methods */
+    public List<Ev<T>> list()
+    {
+        return evs;
+    }
 
-    public Transaction getTransaction()
+    /* Attributes */
+
+    public Transaction transaction()
     {
         State.cool(tran, "tran");
         return tran;
     }
 
-    public void setTransaction(Transaction tr)
+    public void transaction(Transaction tr)
     {
         sane(tr, "tr");
         tran = tr;
-    }
-
-    public List<Ev<T>> list()
-    {
-        return evs;
     }
 }

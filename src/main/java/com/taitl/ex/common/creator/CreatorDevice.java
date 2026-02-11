@@ -102,7 +102,7 @@ public class CreatorDevice
         {
             if (parameterized)
             {
-                // Supplier can handle parameterized constructors?
+                // Can the supplier handle parameterized constructors?
                 if (supplier instanceof BiFunction<?, ?, ?>)
                 {
                     @SuppressWarnings("unchecked")
@@ -111,7 +111,7 @@ public class CreatorDevice
                     created.add(className);
                     return result;
                 }
-                // Else fall through to default processing
+                // Else fall through
             }
             else
             {
@@ -124,13 +124,13 @@ public class CreatorDevice
         try
         {
             T result;
-            if (paramTypes == null || initargs == null)
+            if (parameterized)
             {
-                result = cls.getDeclaredConstructor().newInstance();
+                result = cls.getDeclaredConstructor(paramTypes).newInstance(initargs);
             }
             else
             {
-                result = cls.getDeclaredConstructor(paramTypes).newInstance(initargs);
+                result = cls.getDeclaredConstructor().newInstance();
             }
             created.add(className);
             return result;

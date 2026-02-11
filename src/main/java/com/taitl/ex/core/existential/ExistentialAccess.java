@@ -1,10 +1,9 @@
 package com.taitl.ex.core.existential;
 
+import java.io.*;
 import com.taitl.existential.*;
-import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.keys.TypeKey;
-
-import java.io.Closeable;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.keys.*;
 
 public class ExistentialAccess implements Closeable
 {
@@ -17,21 +16,26 @@ public class ExistentialAccess implements Closeable
 
     public <T> void read(T entity, TypeKey<T> type, String tranID) throws ExistentialException
     {
+        // TODO
     }
 
     public <T> void read(T entity, String tranID) throws ExistentialException
     {
+        // TODO
     }
 
     public <T> void write(T entity, TypeKey<T> type, String tranID) throws ExistentialException
     {
+        // TODO
     }
 
     public <T> void write(T entity, String tranID) throws ExistentialException
     {
+        // TODO
     }
 
     public void close()
     {
+        // TODO
     }
 }

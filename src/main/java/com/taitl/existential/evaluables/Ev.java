@@ -1,11 +1,10 @@
 package com.taitl.existential.evaluables;
 
 /**
- * Marker interface for an evaluated statement, such as an expression (All<Entity>), event handler (OnUpdate<Entity>),
- * and the like.
+ * Marker interface for an evaluated statement.
+ * Examples: an expression (All<Entity>), an event handler (OnUpdate<Entity>)
  *
- * @param <T>
- *            Type of entity
+ * @param <T> Entity type
  */
 public interface Ev<T>
 {

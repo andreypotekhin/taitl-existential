@@ -8,8 +8,8 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
- * A path-like representation of a business operation, serving for identification of
- * the applicable Contexts (operation Context, its parent Contexts, any matching wildcard Contexts).
+ * Path-like representation of a business operation, used for identification of
+ * the applicable Contexts (operation Context, parent Contexts and any matching wildcard Contexts).
  *
  * Example: "/app/orders/update"
  *
@@ -58,15 +58,14 @@ public class ConcretePath
     }
 
     /**
-     * Gets this key parent key, if any - a shortened key without the part starting with the last slash.
+     * Returns parent key, if any, that is, a shortened key without last part - the part starting at the last slash.
      * Throws IllegalStateException if this key is a top-level key (has no parent).
-     * <p>
      * Example:
      *   Key: "/app/orders/update"
      *   Parent key: "/app/orders"
-     * <p>
+     *
      * @return A shortened key without the part starting with the last slash.
-     * @throws IllegalStateException if this key is a top-level key (has no parent).
+     * @throws IllegalStateException If this key is a top-level key (has no parent).
      */
     public ConcretePath getParent()
     {

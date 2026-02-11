@@ -6,7 +6,7 @@ import com.taitl.existential.contexts.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.invariants.*;
 
-public class ConfigureClasses
+public class ConfigureClassRules
 {
     public void configure()
     {

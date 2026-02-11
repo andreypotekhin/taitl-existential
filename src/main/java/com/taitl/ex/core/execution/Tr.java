@@ -8,14 +8,15 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Defines an Operation Transaction - a set of Transaction objects relevant
- * for a single business operation.
- * There may be multiple Contexts that apply to a business operation (parent-child
- * contexts as well as matching wildcard contexts).
- * This class's job is to hold Transaction objects created by these various
- * contexts.
- * The order of transactions follows the order of declaration of their corresponding
- * contexts (contexts which are applicable to business operation).
+ * Defines an existential transaction - backbone of this library transaction model.
+ * Holds a set of Transaction objects (rule configurations) that apply to a single business operation.
+ * Since there may be multiple Contexts applicable to a business operation
+ * (parent-child contexts as well as matching wildcard contexts),
+ * this class's job is to hold Transaction objects created by each of these Contexts,
+ * as means of accessing their rules.
+ * The order of Transactions follows the order of declaration of their corresponding
+ * Contexts (contexts which are applicable to business operation). Parent contexts are
+ * thought to be declared before child contexts. Wildcard contexts are before specific contexts.
  */
 public class Tr
 {
@@ -39,11 +40,11 @@ public class Tr
         transactions.add(tr);
     }
 
-    // TODO begin()
+    // TODO
+    // begin()
     // commit()
     // Commit transactions - run handlers and evaluate validation expressions
     // Close transactions, remove op transaction from registry
-
     // rollback()
-
+    // checkpoint()
 }

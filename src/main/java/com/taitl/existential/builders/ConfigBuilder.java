@@ -113,16 +113,6 @@ public class ConfigBuilder
     }
 
     /**
-     * Create ConfigBuilder for a transaction.
-     *
-     * @return ConfigBuilder for transaction
-     */
-    // public ContextBuilder transaction(String name)
-    // {
-    // return new TransactionBuilder(this, name);
-    // }
-
-    /**
      * For each Context within Op, create instances of custom
      * Contexts using provided context factories, and add them separately
      * to each Context.add().
@@ -195,8 +185,6 @@ public class ConfigBuilder
     {
         sane(cont, "cont");
         verify(!contexts.contains(cont), "This context is already added");
-        // ContextKey key = ContextKey.from(cont.name());
-        // verify(!name.equals(key.toString()), "Can't add context to itself");
         contexts.add(cont);
     }
 }

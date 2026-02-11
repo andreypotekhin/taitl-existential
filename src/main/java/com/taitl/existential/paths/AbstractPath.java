@@ -8,16 +8,16 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
- * A path-like representation of a business operation, serving as a key for finding
+ * Path-like representation of a business operation, serving as a key for finding
  * appropriate Contexts, including wildcard and parent Contexts.
  *
  * Example:
  * "/app/orders/update"
- * "/app/orders" - parent context of the above context
+ * "/app/orders" - parent context
  * "/" - root context (parent to all contexts)
  * "/app/*a/update" - wildcard context
  *
- * Context key cannot end with a slash.
+ * AbstractPath key cannot end with a slash.
  * Wildcard character (*) is allowed in context key.
  *
  * @see Context

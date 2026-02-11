@@ -25,11 +25,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     List<Ev<T>> evs = new ArrayList<>();
 
-    /**
-     * Expressions, such as All<T>, defined in this context.
-     */
-    // public Expressions expressions = new Expressions();
-
     /* Event handler methods */
 
     public Invariant<T> on(Predicate<? super T> condition, String description)
@@ -157,7 +152,21 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return new Exists<T>(values, bipredicate, placeholder);
     }
 
-    /* Other methods */
+    /* Evs implementation */
+
+    public Invariant<T> add(Ev<T> ev)
+    {
+        sane(ev, "eh");
+        evs.add(ev);
+        return this;
+    }
+
+    public List<Ev<T>> list()
+    {
+        return evs;
+    }
+
+    /* Attributes */
 
     public Transaction transaction()
     {
@@ -171,17 +180,4 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         tran = tr;
     }
 
-    /* Implementation */
-
-    protected Invariant<T> add(Ev<T> ev)
-    {
-        sane(ev, "eh");
-        evs.add(ev);
-        return this;
-    }
-
-    public List<Ev<T>> list()
-    {
-        return evs;
-    }
 }

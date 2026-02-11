@@ -1,8 +1,10 @@
 ## Claims / User Stories
 
 This is the list of claims made by Existential library - things that are stated (claimed) in library documents.
-As user stories, the claim statements may be prefixed with 'The user can...' (or 'The user can't...').
-The claims are backed by test cases in src/test/claims. The (+) signs indicate the ones already covered by tests. 
+As user stories, these claim statements may be prefixed with 'The user can...' (or 'The user can't...').
+The claims are backed by test cases in src/test/claims. The (+) signs indicate the ones already covered by tests.
+None of the included claims are in any way legal, nor any of them constitute a contract.
+Instead, they are statements on library features and behavior to clarify development goals.
 
 ### Terminology
 
@@ -11,13 +13,13 @@ Path: OS path-like notation for Op names
   - Abstract path can contain wildcards, such as "/api/*/update"
   - Concrete path doesn't contain wildcards
 Evaluable: anything that can be evaluated
-Expression: an Evaluable that evaluates to a value
-Predicate: an Expression that evaluates to a boolean
-Invariant: a list of Predicate expressions
 Statement: an Evaluable that does not necessarily return a value
+Expression: an Evaluable that returns a value
+Predicate: an Expression that returns a boolean value
+Invariant: a list of Predicate expressions
 Effect: a list of Statements
 Intent: a list of Statements for controlling access to entities, e.g. loading an entity from persistent store  
-Rule: a general term for invariants, effects and intents
+Rule: a general term for invariants, effects and intents 
 Event: an application or library event, such as: 
   - modifying an entity (e.g. Update<User>) 
   - accessing an entity (e.g. Read<User>)
@@ -25,23 +27,24 @@ Event: an application or library event, such as:
   - Events are sent to the library by calling event() method
   - Access events are sent to the library by calling read() and write()
   - Transaction events are automatically sent to the library when initiating or completing a transaction (begin(), commit(), rollback(), checkpoint() methods)
-Context: a set of rules (constraints, effects, intents) associated with a business operation 
+Context: a set of rules associated with a business operation 
   - A Context uses Op name to associate with an Op 
   - A Context can be defined with a wildcard Op name
   - Parent context is any Context whose name matches, without being equal to, Context's name
   - Matching context is any wildard context whose name matches, without being equal to, Context's name
   - The rules from parent apply to child contexts
   - The rules from matching contexts apply to matched contexts
-Transaction: a set of rules (constraints, effects, intents) associated with a Context
-  Transactions are more dynamic than the Contexts, allowing to use local scope (method parameters,
+Transaction: a set of rules associated with a Context
+  - Transactions are defined within a Context
+  - Transactions are more dynamic than the Contexts, allowing to use local scope (method parameters,
   local variables) and members of the defining class (for anonimous nested classes) in event handlers' code
-Library Transaction: a unit of execution in the library, associated with an Op name
+Library Transaction (Tr): a unit of execution in the library, associated with an Op name
   - Association with an Op name allows to select relevant Contexts and Transactions for evaluation
   - Transaction lifecycle is triggered by calling begin(), ending with commit(), rollback(), optional checkpoint()
   - For each relevant Context and Transactions, their configured rules are evaluated
   - The rules are evaluated at the end of transaction (commit or checkpoint), unless assigned to an earlier stage
   - In case of a constraint violation, an exception is raised and constraint violations are reported
-Quantifier: a logical expression, such as All or Exists
+Quantifier: a logical expression such as All or Exists
 Mutation: an event that records both before- and after- states of an entity 
 Transition: a Mutation that can have a null in before- or after- state (but not in both) 
   - The null in 'before' state indicates creation of an entity
@@ -119,7 +122,7 @@ User can configure the rules (constraints) with custom transaction object per tr
 User can specify a custom factory for creation of transactions in a Context
 Transaction factory from parent Context is used for child Contexts, unless overridden in the child Context
 
-##### Custom transaction
+##### Custom transaction instance
 
 User can specify an instance of Transaction class to use in a library transaction
   Rationale: be able to configure the rules based on dynamic information, such as web request parameters  
@@ -137,26 +140,53 @@ User can specify side effect for transaction lifecycle event (begin, commit, rol
 
 ##### Configuring Intents
 
+##### Configuration stages
+
+User can assign rules to different stages of transaction lifecycle.
+Configuration stages include: Early, Middle and Late.
+By default, rules are assigned to Late stage.
+Early stage rules execute on transaction start
+Middle stage rules execute within transaction immediately upon encountering a trigger event
+Late stage rules execute transaction commit or checkpoint
+
 ##### Configuring Custom Events
 
-#### Execution workflow
+### Evaluation
 
-Execution phase starts upon beginning and ends upon end of a library transaction
-The execution transaction is associated with a context, its parent contexts, and any configured Transaction factories and instances
-The pre-conditions are checked at the beginning of transaction
-Execution-time Effects are executed immediately upon trigger event
-Execution-time Constraints are checked immediately upon trigger event
-Execution-time Intents are checked immediately upon trigger event
+Evaluation is the process of executing the rules (evaluating expressions, calling event handlers) configured for a business operation
+Evaluations start upon beginning and end upon end of an existential transaction
 
-#### Validation workflow
+Each existential transaction is associated with business op name, and through that with the closest matching context, its parent contexts,  
+matching wildcard contexts, any configured Transaction factory and any passed-in Transaction instance. The rules 
+configured in these contexts and transactions participate in evaluations. 
+Evaluation of Early stage rules is called Preconditions evaluation. It is invoked upon transaction start.
+Evaluation of Middle stage rules is called Execution evaluation. It is invoked for each trigger event.
+Evaluation of Late stage rules is called Validation evaluation. It is invoked upon transaction commit or at checkpoint.
 
-Validation phase starts upon transaction commit or checkpoint
-Separate transactions are validated independently (even if these transactions are nested)
-Only the events reported during transaction are considered for validation for that transaction
-The order of execution of Effects, Constraints and Intents follows the order of their definition
-Validation-time Effects are executed by applying event handlers for each reported event to its corresponding entity
-Validation-time Constraints are evaluated and violations added to validation report
-Validation-time Intents are checked similarly to the constraints
+Evaluations of separate existential transactions are independent, even if these transactions are nested
+Only the events reported during transaction participate in its evaluations
+
+Rules defined in parent contexts/transactions are considered to be defined 'earlier' than the rules in children contexts/transactions
+The order of execution of rules follows the order of their definition
+For each event, the order of invocations of its event handlers, if multiple handlers are defined, follows the order of their definition
+Immediately evaluated rules are out-of-order. 
+
+#### Preconditions evaluation
+
+User can assign any rule to early stage
+Early stage rules are evaluated at the beginning of existential transaction
+Precondition expressions are evaluated at transaction start
+Precondition event handlers get invoked upon receiving a trigger event (any time during transaction)
+
+#### Execution evaluation
+
+The rules assigned to middle stage are evaluated immediately upon receiving the corresponding trigger event
+
+#### Validation evaluation
+
+Validation evaluation is triggered on a commit or checkpoint of an existential transaction
+Effects are evaluated by applying event handlers for each event reported during transaction to corresponding entity
+Intents are evaluated as lists of predicates. Violations are added to validation report
 
 ### Contexts
 
@@ -171,8 +201,9 @@ User can't modify configurations (e.g. create invariants) after sending first ev
 - Except for specifying custom Transaction object for transaction run
 
 ### Constraints
+(Below, the terms 'contstraints' and 'invariants' are used interchangeably)
 
-##### Constraint single entity
+##### Constraint on a single entity
 
 User can create a constraint on a field within an entity's class code
 User can create a constraint on a field outside of entity's class code
@@ -182,60 +213,78 @@ User can create a constraint on multiple fields of a class
 User can create a constraint on a collection field size
 User can create a constraint on a collection field contents
 
-##### Constraint multiple entities
+##### Constraints on multiple entities
 
 Create a constraint on two entities of same class within entity class code
 Create a constraint on two entities of different classes, outside entity class code
 Require another entity to exist when entity exists, (same class, within entity class code)
 Require another entity to exist when entity exists, (different classes, outside entity class code)
 
-##### Constraint entity evolution
+##### Constraints on entity evolution
 
 User can declare an invariant on entity mutation
 User can declare an invariant on entity transition
 
-##### Constraint evolution of multiple entities
+##### Constraints on evolution of multiple entities
 
 User can pass additional values when emitting an event
 
-##### Constraint subclasses
+##### Constraints on subclasses
 
 Constraints on parent class apply to any subclass. 
 
 ##### Constraint violation reporting
 
-User should receive an exception in the case of constraint violation, along with the details
+User should receive an exception in case of constraint violation, along with the details
 User can pass a human-readable description when creating a constraint, to help with reporting
 User can specify an error number when creating a constraint, to help with reporting
-Constraint violation exception contains details such as custom description
+Constraint violation exception contains details about the violation, such as human description of violated rule 
 Optionally, user can confgure the library to require a description for each constraint
 
-### Qualifiers
+### Quantifiers
 
-#### Universal Qualifier
+#### Universal Quantifier
 
 User can create an invariant for an entity class using the 'All' quantifier 
 User can restrict the 'All' quantifier to only apply to certain entities, by specifying a condition
 User can define the 'All' quantifier on an entity class
 User can define the 'All' quantifier on an entity mutation class (Mutation<T>)
 
-#### Existence Qualifier
+#### Existence Quantifier
 
 User can create an invariant on an entity class using the 'Exist' quantifier
 User can require entity existence when certain condition is met (same class, within entity class code)
 User can require entity existence when certain condition is met (different classes, outside entity class code)
-User can specify 'Exists' quantifier as a parameter to the 'All' quantifier, thus creating All-Exists invariant
+User can specify 'Exists' quantifier as a parameter to the 'All' quantifier, thus creating an All-Exists invariant
 User can define the 'Exist' quantifier on a collection
 User can define the 'Exist' quantifier on a stream
 User can specify a transaction object for the 'Exist' quantifier
 
+#### Indexes
+
+User can use an index to speed up evaluation of Existence expression
+User can use an index to speed up evaluation of other expressions
+User can create an in-transaction index to pass information between the rules
+User can create an out-of-transaction index to pass information between the rules
+
 ### Effects
+
+User can create a side effect for an entity by configuring an event handler for entity event
+Effects can be assigned to different stages of transaction lifecycle: Early, Middle and Late 
+For early and middle stage effects, event handlers gets executed upon receiving a trigger event
+  - Handlers are executed immediately
+  - Handlers get invoked per each received trigger event
+Late stage handlers are executed at transaction commit or checkpoint, once per trigger event type
+  - For several trigger events of the same type, late stage event handler is executed only once
+The order of effect invocation follows the order of their declaration
 
 ### Intents
 
 User can define 'allow' intent on event type and entity class
 User can define 'deny' intent on event type and entity class
-User can declare a combination of event type and entity class as 'protected', thus requiring intents to be declared 
+User can declare a combination of event type and entity class as 'protected', thus requiring explicit intents
+  - Marking as 'protected' results in requiring explicit intents
+  - Any action on the entity not covered by explicit intents is denied
 System validates the intents at validation phase along with other constraints.
 
 #### Custom Event Types
@@ -257,8 +306,8 @@ Intermediate data structures are cached between contexts
 
 #### Transaction Cleanup
 
-Resources taken during transaction are released upon its completion (commit or rollback)
-The above applies to transaction resources as well as reported events
+Resources taken during a transaction are released upon its completion (commit or rollback)
+The above applies to the transaction resources as well as all reported events
 
 #### Global Cleanup
 
@@ -269,18 +318,7 @@ System ensures that any memory leaks are reported (Log memory leaks, e.g. when t
 ### Maven 
 
 User can add the Library as a dependency to their project using Maven-based dependency resolution. 
-Requirements: Maven Central account
-
-#### Indexing
-
-User can create in-transaction index to pass info between the rules
-User can create out-of-transaction index to pass information between the rules
-User can use an index to speed up evaluation of Existence expression
-
-#### Side Effects
-
-User can automate side effects, such as setting a field to a default value on all objects of certain type
-that participate in a transaction.
+  - Requirements: Maven Central account
 
 ### Appendix
 

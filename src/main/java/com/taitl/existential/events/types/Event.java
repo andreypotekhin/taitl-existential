@@ -1,19 +1,10 @@
 package com.taitl.existential.events.types;
 
-import com.taitl.existential.events.Create;
-import com.taitl.existential.events.Delete;
-import com.taitl.existential.events.Mutate;
-import com.taitl.existential.events.Read;
-import com.taitl.existential.events.ReadAndLock;
-import com.taitl.existential.events.Transit;
-import com.taitl.existential.events.Update;
-import com.taitl.existential.events.Upsert;
-import com.taitl.existential.events.Write;
+import com.taitl.existential.events.*;
 
 /**
- * Indicates something that has happened to an application entity.
- *
- * Serves as base class to more specific events ({@code Create<T>, Update<T>, Delete<T>,} etc.)
+ * Marker interface for any event about an entity.
+ * Serves as base class to more specific events, such as {@code Create<T>, Update<T>, Delete<T>,} etc.
  *
  * @param <T>
  *            Class of application entity

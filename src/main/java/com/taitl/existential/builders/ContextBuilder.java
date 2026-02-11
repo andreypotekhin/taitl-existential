@@ -2,7 +2,6 @@ package com.taitl.existential.builders;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.ex.common.creator.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
@@ -17,7 +16,7 @@ public class ContextBuilder
     String op;
     List<EvsBuilder> evsBuilders;
     List<Evs> evsList;
-    Supplier<? extends Transaction> transactionFactory = Creator.getSupplier(Transaction.class);
+    Supplier<? extends Transaction> transactionFactory;
 
     public ContextBuilder(ConfigBuilder parentConfig, String op)
     {
@@ -27,7 +26,7 @@ public class ContextBuilder
         this.evsList = new ArrayList<>();
     }
 
-    public Context build()
+    public ConfigBuilder build()
     {
         Context context = createInstance();
         context.op(op);
@@ -56,8 +55,11 @@ public class ContextBuilder
             }
         }
 
-        context.transaction(transactionFactory);
-        return context;
+        if (transactionFactory != null)
+        {
+            context.transaction(transactionFactory);
+        }
+        return parent;
     }
 
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
@@ -92,13 +94,6 @@ public class ContextBuilder
 
     // TODO: intent()
 
-    public ContextBuilder transaction(Supplier<? extends Transaction> supplier)
-    {
-        sane(supplier, "supplier");
-        transactionFactory = supplier;
-        return this;
-    }
-
     public TransactionBuilder transaction(String name)
     {
         return new TransactionBuilder(this, name);
@@ -106,6 +101,13 @@ public class ContextBuilder
 
     public ContextBuilder done()
     {
+        return this;
+    }
+
+    ContextBuilder transaction(Supplier<? extends Transaction> supplier)
+    {
+        sane(supplier, "supplier");
+        transactionFactory = supplier;
         return this;
     }
 

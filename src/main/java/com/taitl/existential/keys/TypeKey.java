@@ -1,36 +1,27 @@
 package com.taitl.existential.keys;
 
-import com.taitl.ex.core.handlers.*;
-
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * A string representing a type along with its generics, for example "Set<Car>".<p>
- * <p>
- * This class is used to overcome effects of Java type erasure, in scenarios where we need to know the generic qualifier.<p>
- * <p>
- * For the types without generics, it corresponds to the short name of the class (like "String").<br>
- * For the types qualified with generics, it corresponds to class short name with generic qualifier, like {@code Set<House>}.<p>
- * <p>
- * Examples: <br>
- * Classes without generics: Class: Car, TypeKey: string "Car"<br>
- * Classes with generics: Class: {@code Set<House>}, TypeKey: string "{@code Set<House>}"<br>
- * <p>
- * Q: Why do we need to overcome Java type erasure? After all, Java compiler survives with it?<br>
- * A: Because we want ability to define event handlers on a distinct fully-qualified type. For
- * instance, we might want to different handlers for different types of a document:
+ * A string representing a type along with its generics, for example "Set<Car>".
+ * This class is used to overcome the effects of Java type erasure when we need to know the generic qualifier at runtime.
+ * For the types without generics, it is same as the short name of the class (like "String").
+ * For the generic types, it is class short name with generic qualifier, like {@code Set<House>}.
+ * Examples:
+ * Classes without generics: for class Car, the TypeKey is "Car"
+ * Classes with generics: for class {@code Set<House>}, the TypeKey is "Set<House>"
+ * Q: Why do we need to overcome Java type erasure?
+ * A: We want ability to define event handlers with fully-qualified types. For
+ * instance, we might want different handlers for different types of a document:
  * OnChange<Document<HTML>>(...)
  * OnChange<Document<JSON>>(...)
- * <p>
- *
- * @see EventHandlers
  */
 public class TypeKey<T>
 {
     protected String typeid;
 
     /**
-     * Constructs a TypeKey from a class without generics.
+     * Constructs TypeKey for a class without generics.
      * Example: TypeKey("Car")
      *
      * @param clz Class to construct TypeKey from
@@ -41,7 +32,7 @@ public class TypeKey<T>
     }
 
     /**
-     * Constructs a TypeKey from a class and a generic qualifier.
+     * Constructs TypeKey for a class with generics.
      * Example: TypeKey(Document.class, "JSON")
      *
      * @param clz              Class to construct TypeKey from, like Document.class
@@ -55,7 +46,7 @@ public class TypeKey<T>
     }
 
     /**
-     * Constructs a TypeKey from a class and a generic qualifier.
+     * Constructs TypeKey for a class name string with possible generic qualifier.
      * Example: {@code TypeKey("Document<JSON>")}
      *
      * @param classNameQualifiedWithGenerics Class name qualified with generics, like {@code "Document<JSON>"}

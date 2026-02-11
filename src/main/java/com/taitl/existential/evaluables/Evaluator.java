@@ -1,7 +1,8 @@
 package com.taitl.existential.evaluables;
 
-import com.taitl.existential.interfaces.*;
-
+/**
+ * Evaluates Evs and Evaluables
+ */
 public interface Evaluator
 {
     <T> void visit(Ev<T> ev);
@@ -14,9 +15,9 @@ public interface Evaluator
         }
     }
 
-    default void visit(Evaluatable evaluatable)
+    default void visit(Evaluable evaluable)
     {
-        for (Evs<?> evs : evaluatable.evs())
+        for (Evs<?> evs : evaluable.evs())
         {
             evs.accept(this);
         }

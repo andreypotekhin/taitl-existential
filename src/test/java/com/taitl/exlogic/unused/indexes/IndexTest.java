@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.*;
 import com.taitl.ex.examples.night_city.data.*;
 import com.taitl.ex.examples.night_city.model.*;
-import com.taitl.ex.logic.unused.indexes.*;
+import com.taitl.existential.indexes.*;
 import org.junit.jupiter.api.*;
 
 import static com.taitl.ex.common.helper.Coll.*;
@@ -107,7 +107,7 @@ class IndexTest
         Index<String, Cat> index_without_get_index_function = new Index<>();
         index_without_get_index_function.add("Grey", GREY_CAT);
         assertTrue(index_without_get_index_function.contains("Grey", GREY_CAT));
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(IllegalStateException.class,
                 () -> index_without_get_index_function.add(CityTestData.ORANGE_CAT));
     }
 
@@ -148,13 +148,13 @@ class IndexTest
         assertEquals(GREY_CAT, getFirst(cats_by_color.getObj("Grey")));
         assertThrows(IllegalArgumentException.class,
                 () -> cats_by_location.getObj(null));
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(IllegalStateException.class,
                 () -> cats_by_location.getObj(BLACK_CAT), "Wrong type of key");
         cats_by_color.clear();
         assertNull(cats_by_color.getObj("Grey"));
         cats_by_color.add(ORANGE_CAT);
         assertEquals(ORANGE_CAT, getFirst(cats_by_color.getObj("Orange")));
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(IllegalStateException.class,
                 () -> cats_by_color.getObj(BLACK_CAT), "Wrong type of key");
     }
 }

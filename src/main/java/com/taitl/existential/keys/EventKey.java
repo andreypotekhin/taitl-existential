@@ -1,7 +1,7 @@
 package com.taitl.existential.keys;
 
 /**
- * Event + TypeKey, for use as key in EventHandler.
+ * EventKey = Event + TypeKey,  for retrieving EventHandlers
  * Examples: "Create<Doc<Json>>", "Update<Measurement<Float>>"
  */
 public class EventKey

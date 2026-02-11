@@ -29,14 +29,14 @@ public final class Existential implements Closeable
     private ExistentialTransactions transactions = new ExistentialTransactions(this);
     private ExistentialEvents events = new ExistentialEvents(this);
     private ExistentialFlags flags = new ExistentialFlags(this);
-    private ExistentialConfigs ops = new ExistentialConfigs(this);
+    private ExistentialConfigs configs = new ExistentialConfigs(this);
 
     private boolean configured = false;
     private boolean closed = false;
 
     public ConfigBuilder configure(String op)
     {
-        return ops.get(op);
+        return configs.get(op);
     }
 
     public String begin(String op) throws ExistentialException
@@ -131,7 +131,7 @@ public final class Existential implements Closeable
             transactions.close();
             events.close();
             flags.close();
-            ops.close();
+            configs.close();
             access.close();
             init.close();
             closed = true;
@@ -148,14 +148,14 @@ public final class Existential implements Closeable
         return configured;
     }
 
-    public ExistentialConfigs ops()
+    public ExistentialConfigs configs()
     {
-        return ops;
+        return configs;
     }
 
     public Contexts contexts()
     {
-        return ops.contexts();
+        return configs.contexts();
     }
 
     public ExistentialTransactions transactions()

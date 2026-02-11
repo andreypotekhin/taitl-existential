@@ -346,16 +346,21 @@ public class Effect<T> implements Evs<T>, Immediate<T>
         return add(new OnUpsert<T>(condition, action, description));
     }
 
-    /* Add event handlers and expressions */
+    /* Evs implementation */
 
-    protected Effect<T> add(Ev<T> ev)
+    public Effect<T> add(Ev<T> ev)
     {
         sane(ev, "eh");
         evs.add(ev);
         return this;
     }
 
-    /* Other methods */
+    public List<Ev<T>> list()
+    {
+        return evs;
+    }
+
+    /* Attributes */
 
     public Transaction getTransaction()
     {
@@ -369,8 +374,4 @@ public class Effect<T> implements Evs<T>, Immediate<T>
         tran = tr;
     }
 
-    public List<Ev<T>> list()
-    {
-        return evs;
-    }
 }

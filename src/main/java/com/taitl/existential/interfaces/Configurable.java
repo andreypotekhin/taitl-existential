@@ -4,6 +4,9 @@ import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;
 
+/**
+ * Marker interface for existential configs, such as Context, Transaction..
+ */
 public interface Configurable
 {
     void op(String op);

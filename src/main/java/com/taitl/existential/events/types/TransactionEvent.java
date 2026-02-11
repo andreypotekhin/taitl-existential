@@ -1,10 +1,11 @@
 package com.taitl.existential.events.types;
 
 import com.taitl.existential.constants.*;
+import com.taitl.existential.events.transaction_events.*;
 import com.taitl.existential.transactions.*;
 
 /**
- * Transaction lifecycle event: begin, commit or rollback a transaction.
+ * Indicates a transaction lifecycle event, such as begin, commit, checkpoint or rollback of a transaction.
  * Serves as base class to specific events ({@code Begin<T>, Commit<T>,} etc.)
  *
  * @param <T>

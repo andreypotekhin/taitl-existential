@@ -1,4 +1,4 @@
-package com.taitl.ex.common.caching;
+package com.taitl.ex.cross.caching;
 
 public class CacheHandlers
 {

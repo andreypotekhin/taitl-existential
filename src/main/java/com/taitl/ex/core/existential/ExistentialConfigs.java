@@ -36,7 +36,7 @@ public class ExistentialConfigs implements Closeable
      * From this point, we stop accepting new contexts, custom transactions,
      * rules and handlers, to be able to freely cache for best performance.
      */
-    public void finalise()
+    public void finalizeConfiguration()
     {
         if (!ex.configured())
         {
@@ -49,13 +49,13 @@ public class ExistentialConfigs implements Closeable
             {
                 ex.configured(true);
 
-                // Now that we finalized set up of rules and event handlers
-                // we'll create custom contexts for all Contexts that
-                // exist in context registry. This will result in a call to each
-                // and every require(), intent() method of each custom context,
-                // and therefore create instances of each Invariant, Intent
-                // provided during the setup.
-                registry.createSubcontexts();
+                // Now that we finalized setting up rules and event handlers
+                // create all (parent, intermediate) contexts for all the Contexts
+                // configured so far. This will result in a call to each
+                // and every intent(), effect() method of each custom context,
+                // and therefore will create instances of each Invariant, Intent
+                // provided during setup.
+                registry.finalizeConfiguration();
             }
         }
     }

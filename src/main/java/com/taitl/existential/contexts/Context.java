@@ -12,7 +12,7 @@ import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class Context implements Configurable, Evaluatable
+public class Context implements Configurable, Evaluable
 {
     protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
             Creator.getSupplier(Transaction.class);
@@ -28,6 +28,9 @@ public class Context implements Configurable, Evaluatable
      */
     protected Context parent;
 
+    /**
+     * Configured rules: invariants, effects, access rules
+     */
     // TODO: split by stage (execution, validation)
     List<Evs<?>> evs = new ArrayList<>();
 
@@ -37,9 +40,7 @@ public class Context implements Configurable, Evaluatable
      */
     protected Instructions instructions = new Instructions();
 
-    /**
-     * Transaction factory
-     */
+    /** Transaction factory */
     protected Supplier<? extends Transaction> transactionFactory = DEFAULT_TRANSACTION_FACTORY;
 
     public Context(String name)
@@ -54,6 +55,10 @@ public class Context implements Configurable, Evaluatable
         this.name = name;
         this.parent = parent;
     }
+
+    /*
+     * Configure invariants, effects, access rules
+     */
 
     /**
      * Set invariants/rules to be enforced for the business operation defined by this context.
@@ -98,11 +103,9 @@ public class Context implements Configurable, Evaluatable
 
     /**
      * Associate a custom Transaction with Context.
-     *
      * Associating a custom Transaction with Context allows to define
      * rules, such as invariants and intents, for the context using
      * an instance of a custom transaction class.
-     *
      * Custom transaction may declare its own member fields, thus
      * allowing to carry over information between rules/event handlers.
      *
@@ -131,22 +134,8 @@ public class Context implements Configurable, Evaluatable
         return this;
     }
 
-    /**
-     * Create instances of custom transactions for a Context.
-     * This method is called by TransactionRegistry.create().
-     * @return List of Transaction objects
-     */
-    // public Transaction createTransaction()
-    // {
-    // Transaction tr = transactionFactory.get();
-    // tr.op(name);
-    // tr.name(name);
-    // tr.context(this);
-    // return tr;
-    // }
-
     /*
-     * Implement Configurable
+     * Configurable interface
      */
 
     public <T> void add(Evs<T> evs)
@@ -178,7 +167,7 @@ public class Context implements Configurable, Evaluatable
         return parent != null;
     }
 
-    public Context getParent()
+    public Context parent()
     {
         return parent;
     }
@@ -187,16 +176,6 @@ public class Context implements Configurable, Evaluatable
     {
         this.parent = parent;
     }
-
-    /*
-     * public void initializeFromCustomTransaction(Transaction tr) { if
-     * (!initializedFromCustomTransaction(tr)) { synchronized (initializedFrom) { if
-     * (!initializedFromCustomTransaction(tr)) { instructions.addAll(tr.instructions);
-     * expressions.addAll(tr.expressions); initializedFrom.add(tr.getClass().getName()); } } } }
-     *
-     * public boolean initializedFromCustomTransaction(Transaction tr) { return
-     * initializedFrom.contains(tr.getClass().getName()); }
-     */
 
     public String name()
     {

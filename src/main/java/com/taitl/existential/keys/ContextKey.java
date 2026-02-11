@@ -1,9 +1,8 @@
 package com.taitl.existential.keys;
 
 import com.taitl.existential.contexts.*;
-
 import com.taitl.existential.paths.*;
-import com.taitl.existential.transactions.Transaction;
+import com.taitl.existential.transactions.*;
 
 /**
  * A path-like representation of a business operation, serving as a key for finding
@@ -16,7 +15,7 @@ import com.taitl.existential.transactions.Transaction;
  * "/app/* /update" - wildcard context
  *
  * Context key cannot end with a slash.
- * Wildcard character (*) is allowed in context key.
+ * The wildcard character (*) is allowed in context key.
  *
  * @see Context
  * @see Transaction

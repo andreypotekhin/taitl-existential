@@ -5,31 +5,30 @@ import com.taitl.ex.common.helper.*;
 
 /**
  * Creates instances of the specified class, or returns a singleton.
- * Allows for dependency injection, by customizing instance creation.
+ * Allows for dependency injection by customizing instance creation.
  *
  * Use cases:
- * 1. Dependency inject using singleton() and create() methods.
+ * 1. Inject dependencies using singleton() and create() methods.
  * 2. Customize class instantiation by calling inject() method.
  * 3. For even greater effect, subclass CreatorDevice. 
- *   Comes handy when mocking components for unit tests.
- * 4. Integrate a third party dependency injection library/framework
- * behind Creator facade, again by providing custom CreatorDevice.
+ *   (Handy for mocking components for unit tests.)
+ * 4. Integrate third-party dependency injection framework
+ * behind framework-agnostic facade.
  * 
  * Usage (per use case):
- * 1. Creator.create(LogDevice.class);
+ * 1. Creator.create(My.class); Creator.singleton(LogDevice.class);
  * 2. Creator.inject(com.company.log.LogDevice.class, () -> new com.my.LogDevice());
  * 3. Creator.setDevice(myCreatorDevice) -- set custom CreatorDevice
  * 4. Creator.setDevice(myThirdPartyAdapter) -- integrate third party injection framework
  *
  * Why:
  * Q: Is this class a kind of 'God' antipattern?
- * A: No - it only deals with classes through reflection, so does not
- * depend on any application classes or business logic.
+ * A: No: it only deals with classes through reflection, so does not
+ * depend on or knows about any application classes or business logic.
  * Q: Is injection by reflection not performant?
- * A: We reserve this to less performance-critical code, for instance,
- * for the one-time execution during application startup. For more
- * performance-critical code, you are welcome to use other approaches,
- * or directly instantiate the classes.
+ * A: Fairly performant: it is normally a method call and a map lookup.
+ * For more performance, you are welcome to use other approaches,
+ * such as directly instantiating the classes.
  */
 public class Creator
 {

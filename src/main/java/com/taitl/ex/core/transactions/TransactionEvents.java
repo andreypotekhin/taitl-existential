@@ -6,12 +6,13 @@ import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
 /**
- * Stores all event types for which some rule is defined in a Transaction or Context.
+ * Stores all event types for which a rule is defined in a Transaction or a Context.
  *
- * Different contexts may react to different types of events.
- * To speed up the answer to question 'which events should be emitted by EventSplitter for this context', the set of
- * relevant events (from the context as well from all its parents) is created at transaction start and stored in the
- * Transaction object. This allows to avoid having to gather such info for each event from each involved context.
+ * Different contexts may have rules to different types of events.
+ * To speed up the answer to question 'which events should be emitted by EventSplitter for this context?',
+ * the set of relevant events (from the context as well from all its parents) is created at transaction
+ * start and stored in the Transaction object. This allows to avoid having to gather such info for each
+ * individual event from each involved context.
  *
  * @see Transaction
  *

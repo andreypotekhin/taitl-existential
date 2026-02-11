@@ -1,8 +1,8 @@
 package com.taitl.existential.events;
 
-import static com.taitl.existential.constants.Strings.ARG_T0_T1;
-
 import com.taitl.existential.events.types.*;
+
+import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Indicates that an application entity has been created, changed or deleted during current transaction.
@@ -19,7 +19,6 @@ import com.taitl.existential.events.types.*;
  * 
  * Database analogs: INSERT, UPDATE, DELETE
  * 
- * @author Andrey Potekhin
  * @param <T>
  *            Class of application entity
  * @see Event

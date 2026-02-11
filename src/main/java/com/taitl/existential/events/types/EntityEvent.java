@@ -1,20 +1,13 @@
 package com.taitl.existential.events.types;
 
-import com.taitl.existential.constants.Strings;
-import com.taitl.existential.events.Create;
-import com.taitl.existential.events.Delete;
-import com.taitl.existential.events.Mutate;
-import com.taitl.existential.events.Read;
-import com.taitl.existential.events.ReadAndLock;
-import com.taitl.existential.events.Transit;
-import com.taitl.existential.events.Update;
-import com.taitl.existential.events.Upsert;
-import com.taitl.existential.events.Write;
+import com.taitl.existential.constants.*;
+import com.taitl.existential.events.*;
 
 /**
- * Indicates the fact of creating, accessing, changing or deleting an entity.
- * Serves as base class to specific events ({@code Create<T>, Update<T>,} etc.)
- * Example: {@code EntityEvent<Account>} is emitted when Account entity was accessed or changed in the course of current transaction.
+ * Indicates an event on an entity, such as of creating, accessing, modifying or deleting.
+ * Serves as base class to more specific events, such as {@code Create<T>, Update<T>}.
+ * Example: {@code EntityEvent<Account>} is emitted when an Account entity has been accessed
+ * or modified in the course of business transaction.
  * Database analogs: SELECT, INSERT, UPDATE or DELETE
  *
  * @param <T>

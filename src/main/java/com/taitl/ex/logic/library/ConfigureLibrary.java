@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.configuration.actions;
+package com.taitl.ex.logic.library;
 
 public class ConfigureLibrary
 {

@@ -1,13 +1,14 @@
 package com.taitl.existential.transactions;
 
 import java.util.*;
+import java.util.function.*;
 import com.taitl.ex.core.events.*;
 import com.taitl.ex.core.instructions.*;
 import com.taitl.ex.core.transactions.*;
-import com.taitl.ex.logic.unused.indexes.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
+import com.taitl.existential.indexes.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
 
@@ -27,36 +28,36 @@ import static com.taitl.ex.common.helper.State.*;
  * Transaction object can store data for passing from one event handler to another.
  *
  * TransactionIndexes
- *   When we encounter various events, such as objects creation or mutation, we might need to store some data about it.
- *   For instance, we may wish to create an index on entities, so that Exists<> expression could be evaluated in a
- *   performant way: {@code On<Cat>((c, tr) -> tr.index("location_to_cats").put(c.location, c))}
+ * When we encounter various events, such as objects creation or mutation, we might need to store some data about it.
+ * For instance, we may wish to create an index on entities, so that Exists<> expression could be evaluated in a
+ * performant way: {@code On<Cat>((c, tr) -> tr.index("location_to_cats").put(c.location, c))}
  *
  * TransactionEvents
- *   Different contexts may be interested in different types of events. To speed up the answer to question 'which events
- *   should be emitted for this context?', the set of relevant event types (from the context as well as all its parents)
- *   is created at transaction start and stored in the Transaction object.
+ * Different contexts may be interested in different types of events. To speed up the answer to question 'which events
+ * should be emitted for this context?', the set of relevant event types (from the context as well as all its parents)
+ * is created at transaction start and stored in the Transaction object.
  *
  * Customizing
- *   To use a custom class for transaction, define them in different context levels, and ask the system to provide
- *   an appropriate instance for a business operation using {@code Context.transaction()}.<br>
- *   For instance, for operation "/app/orders/update":<br>
- *   For data relevant to all transactions, define a custom {@code AppTransaction } class.<br>
- *   An {@code OrdersTransaction} class extending {@code AppTransaction } can be used for the transactions related to
- *   Orders module. If further customization needed, you could also define {@code OrdersUpdateTransaction} class extending
- *   {@code OrdersTransaction}, and so on.<br>
- *   Setting up context-customized Transaction classes:<br>
- *   <pre>{@code
+ * To use a custom class for transaction, define them in different context levels, and ask the system to provide
+ * an appropriate instance for a business operation using {@code Context.transaction()}.<br>
+ * For instance, for operation "/app/orders/update":<br>
+ * For data relevant to all transactions, define a custom {@code AppTransaction } class.<br>
+ * An {@code OrdersTransaction} class extending {@code AppTransaction } can be used for the transactions related to
+ * Orders module. If further customization needed, you could also define {@code OrdersUpdateTransaction} class extending
+ * {@code OrdersTransaction}, and so on.<br>
+ * Setting up context-customized Transaction classes:<br>
+ * <pre>{@code
  *   Ex.contexts().get("/app").transaction(() -> new AppTransaction())
  *   Ex.contexts().get("/app/orders").transaction(() -> new OrdersTransaction())
  *   Ex.contexts().get("/app/orders/update").transaction(() -> new OrdersUpdateTransaction())
  *   }</pre>
- *   If custom transaction class is not defined for a context, the transaction class from its parent context is used.
+ * If custom transaction class is not defined for a context, the transaction class from its parent context is used.
  *
  * Custom Transaction instance
- *   When initiating a business transaction (e.g. with Ex.begin()), you can specify a custom Transaction instance for it.
- *   This is helpful when you need to parameterize rules and expressions based on immediate circumstances such as
- *   enclosing method arguments, or other dynamic circumstances.
- *   To do so, instead of calling Ex.begin(opName), call Ex.begin(opName, transaction) with custom Transaction instance.
+ * When initiating a business transaction (e.g. with Ex.begin()), you can specify a custom Transaction instance for it.
+ * This is helpful when you need to parameterize rules and expressions based on immediate circumstances such as
+ * enclosing method arguments, or other dynamic circumstances.
+ * To do so, instead of calling Ex.begin(opName), call Ex.begin(opName, transaction) with custom Transaction instance.
  *
  * @see Context
  * @see TransactionIndexes
@@ -64,7 +65,7 @@ import static com.taitl.ex.common.helper.State.*;
  * @see EventSplitter
  * TODO: TransactionBuilder
  */
-public class Transaction implements Configurable, Evaluatable
+public class Transaction implements Configurable, Evaluable
 {
     public final UUID id;
     public String op;
@@ -97,6 +98,10 @@ public class Transaction implements Configurable, Evaluatable
         return indexes.get(name);
     }
 
+    /*
+     * Configure invariants, effects, lifecycle rules
+     */
+
     /**
      * Set up invariants/rules to be enforced on this transaction's business operation (Context).
      *
@@ -106,10 +111,10 @@ public class Transaction implements Configurable, Evaluatable
      * 	      invariant(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
      *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     * 	      }})
+     *          }})
      * }</pre>
      *
-     * @param <T> Type parameter
+     * @param <T>        Type parameter
      * @param invariants Invariants (rules) that must be upheld
      */
     public <T> void invariant(Invariant<T> invariant)
@@ -142,32 +147,13 @@ public class Transaction implements Configurable, Evaluatable
         add(effect);
     }
 
-    /**
-     * Add OnBegin<Transaction> handler.
-     *
-     * Example:
-     * Declare transaction member (curPilot) and initialize it at the start of transaction:
-     * <pre>{@code
-     *    Ex.contexts().get("/app/flight_school/pilots/update")
-     *        .transaction(() -> new Transaction(){
-     *          Pilot curPilot;
-     * 		 	{
-     * 			    begin(params -> curPilot = (Pilot)params.get("pilot"))
-     * 			    access(...);
-     * 			    invariant(...);
-     * 			    intent(...);
-     * 			}});
-     * }</pre>
-     *
-     * @return This object
-     */
     public <T extends Transaction> void cycle(Trancycle<T> cycle)
     {
         sane(cycle, "cycle");
-        Transaction tr = cycle.getTransaction();
+        Transaction tr = cycle.transaction();
         if (tr == null)
         {
-            cycle.setTransaction(this);
+            cycle.transaction(this);
         }
         else
         {
@@ -177,8 +163,69 @@ public class Transaction implements Configurable, Evaluatable
     }
 
     /*
-     * Implement Configurable
+     * Convenience methods for lifecycle
      */
+
+    /**
+     * Add OnBegin<Transaction> handler.
+     * Example:
+     * Declare transaction member (curPilot) and initialize it at the start of transaction.
+     * <pre>{@code
+     *    Ex.contexts().get("/app/flight_school/pilots/update")
+     *        .transaction(() -> new Transaction(){
+     *          Pilot curPilot;
+     *            {
+     * 			    begin(params -> curPilot = (Pilot)params.get("pilot"));
+     * 			    access(...);
+     * 			    invariant(...);
+     * 			    intent(...);
+     *            }});
+     * }</pre>
+     */
+    public <T extends Transaction> void begin(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        cycle(new Trancycle<T>() {
+            {
+                begin(action);
+            }
+        });
+    }
+
+    public <T extends Transaction> void commit(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        cycle(new Trancycle<T>() {
+            {
+                commit(action);
+            }
+        });
+    }
+
+    public <T extends Transaction> void rollback(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        cycle(new Trancycle<T>() {
+            {
+                rollback(action);
+            }
+        });
+    }
+
+    public <T extends Transaction> void checkpoint(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        cycle(new Trancycle<T>() {
+            {
+                checkpoint(action);
+            }
+        });
+    }
+
+    /*
+     * Configurable interface
+     */
+
     public <T> void add(Evs<T> evs)
     {
         sane(evs, "evs");
@@ -194,6 +241,10 @@ public class Transaction implements Configurable, Evaluatable
     /**
      * TODO: allow(Intent<T> intent) { ...
      * intent.tran = this; ... }
+     */
+
+    /*
+     * Attributes
      */
 
     public void op(String op)

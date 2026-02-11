@@ -1,6 +1,7 @@
-package com.taitl.existential.expressions;
+package com.taitl.ex.logic.unused.expressions;
 
 import com.taitl.ex.common.helper.*;
+import com.taitl.existential.expressions.*;
 
 /**
  * Container for Expressions, such as All<T1>, All<T2>.

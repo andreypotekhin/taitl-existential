@@ -1,4 +1,4 @@
-package com.taitl.ex.common.logging;
+package com.taitl.ex.cross.logging;
 
 import java.util.function.*;
 

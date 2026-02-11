@@ -74,6 +74,11 @@ public class ConfigRegistry
         return o;
     }
 
+    public void finalizeConfiguration()
+    {
+        createSubcontexts();
+    }
+
     public void createSubcontexts()
     {
         registry.forEach((key, op) -> op.createSubcontexts());

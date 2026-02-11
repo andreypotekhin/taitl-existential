@@ -25,13 +25,13 @@ public class ExistentialEvents implements Closeable
         // Transition<House> -> On<House>, Mutate<House>, Transit<House>
         // Depending on mutation type: OnCreate<House>, OnUpdate<House>, OnMutate<House>,
         // OnDelete<House>
-        // Trigger event processing for events with side effects
-        // Postpone event processing for events without side effects:
-        // Add event to event field
+        // Trigger processing of immediate event handlers
+        // Add event to event field for late-phase processing
     }
 
     public <T> void event(T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
+        // TODO
     }
 
     /**
@@ -41,6 +41,7 @@ public class ExistentialEvents implements Closeable
      */
     public <T> void event(T t0, T t1, String tranID) throws ExistentialException
     {
+        // TODO
     }
 
     /**
@@ -50,6 +51,7 @@ public class ExistentialEvents implements Closeable
      */
     public <T> void event(T t, String tranID) throws ExistentialException
     {
+        // TODO
     }
 
     public void close()

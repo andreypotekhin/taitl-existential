@@ -1,10 +1,10 @@
-package com.taitl.ex.common.logging;
+package com.taitl.ex.cross.logging;
 
 import java.io.*;
-import com.taitl.ex.common.logging.Log.*;
+import com.taitl.ex.cross.logging.Log.*;
 
 /**
- * Default logger for use by Log class.
+ * Default logger for Log class.
  */
 @SuppressWarnings("rawtypes")
 public class Logger

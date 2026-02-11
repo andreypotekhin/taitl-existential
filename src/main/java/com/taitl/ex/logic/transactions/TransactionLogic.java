@@ -29,6 +29,7 @@ public class TransactionLogic implements Closeable
     {
         sane(op, "op");
         OpKey.validate(op);
+        ee.ex().configs().finalizeConfiguration();
         Tr tr = createTr.call(op, null);
         return tr.id.toString();
     }
@@ -37,6 +38,7 @@ public class TransactionLogic implements Closeable
     {
         sane(op, "op");
         OpKey.validate(op);
+        ee.ex().configs().finalizeConfiguration();
         Tr tr = createTr.call(op, custom);
         return tr.id.toString();
     }

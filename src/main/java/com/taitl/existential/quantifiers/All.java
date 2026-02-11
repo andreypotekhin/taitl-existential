@@ -11,7 +11,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * See library documentation for details.
  *
  * @param <T>
- *            Entity type T to which the expression applies, or a mutation of an entity type
+ *            Entity type to which the expression applies, or a mutation of an entity type
  *            (Mutation<T>, Transition<T>)
  */
 public class All<T> implements Expression<T>
