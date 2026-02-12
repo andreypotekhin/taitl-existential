@@ -10,6 +10,7 @@ import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+// TODO: add context() method to build child contexts
 public class ContextBuilder
 {
     ConfigBuilder parent;
@@ -25,6 +26,38 @@ public class ContextBuilder
         this.evsBuilders = new ArrayList<>();
         this.evsList = new ArrayList<>();
     }
+
+    public <T> InvariantBuilder<T> invariant(Class<T> cls)
+    {
+        sane(cls, "cls");
+        InvariantBuilder<T> ib = new InvariantBuilder<>(this);
+        evsBuilders.add(ib);
+        return ib;
+    }
+
+    public <T> ContextBuilder invariant(Invariant<T> invariant)
+    {
+        sane(invariant, "invariant");
+        evsList.add(invariant);
+        return this;
+    }
+
+    public <T> EffectBuilder<T> effect(Class<T> cls)
+    {
+        sane(cls, "cls");
+        EffectBuilder<T> eb = new EffectBuilder<>(this);
+        evsBuilders.add(eb);
+        return eb;
+    }
+
+    public <T> ContextBuilder effect(Effect<T> effect)
+    {
+        sane(effect, "effect");
+        evsList.add(effect);
+        return this;
+    }
+
+    // TODO: intent()
 
     public ConfigBuilder build()
     {
@@ -61,38 +94,6 @@ public class ContextBuilder
         }
         return parent;
     }
-
-    public <T> InvariantBuilder<T> invariant(Class<T> cls)
-    {
-        sane(cls, "cls");
-        InvariantBuilder<T> ib = new InvariantBuilder<>(this);
-        evsBuilders.add(ib);
-        return ib;
-    }
-
-    public <T> ContextBuilder invariant(Invariant<T> invariant)
-    {
-        sane(invariant, "invariant");
-        evsList.add(invariant);
-        return this;
-    }
-
-    public <T> EffectBuilder<T> effect(Class<T> cls)
-    {
-        sane(cls, "cls");
-        EffectBuilder<T> eb = new EffectBuilder<>(this);
-        evsBuilders.add(eb);
-        return eb;
-    }
-
-    public <T> ContextBuilder effect(Effect<T> effect)
-    {
-        sane(effect, "effect");
-        evsList.add(effect);
-        return this;
-    }
-
-    // TODO: intent()
 
     public TransactionBuilder transaction(String name)
     {

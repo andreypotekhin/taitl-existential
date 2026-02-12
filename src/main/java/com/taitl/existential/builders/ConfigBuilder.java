@@ -3,6 +3,7 @@ package com.taitl.existential.builders;
 import java.util.*;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.core.existential.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -113,19 +114,24 @@ public class ConfigBuilder
     }
 
     /**
-     * For each Context within Op, create instances of custom
-     * Contexts using provided context factories, and add them separately
-     * to each Context.add().
+     * Build configured Contexts.
+     * Create intermediates for consumption by subsequent stages.
      *
-     * Problem: this duplicates the rules, and therefore, side effects,
-     * which is not desirable!
-     *
-     * This method is called from ExistentialContexts.finalizeSetup(),
-     * one time, when the first transaction begins.
+     * Do not call this method directly -tt is called by ConfigRegistry when
+     * the first transaction begins.
+     * This method is called from ExistentialConfigs.finalizeConfiguration().
      */
-    public void createSubcontexts()
+    public void build(ExistentialConfigs ec)
     {
-        // Already created
+        // TODO:
+        // Link each configured Context to direct or indirect parent Context
+        // as well as to any matching wildcard Context(s) by comparing context names.
+        // Do not create new contexts
+        // Do not copy or duplicate any the rules between context -
+        // this may cause side effects to be called nore than once
+
+        // Create intermediates for consumption by subsequent stages
+        ec.onFinishConfiguration(name);
     }
 
     /**

@@ -13,6 +13,7 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 // TODO: Delegate to ConcreteContext
+// TODO: add context() method for adding child contexts
 public class Context implements Configurable, Evaluable
 {
     protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
@@ -150,7 +151,7 @@ public class Context implements Configurable, Evaluable
         instructions.addAll(evs);
     }
 
-    public Context add(Context other)
+    public Context addAll(Context other)
     {
         sane(other, "other");
         evs.addAll(other.evs);

@@ -2,9 +2,9 @@ package com.taitl.existential.transactions;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.ex.core.events.*;
 import com.taitl.ex.core.instructions.*;
 import com.taitl.ex.core.transactions.*;
+import com.taitl.ex.logic.events.logic.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
@@ -61,7 +61,7 @@ import static com.taitl.ex.common.helper.State.*;
  *
  * @see Context
  * @see TransactionIndexes
- * @see TransactionEvents
+ * @see TransactionEventKeys
  * @see EventSplitter
  */
 // TODO: Delegate to ConcreteTransaction
@@ -82,7 +82,7 @@ public class Transaction implements Configurable, Evaluable
     public Instructions instructions = new Instructions();
 
     TransactionIndexes indexes = new TransactionIndexes(this);
-    TransactionEvents events = new TransactionEvents(this);
+    TransactionEventKeys events = new TransactionEventKeys(this);
 
     public Transaction(String op, String name)
     {

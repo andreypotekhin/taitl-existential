@@ -2,7 +2,7 @@ package com.taitl.ex.logic.configuration.actions;
 
 import java.util.*;
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.core.contexts.*;
+import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.keys.*;
 
@@ -33,10 +33,9 @@ public class BuildContexts
      * "/"
      * of which it will return the top one ("/app/flights/update")
      * TODO:
-     * Move method to ContextFactory
      * Extend to retrieve wildcard contexts
      */
-    public List<Context> buildContextsRecursively(String op)
+    public List<Context> buildRecursively(String op)
     {
         sane(op, "op");
         OpKey opKey = new OpKey(op);
@@ -47,7 +46,7 @@ public class BuildContexts
             verify(context.name().equals(op), "Context name should be the same as op");
             if (opKey.hasParent())
             {
-                List<Context> parents = buildContextsRecursively(opKey.getParent().toString());
+                List<Context> parents = buildRecursively(opKey.getParent().toString());
                 verify(parents.size() <= 1, // Does this make sense?
                         "A context can only have zero or one parent");
                 if (!parents.isEmpty())

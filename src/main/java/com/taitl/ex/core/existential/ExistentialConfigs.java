@@ -1,19 +1,16 @@
 package com.taitl.ex.core.existential;
 
 import java.io.*;
-import com.taitl.ex.core.configuration.*;
-import com.taitl.ex.core.contexts.*;
+import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.State.*;
 
 public class ExistentialConfigs implements Closeable
 {
     protected Existential ex;
-    protected ConfigRegistry registry = new ConfigRegistry(this);
-    protected Contexts contexts = new Contexts();
+    protected ConfigurationLogic configLogic = new ConfigurationLogic(this);
 
     public ExistentialConfigs(Existential ex)
     {
@@ -23,9 +20,7 @@ public class ExistentialConfigs implements Closeable
     public ConfigBuilder get(String op)
     {
         sane(op, "op");
-        verify(!ex.configured(),
-                "Cannot call this method because setup has already been finalized");
-        return registry.getcreate(op);
+        return configLogic.get(op);
     }
 
     /**
@@ -38,35 +33,26 @@ public class ExistentialConfigs implements Closeable
      */
     public void finalizeConfiguration()
     {
-        if (!ex.configured())
-        {
-            if (isEmpty())
-            {
-                throw new IllegalStateException("You need to configure at least one context");
-            }
+        configLogic.finalizeConfiguration();
+    }
 
-            synchronized (Existential.class)
-            {
-                ex.configured(true);
-
-                // Now that we finalized setting up rules and event handlers
-                // create all (parent, intermediate) contexts for all the Contexts
-                // configured so far. This will result in a call to each
-                // and every intent(), effect() method of each custom context,
-                // and therefore will create instances of each Invariant, Intent
-                // provided during setup.
-                registry.finalizeConfiguration();
-            }
-        }
+    /**
+     * Called from ConfigBuilder.build() to indicate
+     * that the configuration for an op has been completed.
+     */
+    public void onFinishConfiguration(String op)
+    {
+        configLogic.onFinishConfiguration(op);
     }
 
     public boolean isEmpty()
     {
-        return registry.isEmpty();
+        return configLogic.isEmpty();
     }
 
     public void close()
     {
+        configLogic.close();
     }
 
     public Existential ex()
@@ -76,6 +62,6 @@ public class ExistentialConfigs implements Closeable
 
     public Contexts contexts()
     {
-        return contexts;
+        return configLogic.contexts();
     }
 }

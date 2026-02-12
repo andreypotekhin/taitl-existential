@@ -1,7 +1,7 @@
 package com.taitl.existential;
 
-import com.taitl.ex.core.contexts.*;
 import com.taitl.ex.core.existential.*;
+import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
