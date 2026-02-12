@@ -8,21 +8,25 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
-public class CreateTr
+/**
+ * Dispose transaction object after a commit/rollback.
+ */
+public class DisposeTr
 {
     TransactionLogic transactionLogic;
 
-    public CreateTr(TransactionLogic transactionLogic)
+    public DisposeTr(TransactionLogic transactionLogic)
     {
         sane(transactionLogic, "transactionLogic");
         this.transactionLogic = transactionLogic;
     }
 
-    public Tr call(String op, Transaction custom) throws ExistentialException
+    /**
+     * Close transaction, remove from registry
+     */
+    public void call(Tr tr) throws NotFoundException
     {
-        sane(op, "op");
-        OpKey.validate(op);
-        verify(transactionLogic.ex().configured(), "You should call configs().done() first");
-        return transactionLogic.registry().create(op, custom);
+        tr.close();
+        transactionLogic.registry().remove(tr.id.toString());
     }
 }

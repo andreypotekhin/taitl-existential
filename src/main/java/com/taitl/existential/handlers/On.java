@@ -46,7 +46,7 @@ public class On<T> implements EventHandler<T>
         // TODO: invoke and handle execute logic in a separate flow,
         // avoiding exposing this class to implementation logic
         // This class is to remain lightweight 'recording purpose' class
-        ExecuteEventHandler.handle(this, t);
+        ExecuteHandler.handle(this, t);
     }
 
     /**

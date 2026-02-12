@@ -12,9 +12,8 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * TrRegistry creates Trs and holds references to them (keyed by Tr UUID string)
+ * TrRegistry creates Trs and holds references to them (keyed by Tr UUID string id)
  * for the duration of a business transaction.
- * TODO: We don't need this class if we'll just return Tr object to the caller of begin()
  */
 public class TrRegistry
 {
@@ -22,7 +21,7 @@ public class TrRegistry
     protected Map<String, Tr> reg = new LinkedHashMap<>();
 
     protected ExistentialTransactions exec;
-    CreateTransaction createTransaction = Creator.singleton(CreateTransaction.class);
+    protected CreateTransaction createTransaction = new CreateTransaction();
 
     public TrRegistry(ExistentialTransactions exec)
     {

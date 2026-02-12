@@ -70,6 +70,11 @@ public final class Ex
         return instance().begin(op, custom);
     }
 
+    /**
+     * Commits an existential transaction.
+     * Performs validation of the rules configured for transaction's business op.
+     * Note: after the commit(), tranID becomes invalid
+     */
     public static void commit(String tranID) throws ExistentialException
     {
         instance().commit(tranID);
@@ -80,6 +85,11 @@ public final class Ex
         instance().checkpoint(tranID);
     }
 
+    /**
+     * Rolls back an existential transaction.
+     * Rule validation is not performed.
+     * Note: after the rollback(), tranID becomes invalid
+     */
     public static void rollback(String tranID) throws ExistentialException
     {
         instance().rollback(tranID);
@@ -160,7 +170,7 @@ public final class Ex
         return instance().configured();
     }
 
-    public static ExistentialConfigs ops()
+    public static ExistentialConfigs configs()
     {
         return instance().configs();
     }

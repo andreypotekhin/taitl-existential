@@ -1,4 +1,4 @@
-package com.taitl.ex.core.transactions;
+package com.taitl.ex.logic.validation.data;
 
 import java.util.*;
 import com.taitl.existential.constants.*;
@@ -14,17 +14,15 @@ import com.taitl.existential.transactions.*;
  * start and stored in the Transaction object. This allows to avoid having to gather such info for each
  * individual event from each involved context.
  *
- * @see Transaction
- *
- * TODO: Move to Tr
+ * @see Tr
  */
-public class TransactionEventKeys
+public class EventKeys
 {
-    Transaction tr;
+    Tr tr;
     Set<String> eventKeys = new LinkedHashSet<>();
     BitSet eventTypeMask = new BitSet(64);
 
-    public TransactionEventKeys(Transaction tr)
+    public EventKeys(Tr tr)
     {
         this.tr = tr;
     }

@@ -2,6 +2,8 @@ package com.taitl.existential.transactions;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
+import com.taitl.ex.logic.validation.*;
+import com.taitl.ex.logic.validation.data.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -19,9 +21,10 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class Tr
 {
-    public UUID id;
+    public final UUID id;
     String op;
     List<Transaction> transactions = new ArrayList<>();
+    ValidationData validationData = new ValidationData(this);
 
     public Tr(String op, UUID id)
     {
@@ -46,4 +49,11 @@ public class Tr
     // Close transactions, remove op transaction from registry
     // rollback()
     // checkpoint()
+
+    public void close()
+    {
+        validationData.close();
+        validationData = null;
+        transactions = null;
+    }
 }

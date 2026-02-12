@@ -1,5 +1,5 @@
 package com.taitl.ex.logic.validation.maps;
 
-public class MapTransToEvents
+public class EventsToHandlers
 {
 }

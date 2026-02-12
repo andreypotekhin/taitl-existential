@@ -7,7 +7,7 @@ package com.taitl.existential.keys;
  */
 public class EventKey
 {
-    protected String eventkey;
+    protected String key;
 
     public static EventKey valueOf(String s)
     {
@@ -16,17 +16,17 @@ public class EventKey
 
     public EventKey(String s)
     {
-        eventkey = s;
+        key = s;
     }
 
     public EventKey(Object t)
     {
-        eventkey = t.getClass().getSimpleName();
+        key = t.getClass().getSimpleName();
     }
 
     public int hashCode()
     {
-        return eventkey.hashCode();
+        return key.hashCode();
     }
 
     public boolean equals(Object other)
@@ -44,15 +44,15 @@ public class EventKey
             return false;
         }
         EventKey o = (EventKey) other;
-        if (o.eventkey == null)
+        if (o.key == null)
         {
-            return (this.eventkey == null);
+            return (this.key == null);
         }
-        return o.eventkey.equals(this.eventkey);
+        return o.key.equals(this.key);
     }
 
     public String toString()
     {
-        return eventkey;
+        return key;
     }
 }

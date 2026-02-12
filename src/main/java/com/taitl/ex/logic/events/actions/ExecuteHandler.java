@@ -5,7 +5,7 @@ import com.taitl.existential.handlers.*;
 
 import static com.taitl.ex.common.helper.State.*;
 
-public class ExecuteEventHandler
+public class ExecuteHandler
 {
     public static <T> void handle(On<T> handler, T t) throws ExistentialException
     {

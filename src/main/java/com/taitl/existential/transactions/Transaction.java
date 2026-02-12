@@ -61,8 +61,6 @@ import static com.taitl.ex.common.helper.State.*;
  *
  * @see Context
  * @see TransactionIndexes
- * @see TransactionEventKeys
- * @see EventSplitter
  */
 // TODO: Delegate to ConcreteTransaction
 public class Transaction implements Configurable, Evaluable
@@ -82,7 +80,6 @@ public class Transaction implements Configurable, Evaluable
     public Instructions instructions = new Instructions();
 
     TransactionIndexes indexes = new TransactionIndexes(this);
-    TransactionEventKeys events = new TransactionEventKeys(this);
 
     public Transaction(String op, String name)
     {

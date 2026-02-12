@@ -1,6 +1,7 @@
 package com.taitl.existential;
 
 import java.io.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.builders.*;
@@ -18,15 +19,25 @@ import com.taitl.existential.transactions.*;
  */
 public final class Existential implements Closeable
 {
-    private ExistentialInit init = new ExistentialInit(this);
-    private ExistentialAccess access = new ExistentialAccess(this);
-    private ExistentialTransactions transactions = new ExistentialTransactions(this);
-    private ExistentialEvents events = new ExistentialEvents(this);
-    private ExistentialFlags flags = new ExistentialFlags(this);
-    private ExistentialConfigs configs = new ExistentialConfigs(this);
+    private ExistentialInit init;
+    private ExistentialAccess access;
+    private ExistentialTransactions transactions;
+    private ExistentialEvents events;
+    private ExistentialFlags flags;
+    private ExistentialConfigs configs;
 
     private boolean configured = false;
     private boolean closed = false;
+
+    public Existential()
+    {
+        init = Creator.create(ExistentialInit.class, new Class[] { Existential.class }, this);
+        access = Creator.create(ExistentialAccess.class, new Class[] { Existential.class }, this);
+        transactions = Creator.create(ExistentialTransactions.class, new Class[] { Existential.class }, this);
+        events = Creator.create(ExistentialEvents.class, new Class[] { Existential.class }, this);
+        flags = Creator.create(ExistentialFlags.class, new Class[] { Existential.class }, this);
+        configs = Creator.create(ExistentialConfigs.class, new Class[] { Existential.class }, this);
+    }
 
     public ConfigBuilder configure(String op)
     {
@@ -43,6 +54,11 @@ public final class Existential implements Closeable
         return transactions.begin(op, custom);
     }
 
+    /**
+     * Commits an existential transaction.
+     * Performs validation of the rules configured for transaction's business op.
+     * Note: after the commit(), tranID becomes invalid
+     */
     public void commit(String tranID) throws ExistentialException
     {
         transactions.commit(tranID);
@@ -53,6 +69,11 @@ public final class Existential implements Closeable
         transactions.checkpoint(tranID);
     }
 
+    /**
+     * Rolls back an existential transaction.
+     * Rule validation is not performed.
+     * Note: after the rollback(), tranID becomes invalid
+     */
     public void rollback(String tranID) throws ExistentialException
     {
         transactions.rollback(tranID);
