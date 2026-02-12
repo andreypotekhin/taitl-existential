@@ -10,8 +10,8 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Static facade into Existential library.
- * Holds instance of Existential class, to which it delegates all calls.
+ * Static facade for Existential library.
+ * Holds an instance of Existential class, to which it delegates all calls.
  * Note: this class is only a convenience / shorthand for accessing the methods
  * of Existential class.
  * You pay for this convenience by assuming only a single Existential instance per JVM.

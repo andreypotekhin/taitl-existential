@@ -12,6 +12,7 @@ import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+// TODO: Delegate to ConcreteContext
 public class Context implements Configurable, Evaluable
 {
     protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
@@ -64,7 +65,7 @@ public class Context implements Configurable, Evaluable
      * Set invariants/rules to be enforced for the business operation defined by this context.
      *
      * <pre>{@code
-     * Ex.contexts().get("/app/flight_school")
+     * Ex.contexts("/app/flight_school")
      *     .context(() -> new Context(){{
      * 	      invariant(new Invariant<Pilot>() {{
      *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
@@ -85,11 +86,11 @@ public class Context implements Configurable, Evaluable
      * Set effects for business operation defined by this context.
      *
      * <pre>{@code
-     * Ex.contexts().get("/app/flight_school")
+     * Ex.contexts("/app/flight_school")
      *     .context(() -> new Context(){{
      * 	      effect(new Effect<Pilot>() {{
-     *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     *          }})
+     *            transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
+     *        }})
      * }</pre>
      *
      * @param <T>       Type parameter
@@ -103,29 +104,33 @@ public class Context implements Configurable, Evaluable
 
     /**
      * Associate a custom Transaction with Context.
-     * Associating a custom Transaction with Context allows to define
-     * rules, such as invariants and intents, for the context using
-     * an instance of a custom transaction class.
+     * The rules defined for a Transaction does not change the Context,
+     * but get evaluated along with it.
      * Custom transaction may declare its own member fields, thus
      * allowing to carry over information between rules/event handlers.
+     * Adding a Transaction can happen at any time, for instance, in
+     * a web endpoint handler or other business method, which allows
+     * it to access local scope variables and this pointer in its rules.
      *
      * Example:
-     * Ex.contexts().get("/app/school")
-     * .transaction(() -> new Transaction(){{
-     * invariant(new Invariant<Student>() {{
-     * all(student -> student.awake());
-     * }});
-     * invariant(new Invariant<Teacher>() {{
-     * all(teacher -> teacher.notOnLeave());
-     * }});
-     * allow(new Intent<Student>() {{
-     * read();
-     * write();
-     * }});
-     * allow(new Intent<Teacher>() {{
-     * read();
-     * }});
-     * }})
+     * <pre>{@code
+     * Ex.contexts("/app/school")
+     *      .transaction(() -> new Transaction(){{
+     *          invariant(new Invariant<Student>() {{
+     *              all(student -> student.awake());
+     *          }});
+     *          invariant(new Invariant<Teacher>() {{
+     *              all(teacher -> teacher.notOnLeave());
+     *          }});
+     *          allow(new Intent<Student>() {{
+     *              read();
+     *              write();
+     *          }});
+     *          allow(new Intent<Teacher>() {{
+     *              read();
+     *          }});
+     *      }})
+     * }<pre>
      */
     public Context transaction(Supplier<? extends Transaction> supplier)
     {

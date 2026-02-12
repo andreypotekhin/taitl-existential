@@ -63,8 +63,8 @@ import static com.taitl.ex.common.helper.State.*;
  * @see TransactionIndexes
  * @see TransactionEvents
  * @see EventSplitter
- * TODO: TransactionBuilder
  */
+// TODO: Delegate to ConcreteTransaction
 public class Transaction implements Configurable, Evaluable
 {
     public final UUID id;

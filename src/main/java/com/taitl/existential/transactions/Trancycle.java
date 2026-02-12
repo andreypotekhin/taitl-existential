@@ -12,6 +12,7 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * Holds handlers for transaction lifecycle events, such as Begin, Commit, Rollback.
  */
+// TODO: Delegate to ConcreteTrancycle
 public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
 {
     /**

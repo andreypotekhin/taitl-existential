@@ -14,6 +14,7 @@ import static com.taitl.ex.common.helper.Args.*;
  *            Entity type to which the expression applies, or a mutation of an entity type
  *            (Mutation<T>, Transition<T>)
  */
+// TODO: Delegate to ConcreteAll
 public class All<T> implements Expression<T>
 {
     Predicate<? super T> condition;

@@ -9,18 +9,12 @@ import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
 /**
- * Main entry point into Existential library.
+ * Entry point into Existential library.
  *
  * Documentation:
  *   <a href="https://github.com/andreypotekhin/taitl-existential">Existential</a>
  *
  * @author Andrey Potekhin
- *
- * @see ExistentialTransactions
- * @see ExistentialEvents
- * @see ExistentialFlags
- * @see ExistentialConfigs
- * @see ExistentialAccess
  */
 public final class Existential implements Closeable
 {
