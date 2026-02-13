@@ -1,4 +1,4 @@
-package com.taitl.ex.core.events;
+package com.taitl.ex.logic.indexing.config_indexes;
 
 import java.util.*;
 import com.taitl.existential.constants.*;

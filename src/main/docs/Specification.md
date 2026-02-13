@@ -28,6 +28,7 @@ Event: an application or library event, such as:
   - Events are sent to the library by calling event() method
   - Access events are sent to the library by calling read() and write()
   - Transaction events are automatically sent to the library when initiating or completing a transaction (begin(), commit(), rollback(), checkpoint() methods)
+Runtime event: an event that is sent to library during execution of a transaction. Includes event type, entity type and reference to the affected entity.   
 Context: a set of rules associated with a business operation 
   - A Context uses Op name to associate with an Op 
   - A Context can be defined with a wildcard Op name
@@ -145,24 +146,25 @@ User can specify side effect for transaction lifecycle event (begin, commit, rol
 ##### Configuration stages
 
 User can assign rules to different stages of transaction lifecycle.
-Configuration stages include: Early, Middle and Late.
-By default, rules are assigned to Late stage.
-Early stage rules execute on transaction start
-Middle stage rules execute within transaction immediately upon encountering a trigger event
-Late stage rules execute transaction commit or checkpoint
+Configuration stages include: Precondition (Early), Runtime (Middle) and Validation (Late).
+By default, the rules are assigned to Validation stage.
+Precondition stage rules execute on transaction start
+Runtime stage rules execute within transaction upon encountering a trigger event
+Validation stage rules execute on transaction commit or checkpoint
 
 ##### Configuring Custom Events
 
-### Evaluation
+#### Evaluation workflow
 
-Evaluation is the process of executing the rules (evaluating expressions, calling event handlers) configured for a business operation
-Evaluations start upon beginning and end upon end of an existential transaction
+Evaluation is the process of executing the rules (evaluating expressions, calling event handlers) configured for a business operation.
+Evaluations start upon beginning and end upon end of an existential transaction.
+There is a separate evaluation per stage: Precondition, Runtime and Validation.
 
 Each existential transaction is associated with business op name, and through that with the closest matching context, its parent contexts,  
 matching wildcard contexts, any configured Transaction factory and any passed-in Transaction instance. The rules 
 configured in these contexts and transactions participate in evaluations. 
 Evaluation of Early stage rules is called Preconditions evaluation. It is invoked upon transaction start.
-Evaluation of Middle stage rules is called Execution evaluation. It is invoked for each trigger event.
+Evaluation of Middle stage rules is called Runtime evaluation. It is invoked for each trigger event.
 Evaluation of Late stage rules is called Validation evaluation. It is invoked upon transaction commit or at checkpoint.
 
 Evaluations of separate existential transactions are independent, even if these transactions are nested
@@ -173,22 +175,25 @@ The order of execution of rules follows the order of their definition
 For each event, the order of invocations of its event handlers, if multiple handlers are defined, follows the order of their definition
 Immediately evaluated rules are out-of-order. 
 
-#### Preconditions evaluation
+##### Preconditions evaluation
 
 User can assign any rule to early stage
 Early stage rules are evaluated at the beginning of existential transaction
 Precondition expressions are evaluated at transaction start
 Precondition event handlers get invoked upon receiving a trigger event (any time during transaction)
 
-#### Execution evaluation
+##### Runtime evaluation
 
 The rules assigned to middle stage are evaluated immediately upon receiving the corresponding trigger event
 
-#### Validation evaluation
+##### Validation evaluation
 
 Validation evaluation is triggered on a commit or checkpoint of an existential transaction
 Effects are evaluated by applying event handlers for each event reported during transaction to corresponding entity
 Intents are evaluated as lists of predicates. Violations are added to validation report
+
+
+## Concepts
 
 ### Contexts
 
@@ -254,17 +259,17 @@ User can define the 'All' quantifier on an entity mutation class (Mutation<T>)
 
 #### Existence Quantifier
 
-User can create an invariant on an entity class using the 'Exist' quantifier
+User can create an invariant on an entity class using the 'Exists' quantifier
 User can require entity existence when certain condition is met (same class, within entity class code)
 User can require entity existence when certain condition is met (different classes, outside entity class code)
 User can specify 'Exists' quantifier as a parameter to the 'All' quantifier, thus creating an All-Exists invariant
-User can define the 'Exist' quantifier on a collection
-User can define the 'Exist' quantifier on a stream
-User can specify a transaction object for the 'Exist' quantifier
+User can define the 'Exists' quantifier on a collection
+User can define the 'Exists' quantifier on a stream
+User can specify a transaction object for the 'Exists' quantifier
 
 #### Indexes
 
-User can use an index to speed up evaluation of Existence expression
+User can use an index to speed up evaluation of Exists expression
 User can use an index to speed up evaluation of other expressions
 User can create an in-transaction index to pass information between the rules
 User can create an out-of-transaction index to pass information between the rules

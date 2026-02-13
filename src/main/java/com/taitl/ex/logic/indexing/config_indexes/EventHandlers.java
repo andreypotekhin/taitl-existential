@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.events.maps.event_handlers;
+package com.taitl.ex.logic.indexing.config_indexes;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
@@ -8,7 +8,7 @@ import com.taitl.existential.keys.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
- * A multimap mapping of a type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
+ * Maps type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
  * Example: Doc<Json> -> Set<On[Е]<Doc<Json>>>
  * Here, E is one of events Create, Update, Upsert, Delete, Read, Mutate, Transit.
  *

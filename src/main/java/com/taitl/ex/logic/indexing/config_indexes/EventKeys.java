@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.validation.data;
+package com.taitl.ex.logic.indexing.config_indexes;
 
 import java.util.*;
 import com.taitl.existential.constants.*;
@@ -9,10 +9,11 @@ import com.taitl.existential.transactions.*;
  * Stores all event types for which a rule is defined in a Transaction or a Context.
  *
  * Different contexts may have rules to different types of events.
- * To speed up the answer to question 'which events should be emitted by EventSplitter for this context?',
- * the set of relevant events (from the context as well from all its parents) is created at transaction
- * start and stored in the Transaction object. This allows to avoid having to gather such info for each
- * individual event from each involved context.
+ * To speed up the answer to question 'which events should be emitted by EventSplitter
+ * for this context?', the set of relevant events (from the context and from all its
+ * parents and matching contexts) is created at transaction start and stored in the
+ * Transaction object. This allows to avoid having to gather such info for each individual
+ * event from each applicable context.
  *
  * @see Tr
  */
@@ -27,7 +28,7 @@ public class EventKeys
         this.tr = tr;
     }
 
-    void addEventType(EventKey eventKey)
+    void add(EventKey eventKey)
     {
         if (eventKey == null)
         {
@@ -42,5 +43,5 @@ public class EventKeys
         }
     }
 
-    // TODO: get set of relevant event types
+    // TODO: get the set of relevant event types for a key
 }

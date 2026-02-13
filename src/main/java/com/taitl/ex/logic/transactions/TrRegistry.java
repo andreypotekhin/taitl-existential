@@ -1,10 +1,8 @@
 package com.taitl.ex.logic.transactions;
 
 import java.util.*;
-import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
-import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -32,17 +30,7 @@ public class TrRegistry
     {
         sane(op, "op");
         OpKey.validate(op);
-        Tr o = new Tr(op, generateId());
-
-        for (Context context : exec.ex().contexts().getContexts(op))
-        {
-            Transaction tr = createTransaction.call(context);
-            o.addTransaction(tr);
-        }
-        if (custom != null)
-        {
-            o.addTransaction(custom);
-        }
+        Tr o = createTransaction.forContexts(op, exec.ex().contexts().getContexts(op), custom);
         synchronized (this)
         {
             reg.put(o.id.toString(), o);
@@ -82,10 +70,5 @@ public class TrRegistry
         {
             reg.clear();
         }
-    }
-
-    protected UUID generateId()
-    {
-        return UUID.randomUUID();
     }
 }

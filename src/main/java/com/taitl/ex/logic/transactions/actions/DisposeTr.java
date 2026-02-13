@@ -2,23 +2,21 @@ package com.taitl.ex.logic.transactions.actions;
 
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Dispose transaction object after a commit/rollback.
  */
 public class DisposeTr
 {
-    TransactionLogic transactionLogic;
+    TransactionLogic tl;
 
-    public DisposeTr(TransactionLogic transactionLogic)
+    public DisposeTr(TransactionLogic tl)
     {
-        sane(transactionLogic, "transactionLogic");
-        this.transactionLogic = transactionLogic;
+        sane(tl, "transactionLogic");
+        this.tl = tl;
     }
 
     /**
@@ -27,6 +25,6 @@ public class DisposeTr
     public void call(Tr tr) throws NotFoundException
     {
         tr.close();
-        transactionLogic.registry().remove(tr.id.toString());
+        tl.registry().remove(tr.id.toString());
     }
 }

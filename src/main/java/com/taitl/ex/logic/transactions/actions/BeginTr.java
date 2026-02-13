@@ -11,19 +11,18 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class BeginTr
 {
-    TransactionLogic transactionLogic;
+    TransactionLogic tl;
 
-    public BeginTr(TransactionLogic transactionLogic)
+    public BeginTr(TransactionLogic tl)
     {
-        sane(transactionLogic, "transactionLogic");
-        this.transactionLogic = transactionLogic;
+        sane(tl, "transactionLogic");
+        this.tl = tl;
     }
 
-    /**
-     * Execute transaction predicates
-     */
     public void call(Tr tr) throws NotFoundException
     {
-        // TODO: Execute transaction predicates
+        tr.onBegin();
+        tl.validationLogic.prepareForValidation(tr);
+        // TODO: Execute transaction preconditions
     }
 }

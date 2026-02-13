@@ -1,6 +1,8 @@
 package com.taitl.ex.logic.validation;
 
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.transactions.*;
+import com.taitl.ex.logic.validation.actions.*;
 import com.taitl.ex.logic.validation.output.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.transactions.*;
@@ -13,6 +15,8 @@ public class ValidationLogic
 {
     TransactionLogic tl;
     ValidationReport report;
+    PrepareTransaction prepareTransaction =
+            Creator.singleton(PrepareTransaction.class);
 
     public ValidationLogic(TransactionLogic transactionLogic)
     {
@@ -21,7 +25,15 @@ public class ValidationLogic
     }
 
     /**
-     * Evaluate validation expressions and call event handlers
+     * Prepare Tr object for validation.
+     */
+    public void prepareForValidation(Tr tr)
+    {
+        prepareTransaction.call(tr, this);
+    }
+
+    /**
+     * Evaluate validation expressions and call event handlers.
      */
     public void run(Tr tr) throws ValidationStageExceptions
     {

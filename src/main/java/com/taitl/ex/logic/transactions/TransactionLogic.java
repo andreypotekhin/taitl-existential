@@ -18,8 +18,11 @@ public class TransactionLogic implements Closeable
     protected TrRegistry registry;
     protected CreateTr createTr;
     protected BeginTr beginTr;
+    protected CommitTr commitTr;
+    protected CheckpointTr checkpointTr;
+    protected RollbackTr rollbackTr;
     protected DisposeTr disposeTr;
-    protected ValidationLogic validationLogic;
+    public ValidationLogic validationLogic;
 
     public TransactionLogic(ExistentialTransactions ee)
     {
@@ -27,6 +30,9 @@ public class TransactionLogic implements Closeable
         this.registry = new TrRegistry(ee);
         this.createTr = new CreateTr(this);
         this.beginTr = new BeginTr(this);
+        this.commitTr = new CommitTr(this);
+        this.checkpointTr = new CheckpointTr(this);
+        this.rollbackTr = new RollbackTr(this);
         this.disposeTr = new DisposeTr(this);
         this.validationLogic = new ValidationLogic(this);
     }
@@ -56,7 +62,7 @@ public class TransactionLogic implements Closeable
         sane(tranID, "tranID");
         Tr tr = registry.get(tranID);
         verify(tr != null, "Transaction not found, id=" + tranID);
-        validationLogic.run(tr);
+        checkpointTr.call(tr);
     }
 
     public void commit(String tranID) throws ExistentialException
@@ -64,7 +70,7 @@ public class TransactionLogic implements Closeable
         sane(tranID, "tranID");
         Tr tr = registry.get(tranID);
         verify(tr != null, "Transaction not found, id=" + tranID);
-        validationLogic.run(tr);
+        commitTr.call(tr);
         disposeTr.call(tr);
     }
 
@@ -73,6 +79,7 @@ public class TransactionLogic implements Closeable
         sane(tranID, "tranID");
         Tr tr = registry.get(tranID);
         verify(tr != null, "Transaction not found, id=" + tranID);
+        rollbackTr.call(tr);
         disposeTr.call(tr);
     }
 

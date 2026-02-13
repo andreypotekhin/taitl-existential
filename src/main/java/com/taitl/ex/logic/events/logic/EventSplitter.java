@@ -7,6 +7,8 @@ import com.taitl.existential.events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.transactions.*;
 
+import static com.taitl.ex.common.helper.Args.*;
+
 /**
  * Splits events, such as object mutations/transitions, into event sets so that various aspects
  * of an event may be processed/handled separately.
@@ -68,28 +70,25 @@ public class EventSplitter
 {
     public <T> Set<Event<T>> split(Event<T> event)
     {
-        if (event == null)
-        {
-            throw new IllegalArgumentException(Strings.ARG_EVENT);
-        }
+        sane(event, "event");
         Set<Event<T>> set = new LinkedHashSet<>();
         set.add(event);
         if (event instanceof Transit)
         {
-            splitTransit((Transit<T>) event, set);
+            return splitTransit((Transit<T>) event, set);
         }
-        else if (event instanceof Mutate)
-        {
-            throw new IllegalArgumentException(Strings.ARG_NEED_TRANSIT_EVENT);
-        }
+        check(!(event instanceof Mutate), "Please specify event of type Transit<>");
         // TODO: Mutate
-        // TODO: ReadAndLock
+        if (event instanceof ReadAndLock)
+        {
+            return splitReadAndLock((ReadAndLock<T>) event, set);
+        }
         // TODO: other
 
         return set;
     }
 
-    protected <T> void splitTransit(Transit<T> transit, Set<Event<T>> set)
+    protected <T> Set<Event<T>> splitTransit(Transit<T> transit, Set<Event<T>> set)
     {
         if (transit == null)
         {
@@ -130,9 +129,10 @@ public class EventSplitter
             set.add(new Delete<>(transit.t0));
             set.add(new Write<>(transit.t0));
         }
+        return set;
     }
 
-    protected <T> void splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> set)
+    protected <T> Set<Event<T>> splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> set)
     {
         if (event == null)
         {
@@ -143,5 +143,6 @@ public class EventSplitter
             throw new IllegalArgumentException(Strings.ARG_SET);
         }
         set.add(new Read<>(event.t));
+        return set;
     }
 }

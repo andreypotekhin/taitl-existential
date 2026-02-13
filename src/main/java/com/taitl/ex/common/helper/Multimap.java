@@ -1,18 +1,14 @@
 package com.taitl.ex.common.helper;
 
-import static com.taitl.existential.constants.Strings.ARG_KEY;
-import static com.taitl.existential.constants.Strings.ARG_MATCH;
-import static com.taitl.existential.constants.Strings.ARG_VALUE;
-import static java.util.stream.Collectors.toSet;
+import java.util.*;
+import java.util.function.*;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
+import static com.taitl.existential.constants.Strings.*;
+import static java.util.stream.Collectors.*;
 
 /**
- * Maps key to a set of values
+ * Maps key to a set of values.
+ * Multimap<K, V> == Map<K, Set<V>>
  */
 public class Multimap<K, V>
 {

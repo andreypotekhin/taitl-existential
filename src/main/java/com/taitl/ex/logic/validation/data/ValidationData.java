@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.validation.data;
 
 import java.util.*;
+import com.taitl.ex.logic.indexing.config_indexes.*;
 import com.taitl.existential.transactions.*;
 
 public class ValidationData

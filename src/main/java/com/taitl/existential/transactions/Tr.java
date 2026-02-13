@@ -2,7 +2,6 @@ package com.taitl.existential.transactions;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.ex.logic.validation.*;
 import com.taitl.ex.logic.validation.data.*;
 import com.taitl.existential.keys.*;
 
@@ -49,6 +48,39 @@ public class Tr
     // Close transactions, remove op transaction from registry
     // rollback()
     // checkpoint()
+
+    /**
+     * On begin transaction.
+     * Called by BeginTr
+     */
+    public void onBegin()
+    {
+        // Init ValidationData
+    }
+
+    /**
+     * On transaction checkpoint.
+     * Called by CheckpointTr
+     */
+    public void onCheckpoint()
+    {
+    }
+
+    /**
+     * On commit transaction.
+     * Called by CommitTr
+     */
+    public void onCommit()
+    {
+    }
+
+    /**
+     * On rollback transaction.
+     * Called by RollbackTr
+     */
+    public void onRollback()
+    {
+    }
 
     public void close()
     {

@@ -8,6 +8,9 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
+/**
+ * Commit transaction object.
+ */
 public class CreateTr
 {
     TransactionLogic transactionLogic;
