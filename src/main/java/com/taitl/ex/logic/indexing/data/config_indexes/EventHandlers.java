@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.indexing.config_indexes;
+package com.taitl.ex.logic.indexing.data.config_indexes;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
@@ -9,12 +9,13 @@ import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Maps type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
- * Example: Doc<Json> -> Set<On[Е]<Doc<Json>>>
+ * for which a rule is defined in a Transaction or its Contexts.
+ * Example: Doc<JSON> -> Set<On[Е]<Doc<JSON>>>
  * Here, E is one of events Create, Update, Upsert, Delete, Read, Mutate, Transit.
  *
  * Example:
- *   Retrieve event handlers defined for type "Doc<Json>":
- *   Set<Handler> handlers = eventHandlers.get("Doc<Json>")
+ *   To retrieve the event handlers defined for type "Doc<JSON>":
+ *   Set<EventHandler> handlers = eventHandlers.get("Doc<JSON>")
  *
  * @see EventHandlerWithSideEffects
  * @see BiEventHandlerWithSideEffects

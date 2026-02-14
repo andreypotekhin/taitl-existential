@@ -3,6 +3,7 @@ package com.taitl.ex.logic.transactions;
 import java.io.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.transactions.actions.*;
+import com.taitl.ex.logic.transactions.data.*;
 import com.taitl.ex.logic.validation.*;
 import com.taitl.existential.*;
 import com.taitl.existential.exceptions.*;
@@ -91,6 +92,14 @@ public class TransactionLogic implements Closeable
     public TrRegistry registry()
     {
         return registry;
+    }
+
+    public Tr tr(String tranID) throws ExistentialException
+    {
+        sane(tranID, "tranID");
+        Tr tr = registry.get(tranID);
+        verify(tr != null, "Transaction not found, id=" + tranID);
+        return tr;
     }
 
     /** Close on exit */

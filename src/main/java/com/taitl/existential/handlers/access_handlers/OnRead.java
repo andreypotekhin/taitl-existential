@@ -1,7 +1,7 @@
-package com.taitl.existential.handlers;
+package com.taitl.existential.handlers.access_handlers;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.function.*;
+import com.taitl.existential.handlers.*;
 
 public class OnRead<T> extends On<T>
 {

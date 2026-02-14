@@ -1,6 +1,7 @@
 package com.taitl.existential.events.types;
 
 import com.taitl.existential.events.*;
+import com.taitl.existential.events.access_events.*;
 
 /**
  * Marker interface for any event about an entity.

@@ -1,6 +1,7 @@
 package com.taitl.existential.events.types;
 
 import com.taitl.existential.events.*;
+import com.taitl.existential.events.access_events.*;
 
 /**
  * Indicates change event on an entity, recording entities both initial and final states.

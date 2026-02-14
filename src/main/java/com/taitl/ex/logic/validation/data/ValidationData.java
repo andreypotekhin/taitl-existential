@@ -1,35 +1,30 @@
 package com.taitl.ex.logic.validation.data;
 
-import java.util.*;
-import com.taitl.ex.logic.indexing.config_indexes.*;
+import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.existential.transactions.*;
 
+/**
+ * Intermediary data, such as event and handler indexes,
+ * to use in validation stage.
+ * The data in this class is scoped to a single transaction.
+ * An instance of ValidationData is owned by Tr class (Tr.indexData).
+ * Used by ValidationLogic.
+ *
+ * @see Tr
+ */
 public class ValidationData
 {
     Tr tr;
-    EventKeys eventKeys;
-    BitSet eventTypeMask = new BitSet(64);
+    public IndexData indexData;
 
     public ValidationData(Tr tr)
     {
         this.tr = tr;
-        this.eventKeys = new EventKeys(tr);
-    }
-
-    public EventKeys eventKeys()
-    {
-        return eventKeys;
-    }
-
-    public BitSet eventTypeMask()
-    {
-        return eventTypeMask;
+        this.indexData = tr.indexData();
     }
 
     public void close()
     {
         tr = null;
-        eventKeys = null;
-        eventTypeMask = null;
     }
 }

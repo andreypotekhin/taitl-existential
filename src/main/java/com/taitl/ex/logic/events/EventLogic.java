@@ -5,8 +5,11 @@ import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.events.actions.*;
 import com.taitl.existential.*;
+import com.taitl.existential.events.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -14,9 +17,7 @@ public class EventLogic implements Closeable
 {
     protected Existential ex;
     protected ExistentialEvents ev;
-
-    protected ReceiveEvent receiveEvent = Creator.singleton(ReceiveEvent.class);
-    protected SplitEvent splitEvent = Creator.singleton(SplitEvent.class);
+    protected ReceiveEvent receiveEvent = Creator.create(ReceiveEvent.class, new Class[] { EventLogic.class }, this);
 
     public EventLogic(ExistentialEvents ev)
     {
@@ -26,21 +27,18 @@ public class EventLogic implements Closeable
 
     public <T> void event(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        sane(t0, "t0", t1, "t1", type, "type", tranID, "tranID");
-        // Get transaction object
-        // Address the case when tran is not found
-        // Split event into multiple events using EventSplitter
-        // Transition<House> -> On<House>, Mutate<House>, Transit<House>
-        // Depending on mutation type: OnCreate<House>, OnUpdate<House>, OnMutate<House>,
-        // OnDelete<House>
-        // Trigger processing of immediate event handlers
-        // Add event to event field for late-phase processing
+        sane(type, "type", tranID, "tranID");
+        check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
+        boolean haveNull = t0 == null || t1 == null;
+        BiEvent<T> event = haveNull ? new Transit<>(t0, t1) : new Mutate<>(t0, t1);
+        receiveEvent.bievent(event, type, tr(tranID));
     }
 
     public <T> void event(T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
         sane(t, "t", type, "type", tranID, "tranID");
-        // TODO
+        // TODO: Verify the use of Change here
+        receiveEvent.event(new Change<T>(t), t, type, tr(tranID));
     }
 
     /**
@@ -51,7 +49,7 @@ public class EventLogic implements Closeable
     public <T> void event(T t0, T t1, String tranID) throws ExistentialException
     {
         sane(t0, "t0", t1, "t1", tranID, "tranID");
-        // TODO
+        receiveEvent.bievent(new Mutate<T>(t0, t1), null, tr(tranID));
     }
 
     /**
@@ -62,10 +60,16 @@ public class EventLogic implements Closeable
     public <T> void event(T t, String tranID) throws ExistentialException
     {
         sane(t, "t", tranID, "tranID");
-        // TODO
+        // TODO: Verify the use of Change here
+        receiveEvent.event(new Change<T>(t), t, null, tr(tranID));
     }
 
     public void close()
     {
+    }
+
+    Tr tr(String tranID) throws ExistentialException
+    {
+        return ex.transactions().tr(tranID);
     }
 }

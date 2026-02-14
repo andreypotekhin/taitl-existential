@@ -2,6 +2,7 @@ package com.taitl.existential.transactions;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
+import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.ex.logic.validation.data.*;
 import com.taitl.existential.keys.*;
 
@@ -21,9 +22,10 @@ import static com.taitl.ex.common.helper.Args.*;
 public class Tr
 {
     public final UUID id;
-    String op;
+    public String op;
     List<Transaction> transactions = new ArrayList<>();
-    ValidationData validationData = new ValidationData(this);
+    IndexData indexData;
+    ValidationData validationData;
 
     public Tr(String op, UUID id)
     {
@@ -31,6 +33,8 @@ public class Tr
         OpKey.validate(op);
         this.op = op;
         this.id = id;
+        indexData = new IndexData();
+        validationData = new ValidationData(this);
     }
 
     public void addTransaction(Transaction tr)
@@ -87,5 +91,10 @@ public class Tr
         validationData.close();
         validationData = null;
         transactions = null;
+    }
+
+    public IndexData indexData()
+    {
+        return indexData;
     }
 }

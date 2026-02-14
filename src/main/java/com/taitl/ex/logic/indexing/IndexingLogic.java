@@ -24,7 +24,7 @@ public class IndexingLogic implements Closeable
 
     public void indexTransaction(Tr tr)
     {
-        // TODO: add rules to indexes (e.g. EventKeys, EventHandlers)
+        // TODO: add rules to indexes
     }
 
     /* Runtime indexes */
@@ -35,6 +35,11 @@ public class IndexingLogic implements Closeable
     }
 
     public <T> void indexEvent(Event<T> event, T o, TypeKey<T> type, Tr tr)
+    {
+        // TODO
+    }
+
+    public <T> void indexEvent(BiEvent<T> event, TypeKey<T> type, Tr tr)
     {
         // TODO
     }

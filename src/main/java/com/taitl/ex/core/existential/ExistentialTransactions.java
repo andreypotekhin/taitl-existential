@@ -52,6 +52,12 @@ public class ExistentialTransactions implements Closeable
         transactionLogic.rollback(tranID);
     }
 
+    public Tr tr(String tranID) throws ExistentialException
+    {
+        sane(tranID, "tranID");
+        return transactionLogic.tr(tranID);
+    }
+
     // cleanup: Close transactions, remove op transaction from registry
 
     public void close()

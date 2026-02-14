@@ -2,8 +2,8 @@ package com.taitl.existential.contexts;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.instructions.*;
+import com.taitl.ex.logic.events.logic.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.*;
@@ -16,9 +16,6 @@ import static com.taitl.ex.common.helper.Args.*;
 // TODO: add context() method for adding child contexts
 public class Context implements Configurable, Evaluable
 {
-    protected static final Supplier<? extends Transaction> DEFAULT_TRANSACTION_FACTORY =
-            Creator.getSupplier(Transaction.class);
-
     /**
      * Context name, e.g. "/app/flights", "/app/flights/update", "*update"
      */
@@ -43,7 +40,10 @@ public class Context implements Configurable, Evaluable
     protected Instructions instructions = new Instructions();
 
     /** Transaction factory */
-    protected Supplier<? extends Transaction> transactionFactory = DEFAULT_TRANSACTION_FACTORY;
+    protected Supplier<? extends Transaction> transactionFactory = Transaction.DEFAULT_FACTORY;
+
+    /** EventSplitter factory */
+    protected Supplier<? extends EventSplitter> eventSplitterFactory = EventSplitter.DEFAULT_FACTORY;
 
     public Context(String name)
     {
@@ -140,6 +140,13 @@ public class Context implements Configurable, Evaluable
         return this;
     }
 
+    public Context eventSplitter(Supplier<? extends EventSplitter> supplier)
+    {
+        sane(supplier, "supplier");
+        eventSplitterFactory = supplier;
+        return this;
+    }
+
     /*
      * Configurable interface
      */
@@ -196,5 +203,10 @@ public class Context implements Configurable, Evaluable
     public Supplier<? extends Transaction> transactionFactory()
     {
         return transactionFactory;
+    }
+
+    public Supplier<? extends EventSplitter> eventSplitterFactory()
+    {
+        return eventSplitterFactory;
     }
 }

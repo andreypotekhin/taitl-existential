@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.transactions;
+package com.taitl.ex.logic.transactions.data;
 
 import java.util.*;
 import com.taitl.ex.core.existential.*;

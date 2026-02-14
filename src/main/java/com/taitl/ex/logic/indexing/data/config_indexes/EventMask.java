@@ -1,8 +1,9 @@
-package com.taitl.ex.logic.indexing.config_indexes;
+package com.taitl.ex.logic.indexing.data.config_indexes;
 
 import java.util.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
+import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 

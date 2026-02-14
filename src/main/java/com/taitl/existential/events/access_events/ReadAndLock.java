@@ -1,9 +1,9 @@
-package com.taitl.existential.events;
+package com.taitl.existential.events.access_events;
 
-import com.taitl.existential.events.types.EntityEvent;
+import com.taitl.existential.events.types.*;
 
 /**
- * Indicates that entity was read with update lock (selected for update) in the course of of current transaction.
+ * Indicates that entity was read with an update lock (selected for update) in the course of current transaction.
  * 
  * Example: ReadAndLock<Account> is raised when Account entity was loaded in the course of current transaction.
  * 

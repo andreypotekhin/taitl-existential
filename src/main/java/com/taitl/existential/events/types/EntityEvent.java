@@ -2,6 +2,7 @@ package com.taitl.existential.events.types;
 
 import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
+import com.taitl.existential.events.access_events.*;
 
 /**
  * Indicates an event on an entity, such as of creating, accessing, modifying or deleting.

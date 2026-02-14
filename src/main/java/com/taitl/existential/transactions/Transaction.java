@@ -2,9 +2,9 @@ package com.taitl.existential.transactions;
 
 import java.util.*;
 import java.util.function.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.instructions.*;
 import com.taitl.ex.core.transactions.*;
-import com.taitl.ex.logic.events.logic.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
@@ -65,6 +65,9 @@ import static com.taitl.ex.common.helper.State.*;
 // TODO: Delegate to ConcreteTransaction
 public class Transaction implements Configurable, Evaluable
 {
+    public static final Supplier<? extends Transaction> DEFAULT_FACTORY =
+            Creator.getSupplier(Transaction.class);
+
     public final UUID id;
     public String op;
     public String name;
