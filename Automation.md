@@ -1,14 +1,19 @@
 # Automation
 
 ## Automation Contract
-Prioritise 'top-to-bottom', 'working backwards from the Customer' order of implementation, 
+Prioritise 'top-to-bottom', 'working backwards from customer' order of implementation, 
 putting effort into end-user facing artifacts first (source code, documentation), 
-proceeding with implementing library interfaces and then the user stories (specifications) and their backing test cases. 
+then proceeding with implementing library interfaces and user stories (specifications)
+(docs/dev/Specifications.md) and their backing test cases (com.taitl.existential.specs subpackages)
+and unit tests. 
 
-See tracking documents on various levels of code tree for what to focus on:
+See tracking documents on various levels of the code tree for what to focus on:
 - Automation.md
 - Todo.md
 - Suggestions.md
+
+PR titles and Git branch naming for PRs: use 'auto' followed by role name and brief description 
+Example: auto/compress/file-extentions, auto/document/configurables
 
 ### Mastermind role
 See 'Mastermind role' section in 'Team roles' of AGENTS.md
