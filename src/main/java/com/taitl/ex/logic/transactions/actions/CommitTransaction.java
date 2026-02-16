@@ -7,24 +7,21 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Dispose transaction object after a commit/rollback.
+ * Commit transaction
  */
-public class DisposeTr
+public class CommitTransaction
 {
     TransactionLogic tl;
 
-    public DisposeTr(TransactionLogic tl)
+    public CommitTransaction(TransactionLogic tl)
     {
         sane(tl, "transactionLogic");
         this.tl = tl;
     }
 
-    /**
-     * Close transaction, remove from registry
-     */
-    public void call(Tr tr) throws NotFoundException
+    public void call(Tr tr) throws ExistentialException
     {
-        tr.close();
-        tl.registry().remove(tr.id.toString());
+        tr.onCommit();
+        tl.validationLogic.run(tr);
     }
 }

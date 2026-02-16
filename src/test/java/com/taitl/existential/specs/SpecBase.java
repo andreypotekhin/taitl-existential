@@ -1,11 +1,11 @@
-package com.taitl.existential.claims;
+package com.taitl.existential.specs;
 
 import com.taitl.ex.examples.night_city.data.*;
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.ex.examples.night_city.tests.*;
 import com.taitl.existential.*;
 
-public class ClaimBase
+public class SpecBase
 {
     protected Existential ex;
     protected Existential prev;

@@ -1,6 +1,5 @@
 package com.taitl.ex.logic.indexing.data;
 
-import java.util.*;
 import com.taitl.ex.logic.indexing.data.config_indexes.*;
 import com.taitl.ex.logic.indexing.data.runtime_indexes.*;
 import com.taitl.ex.logic.validation.data.*;
@@ -19,32 +18,26 @@ import com.taitl.existential.transactions.*;
  */
 public class IndexData
 {
-    EventKeys eventKeys;
-    EventHandlers<?> eventHandlers;
-    BitSet eventTypesMask;
-    EventField eventField;
+    ConfigIndexes configIndexes;
+    RuntimeIndexes runtimeIndexes;
 
     public IndexData()
     {
-        this.eventKeys = new EventKeys();
-        this.eventHandlers = new EventHandlers<>();
-        this.eventField = new EventField();
-        this.eventTypesMask = new BitSet(64);
+        runtimeIndexes = new RuntimeIndexes();
     }
 
-    public EventKeys eventKeys()
-    {
-        return eventKeys;
-    }
+    // public RuntimeIndexes configIndexes(String op)
+    // {
+    // // Config config = ConfigRegistry.getConfig(op)
+    // // return config.configIndexes();
+    // }
 
-    public BitSet eventTypeMask()
+    public RuntimeIndexes runtimeIndexes(Tr tr)
     {
-        return eventTypesMask;
+        return tr.runtimeIndexes();
     }
 
     public void close()
     {
-        eventKeys = null;
-        eventTypesMask = null;
     }
 }

@@ -2,7 +2,7 @@ package com.taitl.existential.transactions;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.ex.logic.indexing.data.*;
+import com.taitl.ex.logic.indexing.data.runtime_indexes.*;
 import com.taitl.ex.logic.validation.data.*;
 import com.taitl.existential.keys.*;
 
@@ -24,7 +24,7 @@ public class Tr
     public final UUID id;
     public String op;
     List<Transaction> transactions = new ArrayList<>();
-    IndexData indexData;
+    RuntimeIndexes runtimeIndexes;
     ValidationData validationData;
 
     public Tr(String op, UUID id)
@@ -33,7 +33,7 @@ public class Tr
         OpKey.validate(op);
         this.op = op;
         this.id = id;
-        indexData = new IndexData();
+        runtimeIndexes = new RuntimeIndexes();
         validationData = new ValidationData(this);
     }
 
@@ -93,8 +93,8 @@ public class Tr
         transactions = null;
     }
 
-    public IndexData indexData()
+    public RuntimeIndexes runtimeIndexes()
     {
-        return indexData;
+        return runtimeIndexes;
     }
 }

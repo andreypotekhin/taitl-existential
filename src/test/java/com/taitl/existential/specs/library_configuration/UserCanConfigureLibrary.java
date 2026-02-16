@@ -1,7 +1,7 @@
-package com.taitl.existential.claims.library_configuration;
+package com.taitl.existential.specs.library_configuration;
 
-import com.taitl.existential.claims.*;
 import com.taitl.existential.constants.*;
+import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -9,7 +9,7 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserCanConfigureLibrary extends ClaimBase
+class UserCanConfigureLibrary extends SpecBase
 {
     {
         autoConfigure = false;

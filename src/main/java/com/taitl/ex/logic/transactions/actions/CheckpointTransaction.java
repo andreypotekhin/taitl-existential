@@ -7,13 +7,13 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * RollbackTr transaction.
+ * Checkpoint transaction
  */
-public class RollbackTr
+public class CheckpointTransaction
 {
     TransactionLogic tl;
 
-    public RollbackTr(TransactionLogic tl)
+    public CheckpointTransaction(TransactionLogic tl)
     {
         sane(tl, "transactionLogic");
         this.tl = tl;
@@ -21,6 +21,7 @@ public class RollbackTr
 
     public void call(Tr tr) throws ExistentialException
     {
-        tr.onRollback();
+        tr.onCheckpoint();
+        tl.validationLogic.run(tr);
     }
 }

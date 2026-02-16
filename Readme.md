@@ -11,7 +11,7 @@ Memory efficiency is achieved by using singleton objects for expressions and reu
 
 ## Limitations
 
-Existential is fully in-memory library, so its checks do not span beyond what was loaded as part of
+Existential is an in-memory library, so its checks do not span beyond what was loaded as part of
 a business operation/transaction.
 
 ## What it is not
@@ -43,17 +43,17 @@ Java/Groovy must use *new* to create objects. Other languages (Kotlin, Go) can d
 
 For any object of type X, a predicate (boolean expression) is always true:
 
-∀ x ∈ X ⊤(x)                                           All\<X\>(x -> *predicate(x)*)
+∀ x ∈ X ⊤(x)                                           All\<X\>(x -> *predicate(x)*)
 
 Here, *predicate*() is any boolean function.
 
 For any object of type X which satisfies a condition, a predicate is always true:
 
-∀ x ∈ X | *condition(x)* ⊤(x)                     All\<X\>(x -> *condition(x), x* -> *predicate(x)*)
+∀ x ∈ X | *condition(x)* ⊤(x)                     All\<X\>(x -> *condition(x), x* -> *predicate(x)*)
 
 For any object of type X which has been changed in the course of a business transaction, the predicate is always true:
 
-∀ x0 ∈ X0, x1 ∈ X1 ⊤(x0, x1)                 All\<Mutation\<X\>\>((x0, x1) -> *predicate(x0, x1)*)
+∀ x0 ∈ X0, x1 ∈ X1 ⊤(x0, x1)                 All\<Mutation\<X\>\>((x0, x1) -> *predicate(x0, x1)*)
 
 Here, X0 is the data at the start of business transaction (initial state); X1 is the data at the end of transaction (result state).
 x0 is entity's initial state, x1 is its final (before save) state.
@@ -64,13 +64,13 @@ If x1 is null, it is an indication that x is the object that has been deleted/de
 
 Same as above when x0, x1 must also satisfy some condition:
 
-∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ⊤(x0, x1)  All\<Mutation\<X\>\>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> *predicate(x0, x1)*)
+∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ⊤(x0, x1)  All\<Mutation\<X\>\>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> *predicate(x0, x1)*)
 
 ## Establishing Existence
 
 An object of type X exists for which a predicate is true:
 
-∃ x ∈ X ⊤(x)                                              Exists\<X\>(coll, *predicate(x*))
+∃ x ∈ X ⊤(x)                                              Exists\<X\>(coll, *predicate(x*))
 
 Here *coll* is a collection of type X where we should look for objects to establish existence.
 There should be at least one object in the collection which satisfies the predicate.
@@ -78,26 +78,30 @@ This scans through whole collection, so we'll describe more performant approach 
 
 For more efficiency, use an *index* to determine the existence: an object of type X of key k exists in an index where predicate is true:
 
-∃ x ∈ X, ⊤(x)                                              Exists\<X\>(index, key(x), *predicate(x*))
+∃ x ∈ X, ⊤(x)                                              Exists\<X\>(index, key(x), *predicate(x*))
 
 Using an *index* with constant access times, instead of scanning through a collection, can help performance.
 
 For any object of type X an object of type Y exists where predicate is true:
 
-∀ x ∈ X ∃ y ∈ Y ⊤(x, y)                              All\<X\>(x -> Exists\<Y\>(coll, *predicate(x, y*)))
+∀ x ∈ X ∃ y ∈ Y ⊤(x, y)                              All\<X\>(x -> Exists\<Y\>(coll, *predicate(x, y*)))
 
 Here *coll* is a collection of type Y where should be at least one object that satisfies the predicate.
 An index can also be benefitial here: All\<X\>(x -> Exists\<Y\>(index, key(y), *predicate(x, y)*))
 
 For any object of type X which satisfies a condition an object of type Y exists for which predicate is true:
 
-∀ x ∈ X | *condition(x)* ∃ y ∈ Y ⊤(x, y)         All\<X\>(x -> *condition(x)*, x -> Exists\<Y\>(coll, *predicate(x, y*)))
+∀ x ∈ X | *condition(x)* ∃ y ∈ Y ⊤(x, y)         All\<X\>(x -> *condition(x)*, x -> Exists\<Y\>(coll, *predicate(x, y*)))
 
 For any object of type X which has been changed, an object of type Y exists for which a predicate is true
 (X0 and X1 stand for 'before' and 'after' states, as described above):
 
-∀ x0 ∈ X0, x1 ∈ X1 ∃ y ∈ Y ⊤(x0, x1, y)      All\<Mutation\<X\>\>((x0, x1) -> Exists\<Y\>(coll, *predicate(x0, x1, y*)))
+∀ x0 ∈ X0, x1 ∈ X1 ∃ y ∈ Y ⊤(x0, x1, y)      All\<Mutation\<X\>\>((x0, x1) -> Exists\<Y\>(coll, *predicate(x0, x1, y*)))
 
 Same as above when x0, x1 must also satisfy some condition:
 
-∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ∃ y ∈ Y ⊤(y, x0, x1)   All\<Mutation\<X\>\>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> Exists\<Y\>(coll, *predicate(p, x0, x1*)))
+∀ x0 ∈ X0, x1 ∈ X1 | *condition(x0, x1)* ∃ y ∈ Y ⊤(y, x0, x1)   All\<Mutation\<X\>\>((x0, x1) -> *condition(x0, x1),* (x0, x1) -> Exists\<Y\>(coll, *predicate(p, x0, x1*)))
+
+## Documentation
+See /docs directory for further documentation.
+See /docs/dev directory for developer documentation.

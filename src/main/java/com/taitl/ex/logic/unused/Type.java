@@ -1,12 +1,13 @@
 package com.taitl.ex.logic.unused;
 
-import com.taitl.existential.constants.Strings;
+import com.taitl.existential.constants.*;
 
 /**
- * (Unused) A string representing a class, along with its generics, for example "Set<Car>".
+ * A string representing a class, along with its generics, for example "Doc<MD>".
  * 
- * For types without generics, it corresponds to the short name of class (like "String"). If class is qualified
- * with generics, it corresponds to class short name with generic qualifier, like "Set<House>".
+ * For the types without generics, it corresponds to the short name of class (like "String").
+ * If class is qualified with generics, it corresponds to class short name with generic
+ * qualifier, like "Set<House>".
  * 
  * Examples: 
  *   Class without generics: Class: Car, Type: "Car"

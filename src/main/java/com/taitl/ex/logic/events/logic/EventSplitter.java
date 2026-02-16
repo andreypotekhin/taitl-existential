@@ -71,8 +71,8 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class EventSplitter
 {
-    public static final Supplier<? extends EventSplitter> DEFAULT_FACTORY =
-            Creator.getSupplier(EventSplitter.class);
+    public static Supplier<? extends EventSplitter> FACTORY =
+            () -> Creator.create(EventSplitter.class);
 
     public <T> Set<Event<T>> split(Event<T> event)
     {

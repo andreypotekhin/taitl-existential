@@ -1,11 +1,11 @@
-package com.taitl.existential.claims.library_usage;
+package com.taitl.existential.specs.library_usage;
 
 import com.taitl.ex.examples.night_city.model.*;
-import com.taitl.existential.claims.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
 
-class UserCanSendAccessEvents extends ClaimBase
+class UserCanSendAccessEvents extends SpecBase
 {
     @BeforeEach
     public void setup()

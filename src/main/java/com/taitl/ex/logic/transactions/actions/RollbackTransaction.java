@@ -7,13 +7,13 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Commit transaction
+ * RollbackTr transaction.
  */
-public class CommitTr
+public class RollbackTransaction
 {
     TransactionLogic tl;
 
-    public CommitTr(TransactionLogic tl)
+    public RollbackTransaction(TransactionLogic tl)
     {
         sane(tl, "transactionLogic");
         this.tl = tl;
@@ -21,7 +21,6 @@ public class CommitTr
 
     public void call(Tr tr) throws ExistentialException
     {
-        tr.onCommit();
-        tl.validationLogic.run(tr);
+        tr.onRollback();
     }
 }

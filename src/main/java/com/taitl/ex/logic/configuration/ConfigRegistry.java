@@ -16,6 +16,7 @@ public class ConfigRegistry
     protected ConfigurationLogic configurationLogic;
     protected ExistentialConfigs ec;
     protected Map<String, ConfigBuilder> configBuilders = new LinkedHashMap<>();
+    // TODO: configs collection
 
     public ConfigRegistry(ConfigurationLogic configurationLogic)
     {

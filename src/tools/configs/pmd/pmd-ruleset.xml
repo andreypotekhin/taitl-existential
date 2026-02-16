@@ -51,5 +51,6 @@
 		<exclude name="AtLeastOneConstructor" />
 		<exclude name="OnlyOneReturn" />
 		<exclude name="ConfusingTernary" />
+		<exclude name="FieldNamingConventions" />
 	</rule>
 </ruleset>

@@ -1,11 +1,11 @@
-package com.taitl.existential.claims.library_usage;
+package com.taitl.existential.specs.library_usage;
 
-import com.taitl.existential.claims.*;
+import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserCanConfigureClassRules extends ClaimBase
+class UserCanConfigureClassRules extends SpecBase
 {
     {
         autoConfigure = false;

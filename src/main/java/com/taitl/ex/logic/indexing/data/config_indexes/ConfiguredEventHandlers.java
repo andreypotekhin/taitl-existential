@@ -9,7 +9,7 @@ import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Maps type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
- * for which a rule is defined in a Transaction or its Contexts.
+ * for which some rule is defined in Transaction or its Contexts.
  * Example: Doc<JSON> -> Set<On[Е]<Doc<JSON>>>
  * Here, E is one of events Create, Update, Upsert, Delete, Read, Mutate, Transit.
  *
@@ -20,7 +20,7 @@ import static com.taitl.existential.constants.Strings.*;
  * @see EventHandlerWithSideEffects
  * @see BiEventHandlerWithSideEffects
  */
-public class EventHandlers<T>
+public class ConfiguredEventHandlers<T>
 {
     Multimap<String, EventHandler<T>> storage = new Multimap<>();
 

@@ -1,10 +1,10 @@
-package com.taitl.existential.claims.library;
+package com.taitl.existential.specs.library;
 
 import com.taitl.existential.*;
-import com.taitl.existential.claims.*;
+import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
 
-class UserCanAccessLibrary extends ClaimBase
+class UserCanAccessLibrary extends SpecBase
 {
     @BeforeEach
     public void setup()

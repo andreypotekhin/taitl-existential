@@ -40,10 +40,10 @@ public class Context implements Configurable, Evaluable
     protected Instructions instructions = new Instructions();
 
     /** Transaction factory */
-    protected Supplier<? extends Transaction> transactionFactory = Transaction.DEFAULT_FACTORY;
+    protected Supplier<? extends Transaction> transactionFactory = Transaction.FACTORY;
 
     /** EventSplitter factory */
-    protected Supplier<? extends EventSplitter> eventSplitterFactory = EventSplitter.DEFAULT_FACTORY;
+    protected Supplier<? extends EventSplitter> eventSplitterFactory = EventSplitter.FACTORY;
 
     public Context(String name)
     {

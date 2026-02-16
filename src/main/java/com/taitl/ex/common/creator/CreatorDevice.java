@@ -179,6 +179,13 @@ public class CreatorDevice
      * Use inject() to set the supplier for a class.
      * Suppliers are keyed by their class canonical name.
      * Canonical name example: java.util.AbstractMap.SimpleEntry
+     *
+     * IMPORTANT:
+     * This method will only return a non-null if a custom supplier
+     * has been set for this class (e.g. by calling inject())
+     * A 'safer' way to get a guaranteed non-null Supplier is to use lambda
+     * instead of calling this method, as follows:
+     * Supplier<? extends MyType> myTypeFactory = () -> Creator.create(MyType.class);
      * 
      * @param <T> Type to supply
      * @param cls The class to get supplier for

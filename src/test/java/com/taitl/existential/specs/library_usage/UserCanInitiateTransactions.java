@@ -1,6 +1,6 @@
-package com.taitl.existential.claims.library_usage;
+package com.taitl.existential.specs.library_usage;
 
-import com.taitl.existential.claims.*;
+import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -8,7 +8,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
-class UserCanInitiateTransactions extends ClaimBase
+class UserCanInitiateTransactions extends SpecBase
 {
     @BeforeEach
     public void setup()

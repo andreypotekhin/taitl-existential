@@ -65,8 +65,7 @@ import static com.taitl.ex.common.helper.State.*;
 // TODO: Delegate to ConcreteTransaction
 public class Transaction implements Configurable, Evaluable
 {
-    public static final Supplier<? extends Transaction> DEFAULT_FACTORY =
-            Creator.getSupplier(Transaction.class);
+    public static Supplier<? extends Transaction> FACTORY = () -> Creator.create(Transaction.class);
 
     public final UUID id;
     public String op;

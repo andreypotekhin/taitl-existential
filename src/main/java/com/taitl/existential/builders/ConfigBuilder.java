@@ -17,11 +17,12 @@ import static com.taitl.ex.common.helper.State.*;
  *
  * Multiple Contexts which may apply to same a business operation: the main
  * context, all its parent contexts, as well as any matching wildcard contexts.
- * They are stored separately from each other in the OpRegistry.
+ * They are stored separately from each other in the ConfigRegistry.
  *
  * The contexts are stored in the order of being declared. Within each context,
  * the transactions are stored in the order transaction factories are declared.
  */
+// TODO: build to Config instance
 public class ConfigBuilder
 {
     /**
@@ -43,8 +44,8 @@ public class ConfigBuilder
      * The order of factories is important: execution order of rules follows
      * the order of factories, which follows the order of context() method calls.
      */
-    protected Supplier<? extends Context> contextFactory = Creator.getSupplier(Context.class);
-    protected Supplier<? extends Transaction> transactionFactory = Creator.getSupplier(Transaction.class);
+    protected Supplier<? extends Context> contextFactory = () -> Creator.create(Context.class);
+    protected Supplier<? extends Transaction> transactionFactory = () -> Creator.create(Transaction.class);
 
     /**
      * Constructs Config object with specified name.
@@ -183,7 +184,7 @@ public class ConfigBuilder
 
     /**
      * Adds Context instance to Op.
-     * Called by OpRegistry.create(op).
+     * Called by ConfigRegistry.create(op).
      *
      * @param cont Context to add
      */

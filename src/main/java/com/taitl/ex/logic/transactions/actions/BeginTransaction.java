@@ -7,21 +7,22 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Checkpoint transaction
+ * Begin transaction
  */
-public class CheckpointTr
+public class BeginTransaction
 {
     TransactionLogic tl;
 
-    public CheckpointTr(TransactionLogic tl)
+    public BeginTransaction(TransactionLogic tl)
     {
         sane(tl, "transactionLogic");
         this.tl = tl;
     }
 
-    public void call(Tr tr) throws ExistentialException
+    public void call(Tr tr) throws NotFoundException
     {
-        tr.onCheckpoint();
-        tl.validationLogic.run(tr);
+        tr.onBegin();
+        tl.validationLogic.prepareForValidation(tr);
+        // TODO: Execute transaction preconditions
     }
 }

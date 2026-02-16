@@ -24,7 +24,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * @see Tr
  * @see EventSplitter
  */
-public class EventKeys
+public class ConfiguredEventKeys
 {
     Set<String> eventKeys = new LinkedHashSet<>();
 

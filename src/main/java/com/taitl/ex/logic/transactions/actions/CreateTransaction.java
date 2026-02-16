@@ -11,11 +11,11 @@ import static com.taitl.ex.common.helper.State.*;
 /**
  * Commit transaction object.
  */
-public class CreateTr
+public class CreateTransaction
 {
     TransactionLogic transactionLogic;
 
-    public CreateTr(TransactionLogic transactionLogic)
+    public CreateTransaction(TransactionLogic transactionLogic)
     {
         sane(transactionLogic, "transactionLogic");
         this.transactionLogic = transactionLogic;
