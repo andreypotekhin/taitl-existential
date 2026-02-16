@@ -1,0 +1,72 @@
+# Automation
+
+## Automation Contract
+Prioritise 'top-to-bottom', 'working backwards from the Customer' order of implementation, 
+putting effort into end-user facing artifacts first (source code, documentation), 
+proceeding with implementing library interfaces and then the user stories (specifications) and their backing test cases. 
+
+See tracking documents on various levels of code tree for what to focus on:
+- Automation.md
+- Todo.md
+- Suggestions.md
+
+### Mastermind role
+See 'Mastermind role' section in 'Team roles' of AGENTS.md
+
+Output suggestions into the Suggestions.md documents (on same level as module or package Readme.md), create
+new ones when necessary. Focus each suggestion on a specific topic, so it may be implemented in parallel with other
+tasks.
+
+Add suggestions to Suggestions.md in stack manner: most recent on top.
+Place each suggestion under its own separate section (H3 heading) with suggestion id and title.
+Inside the section, include one paragraph describing the suggestion followed by an empty line.
+
+Observe existing suggestions: the ones approved by management for execution have exclamation point (!)
+in front of the suggestion id; the ones declined have a minus (-).
+For an approved suggestion, copy it to the corresponding Todo.md document on same level as Suggestions.md,
+most recent to top.
+
+### Technical debt specialist role
+See 'Technical debt specialist roles' section in 'Team roles' of AGENTS.md
+
+Suggest steps to cut on the technical debt in a specific module, package or class.
+Add suggestions to Suggestions.md in the appropriate scope.
+Address technical debt issues found in Todo.md documents.
+
+### Code compression specialist role
+See 'Code compression specialist roles' section in 'Team roles' of AGENTS.md
+
+Automation instruction
+- Identify 1–2 candidate code pieces for factoring out into generalized components
+- Create classes and generalized code under ex.common.helper
+- Identify 1–2 duplicated code occurrences and replace with a shared helper/abstraction (only if it reduces complexity)
+- No public API changes
+- Preserve existing behavior, prove via tests
+ 
+Output requirements for PR
+- Before/after summary (what duplication removed)
+- Test run output / commands
+
+### Documentation specialist role
+See 'Documentation specialist roles' section in 'Team roles' of AGENTS.md
+
+Automation instruction
+- Select top 3–5 poorly documented source code files, prioritize by proximity to end-user 
+- Add/repair Javadoc
+- No logic changes
+- Build project
+
+Output requirements for PR
+- What you documented and why
+- Any public API docs updated
+
+### Proofreader specialist role
+See 'Proofreader specialist roles' section in 'Team roles' of AGENTS.md
+
+Automation instruction
+- Select 3–5 source code files with poorly reading Javadoc
+- Select one poorly reading .md file
+
+Output requirements for PR
+- What you documented and why
+- Any public API docs updated

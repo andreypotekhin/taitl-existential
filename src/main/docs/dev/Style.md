@@ -37,3 +37,4 @@ We generally avoid, unless there is a valid reason:
 - @Override annotation 
 - reflection
 - overuse of streams
+- HTML tags in Javadocs
