@@ -9,12 +9,12 @@ Claims are backed by test cases in src/test/claims. The (+) signs indicate the o
 
 ### Terminology
 
-Op: a business operation. Op name: business operation name, such as "/api/user/update" 
-Path: OS path-like notation for Op names 
+Op: a business operation. Op name: business operation name, such as "/api/user/update"   
+Path: OS path-like notation for Op names   
   - Abstract path can contain wildcards, such as "/api/*/update"
   - Concrete path doesn't contain wildcards
-Evaluable: anything that can be evaluated
-Statement: an Evaluable that does not necessarily return a value
+Evaluable: anything that can be evaluated  
+Statement: an Evaluable that does not necessarily return a value  
 Expression: an Evaluable that returns a value
 Predicate: an Expression that returns a boolean value
 Invariant: a list of Predicate expressions
