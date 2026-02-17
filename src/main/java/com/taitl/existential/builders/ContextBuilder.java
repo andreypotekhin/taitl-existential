@@ -15,8 +15,7 @@ public class ContextBuilder
 {
     ConfigBuilder parent;
     String op;
-    List<EvsBuilder> evsBuilders;
-    List<Evs> evsList;
+    List<Supplier<? extends Evs<?>>> evsSuppliers;
     Supplier<? extends Context> contextFactory;
     Supplier<? extends Transaction> transactionFactory;
 
@@ -24,22 +23,21 @@ public class ContextBuilder
     {
         this.parent = parentConfig;
         this.op = op;
-        this.evsBuilders = new ArrayList<>();
-        this.evsList = new ArrayList<>();
+        this.evsSuppliers = new ArrayList<>();
     }
 
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
     {
         sane(cls, "cls");
         InvariantBuilder<T> ib = new InvariantBuilder<>(this);
-        evsBuilders.add(ib);
+        evsSuppliers.add(() -> ib.build());
         return ib;
     }
 
     public <T> ContextBuilder invariant(Invariant<T> invariant)
     {
         sane(invariant, "invariant");
-        evsList.add(invariant);
+        evsSuppliers.add(() -> invariant);
         return this;
     }
 
@@ -47,14 +45,14 @@ public class ContextBuilder
     {
         sane(cls, "cls");
         EffectBuilder<T> eb = new EffectBuilder<>(this);
-        evsBuilders.add(eb);
+        evsSuppliers.add(() -> eb.build());
         return eb;
     }
 
     public <T> ContextBuilder effect(Effect<T> effect)
     {
         sane(effect, "effect");
-        evsList.add(effect);
+        evsSuppliers.add(() -> effect);
         return this;
     }
 
@@ -68,22 +66,15 @@ public class ContextBuilder
 
     public ConfigBuilder build()
     {
-        verify(!evsBuilders.isEmpty() || !evsList.isEmpty() || transactionFactory != null,
+        verify(!evsSuppliers.isEmpty() || transactionFactory != null,
                 "Cannot configure context without defining rules");
 
         Context context = createInstance();
         context.op(op);
 
-        // TODO: bug! this code pushes all objects built with builders
-        // invariant(Class) after the ones built with invariant(Invariant)
-
-        for (EvsBuilder evsBuilder : evsBuilders)
+        for (Supplier<? extends Evs<?>> supplier : evsSuppliers)
         {
-            evsList.add(evsBuilder.build());
-        }
-
-        for (Evs evs : this.evsList)
-        {
+            Evs<?> evs = supplier.get();
             if (evs instanceof Invariant invariant)
             {
                 context.invariant(invariant);
