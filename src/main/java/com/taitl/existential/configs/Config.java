@@ -9,28 +9,28 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Defines a single business Operation as a set of Context objects
- * configured with constraints, invariants, intents, qualifiers and effects.
+ * Defines a single business operation as a set of Context objects
+ * configured with constraints, invariants, intents, qualifiers, and effects.
  *
- * Multiple Contexts which may apply to same business operation: the main
- * context, all its parent contexts, as well as any matching wildcard contexts.
+ * Multiple Contexts may apply to the same business operation: the main
+ * context, its parent contexts, and any matching wildcard contexts.
  *
- * The contexts are stored in the order of being declared.
+ * Contexts are stored in the order in which they are declared.
  *
- *  @see Context
+ * @see Context
  */
 public class Config
 {
     /**
-     * Name of business operation, e.g. "/app/docs/update",
-     * or a wildcard name, "/app/docs/*"
+     * Name of the business operation, e.g. "/app/docs/update",
+     * or a wildcard name, "/app/docs/*".
      */
     protected String name;
 
     /**
-     * Context(s) that apply to this operation. This includes main context
+     * Contexts that apply to this operation. This includes the main context
      * (e.g. "/app/docs/update") as well as any matching wildcard contexts
-     * (e.g. "/app/docs/*")
+     * (e.g. "/app/docs/*").
      */
     protected List<Context> contexts = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class Config
     protected ConfigIndexes configIndexes = Creator.create(ConfigIndexes.class);
 
     /**
-     * Adds Context instance to Op.
+     * Adds a Context instance to the operation.
      * Called by ConfigRegistry.create(op).
      *
      * @param cont Context to add

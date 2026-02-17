@@ -8,12 +8,12 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Index implements a mapping of single key (K) to a set of multiple values (V).
- * Indexes help to make Exists<> expressions to performant.
+ * Index implements a mapping from a single key (K) to a set of values (V).
+ * Indexes make Exists<> expressions more performant.
  * Note: null is not allowed as a key or as a value.
  *
- * @param <K>
- * @param <V>
+ * @param <K> Key type
+ * @param <V> Value type
  */
 public class Index<K, V>
 {
@@ -86,13 +86,13 @@ public class Index<K, V>
     }
 
     /**
-     * Removes key-value pair from multimap backing the index.
-     * If other items exist in multimap for the same key, they are intact.
-     * Returns the value that has been removed, or a null if there is no value for this key.
+     * Removes a key-value pair from the multimap backing the index.
+     * If other items exist for the same key, they remain intact.
+     * Returns the value that was removed, or null if there is no value for this key.
      *
      * @param v Value to be removed
      * @param k Key for the value
-     * @return The value being removed, or null if value is not in index
+     * @return The value being removed, or null if value is not in the index
      */
     public V remove(K k, V v)
     {
@@ -109,10 +109,9 @@ public class Index<K, V>
     }
 
     /**
-     * Reinsert a value under a different key.
-     * Used when key is a field in value object, and that
-     * field has updated.
-     *  
+     * Reinserts a value under a different key.
+     * Used when the key is a field on the value object and that field has changed.
+     *
      * @param k0 Old key
      * @param k1 New key
      * @param v Value
@@ -140,12 +139,11 @@ public class Index<K, V>
     }
 
     /**
-     * In some scenarios, the exact type of the key is not known.
-     * Hence, a method to query by an Object key.
+     * In some scenarios, the exact key type is not known.
+     * This provides a method to query by an Object key.
      *
-     * @param key
-     *            Object representing a key
-     * @return Set of values stored under key
+     * @param key Object representing a key
+     * @return Set of values stored under the key
      */
     @SuppressWarnings("unchecked")
     public Set<V> getObj(Object key)

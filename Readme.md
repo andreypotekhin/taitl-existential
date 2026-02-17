@@ -1,14 +1,14 @@
 # Existential
 
-Existential is a constraint library allowing to define and maintain invariants between program entities.
+Existential is a constraint library that lets you define and maintain invariants between program entities.
 
-Existential is a library allowing for use of certain math-like notations for describing application logic.
+Existential is a library that enables certain math-like notations for describing application logic.
 It implements two logic quantifiers, ∀ ("for any") and ∃ ("exists"), allowing to create logical
 expressions about application entities (elements of the business domain), and to guarantee that such
-expressions hold true. For instance, the library allows to create constraints on a class field,
-multiple fields, rules on how an object is allowed to change over time.
-Performance is achieved by only evaluating the expressions at specific
-points in time (transaction boundaries), treating repeat changes between those points as single change. 
+expressions hold true. For instance, the library allows you to create constraints on a class field,
+multiple fields, and rules that describe how an object may change over time.
+Performance is achieved by evaluating expressions only at specific
+points in time (transaction boundaries), treating repeated changes between those points as a single change.
 Memory efficiency is achieved by using singleton objects for expressions and reusing expression objects where possible.
 
 ## Limitations
@@ -19,11 +19,11 @@ a business operation.
 ## What it is not
 
 Existential does not attempt to derive new truths from what's already known,
-nor it is aimed to proofing or equation solving. It allows the user to declare 
-certain truths about program's entities, and guarantees a failure, 
+nor is it aimed at proofing or equation solving. It allows the user to declare
+certain truths about a program's entities, and guarantees a failure,
 such as an exception, in case these truths are violated.
 
-The library does not aim to implement any 'complete' set of mathematical logic notations. 
+The library does not aim to implement any complete set of mathematical logic notations.
 It provides a limited set of notations to allow for declarative reasoning about program
 entities, and focuses on performance and memory efficiency.
 
