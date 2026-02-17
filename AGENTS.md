@@ -166,6 +166,8 @@ it was written by a witty native speaker of the American English language.
 
 
 ## Task completion
+Fully build and test the project in the end of each task.
+
 TODO items
 - Remove TODO items upon completion
 
