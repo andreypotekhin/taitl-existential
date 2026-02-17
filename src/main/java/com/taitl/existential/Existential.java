@@ -3,7 +3,6 @@ package com.taitl.existential;
 import java.io.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
-import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
@@ -41,7 +40,7 @@ public final class Existential implements Closeable
 
     public ConfigBuilder configure(String op)
     {
-        return configs.get(op);
+        return configs.getBuilder(op);
     }
 
     public String begin(String op) throws ExistentialException
@@ -166,11 +165,6 @@ public final class Existential implements Closeable
     public ExistentialConfigs configs()
     {
         return configs;
-    }
-
-    public Contexts contexts()
-    {
-        return configs.contexts();
     }
 
     public ExistentialTransactions transactions()

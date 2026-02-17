@@ -8,7 +8,7 @@ then proceeding with implementing library interfaces and user stories (specifica
 and unit tests. 
 
 See tracking documents on various levels of the code tree for what to focus on:
-- Automation.md
+- AutomationFocus.md
 - Todo.md
 - Suggestions.md
 
@@ -47,23 +47,19 @@ Automation instruction
 - Identify 1–2 duplicated code occurrences and replace with a shared helper/abstraction (only if it reduces complexity)
 - No public API changes
 - Preserve existing behavior, prove via tests
- 
-Output requirements for PR
-- Before/after summary (what duplication removed)
-- Test run output / commands
 
 ### Documentation specialist role
 See 'Documentation specialist roles' section in 'Team roles' of AGENTS.md
 
 Automation instruction
+- Only consider public packages (com.taitl.existential) for Javadoc commenting
 - Select top 3–5 poorly documented source code files, prioritize by proximity to end-user 
 - Add/repair Javadoc
 - No logic changes
 - Build project
 
-Output requirements for PR
-- What you documented and why
-- Any public API docs updated
+Limits
+- Only consider public packages (com.taitl.existential) for Javadoc commenting
 
 ### Proofreader specialist role
 See 'Proofreader specialist roles' section in 'Team roles' of AGENTS.md
@@ -71,7 +67,3 @@ See 'Proofreader specialist roles' section in 'Team roles' of AGENTS.md
 Automation instruction
 - Select 3–5 source code files with poorly reading Javadoc
 - Select one poorly reading .md file
-
-Output requirements for PR
-- What you documented and why
-- Any public API docs updated

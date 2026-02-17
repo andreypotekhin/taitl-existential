@@ -18,7 +18,7 @@ we provide some ways for doing so. See the section 'Extending the classes' below
 ### Code structure
 Package structure:
 - com.taitl.existential: public code (classes, interfaces) for use by end-user
-- com.taitl.ex and subpackages: private code, implementation
+- com.taitl.ex and subpackages: private code, implementation details
   -  com.taitl.ex.common: common/ubiquitous classes (Creator, Args, State)
   -  com.taitl.ex.concrete: concrete implementations (e.g. ConcreteExists) for the classes that end-user creates with 'new'
   -  com.taitl.ex.core: core classes, such as ExistentialConfigs, immediately used by the public code 
@@ -36,9 +36,9 @@ For the rare cases where you aim to significantly affect library's behavior
 versions of the classes, but do so at your own risk.
 
 This is worth repeating:
-! 1. Do it at your own risk!
-! 2. Do not ask for help or support for the cases that involve custom classes 
-! 3. Do not file any issue if it involves using the library with custom classes
+
+    ! 1. Do it at your own risk!
+    ! 2. Please do not ask for help/support/file issues for cases that involve custom classes 
 
 For troubleshooting, remove custom classes and see if the library works without them.
 
@@ -51,7 +51,7 @@ Here are some ways to put custom classes in use:
 - For the classes that end-user creates with 'new' (e.g. Exists, Invariant) 
 subclass concrete implementations (e.g. ConcreteExists, ConcreteInvariant).
 
-To facilitate the ability to extend, we allowed for a few freedoms: 
+To facilitate the ability to extend, we allowed a few freedoms: 
 - The Existential class and classes comprising it logic (e.g. ExistentialAccess) are not declared final
 - FACTORY fields are not declared final
 - Creator.inject() method is declared public

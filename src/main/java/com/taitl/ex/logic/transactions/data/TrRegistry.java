@@ -30,7 +30,7 @@ public class TrRegistry
     {
         sane(op, "op");
         OpKey.validate(op);
-        Tr o = createTransaction.forContexts(op, exec.ex().contexts().getContexts(op), custom);
+        Tr o = createTransaction.forConfig(op, exec.ex().configs().config(op), custom);
         synchronized (this)
         {
             reg.put(o.id.toString(), o);

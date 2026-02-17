@@ -12,7 +12,6 @@ import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-// TODO: Delegate to ConcreteContext
 // TODO: add context() method for adding child contexts
 public class Context implements Configurable, Evaluable
 {

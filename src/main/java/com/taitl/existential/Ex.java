@@ -1,7 +1,6 @@
 package com.taitl.existential;
 
 import com.taitl.ex.core.existential.*;
-import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
@@ -173,11 +172,6 @@ public final class Ex
     public static ExistentialConfigs configs()
     {
         return instance().configs();
-    }
-
-    public static Contexts contexts()
-    {
-        return instance().contexts();
     }
 
     public static ExistentialTransactions transactions()

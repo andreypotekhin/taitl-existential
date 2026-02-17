@@ -12,17 +12,9 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Defines a single business Operation as a set of Context objects 
- * configured with constraints, invariants, intents, qualifiers and effects.
- *
- * Multiple Contexts which may apply to same a business operation: the main
- * context, all its parent contexts, as well as any matching wildcard contexts.
- * They are stored separately from each other in the ConfigRegistry.
- *
- * The contexts are stored in the order of being declared. Within each context,
- * the transactions are stored in the order transaction factories are declared.
+ * Builds a Config object for a single business operation as a set of Context
+ * objects configured with constraints, invariants, intents, qualifiers and effects.
  */
-// TODO: build to Config instance
 public class ConfigBuilder
 {
     /**
@@ -122,17 +114,25 @@ public class ConfigBuilder
      * the first transaction begins.
      * This method is called from ExistentialConfigs.finalizeConfiguration().
      */
-    public void build(ExistentialConfigs ec)
+    public Config build(ExistentialConfigs ec)
     {
         // TODO:
         // Link each configured Context to direct or indirect parent Context
         // as well as to any matching wildcard Context(s) by comparing context names.
-        // Do not create new contexts
-        // Do not copy or duplicate any the rules between context -
-        // this may cause side effects to be called nore than once
+        // Do not create extra contexts
+        // Do not copy or duplicate rules between context -
+        // this may cause side effects to be called more than once
+
+        Config config = Creator.create(Config.class);
+        config.name(name);
+        for (Context context : contexts)
+        {
+            config.addContext(context);
+        }
 
         // Create intermediates for consumption by subsequent stages
         ec.onFinishConfiguration(name);
+        return config;
     }
 
     /**

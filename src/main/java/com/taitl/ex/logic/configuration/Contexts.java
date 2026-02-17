@@ -31,7 +31,7 @@ public class Contexts
      * "/"
      * of which it will return the top one ("/app/flights/update")
      */
-    public List<Context> getContexts(String op)
+    public List<Context> buildContexts(String op)
     {
         Set<Context> result = allContexts.get(op);
         if (result != null && !result.isEmpty())

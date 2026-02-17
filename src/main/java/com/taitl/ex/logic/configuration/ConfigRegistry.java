@@ -2,21 +2,20 @@ package com.taitl.ex.logic.configuration;
 
 import java.util.*;
 import com.taitl.ex.core.existential.*;
-import com.taitl.existential.builders.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Outcome.*;
 
 /**
- * ConfigRegistry holds references to ConfigBuilders, keyed by op name.
+ * ConfigRegistry holds references to Configs, keyed by op name.
  */
 public class ConfigRegistry
 {
     protected ConfigurationLogic configurationLogic;
     protected ExistentialConfigs ec;
-    protected Map<String, ConfigBuilder> configBuilders = new LinkedHashMap<>();
-    // TODO: configs collection
+    protected Map<String, Config> configs = new LinkedHashMap<>();
 
     public ConfigRegistry(ConfigurationLogic configurationLogic)
     {
@@ -24,30 +23,15 @@ public class ConfigRegistry
         this.ec = configurationLogic.ec();
     }
 
-    public ConfigBuilder create(String name)
-    {
-        sane(name, "name");
-        ConfigBuilder o = new ConfigBuilder(name);
-        synchronized (this)
-        {
-            for (Context context : ec.ex().contexts().getContexts(name))
-            {
-                o.addContext(context);
-            }
-            configBuilders.put(name, o);
-        }
-        return o;
-    }
-
     public boolean has(String id)
     {
-        return configBuilders.containsKey(id);
+        return configs.containsKey(id);
     }
 
-    public ConfigBuilder get(String id) throws NotFoundException
+    public Config get(String id) throws NotFoundException
     {
         sane(id, "id");
-        ConfigBuilder o = configBuilders.get(id);
+        Config o = configs.get(id);
         if (o == null)
         {
             throw new NotFoundException("Context not found, id=" + id);
@@ -55,40 +39,37 @@ public class ConfigRegistry
         return o;
     }
 
-    public ConfigBuilder getcreate(String id)
+    public Config remove(String id) throws NotFoundException
     {
         sane(id, "id");
-        ConfigBuilder o = configBuilders.get(id);
-        return (o != null) ? o : create(id);
-    }
-
-    public ConfigBuilder remove(String id) throws NotFoundException
-    {
-        sane(id, "id");
-        ConfigBuilder o = configBuilders.get(id);
+        Config o = configs.get(id);
         if (o == null)
         {
             throw new NotFoundException("Context not found, id=" + id);
         }
-        synchronized (configBuilders)
+        synchronized (configs)
         {
-            configBuilders.remove(id);
+            configs.remove(id);
         }
         return o;
     }
 
-    public void finalizeConfiguration()
+    public void addConfig(Config config)
     {
-        buildContexts();
-    }
-
-    public void buildContexts()
-    {
-        configBuilders.forEach((key, op) -> op.build(ec));
+        sane(config, "config");
+        String op = config.name();
+        verify(!configs.containsKey(op),
+                String.format("Cannot add Config for '%' - config already exists", op));
+        configs.put(op, config);
     }
 
     public boolean isEmpty()
     {
-        return configBuilders.isEmpty();
+        return configs.isEmpty();
+    }
+
+    public Map<String, Config> configs()
+    {
+        return configs;
     }
 }

@@ -4,8 +4,7 @@ import java.io.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
-
-import static com.taitl.ex.common.helper.Args.*;
+import com.taitl.existential.contexts.*;
 
 public class ExistentialConfigs implements Closeable
 {
@@ -17,10 +16,9 @@ public class ExistentialConfigs implements Closeable
         this.ex = ex;
     }
 
-    public ConfigBuilder get(String op)
+    public ConfigBuilder getBuilder(String op)
     {
-        sane(op, "op");
-        return configLogic.get(op);
+        return configLogic.getBuilder(op);
     }
 
     /**
@@ -60,8 +58,8 @@ public class ExistentialConfigs implements Closeable
         return ex;
     }
 
-    public Contexts contexts()
+    public Config config(String op)
     {
-        return configLogic.contexts();
+        return configLogic.config(op);
     }
 }

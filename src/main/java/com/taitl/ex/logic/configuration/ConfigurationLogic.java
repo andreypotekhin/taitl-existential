@@ -4,6 +4,7 @@ import java.io.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
+import com.taitl.existential.contexts.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -13,7 +14,10 @@ public class ConfigurationLogic implements Closeable
     protected Existential ex;
     protected ExistentialConfigs ec;
 
+    protected ConfigBuilders builders = new ConfigBuilders(this);
     protected ConfigRegistry registry = new ConfigRegistry(this);
+
+    // TODO:not clear how this get created?
     protected Contexts contexts = new Contexts();
 
     public ConfigurationLogic(ExistentialConfigs ec)
@@ -22,12 +26,12 @@ public class ConfigurationLogic implements Closeable
         this.ex = ec.ex();
     }
 
-    public ConfigBuilder get(String op)
+    public ConfigBuilder getBuilder(String op)
     {
         sane(op, "op");
         verify(!ex.configured(),
                 "Cannot call this method because setup has already been finalized");
-        return registry.getcreate(op);
+        return builders.getcreateBuilder(op);
     }
 
     /**
@@ -57,7 +61,7 @@ public class ConfigurationLogic implements Closeable
                 // and every intent(), effect() method of each custom context,
                 // and therefore will create instances of each Invariant, Intent
                 // provided during setup.
-                registry.finalizeConfiguration();
+                builders.finalizeConfiguration();
             }
         }
     }
@@ -88,6 +92,19 @@ public class ConfigurationLogic implements Closeable
     public ExistentialConfigs ec()
     {
         return ec;
+    }
+
+    public ConfigRegistry registry()
+    {
+        return registry;
+    }
+
+    public Config config(String op)
+    {
+        sane(op, "op");
+        Config config = registry.configs().get(op);
+        verify(config != null, String.format("Config not found for op '%s'", op));
+        return config;
     }
 
     public Contexts contexts()
