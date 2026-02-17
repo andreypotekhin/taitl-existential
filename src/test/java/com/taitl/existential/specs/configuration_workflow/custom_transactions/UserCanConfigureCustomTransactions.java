@@ -1,13 +1,34 @@
 package com.taitl.existential.specs.configuration_workflow.custom_transactions;
 
+import com.taitl.existential.*;
 import com.taitl.existential.specs.*;
 import com.taitl.existential.transactions.*;
 import org.junit.jupiter.api.*;
+
+import java.util.*;
+import java.util.concurrent.atomic.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserCanConfigureCustomTransactions extends SpecBase
 {
+    static class RootTransaction extends Transaction
+    {
+        RootTransaction(String op)
+        {
+            super(op, "root-transaction");
+        }
+    }
+
+    static class ChildTransaction extends RootTransaction
+    {
+        ChildTransaction(String op)
+        {
+            super(op);
+            name("child-transaction");
+        }
+    }
+
     {
         autoConfigure = false;
     }
@@ -47,5 +68,56 @@ class UserCanConfigureCustomTransactions extends SpecBase
             ex.event(cat, tran);
             ex.commit(tran);
         });
+    }
+
+    @Test
+    @DisplayName("Configuring transactions - custom factory in context")
+    void customFactoryInContext()
+    {
+        AtomicInteger created = new AtomicInteger();
+        AtomicReference<String> transactionType = new AtomicReference<>();
+
+        Ex.configure("/api/cats/create")
+                .context("/api/cats/create")
+                .transaction(() -> {
+                    created.incrementAndGet();
+                    return new ChildTransaction("/api/cats/create");
+                })
+                .begin((ChildTransaction tr) -> transactionType.set(tr.getClass().getSimpleName()))
+                .build()
+                .build();
+
+        String tran = ex.begin("/api/cats/create");
+        ex.event(cat, tran);
+        ex.commit(tran);
+
+        assertEquals(1, created.get());
+        assertEquals(ChildTransaction.class.getSimpleName(), transactionType.get());
+    }
+
+    @Test
+    @DisplayName("Configuring transactions - child context overrides inherited factory")
+    void childContextOverridesInheritedFactory()
+    {
+        List<String> transactionTypes = new ArrayList<>();
+
+        Ex.configure("/api/cats")
+                .context("/api/cats")
+                .transaction(() -> new RootTransaction("/api/cats"))
+                .begin((RootTransaction tr) -> transactionTypes.add(tr.getClass().getSimpleName()))
+                .build()
+                .context("/api/cats/create")
+                .transaction(() -> new ChildTransaction("/api/cats/create"))
+                .begin((ChildTransaction tr) -> transactionTypes.add(tr.getClass().getSimpleName()))
+                .build()
+                .build();
+
+        String tran = ex.begin("/api/cats/create");
+        ex.event(cat, tran);
+        ex.commit(tran);
+
+        assertEquals(
+                List.of(RootTransaction.class.getSimpleName(), ChildTransaction.class.getSimpleName()),
+                transactionTypes);
     }
 }
