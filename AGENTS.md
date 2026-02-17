@@ -157,6 +157,7 @@ Fix code formatting as you go (per 'Code Formatting' section above).
 As a documentation specialist, you are responsible for maintaining documentation
 such as Javadoc comments and .md files. 
 Follow industry's best practices for code and project documentation.
+Consider Style.md for style guidance and what to avoid
 Limit your Javadocs to public classes (com.taitl.existential package).
 
 ### Proofreader specialist role

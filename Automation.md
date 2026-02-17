@@ -52,8 +52,8 @@ Automation instructions
 See 'Code scrutinizer role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
-- Find 1-2 code smells in the existing code and output to TODO.md documents
-- Find 1-2 code bugs in the existing code and output to TODO.md documents
+- Find a bug or issue in the existing code, provide a fix or to TODO.md document
+- Find 1-2 code smells in the existing code, provide a fix or output to TODO.md documents
 
 Limits
 - Only consider stable parts of the codebase that are not under active development.
@@ -75,5 +75,10 @@ Limits
 See 'Proofreader specialist roles' section in 'Team roles' of AGENTS.md
 
 Automation instructions
+- Prioritize public packages (com.taitl.existential) and dirs (/docs) for proofreading
 - Select 3–5 source code files with poorly reading Javadoc
-- Select one poorly reading .md file
+- Select 1-2 poorly reading .md file
+- Add/repair Javadoc
+- Add/repair .md
+- No logic changes
+- Build project

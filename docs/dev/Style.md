@@ -74,7 +74,7 @@ We generally avoid, unless there is a valid reason:
 - @Override annotation 
 - reflection
 - overuse of streams
-- HTML tags in Javadocs
+- HTML formatting tags in Javadocs, such as <p> and <br> 
 - use 'brief' notation for getters and setters (x() instead of getX())
 - testing of protected and private methods is good; and making methods non-private for
 testing purposes is ok.
