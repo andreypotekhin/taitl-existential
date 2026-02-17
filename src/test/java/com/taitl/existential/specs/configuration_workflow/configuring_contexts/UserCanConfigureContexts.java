@@ -4,6 +4,7 @@ import com.taitl.existential.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.specs.*;
 import com.taitl.existential.transactions.*;
+import com.taitl.ex.examples.night_city.model.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -52,12 +53,12 @@ class UserCanConfigureContexts extends SpecBase
         assertDoesNotThrow(() -> {
             Ex.configure("/api/cats/create")
                     .context("/api/cats")
-                    .invariant(String.class)
+                    .invariant(Cat.class)
                     .create(v -> true, "ok")
                     .done()
                     .build()
                     .context("/api/cats/create")
-                    .invariant(String.class)
+                    .invariant(Cat.class)
                     .create(v -> true, "ok")
                     .done()
                     .build();
@@ -76,12 +77,12 @@ class UserCanConfigureContexts extends SpecBase
 
         Ex.configure("/api/cats/create")
                 .context("/api/cats")
-                .effect(String.class)
+                .effect(Cat.class)
                 .create(v -> effectOrder.add("parent"))
                 .done()
                 .build()
                 .context("/api/cats/create")
-                .effect(String.class)
+                .effect(Cat.class)
                 .create(v -> effectOrder.add("child"))
                 .done()
                 .build();
@@ -105,7 +106,7 @@ class UserCanConfigureContexts extends SpecBase
         Ex.configure("/api/cats/create")
                 .contextFactory(() -> new GlobalContext("/unused"))
                 .context("/api/cats")
-                .invariant(String.class)
+                .invariant(Cat.class)
                 .create(v -> true, "ok")
                 .done()
                 .transaction(() -> {
@@ -116,7 +117,7 @@ class UserCanConfigureContexts extends SpecBase
                 .build()
                 .context("/api/cats/create")
                 .contextFactory(() -> new SpecificContext("/unused"))
-                .invariant(String.class)
+                .invariant(Cat.class)
                 .create(v -> true, "ok")
                 .done()
                 .transaction(() -> {
@@ -144,12 +145,12 @@ class UserCanConfigureContexts extends SpecBase
 
         Ex.configure("/api/cats/create")
                 .context("/api/*/create")
-                .effect(String.class)
+                .effect(Cat.class)
                 .create(v -> effectOrder.add("wildcard"))
                 .done()
                 .build()
                 .context("/api/cats/create")
-                .effect(String.class)
+                .effect(Cat.class)
                 .create(v -> effectOrder.add("concrete"))
                 .done()
                 .build();
