@@ -19,4 +19,9 @@ public class ConfigureApp
     {
         configureClassRules.configureMixingFluentAndBuilders();
     }
+
+    public void configureTransactionRules()
+    {
+        configureClassRules.configureTransactionRules();
+    }
 }
