@@ -5,6 +5,7 @@ import com.taitl.existential.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.transactions.*;
 
 public class ConfigureClassRules
 {
@@ -76,6 +77,19 @@ public class ConfigureClassRules
                     }
                 })
                 .done()
+                .build();
+    }
+
+    public void configureTransactionRules()
+    {
+        Ex.configure("/api/cats")
+                .context("/api/cats")
+                .transaction("/api/cats/transaction")
+                .begin((Transaction tr) -> tr.index("cats").clear())
+                .commit((Transaction tr) -> tr.index("cats").clear())
+                .rollback((Transaction tr) -> tr.index("cats").clear())
+                .checkpoint((Transaction tr) -> tr.index("cats").clear())
+                .build()
                 .build();
     }
 }

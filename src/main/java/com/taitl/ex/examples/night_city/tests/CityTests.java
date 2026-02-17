@@ -25,4 +25,9 @@ public class CityTests
     {
         configureApp.configureMixingFluentAndBuilders();
     }
+
+    public void configureTransactionRules()
+    {
+        configureApp.configureTransactionRules();
+    }
 }
