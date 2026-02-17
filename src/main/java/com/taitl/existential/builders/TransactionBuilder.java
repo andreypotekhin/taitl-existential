@@ -14,16 +14,14 @@ public class TransactionBuilder
 {
     ContextBuilder parent;
     String op;
-    List<EvsBuilder> evsBuilders;
-    List<Evs> evsList;
+    List<Supplier<? extends Evs<?>>> evsSuppliers;
     Supplier<? extends Transaction> transactionFactory;
 
     public TransactionBuilder(ContextBuilder parentContext, String op)
     {
         this.parent = parentContext;
         this.op = op;
-        this.evsBuilders = new ArrayList<>();
-        this.evsList = new ArrayList<>();
+        this.evsSuppliers = new ArrayList<>();
         this.transactionFactory = parent::createTransactionInstance;
     }
 
@@ -32,19 +30,13 @@ public class TransactionBuilder
         sane(parentContext, "parentContext", transactionFactory, "transactionFactory");
         this.parent = parentContext;
         this.op = null;
-        this.evsBuilders = new ArrayList<>();
-        this.evsList = new ArrayList<>();
+        this.evsSuppliers = new ArrayList<>();
         this.transactionFactory = transactionFactory;
     }
 
     public ContextBuilder build()
     {
-        for (EvsBuilder evsBuilder : evsBuilders)
-        {
-            evsList.add(evsBuilder.build());
-        }
-
-        parent.transaction(() -> {
+        parent.transactionFactory = () -> {
             Transaction tr = createInstance();
 
             if (op != null)
@@ -52,8 +44,9 @@ public class TransactionBuilder
                 tr.op(op);
             }
 
-            for (Evs evs : this.evsList)
+            for (Supplier<? extends Evs<?>> supplier : this.evsSuppliers)
             {
+                Evs<?> evs = supplier.get();
                 if (evs instanceof Invariant invariant)
                 {
                     tr.invariant(invariant);
@@ -62,13 +55,17 @@ public class TransactionBuilder
                 {
                     tr.effect(effect);
                 }
+                else if (evs instanceof Trancycle cycle)
+                {
+                    tr.cycle(cycle);
+                }
                 else
                 {
                     throw new IllegalStateException("Unexpected class in ruleSet: " + evs);
                 }
             }
             return tr;
-        });
+        };
         return parent;
     }
 
@@ -76,14 +73,14 @@ public class TransactionBuilder
     {
         sane(cls, "cls");
         InvariantBuilder<T> ib = new InvariantBuilder<>(this);
-        evsBuilders.add(ib);
+        evsSuppliers.add(() -> ib.build());
         return ib;
     }
 
     public <T> TransactionBuilder invariant(Invariant<T> invariant)
     {
         sane(invariant, "invariant");
-        evsList.add(invariant);
+        evsSuppliers.add(() -> invariant);
         return this;
     }
 
@@ -91,21 +88,21 @@ public class TransactionBuilder
     {
         sane(cls, "cls");
         EffectBuilder<T> eb = new EffectBuilder<>(this);
-        evsBuilders.add(eb);
+        evsSuppliers.add(() -> eb.build());
         return eb;
     }
 
     public <T> TransactionBuilder effect(Effect<T> effect)
     {
         sane(effect, "effect");
-        evsList.add(effect);
+        evsSuppliers.add(() -> effect);
         return this;
     }
 
     public <T extends Transaction> TransactionBuilder cycle(Trancycle<T> cycle)
     {
         sane(cycle, "cycle");
-        evsList.add(cycle);
+        evsSuppliers.add(() -> cycle);
         return this;
     }
 
