@@ -9,6 +9,7 @@ import com.taitl.existential.invariants.*;
 import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 // TODO: add context() method to build child contexts
 public class ContextBuilder
@@ -17,6 +18,7 @@ public class ContextBuilder
     String op;
     List<EvsBuilder> evsBuilders;
     List<Evs> evsList;
+    Supplier<? extends Context> contextFactory;
     Supplier<? extends Transaction> transactionFactory;
 
     public ContextBuilder(ConfigBuilder parentConfig, String op)
@@ -67,6 +69,9 @@ public class ContextBuilder
 
     public ConfigBuilder build()
     {
+        verify(!evsBuilders.isEmpty() || !evsList.isEmpty() || transactionFactory != null,
+                "Cannot configure context without defining rules");
+
         Context context = createInstance();
         context.op(op);
 
@@ -119,7 +124,18 @@ public class ContextBuilder
 
     Context createInstance()
     {
+        if (contextFactory != null)
+        {
+            return contextFactory.get();
+        }
         return parent.createContextInstance();
+    }
+
+    public ContextBuilder contextFactory(Supplier<? extends Context> supplier)
+    {
+        sane(supplier, "supplier");
+        contextFactory = supplier;
+        return this;
     }
 
     Transaction createTransactionInstance()
