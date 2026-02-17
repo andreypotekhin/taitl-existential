@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.configuration.actions;
+package com.taitl.ex.logic.configuration.indexes.actions;
 
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.configs.*;
@@ -8,17 +8,18 @@ import static com.taitl.ex.common.helper.Args.*;
 public class CreateIndexes
 {
     protected ConfigurationLogic cl;
+    protected IndexConfig indexConfig;
 
     public CreateIndexes(ConfigurationLogic cl)
     {
         this.cl = cl;
+        this.indexConfig = new IndexConfig(cl);
     }
 
     public void call(String op)
     {
         sane(op, "op");
-        // Add all configured rules to config indexes in the order of declaration
         Config config = cl.registry().get(op);
-        config.indexes().indexConfig(config);
+        indexConfig.call(op, config);
     }
 }

@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.configuration.indexes;
 
 import java.util.*;
+import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.existential.configs.*;
 
 public class ConfigIndexes

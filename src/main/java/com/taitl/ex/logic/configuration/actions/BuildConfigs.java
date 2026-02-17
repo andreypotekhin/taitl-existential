@@ -14,6 +14,9 @@ public class BuildConfigs
         this.cl = cl;
     }
 
+    /**
+     * Builds Configs from list of ConfigBuilders and adds them to ConfigRegistry.
+     */
     public void call(Map<String, ConfigBuilder> configBuilders)
     {
         for (String op : configBuilders.keySet())

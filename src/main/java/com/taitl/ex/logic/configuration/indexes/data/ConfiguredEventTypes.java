@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.configuration.indexes;
+package com.taitl.ex.logic.configuration.indexes.data;
 
 import java.util.*;
 
