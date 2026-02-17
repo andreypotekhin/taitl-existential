@@ -7,18 +7,43 @@ import com.taitl.existential.handlers.types.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Base handler declaration that captures an optional condition, an action,
+ * and a human-friendly description for an event.
+ *
+ * <p>This type is meant to be lightweight and declarative; the actual execution
+ * is delegated to the handler runtime.</p>
+ *
+ * @param <T>
+ *            Type of entity or value handled by the event
+ */
 public class On<T> implements EventHandler<T>
 {
     public Predicate<? super T> condition;
     public Consumer<? super T> action;
     public String description = null;
 
+    /**
+     * Creates a handler with an action that always executes.
+     *
+     * @param action
+     *            Action to invoke when the event is handled
+     */
     public On(Consumer<? super T> action)
     {
         sane(action, "action");
         this.action = action;
     }
 
+    /**
+     * Creates a handler with an action that always executes, annotated
+     * with a human-readable description.
+     *
+     * @param action
+     *            Action to invoke when the event is handled
+     * @param description
+     *            Human-friendly description of the handler
+     */
     public On(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
@@ -26,6 +51,14 @@ public class On<T> implements EventHandler<T>
         this.description = description;
     }
 
+    /**
+     * Creates a handler that executes only when the condition passes.
+     *
+     * @param condition
+     *            Predicate that determines whether the action should run
+     * @param action
+     *            Action to invoke when the event is handled
+     */
     public On(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
@@ -33,6 +66,16 @@ public class On<T> implements EventHandler<T>
         this.action = action;
     }
 
+    /**
+     * Creates a conditional handler with an explicit description.
+     *
+     * @param condition
+     *            Predicate that determines whether the action should run
+     * @param action
+     *            Action to invoke when the event is handled
+     * @param description
+     *            Human-friendly description of the handler
+     */
     public On(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", description, "description");
@@ -41,6 +84,14 @@ public class On<T> implements EventHandler<T>
         this.description = description;
     }
 
+    /**
+     * Handles the event using the runtime execution pipeline.
+     *
+     * @param t
+     *            Entity or value associated with the event
+     * @throws ExistentialException
+     *            If handler execution fails
+     */
     public void handle(T t) throws ExistentialException
     {
         // TODO: invoke and handle execute logic in a separate flow,
@@ -50,13 +101,20 @@ public class On<T> implements EventHandler<T>
     }
 
     /**
-     * Has side effects?
+     * Reports whether this handler is immutable (no action attached).
+     *
+     * @return true when the handler has no action and therefore no side effects
      */
     public boolean immutable()
     {
         return action == null;
     }
 
+    /**
+     * Returns the handler description or an empty string if absent.
+     *
+     * @return human-friendly description for diagnostics/logging
+     */
     public String description()
     {
         return description == null ? "" : description;
