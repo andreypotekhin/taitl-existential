@@ -3,7 +3,7 @@ package com.taitl.ex.logic.configuration.actions;
 import java.util.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.builders.*;
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 
 public class BuildConfigs
 {
@@ -14,7 +14,7 @@ public class BuildConfigs
         this.cl = cl;
     }
 
-    public void buildConfigs(Map<String, ConfigBuilder> configBuilders)
+    public void call(Map<String, ConfigBuilder> configBuilders)
     {
         for (String op : configBuilders.keySet())
         {
@@ -22,8 +22,5 @@ public class BuildConfigs
             Config config = cb.build(cl.ec());
             cl.registry().addConfig(config);
         }
-        // Configuration done.
-        // Prevent any further use of configBuilders.
-        configBuilders.clear();
     }
 }

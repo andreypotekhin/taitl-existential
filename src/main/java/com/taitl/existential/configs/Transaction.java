@@ -1,16 +1,16 @@
-package com.taitl.existential.transactions;
+package com.taitl.existential.configs;
 
 import java.util.*;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.instructions.*;
 import com.taitl.ex.core.transactions.*;
-import com.taitl.existential.contexts.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.indexes.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;

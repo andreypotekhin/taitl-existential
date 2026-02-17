@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.taitl.existential.handlers.*;
-import com.taitl.existential.transactions.Transaction;
+import com.taitl.existential.configs.Transaction;
 
 public class OnBegin<T extends Transaction> extends On<T>
 {

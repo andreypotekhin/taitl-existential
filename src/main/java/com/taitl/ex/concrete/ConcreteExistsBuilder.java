@@ -3,7 +3,7 @@ package com.taitl.ex.concrete;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
-import com.taitl.existential.transactions.*;
+import com.taitl.existential.configs.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;

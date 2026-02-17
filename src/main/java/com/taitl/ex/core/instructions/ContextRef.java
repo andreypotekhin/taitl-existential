@@ -1,6 +1,6 @@
 package com.taitl.ex.core.instructions;
 
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 

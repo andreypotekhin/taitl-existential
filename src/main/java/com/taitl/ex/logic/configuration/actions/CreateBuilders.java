@@ -3,22 +3,30 @@ package com.taitl.ex.logic.configuration.actions;
 import java.util.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.builders.*;
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Provides ConfigBuilder instances and builds resulting configs, outputting to ConfigRegistry.
+ * Provides ConfigBuilder instances and builds the Configs,
+ * also adding to ConfigurationLogic.
  */
-public class CreateConfigBuilders
+public class CreateBuilders
 {
     protected Map<String, ConfigBuilder> configBuilders;
     protected ConfigurationLogic cl;
 
-    public CreateConfigBuilders(ConfigurationLogic cl)
+    public CreateBuilders(ConfigurationLogic cl)
     {
         this.cl = cl;
         this.configBuilders = cl.configBuilders();
+    }
+
+    public ConfigBuilder getcreateBuilder(String op)
+    {
+        sane(op, "op");
+        ConfigBuilder o = configBuilders.get(op);
+        return (o != null) ? o : createBuilder(op);
     }
 
     public ConfigBuilder createBuilder(String op)
@@ -34,12 +42,5 @@ public class CreateConfigBuilders
             configBuilders.put(op, o);
         }
         return o;
-    }
-
-    public ConfigBuilder getcreateBuilder(String op)
-    {
-        sane(op, "op");
-        ConfigBuilder o = configBuilders.get(op);
-        return (o != null) ? o : createBuilder(op);
     }
 }

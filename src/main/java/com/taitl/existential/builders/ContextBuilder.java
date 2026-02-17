@@ -2,11 +2,10 @@ package com.taitl.existential.builders;
 
 import java.util.*;
 import java.util.function.*;
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;
-import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;

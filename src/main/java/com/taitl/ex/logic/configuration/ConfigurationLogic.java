@@ -7,7 +7,7 @@ import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -19,10 +19,9 @@ public class ConfigurationLogic implements Closeable
 
     protected ExistentialConfigs ec;
 
-    protected CreateConfigBuilders builders = new CreateConfigBuilders(this);
     protected ConfigRegistry registry = new ConfigRegistry(this);
+    protected CreateBuilders createBuilders = new CreateBuilders(this);
     protected BuildContexts buildContexts = new BuildContexts(this);
-    protected BuildConfigs buildConfigs = new BuildConfigs(this);
     protected FinalizeConfiguration finalizeConfiguration = new FinalizeConfiguration(this);
 
     public ConfigurationLogic(ExistentialConfigs ec)
@@ -30,12 +29,37 @@ public class ConfigurationLogic implements Closeable
         this.ec = ec;
     }
 
+    /**
+     * Creates (or returns an already created) an instance of ConfigBuilder as starting point
+     * for configuring a business operation.
+     */
     public ConfigBuilder getBuilder(String op)
     {
         sane(op, "op");
         verify(!ec.ex().configured(),
                 "Cannot call this method because setup has already been finalized");
-        return builders.getcreateBuilder(op);
+        return createBuilders.getcreateBuilder(op);
+    }
+
+    /**
+     * Get (create if missing), the contexts for business operation.
+     * Operation name is a non-wildcarded, for instance, "/app/flights/update"
+     * When parent or wildcard contexts are defined, multiple contexts may match
+     * a single operation: "/app/flights/update", "/app/flights", "/app/*"
+     * Create a new Context object if no matching context already exist.
+     * Create all parent Context object if this context is not a root context (/).
+     *
+     * Example: call("/app/flights/update") will create these three contexts,
+     * tied by parent-child relationship:
+     * "/app/flights/update"
+     * "/app/flights"
+     * "/app"
+     * "/"
+     * of which it will return the top one ("/app/flights/update")
+     */
+    public List<Context> buildContexts(String op)
+    {
+        return buildContexts.call(op);
     }
 
     /**
@@ -48,7 +72,7 @@ public class ConfigurationLogic implements Closeable
      */
     public void finalizeConfiguration()
     {
-        finalizeConfiguration.finalizeConfiguration();
+        finalizeConfiguration.call();
     }
 
     /**
@@ -60,13 +84,17 @@ public class ConfigurationLogic implements Closeable
         finalizeConfiguration.onFinishConfiguration(op);
     }
 
+    public void close()
+    {
+        configBuilders.clear();
+        contexts.clear();
+    }
+
+    /* Attributes */
+
     public boolean isEmpty()
     {
         return registry.isEmpty();
-    }
-
-    public void close()
-    {
     }
 
     public Existential ex()
@@ -97,14 +125,4 @@ public class ConfigurationLogic implements Closeable
         return config;
     }
 
-    public List<Context> buildContexts(String op)
-    {
-        return buildContexts.buildContexts(op);
-    }
-
-    public void buildConfigs()
-    {
-        verify(!configBuilders.isEmpty(), "No config builders exist");
-        buildConfigs.buildConfigs(configBuilders);
-    }
 }

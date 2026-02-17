@@ -4,8 +4,7 @@ import java.io.*;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.existential.*;
-import com.taitl.existential.contexts.*;
-import com.taitl.existential.transactions.*;
+import com.taitl.existential.configs.*;
 
 public class ExistentialInit implements Closeable
 {

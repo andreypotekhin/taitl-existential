@@ -1,8 +1,8 @@
 package com.taitl.existential.specs.configuration_workflow.custom_transactions;
 
 import com.taitl.existential.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.specs.*;
-import com.taitl.existential.transactions.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;

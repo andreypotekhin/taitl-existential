@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.indexing.data.config_indexes;
+package com.taitl.ex.logic.configuration.indexes;
 
 import java.util.*;
 import com.taitl.ex.logic.events.logic.*;
@@ -8,11 +8,11 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Stores the event keys for which a rule is present in a Transaction or its Contexts.
+ * Stores the event keys (event+type) for which a rule has been configured in a Transaction or its Contexts.
  * Maps event key to a boolean (does a rule exist for this type?)
  * Example: "Create<Doc<JSON>>", "Update<Doc<HTML>>": rules (expressions, event handlers)
- * exist for these events, corresponding non-generic versions ("Create<Doc>", "Update<Doc>",
- * "Create", "Update"), or their elementary versions ("Create", "Update", "Change").
+ * exist for these events , or for their non-generic versions ("Create<Doc<?>>", "Update<Doc<?>>",
+ * "Create<Doc>", "Update<Doc>").
  *
  * Different contexts may have rules to different types of events.
  * To speed up the answer to question 'which events should be emitted by EventSplitter
@@ -34,9 +34,6 @@ public class ConfiguredEventKeys
         if (!eventKeys.contains(eventKey.toString()))
         {
             eventKeys.add(eventKey.toString());
-            // TODO: add generic and elementary versions of the event key,
-            // e.g. for "ReadAndLock<Doc<JSON>>" also add "ReadAndLock<Doc>", "ReadAndLock",
-            // "Read<Doc<JSON>>", "Read<Doc>", "Change"
         }
     }
 

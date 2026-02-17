@@ -4,7 +4,7 @@ import java.io.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 
 public class ExistentialConfigs implements Closeable
 {
@@ -16,6 +16,12 @@ public class ExistentialConfigs implements Closeable
         this.ex = ex;
     }
 
+    /**
+     * Provides an instance of ConfigBuilder as starting point
+     * for configuring a business operation. Repeat calls
+     * result in the same instance returned as the initial call.
+     * Called from Existential.configure(op)
+     */
     public ConfigBuilder getBuilder(String op)
     {
         return configLogic.getBuilder(op);
@@ -25,11 +31,10 @@ public class ExistentialConfigs implements Closeable
      * Called from ExistentialTransactions.begin() to indicate the all
      * setup/configuration activities, such as setting up validation
      * rules and event handlers, has been completed.
-     *
      * From this point, we stop accepting new contexts, custom transactions,
-     * rules and handlers, to be able to freely cache for best performance.
+     * rules and handlers, to be able to freely cache the rules for best performance.
      */
-    public void finalizeConfiguration()
+    public void done()
     {
         configLogic.finalizeConfiguration();
     }

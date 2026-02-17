@@ -1,20 +1,22 @@
-package com.taitl.existential.contexts;
+package com.taitl.existential.configs;
 
 import java.util.*;
 import java.util.function.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.instructions.*;
 import com.taitl.ex.logic.events.logic.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
-import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
 // TODO: add context() method for adding child contexts
 public class Context implements Configurable, Evaluable
 {
+    public static Supplier<? extends Context> FACTORY = () -> Creator.create(Context.class);
+
     /**
      * Context name, e.g. "/app/flights", "/app/flights/update", "*update"
      */

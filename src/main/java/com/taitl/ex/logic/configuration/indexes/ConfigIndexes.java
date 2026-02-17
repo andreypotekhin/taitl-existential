@@ -1,6 +1,7 @@
-package com.taitl.ex.logic.indexing.data.config_indexes;
+package com.taitl.ex.logic.configuration.indexes;
 
 import java.util.*;
+import com.taitl.existential.configs.*;
 
 public class ConfigIndexes
 {
@@ -23,6 +24,11 @@ public class ConfigIndexes
     public BitSet eventTypeMask()
     {
         return eventTypesMask;
+    }
+
+    public void indexConfig(Config config)
+    {
+        // Add all configured rules to indexes, in the order of declaration
     }
 
     public void close()

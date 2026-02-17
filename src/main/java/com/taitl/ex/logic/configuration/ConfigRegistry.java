@@ -1,8 +1,7 @@
 package com.taitl.ex.logic.configuration;
 
 import java.util.*;
-import com.taitl.existential.contexts.*;
-import com.taitl.existential.exceptions.*;
+import com.taitl.existential.configs.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.Outcome.*;
@@ -20,33 +19,27 @@ public class ConfigRegistry
         this.cl = cl;
     }
 
-    public boolean has(String id)
+    public boolean has(String op)
     {
-        return configs.containsKey(id);
+        return configs.containsKey(op);
     }
 
-    public Config get(String id) throws NotFoundException
+    public Config get(String op)
     {
-        sane(id, "id");
-        Config o = configs.get(id);
-        if (o == null)
-        {
-            throw new NotFoundException("Context not found, id=" + id);
-        }
+        sane(op, "op");
+        Config o = configs.get(op);
+        verify(o != null, "Config not found, id=" + op);
         return o;
     }
 
-    public Config remove(String id) throws NotFoundException
+    public Config remove(String op)
     {
-        sane(id, "id");
-        Config o = configs.get(id);
-        if (o == null)
-        {
-            throw new NotFoundException("Context not found, id=" + id);
-        }
+        sane(op, "op");
+        Config o = configs.get(op);
+        verify(o != null, "Config not found, id=" + op);
         synchronized (configs)
         {
-            configs.remove(id);
+            configs.remove(op);
         }
         return o;
     }

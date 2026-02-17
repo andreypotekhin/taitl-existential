@@ -20,15 +20,6 @@ public class IndexingLogic implements Closeable
         this.ec = ex.configs();
     }
 
-    /* Configuration indexes */
-
-    public void indexTransaction(Tr tr)
-    {
-        // TODO: add rules to indexes
-    }
-
-    /* Runtime indexes */
-
     public <T> void indexEvent(Event<T> event, T o, Tr tr)
     {
         // TODO: add event to runtimes indexes (e.g. EventField)

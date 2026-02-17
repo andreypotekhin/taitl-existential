@@ -2,9 +2,9 @@ package com.taitl.ex.core.transactions;
 
 import java.util.*;
 import java.util.function.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.indexes.*;
-import com.taitl.existential.transactions.*;
 
 public class TransactionIndexes
 {

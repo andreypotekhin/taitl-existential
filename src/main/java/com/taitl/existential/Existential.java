@@ -4,9 +4,9 @@ import java.io.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.existential.builders.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
-import com.taitl.existential.transactions.*;
 
 /**
  * Entry point into Existential library.

@@ -1,7 +1,7 @@
 package com.taitl.existential.events.transaction_events;
 
+import com.taitl.existential.configs.*;
 import com.taitl.existential.events.types.*;
-import com.taitl.existential.transactions.*;
 
 /**
  * Indicates transaction checkpoint.

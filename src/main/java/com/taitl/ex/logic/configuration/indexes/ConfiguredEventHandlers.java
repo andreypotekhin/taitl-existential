@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.indexing.data.config_indexes;
+package com.taitl.ex.logic.configuration.indexes;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
@@ -8,21 +8,17 @@ import com.taitl.existential.keys.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
- * Maps type (e.g. T<U>) to a set of corresponding event handlers, Set<On[E]<T<U>>>
- * for which some rule is defined in Transaction or its Contexts.
+ * Maps entity type to a set of configured event handlers, Set<On[E]<T<U>>>
  * Example: Doc<JSON> -> Set<On[Е]<Doc<JSON>>>
- * Here, E is one of events Create, Update, Upsert, Delete, Read, Mutate, Transit.
+ * where E is one of Create, Update, Upsert, Delete, Read, Mutate, Transit.
  *
  * Example:
- *   To retrieve the event handlers defined for type "Doc<JSON>":
+ *   To retrieve the event handlers defined for the type "Doc<JSON>":
  *   Set<EventHandler> handlers = eventHandlers.get("Doc<JSON>")
- *
- * @see EventHandlerWithSideEffects
- * @see BiEventHandlerWithSideEffects
  */
 public class ConfiguredEventHandlers<T>
 {
-    Multimap<String, EventHandler<T>> storage = new Multimap<>();
+    Multimap<String, EventHandler<T>> handlers = new Multimap<>();
 
     /**
      * Gets event handlers for the specified type.
@@ -33,11 +29,12 @@ public class ConfiguredEventHandlers<T>
      */
     public Set<EventHandler<T>> get(TypeKey<T> key)
     {
+
         if (key == null)
         {
             throw new IllegalArgumentException(ARG_KEY);
         }
-        Set<EventHandler<T>> result = storage.get(key.toString());
+        Set<EventHandler<T>> result = handlers.get(key.toString());
         if (result != null && result.isEmpty())
         {
             result = null;
@@ -51,7 +48,7 @@ public class ConfiguredEventHandlers<T>
         {
             throw new IllegalArgumentException(ARG_KEY);
         }
-        return storage.containsKey(key.toString());
+        return handlers.containsKey(key.toString());
     }
 
     public Set<EventHandler<T>> put(TypeKey<T> key, EventHandler<T> value)
@@ -64,6 +61,6 @@ public class ConfiguredEventHandlers<T>
         {
             throw new IllegalArgumentException(ARG_VALUE);
         }
-        return storage.put(key.toString(), value);
+        return handlers.put(key.toString(), value);
     }
 }

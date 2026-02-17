@@ -2,6 +2,7 @@ package com.taitl.existential.builders;
 
 import java.util.*;
 import java.util.function.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;

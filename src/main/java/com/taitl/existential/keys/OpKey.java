@@ -1,8 +1,7 @@
 package com.taitl.existential.keys;
 
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.paths.*;
-import com.taitl.existential.transactions.*;
 
 /**
  * A path-like representation of a business operation, serving as a key for finding

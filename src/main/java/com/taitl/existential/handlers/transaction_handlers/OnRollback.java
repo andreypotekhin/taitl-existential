@@ -1,8 +1,8 @@
 package com.taitl.existential.handlers.transaction_handlers;
 
 import java.util.function.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.handlers.*;
-import com.taitl.existential.transactions.*;
 
 public class OnRollback<T extends Transaction> extends On<T>
 {

@@ -2,7 +2,7 @@ package com.taitl.ex.logic.transactions.actions;
 
 import java.util.*;
 import com.taitl.ex.logic.transactions.*;
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 

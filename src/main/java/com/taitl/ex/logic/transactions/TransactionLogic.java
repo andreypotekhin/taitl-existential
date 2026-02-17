@@ -6,6 +6,7 @@ import com.taitl.ex.logic.transactions.actions.*;
 import com.taitl.ex.logic.transactions.data.*;
 import com.taitl.ex.logic.validation.*;
 import com.taitl.existential.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -42,7 +43,7 @@ public class TransactionLogic implements Closeable
     {
         sane(op, "op");
         OpKey.validate(op);
-        ee.ex().configs().finalizeConfiguration();
+        ee.ex().configs().done();
         Tr tr = registry.create(op, null);
         beginTran.call(tr);
         return tr.id.toString();
@@ -52,7 +53,7 @@ public class TransactionLogic implements Closeable
     {
         sane(op, "op");
         OpKey.validate(op);
-        ee.ex().configs().finalizeConfiguration();
+        ee.ex().configs().done();
         Tr tr = registry.create(op, custom);
         beginTran.call(tr);
         return tr.id.toString();

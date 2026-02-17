@@ -4,6 +4,7 @@ import java.util.*;
 import com.taitl.ex.common.helper.*;
 import com.taitl.ex.logic.indexing.data.runtime_indexes.*;
 import com.taitl.ex.logic.validation.data.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;

@@ -1,6 +1,9 @@
-package com.taitl.existential.contexts;
+package com.taitl.existential.configs;
 
 import java.util.*;
+import java.util.function.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.configuration.indexes.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -31,6 +34,14 @@ public class Config
      */
     protected List<Context> contexts = new ArrayList<>();
 
+    /** Transaction factory */
+    protected Supplier<? extends Context> contextFactory = Context.FACTORY;
+
+    /**
+     * Configuration indexes for performance.
+     */
+    protected ConfigIndexes configIndexes = Creator.create(ConfigIndexes.class);
+
     /**
      * Adds Context instance to Op.
      * Called by ConfigRegistry.create(op).
@@ -58,5 +69,10 @@ public class Config
     public List<Context> contexts()
     {
         return contexts;
+    }
+
+    public ConfigIndexes indexes()
+    {
+        return configIndexes;
     }
 }

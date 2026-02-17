@@ -2,9 +2,9 @@ package com.taitl.existential;
 
 import com.taitl.ex.core.existential.*;
 import com.taitl.existential.builders.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
-import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 

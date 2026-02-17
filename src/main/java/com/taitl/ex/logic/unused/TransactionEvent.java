@@ -2,7 +2,7 @@ package com.taitl.ex.logic.unused;
 
 import com.taitl.existential.constants.Strings;
 import com.taitl.existential.events.types.*;
-import com.taitl.existential.transactions.Transaction;
+import com.taitl.existential.configs.Transaction;
 
 /**
  * Implements type of event related to lifecycle of a business transaction,

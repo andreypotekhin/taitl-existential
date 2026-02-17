@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.concrete.*;
-import com.taitl.existential.transactions.*;
+import com.taitl.existential.configs.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 

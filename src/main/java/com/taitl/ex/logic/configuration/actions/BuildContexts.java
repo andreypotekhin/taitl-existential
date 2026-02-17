@@ -3,7 +3,7 @@ package com.taitl.ex.logic.configuration.actions;
 import java.util.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.*;
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -19,14 +19,14 @@ public class BuildContexts
     }
 
     /**
-     * Get, or create if missing, the contexts for business operation name.
+     * Get, or create if missing, the contexts for business operation.
      * Operation name is a non-wildcarded, for instance, "/app/flights/update"
      * When parent or wildcard contexts are defined, multiple contexts may match
      * a single operation: "/app/flights/update", "/app/flights", "/app/*"
-     * Creates a new Context object if no matching context already exist.
-     * Creates all parent Context object if this context is not a root context (/).
+     * Create a new Context object if no matching context already exist.
+     * Create all parent Context object if this context is not a root context (/).
      *
-     * Example: createContexts("/app/flights/update") will create these three contexts,
+     * Example: call("/app/flights/update") will create these three contexts,
      * tied by parent-child relationship:
      * "/app/flights/update"
      * "/app/flights"
@@ -34,7 +34,7 @@ public class BuildContexts
      * "/"
      * of which it will return the top one ("/app/flights/update")
      */
-    public List<Context> buildContexts(String op)
+    public List<Context> call(String op)
     {
         Set<Context> result = cl.contexts.get(op);
         if (result != null && !result.isEmpty())

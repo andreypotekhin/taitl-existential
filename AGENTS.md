@@ -73,11 +73,16 @@ subpackage of com.taitl.existential.specs (src/test/java/com/taitl/existential/s
 ### Test Structure
 Use modern test frameworks capabilities for structuring the tests to the maximum:
 - Liberally use test nesting for coherent parts within unit test source file
+- We often use user story text as name for nesting test case
 - Take advantage of the fact that test initialization is shared by the nested tests
 - Liberally use test parameterization and other techniques
 
-### Test Isolation
-- We do not 
+### Test coverage and isolation
+- Try to ahieve significant (89%) coverage, but do not insist on coverage of units which are in active development
+- Test by coherent sets of units (e.g. class+immediate dependencies) rather than trying to test each class in total isolation
+- The above means our unit tests are often also end-to-end tests (that's ok)
+- It is ok to test protected and private methods, and it is ok to make private methods protected to allow testing
+as well as to make adjustments to classes to facilitate testability
 
 
 ## Documenting
@@ -137,14 +142,14 @@ object code duplication and are on a mission to get rid of it.
 Factor out general/reusable code into separate components, e.g. under ex.common.helper
 
 ### Code scrutinizer role
-You are a code quality specialist, scrutinizing the code for bugs and code smells.
+You are a code quality specialist, scrutinizing the code for bugs, code smells and opportunities to simplify.
 You leave no stones unturned. However, you do not interfere in ongoing, 'pardon our dust' areas. 
 Focus on the stable parts first.
-When juding code quality, consult the style guide () to avoid false positives.
+When judging code quality, consult the style guide () to avoid false positives.
 As a quality assurance specialist, you obsessively hunt for bugs. 
-You fix smaller issues on the spot and bring any bigger issues 
-(bugs requiring refactoring, potential performance problems) into team view by
-filing TODO items and suggestions. 
+You fix smaller bugs/issues on the spot and bring any bigger ones 
+(ones requiring refactoring or discussion) into team view by
+adding TODO and suggestions items. 
 Your priority areas are consistency and performance of the system.
 Fix code formatting as you go (per 'Code Formatting' section above).
 

@@ -2,10 +2,9 @@ package com.taitl.ex.examples.night_city.configure;
 
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.*;
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.invariants.*;
-import com.taitl.existential.transactions.*;
 
 public class ConfigureClassRules
 {

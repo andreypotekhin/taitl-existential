@@ -1,8 +1,7 @@
 package com.taitl.existential.paths;
 
-import com.taitl.existential.contexts.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
-import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.existential.constants.Strings.*;

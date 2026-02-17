@@ -1,6 +1,5 @@
 package com.taitl.ex.logic.indexing.data;
 
-import com.taitl.ex.logic.indexing.data.config_indexes.*;
 import com.taitl.ex.logic.indexing.data.runtime_indexes.*;
 import com.taitl.ex.logic.validation.data.*;
 import com.taitl.existential.transactions.*;
@@ -18,19 +17,12 @@ import com.taitl.existential.transactions.*;
  */
 public class IndexData
 {
-    ConfigIndexes configIndexes;
     RuntimeIndexes runtimeIndexes;
 
     public IndexData()
     {
         runtimeIndexes = new RuntimeIndexes();
     }
-
-    // public RuntimeIndexes configIndexes(String op)
-    // {
-    // // Config config = ConfigRegistry.getConfig(op)
-    // // return config.configIndexes();
-    // }
 
     public RuntimeIndexes runtimeIndexes(Tr tr)
     {

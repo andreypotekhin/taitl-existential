@@ -1,10 +1,12 @@
 package com.taitl.ex.logic.configuration.actions;
 
+import java.util.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
+import com.taitl.existential.builders.*;
 
-import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 public class FinalizeConfiguration
 {
@@ -12,22 +14,26 @@ public class FinalizeConfiguration
     protected ExistentialConfigs ec;
     protected Existential ex;
 
+    protected BuildConfigs buildConfigs;
+    protected CreateIndexes createIndexes;
+
     public FinalizeConfiguration(ConfigurationLogic cl)
     {
         this.cl = cl;
         this.ec = cl.ec();
         this.ex = cl.ex();
+        this.buildConfigs = new BuildConfigs(cl);
+        this.createIndexes = new CreateIndexes(cl);
     }
 
     /**
-     * Called from ExistentialTransactions.begin() to indicate the all
-     * setup/configuration activities, such as setting up validation
+     * Called from ConfigurationLogic.finalizeConfiguration() to indicate the all
+     * setup/configuration activities, such as declaring validation
      * rules and event handlers, has been completed.
-     *
      * From this point, we stop accepting new contexts, custom transactions,
      * rules and handlers, to be able to freely cache for best performance.
      */
-    public void finalizeConfiguration()
+    public void call()
     {
         if (!ex.configured())
         {
@@ -46,19 +52,27 @@ public class FinalizeConfiguration
                 // and every intent(), effect() method of each custom context,
                 // and therefore will create instances of each Invariant, Intent
                 // provided during setup.
-                cl.buildConfigs();
+                buildConfigs();
             }
         }
     }
 
+    public void buildConfigs()
+    {
+        Map<String, ConfigBuilder> configBuilders = cl.configBuilders();
+        verify(!configBuilders.isEmpty(), "No config builders exist");
+        buildConfigs.call(configBuilders);
+        // Configuration done. Prevent any further use of configBuilders.
+        configBuilders.clear();
+    }
+
     /**
      * Called from ConfigBuilder.build() to indicate
-     * that the configuration for an op has been completed.
+     * that the configuration for an op has been completed
+     * and to create intermediaries for the other processing stages.
      */
     public void onFinishConfiguration(String op)
     {
-        sane(op, "op");
-
-        // TODO: create intermediaries for next stages
+        createIndexes.call(op);
     }
 }
