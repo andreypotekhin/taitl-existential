@@ -16,13 +16,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
 {
     /**
      * Parent Transaction, if any.
-     * This field is null for the invariants that are not declared on
-     * transaction level, e.g. for the invariants the declared in a Context.
+     * This field is null for invariants that are not declared at the
+     * transaction level, e.g. invariants declared in a Context.
      */
     Transaction tran;
 
     /**
-     * Entity event handlers
+     * Entity event handlers.
      */
     List<Ev<T>> evs = new ArrayList<>();
 
