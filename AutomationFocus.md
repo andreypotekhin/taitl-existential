@@ -1,6 +1,6 @@
 ## Automation Focus
 
-### Automation priorities
+### Priorities
 Proofreading
 - Source code comments
 - .md documents  
@@ -10,3 +10,6 @@ TODO items
 
 Specification.md
 - Address items in 'Library' section
+
+Bug discovery
+Bug fixing

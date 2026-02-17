@@ -7,22 +7,24 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Begin transaction
+ * Dispose transaction object after a commit/rollback.
  */
-public class BeginTransaction
+public class DisposeTran
 {
     TransactionLogic tl;
 
-    public BeginTransaction(TransactionLogic tl)
+    public DisposeTran(TransactionLogic tl)
     {
         sane(tl, "transactionLogic");
         this.tl = tl;
     }
 
+    /**
+     * Close transaction, remove from registry
+     */
     public void call(Tr tr) throws NotFoundException
     {
-        tr.onBegin();
-        tl.validationLogic.prepareForValidation(tr);
-        // TODO: Execute transaction preconditions
+        tr.close();
+        tl.registry().remove(tr.id.toString());
     }
 }

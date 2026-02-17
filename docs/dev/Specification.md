@@ -5,7 +5,8 @@ None of the claims are in any way legal. None any of them constitute any contrac
 They only describe library features and behavior for implementation.
 
 As user stories, claims statements may be prefixed with 'The user can...' (or 'The user can't...').
-Claims are backed by test cases in src/test/claims. The (+) signs indicate the ones already covered by tests.
+Claims are backed by test cases in src/test/java/com/taitl/existential/specs. 
+The (+) signs indicate the ones already completed and covered by tests.
 
 ### Terminology
 
@@ -52,6 +53,8 @@ Transition: a Mutation that can have a null in before- or after- state (but not 
   - The null in 'before' state indicates creation of an entity
   - The null in 'after' state indicates deletion of an entity
   - Both 'before' and 'after' states being non-null indicates a change (mutation) of an entity
+
+For additional documentation, see /Readme.md, /docs and /docs/dev.
 
 ### Library
 
@@ -195,6 +198,8 @@ Intents are evaluated as lists of predicates. Violations are added to validation
 
 ## Concepts
 
+### Configs
+
 ### Contexts
 
 ### Events
@@ -326,6 +331,29 @@ System ensures that any memory leaks are reported (Log memory leaks, e.g. when t
 
 User can add the Library as a dependency to their project using Maven-based dependency resolution. 
   - Requirements: Maven Central account
+
+
+### Implementation
+(Technical user stories)
+
+#### Public interface
+
+##### Public classes
+User can interact with the library as a whole using Ex, Existential classes
+User can configure rules per op using builders (ConfigBuilder, ContextBuilder, etc.)
+User can specify configuration rules per context using Context, ContextBuilder
+User can specify configuration rules per business method invocation using Transaction, TransactionBuilder
+User can interact with the business transaction using Ex, Existential and Tr classes
+User can send messages to library using Ex, Existential and Tr classes
+
+##### Internal indexing
+System automatically finalizes configuration for op upon start of a transaction 
+System indexes configuration rules per op when configuration is finalized
+Configuration indexes are owned by Config object for business op
+System indexes the received events at run time
+Runtime indexes are owned by Tr object
+Evaluation runs (e.g. at Validation state) use config and runtime indexes for performance.
+
 
 ### Appendix
 

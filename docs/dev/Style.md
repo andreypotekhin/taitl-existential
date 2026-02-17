@@ -12,6 +12,7 @@ General rules:
 - Refactor with minimal code
 - Move general (non-specific to project business logic/reusable) code into separate components, 
 e.g. by adding to ex.common.helper 
+- Less code, less bugs
 
 ### Naming
 #### Naming - Identifiers
@@ -30,6 +31,7 @@ In compound identifiers, do not convert all-capital abbreviations (HTML) to came
 
 ### OOP
 Instantiation
+- We generally prefer Builder pattern for multi-field classes or where readability is crucial  
 - Objects are normally instantiated with Creator.create()
 - Singletons are maintained with Creator.singleton()
 - For dependency injections, one can use Creator.inject()
@@ -61,7 +63,7 @@ Object and package decomposition
   - Integrate with other 'apps' using their corresponding data model structures 
 
 ### What to avoid
-As a principled org, we fight a few dogmas.
+Being a principled team, we fight a few dogmas.
 
 We generally avoid, unless there is a valid reason:
 - non-wildcard imports 
@@ -74,3 +76,5 @@ We generally avoid, unless there is a valid reason:
 - overuse of streams
 - HTML tags in Javadocs
 - use 'brief' notation for getters and setters (x() instead of getX())
+- testing of protected and private methods is good; and making methods non-private for
+testing purposes is ok.

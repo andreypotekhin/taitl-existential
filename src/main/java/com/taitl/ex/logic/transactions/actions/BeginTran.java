@@ -7,20 +7,22 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * RollbackTr transaction.
+ * Begin transaction
  */
-public class RollbackTransaction
+public class BeginTran
 {
     TransactionLogic tl;
 
-    public RollbackTransaction(TransactionLogic tl)
+    public BeginTran(TransactionLogic tl)
     {
         sane(tl, "transactionLogic");
         this.tl = tl;
     }
 
-    public void call(Tr tr) throws ExistentialException
+    public void call(Tr tr) throws NotFoundException
     {
-        tr.onRollback();
+        tr.onBegin();
+        tl.validationLogic.prepareForValidation(tr);
+        // TODO: Execute transaction preconditions
     }
 }

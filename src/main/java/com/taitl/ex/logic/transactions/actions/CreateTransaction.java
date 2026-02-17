@@ -1,31 +1,57 @@
 package com.taitl.ex.logic.transactions.actions;
 
-import com.taitl.ex.logic.transactions.*;
-import com.taitl.existential.exceptions.*;
+import java.util.*;
+import com.taitl.existential.contexts.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.State.*;
 
-/**
- * Commit transaction object.
- */
 public class CreateTransaction
 {
-    TransactionLogic transactionLogic;
-
-    public CreateTransaction(TransactionLogic transactionLogic)
+    public Tr forConfig(String op, Config config, Transaction custom)
     {
-        sane(transactionLogic, "transactionLogic");
-        this.transactionLogic = transactionLogic;
+        sane(op, "op", config, "config");
+        OpKey.validate(op);
+        Tr o = new Tr(op, generateId());
+        for (Context context : config.contexts())
+        {
+            o.addTransaction(forContext(context));
+        }
+        if (custom != null)
+        {
+            o.addTransaction(custom);
+        }
+        return o;
     }
 
-    public Tr call(String op, Transaction custom) throws ExistentialException
+    public Tr forContexts(String op, List<Context> contexts, Transaction custom)
     {
-        sane(op, "op");
+        sane(op, "op", contexts, "contexts");
         OpKey.validate(op);
-        verify(transactionLogic.ex().configured(), "You should call configs().done() first");
-        return transactionLogic.registry().create(op, custom);
+        Tr o = new Tr(op, generateId());
+        for (Context context : contexts)
+        {
+            o.addTransaction(forContext(context));
+        }
+        if (custom != null)
+        {
+            o.addTransaction(custom);
+        }
+        return o;
+    }
+
+    protected UUID generateId()
+    {
+        return UUID.randomUUID();
+    }
+
+    protected static Transaction forContext(Context context)
+    {
+        Transaction t = context.transactionFactory().get();
+        t.op(context.name());
+        t.name(context.name());
+        t.context(context);
+        return t;
     }
 }

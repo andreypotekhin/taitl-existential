@@ -1,8 +1,8 @@
 package com.taitl.ex.logic.transactions.data;
 
 import java.util.*;
-import com.taitl.ex.core.existential.*;
-import com.taitl.ex.logic.configuration.actions.*;
+import com.taitl.ex.logic.transactions.*;
+import com.taitl.ex.logic.transactions.actions.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -15,22 +15,21 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class TrRegistry
 {
-    /** Tr id to Tr */
     protected Map<String, Tr> reg = new LinkedHashMap<>();
+    protected CreateTran createTran;
+    protected TransactionLogic tl;
 
-    protected ExistentialTransactions exec;
-    protected CreateTransaction createTransaction = new CreateTransaction();
-
-    public TrRegistry(ExistentialTransactions exec)
+    public TrRegistry(TransactionLogic tl)
     {
-        this.exec = exec;
+        sane(tl, "tl");
+        this.tl = tl;
     }
 
     public Tr create(String op, Transaction custom)
     {
         sane(op, "op");
         OpKey.validate(op);
-        Tr o = createTransaction.forConfig(op, exec.ex().configs().config(op), custom);
+        Tr o = createTran.forConfig(op, tl.ex().configs().config(op), custom);
         synchronized (this)
         {
             reg.put(o.id.toString(), o);

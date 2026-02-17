@@ -1,7 +1,10 @@
 package com.taitl.ex.logic.configuration;
 
 import java.io.*;
+import java.util.*;
+import com.taitl.ex.common.helper.*;
 import com.taitl.ex.core.existential.*;
+import com.taitl.ex.logic.configuration.actions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.contexts.*;
@@ -11,25 +14,26 @@ import static com.taitl.ex.common.helper.State.*;
 
 public class ConfigurationLogic implements Closeable
 {
-    protected Existential ex;
+    protected Map<String, ConfigBuilder> configBuilders = new LinkedHashMap<>();
+    public Multimap<String, Context> contexts = new Multimap<>();
+
     protected ExistentialConfigs ec;
 
-    protected ConfigBuilders builders = new ConfigBuilders(this);
+    protected CreateConfigBuilders builders = new CreateConfigBuilders(this);
     protected ConfigRegistry registry = new ConfigRegistry(this);
-
-    // TODO:not clear how this get created?
-    protected Contexts contexts = new Contexts();
+    protected BuildContexts buildContexts = new BuildContexts(this);
+    protected BuildConfigs buildConfigs = new BuildConfigs(this);
+    protected FinalizeConfiguration finalizeConfiguration = new FinalizeConfiguration(this);
 
     public ConfigurationLogic(ExistentialConfigs ec)
     {
         this.ec = ec;
-        this.ex = ec.ex();
     }
 
     public ConfigBuilder getBuilder(String op)
     {
         sane(op, "op");
-        verify(!ex.configured(),
+        verify(!ec.ex().configured(),
                 "Cannot call this method because setup has already been finalized");
         return builders.getcreateBuilder(op);
     }
@@ -44,26 +48,7 @@ public class ConfigurationLogic implements Closeable
      */
     public void finalizeConfiguration()
     {
-        if (!ex.configured())
-        {
-            if (isEmpty())
-            {
-                throw new IllegalStateException("You need to configure at least one context");
-            }
-
-            synchronized (Existential.class)
-            {
-                ex.configured(true);
-
-                // Now that we finalized setting up rules and event handlers
-                // create all (parent, intermediate) contexts for all the Contexts
-                // configured so far. This will result in a call to each
-                // and every intent(), effect() method of each custom context,
-                // and therefore will create instances of each Invariant, Intent
-                // provided during setup.
-                builders.finalizeConfiguration();
-            }
-        }
+        finalizeConfiguration.finalizeConfiguration();
     }
 
     /**
@@ -72,7 +57,7 @@ public class ConfigurationLogic implements Closeable
      */
     public void onFinishConfiguration(String op)
     {
-        // TODO: create intermediaries for next stages
+        finalizeConfiguration.onFinishConfiguration(op);
     }
 
     public boolean isEmpty()
@@ -86,7 +71,7 @@ public class ConfigurationLogic implements Closeable
 
     public Existential ex()
     {
-        return ex;
+        return ec.ex();
     }
 
     public ExistentialConfigs ec()
@@ -99,6 +84,11 @@ public class ConfigurationLogic implements Closeable
         return registry;
     }
 
+    public Map<String, ConfigBuilder> configBuilders()
+    {
+        return configBuilders;
+    }
+
     public Config config(String op)
     {
         sane(op, "op");
@@ -107,8 +97,14 @@ public class ConfigurationLogic implements Closeable
         return config;
     }
 
-    public Contexts contexts()
+    public List<Context> buildContexts(String op)
     {
-        return contexts;
+        return buildContexts.buildContexts(op);
+    }
+
+    public void buildConfigs()
+    {
+        verify(!configBuilders.isEmpty(), "No config builders exist");
+        buildConfigs.buildConfigs(configBuilders);
     }
 }

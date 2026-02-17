@@ -1,7 +1,6 @@
 package com.taitl.ex.logic.configuration;
 
 import java.util.*;
-import com.taitl.ex.core.existential.*;
 import com.taitl.existential.contexts.*;
 import com.taitl.existential.exceptions.*;
 
@@ -13,14 +12,12 @@ import static com.taitl.ex.common.helper.Outcome.*;
  */
 public class ConfigRegistry
 {
-    protected ConfigurationLogic configurationLogic;
-    protected ExistentialConfigs ec;
     protected Map<String, Config> configs = new LinkedHashMap<>();
+    protected ConfigurationLogic cl;
 
-    public ConfigRegistry(ConfigurationLogic configurationLogic)
+    public ConfigRegistry(ConfigurationLogic cl)
     {
-        this.configurationLogic = configurationLogic;
-        this.ec = configurationLogic.ec();
+        this.cl = cl;
     }
 
     public boolean has(String id)

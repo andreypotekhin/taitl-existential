@@ -41,17 +41,27 @@ Address technical debt issues found in Todo.md documents.
 ### Code compression specialist role
 See 'Code compression specialist roles' section in 'Team roles' of AGENTS.md
 
-Automation instruction
+Automation instructions
 - Identify 1–2 candidate code pieces for factoring out into generalized components
 - Create classes and generalized code under ex.common.helper
 - Identify 1–2 duplicated code occurrences and replace with a shared helper/abstraction (only if it reduces complexity)
 - No public API changes
 - Preserve existing behavior, prove via tests
 
+### Code scrutinizer role
+See 'Code scrutinizer role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+- Find 1-2 code smells in the existing code and output to TODO.md documents
+- Find 1-2 code bugs in the existing code and output to TODO.md documents
+
+Limits
+- Only consider stable parts of the codebase that are not under active development.
+
 ### Documentation specialist role
 See 'Documentation specialist roles' section in 'Team roles' of AGENTS.md
 
-Automation instruction
+Automation instructions
 - Only consider public packages (com.taitl.existential) for Javadoc commenting
 - Select top 3–5 poorly documented source code files, prioritize by proximity to end-user 
 - Add/repair Javadoc
@@ -59,11 +69,11 @@ Automation instruction
 - Build project
 
 Limits
-- Only consider public packages (com.taitl.existential) for Javadoc commenting
+- Only consider public packages (com.taitl.existential) for Javadoc commenting.
 
 ### Proofreader specialist role
 See 'Proofreader specialist roles' section in 'Team roles' of AGENTS.md
 
-Automation instruction
+Automation instructions
 - Select 3–5 source code files with poorly reading Javadoc
 - Select one poorly reading .md file

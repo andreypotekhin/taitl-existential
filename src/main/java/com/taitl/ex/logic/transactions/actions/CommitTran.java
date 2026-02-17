@@ -7,13 +7,13 @@ import com.taitl.existential.transactions.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Checkpoint transaction
+ * Commit transaction
  */
-public class CheckpointTransaction
+public class CommitTran
 {
     TransactionLogic tl;
 
-    public CheckpointTransaction(TransactionLogic tl)
+    public CommitTran(TransactionLogic tl)
     {
         sane(tl, "transactionLogic");
         this.tl = tl;
@@ -21,7 +21,7 @@ public class CheckpointTransaction
 
     public void call(Tr tr) throws ExistentialException
     {
-        tr.onCheckpoint();
+        tr.onCommit();
         tl.validationLogic.run(tr);
     }
 }

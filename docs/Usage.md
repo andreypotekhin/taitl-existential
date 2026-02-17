@@ -37,8 +37,8 @@ versions of the classes, but do so at your own risk.
 
 This is worth repeating:
 
-    ! 1. Do it at your own risk!
-    ! 2. Please do not ask for help/support/file issues for cases that involve custom classes 
+    ! 1. Do this at your own risk!
+    ! 2. Do not ask for help/support or file issues if your case involves custom classes 
 
 For troubleshooting, remove custom classes and see if the library works without them.
 
@@ -52,13 +52,13 @@ Here are some ways to put custom classes in use:
 subclass concrete implementations (e.g. ConcreteExists, ConcreteInvariant).
 
 To facilitate the ability to extend, we allowed a few freedoms: 
-- The Existential class and classes comprising it logic (e.g. ExistentialAccess) are not declared final
+- No emphasys on final or sealed classes
 - FACTORY fields are not declared final
 - Creator.inject() method is declared public
 
 But remember, with this freedom comes responsibility:
 - If using custom classes, you are on your own. 
-- Future versions of the library can completely rewrite, abandon and rewire its implementation.
+- Future versions of the library can completely rewrite its implementation, including any and all non-public classes.
 
 In short, you should treat extending the library with own classes as 'hacking', 
-which relies on undocumented features/features that not guaranteed to continue into future.
+which relies on undocumented features/features that not guaranteed to survive multiple versions.

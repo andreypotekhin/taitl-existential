@@ -11,11 +11,37 @@ import static com.taitl.ex.common.helper.State.*;
 
 public class BuildContexts
 {
-    protected Contexts parent;
+    protected ConfigurationLogic cl;
 
-    public BuildContexts(Contexts contexts)
+    public BuildContexts(ConfigurationLogic cl)
     {
-        this.parent = contexts;
+        this.cl = cl;
+    }
+
+    /**
+     * Get, or create if missing, the contexts for business operation name.
+     * Operation name is a non-wildcarded, for instance, "/app/flights/update"
+     * When parent or wildcard contexts are defined, multiple contexts may match
+     * a single operation: "/app/flights/update", "/app/flights", "/app/*"
+     * Creates a new Context object if no matching context already exist.
+     * Creates all parent Context object if this context is not a root context (/).
+     *
+     * Example: createContexts("/app/flights/update") will create these three contexts,
+     * tied by parent-child relationship:
+     * "/app/flights/update"
+     * "/app/flights"
+     * "/app"
+     * "/"
+     * of which it will return the top one ("/app/flights/update")
+     */
+    public List<Context> buildContexts(String op)
+    {
+        Set<Context> result = cl.contexts.get(op);
+        if (result != null && !result.isEmpty())
+        {
+            return new ArrayList<>(result);
+        }
+        return buildRecursively(op);
     }
 
     /**
@@ -35,11 +61,11 @@ public class BuildContexts
      * TODO:
      * Extend to retrieve wildcard contexts
      */
-    public List<Context> buildRecursively(String op)
+    protected List<Context> buildRecursively(String op)
     {
         sane(op, "op");
         OpKey opKey = new OpKey(op);
-        Set<Context> result = parent.allContexts.get(op);
+        Set<Context> result = cl.contexts.get(op);
         if (result == null || result.isEmpty())
         {
             Context context = Creator.create(Context.class, new Class[] { String.class }, op);
@@ -56,10 +82,10 @@ public class BuildContexts
             }
             synchronized (this)
             {
-                result = parent.allContexts.get(op);
+                result = cl.contexts.get(op);
                 if (result == null || result.isEmpty())
                 {
-                    result = parent.allContexts.put(op, context);
+                    result = cl.contexts.put(op, context);
                 }
             }
         }

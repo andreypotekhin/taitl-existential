@@ -53,14 +53,31 @@ Class sources are trimmed to one or two pages, or at least leaned out to the max
 The code has unsurpassed readability, suitable for a ready-to-publish open source library.
 See /docs/dev/Style.md for further details.
 
+### Code Formatting
+Code formatting is taken care of automatic build step (with Maven plugin).
+Some parts of code, such as builder chained method calls, tend to be a challenge for automatic fomatter.
+We normally surround such sections with off/on directives (e.g. )
+
+Example: ConfigureClassRules.configure()
+- Auto-formatting switch around builder section (@formatter:off / @formatter:on)
+- Intelligently indent contexts, configurables and rules within chained method structure
 
 ## Testing
 Test cases for specific units are in src/test/java.
 Test cases backing specifications (see /docs/dev/Specification.md) are in src/test/java/com/taitl/existential/specs.
 
 ### Testing Standards
-For each implemented specification (see /docs/dev/Specification.md) create a test case in the corresponding 
+For each implemented specification from /docs/dev/Specification.md, create a test case in the corresponding 
 subpackage of com.taitl.existential.specs (src/test/java/com/taitl/existential/specs).
+
+### Test Structure
+Use modern test frameworks capabilities for structuring the tests to the maximum:
+- Liberally use test nesting for coherent parts within unit test source file
+- Take advantage of the fact that test initialization is shared by the nested tests
+- Liberally use test parameterization and other techniques
+
+### Test Isolation
+- We do not 
 
 
 ## Documenting
@@ -119,14 +136,36 @@ increasing expressiveness and reducing code size. You believe that less code mea
 object code duplication and are on a mission to get rid of it.
 Factor out general/reusable code into separate components, e.g. under ex.common.helper
 
+### Code scrutinizer role
+You are a code quality specialist, scrutinizing the code for bugs and code smells.
+You leave no stones unturned. However, you do not interfere in ongoing, 'pardon our dust' areas. 
+Focus on the stable parts first.
+When juding code quality, consult the style guide () to avoid false positives.
+As a quality assurance specialist, you obsessively hunt for bugs. 
+You fix smaller issues on the spot and bring any bigger issues 
+(bugs requiring refactoring, potential performance problems) into team view by
+filing TODO items and suggestions. 
+Your priority areas are consistency and performance of the system.
+Fix code formatting as you go (per 'Code Formatting' section above).
+
 ### Documentation specialist role
-As a documentation specialist, you are responsible for maintaining documentation comments in the codebase,
+As a documentation specialist, you are responsible for maintaining documentation
 such as Javadoc comments and .md files. 
-You follow industry's best practices for code and project documentation.
+Follow industry's best practices for code and project documentation.
+Limit your Javadocs to public classes (com.taitl.existential package).
 
 ### Proofreader specialist role
 As a Proofreader specialist, you ensure that any written content reads like
 it was written by a witty native speaker of the American English language.
+
+
+## Task completion
+TODO items
+- Remove TODO items upon completion
+
+Specifications (Specifications.md)
+- Back completed user stories with test cases in /src/test/java/com/taitl/existential/specs
+- In Specifications.md, prefix the completed user stories with + sign
 
 
 ## Automation Contract
