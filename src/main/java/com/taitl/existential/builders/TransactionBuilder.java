@@ -15,6 +15,7 @@ public class TransactionBuilder
     String op;
     List<EvsBuilder> evsBuilders;
     List<Evs> evsList;
+    Supplier<? extends Transaction> transactionFactory;
 
     public TransactionBuilder(ContextBuilder parentContext, String op)
     {
@@ -22,38 +23,51 @@ public class TransactionBuilder
         this.op = op;
         this.evsBuilders = new ArrayList<>();
         this.evsList = new ArrayList<>();
+        this.transactionFactory = parent::createTransactionInstance;
+    }
+
+    public TransactionBuilder(ContextBuilder parentContext, Supplier<? extends Transaction> transactionFactory)
+    {
+        sane(parentContext, "parentContext", transactionFactory, "transactionFactory");
+        this.parent = parentContext;
+        this.op = null;
+        this.evsBuilders = new ArrayList<>();
+        this.evsList = new ArrayList<>();
+        this.transactionFactory = transactionFactory;
     }
 
     public ContextBuilder build()
     {
-        Transaction tr = createInstance();
-        tr.op(op);
-
-        // TODO: bug! this code pushes all objects built with builders
-        // invariant(Class) after the ones built with invariant(Invariant)
-
         for (EvsBuilder evsBuilder : evsBuilders)
         {
             evsList.add(evsBuilder.build());
         }
 
-        for (Evs evs : this.evsList)
-        {
-            if (evs instanceof Invariant invariant)
-            {
-                tr.invariant(invariant);
-            }
-            else if (evs instanceof Effect effect)
-            {
-                tr.effect(effect);
-            }
-            else
-            {
-                throw new IllegalStateException("Unexpected class in ruleSet: " + evs);
-            }
-        }
+        parent.transaction(() -> {
+            Transaction tr = createInstance();
 
-        parent.transaction(() -> tr);
+            if (op != null)
+            {
+                tr.op(op);
+            }
+
+            for (Evs evs : this.evsList)
+            {
+                if (evs instanceof Invariant invariant)
+                {
+                    tr.invariant(invariant);
+                }
+                else if (evs instanceof Effect effect)
+                {
+                    tr.effect(effect);
+                }
+                else
+                {
+                    throw new IllegalStateException("Unexpected class in ruleSet: " + evs);
+                }
+            }
+            return tr;
+        });
         return parent;
     }
 
@@ -147,6 +161,6 @@ public class TransactionBuilder
 
     protected Transaction createInstance()
     {
-        return parent.createTransactionInstance();
+        return transactionFactory.get();
     }
 }

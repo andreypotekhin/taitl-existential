@@ -57,6 +57,12 @@ public class ContextBuilder
         return this;
     }
 
+    public ContextBuilder context(String name)
+    {
+        sane(name, "name");
+        return parent.context(name);
+    }
+
     // TODO: intent()
 
     public ConfigBuilder build()
@@ -105,11 +111,10 @@ public class ContextBuilder
         return this;
     }
 
-    ContextBuilder transaction(Supplier<? extends Transaction> supplier)
+    public TransactionBuilder transaction(Supplier<? extends Transaction> supplier)
     {
         sane(supplier, "supplier");
-        transactionFactory = supplier;
-        return this;
+        return new TransactionBuilder(this, supplier);
     }
 
     Context createInstance()

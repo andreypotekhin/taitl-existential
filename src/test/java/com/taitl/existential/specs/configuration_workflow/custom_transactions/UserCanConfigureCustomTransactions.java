@@ -87,9 +87,11 @@ class UserCanConfigureCustomTransactions extends SpecBase
                 .build()
                 .build();
 
-        String tran = ex.begin("/api/cats/create");
-        ex.event(cat, tran);
-        ex.commit(tran);
+        assertDoesNotThrow(() -> {
+            String tran = ex.begin("/api/cats/create");
+            ex.event(cat, tran);
+            ex.commit(tran);
+        });
 
         assertEquals(1, created.get());
         assertEquals(ChildTransaction.class.getSimpleName(), transactionType.get());
@@ -112,9 +114,11 @@ class UserCanConfigureCustomTransactions extends SpecBase
                 .build()
                 .build();
 
-        String tran = ex.begin("/api/cats/create");
-        ex.event(cat, tran);
-        ex.commit(tran);
+        assertDoesNotThrow(() -> {
+            String tran = ex.begin("/api/cats/create");
+            ex.event(cat, tran);
+            ex.commit(tran);
+        });
 
         assertEquals(
                 List.of(RootTransaction.class.getSimpleName(), ChildTransaction.class.getSimpleName()),
