@@ -55,6 +55,7 @@ public class Context implements Configurable, Evaluable
         sane(name, "name", parent, "parent");
         this.name = name;
         this.parent = parent;
+        this.transactionFactory = null;
     }
 
     /*
@@ -201,7 +202,11 @@ public class Context implements Configurable, Evaluable
 
     public Supplier<? extends Transaction> transactionFactory()
     {
-        return transactionFactory;
+        if (transactionFactory != null)
+        {
+            return transactionFactory;
+        }
+        return parent != null ? parent.transactionFactory() : Transaction.FACTORY;
     }
 
     public Supplier<? extends EventSplitter> eventSplitterFactory()
