@@ -9,13 +9,13 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Defines a single business operation as a set of Context objects
+ * Defines a single business operation as a set of {@link Context} objects
  * configured with constraints, invariants, intents, qualifiers, and effects.
  *
- * Multiple Contexts may apply to the same business operation: the main
+ * Multiple contexts may apply to the same business operation: the main
  * context, its parent contexts, and any matching wildcard contexts.
  *
- * Contexts are stored in the order in which they are declared.
+ * Contexts are stored in the order they are declared.
  *
  * @see Context
  */
@@ -43,8 +43,8 @@ public class Config
     protected ConfigIndexes configIndexes = Creator.create(ConfigIndexes.class);
 
     /**
-     * Adds a Context instance to the operation.
-     * Called by ConfigRegistry.create(op).
+     * Adds a {@link Context} instance to the operation.
+     * Called by {@code ConfigRegistry.create(op)}.
      *
      * @param cont Context to add
      */

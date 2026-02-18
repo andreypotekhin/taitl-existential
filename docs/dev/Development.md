@@ -5,18 +5,18 @@ The Existential library aims for:
 - Ability to express certain truths (constraints, invariants) about application classes and combinations of such. 
 - Uphold these truths (rules) by automatically verifying them at certain points of execution.
 
-To apply the rules, Existential library:
+To apply the rules, the Existential library:
 - Allows the user to 'send' events about an entity, e.g. 'Change\<MyEntity\>' upon changing the entity.
 - Automatically validates rules that are applicable based on the encountered events.
-- An event may concern entity's lifecycle (Create, Update, Delete), accessing the entity (Read, Write), 
-transaction lifecycle (Begin, Commit, Rollback), allowing to 'attach' rules to specific points/circumstances.
+- An event may concern the entity's lifecycle (Create, Update, Delete), access to the entity (Read, Write), or the
+transaction lifecycle (Begin, Commit, Rollback), allowing rules to be attached to specific points or circumstances.
 
-To allow for performance, Existential library:
+To allow for performance, the Existential library:
 - Avoids immediate evaluation of the rules, evaluating them instead at the end of a 'business transaction', 
 e.g. before committing the changed data to persistent storage.
 - Multiple events of same type 'fold' into a single event, saving on the number of performed validations. 
 
-To do so, Existential library allows end-user to:
+To do so, the Existential library allows the end-user to:
 1. Attach rules (constraints, invariants) to arbitrary classes (own or third-party).
 2. Configure the rules to only be applicable within a certain business operation (e.g. an API endpoint or 
 verb), allowing for different sets of rules to apply to different circumstances.
@@ -28,10 +28,10 @@ See Specification.md for terminology and detailed description of library behavio
 
 #### Limitations
 
-Existential is an in-memory library, so will not run checks on what was not loaded into memory.
+Existential is an in-memory library, so it does not run checks on data that was not loaded into memory.
 
 #### Performance
-The library does not emphasize performance at the following areas, assuming they take
+The library does not emphasize performance in the following areas, assuming they take
 place outside of application's performance-critical paths, e.g. once per application run:
 - Configuring the library itself
 - Configuring the rules for each business operation ('per context')
@@ -49,7 +49,7 @@ Package structure:
 - com.taitl.ex and subpackages: private code/implementation
     -  com.taitl.ex.common: common/ubiquitous classes (Creator, Args, State)
     -  com.taitl.ex.cross: cross-cut concepts (caching, logging)
-    -  com.taitl.ex.concrete: concrete implementations (e.g. ConcreteExists) for the classes that end-user creates with 'new'
+    -  com.taitl.ex.concrete: concrete implementations (e.g. ConcreteExists) for the classes the end-user creates with 'new'
     -  com.taitl.ex.code: core classes, such as ExistentialConfigs, immediately used by public code
     -  com.taitl.ex.logic: business logic implementation
     -  com.taitl.ex.configuration: configuration logic (e.g. BuildContexts)
