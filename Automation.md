@@ -15,6 +15,8 @@ See tracking documents on various levels of the code tree for what to focus on:
 PR titles and Git branch naming for PRs: use 'auto' followed by role name and brief description 
 Example: auto/compress/file-extentions, auto/document/configurables
 
+Fully build and test the project in the end of each task that alters code.
+
 ### Mastermind role
 See 'Mastermind role' section in 'Team roles' of AGENTS.md
 
@@ -66,7 +68,6 @@ Automation instructions
 - Select top 3–5 poorly documented source code files, prioritize by proximity to end-user 
 - Add/repair Javadoc
 - No logic changes
-- Build project
 
 Limits
 - Only consider public packages (com.taitl.existential) for Javadoc commenting.
@@ -81,4 +82,3 @@ Automation instructions
 - Add/repair Javadoc
 - Add/repair .md
 - No logic changes
-- Build project
