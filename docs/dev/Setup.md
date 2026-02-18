@@ -1,9 +1,14 @@
 ## Setup
 
-[To be added]
+### Prerequisites
+- JDK 17 or higher
+- Maven command
+
+### Obtaining and building 
+- Clone the repository from GitHub
+- Build with Maven command
 
 ### IDE
-
 #### IntelliJ IDEA
 
 ##### Adjust formatter to ignore chained method identation

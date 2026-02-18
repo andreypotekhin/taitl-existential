@@ -58,6 +58,9 @@ Package structure:
     -  com.taitl.ex.transactions: transaction logic (e.g. BeginTransaction, RollbackTransaction)
     -  com.taitl.ex.validation: validation logic (e.g. ValidateTransaction)
 
+### Setup
+See Setup.md for setup and prerequisites
+
 ### Building
 Use regular Maven commands to build the project:
 

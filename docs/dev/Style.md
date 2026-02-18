@@ -3,7 +3,7 @@
 ### Priorities
 Coding priorities:
 - Convenience of human code reader
-- Convenience of library human end-user
+- Convenience of human end-user
 - Performance where it matters
 
 ### Coding Style
@@ -62,6 +62,11 @@ Object and package decomposition
     data model (.data subpackage), business rules (.rules subpackage), outputs (.output subpackage)
   - Integrate with other 'apps' using their corresponding data model structures 
 
+### Various
+- Use 'brief' notation for getters and setters (x() instead of getX())
+- Testing of protected and private methods is good; and making methods non-private for
+testing purposes is ok. As well as making adjustments to classes to facilitate testability.
+
 ### What to avoid
 Being a principled team, we fight a few dogmas.
 
@@ -75,6 +80,4 @@ We generally avoid, unless there is a valid reason:
 - reflection
 - overuse of streams
 - HTML formatting tags in Javadocs, such as <p> and <br> 
-- use 'brief' notation for getters and setters (x() instead of getX())
-- testing of protected and private methods is good; and making methods non-private for
-testing purposes is ok.
+- non-Javadoc comments (the meaning should stem from code)

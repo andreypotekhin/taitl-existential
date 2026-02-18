@@ -48,8 +48,8 @@ Suggest steps to cut on the technical debt in a specific module, package or clas
 Limits
 - Only consider the parts of the codebase that are not under active development.
 
-### Code compression specialist role
-See 'Code compression specialist roles' section in 'Team roles' of AGENTS.md
+### Code cleansing specialist role
+See 'Code cleansing specialist roles' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 - Identify 1–2 candidate code pieces for factoring out into generalized components
@@ -81,6 +81,26 @@ Limits
 - Only consider performance-crucial paths (e.g. things that take place between transaction start and finish), 
 omitting less-critical ones (configuring the library, configuring the rules). 
 - Only consider stable parts of the codebase not under active development.
+
+### Security specialist role
+See 'Security specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+- Find a security issue or bugs in the code, provide a fix or add to TODO.md document.
+- Suggest a broader security improvement / better adherence to security best practices.
+
+### Open source specialist role
+See 'Open source specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+- Find 2-3 opportunities to improve the library for open source contribution and delivery,
+(e.g. better documentation, better error messages, more helpful exceptions, better logging, better test coverage, better code structure for readability and maintainability)
+- Provide changes or add to TODO.md document.
+- For more extensive refactorings, add items to TODO.md or suggestions to Suggestions.md
+
+Limits
+- Only consider stable parts of the codebase not under active development.
+- Ensure to follow style guide (/docs/dev/Style.md)
 
 ### Documentation specialist role
 See 'Documentation specialist roles' section in 'Team roles' of AGENTS.md
