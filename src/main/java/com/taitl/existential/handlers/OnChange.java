@@ -2,8 +2,18 @@ package com.taitl.existential.handlers;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import com.taitl.existential.events.*;
 import com.taitl.existential.handlers.types.*;
 
+/**
+ * Declarative handler for {@link Change} events.
+ *
+ * <p>Extends {@link On} to describe conditional actions that run after a
+ * change is applied to an entity.</p>
+ *
+ * @param <T>
+ *            Type of entity changed
+ */
 public class OnChange<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
     public OnChange(Consumer<? super T> action)
