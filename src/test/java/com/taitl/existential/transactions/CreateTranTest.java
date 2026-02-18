@@ -1,7 +1,6 @@
 package com.taitl.existential.transactions;
 
 import java.util.*;
-import com.taitl.ex.common.helper.*;
 import com.taitl.ex.logic.transactions.actions.*;
 import com.taitl.existential.configs.*;
 import org.junit.jupiter.api.*;
@@ -9,7 +8,7 @@ import org.junit.jupiter.api.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
-class TransactionCreationTest
+class CreateTranTest
 {
     @Test
     void forConfigBuildsContextTransactionsAndCustom()
@@ -21,7 +20,7 @@ class TransactionCreationTest
         config.addContext(c2);
         Transaction custom = new Transaction("custom", "custom");
 
-        Tr tr = TransactionCreation.forConfig("/op", config, custom);
+        Tr tr = CreateTran.forConfig("/op", config, custom, CreateTran::generateId, CreateTran::forContext);
 
         assertThat(tr.op, is("/op"));
         assertThat(tr.transactions, hasSize(3));
@@ -40,9 +39,8 @@ class TransactionCreationTest
     {
         Context c1 = context("/ctx1");
         Context c2 = context("/ctx2");
-        CreateTransaction builder = new CreateTransaction();
 
-        Tr tr = builder.forContexts("/op2", List.of(c1, c2), null);
+        Tr tr = CreateTran.forContexts("/op2", List.of(c1, c2), null, CreateTran::generateId, CreateTran::forContext);
 
         assertThat(tr.op, is("/op2"));
         assertThat(tr.transactions, hasSize(2));

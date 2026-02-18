@@ -14,6 +14,7 @@ import com.taitl.existential.constants.*;
  *   Class with generics: Class: Set<House>, Type: "Set<House>"
  * 
  * @see EventAndTypeKey
+ * @deprecated Use EventKey
  */
 public class Type
 {

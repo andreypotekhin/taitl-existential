@@ -1,6 +1,5 @@
 package com.taitl.ex.logic.transactions.actions;
 
-import com.taitl.ex.common.helper.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.transactions.*;
@@ -8,7 +7,7 @@ import com.taitl.existential.transactions.*;
 /**
  * Checkpoint transaction
  */
-public class CheckpointTran extends TransactionActionSupport
+public class CheckpointTran extends TranAction
 {
     public CheckpointTran(TransactionLogic tl)
     {

@@ -1,46 +1,87 @@
 package com.taitl.ex.logic.transactions.actions;
 
 import java.util.*;
-import com.taitl.ex.common.helper.*;
+import java.util.function.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Commit transaction object.
  */
-public class CreateTran extends TransactionActionSupport
+public class CreateTran extends TranAction
 {
     public CreateTran(TransactionLogic tl)
     {
         super(tl);
     }
 
-    // public Tr call(String op, Transaction custom) throws ExistentialException
-    // {
-    // sane(op, "op");
-    // OpKey.validate(op);
-    // verify(tl.ex().configured(), "You should call configs().done() first");
-    // //return transactionLogic.registry().create(op, custom);
-    // }
-
     public Tr forConfig(String op, Config config, Transaction custom)
     {
-        return TransactionCreation.forConfig(op, config, custom, this::generateId, CreateTran::forContext);
+        return forConfig(op, config, custom, CreateTran::generateId, CreateTran::forContext);
     }
 
     public Tr forContexts(String op, List<Context> contexts, Transaction custom)
     {
-        return TransactionCreation.forContexts(op, contexts, custom, this::generateId, CreateTran::forContext);
+        return forContexts(op, contexts, custom, CreateTran::generateId, CreateTran::forContext);
     }
 
-    protected UUID generateId()
+    public static Tr forConfig(
+            String op,
+            Config config,
+            Transaction custom,
+            Supplier<UUID> idSupplier,
+            Function<Context, Transaction> contextFactory)
     {
-        return TransactionCreation.generateId();
+        sane(op, "op", config, "config", idSupplier, "idSupplier", contextFactory, "contextFactory");
+        OpKey.validate(op);
+        Tr o = new Tr(op, idSupplier.get());
+        for (Context context : config.contexts())
+        {
+            o.addTransaction(contextFactory.apply(context));
+        }
+        if (custom != null)
+        {
+            o.addTransaction(custom);
+        }
+        return o;
     }
 
-    protected static Transaction forContext(Context context)
+    public static Tr forContexts(
+            String op,
+            List<Context> contexts,
+            Transaction custom,
+            Supplier<UUID> idSupplier,
+            Function<Context, Transaction> contextFactory)
     {
-        return TransactionCreation.forContext(context);
+        sane(op, "op", contexts, "contexts", idSupplier, "idSupplier", contextFactory, "contextFactory");
+        OpKey.validate(op);
+        Tr o = new Tr(op, idSupplier.get());
+        for (Context context : contexts)
+        {
+            o.addTransaction(contextFactory.apply(context));
+        }
+        if (custom != null)
+        {
+            o.addTransaction(custom);
+        }
+        return o;
+    }
+
+    public static UUID generateId()
+    {
+        return UUID.randomUUID();
+    }
+
+    public static Transaction forContext(Context context)
+    {
+        Transaction t = context.transactionFactory().get();
+        t.op(context.name());
+        t.name(context.name());
+        t.context(context);
+        return t;
     }
 }

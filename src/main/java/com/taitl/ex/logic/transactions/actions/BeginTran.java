@@ -1,6 +1,5 @@
 package com.taitl.ex.logic.transactions.actions;
 
-import com.taitl.ex.common.helper.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.transactions.*;
@@ -8,7 +7,7 @@ import com.taitl.existential.transactions.*;
 /**
  * Begin transaction
  */
-public class BeginTran extends TransactionActionSupport
+public class BeginTran extends TranAction
 {
     public BeginTran(TransactionLogic tl)
     {

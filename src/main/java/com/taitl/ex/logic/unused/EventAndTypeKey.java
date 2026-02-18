@@ -1,7 +1,6 @@
 package com.taitl.ex.logic.unused;
 
-import com.taitl.existential.events.types.BiEvent;
-import com.taitl.existential.events.types.Event;
+import com.taitl.existential.events.types.*;
 
 /**
  * Implements a key for collections keyed by Event + Type.
@@ -13,6 +12,7 @@ import com.taitl.existential.events.types.Event;
  * @see Event
  * @see BiEvent
  * @see Type
+ * @deprecated Use EventKey
  */
 public class EventAndTypeKey<T>
 {
