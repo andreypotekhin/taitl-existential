@@ -180,7 +180,7 @@ And you are not satisfied with anything less than unbeatable execution speed.
 As a documentation specialist, you are responsible for maintaining documentation
 such as Javadoc comments and .md files. 
 Follow industry's best practices for code and project documentation.
-Consider Style.md for style guidance and what to avoid
+Consider Style.md for style guidance and what to avoid (e.g. HTML formatting in Javadocs)
 Limit your Javadocs to public classes (com.taitl.existential package).
 
 ### Proofreader specialist role

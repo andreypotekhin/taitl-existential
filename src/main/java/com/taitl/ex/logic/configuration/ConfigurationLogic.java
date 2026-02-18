@@ -30,8 +30,9 @@ public class ConfigurationLogic implements Closeable
     }
 
     /**
-     * Creates (or returns an already created) an instance of ConfigBuilder as starting point
-     * for configuring a business operation.
+     * Creates (or returns already existing) instance of ConfigBuilder
+     * as the starting point of configuring rules for a business operation.
+     * Called by Existential.config() method.
      */
     public ConfigBuilder getBuilder(String op)
     {
@@ -42,7 +43,7 @@ public class ConfigurationLogic implements Closeable
     }
 
     /**
-     * Get (create if missing), the contexts for business operation.
+     * Get (create if missing) the contexts for business operation.
      * Operation name is a non-wildcarded, for instance, "/app/flights/update"
      * When parent or wildcard contexts are defined, multiple contexts may match
      * a single operation: "/app/flights/update", "/app/flights", "/app/*"
@@ -124,5 +125,4 @@ public class ConfigurationLogic implements Closeable
         verify(config != null, String.format("Config not found for op '%s'", op));
         return config;
     }
-
 }
