@@ -49,35 +49,37 @@ public class ConcreteExists<V> implements Predicate<Transaction>
     {
         sane(tran, "tran");
         cool(coll, "values");
-        boolean result;
         if (cpredicate != null)
         {
-            result = cpredicate.test(coll);
+            return cpredicate.test(coll);
         }
-        else if (cbipredicate != null)
+        if (cbipredicate != null)
         {
-            result = cbipredicate.test(coll, tran);
+            return cbipredicate.test(coll, tran);
         }
-        else
+        if (vpredicate != null)
         {
-            result = false;
             for (V value : coll)
             {
-                if (vpredicate != null)
+                if (vpredicate.test(value))
                 {
-                    result = vpredicate.test(value);
-                }
-                else if (vbipredicate != null)
-                {
-                    result = vbipredicate.test(value, tran);
-                }
-                if (result)
-                {
-                    break;
+                    return true;
                 }
             }
+            return false;
         }
-        return result;
+        if (vbipredicate != null)
+        {
+            for (V value : coll)
+            {
+                if (vbipredicate.test(value, tran))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
     }
 
     // protected boolean testOnSet(Transaction tran)
