@@ -118,6 +118,15 @@ Inside the section, include one paragraph describing the item. For bigger items 
 include a bullet list with the steps for carrying it out. Insert a blank line between the items.
 Add new items in a stack manner: most recent on top.
 
+### Making suggestions
+Output suggestions into the Suggestions.md documents (on same level as module or package Readme.md), create
+new ones when necessary. Focus each suggestion on a specific topic, so it may be implemented in parallel with other
+tasks.
+
+Add suggestions to Suggestions.md in stack manner: most recent on top.
+Place each suggestion under its own separate section (H3 heading) with suggestion id and title.
+Inside the section, include one paragraph describing the suggestion followed by an empty line.
+
 
 ## Team roles
 ### Mastermind role

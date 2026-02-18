@@ -15,6 +15,7 @@ See tracking documents on various levels of the code tree for what to focus on:
 PR titles and Git branch naming for PRs: use 'auto' followed by role name and brief description 
 Example: auto/compress/file-extentions, auto/document/configurables
 
+Ensure any code changes adhere to style guide (Style.md)
 Fully build and test the project in the end of each task that alters code.
 
 ### Mastermind role
@@ -37,8 +38,15 @@ most recent to top.
 See 'Technical debt specialist roles' section in 'Team roles' of AGENTS.md
 
 Suggest steps to cut on the technical debt in a specific module, package or class.
-Add suggestions to Suggestions.md in the appropriate scope.
-Address technical debt issues found in Todo.md documents.
+- Analyse codebase for new technical debt issues
+- Identify 1–2 candidate code pieces for refactoring due to technical debt
+- Address 1–2 candidate technical debt issues found in Todo.md documents
+- Address smaller issues directly
+- Add larger issues to TODO.md in the appropriate scopes
+- Add suggestions to Suggestions.md in the appropriate scopes
+
+Limits
+- Only consider the parts of the codebase that are not under active development.
 
 ### Code compression specialist role
 See 'Code compression specialist roles' section in 'Team roles' of AGENTS.md
