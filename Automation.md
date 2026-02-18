@@ -62,11 +62,25 @@ Automation instructions
 See 'Code scrutinizer role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
-- Find a bug or issue in the existing code, provide a fix or to TODO.md document
-- Find 1-2 code smells in the existing code, provide a fix or output to TODO.md documents
+- Find a bug or issue in the existing code, provide a fix or add to TODO.md document
+- Find 1-2 code smells in the existing code, provide a fix or add to TODO.md documents
 
 Limits
 - Only consider stable parts of the codebase that are not under active development.
+
+### Performance specialist role
+See 'Performance specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+- Identify an area of poor performance and improve it 
+- Point out less-than-optimal use of data structures in existing code and suggest alternatives for improved performance. 
+- For more extensive refactorings, add items to TODO.md or suggestions to Suggestions.md 
+- Preserve existing behavior, prove via tests
+
+Limits
+- Only consider performance-crucial paths (e.g. things that take place between transaction start and finish), 
+omitting less-critical ones (configuring the library, configuring the rules). 
+- Only consider stable parts of the codebase not under active development.
 
 ### Documentation specialist role
 See 'Documentation specialist roles' section in 'Team roles' of AGENTS.md
