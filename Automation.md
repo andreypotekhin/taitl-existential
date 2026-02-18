@@ -7,7 +7,7 @@ then proceeding with implementing library interfaces and user stories (specifica
 (docs/dev/Specifications.md) and their backing test cases (com.taitl.existential.specs subpackages)
 and unit tests. 
 
-See tracking documents on various levels of the code tree for what to focus on:
+See these documents on various levels of the code tree for what to focus on:
 - AutomationFocus.md
 - Todo.md
 - Suggestions.md
@@ -15,8 +15,8 @@ See tracking documents on various levels of the code tree for what to focus on:
 PR titles and Git branch naming for PRs: use 'auto' followed by role name and brief description 
 Example: auto/compress/file-extentions, auto/document/configurables
 
-Ensure any code changes adhere to style guide (Style.md)
-Fully build and test the project in the end of each task that alters code.
+Ensure any code changes adhere to the style guide (Style.md)
+Fully build and test the project at the end of each task that touches code.
 
 ### Mastermind role
 See 'Mastermind role' section in 'Team roles' of AGENTS.md
@@ -93,6 +93,7 @@ Automation instructions
 
 Limits
 - Only consider public packages (com.taitl.existential) for Javadoc commenting.
+- Consider Style.md for style guidance and what to avoid (e.g. HTML formatting in Javadocs)
 
 ### Proofreader specialist role
 See 'Proofreader specialist roles' section in 'Team roles' of AGENTS.md
