@@ -11,6 +11,8 @@ public class Logger
 {
     protected PrintStream out = System.out;
     protected PrintStream err = System.err;
+    protected static final String NEWLINE_ESCAPED = "\\n";
+    protected static final String CARRIAGE_ESCAPED = "\\r";
 
     /**
      * Outputs a log message of the specified class and level. Messages of LEVEL_ERROR
@@ -42,27 +44,50 @@ public class Logger
             outStream = err;
         }
         StringBuffer output = new StringBuffer();
+        String sanitizedMessage = sanitize(message);
         if (clz != null)
         {
             output.append(clz.getName() + " ");
         }
         if (format != null)
         {
-            output.append(String.format(format, message));
+            output.append(formatMessage(format, sanitizedMessage));
         }
         else
         {
-            output.append(message);
+            output.append(sanitizedMessage);
         }
         if (keyValuePairs != null && keyValuePairs.length > 0)
         {
             output.append(" {");
             for (int i = 0; i < keyValuePairs.length; i += 2)
             {
-                output.append(" " + keyValuePairs[i] + "=" + keyValuePairs[i + 1] + "; ");
+                output.append(" " + sanitize(keyValuePairs[i]) + "=" + sanitize(keyValuePairs[i + 1]) + "; ");
             }
             output.append("}");
         }
         outStream.print(output.toString());
+    }
+
+    protected String formatMessage(String format, String message)
+    {
+        try
+        {
+            return String.format(format, message);
+        }
+        catch (java.util.IllegalFormatException ignored)
+        {
+            return message;
+        }
+    }
+
+    protected String sanitize(Object value)
+    {
+        String rendered = String.valueOf(value);
+        if (rendered.isEmpty())
+        {
+            return rendered;
+        }
+        return rendered.replace("\r", CARRIAGE_ESCAPED).replace("\n", NEWLINE_ESCAPED);
     }
 }

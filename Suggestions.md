@@ -24,3 +24,5 @@ Add a structured validation report surface that records which contexts, transact
 
 ### S02182601 Config Source + Preflight Validator
 Design a configuration source loader that supports file, classpath resource, and environment variable selection with a single resolution path, then run a preflight validator on startup. The validator should confirm required options, warn on conflicting flags, and emit actionable errors that deep-link to Troubleshooting entries for quick remediation.
+### S02192601 Security Log Redaction Policy
+Introduce a configurable redaction policy for logging that can mask or drop values marked as sensitive (tokens, secrets, PII) before formatting log output, with a default policy that keeps safe fields visible while preventing accidental disclosure.
