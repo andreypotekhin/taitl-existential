@@ -29,6 +29,13 @@ public class EventKey
         key = t.getClass().getSimpleName();
     }
 
+    public <T> EventKey(Event<T> e, TypeKey<T> typeKey)
+    {
+        String eventClass = e.getClass().getSimpleName();
+        // Use event + class name , like 'Create<Doc<JSON>>'
+        key = eventClass + "<" + typeKey.toString() + ">";
+    }
+
     public <T> EventKey(Event<T> e, String type)
     {
         String eventClass = e.getClass().getSimpleName();

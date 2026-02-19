@@ -10,6 +10,7 @@ import com.taitl.existential.configs.*;
 public class ExistentialInit implements Closeable
 {
     protected Existential ex;
+    protected ConfigureLibrary configureLibrary;
 
     static
     {
@@ -20,6 +21,14 @@ public class ExistentialInit implements Closeable
     public ExistentialInit(Existential ex)
     {
         this.ex = ex;
+        this.configureLibrary = new ConfigureLibrary(ex);
+    }
+
+    /* Testing-only */
+    public ExistentialInit(Existential ex, ConfigureLibrary configureLibrary)
+    {
+        this.ex = ex;
+        this.configureLibrary = configureLibrary;
     }
 
     public static <T> void inject(Class<T> cls, Supplier<? extends T> supplier)
@@ -29,12 +38,7 @@ public class ExistentialInit implements Closeable
 
     public void startup()
     {
-        configureLibrary().configure();
-    }
-
-    protected ConfigureLibrary configureLibrary()
-    {
-        return new ConfigureLibrary(ex);
+        configureLibrary.configure();
     }
 
     // Deinit library

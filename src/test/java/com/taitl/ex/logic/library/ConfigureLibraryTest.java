@@ -72,25 +72,10 @@ class ConfigureLibraryTest extends SpecBase
     @Test
     void startupDelegatesToConfigureLibrary()
     {
-        SpyInit init = new SpyInit(ex);
-        init.startup();
-        assertThat(init.loader.called, is(true));
-    }
-
-    private static class SpyInit extends ExistentialInit
-    {
-        private StubConfigureLibrary loader;
-
-        private SpyInit(Existential ex)
-        {
-            super(ex);
-            loader = new StubConfigureLibrary(ex);
-        }
-
-        protected ConfigureLibrary configureLibrary()
-        {
-            return loader;
-        }
+        StubConfigureLibrary loader = new StubConfigureLibrary(ex);
+        ExistentialInit ei = new ExistentialInit(ex, loader);
+        ei.startup();
+        assertThat(loader.called, is(true));
     }
 
     private static class StubConfigureLibrary extends ConfigureLibrary

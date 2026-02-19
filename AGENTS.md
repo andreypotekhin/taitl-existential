@@ -81,31 +81,7 @@ Example: ConfigureClassRules.configure()
 ## Testing
 Test cases for code units live in src/test/java.
 Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/existential/specs.
-
-### Testing Standards
-For each implemented specification from /docs/dev/Specification.md, create a test case in the corresponding 
-subpackage of com.taitl.existential.specs (src/test/java/com/taitl/existential/specs).
-
-#### Testing Guidelines
-Some rules around testing we adopt:
-- It is ok to test protected and private methods 
-- It is ok to make private methods/fields protected to allow testing
-- As well as to make adjustments to classes to facilitate testability
-
-#### Test Structure
-Use modern test frameworks capabilities for structuring the tests to the maximum:
-- Liberally use test nesting for coherent parts within unit test source file
-- We often use user story text as name for nesting test case
-- Take advantage of the fact that test initialization is shared by the nested tests
-- Liberally use test parameterization and other techniques
-
-#### Test coverage and isolation
-- Try to ahieve significant (89%) coverage, but do not insist on coverage of units which are in active development
-- Test by coherent sets of units (e.g. class+immediate dependencies) rather than testing each class in total isolation
-- The above means our unit tests are often also end-to-end tests (that's ok)
-- We include all tests into test coverage
-- Regression tests refer to issue number in name and title in test description 
-
+Testing standards, guidelines, structure are coverage limits: see style guide (/docs/dev/Style.md).
 
 ## Documenting
 ### Documenting issues and remedies

@@ -1,10 +1,12 @@
-## Style Guide
+# Style Guide
 
-### Priorities
+## Priorities
 Coding priorities:
 - Convenience of human code reader
 - Convenience of human end-user
 - Performance where it matters
+
+## Coding
 
 ### Coding Style
 General rules:
@@ -14,20 +16,42 @@ General rules:
 e.g. by adding to ex.common.helper 
 - Less code, less bugs
 
-### Naming
-#### Naming - Identifiers
+#### Naming
+##### Naming - Identifiers
 Avoid abbreviations in identifiers, with an exception for well-known and widely accepted
 ones when used in compound identifiers, such as 'Doc' for document. Do not use
 vowel dropping, and also limit the use of numbered identifiers.
 Avoid abbreviations in single-word identifiers.
 In math-like contexts, e.g. around looping, use single-character identifiers for brevity.
 
-#### Naming - Loops
+##### Naming - Loops
 Prefer single-word identifiers for the 'for' loop variables.
 Prefer single-character identifiers for loop counters and other math-like variables.
 
-#### Naming - Abbreviations
+##### Naming - Abbreviations
 In compound identifiers, do not convert all-capital abbreviations (HTML) to camel-case (Html).
+
+#### Comments
+Javadoc comments
+- Avoid HTML formatting tags in Javadocs, such as <p> and <br>
+- In user-facing code packages, use Javadoc comments with parameter, return and throws tags 
+- Add Javadoc comments on non-trivival private methods
+- In implementation (non user-facing) code packages, avoid parameter, return and throws tags
+- In implementation code packages, Javadoc comments are more free-form, used to explain the rationale,
+not required on class level, used mostly on essential or non-trivial methods.
+
+We discourage non-Javadoc comments: the meaning should stem from code itself.
+Example: instead of creating a comment on a method call, we can
+create more context by extracting the method into a well-named method or lightweight component 
+
+#### Code Formatting
+Code formatting is taken care of automatic build step (with Maven plugin).
+Some parts of code, such as builder chained method calls, tend to be a challenge for automatic fomatter.
+We normally surround such sections with @formatter:off / @formatter:on directives.
+Example: ConfigureClassRules.configure()
+- Auto-formatting switch around builder section (@formatter:off / @formatter:on)
+- Intelligently indent contexts, configurables and rules within chained method structure
+
 
 ### OOP
 #### Instantiation
@@ -62,10 +86,40 @@ these concrete implementations.
     data model (.data subpackage), business rules (.rules subpackage), outputs (.output subpackage)
   - Integrate with other 'apps' using their corresponding data model structures 
 
+
+
+### Testing
+Test cases for code units live in src/test/java.
+Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/existential/specs.
+
+#### Testing Standards
+For each implemented specification from /docs/dev/Specification.md, create a test case in the corresponding
+subpackage of com.taitl.existential.specs (src/test/java/com/taitl/existential/specs).
+
+#### Testing Guidelines
+Some rules around testing we adopt:
+- It is ok to test protected and private methods
+- It is ok to make private methods/fields protected/default to allow testing
+- As well as to make adjustments to classes to facilitate testability
+
+#### Test Structure
+Use modern test frameworks capabilities for structuring the tests to the maximum:
+- Liberally use test nesting for coherent parts within unit test source file
+- We often use user story text as name for nesting test case
+- Take advantage of the fact that test initialization is shared by the nested tests
+- Liberally use test parameterization and other techniques
+
+#### Test coverage and isolation
+- Try to achieve significant (89%) coverage, but do not insist on coverage of units which are in active development
+- Test by coherent sets of units (e.g. class+immediate dependencies) rather than testing each class in total isolation
+- The above means our unit tests are often also end-to-end tests (that's ok)
+- We include all tests into test coverage
+- Regression tests refer to issue number in name and title in test description
+
+
 ### Various
 - Use 'brief' notation for getters and setters (x() instead of getX())
-- Testing of protected and private methods is good; and making methods non-private for
-testing purposes is ok. As well as making adjustments to classes to facilitate testability.
+
 
 ### What to avoid
 Being a principled team, we fight a few dogmas.
@@ -81,4 +135,4 @@ We generally avoid, unless there is a valid reason:
 - overuse of streams
 - HTML formatting tags in Javadocs, such as <p> and <br> 
 - non-Javadoc comments (the meaning should stem from code)
-- total isolation when testing (test coherent clusters of classes instead of mocking around) 
+- testing a class in total isolation (we test coherent clusters of classes instead of mocking around) 
