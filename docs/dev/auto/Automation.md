@@ -1,24 +1,27 @@
 # Automation
 
 ## Automation Contract
-Prioritise 'top-to-bottom', 'working backwards from customer' order of implementation, 
-putting effort into end-user facing artifacts first (source code, documentation), 
+
+Prioritise 'top-to-bottom', 'working backwards from customer' order of implementation,
+putting effort into end-user facing artifacts first (source code, documentation),
 then proceeding with implementing library interfaces and user stories (specifications)
 (docs/dev/Specifications.md) and their backing test cases (com.taitl.existential.specs subpackages)
-and unit tests. 
+and unit tests.
 
 See these documents on various levels of the code tree for what to focus on:
+
 - AutomationFocus.md
 - Todo.md
 - Suggestions.md
 
-PR titles and Git branch naming for PRs: use 'auto' followed by role name and brief description 
+PR titles and Git branch naming for PRs: use 'auto' followed by role name and brief description
 Example: auto/compress/file-extentions, auto/document/configurables
 
 Ensure any code changes adhere to the style guide (Style.md)
 Fully build and test the project at the end of each task that touches code.
 
 ### Mastermind role
+
 See 'Mastermind role' section in 'Team roles' of AGENTS.md
 
 Output suggestions into the Suggestions.md documents (on same level as module or package Readme.md), create
@@ -35,9 +38,11 @@ For an approved suggestion, copy it to the corresponding Todo.md document on sam
 most recent to top.
 
 ### Technical debt specialist role
+
 See 'Technical debt specialist roles' section in 'Team roles' of AGENTS.md
 
 Suggest steps to cut on the technical debt in a specific module, package or class.
+
 - Analyse codebase for new technical debt issues
 - Identify 1–2 candidate code pieces for refactoring due to technical debt
 - Address 1–2 candidate technical debt issues found in Todo.md documents
@@ -46,13 +51,16 @@ Suggest steps to cut on the technical debt in a specific module, package or clas
 - Add suggestions to Suggestions.md in the appropriate scopes
 
 Limits
+
 - Only consider the parts of the codebase that are not under active development.
 - Consider Style.md for style guidance and what to avoid (e.g. @Override annotations)
 
 ### Code cleansing specialist role
+
 See 'Code cleansing specialist roles' section in 'Team roles' of AGENTS.md
 
 Automation instructions
+
 - Identify 1–2 candidate code pieces for factoring out into generalized components
 - Create classes and generalized code under ex.common.helper
 - Identify 1–2 duplicated code occurrences and replace with a shared helper/abstraction (only if it reduces complexity)
@@ -60,83 +68,105 @@ Automation instructions
 - Preserve existing behavior, prove via tests
 
 Limits
+
 - Do not place any code related to library business/use case into ex.common.helper - that package is only for general
-(not library-specific) helper code. You can still factor out, but to proximity (e.g. to same package, module). 
+  (not library-specific) helper code. You can still factor out, but to proximity (e.g. to same package, module).
 
 ### Code scrutinizer role
+
 See 'Code scrutinizer role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
+
 - Find a bug or issue in the existing code, provide a fix or add to TODO.md document
 - Find 1-2 code smells in the existing code, provide a fix or add to TODO.md documents
 
 Limits
+
 - Only consider stable parts of the codebase that are not under active development.
 
 ### Performance specialist role
+
 See 'Performance specialist role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
-- Identify an area of poor performance and improve it 
-- Point out less-than-optimal use of data structures in existing code and suggest alternatives for improved performance. 
-- For more extensive refactorings, add items to TODO.md or suggestions to Suggestions.md 
+
+- Identify an area of poor performance and improve it
+- Point out less-than-optimal use of data structures in existing code and suggest alternatives for improved performance.
+- For more extensive refactorings, add items to TODO.md or suggestions to Suggestions.md
 - Preserve existing behavior, prove via tests
 
 Limits
-- Only consider performance-crucial paths (e.g. things that take place between transaction start and finish), 
-omitting less-critical ones (configuring the library, configuring the rules). 
+
+- Only consider performance-crucial paths (e.g. things that take place between transaction start and finish),
+  omitting less-critical ones (configuring the library, configuring the rules).
 - Only consider stable parts of the codebase not under active development.
 
 ### Security specialist role
+
 See 'Security specialist role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
+
 - Find a security issue or bugs in the code, provide a fix or add to TODO.md document.
 - Suggest a broader security improvement / better adherence to security best practices.
 
 ### Open source specialist role
+
 See 'Open source specialist role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
+
 - Find 2-3 opportunities to improve the library for open source contribution and delivery,
-(e.g. better documentation, better error messages, more helpful exceptions, better logging, better test coverage, better code structure for readability and maintainability)
+  (e.g. better documentation, better error messages, more helpful exceptions, better logging, better test coverage,
+  better code structure for readability and maintainability)
 - Provide changes or add to TODO.md document.
 - For more extensive refactorings, add items to TODO.md or suggestions to Suggestions.md
 
 Limits
+
 - Only consider stable parts of the codebase not under active development.
 - Ensure to follow the style guide (/docs/dev/Style.md)
 
 ### End-user advocate role
+
 See 'End-user advocate role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
+
 - Find 2-3 opportunities to improve the library for end user, and provide fixes.
-(e.g. better documentation, error messages, exceptions, logging, public code structure for readability and maintainability).
+  (e.g. better documentation, error messages, exceptions, logging, public code structure for readability and
+  maintainability).
 - Create Suggestions for broader refactorings.
 
 Limits
-- Focus on public-facing public code, documentation; 
-but be all-encompassing on the error messages/logging (cause they eventually bubble up to end-user).
+
+- Focus on public-facing public code, documentation;
+  but be all-encompassing on the error messages/logging (cause they eventually bubble up to end-user).
 - Ensure to follow the style guide (/docs/dev/Style.md)
 
 ### Documentation specialist role
+
 See 'Documentation specialist roles' section in 'Team roles' of AGENTS.md
 
 Automation instructions
+
 - Only consider public packages (com.taitl.existential) for Javadoc commenting
-- Select top 3–5 poorly documented source code files, prioritize by proximity to end-user 
+- Select top 3–5 poorly documented source code files, prioritize by proximity to end-user
 - Add/repair Javadoc
 - No logic changes
 
 Limits
+
 - Only consider public packages (com.taitl.existential) for Javadoc commenting.
 - Consider Style.md for style guidance and what to avoid (e.g. HTML formatting in Javadocs)
 
 ### Proofreader specialist role
+
 See 'Proofreader specialist roles' section in 'Team roles' of AGENTS.md
 
 Automation instructions
+
 - Prioritize public packages (com.taitl.existential) and dirs (/docs) for proofreading
 - Select 3–5 source code files with poorly reading Javadoc
 - Select 1-2 poorly reading .md file

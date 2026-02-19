@@ -34,7 +34,7 @@ entities, and focuses on performance and memory efficiency.
 ∈ == "Element of" (member of a set)  
 | = "Such as" (a set comprehension)   
 P == logical predicate (a boolean function)  
-⊤ == "Truth", a logical predicate always rendering true  
+⊤ == "Truth", a logical predicate always rendering true
 
 Note: in the examples below, the *new* keyword is dropped in front of All and Exists for brevity.
 Java/Groovy must use *new*. Other languages (Kotlin, Go) may omit *new*.
@@ -55,15 +55,15 @@ For any object of type X which has been changed in the course of a business tran
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Mutation<X>>((x0, x1) -> predicate(x0, x1))
 
-Here, x0 is the entity's initial state at the start of a business transaction; 
+Here, x0 is the entity's initial state at the start of a business transaction;
 x1 is its final (before save) state - at the end of transaction.
 *Mutation<X>* indicates that we are describing a change of an entity of type X.
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Transition<X>>((x0, x1) -> predicate(x0, x1))
 
 Same as above, but with Transition we are describing a change of an entity of type X
-where one of x0, x1 may be null (but not both). 
-If x0 is null, it indicates that x is a new object created in the course of the transaction. 
+where one of x0, x1 may be null (but not both).
+If x0 is null, it indicates that x is a new object created in the course of the transaction.
 If x1 is null, it indicates that x is the object that has been deleted as part of the transaction.
 
 Same as above when x0, x1 must also satisfy some condition:
@@ -106,4 +106,5 @@ Same when x0, x1 must also satisfy some condition:
     ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Mutation<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(p, x0, x1)))
 
 ## Documentation
+
 See /docs directory for further documentation.
