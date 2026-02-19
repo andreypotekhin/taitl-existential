@@ -2,6 +2,8 @@ package com.taitl.ex.cross.logging;
 
 import java.util.function.*;
 
+import static com.taitl.ex.common.helper.Args.sane;
+
 @SuppressWarnings("rawtypes")
 public final class Log
 {
@@ -11,49 +13,42 @@ public final class Log
     }
 
     private static final Supplier<Logger> FACTORY = Logger::new;
-    private static Supplier<Logger> loggerFactory = FACTORY;
+    private static Supplier<Logger> factory = FACTORY;
     private static LogLevel logLevel = LogLevel.LEVEL_WARNING;
+    private static volatile boolean loggerInitialized;
 
     private static final class InstanceHolder
     {
-        private static volatile Logger logger;
-
-        private InstanceHolder()
-        {
-        }
+        private static final Logger logger = createLogger();
     }
 
     public static void factory(Supplier<Logger> factory)
     {
-        if (factory == null)
+        sane(factory, "factory");
+        synchronized (Log.class)
         {
-            throw new IllegalArgumentException("Argument 'factory' must not be null");
+            if (loggerInitialized)
+            {
+                throw new IllegalStateException("Logger factory cannot be changed after logger initialization");
+            }
+            Log.factory = factory;
         }
-        loggerFactory = factory;
-        InstanceHolder.logger = null;
     }
 
     private static Logger logger()
     {
-        Logger current = InstanceHolder.logger;
-        if (current != null)
+        return InstanceHolder.logger;
+    }
+
+    private static Logger createLogger()
+    {
+        Logger logger = factory.get();
+        if (logger == null)
         {
-            return current;
+            throw new IllegalArgumentException("Logger factory must not return null");
         }
-        synchronized (InstanceHolder.class)
-        {
-            current = InstanceHolder.logger;
-            if (current == null)
-            {
-                current = loggerFactory.get();
-                if (current == null)
-                {
-                    throw new IllegalArgumentException("Logger factory must not return null");
-                }
-                InstanceHolder.logger = current;
-            }
-            return current;
-        }
+        loggerInitialized = true;
+        return logger;
     }
 
     public static boolean isTracing()
