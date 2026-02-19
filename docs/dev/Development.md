@@ -1,25 +1,25 @@
 ## Development
 
 ### Project overview
-The Existential library aims for:
-- Ability to express certain truths (constraints, invariants) about application classes and combinations of such. 
-- Uphold these truths (rules) by automatically verifying them at certain points of execution.
+The Existential library aims to:
+- Express truths (constraints, invariants) about application classes and their combinations.
+- Uphold these truths by automatically verifying them at specific points of execution.
 
 To apply the rules, the Existential library:
-- Allows the user to 'send' events about an entity, e.g. 'Change\<MyEntity\>' upon changing the entity.
+- Allows the user to send events about an entity, for example Change<MyEntity> when the entity changes.
 - Automatically validates rules that are applicable based on the encountered events.
 - An event may concern the entity's lifecycle (Create, Update, Delete), access to the entity (Read, Write), or the
 transaction lifecycle (Begin, Commit, Rollback), allowing rules to be attached to specific points or circumstances.
 
 To allow for performance, the Existential library:
-- Avoids immediate evaluation of the rules, evaluating them instead at the end of a 'business transaction', 
-e.g. before committing the changed data to persistent storage.
-- Multiple events of same type 'fold' into a single event, saving on the number of performed validations. 
+- Avoids immediate rule evaluation, evaluating them instead at the end of a business transaction,
+such as before committing the changed data to persistent storage.
+- Multiple events of the same type fold into a single event, reducing the number of validations performed.
 
 To do so, the Existential library allows the end-user to:
 1. Attach rules (constraints, invariants) to arbitrary classes (own or third-party).
-2. Configure the rules to only be applicable within a certain business operation (e.g. an API endpoint or 
-verb), allowing for different sets of rules to apply to different circumstances.
+2. Configure the rules to apply only within a specific business operation (such as an API endpoint or verb),
+allowing different sets of rules to apply to different circumstances.
 
 ### Terminology, use cases, user stories
 See Specification.md for terminology and detailed description of library behavior.
@@ -59,14 +59,14 @@ Package structure:
     -  com.taitl.ex.validation: validation logic (e.g. ValidateTransaction)
 
 ### Setup
-See Setup.md for setup and prerequisites
+See Setup.md for setup and prerequisites.
 
 ### Building
 Use regular Maven commands to build the project:
 
     mvn clean install # build from scratch
-    mvn -T 2C install -am --offline # speed build (offline) 
+    mvn -T 2C install -am --offline # speed build (offline)
 
 ### Troubleshooting
-Refer to Troubleshooting.md doc.
-If using custom classes, remove them and see if the library works without them.
+Refer to Troubleshooting.md.
+If using custom classes, remove them and verify whether the library works without them.

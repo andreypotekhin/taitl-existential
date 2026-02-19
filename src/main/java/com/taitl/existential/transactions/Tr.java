@@ -10,15 +10,13 @@ import com.taitl.existential.keys.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Defines an existential transaction - backbone of this library transaction model.
- * Holds a set of Transaction objects (rule configurations) that apply to a single business operation.
- * Since there may be multiple Contexts applicable to a business operation
- * (parent-child contexts as well as matching wildcard contexts),
- * this class's job is to hold Transaction objects created by each of these Contexts,
- * as means of accessing their rules.
- * The order of Transactions follows the order of declaration of their corresponding
- * Contexts (contexts which are applicable to business operation). Parent contexts are
- * thought to be declared before child contexts. Wildcard contexts are before specific contexts.
+ * Defines an existential transaction, the backbone of the library transaction model.
+ * Holds Transaction objects (rule configurations) that apply to a single business operation.
+ * Multiple Contexts can match an operation (parent-child contexts and wildcard contexts),
+ * and this class keeps the Transaction objects created by each matching Context so their
+ * rules can be accessed.
+ * The Transaction order follows the declaration order of their Contexts: parent contexts
+ * before child contexts, and wildcard contexts before specific contexts.
  */
 public class Tr
 {
@@ -55,8 +53,8 @@ public class Tr
     // checkpoint()
 
     /**
-     * On begin transaction.
-     * Called by BeginTr
+     * Called when a transaction begins.
+     * Invoked by BeginTr.
      */
     public void onBegin()
     {
@@ -64,24 +62,24 @@ public class Tr
     }
 
     /**
-     * On transaction checkpoint.
-     * Called by CheckpointTr
+     * Called when a transaction checkpoint is reached.
+     * Invoked by CheckpointTr.
      */
     public void onCheckpoint()
     {
     }
 
     /**
-     * On commit transaction.
-     * Called by CommitTr
+     * Called when a transaction is committed.
+     * Invoked by CommitTr.
      */
     public void onCommit()
     {
     }
 
     /**
-     * On rollback transaction.
-     * Called by RollbackTr
+     * Called when a transaction is rolled back.
+     * Invoked by RollbackTr.
      */
     public void onRollback()
     {

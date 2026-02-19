@@ -5,10 +5,9 @@ import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;
 
 /**
- * Contract for configuration containers (for example, Context and Transaction).
- *
- * <p>Implementations expose a minimal surface for attaching operational
- * metadata and validation/execution hooks.</p>
+ * Contract for configuration containers, such as Context and Transaction.
+ * Implementations expose a minimal surface for attaching operational metadata
+ * and validation or execution hooks.
  */
 public interface Configurable
 {

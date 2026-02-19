@@ -69,6 +69,10 @@ public class Args
 
     public static void check(boolean condition, String message, Object... args)
     {
+        if (args == null)
+        {
+            throw new IllegalArgumentException(String.format(ARGUMENT_MUST_NOT_BE_NULL, "args"));
+        }
         if (args.length % 2 != 0)
         {
             throw new IllegalArgumentException(

@@ -12,6 +12,16 @@ import com.taitl.existential.invariants.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Describes a business context within a configuration, including invariants,
+ * effects, and event handlers that should apply to a specific operation.
+ *
+ * Contexts can form a hierarchy, where parent rules execute before child rules,
+ * and can be customized with transaction and event-splitting factories.
+ *
+ * @see Config
+ * @see Transaction
+ */
 // TODO: add context() method for adding child contexts
 public class Context implements Configurable, Evaluable
 {
