@@ -3,6 +3,8 @@ package com.taitl.ex.cross.logging;
 import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.State.verify;
+import static com.taitl.ex.cross.logging.Log.InstanceHolder.logger;
 
 @SuppressWarnings("rawtypes")
 public final class Log
@@ -17,9 +19,9 @@ public final class Log
     private static LogLevel logLevel = LogLevel.LEVEL_WARNING;
     private static volatile boolean loggerInitialized;
 
-    private static final class InstanceHolder
+    static final class InstanceHolder
     {
-        private static final Logger logger = createLogger();
+        public static final Logger logger = createLogger();
     }
 
     public static void factory(Supplier<Logger> factory)
@@ -35,18 +37,10 @@ public final class Log
         }
     }
 
-    private static Logger logger()
-    {
-        return InstanceHolder.logger;
-    }
-
     private static Logger createLogger()
     {
         Logger logger = factory.get();
-        if (logger == null)
-        {
-            throw new IllegalArgumentException("Logger factory must not return null");
-        }
+        verify(logger != null, "Logger factory returned a null");
         loggerInitialized = true;
         return logger;
     }
@@ -65,7 +59,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_ERROR) <= 0)
         {
-            logger().log(LogLevel.LEVEL_ERROR, clz, format, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_ERROR, clz, format, message, keyValuePairs);
         }
     }
 
@@ -73,7 +67,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_ERROR) <= 0)
         {
-            logger().log(LogLevel.LEVEL_ERROR, clz, null, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_ERROR, clz, null, message, keyValuePairs);
         }
     }
 
@@ -81,7 +75,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_WARNING) <= 0)
         {
-            logger().log(LogLevel.LEVEL_WARNING, clz, format, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_WARNING, clz, format, message, keyValuePairs);
         }
     }
 
@@ -89,7 +83,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_WARNING) <= 0)
         {
-            logger().log(LogLevel.LEVEL_WARNING, clz, null, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_WARNING, clz, null, message, keyValuePairs);
         }
     }
 
@@ -97,7 +91,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_INFO) <= 0)
         {
-            logger().log(LogLevel.LEVEL_INFO, clz, format, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_INFO, clz, format, message, keyValuePairs);
         }
     }
 
@@ -105,7 +99,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_INFO) <= 0)
         {
-            logger().log(LogLevel.LEVEL_INFO, clz, null, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_INFO, clz, null, message, keyValuePairs);
         }
     }
 
@@ -113,7 +107,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_DEBUG) <= 0)
         {
-            logger().log(LogLevel.LEVEL_DEBUG, clz, format, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_DEBUG, clz, format, message, keyValuePairs);
         }
     }
 
@@ -121,7 +115,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_DEBUG) <= 0)
         {
-            logger().log(LogLevel.LEVEL_DEBUG, clz, null, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_DEBUG, clz, null, message, keyValuePairs);
         }
     }
 
@@ -129,7 +123,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_TRACE) <= 0)
         {
-            logger().log(LogLevel.LEVEL_TRACE, clz, format, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_TRACE, clz, format, message, keyValuePairs);
         }
     }
 
@@ -137,7 +131,7 @@ public final class Log
     {
         if (logLevel.compareTo(LogLevel.LEVEL_TRACE) <= 0)
         {
-            logger().log(LogLevel.LEVEL_TRACE, clz, null, message, keyValuePairs);
+            logger.log(LogLevel.LEVEL_TRACE, clz, null, message, keyValuePairs);
         }
     }
 }
