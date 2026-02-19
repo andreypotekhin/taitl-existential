@@ -30,7 +30,7 @@ Prefer single-character identifiers for loop counters and other math-like variab
 In compound identifiers, do not convert all-capital abbreviations (HTML) to camel-case (Html).
 
 ### OOP
-Instantiation
+#### Instantiation
 - We generally prefer Builder pattern for multi-field classes or where readability is crucial  
 - Objects are normally instantiated with Creator.create()
 - Singletons are maintained with Creator.singleton()
@@ -40,11 +40,11 @@ Since this precludes from using Creator.create(), we have a workaround: these cl
 a corresponding concrete implementation (e.g. ConcreteExists); and Creator is used to instantiate/inject 
 these concrete implementations.
 
-Inheritance
+#### Inheritance
 - Avoid deep inheritance chains
 - We do not use 'final' or 'locked'  
 
-Object and package decomposition
+#### Object and package decomposition
 - We divide the classes into 'public', 'orchestration' and 'logic' classes
 - The 'public' classes are the onece facing end-user classes from 'public' packages (com.taitl.existential)
 - The 'orchestration' classes are top-level classes to which the public classes delegate. Example: ConfigBuilder 
@@ -58,7 +58,7 @@ Object and package decomposition
   - Deep on implementation details
 - The 'logic' packages are thought of semi-autonomous 'apps':
   - Define own subpackage. Example: com.taitl.ex.logic.configuration, com.taitl.ex.logic.validation
-  - Implement business logic as 'actions' (.actions subpackage), mappings (.maps subpackage),
+  - Implement business logic as close-to-stateless 'actions' (.actions subpackage), mappings (.maps subpackage),
     data model (.data subpackage), business rules (.rules subpackage), outputs (.output subpackage)
   - Integrate with other 'apps' using their corresponding data model structures 
 

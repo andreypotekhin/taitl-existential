@@ -26,8 +26,9 @@ Development documentation: /docs/dev
 ### Agentic and automation documentation
 
 Agentic and automation documentation: /docs/dev/auto
-
-- Planning.md: guide for multi-step tasks such as planning an implementation
+- Automation.md: for automation contract and details on agents' parallel work.  
+- AutomationFocus.md: document for automation focus and priorities.
+- Plans.md: guidance for multi-step tasks planning such as planning an implementation of a feature
 
 ## Engineering
 

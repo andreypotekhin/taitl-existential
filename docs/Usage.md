@@ -10,9 +10,10 @@ See /Readme.md for general usage.
 See /docs/dev/Specification.md for terminology and complete description of library behavior.
 
 ### Extending the library
-Regular use of library does not imply extending any library classes.
+Regular use of library does not require customizing or extending any library classes -
+stock classes should work for most occasions.
 
-However, for rare circumstances where you want to significantly affect library behavior, 
+For the rare circumstances where you want to significantly affect library behavior, 
 we provide some ways for doing so. See the section 'Extending the classes' below.
 
 ### Code structure
