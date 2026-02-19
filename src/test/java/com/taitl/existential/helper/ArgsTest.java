@@ -61,5 +61,8 @@ class ArgsTest
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
             Args.check(true, "msg1", false);
         }).getMessage(), containsString("must be of even length"));
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            Args.check(true, "msg1", (Object[]) null);
+        }).getMessage(), containsString("must not be null"));
     }
 }

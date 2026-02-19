@@ -10,10 +10,9 @@ import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Declarative handler for {@link Transit} events that involve two values.
- *
- * <p>The handler can be guarded by a predicate on the new value or a
- * bi-predicate on both values. When the condition passes, the action is
- * invoked; execution failures are wrapped as {@link EventHandlerExecutionException}.</p>
+ * The handler can be guarded by a predicate on the new value or a bi-predicate
+ * on both values. When the condition passes, the action is invoked and any
+ * execution failures are wrapped as {@link EventHandlerExecutionException}.
  *
  * @param <T>
  *            Type of entity transitioning between values

@@ -3,9 +3,12 @@ package com.taitl.existential.keys;
 import com.taitl.existential.events.types.*;
 
 /**
- * EventKey = EventType + TypeKey,  for retrieving EventHandlers
- * configured for a specific event type and type.
- * Examples: "Create<Doc<Json>>", "Update<Measurement<Float>>"
+ * Combines an event type with a {@link TypeKey} to address configured handlers.
+ *
+ * Examples: {@code Create<Doc<Json>>}, {@code Update<Measurement<Float>>}.
+ *
+ * @see TypeKey
+ * @see Event
  */
 public class EventKey
 {

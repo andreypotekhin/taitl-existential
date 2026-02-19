@@ -4,16 +4,23 @@ public class CacheHandlers
 {
     public void cacheHandlersPerOp()
     {
-        // TODO: implement
+        throw notImplemented("cacheHandlersPerOp");
     }
 
     public void cacheHandlersPerContext()
     {
-        // TODO: implement
+        throw notImplemented("cacheHandlersPerContext");
     }
 
     public void cacheHandlersPerTran()
     {
-        // TODO: implement
+        throw notImplemented("cacheHandlersPerTran");
+    }
+
+    private UnsupportedOperationException notImplemented(String methodName)
+    {
+        return new UnsupportedOperationException(
+                "CacheHandlers." + methodName + "() is not implemented yet. " +
+                        "See /Troubleshooting.md#cache-handlers-not-implemented");
     }
 }

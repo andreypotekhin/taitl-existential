@@ -1,3 +1,30 @@
+### S02192602 Error Message Troubleshooting Links
+Introduce a small, consistent error-id format for public exceptions and append a Troubleshooting.md deep-link to
+configuration and validation failures. This gives end users a single hop to remediation steps while keeping
+exception messages actionable and stable across releases.
+
+### S02192603 Add Security Policy Document
+Create a `SECURITY.md` that explains how to report vulnerabilities privately, expected response timelines, and
+supported versions. Link to it from `Readme.md` so OSS users know how to disclose issues without opening
+public tickets.
+
+### S02192602 Publish License and Source Availability
+Add an explicit OSS license file and a short Readme section that states the license and any contribution
+requirements. This reduces legal ambiguity for adopters and helps downstream users vet compatibility early.
+
+### S02192602 Stable Rule Identity + Digest
+Introduce a canonical rule identity and digest (for example, based on context, stage, event signature, and predicate
+source metadata) that remains stable across runs. This enables deterministic caching, clearer diagnostics, and
+safe incremental reload by matching rules without relying on object identity or registration order.
+
+### S02192601 Security Log Redaction Policy
+Introduce a configurable redaction policy for logging that can mask or drop values marked as sensitive (tokens,
+secrets, PII) before formatting log output, with a default policy that keeps safe fields visible while preventing
+accidental disclosure.
+
+### S02182610 Immutable Rule Snapshot + Hot Reload
+Introduce an immutable, compiled rule snapshot that indexes rules by context, stage, and event signature, allowing lock-free evaluation on the hot path while enabling safe hot reload by swapping snapshots. This separates configuration from execution, eliminates write locks during runtime, and makes it feasible to add validation, caching, and observability hooks without impacting transaction latency.
+
 ### S02182604 Fail-Fast Stubs for Unimplemented Actions
 
 Replace TODO-marked no-op action classes (e.g., event receive/ignore/execute actions) with fail-fast implementations
@@ -17,11 +44,6 @@ Replace the current EventQueue base type with a deque-backed structure (e.g. Arr
 explicit enqueue/dequeue operations to avoid ArrayList growth churn and improve cache-friendly traversal for
 transaction-close handling; keep API surface minimal and documented for batching behavior.
 
-### S02182604 Explicitly Deprecate or Excise Unused Types
-
-Deprecated classes under `com.taitl.ex.logic.unused` linger without clear guidance or cleanup, which risks accidental
-use and maintenance drag. Establish a legacy boundary (module or package), add a short migration note to docs, and
-either remove or quarantine the unused types so the supported API surface is unambiguous.
 
 ### S02182604 Immutable Rule Snapshot + Hot Reload
 
@@ -50,10 +72,10 @@ log or export diagnostics without relying on exceptions alone, enabling monitori
 complex rule sets.
 
 ### S02182601 Config Source + Preflight Validator
-
-Design a configuration source loader that supports file, classpath resource, and environment variable selection with a
-single resolution path, then run a preflight validator on startup. The validator should confirm required options, warn
-on conflicting flags, and emit actionable errors that deep-link to Troubleshooting entries for quick remediation.
+<<<<<<< HEAD
+Design a configuration source loader that supports file, classpath resource, and environment variable selection with
+a single resolution path, then run a preflight validator on startup. The validator should confirm required options,
+warn on conflicting flags, and emit actionable errors that deep-link to Troubleshooting entries for quick remediation.
 
 ### S02192601 Security Log Redaction Policy
 

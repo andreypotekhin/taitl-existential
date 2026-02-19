@@ -4,12 +4,12 @@
 The Existential package (com.taitl.existential) defines end-user interfaces and classes for Existential library.
 
 ### Claims
-See /doc/Specification.md for the list of library claims.
+See /docs/dev/Specification.md for the list of library claims.
 
 ### Goals
-These interfaces and classes serve as DSL for 
+These interfaces and classes serve as a DSL for:
 1. Configuring Existential library, Contexts and Transactions
-2. Beginnging, committing and rolling back an Existential transaction
+2. Beginning, committing and rolling back an Existential transaction
 3. Recording the events in the course of the transaction
 4. Automatically executing event handlers as configured in step 1
 5. Automatically executing entity validation as configured in step 1

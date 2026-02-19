@@ -3,18 +3,14 @@ package com.taitl.existential.keys;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * A string representing a type along with its generics, for example "Set<Car>".
- * This class is used to overcome the effects of Java type erasure when we need to know the generic qualifier at runtime.
- * For the types without generics, it is same as the short name of the class (like "String").
- * For the generic types, it is class short name with generic qualifier, like {@code Set<House>}.
- * Examples:
- * Classes without generics: for class Car, the TypeKey is "Car"
- * Classes with generics: for class {@code Set<House>}, the TypeKey is "Set<House>"
- * Q: Why do we need to overcome Java type erasure?
- * A: We want ability to define event handlers with fully-qualified types. For
- * instance, we might want different handlers for different types of a document:
- * OnChange<Document<HTML>>(...)
- * OnChange<Document<JSON>>(...)
+ * String representation of a type along with its generic qualifier, for example "Set<Car>".
+ * This type key is used to work around Java type erasure when the generic qualifier is
+ * needed at runtime.
+ * For non-generic types, the key is the class short name, such as "String".
+ * For generic types, the key is the class short name with the qualifier, such as
+ * {@code Set<House>}.
+ * This allows event handlers to be registered for fully-qualified types, for example
+ * OnChange<Document<HTML>> and OnChange<Document<JSON>>.
  */
 public class TypeKey<T>
 {

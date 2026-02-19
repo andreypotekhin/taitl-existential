@@ -27,12 +27,12 @@ public final class Log
         logger = resolved;
     }
 
-    public boolean isTracing()
+    public static boolean isTracing()
     {
         return logLevel.compareTo(LogLevel.LEVEL_TRACE) <= 0;
     }
 
-    public boolean isDebug()
+    public static boolean isDebug()
     {
         return logLevel.compareTo(LogLevel.LEVEL_DEBUG) <= 0;
     }

@@ -31,12 +31,12 @@ public class Strings
     public static final String ARG_CHECK = "Argument 'check' should not be null";
     public static final String ARG_MATCH = "Argument 'match' must not be null";
     public static final String ARG_NEED_TRANSIT_EVENT = "Please specify event of type Transit<>";
-    public static final String ARG_OP_SINGLE_SLASH = "Argument 'op' cannot be a signle slash ('/')";
+    public static final String ARG_OP_SINGLE_SLASH = "Argument 'op' cannot be a single slash ('/')";
     public static final String ARG_OP_END_SLASH = "Argument 'op' cannot end with a slash ('/')";
     public static final String ARG_OP_NO_WILDCARDS = "Argument 'op' cannot have wildcards ('*')";
     public static final String SLASH = "/";
     public static final String WILDCARD = "*";
-    public static final String CONDITION_NOT_MET = "The specified condition not met";
+    public static final String CONDITION_NOT_MET = "The specified condition is not met";
     public static final String ARGUMENT_MUST_NOT_BE_NULL = "Argument '%s' must not be null";
     public static final String ARGUMENT_MUST_BE_BOOLEAN = "Argument '%s' must be boolean expression";
     public static final String ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH =
