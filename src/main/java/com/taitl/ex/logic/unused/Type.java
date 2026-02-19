@@ -16,6 +16,7 @@ import com.taitl.existential.constants.*;
  * @see EventAndTypeKey
  * @deprecated Use EventKey
  */
+@Deprecated
 public class Type
 {
     protected String typeid;

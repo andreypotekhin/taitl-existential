@@ -47,6 +47,7 @@ Suggest steps to cut on the technical debt in a specific module, package or clas
 
 Limits
 - Only consider the parts of the codebase that are not under active development.
+- Consider Style.md for style guidance and what to avoid (e.g. @Override annotations)
 
 ### Code cleansing specialist role
 See 'Code cleansing specialist roles' section in 'Team roles' of AGENTS.md
@@ -57,6 +58,10 @@ Automation instructions
 - Identify 1–2 duplicated code occurrences and replace with a shared helper/abstraction (only if it reduces complexity)
 - No public API changes
 - Preserve existing behavior, prove via tests
+
+Limits
+- Do not place any code related to library business/use case into ex.common.helper - that package is only for general
+(not library-specific) helper code. You can still factor out, but to proximity (e.g. to same package, module). 
 
 ### Code scrutinizer role
 See 'Code scrutinizer role' section in 'Team roles' of AGENTS.md
@@ -100,7 +105,20 @@ Automation instructions
 
 Limits
 - Only consider stable parts of the codebase not under active development.
-- Ensure to follow style guide (/docs/dev/Style.md)
+- Ensure to follow the style guide (/docs/dev/Style.md)
+
+### End-user advocate role
+See 'End-user advocate role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+- Find 2-3 opportunities to improve the library for end user, and provide fixes.
+(e.g. better documentation, error messages, exceptions, logging, public code structure for readability and maintainability).
+- Create Suggestions for broader refactorings.
+
+Limits
+- Focus on public-facing public code, documentation; 
+but be all-encompassing on the error messages/logging (cause they eventually bubble up to end-user).
+- Ensure to follow the style guide (/docs/dev/Style.md)
 
 ### Documentation specialist role
 See 'Documentation specialist roles' section in 'Team roles' of AGENTS.md

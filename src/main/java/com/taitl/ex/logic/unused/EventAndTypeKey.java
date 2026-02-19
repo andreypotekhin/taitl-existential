@@ -14,6 +14,7 @@ import com.taitl.existential.events.types.*;
  * @see Type
  * @deprecated Use EventKey
  */
+@Deprecated
 public class EventAndTypeKey<T>
 {
     String key;

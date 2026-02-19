@@ -12,8 +12,8 @@
 #### IntelliJ IDEA
 
 ##### Adjust formatter to ignore chained method identation
-By default, Java formatter removes custom indentation on chained calls.
-This may get in the way of readability when configuring with builders.
+By default, the Java formatter removes custom indentation on chained calls.
+This can reduce readability when configuring with builders.
 Example of custom indentation:
 ```
   Ex.configure("/api/cats")
@@ -22,5 +22,6 @@ Example of custom indentation:
          .create(c -> "Black".equals(c.color), "Cats are born black")
        .done()
 ```
-To avoid automatic removal of indents, adjust formatter settings: Keep builder method indents
-Problem: no effect: **Settings | Editor | Code Style | Formatter | Wrapping & Braces | Chained Method Calls | Keep builder method indents **
+To avoid automatic removal of indents, use auto-formatter switch comment around the code:
+- Before code section: // @formatter:off 
+- After code section: // @formatter:on
