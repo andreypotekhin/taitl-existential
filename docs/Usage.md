@@ -6,6 +6,27 @@ See /Readme.md for library overview.
 ### Using the library
 See /Readme.md for general usage.
 
+### Library configuration
+Library startup loads library options in this order:
+- Load classpath resource `existential.properties` first (default values).
+- If env var `EXISTENTIAL_CONFIG_FILE` is set and non-empty, load that file next (override defaults).
+
+Quickstart:
+1. Create a properties file:
+   - `behavior.rules.requireDescriptions=true`
+2. Set env var before starting your application:
+   - `export EXISTENTIAL_CONFIG_FILE=/path/to/existential.properties`
+3. Start your application. The library applies options on startup.
+
+Reference:
+- Format: Java `.properties`
+- Supported keys:
+  - `behavior.rules.requireDescriptions` (`true`/`false`)
+- Source precedence:
+  - Classpath defaults load first, then env-selected file overrides.
+- Troubleshooting:
+  - See `/Troubleshooting.md#library-configuration-load-failure`
+
 #### More details on usage
 See /docs/dev/Specification.md for terminology and complete description of library behavior.
 

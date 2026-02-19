@@ -70,10 +70,10 @@ Within an operation context, the user can configure multiple rules such as invar
 +User can change library configuration options programmatically
 +User can affect library behavior by setting behavioral flags
 +User must configure the library before use
-User can configure library options using a config file
-User can configure library options using a classpath resource
-User can specify the config file with an environment variable
-Initial version of the config file is auto-created or otherwise available
++User can configure library options using a config file
++User can configure library options using a classpath resource
++User can specify the config file with an environment variable
++Initial version of the config file is auto-created or otherwise available
 
 #### Library usage
 

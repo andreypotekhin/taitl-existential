@@ -1,5 +1,19 @@
 ## Troubleshooting
 
+### Problem (Initialization order): `NullPointerException` during startup
+When: Running tests or app startup after adding/changing constructor collaborators.
+Error example:
+```
+Could not create an instance of class com.taitl.ex.core.existential.ExistentialConfigs
+Caused by: java.lang.NullPointerException: ... \"this.ec\" is null
+```
+Cause: A collaborator is created in a field initializer before constructor dependencies are assigned.
+Fix: Move collaborator creation from field initializers into the constructor, after dependency assignment.
+Example fixes in this project:
+- `ExistentialConfigs`: initialize `ConfigurationLogic` in constructor
+- `ConfigurationLogic`: initialize action delegates in constructor
+- `EventLogic`: initialize `ReceiveEvent` in constructor after `ev`/`ex` are assigned
+
 ### Problem (PMD): 'Double-brace initialization should be avoided' error
 When: Running PMD checks as part of the build process.
 Error: "[INFO] PMD Failure: [class] :22 Rule:DoubleBraceInitialization Priority:3 Double-brace initialization should be avoided."

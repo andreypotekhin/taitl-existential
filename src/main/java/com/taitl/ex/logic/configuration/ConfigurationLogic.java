@@ -19,14 +19,18 @@ public class ConfigurationLogic implements Closeable
 
     protected ExistentialConfigs ec;
 
-    protected ConfigRegistry registry = new ConfigRegistry(this);
-    protected CreateBuilders createBuilders = new CreateBuilders(this);
-    protected BuildContexts buildContexts = new BuildContexts(this);
-    protected FinalizeConfiguration finalizeConfiguration = new FinalizeConfiguration(this);
+    protected ConfigRegistry registry;
+    protected CreateBuilders createBuilders;
+    protected BuildContexts buildContexts;
+    protected FinalizeConfiguration finalizeConfiguration;
 
     public ConfigurationLogic(ExistentialConfigs ec)
     {
         this.ec = ec;
+        this.registry = new ConfigRegistry(this);
+        this.createBuilders = new CreateBuilders(this);
+        this.buildContexts = new BuildContexts(this);
+        this.finalizeConfiguration = new FinalizeConfiguration(this);
     }
 
     /**
