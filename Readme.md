@@ -36,8 +36,9 @@ entities, and focuses on performance and memory efficiency.
 P == logical predicate (a boolean function)  
 ⊤ == "Truth", a logical predicate always rendering true
 
-Note: in the examples below, the *new* keyword is dropped in front of All and Exists for brevity.
-Java/Groovy must use *new*. Other languages (Kotlin, Go) may omit *new*.
+In the examples below:
+- The *new* keyword is dropped in front of All and Exists for brevity. Java/Groovy must use *new*. Other languages (Kotlin) may omit *new*.
+- Math notation is on the left, and corresponding Java notation is on the right.
 
 ## Establishing Truth
 
@@ -51,7 +52,7 @@ For any object of type X which satisfies a condition, a predicate holds true:
 
     ∀ x ∈ X | condition(x) ⊤(x)      All<X>(x -> condition(x), x -> predicate(x))
 
-For any object of type X which has been changed in the course of a business transaction, predicate holds true:
+For any object of type X that has been changed in the course of a business transaction, predicate holds true:
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Mutation<X>>((x0, x1) -> predicate(x0, x1))
     
@@ -59,7 +60,7 @@ For any object of type X which has been changed in the course of a business tran
     x0 is the entity's initial state - the state at the start of a business transaction
     x1 is its final state at the end of transaction.
 
-For any object of type X which has been created, changed or deleted in the course of a business transaction, predicate holds true:
+For any object of type X that has been created, changed or deleted in the course of a business transaction, predicate holds true:
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Transition<X>>((x0, x1) -> predicate(x0, x1))
 
@@ -79,9 +80,9 @@ An object of type X exists for which a predicate holds:
     ∃ x ∈ X ⊤(x)      Exists<X>(coll, predicate(x))
     
     Here, coll is a collection where we should look for objects to establish existence.
-    There should be at least one object in the collection which satisfies the predicate.
+    The Exists expression guarantees that there is at least one object in the collection which satisfies the predicate.
+    This scans through the whole collection, so a more performant approach is shown next.
 
-This scans through the whole collection, so a more performant approach is shown next.
 For more efficiency, use an *index* to determine the existence:
 
     ∃ x ∈ X, ⊤(x)      Exists<X>(index, key(x), predicate(x))
@@ -105,8 +106,8 @@ For any object of type X that has been changed, an object of type Y exists for w
 
 Same when x0, x1 must also satisfy some condition:
 
-    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Mutation<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(p, x0, x1)))
-    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Transition<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(p, x0, x1)))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Mutation<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Transition<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
 
 ## Documentation
 
