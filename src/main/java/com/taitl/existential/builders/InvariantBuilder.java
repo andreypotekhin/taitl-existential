@@ -5,6 +5,12 @@ import com.taitl.existential.invariants.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Fluent builder for {@link Invariant} rules.
+ * Allows describing constraints for specific event types.
+ *
+ * @param <T> Subject type the invariants target
+ */
 public class InvariantBuilder<T> implements EvsBuilder<T>
 {
     ContextBuilder parent;

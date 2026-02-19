@@ -10,9 +10,10 @@ import com.taitl.existential.keys.*;
 
 /**
  * Entry point to the Existential library.
+ * Provides access to configuration, transactions, and event dispatch.
  *
  * Documentation:
- *   <a href="https://github.com/andreypotekhin/taitl-existential">Existential</a>
+ * <a href="https://github.com/andreypotekhin/taitl-existential">Existential</a>
  *
  * @author Andrey Potekhin
  */
@@ -55,8 +56,8 @@ public final class Existential implements Closeable
 
     /**
      * Commits an existential transaction.
-     * Validates rules configured for the transaction's business op.
-     * Note: after commit(), tranID becomes invalid.
+     * Validates rules configured for the transaction's business operation.
+     * After {@code commit()}, {@code tranID} becomes invalid.
      */
     public void commit(String tranID) throws ExistentialException
     {
@@ -71,7 +72,7 @@ public final class Existential implements Closeable
     /**
      * Rolls back an existential transaction.
      * Rule validation is not performed.
-     * Note: after rollback(), tranID becomes invalid.
+     * After {@code rollback()}, {@code tranID} becomes invalid.
      */
     public void rollback(String tranID) throws ExistentialException
     {

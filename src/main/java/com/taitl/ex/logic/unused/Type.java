@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.unused;
 
 import com.taitl.existential.constants.*;
+import java.util.Objects;
 
 /**
  * A string representing a class, along with its generics, for example "Doc<MD>".
@@ -65,6 +66,25 @@ public class Type
         }
     }
 
-    // TODO: equals, hashCode
+    @Override
+    public boolean equals(Object other)
+    {
+        if (this == other)
+        {
+            return true;
+        }
+        if (!(other instanceof Type))
+        {
+            return false;
+        }
+        Type that = (Type) other;
+        return Objects.equals(typeid, that.typeid);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(typeid);
+    }
 
 }

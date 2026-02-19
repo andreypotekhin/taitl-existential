@@ -1,12 +1,12 @@
 ## Library Specification 
 
-Below is the list of claims made by Existential library - things that are stated (claimed) in library documents.
-None of the claims are in any way legal. None any of them constitute any contract.
+Below is the list of claims made by the Existential library - things that are stated (claimed) in library documents.
+None of the claims are in any way legal. None of them constitute any contract.
 They only describe library features and behavior for implementation.
 
-As user stories, claims statements may be prefixed with 'The user can...' (or 'The user can't...').
+As user stories, claim statements may be prefixed with 'The user can...' (or 'The user can't...').
 Claims are backed by test cases in src/test/java/com/taitl/existential/specs. 
-The (+) signs indicate the ones already completed and covered by tests.
+The (+) signs indicate items already completed and covered by tests.
 
 ### Terminology
 
@@ -26,33 +26,33 @@ Event: an application or library event, such as:
   - modifying an entity (e.g. Update<User>) 
   - accessing an entity (e.g. Read<User>)
   - starting or committing a transaction (e.g. Begin<Transaction>) and the like
-  - Events are sent to the library by calling event() method
+  - Events are sent to the library by calling the event() method
   - Access events are sent to the library by calling read() and write()
   - Transaction events are automatically sent to the library when initiating or completing a transaction (begin(), commit(), rollback(), checkpoint() methods)
 Runtime event: an event that is sent to library during execution of a transaction. Includes event type, entity type and reference to the affected entity.   
 Context: a set of rules associated with a business operation 
   - A Context uses Op name to associate with an Op 
   - A Context can be defined with a wildcard Op name
-  - Parent context is any Context whose name matches, without being equal to, Context's name
-  - Matching context is any wildard context whose name matches, without being equal to, Context's name
+  - Parent context is any Context whose name matches, without being equal to, the Context's name
+  - Matching context is any wildcard context whose name matches, without being equal to, the Context's name
   - The rules from parent apply to child contexts
   - The rules from matching contexts apply to matched contexts
 Transaction: a set of rules associated with a Context
   - Transactions are defined within a Context
-  - Transactions are more dynamic than the Contexts, allowing to use local scope (method parameters,
-  local variables) and members of the defining class (for anonimous nested classes) in event handlers' code
+  - Transactions are more dynamic than the Contexts, allowing use of local scope (method parameters,
+  local variables) and members of the defining class (for anonymous nested classes) in event handlers' code
 Library Transaction (Tr): a unit of execution in the library, associated with an Op name
   - Association with an Op name allows to select relevant Contexts and Transactions for evaluation
   - Transaction lifecycle is triggered by calling begin(), ending with commit(), rollback(), optional checkpoint()
-  - For each relevant Context and Transactions, their configured rules are evaluated
+  - For each relevant Context and Transaction, their configured rules are evaluated
   - The rules are evaluated at the end of transaction (commit or checkpoint), unless assigned to an earlier stage
-  - In case of a constraint violation, an exception is raised and constraint violations are reported
+  - In case of a constraint violation, an exception is raised and violations are reported
 Quantifier: a logical expression such as All or Exists
-Mutation: an event that records both before- and after- states of an entity 
-Transition: a Mutation that can have a null in before- or after- state (but not in both) 
+Mutation: an event that records both before and after states of an entity 
+Transition: a Mutation that can have a null in the before or after state (but not in both) 
   - The null in 'before' state indicates creation of an entity
   - The null in 'after' state indicates deletion of an entity
-  - Both 'before' and 'after' states being non-null indicates a change (mutation) of an entity
+  - Both 'before' and 'after' states being non-null indicate a change (mutation) of an entity
 
 For additional documentation, see /Readme.md, /docs and /docs/dev.
 
@@ -83,21 +83,21 @@ User can configure transaction lifecycle rules for a class
 +User can start a transaction
 +User can commit a transaction
 +User can roll back a transaction
-+User can initiate transaction checkpont
++User can initiate transaction checkpoint
 +User can send events to record entity modification
 +User can send events to record entity access 
 User can't send events outside a transaction 
-+User can't send events if no rules has been configured
++User can't send events if no rules have been configured
 
 #### Library lifecycle phases
 
 The library usage falls into configuration, execution and validation phases
-In configuration phase, the user defines rules - constraints, effects - using contexts and transactions
-In execution phase, user begins and ends transactions and sends events to the library
-In execution phase, the library executes execution time side effects 
+In the configuration phase, the user defines rules - constraints and effects - using contexts and transactions
+In the execution phase, the user begins and ends transactions and sends events to the library
+In the execution phase, the library executes execution-time side effects 
 The validation phase triggers upon transaction commit, or at a checkpoint
-In validation phase, the library evaluates all applicable constraints and reports violations
-In validation phase, the library executes validation time side effects 
+In the validation phase, the library evaluates all applicable constraints and reports violations
+In the validation phase, the library executes validation-time side effects 
 
 ### Workflows
 
@@ -107,19 +107,19 @@ In validation phase, the library executes validation time side effects
 
 User can configure the rules (constraints) on a class with a custom Context
 Contexts are keyed by op name 
-The rules from parent contexts apply to child context
+The rules from parent contexts apply to child contexts
 The rules from parent contexts execute before the rules of child contexts
 User can specify a custom factory for creation of all Contexts
-User can specify a custom factory for creation a Context for specific op
+User can specify a custom factory for creation of a Context for a specific op
 User can't configure a context without defining any rules
 
 ##### Wildcard contexts
 
 User can define a Context for an op name with a wildcard in it
-The wildcard contexts whose path match a concrete op participate in its validation
+The wildcard contexts whose paths match a concrete op participate in its validation
 The wildcard contexts matching the currently evaluated context participate in its validation
-The rules from matching contexts apply to context
-The rules from matching contexts execute before the rules of context
+The rules from matching contexts apply to the context
+The rules from matching contexts execute before the rules of the context
 
 ##### Configuring transactions
 
@@ -131,7 +131,7 @@ Transaction factory from parent Context is used for child Contexts, unless overr
 ##### Custom transaction instance
 
 User can specify an instance of Transaction class to use in a library transaction
-  Rationale: be able to configure the rules based on dynamic information, such as web request parameters  
+  Rationale: so they can configure the rules based on dynamic information, such as web request parameters  
   Code: This is done by specifying Transaction instance as parameter to Ex.begin() method
 
 ##### Configuring Constraints
@@ -160,10 +160,10 @@ Validation stage rules execute on transaction commit or checkpoint
 #### Evaluation workflow
 
 Evaluation is the process of executing the rules (evaluating expressions, calling event handlers) configured for a business operation.
-Evaluations start upon beginning and end upon end of an existential transaction.
+Evaluations start when an existential transaction begins and end when it ends.
 There is a separate evaluation per stage: Precondition, Runtime and Validation.
 
-Each existential transaction is associated with business op name, and through that with the closest matching context, its parent contexts,  
+Each existential transaction is associated with a business op name, and through that with the closest matching context, its parent contexts,  
 matching wildcard contexts, any configured Transaction factory and any passed-in Transaction instance. The rules 
 configured in these contexts and transactions participate in evaluations. 
 Evaluation of Early stage rules is called Preconditions evaluation. It is invoked upon transaction start.
@@ -171,7 +171,7 @@ Evaluation of Middle stage rules is called Runtime evaluation. It is invoked for
 Evaluation of Late stage rules is called Validation evaluation. It is invoked upon transaction commit or at checkpoint.
 
 Evaluations of separate existential transactions are independent, even if these transactions are nested
-Only the events reported during transaction participate in its evaluations
+Only the events reported during a transaction participate in its evaluations
 
 Rules defined in parent contexts/transactions are considered to be defined 'earlier' than the rules in children contexts/transactions
 The order of execution of rules follows the order of their definition
@@ -192,7 +192,7 @@ The rules assigned to middle stage are evaluated immediately upon receiving the 
 ##### Validation evaluation
 
 Validation evaluation is triggered on a commit or checkpoint of an existential transaction
-Effects are evaluated by applying event handlers for each event reported during transaction to corresponding entity
+Effects are evaluated by applying event handlers for each event reported during a transaction to the corresponding entity
 Intents are evaluated as lists of predicates. Violations are added to validation report
 
 

@@ -1,14 +1,14 @@
 package com.taitl.existential.indexes;
 
 /**
- * Composition of indexes with Index-like interface to multiple indexes.
+ * Composition of indexes that provides an Index-like interface over multiple indexes.
  * Convenience for adding a document to multiple indexes with a single call.
- * Example:
+ *
  * <pre>
  * {@code
- * indexes.add(doc1) <-- same as calling .add() on each underlying index
+ * indexes.add(doc1); // same as calling .add() on each underlying index
  * }
- * </pre><p>
+ * </pre>
  *
  * @see Index
  */

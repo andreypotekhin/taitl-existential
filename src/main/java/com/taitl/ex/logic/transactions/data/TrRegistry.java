@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.transactions.data;
 
-import java.util.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.transactions.actions.*;
 import com.taitl.existential.configs.*;
@@ -16,7 +17,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class TrRegistry
 {
-    protected Map<String, Tr> reg = new LinkedHashMap<>();
+    protected Map<String, Tr> reg = new ConcurrentHashMap<>();
     protected CreateTran createTran;
     protected TransactionLogic tl;
 
@@ -31,10 +32,7 @@ public class TrRegistry
         sane(op, "op");
         OpKey.validate(op);
         Tr o = createTran.forConfig(op, tl.ex().configs().config(op), custom);
-        synchronized (this)
-        {
-            reg.put(o.id.toString(), o);
-        }
+        reg.put(o.id.toString(), o);
         return o;
     }
 
@@ -52,23 +50,17 @@ public class TrRegistry
     public Tr remove(String id) throws NotFoundException
     {
         sane(id, "id");
-        Tr o = reg.get(id);
+        Tr o = reg.remove(id);
         if (o == null)
         {
             throw new NotFoundException("Transaction not found, id=" + id);
         }
-        synchronized (this)
-        {
-            reg.remove(id);
-        }
+        reg.remove(id);
         return o;
     }
 
     public void clear()
     {
-        synchronized (this)
-        {
-            reg.clear();
-        }
+        reg.clear();
     }
 }

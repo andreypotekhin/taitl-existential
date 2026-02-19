@@ -19,7 +19,12 @@ public final class Log
         {
             throw new IllegalArgumentException("Argument 'factory' must not be null");
         }
-        logger = factory.get();
+        Logger resolved = factory.get();
+        if (resolved == null)
+        {
+            throw new IllegalArgumentException("Logger factory must not return null");
+        }
+        logger = resolved;
     }
 
     public boolean isTracing()
@@ -42,7 +47,7 @@ public final class Log
 
     public static void error(Class clz, String message, Object... keyValuePairs)
     {
-        if (logLevel.compareTo(LogLevel.LEVEL_ERROR) >= 0)
+        if (logLevel.compareTo(LogLevel.LEVEL_ERROR) <= 0)
         {
             logger.log(LogLevel.LEVEL_ERROR, clz, null, message, keyValuePairs);
         }

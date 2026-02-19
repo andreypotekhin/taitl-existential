@@ -2,12 +2,23 @@ package com.taitl.existential.handlers;
 
 import java.util.function.*;
 import com.taitl.ex.common.helper.*;
+import com.taitl.existential.events.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.existential.constants.Strings.*;
 
+/**
+ * Declarative handler for {@link Mutate} events that involve two values.
+ *
+ * <p>The handler can be guarded by a predicate on the new value or a
+ * bi-predicate on both values. When no action is provided, the handler
+ * behaves as a constraint and throws when the condition is not met.</p>
+ *
+ * @param <T>
+ *            Type of entity being mutated
+ */
 public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
 {
     Predicate<? super T> condition;
@@ -65,6 +76,16 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
     // this.condition = condition;
     // }
 
+    /**
+     * Handles a mutation between two values.
+     *
+     * @param t0
+     *            Previous value
+     * @param t1
+     *            New value
+     * @throws ExistentialException
+     *            If validation fails or action execution errors
+     */
     public void handle(T t0, T t1) throws ExistentialException
     {
         sane(t0, "t0", t1, "t1");
@@ -96,6 +117,11 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
         }
     }
 
+    /**
+     * Returns the handler description or an empty string if absent.
+     *
+     * @return human-friendly description for diagnostics/logging
+     */
     public String description()
     {
         return description == null ? "" : description;

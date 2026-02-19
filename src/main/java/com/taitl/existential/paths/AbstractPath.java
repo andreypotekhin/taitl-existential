@@ -36,6 +36,7 @@ public class AbstractPath
         this.path = path.trim();
     }
 
+    @Override
     public String toString()
     {
         return path;
@@ -86,30 +87,24 @@ public class AbstractPath
         return new AbstractPath(path.substring(0, path.lastIndexOf(SLASH)));
     }
 
+    @Override
     public int hashCode()
     {
         return path.hashCode();
     }
 
+    @Override
     public boolean equals(Object other)
     {
         if (other == this)
         {
             return true;
         }
-        if (other == null)
-        {
-            return false;
-        }
         if (!(other instanceof AbstractPath))
         {
             return false;
         }
         AbstractPath o = (AbstractPath) other;
-        if (o.path == null)
-        {
-            return (this.path == null);
-        }
         return o.path.equals(this.path);
     }
 }

@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.unused;
 
 import com.taitl.existential.events.types.*;
+import java.util.Objects;
 
 /**
  * Implements a key for collections keyed by Event + Type.
@@ -55,5 +56,24 @@ public class EventAndTypeKey<T>
         key = eventClass + "<" + type.toString() + ">";
     }
 
-    // TODO: equals, hashCode
+    @Override
+    public boolean equals(Object other)
+    {
+        if (this == other)
+        {
+            return true;
+        }
+        if (!(other instanceof EventAndTypeKey))
+        {
+            return false;
+        }
+        EventAndTypeKey<?> that = (EventAndTypeKey<?>) other;
+        return Objects.equals(key, that.key);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(key);
+    }
 }

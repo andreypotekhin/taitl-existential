@@ -4,8 +4,9 @@ import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 
 /**
- * Marker interface for any event about an entity.
- * Serves as base class to more specific events, such as {@code Create<T>, Update<T>, Delete<T>,} etc.
+ * Marker interface for events about an entity.
+ * Serves as a base type for more specific events, such as {@code Create<T>}, {@code Update<T>},
+ * and {@code Delete<T>}.
  *
  * @param <T>
  *            Class of application entity

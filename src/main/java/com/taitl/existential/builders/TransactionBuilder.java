@@ -10,6 +10,10 @@ import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Configures a {@link Transaction} within a specific context.
+ * Collects invariants, effects, and transaction lifecycle handlers.
+ */
 public class TransactionBuilder
 {
     ContextBuilder parent;
@@ -34,6 +38,11 @@ public class TransactionBuilder
         this.transactionFactory = transactionFactory;
     }
 
+    /**
+     * Finalizes transaction configuration and returns the parent {@link ContextBuilder}.
+     *
+     * @return Parent builder
+     */
     public ContextBuilder build()
     {
         parent.transactionFactory = () -> {

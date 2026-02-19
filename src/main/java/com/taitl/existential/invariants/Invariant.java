@@ -12,6 +12,13 @@ import com.taitl.existential.quantifiers.*;
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
+/**
+ * Declares invariants over entities within a transaction or a specific context.
+ * Invariants are assembled from event handlers and quantifiers such as {@link All}
+ * and {@link Exists}, and are evaluated when a transaction is validated.
+ *
+ * @param <T> entity type the invariant applies to
+ */
 public class Invariant<T> implements Evs<T>, Constraints<T>
 {
     /**

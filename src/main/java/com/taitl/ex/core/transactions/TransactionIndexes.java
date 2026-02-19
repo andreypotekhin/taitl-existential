@@ -1,6 +1,7 @@
 package com.taitl.ex.core.transactions;
 
-import java.util.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
@@ -9,7 +10,7 @@ import com.taitl.existential.indexes.*;
 public class TransactionIndexes
 {
     Transaction tr;
-    Map<String, Index<?, ?>> indexes = new LinkedHashMap<>();
+    Map<String, Index<?, ?>> indexes = new ConcurrentHashMap<>();
 
     public TransactionIndexes(Transaction tr)
     {
@@ -27,13 +28,9 @@ public class TransactionIndexes
         {
             index.setGetKey(getKey);
         }
-        synchronized (indexes)
+        if (indexes.putIfAbsent(name, index) != null)
         {
-            if (indexes.containsKey(name))
-            {
-                throw new IllegalStateException(String.format("Index with name '%s' already exists.", name));
-            }
-            indexes.put(name, index);
+            throw new IllegalStateException(String.format("Index with name '%s' already exists.", name));
         }
         return index;
     }

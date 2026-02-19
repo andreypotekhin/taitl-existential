@@ -12,7 +12,6 @@ import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.State.*;
 
 public class TransactionLogic implements Closeable
 {
@@ -62,16 +61,14 @@ public class TransactionLogic implements Closeable
     public void checkpoint(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
-        Tr tr = registry.get(tranID);
-        verify(tr != null, "Transaction not found, id=" + tranID);
+        Tr tr = tr(tranID);
         checkpointTran.call(tr);
     }
 
     public void commit(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
-        Tr tr = registry.get(tranID);
-        verify(tr != null, "Transaction not found, id=" + tranID);
+        Tr tr = tr(tranID);
         commitTran.call(tr);
         disposeTran.call(tr);
     }
@@ -79,8 +76,7 @@ public class TransactionLogic implements Closeable
     public void rollback(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
-        Tr tr = registry.get(tranID);
-        verify(tr != null, "Transaction not found, id=" + tranID);
+        Tr tr = tr(tranID);
         rollbackTran.call(tr);
         disposeTran.call(tr);
     }
@@ -98,9 +94,7 @@ public class TransactionLogic implements Closeable
     public Tr tr(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
-        Tr tr = registry.get(tranID);
-        verify(tr != null, "Transaction not found, id=" + tranID);
-        return tr;
+        return registry.get(tranID);
     }
 
     /** Close on exit */
