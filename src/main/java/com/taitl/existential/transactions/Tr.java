@@ -23,6 +23,7 @@ public class Tr
     public final UUID id;
     public String op;
     List<Transaction> transactions = new ArrayList<>();
+    Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
     RuntimeIndexes runtimeIndexes;
     ValidationData validationData;
 
@@ -39,7 +40,7 @@ public class Tr
     public void addTransaction(Transaction tr)
     {
         sane(tr, "tr");
-        State.verify(!transactions.contains(tr), "This transaction is already added");
+        State.verify(already.add(tr), "This transaction is already added");
         tr.op = op;
         transactions.add(tr);
     }
@@ -90,6 +91,7 @@ public class Tr
         validationData.close();
         validationData = null;
         transactions = null;
+        already = null;
     }
 
     public RuntimeIndexes runtimeIndexes()
