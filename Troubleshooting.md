@@ -1,5 +1,21 @@
 # Troubleshooting
 
+## Library configuration load failure
+
+**Problem: Startup fails with an IllegalStateException while loading library configuration**
+
+Common causes:
+- `EXISTENTIAL_CONFIG_FILE` points to a missing or unreadable file.
+- Properties file has an unknown key.
+- Boolean value is not `true` or `false`.
+
+Fix:
+1. If `EXISTENTIAL_CONFIG_FILE` is set, verify the file exists and is readable.
+2. Keep only supported keys:
+   - `behavior.rules.requireDescriptions`
+3. Use only `true` or `false` for boolean values.
+4. Unset `EXISTENTIAL_CONFIG_FILE` to use classpath fallback `existential.properties`.
+
 ## Maven Build
 
 **Problem: Maven build fails with `Failed to execute goal org.apache.maven.plugins:maven-checkstyle-plugin:3.1.2:check`

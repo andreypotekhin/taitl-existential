@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.events.actions;
 
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.events.*;
 import com.taitl.ex.logic.indexing.*;
 import com.taitl.existential.events.types.*;
@@ -11,11 +12,14 @@ public class ReceiveEvent
 {
     protected EventLogic el;
     protected SplitEvent splitEvent = Creator.singleton(SplitEvent.class);
-    protected IndexingLogic indexingLogic = Creator.singleton(IndexingLogic.class);
+    protected IndexingLogic indexingLogic;
 
     public ReceiveEvent(EventLogic el)
     {
         this.el = el;
+        this.indexingLogic = Creator.create(IndexingLogic.class,
+                new Class[] { ExistentialEvents.class },
+                el.ev());
     }
 
     public <T> void bievent(BiEvent<T> event, TypeKey<T> type, Tr tr)

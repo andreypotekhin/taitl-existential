@@ -9,11 +9,12 @@ import com.taitl.existential.configs.*;
 public class ExistentialConfigs implements Closeable
 {
     protected Existential ex;
-    protected ConfigurationLogic configLogic = new ConfigurationLogic(this);
+    protected ConfigurationLogic configLogic;
 
     public ExistentialConfigs(Existential ex)
     {
         this.ex = ex;
+        this.configLogic = new ConfigurationLogic(this);
     }
 
     /**

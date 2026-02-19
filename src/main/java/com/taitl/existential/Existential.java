@@ -37,6 +37,7 @@ public final class Existential implements Closeable
         events = Creator.create(ExistentialEvents.class, new Class[] { Existential.class }, this);
         flags = Creator.create(ExistentialFlags.class, new Class[] { Existential.class }, this);
         configs = Creator.create(ExistentialConfigs.class, new Class[] { Existential.class }, this);
+        init.startup();
     }
 
     public ConfigBuilder configure(String op)

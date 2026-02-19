@@ -17,12 +17,13 @@ public class EventLogic implements Closeable
 {
     protected Existential ex;
     protected ExistentialEvents ev;
-    protected ReceiveEvent receiveEvent = Creator.create(ReceiveEvent.class, new Class[] { EventLogic.class }, this);
+    protected ReceiveEvent receiveEvent;
 
     public EventLogic(ExistentialEvents ev)
     {
         this.ev = ev;
         this.ex = ev.ex();
+        this.receiveEvent = Creator.create(ReceiveEvent.class, new Class[] { EventLogic.class }, this);
     }
 
     public <T> void event(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
@@ -66,6 +67,11 @@ public class EventLogic implements Closeable
 
     public void close()
     {
+    }
+
+    public ExistentialEvents ev()
+    {
+        return ev;
     }
 
     Tr tr(String tranID) throws ExistentialException
