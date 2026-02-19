@@ -5,6 +5,12 @@ import com.taitl.existential.effects.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Fluent builder for {@link Effect} rules.
+ * Provides typed helpers for associating actions with events.
+ *
+ * @param <T> Subject type the effects target
+ */
 public class EffectBuilder<T> implements EvsBuilder<T>
 {
     ContextBuilder parent;

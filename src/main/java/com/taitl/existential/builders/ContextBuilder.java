@@ -10,6 +10,10 @@ import com.taitl.existential.invariants.*;
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
+/**
+ * Configures a single Context inside a {@link com.taitl.existential.configs.Config}.
+ * Collects invariants, effects, and optional transaction settings for the context.
+ */
 // TODO: add context() method to build child contexts
 public class ContextBuilder
 {
@@ -64,6 +68,11 @@ public class ContextBuilder
 
     // TODO: intent()
 
+    /**
+     * Builds the configured context and returns the parent {@link ConfigBuilder}.
+     *
+     * @return Parent builder
+     */
     public ConfigBuilder build()
     {
         verify(!evsSuppliers.isEmpty() || transactionFactory != null,

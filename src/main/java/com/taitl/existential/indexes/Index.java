@@ -8,17 +8,19 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Index implements a mapping from a single key (K) to a set of values (V).
- * Indexes make Exists<> expressions more performant.
- * Note: null is not allowed as a key or as a value.
+ * Index maps a single key ({@code K}) to a set of values ({@code V}).
+ * Indexes make {@code Exists} expressions more performant.
+ * Note: {@code null} is not allowed as a key or as a value.
  *
- * @param <K> Key type
- * @param <V> Value type
+ * @param <K>
+ *            Key type
+ * @param <V>
+ *            Value type
  */
 public class Index<K, V>
 {
     private static final String ARG_KEY_CLASS = "Argument 'key' class '%s' does not match the key class '%s'"
-            + " reqired by this index.";
+            + " required by this index.";
     private static final String ARG_KEY_VALUE = "Argument 'k1' value '%s' does not match key value '%s'"
             + " returned for object 'v' by 'getKey' function.";
 
@@ -90,9 +92,11 @@ public class Index<K, V>
      * If other items exist for the same key, they remain intact.
      * Returns the value that was removed, or null if there is no value for this key.
      *
-     * @param v Value to be removed
-     * @param k Key for the value
-     * @return The value being removed, or null if value is not in the index
+     * @param k
+     *            Key for the value
+     * @param v
+     *            Value to be removed
+     * @return The value being removed, or {@code null} if the value is not in the index
      */
     public V remove(K k, V v)
     {
@@ -140,9 +144,10 @@ public class Index<K, V>
 
     /**
      * In some scenarios, the exact key type is not known.
-     * This provides a method to query by an Object key.
+     * This provides a method to query by an {@link Object} key.
      *
-     * @param key Object representing a key
+     * @param key
+     *            Object representing a key
      * @return Set of values stored under the key
      */
     @SuppressWarnings("unchecked")

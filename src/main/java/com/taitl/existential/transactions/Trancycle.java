@@ -51,7 +51,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
     public Trancycle<T> begin(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        return add(new OnBegin<T>(condition, action));
+        return add(new OnBegin<T>(condition, action, description));
     }
 
     public Trancycle<T> commit(Consumer<? super T> action)
