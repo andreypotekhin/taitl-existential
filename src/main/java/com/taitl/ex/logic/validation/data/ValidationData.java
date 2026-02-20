@@ -1,6 +1,6 @@
 package com.taitl.ex.logic.validation.data;
 
-import com.taitl.ex.logic.indexing.data.runtime_indexes.*;
+import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.existential.transactions.*;
 
 /**
@@ -15,7 +15,7 @@ import com.taitl.existential.transactions.*;
 public class ValidationData
 {
     Tr tr;
-    public RuntimeIndexes indexData;
+    public IndexData indexData;
 
     public ValidationData(Tr tr)
     {

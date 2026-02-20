@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.configuration.indexes;
 
 import java.util.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.actions.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.existential.configs.*;
@@ -14,6 +15,7 @@ public class ConfigIndexes
     public ConfiguredHandlers configuredHandlers;
     BitSet eventTypesMask;
     IndexConfig indexConfig;
+    public EventField eventField;
 
     public ConfigIndexes()
     {
@@ -22,6 +24,16 @@ public class ConfigIndexes
         this.configuredHandlers = new ConfiguredHandlers();
         this.eventTypesMask = new BitSet(64);
         this.indexConfig = new IndexConfig(this);
+        this.eventField = Creator.create(EventField.class);
+    }
+
+    /**
+     * Add all configured rules to indexes, in the order of declaration.
+     */
+    public void indexConfig(String op, Config config)
+    {
+        sane(op, "op", config, "config");
+        indexConfig.call(op, config);
     }
 
     public ConfiguredEventKeys eventKeys()
@@ -34,13 +46,9 @@ public class ConfigIndexes
         return eventTypesMask;
     }
 
-    /**
-     * Add all configured rules to indexes, in the order of declaration.
-     */
-    public void indexConfig(String op, Config config)
+    public EventField eventField()
     {
-        sane(op, "op", config, "config");
-        indexConfig.call(op, config);
+        return eventField;
     }
 
     public void close()

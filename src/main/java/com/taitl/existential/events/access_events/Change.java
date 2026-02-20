@@ -1,6 +1,6 @@
-package com.taitl.existential.events;
+package com.taitl.existential.events.access_events;
 
-import com.taitl.existential.events.types.EntityEvent;
+import com.taitl.existential.events.types.*;
 
 /**
  * Indicates that entity was updated in the course of current transaction.

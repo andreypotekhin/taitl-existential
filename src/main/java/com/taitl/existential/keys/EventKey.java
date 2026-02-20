@@ -14,9 +14,29 @@ public class EventKey
 {
     protected String key;
 
-    public static TypeKey valueOf(String s)
+    public static EventKey valueOf(String s)
     {
-        return new TypeKey(s);
+        return new EventKey(s);
+    }
+
+    public static <T> EventKey valueOf(T t)
+    {
+        return new EventKey(t);
+    }
+
+    public static <T> EventKey valueOf(Event<T> e, TypeKey<T> typeKey)
+    {
+        return new EventKey(e, typeKey);
+    }
+
+    public static <T> EventKey valueOf(Event<T> e, String type)
+    {
+        return new EventKey(e, type);
+    }
+
+    public static <T> EventKey valueOf(Class<T> clz, String type)
+    {
+        return new EventKey(clz, type);
     }
 
     public EventKey(String s)
@@ -24,7 +44,7 @@ public class EventKey
         key = s;
     }
 
-    public EventKey(Object t)
+    public <T> EventKey(T t)
     {
         key = t.getClass().getSimpleName();
     }

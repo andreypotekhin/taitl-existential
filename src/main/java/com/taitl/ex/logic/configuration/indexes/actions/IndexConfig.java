@@ -56,6 +56,8 @@ public class IndexConfig
                 throw new RuntimeException("Unknown rule type: " + ev.getClass());
             }
             ci.configuredHandlers.put(eventKey, ev);
+
+            // TODO: add to EventField
         }
     }
 }

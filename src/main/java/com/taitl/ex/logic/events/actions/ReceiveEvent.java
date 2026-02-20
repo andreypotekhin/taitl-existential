@@ -22,22 +22,23 @@ public class ReceiveEvent
                 el.ev());
     }
 
-    public <T> void bievent(BiEvent<T> event, TypeKey<T> type, Tr tr)
-    {
-        // TODO: implement event receiving logic
-        // Split event into multiple events using EventSplitter
-        // Transit<House> -> On<House>, Mutate<House>, Transit<House>
-        // Depending on mutation type: OnCreate<House>, OnUpdate<House>, OnMutate<House>,
-        // OnDelete<House>
-        // Trigger processing of immediate event handlers
-        // Add event to event index for late-phase processing
-        indexingLogic.indexEvent(event, type, tr);
-    }
-
     public <T> void event(Event<T> event, T t, TypeKey<T> type, Tr tr)
     {
-        // TODO: implement event receiving logic
+        // TODO: implement event processing
+        // Split event into elementary events using EventSplitter
+        // Transit<House> -> On<House>, Mutate<House>, Transit<House>
+        // Then, depending on mutation type: OnCreate<House>, OnUpdate<House>, OnMutate<House>,
+        // OnDelete<House>, CU<House>, CUD<House>, UD<House>
+        // Trigger processing of immediate event handlers
         // ...
+        // Add each event to indexes for late-stage processing
         indexingLogic.indexEvent(event, t, type, tr);
+    }
+
+    public <T> void bievent(BiEvent<T> event, TypeKey<T> type, Tr tr)
+    {
+        // TODO: implement event processing
+        // ...
+        indexingLogic.indexEvent(event, type, tr);
     }
 }

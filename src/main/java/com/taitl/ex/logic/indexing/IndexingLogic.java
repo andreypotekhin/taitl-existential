@@ -2,6 +2,7 @@ package com.taitl.ex.logic.indexing;
 
 import java.io.*;
 import com.taitl.ex.core.existential.*;
+import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.existential.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
@@ -20,19 +21,25 @@ public class IndexingLogic implements Closeable
         this.ec = ex.configs();
     }
 
-    public <T> void indexEvent(Event<T> event, T o, Tr tr)
-    {
-        // TODO: add event to runtimes indexes (e.g. EventField)
-    }
-
     public <T> void indexEvent(Event<T> event, T o, TypeKey<T> type, Tr tr)
     {
-        // TODO
+        IndexData indexData = tr.runtimeIndexes();
+        EventKey eventKey = EventKey.valueOf(event, type);
+        RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, o);
+        indexData.encounteredUniqueEvents.add(runtimeKey);
+        indexData.encounteredEventKeys.add(eventKey);
+        indexData.encounteredTypeKeys.add(type);
     }
 
     public <T> void indexEvent(BiEvent<T> event, TypeKey<T> type, Tr tr)
     {
-        // TODO
+        IndexData indexData = tr.runtimeIndexes();
+        EventKey eventKey = EventKey.valueOf(event, type);
+        // TODO: add clarification, perhaps a business rule, around choice of using event.t1
+        RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, event.t1);
+        indexData.encounteredUniqueEvents.add(runtimeKey);
+        indexData.encounteredEventKeys.add(eventKey);
+        indexData.encounteredTypeKeys.add(type);
     }
 
     public void close()

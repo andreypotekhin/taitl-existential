@@ -7,6 +7,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.access_handlers.*;
+import com.taitl.existential.handlers.combined_event_handlers.*;
 import com.taitl.existential.interfaces.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -326,25 +327,25 @@ public class Effect<T> implements Evs<T>, Immediate<T>
     public Effect<T> upsert(Consumer<? super T> action)
     {
         sane(action, "action");
-        return add(new OnUpsert<T>(action));
+        return add(new OnCU<T>(action));
     }
 
     public Effect<T> upsert(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
-        return add(new OnUpsert<T>(action, description));
+        return add(new OnCU<T>(action, description));
     }
 
     public Effect<T> upsert(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
-        return add(new OnUpsert<T>(condition, action));
+        return add(new OnCU<T>(condition, action));
     }
 
     public Effect<T> upsert(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        return add(new OnUpsert<T>(condition, action, description));
+        return add(new OnCU<T>(condition, action, description));
     }
 
     /* Evs implementation */

@@ -56,7 +56,7 @@ Example: ConfigureClassRules.configure()
 ### OOP
 #### Instantiation
 - We generally prefer Builder pattern for multi-field classes or where readability is crucial  
-- Objects are normally instantiated with Creator.create()
+- Objects are normally instantiated with Creator.create() - prefer that over the 'new' for extensibility
 - Singletons are maintained with Creator.singleton()
 - For dependency injections, one can use Creator.inject()
 - Some classes (All, Exists) are instantiated with 'new' by end-user. This is part of library contract.
@@ -133,6 +133,7 @@ We generally avoid, unless there is a valid reason:
 - @Override annotation 
 - reflection
 - overuse of streams
+- Camel-case abbreviations (e.g. HTML -> Html)
 - HTML formatting tags in Javadocs, such as <p> and <br> 
 - non-Javadoc comments (the meaning should stem from code)
 - testing a class in total isolation (we test coherent clusters of classes instead of mocking around) 

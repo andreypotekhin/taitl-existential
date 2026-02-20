@@ -6,6 +6,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.access_handlers.*;
+import com.taitl.existential.handlers.combined_event_handlers.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.quantifiers.*;
 
@@ -116,7 +117,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> upsert(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
-        return add(new OnUpsert<T>(condition, null, description));
+        return add(new OnCU<T>(condition, null, description));
     }
 
     /* Expression methods */

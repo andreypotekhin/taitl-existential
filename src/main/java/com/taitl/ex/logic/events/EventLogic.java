@@ -6,6 +6,7 @@ import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.events.actions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.events.*;
+import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;

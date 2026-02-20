@@ -15,7 +15,7 @@ import static com.taitl.existential.constants.Strings.*;
  * Initial state (t0): entity state in the beginning of transaction. Null indicates the entity has been created. Final
  * state (t1): entity state in the end of transaction. Null indicates the entity has been deleted.
  * 
- * Example: Permutate<Account> is raised when Account entity has been created, updated or deleted in the course of
+ * Example: Transit<Account> is raised when Account entity has been created, updated or deleted in the course of
  * current transaction.
  * 
  * Database analogs: INSERT, UPDATE, DELETE

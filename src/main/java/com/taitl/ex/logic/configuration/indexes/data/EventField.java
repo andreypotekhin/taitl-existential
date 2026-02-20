@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.indexing.data.runtime_indexes;
+package com.taitl.ex.logic.configuration.indexes.data;
 
 /**
  * Maps event-type key to a set of event handlers configured

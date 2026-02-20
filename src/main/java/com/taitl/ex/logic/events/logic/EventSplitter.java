@@ -8,6 +8,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
+import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -58,7 +59,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * @see BiEvent
  * @see Change
  * @see Update
- * @see Upsert
+ * @see CU
  * @see Delete
  * @see Read
  * @see ReadAndLock
@@ -117,7 +118,7 @@ public class EventSplitter
         if (transit.t0 == null)
         {
             set.add(new Create<>(transit.t1));
-            set.add(new Upsert<>(transit.t1));
+            set.add(new CU<>(transit.t1));
             set.add(new Write<>(transit.t1));
         }
         // Update
@@ -125,7 +126,7 @@ public class EventSplitter
         {
             set.add(new Change<>(transit.t0));
             set.add(new Update<>(transit.t1));
-            set.add(new Upsert<>(transit.t1));
+            set.add(new CU<>(transit.t1));
             set.add(new Write<>(transit.t1));
         }
         // Delete

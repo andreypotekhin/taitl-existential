@@ -4,6 +4,7 @@ import java.util.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
+import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 
@@ -18,7 +19,7 @@ public class EventMask
         registerEventType(TypeKey.valueOf(Event.class));
         registerEventType(TypeKey.valueOf(Create.class));
         registerEventType(TypeKey.valueOf(Update.class));
-        registerEventType(TypeKey.valueOf(Upsert.class));
+        registerEventType(TypeKey.valueOf(CU.class));
         registerEventType(TypeKey.valueOf(Delete.class));
         registerEventType(TypeKey.valueOf(Read.class));
         registerEventType(TypeKey.valueOf(BiEvent.class));
