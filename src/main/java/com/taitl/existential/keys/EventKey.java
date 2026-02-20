@@ -14,9 +14,9 @@ public class EventKey
 {
     protected String key;
 
-    public static EventKey valueOf(String s)
+    public static TypeKey valueOf(String s)
     {
-        return new EventKey(s);
+        return new TypeKey(s);
     }
 
     public EventKey(String s)
@@ -65,16 +65,16 @@ public class EventKey
         {
             return false;
         }
-        if (!(other instanceof EventKey))
+        if (!(other instanceof TypeKey))
         {
             return false;
         }
-        EventKey o = (EventKey) other;
-        if (o.key == null)
+        TypeKey o = (TypeKey) other;
+        if (o.typeid == null)
         {
             return (this.key == null);
         }
-        return o.key.equals(this.key);
+        return o.typeid.equals(this.key);
     }
 
     public String toString()

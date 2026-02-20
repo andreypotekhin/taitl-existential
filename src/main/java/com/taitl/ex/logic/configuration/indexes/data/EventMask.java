@@ -46,7 +46,7 @@ public class EventMask
      * @param et EventKey, e.g. Create, Update, Delete, Read, Mutate, etc.
      * @return The number representing a bit position for this type in events bitmask
      */
-    public static int getEventBit(EventKey et)
+    public static int getEventBit(TypeKey et)
     {
         Integer result = eventBits.get(et.toString());
         if (result == null)
@@ -56,14 +56,14 @@ public class EventMask
         return result;
     }
 
-    public static EventKey getEventType(int bit)
+    public static TypeKey getEventType(int bit)
     {
         String result = eventTypes.get(bit);
         if (result == null)
         {
             throw new IllegalStateException(String.format("Event bit '%d' not assigned to any event type", bit));
         }
-        return EventKey.valueOf(result);
+        return TypeKey.valueOf(result);
     }
 
     /**
