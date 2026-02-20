@@ -29,33 +29,33 @@ public class IndexConfig
      */
     public void indexConfig(Config config)
     {
-        TraverseConfig tc = new TraverseConfig(this);
-        tc.visit(config);
+        for (Context context : config.contexts())
+        {
+            TraverseContext tc = new TraverseContext();
+            tc.visit(context);
+        }
     }
 
-    public void onContext(Context context)
+    class TraverseContext implements Evaluator
     {
-        TraverseContext tc = new TraverseContext(this);
-        tc.visit(context);
-    }
-
-    public <T> void onRule(Ev<T> ev)
-    {
-        // Bug: we need to know a TypeKey to create a proper EventKey
-        // Without it, it is just 'Event'!
-        EventKey eventKey = new EventKey(ev);
-        if (ev instanceof EventHandler<T> handler)
+        public <T> void visit(Ev<T> ev)
         {
-            ci.configuredEventHandlers.put(eventKey, handler);
+            // Bug: we need to know a TypeKey to create a proper EventKey
+            // Without it, it is just 'Event'!
+            EventKey eventKey = new EventKey(ev);
+            if (ev instanceof EventHandler<T> handler)
+            {
+                ci.configuredEventHandlers.put(eventKey, handler);
+            }
+            else if (ev instanceof Expression<T> expression)
+            {
+                // TODO: add to expression index, if needed
+            }
+            else
+            {
+                throw new RuntimeException("Unknown rule type: " + ev.getClass());
+            }
+            ci.configuredHandlers.put(eventKey, ev);
         }
-        else if (ev instanceof Expression<T> expression)
-        {
-            // TODO: add to expression index, if needed
-        }
-        else
-        {
-            throw new RuntimeException("Unknown rule type: " + ev.getClass());
-        }
-        ci.configuredHandlers.put(eventKey, ev);
     }
 }

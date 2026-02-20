@@ -5,7 +5,6 @@ import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
-import com.taitl.existential.configs.*;
 
 import static com.taitl.ex.common.helper.State.*;
 
@@ -14,7 +13,6 @@ public class FinalizeConfiguration
     protected ConfigurationLogic cl;
     protected ExistentialConfigs ec;
     protected Existential ex;
-
     protected BuildConfigs buildConfigs;
 
     public FinalizeConfiguration(ConfigurationLogic cl)
@@ -72,7 +70,6 @@ public class FinalizeConfiguration
      */
     public void onFinishConfiguration(String op)
     {
-        Config config = cl.registry().get(op);
-        config.indexes().indexConfig(op, config);
+        cl.indexConfig(op);
     }
 }

@@ -129,4 +129,14 @@ public class ConfigurationLogic implements Closeable
         verify(config != null, String.format("Config not found for op '%s'", op));
         return config;
     }
+
+    /**
+     * Add all configured rules to indexes.
+     */
+    public void indexConfig(String op)
+    {
+        sane(op, "op");
+        Config config = registry.get(op);
+        config.indexes().indexConfig(op, config);
+    }
 }
