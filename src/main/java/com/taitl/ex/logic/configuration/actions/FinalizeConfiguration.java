@@ -3,9 +3,9 @@ package com.taitl.ex.logic.configuration.actions;
 import java.util.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.*;
-import com.taitl.ex.logic.configuration.indexes.actions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
+import com.taitl.existential.configs.*;
 
 import static com.taitl.ex.common.helper.State.*;
 
@@ -16,7 +16,6 @@ public class FinalizeConfiguration
     protected Existential ex;
 
     protected BuildConfigs buildConfigs;
-    protected CreateIndexes createIndexes;
 
     public FinalizeConfiguration(ConfigurationLogic cl)
     {
@@ -24,7 +23,6 @@ public class FinalizeConfiguration
         this.ec = cl.ec();
         this.ex = cl.ex();
         this.buildConfigs = new BuildConfigs(cl);
-        this.createIndexes = new CreateIndexes(cl);
     }
 
     /**
@@ -74,6 +72,7 @@ public class FinalizeConfiguration
      */
     public void onFinishConfiguration(String op)
     {
-        createIndexes.call(op);
+        Config config = cl.registry().get(op);
+        config.indexes().indexConfig(op, config);
     }
 }

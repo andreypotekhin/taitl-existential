@@ -1,13 +1,12 @@
 package com.taitl.ex.logic.configuration.indexes.actions;
 
-import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.configs.*;
 
 public class TraverseConfig
 {
-    ConfigIndexes indexes;
+    IndexConfig indexes;
 
-    public TraverseConfig(ConfigIndexes indexes)
+    public TraverseConfig(IndexConfig indexes)
     {
         this.indexes = indexes;
     }

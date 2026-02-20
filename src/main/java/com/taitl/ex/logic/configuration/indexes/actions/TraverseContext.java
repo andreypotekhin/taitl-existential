@@ -1,13 +1,12 @@
 package com.taitl.ex.logic.configuration.indexes.actions;
 
-import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.evaluables.*;
 
 public class TraverseContext implements Evaluator
 {
-    ConfigIndexes indexes;
+    IndexConfig indexes;
 
-    public TraverseContext(ConfigIndexes indexes)
+    public TraverseContext(IndexConfig indexes)
     {
         this.indexes = indexes;
     }
