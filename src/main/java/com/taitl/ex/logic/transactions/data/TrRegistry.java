@@ -55,7 +55,6 @@ public class TrRegistry
         {
             throw new NotFoundException("Transaction not found, id=" + id);
         }
-        reg.remove(id);
         return o;
     }
 

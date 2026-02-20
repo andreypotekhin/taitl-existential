@@ -11,8 +11,8 @@ To apply the rules, the Existential library:
 - An event may concern the entity's lifecycle (Create, Update, Delete), access to the entity (Read, Write), or the
 transaction lifecycle (Begin, Commit, Rollback), allowing rules to be attached to specific points or circumstances.
 
-To allow for performance, the Existential library:
-- Avoids immediate rule evaluation, evaluating them instead at the end of a business transaction,
+For performance, the Existential library:
+- Avoids immediate rule evaluation and evaluates rules at the end of a business transaction,
 such as before committing the changed data to persistent storage.
 - Multiple events of the same type fold into a single event, reducing the number of validations performed.
 
@@ -32,7 +32,7 @@ Existential is an in-memory library, so it does not run checks on data that was 
 
 #### Performance
 The library does not emphasize performance in the following areas, assuming they take
-place outside of application's performance-critical paths, e.g. once per application run:
+place outside of the application's performance-critical paths, such as once per application run:
 - Configuring the library itself
 - Configuring the rules for each business operation ('per context')
 

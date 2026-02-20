@@ -112,3 +112,9 @@ Same when x0, x1 must also satisfy some condition:
 ## Documentation
 
 See /docs directory for further documentation.
+
+## Community
+
+- Contributing: /CONTRIBUTING.md
+- Code of Conduct: /CODE_OF_CONDUCT.md
+- Security: /SECURITY.md

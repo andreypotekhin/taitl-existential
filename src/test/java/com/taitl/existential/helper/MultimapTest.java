@@ -35,6 +35,7 @@ class MultimapTest
 
         cats = o.get(LOCATION_PARK);
         assertEquals(2, cats.size());
+        assertThrows(UnsupportedOperationException.class, () -> cats.add(BLACK_CAT));
 
         cats = o.get(LOCATION_GARDEN);
         assertNull(cats);

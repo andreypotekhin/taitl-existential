@@ -2,6 +2,8 @@ package com.taitl.existential.mutations;
 
 import static com.taitl.existential.constants.Strings.ARG_T0_T1;
 
+import com.taitl.ex.common.helper.*;
+
 /**
  * Represents an object mutation that, unlike Mutation<T>, allows either 'from' or 'to' state to be null (but not both).
  *
@@ -23,10 +25,7 @@ public final class Transition<T>
 
     public Transition(T t0, T t1)
     {
-        if (t0 == null && t1 == null)
-        {
-            throw new IllegalArgumentException(ARG_T0_T1);
-        }
+        PairArgs.requireNotBothNull(t0, t1, ARG_T0_T1);
         this.t0 = t0;
         this.t1 = t1;
     }

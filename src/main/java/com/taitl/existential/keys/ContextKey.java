@@ -5,16 +5,16 @@ import com.taitl.existential.paths.*;
 
 /**
  * A path-like representation of a business operation, serving as a key for
- * configuring and lookup of Contexts, including wildcard and parent Contexts.
+ * configuration and lookup of contexts, including wildcard and parent contexts.
  *
  * Example:
- * "/app/orders/update"
- * "/app/orders" - parent context of the above context
- * "/" - root context (parent to all contexts)
- * "/app/* /update" - wildcard context
+ * {@code /app/orders/update}
+ * {@code /app/orders} - parent context of the above context
+ * {@code /} - root context (parent to all contexts)
+ * {@code /app/*}{@code /update} - wildcard context
  *
- * Context key cannot end with a slash.
- * The wildcard character (*) is allowed in context key.
+ * A context key cannot end with a slash.
+ * The wildcard character ({@code *}) is allowed in a context key.
  *
  * @see AbstractPath
  * @see Context

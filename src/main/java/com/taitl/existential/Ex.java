@@ -9,18 +9,13 @@ import com.taitl.existential.keys.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Static facade for Existential library.
- * Holds an instance of Existential class, to which it delegates all calls.
- * Note: this class is only a convenience / shorthand for accessing the methods
- * of Existential class.
- * You pay for this convenience by assuming only a single Existential instance per JVM.
- * This is ok for most applications, but may become an issue if you're writing library code.
+ * Static facade for the Existential library.
+ * Holds a single {@link Existential} instance and delegates all calls to it.
+ * This convenience implies a single {@link Existential} instance per JVM. This is fine for
+ * most applications, but it can be limiting in library code.
  *
- * Usage:
- * Ex.configure("api/resource").context("api/resource/create")...
- *
- * Documentation:
- *   <a href="https://github.com/andreypotekhin/taitl-existential">Existential</a>
+ * Usage: {@code Ex.configure("api/resource").context("api/resource/create")...}
+ * Documentation: https://github.com/andreypotekhin/taitl-existential
  *
  * @author Andrey Potekhin
  *
@@ -42,8 +37,9 @@ public final class Ex
     }
 
     /**
-     * Instance setter, for testing purposes.
-     * Note: this method is not envisioned for use in production.
+     * Instance setter for testing purposes.
+     * Note: this method is not intended for production use.
+     *
      * @return Previous instance
      */
     public static Existential instance(Existential instance)
@@ -71,8 +67,8 @@ public final class Ex
 
     /**
      * Commits an existential transaction.
-     * Performs validation of the rules configured for transaction's business op.
-     * Note: after the commit(), tranID becomes invalid
+     * Performs validation of the rules configured for the transaction's business operation.
+     * Note: after {@code commit()}, {@code tranID} becomes invalid.
      */
     public static void commit(String tranID) throws ExistentialException
     {
@@ -87,7 +83,7 @@ public final class Ex
     /**
      * Rolls back an existential transaction.
      * Rule validation is not performed.
-     * Note: after the rollback(), tranID becomes invalid
+     * Note: after {@code rollback()}, {@code tranID} becomes invalid.
      */
     public static void rollback(String tranID) throws ExistentialException
     {

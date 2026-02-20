@@ -1,3 +1,9 @@
+<<<<<<< ours
+### T02202601 Add OSS License File
+
+Select a concrete OSS license and add a `LICENSE` file at the repo root. Update `Readme.md` to mention the
+chosen license and any contribution requirements so downstream users can quickly evaluate compatibility.
+
 ### T02182601 Separate Handler Execution Flow in On
 
 Refactor `com.taitl.existential.handlers.On` to split execution and error handling flow into a dedicated path to avoid
@@ -6,9 +12,10 @@ about and reduce the risk of partially applied handler effects.
 
 - Introduce a dedicated execution method with explicit inputs/outputs.
 - Move error handling and post-execution bookkeeping into discrete steps.
+=======
+### T02202601 Define Non-Null Handler Action Defaults
 
-### T02182602 Resolve CacheHandlers Stub
-
-Either implement the `com.taitl.ex.cross.caching.CacheHandlers` API or delete/replace it with a documented placeholder
-that throws a clear exception and links to a troubleshooting entry. Leaving TODO stubs in a public surface area is
-misleading for users.
+Replace the placeholder TODO in `ExecuteHandler` by introducing a canonical truth predicate for implicit handler
+conditions and tightening handler action invariants (prefer disallowing null actions). Capture the intended behavior
+in tests so immutable handlers still validate conditions while actionable handlers execute predictably.
+>>>>>>> theirs

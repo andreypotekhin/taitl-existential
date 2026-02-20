@@ -1,5 +1,6 @@
 package com.taitl.existential.events;
 
+import com.taitl.ex.common.helper.*;
 import com.taitl.existential.events.types.*;
 
 import static com.taitl.existential.constants.Strings.*;
@@ -29,9 +30,6 @@ public class Transit<T> extends BiEvent<T>
     public Transit(T t0, T t1)
     {
         super(t0, t1);
-        if (t0 == null && t1 == null)
-        {
-            throw new IllegalArgumentException(ARG_T0_T1);
-        }
+        PairArgs.requireNotBothNull(t0, t1, ARG_T0_T1);
     }
 }

@@ -11,9 +11,7 @@ import com.taitl.existential.keys.*;
 /**
  * Entry point to the Existential library.
  * Provides access to configuration, transactions, and event dispatch.
- *
- * Documentation:
- * <a href="https://github.com/andreypotekhin/taitl-existential">Existential</a>
+ * Documentation: https://github.com/andreypotekhin/taitl-existential
  *
  * @author Andrey Potekhin
  */

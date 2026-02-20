@@ -1,5 +1,9 @@
 package com.taitl.existential.constants;
 
+/**
+ * Shared message templates and validation strings used across the library.
+ * Keep these messages stable to preserve log and error consistency.
+ */
 public class Strings
 {
     public static final String ARG_PREDICATE = "Argument 'predicate' should not be null";
@@ -37,6 +41,8 @@ public class Strings
     public static final String SLASH = "/";
     public static final String WILDCARD = "*";
     public static final String CONDITION_NOT_MET = "The specified condition is not met";
+    public static final String EVENT_HANDLER_EXECUTION_FAILED = "Event handler execution failed";
+    public static final String NOT_FOUND = "Requested item was not found";
     public static final String ARGUMENT_MUST_NOT_BE_NULL = "Argument '%s' must not be null";
     public static final String ARGUMENT_MUST_BE_BOOLEAN = "Argument '%s' must be boolean expression";
     public static final String ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH =

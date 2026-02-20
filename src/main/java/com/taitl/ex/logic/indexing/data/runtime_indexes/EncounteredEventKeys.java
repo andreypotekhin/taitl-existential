@@ -23,9 +23,9 @@ public class EncounteredEventKeys
     void add(EventKey eventKey)
     {
         sane(eventKey, "eventKey");
-        if (!eventKeys.contains(eventKey.toString()))
+        String key = eventKey.toString();
+        if (eventKeys.add(key))
         {
-            eventKeys.add(eventKey.toString());
             // TODO: also add generic and elementary versions of the event key type:
             // e.g. for "ReadAndLock<Doc<JSON>>" also add "ReadAndLock<Doc<?>>", "ReadAndLock<Doc>"
             // "Read<Doc<JSON>>", "Read<Doc<?>>", "Read<Doc>"

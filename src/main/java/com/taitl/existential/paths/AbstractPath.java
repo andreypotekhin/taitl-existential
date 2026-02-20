@@ -8,21 +8,19 @@ import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Path-like representation of a business operation, serving as a key for finding
- * appropriate Contexts, including wildcard and parent Contexts.
+ * appropriate contexts, including wildcard and parent contexts.
  *
  * Example:
- * "/app/orders/update"
- * "/app/orders" - parent context
- * "/" - root context (parent to all contexts)
- * "/app/*a/update" - wildcard context
+ * {@code /app/orders/update}
+ * {@code /app/orders} - parent context
+ * {@code /} - root context (parent to all contexts)
+ * {@code /app/*a/update} - wildcard context
  *
- * AbstractPath key cannot end with a slash.
- * Wildcard character (*) is allowed in context key.
+ * An {@link AbstractPath} cannot end with a slash.
+ * The wildcard character ({@code *}) is allowed in a context key.
  *
  * @see Context
  * @see Transaction
- *
- * Usage:
  * @see ContextKey
  */
 public class AbstractPath
@@ -68,13 +66,13 @@ public class AbstractPath
     }
 
     /**
-     * Gets this key parent key, if any - a shortened key without the part starting with the last slash.
-     * Throws IllegalStateException if this key is a top-level key (has no parent).
-     * <p>
+     * Gets this key's parent key, if any, without the part starting at the last slash.
+     * Throws {@link IllegalStateException} if this key is a top-level key (has no parent).
+     *
      * Example:
-     *   Key: "/app/orders/update"
-     *   Parent key: "/app/orders"
-     * <p>
+     * Key: {@code /app/orders/update}
+     * Parent key: {@code /app/orders}
+     *
      * @return A shortened key without the part starting with the last slash.
      * @throws IllegalStateException if this key is a top-level key (has no parent).
      */

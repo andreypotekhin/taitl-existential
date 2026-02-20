@@ -13,6 +13,8 @@ public class Logger
     protected PrintStream err = System.err;
     protected static final String NEWLINE_ESCAPED = "\\n";
     protected static final String CARRIAGE_ESCAPED = "\\r";
+    protected static final String CONTROL_PREFIX = "\\u00";
+    protected static final char[] HEX = "0123456789abcdef".toCharArray();
 
     /**
      * Outputs a log message of the specified class and level. Messages of LEVEL_ERROR
@@ -88,6 +90,42 @@ public class Logger
         {
             return rendered;
         }
-        return rendered.replace("\r", CARRIAGE_ESCAPED).replace("\n", NEWLINE_ESCAPED);
+        StringBuilder sanitized = null;
+        for (int i = 0; i < rendered.length(); i++)
+        {
+            char ch = rendered.charAt(i);
+            String replacement = null;
+            if (ch == '\r')
+            {
+                replacement = CARRIAGE_ESCAPED;
+            }
+            else if (ch == '\n')
+            {
+                replacement = NEWLINE_ESCAPED;
+            }
+            else if (ch < 0x20 || ch == 0x7f)
+            {
+                replacement = toControlEscape(ch);
+            }
+            if (replacement != null)
+            {
+                if (sanitized == null)
+                {
+                    sanitized = new StringBuilder(rendered.length() + 8);
+                    sanitized.append(rendered, 0, i);
+                }
+                sanitized.append(replacement);
+            }
+            else if (sanitized != null)
+            {
+                sanitized.append(ch);
+            }
+        }
+        return sanitized == null ? rendered : sanitized.toString();
+    }
+
+    protected String toControlEscape(char ch)
+    {
+        return CONTROL_PREFIX + HEX[(ch >> 4) & 0x0f] + HEX[ch & 0x0f];
     }
 }

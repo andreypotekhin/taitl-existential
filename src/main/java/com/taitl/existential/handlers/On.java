@@ -94,9 +94,6 @@ public class On<T> implements EventHandler<T>
      */
     public void handle(T t) throws ExistentialException
     {
-        // TODO: invoke and handle execute logic in a separate flow,
-        // avoiding exposing this class to implementation logic
-        // This class is to remain lightweight 'recording purpose' class
         ExecuteHandler.handle(this, t);
     }
 

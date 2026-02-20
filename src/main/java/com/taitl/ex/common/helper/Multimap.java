@@ -26,7 +26,8 @@ public class Multimap<K, V>
         {
             throw new IllegalArgumentException(ARG_KEY);
         }
-        return storage.get(key);
+        Set<V> result = storage.get(key);
+        return result == null ? null : Collections.unmodifiableSet(result);
     }
 
     public Set<V> put(K key, V value)
