@@ -4,15 +4,15 @@ import com.taitl.existential.evaluables.*;
 
 public class TraverseContext implements Evaluator
 {
-    IndexConfig indexes;
+    IndexConfig ic;
 
-    public TraverseContext(IndexConfig indexes)
+    public TraverseContext(IndexConfig ic)
     {
-        this.indexes = indexes;
+        this.ic = ic;
     }
 
     public <T> void visit(Ev<T> ev)
     {
-        indexes.onRule(ev);
+        ic.onRule(ev);
     }
 }

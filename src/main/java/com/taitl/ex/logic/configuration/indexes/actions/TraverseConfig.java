@@ -4,18 +4,18 @@ import com.taitl.existential.configs.*;
 
 public class TraverseConfig
 {
-    IndexConfig indexes;
+    IndexConfig ic;
 
-    public TraverseConfig(IndexConfig indexes)
+    public TraverseConfig(IndexConfig ic)
     {
-        this.indexes = indexes;
+        this.ic = ic;
     }
 
     public void visit(Config config)
     {
         for (Context context : config.contexts())
         {
-            indexes.onContext(context);
+            ic.onContext(context);
         }
     }
 }
