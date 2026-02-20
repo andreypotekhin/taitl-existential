@@ -28,7 +28,7 @@ public class ConfiguredEventKeys
 {
     Set<String> eventKeys = new LinkedHashSet<>();
 
-    void add(EventKey eventKey)
+    void add(TypeKey eventKey)
     {
         sane(eventKey, "eventKey");
         if (!eventKeys.contains(eventKey.toString()))
@@ -37,9 +37,14 @@ public class ConfiguredEventKeys
         }
     }
 
-    boolean contains(EventKey eventKey)
+    boolean contains(TypeKey eventKey)
     {
         sane(eventKey, "eventKey");
         return eventKeys.contains(eventKey.toString());
+    }
+
+    public void clear()
+    {
+        eventKeys.clear();
     }
 }

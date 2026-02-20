@@ -68,7 +68,7 @@ Automation instructions
 - Preserve existing behavior, prove via tests
 
 Limits
-
+- Limit yourself to externalizing general purpose parts of code, that is, the ones not related to library subject.  
 - Do not place any code related to library business/use case into ex.common.helper - that package is only for general
   (not library-specific) helper code. You can still factor out, but to proximity (e.g. to same package, module).
 

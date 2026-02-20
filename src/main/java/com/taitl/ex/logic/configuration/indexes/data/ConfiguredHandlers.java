@@ -2,36 +2,36 @@ package com.taitl.ex.logic.configuration.indexes.data;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Maps event key to a set of configured event handlers, Set<On[E]<T<U>>>
+ * Maps event key to a set of configured event handlers/expressions (Evs)
  * Example: E<Doc<JSON>> -> Set<On[Е]<Doc<JSON>>>
  * where E is one of Create, Update, Delete, Read, Write, Mutate, Transit.
  *
  * Example:
- *   To retrieve the event handlers defined for the type "Create<Doc<JSON>>":
- *   Set<EventHandler> handlers = eventHandlers.get("Create<Doc<JSON>>")
+ *   To retrieve the event handlers/expressions defined for the type "Create<Doc<JSON>>":
+ *   Set<EventHandler> handlers = evHandlers.get("Create<Doc<JSON>>")
  */
-public class ConfiguredEventHandlers
+public class ConfiguredHandlers
 {
     // EventKey to Set<EventHandler<>>
-    Multimap<String, EventHandler<?>> handlers = new Multimap<>();
+    Multimap<String, Ev<?>> handlers = new Multimap<>();
 
     /**
      * Gets event handlers for the specified event key.
      *
      * @param key
      *            TypeKey to search for.
-     * @return Set<EventHandler<T>>, or null if no handlers defined for the type.
+     * @return Set<Ev<T>>, or null if no handlers defined for the type.
      */
-    public Set<EventHandler<?>> get(EventKey key)
+    public Set<Ev<?>> get(EventKey key)
     {
         sane(key, "key");
-        Set<EventHandler<?>> result = handlers.get(key.toString());
+        Set<Ev<?>> result = handlers.get(key.toString());
         if (result != null && result.isEmpty())
         {
             result = null;
@@ -45,7 +45,7 @@ public class ConfiguredEventHandlers
         return handlers.containsKey(key.toString());
     }
 
-    public <T> Set<EventHandler<?>> put(EventKey key, EventHandler<T> value)
+    public <T> Set<Ev<?>> put(EventKey key, Ev<T> value)
     {
         sane(key, "key");
         sane(value, "value");
