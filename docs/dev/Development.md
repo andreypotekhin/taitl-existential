@@ -12,9 +12,9 @@ To apply the rules, the Existential library:
 transaction lifecycle (Begin, Commit, Rollback), allowing rules to be attached to specific points or circumstances.
 
 For performance, the Existential library:
-- Avoids immediate rule evaluation and evaluates rules at the end of a business transaction,
+- Avoids immediate rule evaluation and instead evaluates rules at the end of a business transaction,
 such as before committing the changed data to persistent storage.
-- Multiple events of the same type fold into a single event, reducing the number of validations performed.
+- Multiple events of the same type are folded into a single event, reducing the number of validations performed.
 
 To do so, the Existential library allows the end-user to:
 1. Attach rules (constraints, invariants) to arbitrary classes (own or third-party).
@@ -49,7 +49,8 @@ Package structure:
 - com.taitl.ex and subpackages: private code/implementation
     -  com.taitl.ex.common: common/ubiquitous classes (Creator, Args, State)
     -  com.taitl.ex.cross: cross-cut concepts (caching, logging)
-    -  com.taitl.ex.concrete: concrete implementations (e.g. ConcreteExists) for the classes the end-user creates with 'new'
+    -  com.taitl.ex.concrete: concrete implementations (e.g. ConcreteExists) for the classes the end-user creates
+       with 'new'
     -  com.taitl.ex.code: core classes, such as ExistentialConfigs, immediately used by public code
     -  com.taitl.ex.logic: business logic implementation
     -  com.taitl.ex.configuration: configuration logic (e.g. BuildContexts)

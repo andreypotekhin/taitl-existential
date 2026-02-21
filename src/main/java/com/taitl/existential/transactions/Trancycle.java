@@ -30,96 +30,240 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
 
     /* Event handler methods */
 
+    /**
+     * Registers a begin handler that always executes.
+     *
+     * @param action
+     *            Action to invoke on transaction begin
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> begin(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnBegin<T>(action));
     }
 
+    /**
+     * Registers a begin handler with a human-friendly description.
+     *
+     * @param action
+     *            Action to invoke on transaction begin
+     * @param description
+     *            Description of the handler
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> begin(Consumer<? super T> action, String description)
     {
         sane(action, "action");
         return add(new OnBegin<T>(action, description));
     }
 
+    /**
+     * Registers a conditional begin handler.
+     *
+     * @param condition
+     *            Predicate deciding whether the handler runs
+     * @param action
+     *            Action to invoke on transaction begin
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> begin(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnBegin<T>(condition, action));
     }
 
+    /**
+     * Registers a conditional begin handler with a description.
+     *
+     * @param condition
+     *            Predicate deciding whether the handler runs
+     * @param action
+     *            Action to invoke on transaction begin
+     * @param description
+     *            Description of the handler
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> begin(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnBegin<T>(condition, action, description));
     }
 
+    /**
+     * Registers a commit handler that always executes.
+     *
+     * @param action
+     *            Action to invoke on transaction commit
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> commit(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnCommit<T>(action));
     }
 
+    /**
+     * Registers a commit handler with a human-friendly description.
+     *
+     * @param action
+     *            Action to invoke on transaction commit
+     * @param description
+     *            Description of the handler
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> commit(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnCommit<T>(action, description));
     }
 
+    /**
+     * Registers a conditional commit handler.
+     *
+     * @param condition
+     *            Predicate deciding whether the handler runs
+     * @param action
+     *            Action to invoke on transaction commit
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> commit(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnCommit<T>(condition, action));
     }
 
+    /**
+     * Registers a conditional commit handler with a description.
+     *
+     * @param condition
+     *            Predicate deciding whether the handler runs
+     * @param action
+     *            Action to invoke on transaction commit
+     * @param description
+     *            Description of the handler
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> commit(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnCommit<T>(condition, action, description));
     }
 
+    /**
+     * Registers a checkpoint handler that always executes.
+     *
+     * @param action
+     *            Action to invoke on transaction checkpoint
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> checkpoint(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnCheckpoint<T>(action));
     }
 
+    /**
+     * Registers a checkpoint handler with a human-friendly description.
+     *
+     * @param action
+     *            Action to invoke on transaction checkpoint
+     * @param description
+     *            Description of the handler
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> checkpoint(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnCheckpoint<T>(action, description));
     }
 
+    /**
+     * Registers a conditional checkpoint handler.
+     *
+     * @param condition
+     *            Predicate deciding whether the handler runs
+     * @param action
+     *            Action to invoke on transaction checkpoint
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnCheckpoint<T>(condition, action));
     }
 
+    /**
+     * Registers a conditional checkpoint handler with a description.
+     *
+     * @param condition
+     *            Predicate deciding whether the handler runs
+     * @param action
+     *            Action to invoke on transaction checkpoint
+     * @param description
+     *            Description of the handler
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnCheckpoint<T>(condition, action, description));
     }
 
+    /**
+     * Registers a rollback handler that always executes.
+     *
+     * @param action
+     *            Action to invoke on transaction rollback
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> rollback(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnRollback<T>(action));
     }
 
+    /**
+     * Registers a rollback handler with a human-friendly description.
+     *
+     * @param action
+     *            Action to invoke on transaction rollback
+     * @param description
+     *            Description of the handler
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> rollback(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnRollback<T>(action, description));
     }
 
+    /**
+     * Registers a conditional rollback handler.
+     *
+     * @param condition
+     *            Predicate deciding whether the handler runs
+     * @param action
+     *            Action to invoke on transaction rollback
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> rollback(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnRollback<T>(condition, action));
     }
 
+    /**
+     * Registers a conditional rollback handler with a description.
+     *
+     * @param condition
+     *            Predicate deciding whether the handler runs
+     * @param action
+     *            Action to invoke on transaction rollback
+     * @param description
+     *            Description of the handler
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> rollback(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
@@ -128,6 +272,13 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
 
     /* Evs implementation */
 
+    /**
+     * Adds an event handler to this transaction cycle.
+     *
+     * @param ev
+     *            Event handler to register
+     * @return This trancycle for chaining
+     */
     public Trancycle<T> add(Ev<T> ev)
     {
         sane(ev, "eh");
@@ -135,6 +286,11 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
         return this;
     }
 
+    /**
+     * Returns the list of registered transaction event handlers.
+     *
+     * @return Ordered list of handlers
+     */
     public List<Ev<T>> list()
     {
         return evs;
@@ -142,12 +298,23 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
 
     /* Attributes */
 
+    /**
+     * Returns the transaction associated with this trancycle.
+     *
+     * @return Parent transaction
+     */
     public Transaction transaction()
     {
         State.cool(tran, "tran");
         return tran;
     }
 
+    /**
+     * Associates this trancycle with a transaction.
+     *
+     * @param tr
+     *            Transaction owning this trancycle
+     */
     public void transaction(Transaction tr)
     {
         sane(tr, "tr");

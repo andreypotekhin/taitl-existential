@@ -104,7 +104,7 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
             }
             catch (Exception e)
             {
-                throw new EventHandlerExecutionException(e);
+                throw new EventHandlerExecutionException(handlerMessage(EVENT_HANDLER_EXECUTION_FAILED), e);
             }
         }
     }
@@ -117,5 +117,14 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
     public String description()
     {
         return description == null ? "" : description;
+    }
+
+    private String handlerMessage(String base)
+    {
+        if (description == null || description.isEmpty())
+        {
+            return base;
+        }
+        return base + ": " + description;
     }
 }

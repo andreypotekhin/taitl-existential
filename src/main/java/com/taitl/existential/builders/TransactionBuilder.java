@@ -21,6 +21,14 @@ public class TransactionBuilder
     List<Supplier<? extends Evs<?>>> evsSuppliers;
     Supplier<? extends Transaction> transactionFactory;
 
+    /**
+     * Creates a transaction builder for a concrete operation name.
+     *
+     * @param parentContext
+     *            Parent context builder
+     * @param op
+     *            Operation name to associate with the transaction
+     */
     public TransactionBuilder(ContextBuilder parentContext, String op)
     {
         this.parent = parentContext;
@@ -29,6 +37,14 @@ public class TransactionBuilder
         this.transactionFactory = parent::createTransactionInstance;
     }
 
+    /**
+     * Creates a transaction builder with a custom transaction factory.
+     *
+     * @param parentContext
+     *            Parent context builder
+     * @param transactionFactory
+     *            Factory for creating transaction instances
+     */
     public TransactionBuilder(ContextBuilder parentContext, Supplier<? extends Transaction> transactionFactory)
     {
         sane(parentContext, "parentContext", transactionFactory, "transactionFactory");
@@ -78,6 +94,15 @@ public class TransactionBuilder
         return parent;
     }
 
+    /**
+     * Starts building an {@link Invariant} for a given subject type.
+     *
+     * @param cls
+     *            Subject type for the invariant
+     * @param <T>
+     *            Subject type for the invariant
+     * @return Invariant builder
+     */
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
     {
         sane(cls, "cls");
@@ -86,6 +111,15 @@ public class TransactionBuilder
         return ib;
     }
 
+    /**
+     * Registers an already-built invariant with this transaction.
+     *
+     * @param invariant
+     *            Invariant to register
+     * @param <T>
+     *            Subject type for the invariant
+     * @return This builder for chaining
+     */
     public <T> TransactionBuilder invariant(Invariant<T> invariant)
     {
         sane(invariant, "invariant");
@@ -93,6 +127,15 @@ public class TransactionBuilder
         return this;
     }
 
+    /**
+     * Starts building an {@link Effect} for a given subject type.
+     *
+     * @param cls
+     *            Subject type for the effect
+     * @param <T>
+     *            Subject type for the effect
+     * @return Effect builder
+     */
     public <T> EffectBuilder<T> effect(Class<T> cls)
     {
         sane(cls, "cls");
@@ -101,6 +144,15 @@ public class TransactionBuilder
         return eb;
     }
 
+    /**
+     * Registers an already-built effect with this transaction.
+     *
+     * @param effect
+     *            Effect to register
+     * @param <T>
+     *            Subject type for the effect
+     * @return This builder for chaining
+     */
     public <T> TransactionBuilder effect(Effect<T> effect)
     {
         sane(effect, "effect");
@@ -108,6 +160,15 @@ public class TransactionBuilder
         return this;
     }
 
+    /**
+     * Registers a transaction lifecycle rule set.
+     *
+     * @param cycle
+     *            Trancycle to register
+     * @param <T>
+     *            Transaction type handled by the trancycle
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder cycle(Trancycle<T> cycle)
     {
         sane(cycle, "cycle");
@@ -117,6 +178,15 @@ public class TransactionBuilder
 
     // TODO: intent()
 
+    /**
+     * Adds a begin handler to the transaction lifecycle.
+     *
+     * @param action
+     *            Action to invoke on transaction begin
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder begin(Consumer<? super T> action)
     {
         sane(action, "action");
@@ -128,6 +198,15 @@ public class TransactionBuilder
         return this;
     }
 
+    /**
+     * Adds a commit handler to the transaction lifecycle.
+     *
+     * @param action
+     *            Action to invoke on transaction commit
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder commit(Consumer<? super T> action)
     {
         sane(action, "action");
@@ -139,6 +218,15 @@ public class TransactionBuilder
         return this;
     }
 
+    /**
+     * Adds a rollback handler to the transaction lifecycle.
+     *
+     * @param action
+     *            Action to invoke on transaction rollback
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder rollback(Consumer<? super T> action)
     {
         sane(action, "action");
@@ -150,6 +238,15 @@ public class TransactionBuilder
         return this;
     }
 
+    /**
+     * Adds a checkpoint handler to the transaction lifecycle.
+     *
+     * @param action
+     *            Action to invoke on transaction checkpoint
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder checkpoint(Consumer<? super T> action)
     {
         sane(action, "action");
@@ -161,6 +258,11 @@ public class TransactionBuilder
         return this;
     }
 
+    /**
+     * No-op convenience for fluent call sites.
+     *
+     * @return This builder
+     */
     public TransactionBuilder done()
     {
         return this;

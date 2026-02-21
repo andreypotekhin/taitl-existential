@@ -41,15 +41,7 @@ public class Outcome
      */
     public static void cool(Object o, String objName, Object... args)
     {
-        if (args == null)
-        {
-            throw new IllegalArgumentException(String.format(ARGUMENT_MUST_NOT_BE_NULL, "args"));
-        }
-        if (args.length % 2 != 0)
-        {
-            throw new IllegalArgumentException(
-                    String.format(ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH, "args"));
-        }
+        ArgPairs.requireEvenArgs(args);
         if (o == null)
         {
             throw new RuntimeException(String.format(VALUE_MUST_NOT_BE_NULL, objName));
@@ -80,26 +72,15 @@ public class Outcome
      */
     public static void verify(boolean condition, String message, Object... args)
     {
-        if (args == null)
-        {
-            throw new IllegalArgumentException(String.format(ARGUMENT_MUST_NOT_BE_NULL, "args"));
-        }
-        if (args.length % 2 != 0)
-        {
-            throw new IllegalArgumentException(
-                    String.format(ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH, "args"));
-        }
+        ArgPairs.requireEvenArgs(args);
         if (!condition)
         {
             throw new RuntimeException(message);
         }
+        ArgPairs.requireBooleanPairs(args);
         for (int i = 0; i < args.length; i += 2)
         {
-            if (!(args[i]instanceof Boolean b))
-            {
-                throw new IllegalArgumentException(String.format(ARGUMENT_MUST_BE_BOOLEAN, i));
-            }
-            if (!b)
+            if (!((Boolean) args[i]))
             {
                 throw new RuntimeException(String.valueOf(args[i + 1]));
             }

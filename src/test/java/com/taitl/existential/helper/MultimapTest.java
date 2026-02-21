@@ -2,6 +2,7 @@ package com.taitl.existential.helper;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import com.taitl.ex.common.helper.*;
 import com.taitl.ex.examples.night_city.model.*;
 import org.junit.jupiter.api.*;
@@ -48,7 +49,8 @@ class MultimapTest
         assertThrows(IllegalArgumentException.class, () -> o.put(null, GREY_CAT));
         assertThrows(IllegalArgumentException.class, () -> o.put(LOCATION_PARK, null));
 
-        o.put(LOCATION_PARK, BLACK_CAT);
+        Set<Cat> returned = o.put(LOCATION_PARK, BLACK_CAT);
+        assertThrows(UnsupportedOperationException.class, () -> returned.add(ORANGE_CAT));
         o.put(LOCATION_GARDEN, BLACK_CAT);
         // We can see that same value can be present under different keys.
         // This not very well match the real life, since cat now present in
@@ -76,6 +78,19 @@ class MultimapTest
         assertNull(o.remove(LOCATION_PARK, GREY_CAT));
         assertEquals(0, o.get(LOCATION_PARK).size());
         assertNull(o.get(LOCATION_GARDEN));
+    }
+
+    @Test
+    void testRemovePredicateEvaluatedOnce()
+    {
+        AtomicInteger calls = new AtomicInteger();
+        Set<Cat> removed = o.remove(LOCATION_PARK, cat -> {
+            calls.incrementAndGet();
+            return false;
+        });
+        assertNull(removed);
+        assertEquals(2, calls.get());
+        assertEquals(2, o.get(LOCATION_PARK).size());
     }
 
     @Test

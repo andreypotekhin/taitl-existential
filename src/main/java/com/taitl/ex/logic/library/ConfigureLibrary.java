@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.function.*;
+import com.taitl.ex.common.helper.LimitedInputStream;
 import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
 
@@ -18,6 +19,7 @@ public class ConfigureLibrary
             "/Troubleshooting.md#library-configuration-load-failure";
 
     private static final String OPT_REQUIRE_DESCRIPTIONS = "behavior.rules.requireDescriptions";
+    private static final long MAX_CONFIG_BYTES = 1024 * 1024;
     private static final Set<String> BOOL_TRUES = Set.of("true", "TRUE", "True");
     private static final Set<String> BOOL_FALSES = Set.of("false", "FALSE", "False");
 
@@ -55,10 +57,16 @@ public class ConfigureLibrary
         Path file = Paths.get(path.trim());
         verify(Files.exists(file),
                 String.format("Configuration file does not exist: %s. See %s", file, TROUBLESHOOTING_SECTION));
-        verify(Files.isRegularFile(file),
+        verify(!Files.isSymbolicLink(file),
+                String.format("Configuration file must not be a symlink: %s. See %s", file, TROUBLESHOOTING_SECTION));
+        verify(Files.isRegularFile(file, LinkOption.NOFOLLOW_LINKS),
                 String.format("Configuration path is not a file: %s. See %s", file, TROUBLESHOOTING_SECTION));
         verify(Files.isReadable(file),
                 String.format("Configuration file is not readable: %s. See %s", file, TROUBLESHOOTING_SECTION));
+        long size = fileSize(file);
+        verify(size <= MAX_CONFIG_BYTES,
+                String.format("Configuration file is too large (%d bytes). Max allowed is %d bytes. See %s",
+                        size, MAX_CONFIG_BYTES, TROUBLESHOOTING_SECTION));
         try (InputStream stream = Files.newInputStream(file))
         {
             load(stream, file.toString());
@@ -98,7 +106,14 @@ public class ConfigureLibrary
         Properties props = new Properties();
         try
         {
-            props.load(stream);
+            props.load(new LimitedInputStream(stream, MAX_CONFIG_BYTES));
+        }
+        catch (LimitedInputStream.MaxSizeExceededException e)
+        {
+            throw new IllegalStateException(
+                    String.format("Configuration data in '%s' exceeds max size of %d bytes. See %s",
+                            source, MAX_CONFIG_BYTES, TROUBLESHOOTING_SECTION),
+                    e);
         }
         catch (IOException e)
         {
@@ -150,5 +165,20 @@ public class ConfigureLibrary
                 String.format(
                         "Invalid boolean value '%s' for key '%s' in '%s'. Use true/false. See %s",
                         value, key, source, TROUBLESHOOTING_SECTION));
+    }
+
+    protected long fileSize(Path file)
+    {
+        try
+        {
+            return Files.size(file);
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException(
+                    String.format("Could not read configuration file size '%s'. See %s",
+                            file, TROUBLESHOOTING_SECTION),
+                    e);
+        }
     }
 }
