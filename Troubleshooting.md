@@ -71,5 +71,4 @@ throws `UnsupportedOperationException`**
 
 Cause: `CacheHandlers` is a placeholder API and its caching strategies are not implemented yet.
 
-Fix: Avoid using `CacheHandlers` until the caching implementation lands. Track progress in `Todo.md` for the
-implementation or replacement plan.
+Fix: Avoid using `CacheHandlers` until the caching implementation lands.

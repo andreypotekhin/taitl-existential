@@ -19,10 +19,24 @@ e.g. by adding to ex.common.helper
 #### Naming
 ##### Naming - Identifiers
 Avoid abbreviations in identifiers, with an exception for well-known and widely accepted
-ones when used in compound identifiers, such as 'Doc' for document. Do not use
-vowel dropping, and also limit the use of numbered identifiers.
+ones when used in compound identifiers, such as 'Doc' for document. 
+Do not use vowel dropping, and also limit the use of numbered identifiers.
 Avoid abbreviations in single-word identifiers.
 In math-like contexts, e.g. around looping, use single-character identifiers for brevity.
+
+##### Naming - Classes
+Use action-oriented name (verb+noun) for logic classes focused on a single action (BuildConfigs instead of ConfigBuilder)
+
+##### Naming - Spank
+Prefer 'spankier' names, when applicable, for variables/fields: shorter names that immediately convey purpose.  
+Example: In class Tr, the field Set<Transaction> 'transactionSet' is renamed to 'already'.
+Rationale: it is 'spankier' than the old one since immediately reflects the rationale, 
+and does that with a single word.
+
+##### Naming - Trivialization
+For single-field (or near-single-field) classes, it is ok to use a single word trivial name
+that matches class purpose. 
+Ex: In classes EventKey, RuntimeKey, the essential field is named simply 'key'. 
 
 ##### Naming - Loops
 Prefer single-word identifiers for the 'for' loop variables.
@@ -68,24 +82,23 @@ these concrete implementations.
 - Avoid deep inheritance chains
 - We do not use 'final' or 'locked'  
 
-#### Object and package decomposition
+#### Object-oriented decomposition
 - We divide the classes into 'public', 'orchestration' and 'logic' classes
-- The 'public' classes are the onece facing end-user classes from 'public' packages (com.taitl.existential)
+- The 'public' classes are the end-user facing classes from our 'public' packages (com.taitl.existential)
 - The 'orchestration' classes are top-level classes to which the public classes delegate. Example: ConfigBuilder 
 - The 'logic' classes implement business logic. Example: BuildConfigs
 - The logic classes are characterized by
   - Action-oriented name (verb+noun) (BuildConfigs instead of ConfigBuilder)
   - Focus on a single task
-  - Less reliance on state: most methods can be thought of as 'static', even if they formally aren't,
-  and the context is normally passed by method parameters.
+  - Limited or absent state: most methods can be thought of as 'static', even if they formally aren't,
+  and the context is normally passed in by method parameters.
   - Belong to 'logic' packages (com.taitl.ex.logic)
-  - Deep on implementation details
-- The 'logic' packages are thought of semi-autonomous 'apps':
+  - Rich with implementation details
+- The upper level 'logic' packages are thought to be similar to semi-autonomous 'apps':
   - Define own subpackage. Example: com.taitl.ex.logic.configuration, com.taitl.ex.logic.validation
-  - Implement business logic as close-to-stateless 'actions' (.actions subpackage), mappings (.maps subpackage),
+  - Implement business logic as near-stateless 'actions' (.actions subpackage), mappings (.maps subpackage),
     data model (.data subpackage), business rules (.rules subpackage), outputs (.output subpackage)
   - Integrate with other 'apps' using their corresponding data model structures 
-
 
 
 ### Testing

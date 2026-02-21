@@ -6,7 +6,11 @@ Proofreading
 - .md documents  
 
 TODO items
-- TODO items in code, comments, Todo.md documents
+- TODO comments in code
+- TODO items docs/dev/todo/approved
+
+Suggestions
+- Suggestion items docs/dev/suggestions/approved
 
 Specification.md
 - Address items in 'Library' section

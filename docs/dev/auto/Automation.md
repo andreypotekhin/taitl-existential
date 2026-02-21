@@ -11,8 +11,8 @@ and unit tests.
 See these documents on various levels of the code tree for what to focus on:
 
 - AutomationFocus.md
-- Todo.md
-- Suggestions.md
+- docs/dev/todo/approved
+- docs/dev/suggestions/approved
 
 PR titles and Git branch naming for PRs: use 'auto' followed by role name and brief description
 Example: auto/compress/file-extentions, auto/document/configurables
@@ -24,18 +24,14 @@ Fully build and test the project at the end of each task that touches code.
 
 See 'Mastermind role' section in 'Team roles' of AGENTS.md
 
-Output suggestions into the Suggestions.md documents (on same level as module or package Readme.md), create
-new ones when necessary. Focus each suggestion on a specific topic, so it may be implemented in parallel with other
+Output suggestions to docs/dev/suggestions/. 
+Focus each suggestion on a specific topic, so it may be implemented in parallel with other
 tasks.
 
-Add suggestions to Suggestions.md in stack manner: most recent on top.
-Place each suggestion under its own separate section (H3 heading) with suggestion id and title.
-Inside the section, include one paragraph describing the suggestion followed by an empty line.
+Follow 'Documenting' subsections in AGENTS.md for guidance on item id and formatting.
 
-Observe existing suggestions: the ones approved by management for execution have exclamation point (!)
-in front of the suggestion id; the ones declined have a minus (-).
-For an approved suggestion, copy it to the corresponding Todo.md document on same level as Suggestions.md,
-most recent to top.
+Observe existing suggestions: move the ones approved for execution to docs/dev/suggestions/approved.
+For an approved suggestion, create the corresponding todo item in docs/dev/todo/approved.
 
 ### Technical debt specialist role
 
@@ -45,10 +41,10 @@ Suggest steps to cut on the technical debt in a specific module, package or clas
 
 - Analyse codebase for new technical debt issues
 - Identify 1–2 candidate code pieces for refactoring due to technical debt
-- Address 1–2 candidate technical debt issues found in Todo.md documents
+- Address 1–2 candidate technical debt issues found in todo documents
 - Address smaller issues directly
-- Add larger issues to TODO.md in the appropriate scopes
-- Add suggestions to Suggestions.md in the appropriate scopes
+- Add larger issues to todo documents in the appropriate scopes
+- Add suggestions 
 
 Limits
 
@@ -78,8 +74,8 @@ See 'Code scrutinizer role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 
-- Find a bug or issue in the existing code, provide a fix or add to TODO.md document
-- Find 1-2 code smells in the existing code, provide a fix or add to TODO.md documents
+- Find a bug or issue in the existing code, provide a fix or add a todo item
+- Find 1-2 code smells in the existing code, provide a fix or add a todo item
 
 Limits
 
@@ -93,7 +89,7 @@ Automation instructions
 
 - Identify an area of poor performance and improve it
 - Point out less-than-optimal use of data structures in existing code and suggest alternatives for improved performance.
-- For more extensive refactorings, add items to TODO.md or suggestions to Suggestions.md
+- For more extensive refactorings, add todo items or suggestions
 - Preserve existing behavior, prove via tests
 
 Limits
@@ -108,7 +104,7 @@ See 'Security specialist role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 
-- Find a security issue or bugs in the code, provide a fix or add to TODO.md document.
+- Find a security issue or bugs in the code, provide a fix or add a todo item.
 - Suggest a broader security improvement / better adherence to security best practices.
 
 ### Open source specialist role
@@ -120,8 +116,8 @@ Automation instructions
 - Find 2-3 opportunities to improve the library for open source contribution and delivery,
   (e.g. better documentation, better error messages, more helpful exceptions, better logging, better test coverage,
   better code structure for readability and maintainability)
-- Provide changes or add to TODO.md document.
-- For more extensive refactorings, add items to TODO.md or suggestions to Suggestions.md
+- Provide changes or add a todo item document.
+- For more extensive refactorings, add todo items or suggestions
 
 Limits
 
@@ -137,7 +133,7 @@ Automation instructions
 - Find 2-3 opportunities to improve the library for end user, and provide fixes.
   (e.g. better documentation, error messages, exceptions, logging, public code structure for readability and
   maintainability).
-- Create Suggestions for broader refactorings.
+- Create suggestions for broader refactorings.
 
 Limits
 

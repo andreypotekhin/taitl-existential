@@ -90,20 +90,12 @@ You document issues and remedies (fixes) in Troubleshooting.md documents and dee
 Separate end-user troubleshooting items (/Troubleshooting.md) from development troubleshooting items
 (/docs/dev/Troubleshooting.md)
 
-### Documenting TODO items
-Keep track of the TODO items in Todo.md files. Keep it close to the source, e.g. in Maven module or package level -
-in general on same level with Readme.md. 
-Copy approved suggestions (see 'Documenting the suggestions' section below) into corresponding Todo.md for implementation.
-Remove TODO items from Todo.md upon completion, and mark corresponding suggestions in Suggestions.md, if any, 
-with '+' in front of suggestion id.
-
 ### Documenting the suggestions
 As you assume team roles as described in 'Team roles' section below, come up with suggestions for improvements.
-Record suggestions in Suggestions.md file. Keep the document close to the source, e.g. at module or package level -
-in general on same level as Readme.md, Todo.md, Troubleshooting.md.
-Suggestions are reviewed by the manager and mastermind role.
-The approved suggestions get an exclamation point (!) mark in front of suggestion id;
-declined ones get a minus (-) or comment (//), implemented ones get a plus sign mark (+).
+Add suggestion items as [action id].md file to docs/dev/suggestions/.
+Suggestions are reviewed by the manager and mastermind role. 
+The approved suggestions get moved to docs/dev/suggestions/approved. 
+Implemented suggestions get moved to docs/dev/suggestions/done.
 
 ### Documentation formatting
 Because we often read documentation as plain-text Markdown, we want it to look good in plain text editor. 
@@ -113,22 +105,25 @@ In particular, we maintain line limit of 120 characters per line.
 Include an action id for each action (suggestion, TODO item, etc.), the form of XMMDDYYNN, where X is action code
 (S for suggestions, T for TODO items, M for migrations), YY is year, MM is month (01-12), DD is day (01-31), NN is
 a sequence number. For instance, S07142501 is the first suggestion on July 14, 2025.
-Make sure no duplicates exist.
+The action file (md file that conains the action) is named [action id].md 
+and placed to the appropriate directory (docs/dev/suggestions/, docs/dev/todo/ and the like).
 
 ### Action format
-Place each action item (suggestion, TODO item, etc.) under a separate section (H3 heading) with action id and title.
-Inside the section, include one paragraph describing the item. For bigger items (bigger suggestions, migrations),
-include a bullet list with the steps for carrying it out. Insert a blank line between the items.
-Add new items in a stack manner: most recent on top.
+Inside md file, place each action item (suggestion, TODO item, etc.) under a separate section (H3 heading) 
+with action id and title. 
+Inside the section, include one paragraph describing the item. 
+For bigger items (bigger suggestions, migrations), include a bullet list with the steps for carrying it out. 
+Insert a blank line between the items if multiple items share a file (rare).
 
 ### Making suggestions
-Output suggestions into the Suggestions.md documents (on same level as module or package Readme.md), create
-new ones when necessary. Focus each suggestion on a specific topic, so it may be implemented in parallel with other
-tasks.
+Output suggestions into the [action id].md documents in suggestions dir (docs/dev/suggestions/). 
+Focus each suggestion on a specific topic, so it may be implemented in parallel with other tasks.
 
-Add suggestions to Suggestions.md in stack manner: most recent on top.
-Place each suggestion under its own separate section (H3 heading) with suggestion id and title.
-Inside the section, include one paragraph describing the suggestion followed by an empty line.
+### TODO items
+Keep track of the TODO items in [action id].md files similar to how it is done with suggestions.
+TODO items have similar directory structure and purposes (docs/dev/todo/, docs/dev/todo/approved, docs/dev/todo/done) 
+Copy the approved suggestions (docs/dev/suggestions/approved) into corresponding todo files for implementation.
+Upon completion, move TODO items to docs/dev/todo/done upon completion, and move corresponding suggestions to docs/dev/suggestions/done.
 
 
 ## Team roles
@@ -165,7 +160,7 @@ Focus on the stable parts first.
 When judging code quality, consult the style guide (/docs/dev/Style.md) to avoid false positives.
 As a quality assurance specialist, you obsessively hunt for bugs. 
 You fix smaller bugs/issues on the spot and bring bigger ones (ones requiring refactoring or discussion) 
-into team view by adding TODO and Suggestions items. 
+into team view by adding TODO and Suggestion items. 
 Your priority areas are consistency, code logic transparency and system performance.
 Fix code formatting as you go (per 'Code Formatting' section above).
 
@@ -215,18 +210,6 @@ public documentation is clean, public-facing interfaces, classes and methods are
 and intuitive to use, logging is thorough but not overwhelming, Troubleshooting documents
 are up-to-date, and more.
 
-### Style guard role
-As a Style guard, you ensure that the project code adheres to industry
-best practices and our coding style as set by the style guide (/docs/dev/Style.md).
-
-### Extensibility specialist role
-As extensibility specialist, your job is to ensure that the library is designed and implemented 
-in a way that allows for easy extension and customization by end users.
-Take into account all aspects of extensibility, such as allowing to create and use custom
-events, event handlers, expressions, indexes, 
-allowing to extend/replace stock classes with subclasses via injection (Creator.inject()),
-allowing to replace concrete classes with subclasses via injection.
-
 ### Documentation specialist role
 As a documentation specialist, you are responsible for maintaining documentation
 such as Javadoc comments and .md files. 
@@ -238,12 +221,29 @@ Limit your Javadocs to public classes (com.taitl.existential package).
 As a Proofreader specialist, you ensure that any written content reads like
 it was written by a witty native speaker of the American English language.
 
+### Style guard role
+As a Style guard, you ensure that the project code adheres to industry best practices
+and especially our coding style as set by the style guide (/docs/dev/Style.md) and current code.
+
+### Extensibility specialist role
+As extensibility specialist, your job is to ensure that the library is designed and implemented
+in a way that allows for easy extension and customization by end users.
+Take into account all aspects of extensibility, such as allowing to create and use custom
+events, event handlers, expressions, indexes,
+allowing to extend/replace stock classes with subclasses via injection (Creator.inject()),
+allowing to replace concrete classes with subclasses via injection.
+
+### Planner role
+### Testing specialist role
+### QA specialist role
+
+
 ## Task completion
-Ensure the project fully builds with tests the project in the end of each task. 
+Ensure the project fully builds with tests the project in the end of each task.
 Resolve any build or test issues resulved before completing the task.
 
 TODO items
-- Remove TODO items upon completion
+- Upon completion, move TODO items to docs/dev/todo/done.
 
 Specifications (Specifications.md)
 - Back completed user stories with test cases in /src/test/java/com/taitl/existential/specs
@@ -253,7 +253,6 @@ Troubleshooting documentation
 - Output encountered issues and remedies into corresponding Troubleshooting.md documents, and deep-link to them from error messages.
 - End-user issues go to /Troubleshooting.md
 - Development issues go to /docs/dev/Troubleshooting.md
-
 
 ## Automation Contract
 See /docs/dev/auto/Automation.md document for automation contract and details on agents' parallel work.  
