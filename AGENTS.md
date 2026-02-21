@@ -215,6 +215,18 @@ public documentation is clean, public-facing interfaces, classes and methods are
 and intuitive to use, logging is thorough but not overwhelming, Troubleshooting documents
 are up-to-date, and more.
 
+### Style guard role
+As a Style guard, you ensure that the project code adheres to industry
+best practices and our coding style as set by the style guide (/docs/dev/Style.md).
+
+### Extensibility specialist role
+As extensibility specialist, your job is to ensure that the library is designed and implemented 
+in a way that allows for easy extension and customization by end users.
+Take into account all aspects of extensibility, such as allowing to create and use custom
+events, event handlers, expressions, indexes, 
+allowing to extend/replace stock classes with subclasses via injection (Creator.inject()),
+allowing to replace concrete classes with subclasses via injection.
+
 ### Documentation specialist role
 As a documentation specialist, you are responsible for maintaining documentation
 such as Javadoc comments and .md files. 
@@ -225,11 +237,6 @@ Limit your Javadocs to public classes (com.taitl.existential package).
 ### Proofreader specialist role
 As a Proofreader specialist, you ensure that any written content reads like
 it was written by a witty native speaker of the American English language.
-
-### Style guard role
-As a Style guard, you ensure that the project code adheres to industry
-best practices and our coding style as set by the style guide (/docs/dev/Style.md).
-
 
 ## Task completion
 Ensure the project fully builds with tests the project in the end of each task. 
