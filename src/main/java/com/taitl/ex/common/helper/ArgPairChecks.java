@@ -1,0 +1,59 @@
+package com.taitl.ex.common.helper;
+
+/**
+ * Shared checks for vararg pairs with caller-provided exception mapping.
+ */
+public class ArgPairChecks
+{
+    @FunctionalInterface
+    public interface Thrower
+    {
+        void raise(String message);
+    }
+
+    /**
+     * Protected constructor for an utility class.
+     */
+    protected ArgPairChecks()
+    {
+    }
+
+    /**
+     * Throws via provided thrower if first or any pair element is null.
+     */
+    public static void requireNonNullPairs(Object first,
+            String firstName,
+            String firstMessage,
+            String pairMessage,
+            Thrower thrower,
+            Object... args)
+    {
+        Args.requireEvenArgs(args);
+        if (first == null)
+        {
+            thrower.raise(String.format(firstMessage, firstName));
+        }
+        for (int i = 0; i < args.length; i += 2)
+        {
+            if (args[i] == null)
+            {
+                thrower.raise(String.format(pairMessage, args[i + 1]));
+            }
+        }
+    }
+
+    /**
+     * Throws via provided thrower if any boolean condition in pairs is false.
+     */
+    public static void requireAllTrue(Thrower thrower, Object... args)
+    {
+        Args.requireBooleanPairs(args);
+        for (int i = 0; i < args.length; i += 2)
+        {
+            if (!((Boolean) args[i]))
+            {
+                thrower.raise(String.valueOf(args[i + 1]));
+            }
+        }
+    }
+}

@@ -4,6 +4,12 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import com.taitl.existential.handlers.types.*;
 
+/**
+ * Event handler for delete operations.
+ *
+ * @param <T>
+ *            Entity type handled by the delete event
+ */
 public class OnDelete<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
     public OnDelete(Consumer<? super T> action)

@@ -15,12 +15,12 @@ import static com.taitl.ex.common.helper.State.*;
 public class CreatorDevice
 {
     /**
-     * Registry for singleton objects, keyed by class canonical name.
+     * Registry for singleton objects, keyed by class binary name.
      */
     protected Map<String, Object> singletons = new LinkedHashMap<>();
 
     /**
-     * Registry for supplier objects, keyed by class canonical name.
+     * Registry for supplier objects, keyed by class binary name.
      */
     protected Map<String, Supplier<?>> suppliers = new LinkedHashMap<>();
 
@@ -41,7 +41,7 @@ public class CreatorDevice
     public <T> T singleton(Class<T> cls)
     {
         sane(cls, "cls");
-        String className = cls.getCanonicalName();
+        String className = classKey(cls);
         T existing = (T) singletons.get(className);
         if (existing != null)
         {
@@ -94,7 +94,7 @@ public class CreatorDevice
                     "If paramTypes is specified, initargs must also be specified");
         }
 
-        String className = cls.getCanonicalName();
+        String className = classKey(cls);
         Supplier<? extends T> supplier = getSupplier(cls);
         boolean parameterized = (paramTypes != null && initargs != null);
 
@@ -152,7 +152,7 @@ public class CreatorDevice
     public <T> T create(Class<T> cls)
     {
         sane(cls, "cls");
-        String className = cls.getCanonicalName();
+        String className = classKey(cls);
         Supplier<? extends T> supplier = getSupplier(cls);
         if (supplier != null)
         {
@@ -177,8 +177,8 @@ public class CreatorDevice
     /**
      * Gets supplier function for the specified class.
      * Use inject() to set the supplier for a class.
-     * Suppliers are keyed by their class canonical name.
-     * Canonical name example: java.util.AbstractMap.SimpleEntry
+     * Suppliers are keyed by their class binary name.
+     * Binary name example: java.util.AbstractMap$SimpleEntry
      *
      * IMPORTANT:
      * This method will only return a non-null if a custom supplier
@@ -195,7 +195,7 @@ public class CreatorDevice
     public <T> Supplier<? extends T> getSupplier(Class<T> cls)
     {
         sane(cls, "cls");
-        return (Supplier<? extends T>) suppliers.get(cls.getCanonicalName());
+        return (Supplier<? extends T>) suppliers.get(classKey(cls));
     }
 
     /**
@@ -210,7 +210,7 @@ public class CreatorDevice
     public boolean hasSupplier(Class<?> cls)
     {
         sane(cls, "cls");
-        return suppliers.containsKey(cls.getCanonicalName());
+        return suppliers.containsKey(classKey(cls));
     }
 
     /**
@@ -224,10 +224,15 @@ public class CreatorDevice
     {
         sane(cls, "cls");
         sane(supplier, "supplier");
-        String className = cls.getCanonicalName();
+        String className = classKey(cls);
         verify(!created.contains(className),
-                "Cannot make injection for class " + cls.getCanonicalName() +
+                "Cannot make injection for class " + cls.getName() +
                         " because create() or singleton() were already called for it");
-        suppliers.put(cls.getCanonicalName(), supplier);
+        suppliers.put(className, supplier);
+    }
+
+    protected String classKey(Class<?> cls)
+    {
+        return cls.getName();
     }
 }

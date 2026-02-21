@@ -43,19 +43,14 @@ public class State
      */
     public static void cool(Object o, String objName, Object... args)
     {
-        ArgPairs.requireEvenArgs(args);
-        if (o == null)
-        {
-            throw new IllegalStateException(String.format(ARGUMENT_MUST_NOT_BE_NULL, objName));
-        }
-        for (int i = 0; i < args.length; i += 2)
-        {
-            if (args[i] == null)
-            {
-                throw new IllegalStateException(
-                        String.format(ARGUMENT_MUST_NOT_BE_NULL, args[i + 1]));
-            }
-        }
+        ArgPairChecks.requireNonNullPairs(o,
+                objName,
+                ARGUMENT_MUST_NOT_BE_NULL,
+                ARGUMENT_MUST_NOT_BE_NULL,
+                message -> {
+                    throw new IllegalStateException(message);
+                },
+                args);
     }
 
     /**
@@ -74,19 +69,14 @@ public class State
      */
     public static void verify(boolean condition, String message, Object... args)
     {
-        ArgPairs.requireEvenArgs(args);
+        Args.requireEvenArgs(args);
         if (!condition)
         {
             throw new IllegalStateException(message);
         }
-        ArgPairs.requireBooleanPairs(args);
-        for (int i = 0; i < args.length; i += 2)
-        {
-            if (!((Boolean) args[i]))
-            {
-                throw new IllegalStateException(String.valueOf(args[i + 1]));
-            }
-        }
+        ArgPairChecks.requireAllTrue(messageArg -> {
+            throw new IllegalStateException(messageArg);
+        }, args);
     }
 
 }

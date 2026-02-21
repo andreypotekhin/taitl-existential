@@ -157,4 +157,15 @@ class IndexTest
         assertThrows(IllegalStateException.class,
                 () -> cats_by_color.getObj(BLACK_CAT), "Wrong type of key");
     }
+
+    @Test
+    void testRekeyUsesValueEquality()
+    {
+        Index<String, Cat> index = new Index<>(cat -> new String(cat.color));
+        Cat cat = CityTestData.BLACK_CAT;
+        index.add("Black", cat);
+        assertDoesNotThrow(() -> index.rekey("Black", new String("Black"), cat));
+        assertTrue(index.contains("Black", cat));
+        assertThrows(IllegalArgumentException.class, () -> index.rekey("Black", "Orange", cat));
+    }
 }

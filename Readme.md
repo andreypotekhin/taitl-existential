@@ -113,6 +113,7 @@ Same when x0, x1 must also satisfy some condition:
 
 See /docs directory for further documentation.
 See /Troubleshooting.md for common setup and runtime failures.
+See /CHANGELOG.md for release notes and the semantic versioning policy.
 
 ## Community
 

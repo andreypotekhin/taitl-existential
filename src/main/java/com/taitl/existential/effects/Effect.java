@@ -12,6 +12,16 @@ import com.taitl.existential.interfaces.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Declares side effects for a business operation by registering handlers for
+ * entity lifecycle and access events.
+ *
+ * Effects are evaluated as part of a context or a transaction, and may be
+ * attached to a custom transaction instance when the operation begins.
+ *
+ * @param <T>
+ *            Entity type the effect applies to
+ */
 public class Effect<T> implements Evs<T>, Immediate<T>
 {
     /**
@@ -350,6 +360,13 @@ public class Effect<T> implements Evs<T>, Immediate<T>
 
     /* Evs implementation */
 
+    /**
+     * Adds a handler to this effect.
+     *
+     * @param ev
+     *            Event handler to register
+     * @return This effect for chaining
+     */
     public Effect<T> add(Ev<T> ev)
     {
         sane(ev, "eh");
@@ -357,6 +374,11 @@ public class Effect<T> implements Evs<T>, Immediate<T>
         return this;
     }
 
+    /**
+     * Returns the handlers registered with this effect.
+     *
+     * @return Ordered list of handlers
+     */
     public List<Ev<T>> list()
     {
         return evs;
@@ -364,12 +386,23 @@ public class Effect<T> implements Evs<T>, Immediate<T>
 
     /* Attributes */
 
+    /**
+     * Returns the transaction associated with this effect.
+     *
+     * @return Transaction owning this effect
+     */
     public Transaction getTransaction()
     {
         State.cool(tran, "tran");
         return tran;
     }
 
+    /**
+     * Associates this effect with a transaction.
+     *
+     * @param tr
+     *            Transaction owning this effect
+     */
     public void setTransaction(Transaction tr)
     {
         sane(tr, "tr");

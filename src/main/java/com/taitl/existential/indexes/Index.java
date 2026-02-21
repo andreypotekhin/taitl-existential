@@ -128,7 +128,7 @@ public class Index<K, V>
         if (getKey != null)
         {
             K k = getKey.apply(v);
-            if (k1 != k)
+            if (!k1.equals(k))
             {
                 throw new IllegalArgumentException(String.format(
                         ARG_KEY_VALUE,
