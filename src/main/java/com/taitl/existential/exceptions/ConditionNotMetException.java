@@ -22,7 +22,7 @@ public class ConditionNotMetException extends ExistentialException
 
     public ConditionNotMetException(Throwable cause)
     {
-        super(cause);
+        super(CONDITION_NOT_MET, cause);
     }
 
     public ConditionNotMetException(String message, Throwable cause)

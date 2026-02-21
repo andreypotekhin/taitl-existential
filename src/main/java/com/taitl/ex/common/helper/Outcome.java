@@ -41,19 +41,14 @@ public class Outcome
      */
     public static void cool(Object o, String objName, Object... args)
     {
-        ArgPairs.requireEvenArgs(args);
-        if (o == null)
-        {
-            throw new RuntimeException(String.format(VALUE_MUST_NOT_BE_NULL, objName));
-        }
-        for (int i = 0; i < args.length; i += 2)
-        {
-            if (args[i] == null)
-            {
-                throw new RuntimeException(
-                        String.format(VALUE_MUST_NOT_BE_NULL, args[i + 1]));
-            }
-        }
+        ArgPairChecks.requireNonNullPairs(o,
+                objName,
+                VALUE_MUST_NOT_BE_NULL,
+                VALUE_MUST_NOT_BE_NULL,
+                message -> {
+                    throw new RuntimeException(message);
+                },
+                args);
     }
 
     /**
@@ -72,18 +67,13 @@ public class Outcome
      */
     public static void verify(boolean condition, String message, Object... args)
     {
-        ArgPairs.requireEvenArgs(args);
+        Args.requireEvenArgs(args);
         if (!condition)
         {
             throw new RuntimeException(message);
         }
-        ArgPairs.requireBooleanPairs(args);
-        for (int i = 0; i < args.length; i += 2)
-        {
-            if (!((Boolean) args[i]))
-            {
-                throw new RuntimeException(String.valueOf(args[i + 1]));
-            }
-        }
+        ArgPairChecks.requireAllTrue(messageArg -> {
+            throw new RuntimeException(messageArg);
+        }, args);
     }
 }

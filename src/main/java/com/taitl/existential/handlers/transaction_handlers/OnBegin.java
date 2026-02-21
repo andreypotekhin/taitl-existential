@@ -6,6 +6,12 @@ import java.util.function.Predicate;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.configs.Transaction;
 
+/**
+ * Transaction lifecycle handler for begin events.
+ *
+ * @param <T>
+ *            Transaction type handled by the begin event
+ */
 public class OnBegin<T extends Transaction> extends On<T>
 {
     public OnBegin(Consumer<? super T> action)

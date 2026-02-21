@@ -4,6 +4,12 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import com.taitl.existential.handlers.types.*;
 
+/**
+ * Event handler for modify operations.
+ *
+ * @param <T>
+ *            Entity type handled by the modify event
+ */
 public class OnModify<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
     public OnModify(Consumer<? super T> action)

@@ -63,7 +63,7 @@ public class RuntimeKey<T>
 
     public int hashCode()
     {
-        return key.hashCode() + entity.hashCode();
+        return key.hashCode() + System.identityHashCode(entity);
     }
 
     @SuppressWarnings("unchecked")

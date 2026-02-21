@@ -85,16 +85,16 @@ public class EventKey
         {
             return false;
         }
-        if (!(other instanceof TypeKey))
+        if (!(other instanceof EventKey))
         {
             return false;
         }
-        TypeKey o = (TypeKey) other;
-        if (o.typeid == null)
+        EventKey o = (EventKey) other;
+        if (o.key == null)
         {
             return (this.key == null);
         }
-        return o.typeid.equals(this.key);
+        return o.key.equals(this.key);
     }
 
     public String toString()

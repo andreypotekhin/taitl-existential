@@ -18,10 +18,6 @@ Fix:
 3. Use only `true` or `false` for boolean values.
 4. Unset `EXISTENTIAL_CONFIG_FILE` to use classpath fallback `existential.properties`.
 
-<<<<<<< ours
-## Condition Not Met
-=======
->>>>>>> theirs
 ## Condition Not Met
 
 **Problem: Rule or handler fails with `ConditionNotMetException` or `EventHandlerExecutionException`**

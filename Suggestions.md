@@ -1,9 +1,15 @@
+### S02212601 Public Lifecycle Status Dashboard
+Expose a minimal, immutable lifecycle status object (for example, configuration state, active transaction count,
+and last validation result) that can be queried from the public API and logged for diagnostics. This keeps runtime
+observability explicit and makes it easier for users to detect mis-ordered calls while preserving strict phase
+boundaries and fail-fast behavior.
+
 ### S02202603 Add Security Static Analysis
 Introduce automated security static analysis (for example, SpotBugs + FindSecBugs with a curated exclude file)
 into the build and CI pipeline, failing on high-confidence issues while documenting suppression policy for
 accepted risks.
 
-### S02202603 Prefer HashMap for TransactionIndexes
+### S02202604 Prefer HashMap for TransactionIndexes
 Transaction-scoped indexes are created and used within a single business transaction, so the current
 ConcurrentHashMap in `TransactionIndexes` likely adds contention and allocation overhead without delivering
 value. Consider switching to `HashMap` (or a small, pre-sized map) and explicitly documenting that transaction
@@ -63,6 +69,11 @@ Introduce a configurable redaction policy for logging that can mask or drop valu
 PII) before formatting log output, with a default policy that keeps safe fields visible while preventing accidental
 disclosure.
 
-### S02202603 Dependency Vulnerability Scans
+### S02202605 Dependency Vulnerability Scans
 Add automated dependency vulnerability scanning (for example, OWASP Dependency-Check or equivalent) to the build
 and CI pipeline, failing builds on high-severity findings while documenting suppression policy for accepted risks.
+### S02212601 Enforce Secure Config File Permissions
+Before loading configuration from the filesystem, check that the file is owned by the current user (when
+available) and is not group/world writable. Fail fast with a clear error that links to the troubleshooting
+entry and suggests how to fix permissions, preventing accidental use of tampered configuration in shared
+environments.
