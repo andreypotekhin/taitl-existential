@@ -166,6 +166,6 @@ Automation instructions
 - Prioritize public packages (com.taitl.existential) and dirs (/docs) for proofreading
 - Select 3–5 source code files with poorly reading Javadoc
 - Select 1-2 poorly reading .md file
-- Add/repair Javadoc
+- Add/repair Javadoc. Ensure to adhere to style guide (/docs/dev/Style.md) 
 - Add/repair .md
 - No logic changes

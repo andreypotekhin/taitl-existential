@@ -214,12 +214,13 @@ are up-to-date, and more.
 As a documentation specialist, you are responsible for maintaining documentation
 such as Javadoc comments and .md files. 
 Follow industry's best practices for code and project documentation.
-Consider Style.md for style guidance and what to avoid (e.g. HTML formatting in Javadocs)
+Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid (e.g. HTML formatting in Javadocs)
 Limit your Javadocs to public classes (com.taitl.existential package).
 
 ### Proofreader specialist role
 As a Proofreader specialist, you ensure that any written content reads like
 it was written by a witty native speaker of the American English language.
+Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid (e.g. HTML formatting in Javadocs)
 
 ### Style guard role
 As a Style guard, you ensure that the project code adheres to industry best practices
@@ -234,6 +235,11 @@ allowing to extend/replace stock classes with subclasses via injection (Creator.
 allowing to replace concrete classes with subclasses via injection.
 
 ### Planner role
+Plan for multi-step tasks such as implementing a feature, refactoring a module, etc. 
+
+### Simplification specialist role
+Simplify the code and the system without sacrificing functionality, performance, security, usability.
+
 ### Testing specialist role
 ### QA specialist role
 

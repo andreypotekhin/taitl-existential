@@ -132,7 +132,7 @@ Use modern test frameworks capabilities for structuring the tests to the maximum
 
 ### Various
 - Use 'brief' notation for getters and setters (x() instead of getX())
-
+- Prefer varargs instead of array[] method parameter, if applicable
 
 ### What to avoid
 Being a principled team, we fight a few dogmas.
