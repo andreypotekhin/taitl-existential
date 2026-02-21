@@ -43,15 +43,7 @@ public class State
      */
     public static void cool(Object o, String objName, Object... args)
     {
-        if (args == null)
-        {
-            throw new IllegalArgumentException(String.format(ARGUMENT_MUST_NOT_BE_NULL, "args"));
-        }
-        if (args.length % 2 != 0)
-        {
-            throw new IllegalArgumentException(
-                    String.format(ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH, "args"));
-        }
+        ArgPairs.requireEvenArgs(args);
         if (o == null)
         {
             throw new IllegalStateException(String.format(ARGUMENT_MUST_NOT_BE_NULL, objName));
@@ -82,26 +74,15 @@ public class State
      */
     public static void verify(boolean condition, String message, Object... args)
     {
-        if (args == null)
-        {
-            throw new IllegalArgumentException(String.format(ARGUMENT_MUST_NOT_BE_NULL, "args"));
-        }
-        if (args.length % 2 != 0)
-        {
-            throw new IllegalArgumentException(
-                    String.format(ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH, "args"));
-        }
+        ArgPairs.requireEvenArgs(args);
         if (!condition)
         {
             throw new IllegalStateException(message);
         }
+        ArgPairs.requireBooleanPairs(args);
         for (int i = 0; i < args.length; i += 2)
         {
-            if (!(args[i]instanceof Boolean b))
-            {
-                throw new IllegalArgumentException(String.format(ARGUMENT_MUST_BE_BOOLEAN, i));
-            }
-            if (!b)
+            if (!((Boolean) args[i]))
             {
                 throw new IllegalStateException(String.valueOf(args[i + 1]));
             }

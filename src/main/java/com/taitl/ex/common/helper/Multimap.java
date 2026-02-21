@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.function.*;
 
 import static com.taitl.existential.constants.Strings.*;
-import static java.util.stream.Collectors.*;
 
 /**
  * Maps key to a set of values.
@@ -49,7 +48,7 @@ public class Multimap<K, V>
                 validateSize();
             }
             set.add(value);
-            return set;
+            return Collections.unmodifiableSet(set);
         }
     }
 
@@ -97,8 +96,17 @@ public class Multimap<K, V>
             {
                 return null;
             }
-            Set<V> removed = set.stream().filter(match).collect(toSet());
-            set.removeIf(match);
+            Set<V> removed = new LinkedHashSet<>();
+            Iterator<V> iterator = set.iterator();
+            while (iterator.hasNext())
+            {
+                V value = iterator.next();
+                if (match.test(value))
+                {
+                    removed.add(value);
+                    iterator.remove();
+                }
+            }
             if (!removed.isEmpty() && set.isEmpty())
             {
                 size--;

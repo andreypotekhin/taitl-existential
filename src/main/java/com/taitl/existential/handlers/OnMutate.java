@@ -98,7 +98,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             // Check the condition and throw an exception if it is not met.
             if (!condition.test(t1))
             {
-                throw new EventHandlerExecutionException(CONDITION_NOT_MET);
+                throw new EventHandlerExecutionException(handlerMessage(CONDITION_NOT_MET));
             }
 
             return;
@@ -112,7 +112,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             }
             catch (Exception e)
             {
-                throw new EventHandlerExecutionException(e);
+                throw new EventHandlerExecutionException(handlerMessage(EVENT_HANDLER_EXECUTION_FAILED), e);
             }
         }
     }
@@ -125,5 +125,14 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
     public String description()
     {
         return description == null ? "" : description;
+    }
+
+    private String handlerMessage(String base)
+    {
+        if (description == null || description.isEmpty())
+        {
+            return base;
+        }
+        return base + ": " + description;
     }
 }

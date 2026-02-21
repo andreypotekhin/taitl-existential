@@ -2,16 +2,16 @@
 
 ### Prerequisites
 - JDK 17 or higher
-- Maven command
+- Maven
 
-### Obtaining and building 
+### Obtaining and building
 - Clone the repository from GitHub
-- Build with Maven command
+- Build with Maven
 
 ### IDE
 #### IntelliJ IDEA
 
-##### Adjust formatter to ignore chained method identation
+##### Adjust formatter to ignore chained method indentation
 By default, the Java formatter removes custom indentation on chained calls.
 This can reduce readability when configuring with builders.
 Example of custom indentation:

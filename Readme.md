@@ -112,6 +112,7 @@ Same when x0, x1 must also satisfy some condition:
 ## Documentation
 
 See /docs directory for further documentation.
+See /Troubleshooting.md for common setup and runtime failures.
 
 ## Community
 

@@ -2,6 +2,7 @@ package com.taitl.ex.logic.library;
 
 import java.io.*;
 import java.nio.charset.*;
+import java.nio.file.*;
 import java.util.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.existential.*;
@@ -70,6 +71,90 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    void rejectOversizedClasspathConfig()
+    {
+        ConfigureLibrary loader = new ConfigureLibrary(ex,
+                name -> null,
+                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE, oversizedConfig())));
+
+        String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+        assertThat(message, containsString("exceeds max size"));
+        assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+    }
+
+    @Test
+    void rejectOversizedEnvFile()
+    {
+        try
+        {
+            Path temp = Files.createTempFile("ex-config", ".properties");
+            try
+            {
+                Files.write(temp, oversizedConfig().getBytes(StandardCharsets.UTF_8));
+
+                ConfigureLibrary loader = new ConfigureLibrary(ex,
+                        name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? temp.toString() : null,
+                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                "behavior.rules.requireDescriptions=false")));
+
+                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                assertThat(message, containsString("too large"));
+                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+            }
+            finally
+            {
+                deleteTempFile(temp);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Test
+    void rejectSymlinkEnvFile()
+    {
+        try
+        {
+            Path tempDir = Files.createTempDirectory("ex-config");
+            Path target = Files.createTempFile(tempDir, "ex-target", ".properties");
+            Path link = tempDir.resolve("config-link.properties");
+            try
+            {
+                Files.write(target, "behavior.rules.requireDescriptions=false".getBytes(StandardCharsets.UTF_8));
+                try
+                {
+                    Files.createSymbolicLink(link, target);
+                }
+                catch (UnsupportedOperationException | IOException e)
+                {
+                    Assumptions.assumeTrue(false, "Symlinks not supported");
+                }
+
+                ConfigureLibrary loader = new ConfigureLibrary(ex,
+                        name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? link.toString() : null,
+                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                "behavior.rules.requireDescriptions=false")));
+
+                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                assertThat(message, containsString("must not be a symlink"));
+                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+            }
+            finally
+            {
+                deleteTempFile(link);
+                deleteTempFile(target);
+                deleteTempDirectory(tempDir);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Test
     void startupDelegatesToConfigureLibrary()
     {
         StubConfigureLibrary loader = new StubConfigureLibrary(ex);
@@ -110,6 +195,43 @@ class ConfigureLibraryTest extends SpecBase
                 return new ByteArrayInputStream(resource.getBytes(StandardCharsets.UTF_8));
             }
             return super.getResourceAsStream(name);
+        }
+    }
+
+    private static String oversizedConfig()
+    {
+        char[] data = new char[2_000_000];
+        Arrays.fill(data, 'a');
+        return new String(data);
+    }
+
+    private static void deleteTempFile(Path path)
+    {
+        if (path == null)
+        {
+            return;
+        }
+        try
+        {
+            Files.deleteIfExists(path);
+        }
+        catch (IOException ignored)
+        {
+        }
+    }
+
+    private static void deleteTempDirectory(Path path)
+    {
+        if (path == null)
+        {
+            return;
+        }
+        try
+        {
+            Files.deleteIfExists(path);
+        }
+        catch (IOException ignored)
+        {
         }
     }
 }
