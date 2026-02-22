@@ -9,6 +9,7 @@ import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
+import static com.taitl.ex.common.helper.Text.*;
 
 /**
  * Builds a Config object for a single business operation as a set of Context
@@ -46,9 +47,9 @@ public class ConfigBuilder
      */
     public ConfigBuilder(String name)
     {
-        sane(name, "op");
-        ContextKey.validate(name);
-        this.name = name.trim();
+        String trimmed = trimmed(name, "op");
+        ContextKey.validate(trimmed);
+        this.name = trimmed;
     }
 
     /**

@@ -5,18 +5,18 @@ The Existential library aims to:
 - Express truths (constraints, invariants) about application classes and their combinations.
 - Uphold these truths by automatically verifying them at specific points of execution.
 
-To apply the rules, the Existential library:
+To apply the rules, the library:
 - Allows the user to send events about an entity, for example Change<MyEntity> when the entity changes.
 - Automatically validates rules that are applicable based on the encountered events.
 - An event may concern the entity's lifecycle (Create, Update, Delete), access to the entity (Read, Write), or the
 transaction lifecycle (Begin, Commit, Rollback), allowing rules to be attached to specific points or circumstances.
 
-For performance, the Existential library:
+For performance, the library:
 - Avoids immediate rule evaluation and instead evaluates rules at the end of a business transaction,
 such as before committing the changed data to persistent storage.
 - Multiple events of the same type are folded into a single event, reducing the number of validations performed.
 
-To do so, the Existential library allows the end-user to:
+To do so, the library allows end users to:
 1. Attach rules (constraints, invariants) to arbitrary classes (own or third-party).
 2. Configure the rules to apply only within a specific business operation (such as an API endpoint or verb),
 allowing different sets of rules to apply to different circumstances.
@@ -47,17 +47,17 @@ The library emphasizes performance for the parts that run as part of a business 
 Package structure:
 - com.taitl.existential: public code (classes, interfaces) for use by end-user
 - com.taitl.ex and subpackages: private code/implementation
-    -  com.taitl.ex.common: common/ubiquitous classes (Creator, Args, State)
-    -  com.taitl.ex.cross: cross-cut concepts (caching, logging)
-    -  com.taitl.ex.concrete: concrete implementations (e.g. ConcreteExists) for the classes the end-user creates
-       with 'new'
-    -  com.taitl.ex.code: core classes, such as ExistentialConfigs, immediately used by public code
-    -  com.taitl.ex.logic: business logic implementation
-    -  com.taitl.ex.configuration: configuration logic (e.g. BuildContexts)
-    -  com.taitl.ex.events: event processing logic (e.g. ReceiveEvent)
-    -  com.taitl.ex.library: dealing with library as a whole
-    -  com.taitl.ex.transactions: transaction logic (e.g. BeginTransaction, RollbackTransaction)
-    -  com.taitl.ex.validation: validation logic (e.g. ValidateTransaction)
+  -  com.taitl.ex.common: common/ubiquitous classes (Creator, Args, State)
+  -  com.taitl.ex.cross: cross-cut concepts (caching, logging)
+  -  com.taitl.ex.concrete: concrete implementations (e.g. ConcreteExists) for the classes the end-user creates
+     with 'new'
+  -  com.taitl.ex.core: core classes, such as ExistentialConfigs, immediately used by public code
+  -  com.taitl.ex.logic: business logic implementation
+  -  com.taitl.ex.configuration: configuration logic (e.g. BuildContexts)
+  -  com.taitl.ex.events: event processing logic (e.g. ReceiveEvent)
+  -  com.taitl.ex.library: dealing with library as a whole
+  -  com.taitl.ex.transactions: transaction logic (e.g. BeginTransaction, RollbackTransaction)
+  -  com.taitl.ex.validation: validation logic (e.g. ValidateTransaction)
 
 ### Setup
 See Setup.md for setup and prerequisites.

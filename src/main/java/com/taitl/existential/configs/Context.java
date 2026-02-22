@@ -75,19 +75,20 @@ public class Context implements Configurable, Evaluable
      */
 
     /**
-     * Set invariants/rules to be enforced for the business operation defined by this context.
+     * Sets invariants (rules) enforced for the business operation defined by this context.
      *
      * <pre>{@code
      * Ex.contexts("/app/flight_school")
-     *     .context(() -> new Context(){{
-     * 	      invariant(new Invariant<Pilot>() {{
-     *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
-     *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     *          }})
+     *     .context(() -> new Context() {{
+     *         invariant(new Invariant<Pilot>() {{
+     *             all((p0, p1) -> p1.hours >= p0.hours, "Flight hours cannot go down");
+     *             transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
+     *         }});
+     *     }});
      * }</pre>
      *
      * @param <T>       Type parameter
-     * @param invariant Invariant (rules) that must be upkept
+     * @param invariant Invariant (rules) that must be upheld
      */
     public <T> void invariant(Invariant<T> invariant)
     {
@@ -96,18 +97,19 @@ public class Context implements Configurable, Evaluable
     }
 
     /**
-     * Set effects for business operation defined by this context.
+     * Sets effects for the business operation defined by this context.
      *
      * <pre>{@code
      * Ex.contexts("/app/flight_school")
-     *     .context(() -> new Context(){{
-     * 	      effect(new Effect<Pilot>() {{
-     *            transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     *        }})
+     *     .context(() -> new Context() {{
+     *         effect(new Effect<Pilot>() {{
+     *             transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
+     *         }});
+     *     }});
      * }</pre>
      *
      * @param <T>       Type parameter
-     * @param invariant Invariant (rules) that must be upkept
+     * @param effect    Effect to register
      */
     public <T> void effect(Effect<T> effect)
     {
@@ -116,19 +118,19 @@ public class Context implements Configurable, Evaluable
     }
 
     /**
-     * Associate a custom Transaction with Context.
-     * The rules defined for a Transaction does not change the Context,
-     * but get evaluated along with it.
-     * Custom transaction may declare its own member fields, thus
-     * allowing to carry over information between rules/event handlers.
-     * Adding a Transaction can happen at any time, for instance, in
-     * a web endpoint handler or other business method, which allows
-     * it to access local scope variables and this pointer in its rules.
+     * Associates a custom Transaction with this Context.
+     * The rules defined for a Transaction do not change the Context,
+     * but they are evaluated alongside it.
+     * A custom transaction may declare its own fields, allowing you to
+     * carry information between rules and event handlers.
+     * Adding a Transaction can happen at any time, for instance in a
+     * web endpoint handler or other business method, which allows it
+     * to access local scope variables and the current instance in its rules.
      *
      * Example:
      * <pre>{@code
      * Ex.contexts("/app/school")
-     *      .transaction(() -> new Transaction(){{
+     *      .transaction(() -> new Transaction() {{
      *          invariant(new Invariant<Student>() {{
      *              all(student -> student.awake());
      *          }});
@@ -142,8 +144,8 @@ public class Context implements Configurable, Evaluable
      *          allow(new Intent<Teacher>() {{
      *              read();
      *          }});
-     *      }})
-     * }<pre>
+     *      }});
+     * }</pre>
      */
     public Context transaction(Supplier<? extends Transaction> supplier)
     {

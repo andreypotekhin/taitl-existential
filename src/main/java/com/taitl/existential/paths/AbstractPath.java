@@ -4,6 +4,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Text.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
@@ -29,9 +30,8 @@ public class AbstractPath
 
     public AbstractPath(String path)
     {
-        sane(path, "name");
         validate(path);
-        this.path = path.trim();
+        this.path = trimmed(path, "name");
     }
 
     @Override
@@ -58,8 +58,7 @@ public class AbstractPath
 
     public static void validate(String name)
     {
-        sane(name, "name");
-        name = name.trim();
+        name = trimmed(name, "name");
         check(name.startsWith(SLASH), "Argument 'name' should start with a slash ('/')");
         check(name.length() == 1 || !name.endsWith(SLASH),
                 "Argument 'name' should not end with a slash ('/')");

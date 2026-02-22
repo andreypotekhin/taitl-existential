@@ -1,16 +1,5 @@
 ### T02202602 Define Non-Null Handler Action Defaults
 
-Replace the placeholder TODO in `ExecuteHandler` by introducing a canonical truth predicate for implicit
-handler conditions and tightening handler action invariants (prefer disallowing null actions). Capture the
-intended behavior in tests so immutable handlers still validate conditions while actionable handlers execute
-predictably.
-### T02202601 Add OSS License File
-
-Select a concrete OSS license and add a `LICENSE` file at the repo root. Update `Readme.md` to mention the
-chosen license and any contribution requirements so downstream users can quickly evaluate compatibility.
-
-### T02202602 Define Non-Null Handler Action Defaults
-
 Replace the placeholder TODO in `ExecuteHandler` by introducing a canonical truth predicate for implicit handler
 conditions and tightening handler action invariants (prefer disallowing null actions). Capture the intended behavior
 in tests so immutable handlers still validate conditions while actionable handlers execute predictably.

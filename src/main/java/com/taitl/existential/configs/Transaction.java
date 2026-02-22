@@ -16,48 +16,48 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Implements constraints and effects on a transaction level.
+ * Implements constraints and effects at the transaction level.
  *
- * 'Transactions' in this library are not related to database transactions, although when integrating, they assumed
- * to be aligned with ones (if you have such). They are simply markers of beginning and end of processing - of a
- * business transaction, web request etc.
+ * "Transactions" in this library are not database transactions. When integrating
+ * with a database, they typically align with it, but they are markers of the
+ * beginning and end of a business operation (web request, batch job, etc.).
  *
- * Transaction's end (a commit) serves as the point where the expressions, such as All and Exists, defined in
- * the current Context as well as its parent Contexts, are evaluated.
+ * The transaction end (a commit) is where expressions such as All and Exists,
+ * defined in the current Context and its parent Contexts, are evaluated.
  *
- * Transaction object can store data for passing from one event handler to another.
+ * A Transaction instance can store data to pass between event handlers.
  *
  * TransactionIndexes
- * When we encounter various events, such as objects creation or mutation, we might need to store some data about it.
- * For instance, we may wish to create an index on entities, so that Exists<> expression could be evaluated in a
- * performant way: {@code On<Cat>((c, tr) -> tr.index("location_to_cats").put(c.location, c))}
+ * When we encounter events such as object creation or mutation, we may need to
+ * store derived data. For example, an index can be created so that an Exists<>
+ * expression evaluates efficiently: {@code On<Cat>((c, tr) -> tr.index("location_to_cats").put(c.location, c))}
  *
  * TransactionEvents
- * Different contexts may be interested in different types of events. To speed up the answer to question 'which events
- * should be emitted for this context?', the set of relevant event types (from the context as well as all its parents)
- * is created at transaction start and stored in the Transaction object.
+ * Different contexts may be interested in different event types. To speed up
+ * the "which events should be emitted for this context?" lookup, the set of
+ * relevant event types (from the context and all parents) is created at
+ * transaction start and stored in the Transaction.
  *
  * Customizing
- * To use a custom class for transaction, define them in different context levels, and ask the system to provide
- * an appropriate instance for a business operation using {@code Context.transaction()}.<br>
- * For instance, for operation "/app/orders/update":<br>
- * For data relevant to all transactions, define a custom {@code AppTransaction } class.<br>
- * An {@code OrdersTransaction} class extending {@code AppTransaction } can be used for the transactions related to
- * Orders module. If further customization needed, you could also define {@code OrdersUpdateTransaction} class extending
- * {@code OrdersTransaction}, and so on.<br>
- * Setting up context-customized Transaction classes:<br>
+ * To use a custom Transaction class, define them at different context levels
+ * and ask the system to provide the appropriate instance using
+ * {@code Context.transaction()}.
+ * For example, for operation "/app/orders/update":
  * <pre>{@code
- *   Ex.contexts().get("/app").transaction(() -> new AppTransaction())
- *   Ex.contexts().get("/app/orders").transaction(() -> new OrdersTransaction())
- *   Ex.contexts().get("/app/orders/update").transaction(() -> new OrdersUpdateTransaction())
- *   }</pre>
- * If custom transaction class is not defined for a context, the transaction class from its parent context is used.
+ * Ex.contexts().get("/app").transaction(() -> new AppTransaction());
+ * Ex.contexts().get("/app/orders").transaction(() -> new OrdersTransaction());
+ * Ex.contexts().get("/app/orders/update").transaction(() -> new OrdersUpdateTransaction());
+ * }</pre>
+ * If a custom transaction class is not defined for a context, the class from
+ * its parent context is used.
  *
  * Custom Transaction instance
- * When initiating a business transaction (e.g. with Ex.begin()), you can specify a custom Transaction instance for it.
- * This is helpful when you need to parameterize rules and expressions based on immediate circumstances such as
- * enclosing method arguments, or other dynamic circumstances.
- * To do so, instead of calling Ex.begin(opName), call Ex.begin(opName, transaction) with custom Transaction instance.
+ * When initiating a business transaction (e.g. with Ex.begin()), you can
+ * specify a custom Transaction instance. This is helpful when you need to
+ * parameterize rules and expressions based on immediate circumstances such as
+ * enclosing method arguments or other dynamic data.
+ * To do so, instead of calling Ex.begin(opName), call Ex.begin(opName, transaction)
+ * with the custom Transaction instance.
  *
  * @see Context
  * @see TransactionIndexes
@@ -102,19 +102,20 @@ public class Transaction implements Configurable, Evaluable
      */
 
     /**
-     * Set up invariants/rules to be enforced on this transaction's business operation (Context).
+     * Sets invariants (rules) enforced on this transaction's business operation (Context).
      *
      * <pre>{@code
-     *    Ex.contexts().get("/app/flight_school")
-     *     .transaction(() -> new Transaction(){{
-     * 	      invariant(new Invariant<Pilot>() {{
-     *                all((p0, p1) -> p1.hours >= p0.hours, "Flight hours can not go down");
-     *                transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     *          }})
+     * Ex.contexts().get("/app/flight_school")
+     *     .transaction(() -> new Transaction() {{
+     *         invariant(new Invariant<Pilot>() {{
+     *             all((p0, p1) -> p1.hours >= p0.hours, "Flight hours cannot go down");
+     *             transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
+     *         }});
+     *     }});
      * }</pre>
      *
-     * @param <T>        Type parameter
-     * @param invariants Invariants (rules) that must be upheld
+     * @param <T>       Type parameter
+     * @param invariant Invariant (rules) that must be upheld
      */
     public <T> void invariant(Invariant<T> invariant)
     {
@@ -170,15 +171,16 @@ public class Transaction implements Configurable, Evaluable
      * Example:
      * Declare transaction member (curPilot) and initialize it at the start of transaction.
      * <pre>{@code
-     *    Ex.contexts().get("/app/flight_school/pilots/update")
-     *        .transaction(() -> new Transaction(){
-     *          Pilot curPilot;
-     *            {
-     * 			    begin(params -> curPilot = (Pilot)params.get("pilot"));
-     * 			    access(...);
-     * 			    invariant(...);
-     * 			    intent(...);
-     *            }});
+     * Ex.contexts().get("/app/flight_school/pilots/update")
+     *     .transaction(() -> new Transaction() {
+     *         Pilot curPilot;
+     *         {
+     *             begin(params -> curPilot = (Pilot) params.get("pilot"));
+     *             access(...);
+     *             invariant(...);
+     *             intent(...);
+     *         }
+     *     });
      * }</pre>
      */
     public <T extends Transaction> void begin(Consumer<? super T> action)

@@ -1,3 +1,15 @@
+### S02212603 Context Path Index (Trie) for Matching
+Introduce a context path index (trie) that stores exact and wildcard nodes, precomputes deterministic match
+ordering, and caches match sets per operation. Build the index during configuration finalization and have
+ConfigurationLogic resolve contexts via the index instead of recursive parent creation. This clarifies wildcard
+semantics, centralizes precedence rules, and removes repeated path parsing on the hot path.
+
+### S02212602 Enforce Secure Config File Permissions
+Before loading configuration from the filesystem, check that the file is owned by the current user (when
+available) and is not group/world writable. Fail fast with a clear error that links to the troubleshooting
+entry and suggests how to fix permissions, preventing accidental use of tampered configuration in shared
+environments.
+
 ### S02212601 Public Lifecycle Status Dashboard
 Expose a minimal, immutable lifecycle status object (for example, configuration state, active transaction count,
 and last validation result) that can be queried from the public API and logged for diagnostics. This keeps runtime
@@ -25,7 +37,7 @@ Replace the current EventQueue base type with a deque-backed structure (for exam
 sets) and expose explicit enqueue/dequeue operations to avoid ArrayList growth churn and improve cache-friendly
 traversal for transaction-close handling; keep the API surface minimal and documented for batching behavior.
 
-### S02192604 Publish License and Source Availability
+### +S02192604 Publish License and Source Availability
 Add an explicit OSS license file and a short Readme section that states the license and any contribution
 requirements. This reduces legal ambiguity for adopters and helps downstream users vet compatibility early.
 
@@ -72,8 +84,3 @@ disclosure.
 ### S02202605 Dependency Vulnerability Scans
 Add automated dependency vulnerability scanning (for example, OWASP Dependency-Check or equivalent) to the build
 and CI pipeline, failing builds on high-severity findings while documenting suppression policy for accepted risks.
-### S02212601 Enforce Secure Config File Permissions
-Before loading configuration from the filesystem, check that the file is owned by the current user (when
-available) and is not group/world writable. Fail fast with a clear error that links to the troubleshooting
-entry and suggests how to fix permissions, preventing accidental use of tampered configuration in shared
-environments.

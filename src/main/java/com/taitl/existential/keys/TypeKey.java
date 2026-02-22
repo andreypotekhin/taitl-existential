@@ -1,6 +1,7 @@
 package com.taitl.existential.keys;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Text.*;
 
 /**
  * String representation of a type along with its generic qualifier, for example "Set<Car>".
@@ -134,8 +135,7 @@ public class TypeKey<T>
 
     protected static void requireValidTypeKey(String key)
     {
-        sane(key, "class name");
-        key = key.trim();
+        key = trimmed(key, "class name");
         check(!key.isBlank(), "Class name cannot be blank");
         if (key.contains("<") || key.contains(">"))
         {

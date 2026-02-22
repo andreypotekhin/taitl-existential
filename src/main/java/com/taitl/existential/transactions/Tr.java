@@ -27,6 +27,14 @@ public class Tr
     IndexData runtimeIndexes;
     ValidationData validationData;
 
+    /**
+     * Creates a transaction instance for the given operation and id.
+     *
+     * @param op
+     *            Operation name
+     * @param id
+     *            Transaction identifier
+     */
     public Tr(String op, UUID id)
     {
         sane(op, "op", id, "id");
@@ -37,6 +45,12 @@ public class Tr
         validationData = new ValidationData(this);
     }
 
+    /**
+     * Registers a transaction configuration instance for this operation.
+     *
+     * @param tr
+     *            Transaction configuration to add
+     */
     public void addTransaction(Transaction tr)
     {
         sane(tr, "tr");
@@ -86,6 +100,9 @@ public class Tr
     {
     }
 
+    /**
+     * Releases transaction resources and clears internal collections.
+     */
     public void close()
     {
         validationData.close();
@@ -94,6 +111,11 @@ public class Tr
         already = null;
     }
 
+    /**
+     * Returns runtime indexes used for fast evaluation of expressions.
+     *
+     * @return Runtime index data
+     */
     public IndexData runtimeIndexes()
     {
         return runtimeIndexes;

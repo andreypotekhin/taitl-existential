@@ -114,6 +114,10 @@ Same when x0, x1 must also satisfy some condition:
 See /docs directory for further documentation.
 See /Troubleshooting.md for common setup and runtime failures.
 
+## License
+
+Licensed under the Apache License, Version 2.0. See /LICENSE for details.
+
 ## Community
 
 - Contributing: /CONTRIBUTING.md

@@ -1,6 +1,5 @@
 package com.taitl.ex.logic.events.logic;
 
-import javax.naming.Context;
 import java.util.*;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
@@ -124,7 +123,7 @@ public class EventSplitter
         // Update
         if (transit.t0 != null && transit.t1 != null)
         {
-            set.add(new Change<>(transit.t0));
+            set.add(new Change<>(transit.t1));
             set.add(new Update<>(transit.t1));
             set.add(new CU<>(transit.t1));
             set.add(new Write<>(transit.t1));

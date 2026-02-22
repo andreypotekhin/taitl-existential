@@ -45,11 +45,11 @@ public class Logger
         {
             outStream = err;
         }
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
         String sanitizedMessage = sanitize(message);
         if (clz != null)
         {
-            output.append(clz.getName() + " ");
+            output.append(clz.getName()).append(' ');
         }
         if (format != null)
         {
@@ -64,7 +64,11 @@ public class Logger
             output.append(" {");
             for (int i = 0; i < keyValuePairs.length; i += 2)
             {
-                output.append(" " + sanitize(keyValuePairs[i]) + "=" + sanitize(keyValuePairs[i + 1]) + "; ");
+                output.append(' ')
+                        .append(sanitize(keyValuePairs[i]))
+                        .append('=')
+                        .append(sanitize(keyValuePairs[i + 1]))
+                        .append("; ");
             }
             output.append("}");
         }

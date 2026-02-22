@@ -4,6 +4,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Text.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
@@ -28,7 +29,7 @@ public class ConcretePath
     public ConcretePath(String op)
     {
         validate(op);
-        this.op = op.trim();
+        this.op = trimmed(op, "op");
     }
 
     public String toString()
@@ -48,8 +49,7 @@ public class ConcretePath
 
     public static void validate(String op)
     {
-        sane(op, "op");
-        op = op.trim();
+        op = trimmed(op, "op");
         check(op.startsWith(SLASH), "Argument 'op' should start with a slash ('/')");
         check(!SLASH.equals(op), ARG_OP_SINGLE_SLASH);
         check(!op.endsWith(SLASH), "Argument 'op' should not end with a slash ('/')");
