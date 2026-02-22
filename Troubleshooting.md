@@ -7,16 +7,19 @@
 Common causes:
 - `EXISTENTIAL_CONFIG_FILE` points to a missing or unreadable file.
 - `EXISTENTIAL_CONFIG_FILE` points to a symlink or an oversized file.
+- `EXISTENTIAL_CONFIG_FILE` points to a file with insecure permissions or unexpected ownership.
 - Properties file has an unknown key.
 - Boolean value is not `true` or `false`.
 
 Fix:
 1. If `EXISTENTIAL_CONFIG_FILE` is set, verify the file exists and is readable.
-1. Ensure the configuration file is a real file (not a symlink) and under 1 MB.
-2. Keep only supported keys:
+2. Ensure the configuration file is a real file (not a symlink) and under 1 MB.
+3. On POSIX systems, ensure the file is owned by the current user and not group/world writable (for example,
+   `chmod 600 /path/to/config.properties`).
+4. Keep only supported keys:
    - `behavior.rules.requireDescriptions`
-3. Use only `true` or `false` for boolean values.
-4. Unset `EXISTENTIAL_CONFIG_FILE` to use classpath fallback `existential.properties`.
+5. Use only `true` or `false` for boolean values.
+6. Unset `EXISTENTIAL_CONFIG_FILE` to use classpath fallback `existential.properties`.
 
 ## Condition Not Met
 
@@ -43,6 +46,20 @@ Fix:
 1. Inspect the exception cause for the original failure.
 2. Guard against nulls and invalid state in the handler action.
 3. Add a description to the handler and log key inputs for diagnostics.
+
+## Transaction not found
+
+**Problem: A call fails with `NotFoundException` stating `Transaction not found`**
+
+Common causes:
+- The transaction was already committed or rolled back, which invalidates its id.
+- The transaction id was never created or was modified before reuse.
+- The transaction id came from a different runtime or test scope.
+
+Fix:
+1. Call `begin()` and use the returned id exactly as-is.
+2. Do not reuse transaction ids after `commit()` or `rollback()`.
+3. Keep transaction ids scoped to the runtime that created them.
 
 ## Maven Build
 

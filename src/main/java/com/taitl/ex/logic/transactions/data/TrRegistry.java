@@ -17,6 +17,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class TrRegistry
 {
+    public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#transaction-not-found";
     protected Map<String, Tr> reg = new ConcurrentHashMap<>();
     protected CreateTran createTran;
     protected TransactionLogic tl;
@@ -42,7 +43,8 @@ public class TrRegistry
         Tr o = reg.get(id);
         if (o == null)
         {
-            throw new NotFoundException("Transaction not found, id=" + id);
+            throw new NotFoundException(String.format("Transaction not found, id=%s. See %s",
+                    id, TROUBLESHOOTING_SECTION));
         }
         return o;
     }
@@ -53,7 +55,8 @@ public class TrRegistry
         Tr o = reg.remove(id);
         if (o == null)
         {
-            throw new NotFoundException("Transaction not found, id=" + id);
+            throw new NotFoundException(String.format("Transaction not found, id=%s. See %s",
+                    id, TROUBLESHOOTING_SECTION));
         }
         return o;
     }

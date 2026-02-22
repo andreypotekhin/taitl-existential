@@ -40,6 +40,6 @@ public class Instructions
 
     public List<Ev<?>> list()
     {
-        return instructions;
+        return Collections.unmodifiableList(instructions);
     }
 }

@@ -115,6 +115,10 @@ See /docs directory for further documentation.
 See /Troubleshooting.md for common setup and runtime failures.
 See /CHANGELOG.md for release notes and the semantic versioning policy.
 
+## License
+
+Licensed under the Apache License, Version 2.0. See /LICENSE for details.
+
 ## Community
 
 - Contributing: /CONTRIBUTING.md

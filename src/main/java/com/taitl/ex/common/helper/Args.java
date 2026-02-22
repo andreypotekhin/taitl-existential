@@ -88,6 +88,7 @@ public class Args
      */
     public static void requireBooleanPairs(Object... args)
     {
+        requireEvenArgs(args);
         for (int i = 0; i < args.length; i += 2)
         {
             if (!(args[i] instanceof Boolean))

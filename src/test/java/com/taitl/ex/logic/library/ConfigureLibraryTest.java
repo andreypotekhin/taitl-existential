@@ -3,6 +3,7 @@ package com.taitl.ex.logic.library;
 import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
+import java.nio.file.attribute.*;
 import java.util.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.existential.*;
@@ -146,6 +147,39 @@ class ConfigureLibraryTest extends SpecBase
                 deleteTempFile(link);
                 deleteTempFile(target);
                 deleteTempDirectory(tempDir);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Test
+    void rejectGroupWritableEnvFile()
+    {
+        try
+        {
+            Path temp = Files.createTempFile("ex-config", ".properties");
+            PosixFileAttributeView view = Files.getFileAttributeView(temp, PosixFileAttributeView.class);
+            Assumptions.assumeTrue(view != null, "POSIX permissions not supported");
+            try
+            {
+                Files.write(temp, "behavior.rules.requireDescriptions=false".getBytes(StandardCharsets.UTF_8));
+                Files.setPosixFilePermissions(temp, PosixFilePermissions.fromString("rw-rw-r--"));
+
+                ConfigureLibrary loader = new ConfigureLibrary(ex,
+                        name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? temp.toString() : null,
+                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                "behavior.rules.requireDescriptions=false")));
+
+                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                assertThat(message, containsString("group/world writable"));
+                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+            }
+            finally
+            {
+                deleteTempFile(temp);
             }
         }
         catch (IOException e)
