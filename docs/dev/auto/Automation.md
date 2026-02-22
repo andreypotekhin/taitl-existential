@@ -51,9 +51,9 @@ Limits
 - Only consider the parts of the codebase that are not under active development.
 - Consider Style.md for style guidance and what to avoid (e.g. @Override annotations)
 
-### Code cleansing specialist role
+### Code shrinking specialist role
 
-See 'Code cleansing specialist roles' section in 'Team roles' of AGENTS.md
+See 'Code shrinking specialist role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 
@@ -160,7 +160,7 @@ Limits
 
 ### Proofreader specialist role
 
-See 'Proofreader specialist roles' section in 'Team roles' of AGENTS.md
+See 'Proofreader specialist role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 
@@ -170,3 +170,98 @@ Automation instructions
 - Add/repair Javadoc. Ensure to adhere to style guide (/docs/dev/Style.md) 
 - Add/repair .md
 - No logic changes
+
+### Design scrutinizer role
+
+See 'Design scrutinizer role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+- Find a poorly designed or design opportunity area in the existing code, suggest improvements
+- Find a poorly designed or design opportunity in library specifications, suggest improvements
+
+### Style scrutinizer role
+
+See 'Style scrutinizer role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 1-2 code areas with poor styling, provide fixes
+- Find 1-2 with poor Javadoc, provide improvements
+
+Limits
+
+- Only consider stable parts of the codebase that are not under active development.
+
+### Extensibility specialist role
+
+See 'Extensibility specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find library code area with poor extensibility, provide fixes, tests and documentation
+- Provide suggestion for overall extensibility
+
+### Concurrency specialist role
+
+See 'Concurrency specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Analyze library code for potential problems with external concurrency
+- For potential external concurrency issues, provide fixes, tests and documentation 
+- Analyze library code for potential problems with internal concurrency
+- For internal concurrency issues, provide fixes, tests and documentation
+- Provide suggestion for overall improvements of external concurrency
+
+### Planner role
+
+See 'Planner role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Consider a suggestion under /docs/dev/suggestions/approved
+- Create ExecPlan as described in docs/dev/auto/Plans.md
+- Output the resulting ExecPlan to docs/dev/planning/ with short descriptive name
+- Discuss and refine the plan with human user
+- Upon approval from human user, proceed with plan implementation
+- Move implemented plan to docs/dev/planning/done/
+
+Notes
+
+- Example plan: docs/dev/planning/done/LibraryConfiguration.plan.md
+
+### Simplification specialist role
+
+See 'Simplification specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Analyze the codebase for opportunity to simplify, such as areas of overdesign, convolution, or difficulty to understand.
+- Focus on 2 areas that can most benefit from simplification. Provide fixes and document rationales for simplification.
+
+Limits
+
+- Only consider stable parts of the codebase that are not under active development.
+
+### Testing specialist role
+
+See 'Testing specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 1-2 code areas with poor coverage, provide tests
+
+Limits
+
+- Only consider stable parts of the codebase that are not under active development.
+
+### QA specialist role
+
+See 'QA specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 1-2 bugs or quality issues in codebase
+- Provide fixes and tests, or add todo items for larger issues
+- Suggests refactorings to improve end product quality
+
