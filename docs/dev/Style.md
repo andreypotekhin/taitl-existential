@@ -138,7 +138,7 @@ Separate end-user troubleshooting items (/Troubleshooting.md) from development t
 
 #### Documenting the suggestions
 As you assume team roles as described in 'Team roles' section below, come up with suggestions for improvements.
-Add suggestion items as [action id].md file to docs/dev/suggestions/.
+Add suggestion items as [action id].[action title].md file to docs/dev/suggestions/.
 Suggestions are reviewed by the manager and mastermind role.
 The approved suggestions get moved to docs/dev/suggestions/approved.
 Implemented suggestions get moved to docs/dev/suggestions/done.
@@ -151,7 +151,7 @@ In particular, we maintain line limit of 120 characters per line.
 Include an action id for each action (suggestion, TODO item, etc.), the form of XMMDDYYNN, where X is action code
 (S for suggestions, T for TODO items, M for migrations, P for planning documents), YY is year, MM is month (01-12), DD is day (01-31), NN is
 a sequence number. For instance, S07142501 is the first suggestion on July 14, 2025.
-The action file (md file that conains the action) is named [action id].md
+The action file (md file that conains the action) is named [action id].[action title].md
 and placed to the appropriate directory (docs/dev/suggestions/, docs/dev/todo/ and the like).
 
 #### Action format
@@ -162,11 +162,11 @@ For bigger items (bigger suggestions, migrations), include a bullet list with th
 Insert a blank line between the items if multiple items share a file (rare).
 
 #### Making suggestions
-Output suggestions into the [action id].md documents in suggestions dir (docs/dev/suggestions/).
+Output suggestions into the [action id].[action title].md documents in suggestions dir (docs/dev/suggestions/).
 Focus each suggestion on a specific topic, so it may be implemented in parallel with other tasks.
 
 #### TODO items
-Keep track of the TODO items in [action id].md files similar to how it is done with suggestions.
+Keep track of the TODO items in [action id].[action title].md files similar to how it is done with suggestions.
 TODO items have similar directory structure and purposes (docs/dev/todo/, docs/dev/todo/approved, docs/dev/todo/done)
 Copy the approved suggestions (docs/dev/suggestions/approved) into corresponding todo files for implementation.
 Upon completion, move TODO items to docs/dev/todo/done upon completion, and move corresponding suggestions to docs/dev/suggestions/done.

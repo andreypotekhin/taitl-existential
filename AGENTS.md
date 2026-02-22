@@ -90,11 +90,11 @@ See 'Documenting' sections in /docs/dev/Style.md for details.
 
 #### Making suggestions
 As you assume team roles as described in 'Team roles' section below, come up with suggestions for improvements.
-Output suggestions into the [action id].md documents in suggestions dir (docs/dev/suggestions/).
+Output suggestions into the [action id].[action title].md documents in suggestions dir (docs/dev/suggestions/).
 Focus each suggestion on a specific topic, so it may be implemented in parallel with other tasks.
 
 #### TODO items
-Keep track of the TODO items in [action id].md files similar to how it is done with suggestions.
+Keep track of the TODO items in [action id].[action title].md files similar to how it is done with suggestions.
 TODO items have similar directory structure and purposes (docs/dev/todo/, docs/dev/todo/approved, docs/dev/todo/done)
 Copy the approved suggestions (docs/dev/suggestions/approved) into corresponding todo files for implementation.
 Upon completion, move TODO items to docs/dev/todo/done upon completion, and move corresponding suggestions to docs/dev/suggestions/done.
