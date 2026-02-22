@@ -198,7 +198,8 @@ See 'Extensibility specialist role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 
-- Find library code area with poor extensibility, provide fixes, tests and documentation
+- Find library code area with poor extensibility, provide fixes, tests or todo item or suggestions for bigger issues
+- If no issues found, wrap up.
 - Provide suggestion for overall extensibility
 
 ### Concurrency specialist role
@@ -208,9 +209,10 @@ See 'Concurrency specialist role' section in 'Team roles' of AGENTS.md
 Automation instructions
 
 - Analyze library code for potential problems with external concurrency
-- For potential external concurrency issues, provide fixes, tests and documentation 
 - Analyze library code for potential problems with internal concurrency
-- For internal concurrency issues, provide fixes, tests and documentation
+- If no issues found, wrap up.
+- For found potential external concurrency issues, provide fixes, tests and documentation 
+- For found internal concurrency issues, provide fixes, tests and documentation
 - Provide suggestion for overall improvements of external concurrency
 
 ### Planner role
@@ -237,7 +239,9 @@ See 'Simplification specialist role' section in 'Team roles' of AGENTS.md
 Automation instructions
 
 - Analyze the codebase for opportunity to simplify, such as areas of overdesign, convolution, or difficulty to understand.
-- Focus on 2 areas that can most benefit from simplification. Provide fixes and document rationales for simplification.
+- If no opportunities found, wrap up.
+- Focus on opportunity that can benefit from simplification the most. 
+- Provide fixes and document the rationales for simplification.
 
 Limits
 
@@ -262,6 +266,7 @@ See 'QA specialist role' section in 'Team roles' of AGENTS.md
 Automation instructions
 
 - Find 1-2 bugs or quality issues in codebase
+- If no bugs/issues found, wrap up.
 - Provide fixes and tests, or add todo items for larger issues
 - Suggests refactorings to improve end product quality
 
