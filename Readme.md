@@ -97,7 +97,7 @@ For any object of type X, an object of type Y exists such that the predicate hol
 
 For any object of type X that satisfies a condition, an object of type Y exists for which the predicate holds:
 
-    ∀ x ∈ X | condition(x)* ∃ y ∈ Y ⊤(x, y)      All<X>(x -> condition(x), x -> Exists<Y>(index, key(x), predicate(x, y)))
+    ∀ x ∈ X | condition(x) ∃ y ∈ Y ⊤(x, y)      All<X>(x -> condition(x), x -> Exists<Y>(index, key(x), predicate(x, y)))
 
 For any object of type X that has been changed, an object of type Y exists for which a predicate holds:
 
@@ -113,7 +113,6 @@ Same when x0, x1 must also satisfy some condition:
 
 See /docs directory for further documentation.
 See /Troubleshooting.md for common setup and runtime failures.
-See /CHANGELOG.md for release notes and the semantic versioning policy.
 
 ## Community
 

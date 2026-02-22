@@ -118,6 +118,7 @@ Automation instructions
   better code structure for readability and maintainability)
 - Provide changes or add a todo item document.
 - For more extensive refactorings, add todo items or suggestions
+- Update Changelog.md with recent changes 
 
 Limits
 
