@@ -14,6 +14,28 @@ import static com.taitl.ex.common.helper.State.*;
  */
 public class CreatorDevice
 {
+    private static final class SupplierResult<T>
+    {
+        private final boolean used;
+        private final T value;
+
+        private SupplierResult(boolean used, T value)
+        {
+            this.used = used;
+            this.value = value;
+        }
+
+        private static <T> SupplierResult<T> used(T value)
+        {
+            return new SupplierResult<>(true, value);
+        }
+
+        private static <T> SupplierResult<T> notUsed()
+        {
+            return new SupplierResult<>(false, null);
+        }
+    }
+
     /**
      * Registry for singleton objects, keyed by class binary name.
      */
@@ -48,27 +70,8 @@ public class CreatorDevice
             return existing;
         }
 
-        T result;
         Supplier<? extends T> supplier = getSupplier(cls);
-
-        if (supplier != null)
-        {
-            result = supplier.get();
-            created.add(className);
-        }
-        else
-        {
-            try
-            {
-                result = cls.getDeclaredConstructor().newInstance();
-                created.add(className);
-            }
-            catch (ReflectiveOperationException e)
-            {
-                throw new IllegalArgumentException(
-                        "Could not create an instance of class " + className, e);
-            }
-        }
+        T result = createWithSupplierOrReflect(cls, className, supplier, null, null);
 
         synchronized (singletons)
         {
@@ -96,50 +99,7 @@ public class CreatorDevice
 
         String className = classKey(cls);
         Supplier<? extends T> supplier = getSupplier(cls);
-        boolean parameterized = (paramTypes != null && initargs != null);
-
-        if (supplier != null)
-        {
-            if (parameterized)
-            {
-                // Can the supplier handle parameterized constructors?
-                if (supplier instanceof BiFunction<?, ?, ?>)
-                {
-                    @SuppressWarnings("unchecked")
-                    BiFunction<Class<?>[], Object[], T> paramSupplier = (BiFunction<Class<?>[], Object[], T>) supplier;
-                    T result = paramSupplier.apply(paramTypes, initargs);
-                    created.add(className);
-                    return result;
-                }
-                // Else fall through
-            }
-            else
-            {
-                T result = supplier.get();
-                created.add(className);
-                return result;
-            }
-        }
-
-        try
-        {
-            T result;
-            if (parameterized)
-            {
-                result = cls.getDeclaredConstructor(paramTypes).newInstance(initargs);
-            }
-            else
-            {
-                result = cls.getDeclaredConstructor().newInstance();
-            }
-            created.add(className);
-            return result;
-        }
-        catch (ReflectiveOperationException e)
-        {
-            throw new IllegalArgumentException(
-                    "Could not create an instance of class " + className, e);
-        }
+        return createWithSupplierOrReflect(cls, className, supplier, paramTypes, initargs);
     }
 
     /**
@@ -154,24 +114,7 @@ public class CreatorDevice
         sane(cls, "cls");
         String className = classKey(cls);
         Supplier<? extends T> supplier = getSupplier(cls);
-        if (supplier != null)
-        {
-            T result = supplier.get();
-            created.add(className);
-            return result;
-        }
-
-        try
-        {
-            T result = cls.getDeclaredConstructor().newInstance();
-            created.add(className);
-            return result;
-        }
-        catch (ReflectiveOperationException e)
-        {
-            throw new IllegalArgumentException(
-                    "Could not create an instance of class " + className, e);
-        }
+        return createWithSupplierOrReflect(cls, className, supplier, null, null);
     }
 
     /**
@@ -234,5 +177,80 @@ public class CreatorDevice
     protected String classKey(Class<?> cls)
     {
         return cls.getName();
+    }
+
+    private static boolean isParameterized(Class<?>[] paramTypes, Object[] initargs)
+    {
+        return paramTypes != null && initargs != null;
+    }
+
+    private <T> SupplierResult<T> trySupplier(Supplier<? extends T> supplier,
+            Class<?>[] paramTypes,
+            Object[] initargs)
+    {
+        if (supplier == null)
+        {
+            return SupplierResult.notUsed();
+        }
+        boolean parameterized = isParameterized(paramTypes, initargs);
+        if (parameterized)
+        {
+            if (supplier instanceof BiFunction<?, ?, ?>)
+            {
+                @SuppressWarnings("unchecked")
+                BiFunction<Class<?>[], Object[], T> paramSupplier =
+                        (BiFunction<Class<?>[], Object[], T>) supplier;
+                return SupplierResult.used(paramSupplier.apply(paramTypes, initargs));
+            }
+            return SupplierResult.notUsed();
+        }
+        return SupplierResult.used(supplier.get());
+    }
+
+    /**
+     * Keeps supplier/reflective creation paths consistent and easy to follow.
+     */
+    private <T> T createWithSupplierOrReflect(Class<T> cls,
+            String className,
+            Supplier<? extends T> supplier,
+            Class<?>[] paramTypes,
+            Object[] initargs)
+    {
+        SupplierResult<T> supplied = trySupplier(supplier, paramTypes, initargs);
+        if (supplied.used)
+        {
+            return markCreated(className, supplied.value);
+        }
+
+        boolean parameterized = isParameterized(paramTypes, initargs);
+        T result = createReflective(className, cls, parameterized, paramTypes, initargs);
+        return markCreated(className, result);
+    }
+
+    private <T> T createReflective(String className,
+            Class<T> cls,
+            boolean parameterized,
+            Class<?>[] paramTypes,
+            Object[] initargs)
+    {
+        try
+        {
+            if (parameterized)
+            {
+                return cls.getDeclaredConstructor(paramTypes).newInstance(initargs);
+            }
+            return cls.getDeclaredConstructor().newInstance();
+        }
+        catch (ReflectiveOperationException e)
+        {
+            throw new IllegalArgumentException(
+                    "Could not create an instance of class " + className, e);
+        }
+    }
+
+    private <T> T markCreated(String className, T result)
+    {
+        created.add(className);
+        return result;
     }
 }

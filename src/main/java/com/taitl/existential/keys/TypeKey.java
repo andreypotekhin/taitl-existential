@@ -25,7 +25,19 @@ public class TypeKey<T>
      */
     public TypeKey(Class<?> clz)
     {
-        setTypeid(clz, "");
+        setTypeid(clz, "", false);
+    }
+
+    /**
+     * Constructs TypeKey for a class without generics, optionally using fully-qualified class name.
+     * Example: TypeKey("com.example.Car") or TypeKey("Car")
+     *
+     * @param clz         Class to construct TypeKey from
+     * @param useFullName If true, uses fully-qualified class name instead of short name
+     */
+    public TypeKey(Class<?> clz, boolean useFullName)
+    {
+        setTypeid(clz, "", useFullName);
     }
 
     /**
@@ -39,7 +51,22 @@ public class TypeKey<T>
     {
         sane(clz, "clz", genericQualifier, "genericQualifier");
         check(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
-        setTypeid(clz, genericQualifier);
+        setTypeid(clz, genericQualifier, false);
+    }
+
+    /**
+     * Constructs TypeKey for a class with generics, optionally using fully-qualified class name.
+     * Example: TypeKey(Document.class, "JSON") or TypeKey("com.example.Document", "JSON")
+     *
+     * @param clz              Class to construct TypeKey from, like Document.class
+     * @param genericQualifier Generic qualifier, like {@code "JSON"}
+     * @param useFullName      If true, uses fully-qualified class name instead of short name
+     */
+    public TypeKey(Class<?> clz, String genericQualifier, boolean useFullName)
+    {
+        sane(clz, "clz", genericQualifier, "genericQualifier");
+        check(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
+        setTypeid(clz, genericQualifier, useFullName);
     }
 
     /**
@@ -67,6 +94,22 @@ public class TypeKey<T>
         return new TypeKey<>(clz, genericQualifier);
     }
 
+    /**
+     * Constructs TypeKey from a class using fully-qualified class name.
+     */
+    public static <T> TypeKey<T> valueOfFull(Class<?> clz)
+    {
+        return new TypeKey<>(clz, true);
+    }
+
+    /**
+     * Constructs TypeKey from a class and generic qualifier using fully-qualified class name.
+     */
+    public static <T> TypeKey<T> valueOfFull(Class<?> clz, String genericQualifier)
+    {
+        return new TypeKey<>(clz, genericQualifier, true);
+    }
+
     public static <T> TypeKey<T> valueOf(String classNameQualifiedWithGenerics)
     {
         return new TypeKey<>(classNameQualifiedWithGenerics);
@@ -80,6 +123,14 @@ public class TypeKey<T>
     public static <T> TypeKey<T> valueOf(T t)
     {
         return new TypeKey<>(t.getClass());
+    }
+
+    /**
+     * Constructs TypeKey from an object instance using fully-qualified class name.
+     */
+    public static <T> TypeKey<T> valueOfFull(T t)
+    {
+        return new TypeKey<>(t.getClass(), true);
     }
 
     public int hashCode()
@@ -114,10 +165,10 @@ public class TypeKey<T>
         return typeid;
     }
 
-    protected void setTypeid(Class<?> clz, String genericQualifier)
+    protected void setTypeid(Class<?> clz, String genericQualifier, boolean useFullName)
     {
         sane(clz, "clz", genericQualifier, "genericQualifier");
-        String className = clz.getSimpleName();
+        String className = useFullName ? clz.getName() : clz.getSimpleName();
         if (genericQualifier.isEmpty())
         {
             typeid = className;

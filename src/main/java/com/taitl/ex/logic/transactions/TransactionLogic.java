@@ -28,8 +28,8 @@ public class TransactionLogic implements Closeable
     public TransactionLogic(ExistentialTransactions ee)
     {
         this.ee = ee;
-        this.registry = new TrRegistry(this);
         this.createTran = new CreateTran(this);
+        this.registry = new TrRegistry(this, createTran);
         this.beginTran = new BeginTran(this);
         this.commitTran = new CommitTran(this);
         this.checkpointTran = new CheckpointTran(this);

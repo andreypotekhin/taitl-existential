@@ -24,8 +24,14 @@ public class TrRegistry
 
     public TrRegistry(TransactionLogic tl)
     {
-        sane(tl, "tl");
+        this(tl, new CreateTran(tl));
+    }
+
+    public TrRegistry(TransactionLogic tl, CreateTran createTran)
+    {
+        sane(tl, "tl", createTran, "createTran");
         this.tl = tl;
+        this.createTran = createTran;
     }
 
     public Tr create(String op, Transaction custom)

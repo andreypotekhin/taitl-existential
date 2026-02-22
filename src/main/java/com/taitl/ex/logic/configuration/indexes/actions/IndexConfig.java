@@ -42,7 +42,7 @@ public class IndexConfig
         {
             // Bug: we need to know a TypeKey to create a proper EventKey
             // Without it, it is just 'Event'!
-            EventKey eventKey = new EventKey(ev);
+            EventKey eventKey = ci.useFullClassNames() ? EventKey.valueOfFull(ev) : EventKey.valueOf(ev);
             if (ev instanceof EventHandler<T> handler)
             {
                 ci.configuredEventHandlers.put(eventKey, handler);

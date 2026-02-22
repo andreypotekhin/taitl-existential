@@ -1,0 +1,43 @@
+package com.taitl.existential.helper;
+
+import java.util.*;
+import com.taitl.ex.common.helper.*;
+import com.taitl.ex.examples.night_city.model.*;
+import org.junit.jupiter.api.*;
+
+import static com.taitl.ex.examples.night_city.data.CityTestData.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+class ConcurrentMultimapTest
+{
+    ConcurrentMultimap<Location, Cat> o;
+
+    @BeforeEach
+    void setUp()
+    {
+        o = new ConcurrentMultimap<Location, Cat>();
+        o.put(LOCATION_PARK, GREY_CAT);
+        o.put(LOCATION_PARK, YELLOW_CAT);
+    }
+
+    @Test
+    void testGetReturnsSnapshot()
+    {
+        Set<Cat> snapshot = o.get(LOCATION_PARK);
+        assertEquals(2, snapshot.size());
+
+        o.put(LOCATION_PARK, BLACK_CAT);
+        assertEquals(2, snapshot.size());
+
+        o.remove(LOCATION_PARK, GREY_CAT);
+        assertEquals(2, snapshot.size());
+    }
+
+    @Test
+    void testRemovePredicateReturnsSnapshot()
+    {
+        Set<Cat> removed = o.remove(LOCATION_PARK, cat -> true);
+        assertEquals(2, removed.size());
+        assertThrows(UnsupportedOperationException.class, () -> removed.clear());
+    }
+}

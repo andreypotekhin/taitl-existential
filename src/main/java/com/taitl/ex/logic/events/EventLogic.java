@@ -7,6 +7,7 @@ import com.taitl.ex.logic.events.actions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
+import com.taitl.existential.constants.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
@@ -51,7 +52,7 @@ public class EventLogic implements Closeable
     public <T> void event(T t0, T t1, String tranID) throws ExistentialException
     {
         sane(t0, "t0", t1, "t1", tranID, "tranID");
-        receiveEvent.bievent(new Mutate<T>(t0, t1), null, tr(tranID));
+        receiveEvent.bievent(new Mutate<T>(t0, t1), inferredType(t1), tr(tranID));
     }
 
     /**
@@ -63,7 +64,7 @@ public class EventLogic implements Closeable
     {
         sane(t, "t", tranID, "tranID");
         // TODO: Verify the use of Change here
-        receiveEvent.event(new Change<T>(t), t, null, tr(tranID));
+        receiveEvent.event(new Change<T>(t), t, inferredType(t), tr(tranID));
     }
 
     public void close()
@@ -78,5 +79,11 @@ public class EventLogic implements Closeable
     Tr tr(String tranID) throws ExistentialException
     {
         return ex.transactions().tr(tranID);
+    }
+
+    protected <T> TypeKey<T> inferredType(T t)
+    {
+        return ex.get(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES) ? TypeKey.valueOfFull(t)
+                : TypeKey.valueOf(t);
     }
 }

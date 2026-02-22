@@ -114,6 +114,13 @@ Same when x0, x1 must also satisfy some condition:
 See /docs directory for further documentation.
 See /Troubleshooting.md for common setup and runtime failures.
 
+## Type Keys
+
+When multiple entity classes share the same short name across packages, use fully-qualified type keys:
+`TypeKey.valueOfFull(MyEntity.class)` or `TypeKey.valueOfFull(MyEntity.class, "Qualifier")`.
+For library-inferred keys (for example `event(entity, tranID)` overloads), enable
+`Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES` to switch inference to fully-qualified class names.
+
 ## License
 
 Licensed under the Apache License, Version 2.0. See /LICENSE for details.

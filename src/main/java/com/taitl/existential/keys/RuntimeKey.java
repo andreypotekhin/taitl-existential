@@ -23,9 +23,19 @@ public class RuntimeKey<T>
         return new RuntimeKey<>(t);
     }
 
+    public static <T> RuntimeKey<T> valueOfFull(T t)
+    {
+        return new RuntimeKey<>(t, true);
+    }
+
     public static <T> RuntimeKey<T> valueOf(Event<T> e, TypeKey<T> typeKey, T t)
     {
         return new RuntimeKey<>(e, typeKey, t);
+    }
+
+    public static <T> RuntimeKey<T> valueOfFull(Event<T> e, TypeKey<T> typeKey, T t)
+    {
+        return new RuntimeKey<>(e, typeKey, t, true);
     }
 
     public static <T> RuntimeKey<T> valueOf(Event<T> e, String type, T t)
@@ -33,32 +43,62 @@ public class RuntimeKey<T>
         return new RuntimeKey<>(e, type, t);
     }
 
+    public static <T> RuntimeKey<T> valueOfFull(Event<T> e, String type, T t)
+    {
+        return new RuntimeKey<>(e, type, t, true);
+    }
+
     public static <T> RuntimeKey<T> valueOf(Class<T> clz, String type, T t)
     {
         return new RuntimeKey<>(clz, type, t);
     }
 
+    public static <T> RuntimeKey<T> valueOfFull(Class<T> clz, String type, T t)
+    {
+        return new RuntimeKey<>(clz, type, t, true);
+    }
+
     public RuntimeKey(T t)
     {
-        key = EventKey.valueOf(t);
+        this(t, false);
+    }
+
+    public RuntimeKey(T t, boolean useFullName)
+    {
+        key = useFullName ? EventKey.valueOfFull(t) : EventKey.valueOf(t);
         entity = t;
     }
 
     public RuntimeKey(Event<T> e, TypeKey<T> typeKey, T t)
     {
-        key = EventKey.valueOf(e, typeKey);
+        this(e, typeKey, t, false);
+    }
+
+    public RuntimeKey(Event<T> e, TypeKey<T> typeKey, T t, boolean useFullName)
+    {
+        key = useFullName ? EventKey.valueOfFull(e, typeKey) : EventKey.valueOf(e, typeKey);
         entity = t;
     }
 
     public RuntimeKey(Event<T> e, String type, T t)
     {
-        key = EventKey.valueOf(e, type);
+        this(e, type, t, false);
+    }
+
+    public RuntimeKey(Event<T> e, String type, T t, boolean useFullName)
+    {
+        key = useFullName ? EventKey.valueOfFull(e, type) : EventKey.valueOf(e, type);
         entity = t;
     }
 
     public RuntimeKey(Class<T> clz, String type, T t)
     {
-        key = EventKey.valueOf(clz, type);
+        this(clz, type, t, false);
+    }
+
+    public RuntimeKey(Class<T> clz, String type, T t, boolean useFullName)
+    {
+        key = useFullName ? EventKey.valueOfFull(clz, type) : EventKey.valueOf(clz, type);
         entity = t;
     }
 

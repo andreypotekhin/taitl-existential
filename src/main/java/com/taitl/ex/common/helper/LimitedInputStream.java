@@ -16,7 +16,6 @@ public class LimitedInputStream extends FilterInputStream
         this.maxBytes = maxBytes;
     }
 
-    @Override
     public int read() throws IOException
     {
         if (readBytes >= maxBytes)
@@ -37,7 +36,6 @@ public class LimitedInputStream extends FilterInputStream
         return value;
     }
 
-    @Override
     public int read(byte[] b, int off, int len) throws IOException
     {
         if (len == 0)
