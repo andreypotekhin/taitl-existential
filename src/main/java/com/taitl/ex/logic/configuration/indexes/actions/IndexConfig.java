@@ -43,11 +43,11 @@ public class IndexConfig
             // Bug: we need to know a TypeKey to create a proper EventKey
             // Without it, it is just 'Event'!
             EventKey eventKey = ci.useFullClassNames() ? EventKey.valueOfFull(ev) : EventKey.valueOf(ev);
-            if (ev instanceof EventHandler<T> handler)
+            if (ev instanceof EventHandler<?>)
             {
-                ci.configuredEventHandlers.put(eventKey, handler);
+                ci.configuredEventHandlers.put(eventKey, (EventHandler<T>) ev);
             }
-            else if (ev instanceof Expression<T> expression)
+            else if (ev instanceof Expression<?>)
             {
                 // TODO: add to expression index, if needed
             }

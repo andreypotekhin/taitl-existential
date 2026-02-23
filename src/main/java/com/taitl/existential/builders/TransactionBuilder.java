@@ -72,17 +72,17 @@ public class TransactionBuilder
             for (Supplier<? extends Evs<?>> supplier : this.evsSuppliers)
             {
                 Evs<?> evs = supplier.get();
-                if (evs instanceof Invariant<?> invariant)
+                if (evs instanceof Invariant<?>)
                 {
-                    tr.invariant(invariant);
+                    tr.invariant((Invariant<?>) evs);
                 }
-                else if (evs instanceof Effect<?> effect)
+                else if (evs instanceof Effect<?>)
                 {
-                    tr.effect(effect);
+                    tr.effect((Effect<?>) evs);
                 }
-                else if (evs instanceof Trancycle<?> cycle)
+                else if (evs instanceof Trancycle<?>)
                 {
-                    tr.cycle(cycle);
+                    tr.cycle((Trancycle<?>) evs);
                 }
                 else
                 {
