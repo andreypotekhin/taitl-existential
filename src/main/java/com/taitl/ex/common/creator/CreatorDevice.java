@@ -1,6 +1,7 @@
 package com.taitl.ex.common.creator;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -11,6 +12,8 @@ import static com.taitl.ex.common.helper.State.*;
  * e.g. to provide a custom class instead of the specified class, to initialize/augment the newly 
  * created instance, to provide singletons and other scopes, or to integrate with an existing 
  * dependency injection library.
+ * Thread-safe for concurrent singleton creation and supplier lookup. For predictable injection
+ * behavior, call inject() during configuration before concurrent create/singleton calls.
  */
 public class CreatorDevice
 {
@@ -39,18 +42,19 @@ public class CreatorDevice
     /**
      * Registry for singleton objects, keyed by class binary name.
      */
-    protected Map<String, Object> singletons = new LinkedHashMap<>();
+    protected Map<String, Object> singletons = new ConcurrentHashMap<>();
 
     /**
      * Registry for supplier objects, keyed by class binary name.
      */
-    protected Map<String, Supplier<?>> suppliers = new LinkedHashMap<>();
+    protected Map<String, Supplier<?>> suppliers = new ConcurrentHashMap<>();
 
     /**
      * Remember created classes to avoid creating before injection.
      * See inject() method for details.
      */
-    protected Set<String> created = new HashSet<>();
+    protected Set<String> created = ConcurrentHashMap.newKeySet();
+    private final Object injectionLock = new Object();
 
     /**
      * Provides a singleton instance of the specified class.
@@ -64,18 +68,11 @@ public class CreatorDevice
     {
         sane(cls, "cls");
         String className = classKey(cls);
-        T existing = (T) singletons.get(className);
-        if (existing != null)
-        {
-            return existing;
-        }
-
         Supplier<? extends T> supplier = getSupplier(cls);
-        T result = createWithSupplierOrReflect(cls, className, supplier, null, null);
-
         synchronized (singletons)
         {
-            return (T) singletons.computeIfAbsent(className, key -> result);
+            return (T) singletons.computeIfAbsent(className,
+                    key -> createWithSupplierOrReflect(cls, className, supplier, null, null));
         }
     }
 
@@ -168,10 +165,13 @@ public class CreatorDevice
         sane(cls, "cls");
         sane(supplier, "supplier");
         String className = classKey(cls);
-        verify(!created.contains(className),
-                "Cannot make injection for class " + cls.getName() +
-                        " because create() or singleton() were already called for it");
-        suppliers.put(className, supplier);
+        synchronized (injectionLock)
+        {
+            verify(!created.contains(className),
+                    "Cannot make injection for class " + cls.getName() +
+                            " because create() or singleton() were already called for it");
+            suppliers.put(className, supplier);
+        }
     }
 
     protected String classKey(Class<?> cls)
@@ -250,7 +250,10 @@ public class CreatorDevice
 
     private <T> T markCreated(String className, T result)
     {
-        created.add(className);
+        synchronized (injectionLock)
+        {
+            created.add(className);
+        }
         return result;
     }
 }

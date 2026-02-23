@@ -1,5 +1,7 @@
 package com.taitl.ex.common.creator;
 
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
 
@@ -33,5 +35,49 @@ class CreatorDeviceTest
         assertNotNull(supplierB);
         assertThat(supplierA.get(), instanceOf(LocalA.class));
         assertThat(supplierB.get(), instanceOf(LocalB.class));
+    }
+
+    @Test
+    void singletonUsesSingleInstanceAcrossThreads() throws Exception
+    {
+        class One
+        {
+        }
+
+        CreatorDevice device = new CreatorDevice();
+        AtomicInteger created = new AtomicInteger();
+        device.inject(One.class, () -> {
+            created.incrementAndGet();
+            try
+            {
+                Thread.sleep(200);
+            }
+            catch (InterruptedException e)
+            {
+                Thread.currentThread().interrupt();
+            }
+            return new One();
+        });
+
+        ExecutorService exec = Executors.newFixedThreadPool(2);
+        CountDownLatch start = new CountDownLatch(1);
+        Future<One> first = exec.submit(() -> {
+            start.await();
+            return device.singleton(One.class);
+        });
+        Future<One> second = exec.submit(() -> {
+            start.await();
+            return device.singleton(One.class);
+        });
+
+        start.countDown();
+
+        One a = first.get(2, TimeUnit.SECONDS);
+        One b = second.get(2, TimeUnit.SECONDS);
+
+        exec.shutdownNow();
+
+        assertSame(a, b);
+        assertEquals(1, created.get());
     }
 }

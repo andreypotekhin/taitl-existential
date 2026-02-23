@@ -5,8 +5,8 @@
 - Maven
 
 ### Obtaining and building
-- Clone the repository from GitHub
-- Build with Maven
+- Clone the repository from GitHub.
+- Build with Maven using `mvn test`.
 
 ### IDE
 #### IntelliJ IDEA
@@ -15,13 +15,13 @@
 By default, the Java formatter removes custom indentation on chained calls.
 This can reduce readability when configuring with builders.
 Example of custom indentation:
-```
+```java
   Ex.configure("/api/cats")
     .context()
        .invariant(Cat.class)
          .create(c -> "Black".equals(c.color), "Cats are born black")
        .done()
 ```
-To avoid automatic removal of indents, use auto-formatter switch comment around the code:
-- Before code section: // @formatter:off 
-- After code section: // @formatter:on
+To avoid automatic removal of indents, use formatter switch comments around the code:
+- Before the code section: `// @formatter:off`
+- After the code section: `// @formatter:on`

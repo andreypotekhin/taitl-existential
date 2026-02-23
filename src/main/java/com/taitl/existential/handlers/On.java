@@ -2,6 +2,7 @@ package com.taitl.existential.handlers;
 
 import java.util.function.*;
 import com.taitl.ex.logic.events.actions.*;
+import com.taitl.ex.common.helper.Descriptions;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
 
@@ -11,8 +12,8 @@ import static com.taitl.ex.common.helper.Args.*;
  * Base handler declaration that captures an optional condition, an action,
  * and a human-friendly description for an event.
  *
- * <p>This type is meant to be lightweight and declarative; the actual execution
- * is delegated to the handler runtime.</p>
+ * This type is meant to be lightweight and declarative; the actual execution
+ * is delegated to the handler runtime.
  *
  * @param <T>
  *            Type of entity or value handled by the event
@@ -114,6 +115,6 @@ public class On<T> implements EventHandler<T>
      */
     public String description()
     {
-        return description == null ? "" : description;
+        return Descriptions.text(description);
     }
 }

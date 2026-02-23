@@ -2,6 +2,7 @@ package com.taitl.existential.paths;
 
 import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
+import com.taitl.ex.common.helper.PathSupport;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.Text.*;
@@ -47,7 +48,7 @@ public class AbstractPath
 
     public boolean hasParent()
     {
-        return path.lastIndexOf(SLASH) != 0;
+        return PathSupport.hasParent(path);
     }
 
     public boolean isWildcard()
@@ -76,11 +77,7 @@ public class AbstractPath
      */
     public AbstractPath getParent()
     {
-        if (!hasParent())
-        {
-            throw new IllegalStateException(String.format("ContextKey '%s' has no parent key", path));
-        }
-        return new AbstractPath(path.substring(0, path.lastIndexOf(SLASH)));
+        return new AbstractPath(PathSupport.parentOrThrow(path, "ContextKey"));
     }
 
     public int hashCode()

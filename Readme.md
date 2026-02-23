@@ -52,21 +52,23 @@ For any object of type X which satisfies a condition, a predicate holds true:
 
     ∀ x ∈ X | condition(x) ⊤(x)      All<X>(x -> condition(x), x -> predicate(x))
 
-For any object of type X that has been changed in the course of a business transaction, predicate holds true:
+For any object of type X that has been changed in the course of a business transaction, predicate holds true
+(use Mutation when both before and after states are present):
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Mutation<X>>((x0, x1) -> predicate(x0, x1))
     
-    Mutation<X> indicates that we are describing a change of an entity of type X. 
-    x0 is the entity's initial state - the state at the start of a business transaction
-    x1 is its final state at the end of transaction.
+    Mutation<X> describes a change where both states are non-null.
+    x0 is the entity's initial state at the start of the transaction,
+    x1 is its final state at the end of the transaction.
 
-For any object of type X that has been created, changed or deleted in the course of a business transaction, predicate holds true:
+For any object of type X that has been created, changed, or deleted in the course of a business transaction,
+predicate holds true (use Transition when one side may be null):
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Transition<X>>((x0, x1) -> predicate(x0, x1))
 
-    Transition<X> indicates that we are describing a change of an entity where one of x0, x1, but not both, may be null.
-    If x0 is null, it indicates that x is a new object created in the course of the transaction.
-    If x1 is null, it indicates that x is the object that has been deleted as part of the transaction.
+    Transition<X> describes a change where exactly one of x0 or x1 may be null.
+    If x0 is null, the entity was created during the transaction.
+    If x1 is null, the entity was deleted during the transaction.
 
 Same as above when x0, x1 must also satisfy some condition:
 
@@ -129,4 +131,5 @@ Licensed under the Apache License, Version 2.0. See /LICENSE for details.
 
 - Contributing: /CONTRIBUTING.md
 - Code of Conduct: /CODE_OF_CONDUCT.md
+- Support: /SUPPORT.md
 - Security: /SECURITY.md

@@ -59,40 +59,78 @@ class TypeKeyTest
     @Test
     void testValueOf()
     {
+        assertThat(TypeKey.valueOf(TypeKeyTest.class).toString(), is("TypeKeyTest"));
     }
 
     @Test
     void testValueOf1()
     {
+        assertThat(TypeKey.valueOf(Set.class, "Document").toString(), is("Set<Document>"));
     }
 
     @Test
     void testValueOf2()
     {
+        assertThat(TypeKey.valueOf("Set<Document>").toString(), is("Set<Document>"));
     }
 
     @Test
     void testValueOf3()
     {
+        TypeKeyTest t = new TypeKeyTest();
+        assertThat(TypeKey.valueOf(t).toString(), is("TypeKeyTest"));
+        assertThat(TypeKey.valueOf(t, "JSON").toString(), is("TypeKeyTest<JSON>"));
     }
 
     @Test
     void testHashCode()
     {
+        TypeKey<?> a = new TypeKey("Doc");
+        TypeKey<?> b = new TypeKey("Doc");
+        TypeKey<?> c = new TypeKey("Doc<JSON>");
+        assertThat(a.hashCode(), is(b.hashCode()));
+        assertThat(a.hashCode(), is(not(c.hashCode())));
     }
 
     @Test
     void testEquals()
     {
+        TypeKey<?> a = new TypeKey("Doc");
+        TypeKey<?> b = new TypeKey("Doc");
+        TypeKey<?> c = new TypeKey("Doc<JSON>");
+        assertThat(a.equals(a), is(true));
+        assertThat(a.equals(b), is(true));
+        assertThat(a.equals(c), is(false));
+        assertThat(a.equals(null), is(false));
+        assertThat(a.equals("Doc"), is(false));
     }
 
     @Test
     void testToString()
     {
+        assertThat(new TypeKey("Document<JSON>").toString(), is("Document<JSON>"));
     }
 
     @Test
     void setTypeid()
     {
+        TypeKeyProbe<?> probe = new TypeKeyProbe<>(TypeKeyTest.class);
+        probe.setTypeidForTest(Set.class, "<Doc>", false);
+        assertThat(probe.toString(), is("Set<Doc>"));
+        probe.setTypeidForTest(Set.class, "", true);
+        assertThat(probe.toString(), is("java.util.Set"));
+    }
+
+    static class TypeKeyProbe<T> extends TypeKey<T>
+    {
+        TypeKeyProbe(Class<?> clz)
+        {
+            super(clz);
+        }
+
+        void setTypeidForTest(Class<?> clz, String genericQualifier, boolean useFullName)
+        {
+            setTypeid(clz, genericQualifier, useFullName);
+        }
     }
 }

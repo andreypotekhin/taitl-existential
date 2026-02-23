@@ -5,7 +5,7 @@
 Prioritise 'top-to-bottom', 'working backwards from customer' order of implementation,
 putting effort into end-user facing artifacts first (source code, documentation),
 then proceeding with implementing library interfaces and user stories (specifications)
-(docs/dev/Specifications.md) and their backing test cases (com.taitl.existential.specs subpackages)
+(docs/dev/Specification.md) and their backing test cases (com.taitl.existential.specs subpackages)
 and unit tests.
 
 See these documents on various levels of the code tree for what to focus on:
@@ -293,4 +293,3 @@ Automation instructions
 Limits
 
 - Only consider stable parts of the codebase that are not under active development.
-

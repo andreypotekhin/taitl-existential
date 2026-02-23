@@ -7,25 +7,36 @@ import java.io.*;
  */
 public class LimitedInputStream extends FilterInputStream
 {
+    private final PushbackInputStream probeStream;
     private final long maxBytes;
     private long readBytes;
 
     public LimitedInputStream(InputStream in, long maxBytes)
     {
-        super(in);
+        super(wrap(in));
+        this.probeStream = (PushbackInputStream) this.in;
         this.maxBytes = maxBytes;
+    }
+
+    private static PushbackInputStream wrap(InputStream in)
+    {
+        if (in instanceof PushbackInputStream)
+        {
+            return (PushbackInputStream) in;
+        }
+        return new PushbackInputStream(in, 1);
     }
 
     public int read() throws IOException
     {
         if (readBytes >= maxBytes)
         {
-            int probe = super.read();
+            int probe = probeStream.read();
             if (probe == -1)
             {
                 return -1;
             }
-            readBytes++;
+            probeStream.unread(probe);
             throw new MaxSizeExceededException(maxBytes);
         }
         int value = super.read();
@@ -44,12 +55,12 @@ public class LimitedInputStream extends FilterInputStream
         }
         if (readBytes >= maxBytes)
         {
-            int probe = super.read();
+            int probe = probeStream.read();
             if (probe == -1)
             {
                 return -1;
             }
-            readBytes++;
+            probeStream.unread(probe);
             throw new MaxSizeExceededException(maxBytes);
         }
         long remaining = maxBytes - readBytes;

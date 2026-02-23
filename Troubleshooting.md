@@ -61,6 +61,34 @@ Fix:
 2. Do not reuse transaction ids after `commit()` or `rollback()`.
 3. Keep transaction ids scoped to the runtime that created them.
 
+## Invalid operation key
+
+**Problem: A call fails with an IllegalArgumentException stating the operation key is invalid**
+
+Typical error messages:
+- `Argument 'op' should start with a slash ('/')`
+- `Argument 'op' cannot be a single slash ('/')`
+- `Argument 'op' should not end with a slash ('/')`
+- `Argument 'op' cannot have wildcards ('*')`
+
+Fix:
+1. Use a leading slash and at least one path segment, for example `/app/orders/update`.
+2. Do not include trailing slashes or wildcard characters.
+3. When building op strings dynamically, add unit tests for the formatting.
+
+## Index key mismatch
+
+**Problem: Index usage fails with key type or key value mismatch errors**
+
+Typical error messages:
+- `Argument 'key' class ... does not match the key class ... required by this index`
+- `Argument 'k1' value ... does not match key value ... returned for object 'v' by 'getKey' function`
+
+Fix:
+1. Ensure the index key type matches the key you pass to `get()`/`getObj()`.
+2. If you use `setGetKey()`, confirm it returns the same key you use with `add()` and `rekey()`.
+3. Prefer using `get(K)` with a strongly typed key when possible.
+
 ## Maven Build
 
 **Problem: Maven build fails with

@@ -2,6 +2,7 @@ package com.taitl.existential.paths;
 
 import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
+import com.taitl.ex.common.helper.PathSupport;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.Text.*;
@@ -24,6 +25,7 @@ import static com.taitl.existential.constants.Strings.*;
  */
 public class ConcretePath
 {
+    private static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#invalid-operation-key";
     protected final String op;
 
     public ConcretePath(String op)
@@ -44,16 +46,16 @@ public class ConcretePath
 
     public boolean hasParent()
     {
-        return op.lastIndexOf(SLASH) != 0;
+        return PathSupport.hasParent(op);
     }
 
     public static void validate(String op)
     {
         op = trimmed(op, "op");
-        check(op.startsWith(SLASH), "Argument 'op' should start with a slash ('/')");
-        check(!SLASH.equals(op), ARG_OP_SINGLE_SLASH);
-        check(!op.endsWith(SLASH), "Argument 'op' should not end with a slash ('/')");
-        check(!op.contains(WILDCARD), ARG_OP_NO_WILDCARDS);
+        check(op.startsWith(SLASH), ARG_OP_FORMAT + " See " + TROUBLESHOOTING_SECTION);
+        check(!SLASH.equals(op), ARG_OP_SINGLE_SLASH + " See " + TROUBLESHOOTING_SECTION);
+        check(!op.endsWith(SLASH), ARG_OP_END_SLASH + " See " + TROUBLESHOOTING_SECTION);
+        check(!op.contains(WILDCARD), ARG_OP_NO_WILDCARDS + " See " + TROUBLESHOOTING_SECTION);
     }
 
     /**
@@ -68,11 +70,7 @@ public class ConcretePath
      */
     public ConcretePath getParent()
     {
-        if (!hasParent())
-        {
-            throw new IllegalStateException(String.format("OpKey '%s' has no parent key", op));
-        }
-        return new ConcretePath(op.substring(0, op.lastIndexOf(SLASH)));
+        return new ConcretePath(PathSupport.parentOrThrow(op, "OpKey"));
     }
 
     public int hashCode()

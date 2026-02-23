@@ -3,13 +3,15 @@ package com.taitl.ex.logic.events.actions;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;
 
+import static com.taitl.ex.common.helper.Predicates.*;
 import static com.taitl.ex.common.helper.State.*;
 
 public class ExecuteHandler
 {
     public static <T> void handle(On<T> handler, T t) throws ExistentialException
     {
-        // TODO: Replace with TRUTH predicate and disallow null action
+        prepare(handler);
+
         if (handler.immutable())
         {
             validateImmutable(handler, t);
@@ -40,7 +42,15 @@ public class ExecuteHandler
      */
     private static <T> boolean shouldExecute(On<T> handler, T t)
     {
-        return handler.condition == null || handler.condition.test(t);
+        return handler.condition.test(t);
+    }
+
+    private static <T> void prepare(On<T> handler)
+    {
+        if (handler.condition == null)
+        {
+            handler.condition = truth();
+        }
     }
 
     /**

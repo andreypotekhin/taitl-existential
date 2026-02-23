@@ -43,7 +43,7 @@ public class ConfigurationLogic implements Closeable
         sane(op, "op");
         verify(!ec.ex().configured(),
                 "Cannot call this method because setup has already been finalized");
-        return createBuilders.getcreateBuilder(op);
+        return createBuilders.getCreateBuilder(op);
     }
 
     /**
