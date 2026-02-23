@@ -2,7 +2,7 @@
 
 ## Project overview
 
-See /Readme.md and /docs/dev/Develompent.md.
+See /Readme.md and /docs/dev/Development.md.
 
 ## Documentation
 
@@ -270,9 +270,9 @@ Resolve any build or test issues resulved before completing the task.
 TODO items
 - Upon completion, move TODO items to docs/dev/todo/done.
 
-Specifications (Specifications.md)
+Specifications (Specification.md)
 - Back completed user stories with test cases in /src/test/java/com/taitl/existential/specs
-- In Specifications.md, prefix the completed user stories with + sign
+- In Specification.md, prefix the completed user stories with + sign
 
 Troubleshooting documentation
 - Output encountered issues and remedies into corresponding Troubleshooting.md documents, and deep-link to them from error messages.

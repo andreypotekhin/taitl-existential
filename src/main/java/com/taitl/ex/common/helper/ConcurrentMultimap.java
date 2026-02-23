@@ -3,21 +3,15 @@ package com.taitl.ex.common.helper;
 import java.util.*;
 import java.util.function.*;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Thread-safe multimap variant.
  * Returned sets are snapshots to avoid exposing mutable internal state across threads.
  */
 public class ConcurrentMultimap<K, V> extends Multimap<K, V>
 {
-    @Override
     public Set<V> get(K key)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
+        requireKey(key);
         synchronized (this)
         {
             Set<V> result = storage.get(key);
@@ -25,17 +19,10 @@ public class ConcurrentMultimap<K, V> extends Multimap<K, V>
         }
     }
 
-    @Override
     public Set<V> put(K key, V value)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
-        if (value == null)
-        {
-            throw new IllegalArgumentException(ARG_VALUE);
-        }
+        requireKey(key);
+        requireValue(value);
         synchronized (this)
         {
             Set<V> set = storage.computeIfAbsent(key, k -> new LinkedHashSet<>());
@@ -49,34 +36,20 @@ public class ConcurrentMultimap<K, V> extends Multimap<K, V>
         }
     }
 
-    @Override
     public V remove(Object key, V value)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
-        if (value == null)
-        {
-            throw new IllegalArgumentException(ARG_VALUE);
-        }
+        requireKey(key);
+        requireValue(value);
         synchronized (this)
         {
             return super.remove(key, value);
         }
     }
 
-    @Override
     public Set<V> remove(Object key, Predicate<? super V> match)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
-        if (match == null)
-        {
-            throw new IllegalArgumentException(ARG_MATCH);
-        }
+        requireKey(key);
+        requireMatch(match);
         synchronized (this)
         {
             Set<V> removed = super.remove(key, match);
@@ -84,13 +57,9 @@ public class ConcurrentMultimap<K, V> extends Multimap<K, V>
         }
     }
 
-    @Override
     public boolean containsKey(K key)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
+        requireKey(key);
         synchronized (this)
         {
             Set<V> values = storage.get(key);
@@ -98,7 +67,6 @@ public class ConcurrentMultimap<K, V> extends Multimap<K, V>
         }
     }
 
-    @Override
     public int size()
     {
         synchronized (this)
@@ -108,7 +76,6 @@ public class ConcurrentMultimap<K, V> extends Multimap<K, V>
         }
     }
 
-    @Override
     public void clear()
     {
         synchronized (this)
@@ -118,7 +85,6 @@ public class ConcurrentMultimap<K, V> extends Multimap<K, V>
         }
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public Class<? extends K> getKeyClass()
     {

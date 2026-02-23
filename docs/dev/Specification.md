@@ -10,18 +10,18 @@ The (+) signs indicate items already completed and covered by tests.
 
 ### Terminology
 
-Op: a business operation. Op name: business operation name, such as "/api/user/update"   
-Path: OS path-like notation for Op names   
+Op: a business operation. Op name: the business operation identifier, such as "/api/user/update"   
+Path: OS path-like notation for op names   
   - Abstract path can contain wildcards, such as "/api/*/update"
   - Concrete path doesn't contain wildcards
 Evaluable: anything that can be evaluated  
 Statement: an Evaluable that does not necessarily return a value  
 Expression: an Evaluable that returns a value
 Predicate: an Expression that returns a boolean value
-Invariant: a list of Predicate expressions
-Effect: a list of Statements
-Intent: a list of Statements for controlling access to entities, e.g. loading an entity from persistent store  
-Rule: a general term for invariants, effects and intents 
+Invariant: a list of Predicate expressions evaluated as constraints
+Effect: a list of Statements executed for side effects
+Intent: a list of Statements used to authorize or gate access to entities (e.g., loading from persistence)  
+Rule: an umbrella term for invariants, effects and intents 
 Event: an application or library event, such as: 
   - modifying an entity (e.g. Update<User>) 
   - accessing an entity (e.g. Read<User>)

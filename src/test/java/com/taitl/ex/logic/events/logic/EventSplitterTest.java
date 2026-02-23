@@ -4,12 +4,21 @@ import java.util.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
+import com.taitl.existential.constants.Strings;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class EventSplitterTest
 {
+    private static final class TestEventSplitter extends EventSplitter
+    {
+        private <T> Set<Event<T>> splitTransitPublic(Transit<T> transit, Set<Event<T>> set)
+        {
+            return splitTransit(transit, set);
+        }
+    }
+
     @Test
     void splitTransitUsesUpdatedEntityForChange()
     {
@@ -26,5 +35,16 @@ class EventSplitterTest
                 .orElseThrow(() -> new AssertionError("Change event not found"));
 
         assertSame(newValue, change.t);
+    }
+
+    @Test
+    void splitTransitRejectsNullTransitWithEventMessage()
+    {
+        TestEventSplitter splitter = new TestEventSplitter();
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                () -> splitter.splitTransitPublic(null, new LinkedHashSet<>()));
+
+        assertEquals(Strings.ARG_EVENT, error.getMessage());
     }
 }

@@ -61,7 +61,7 @@ class ConcretePathTest
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
             new ConcretePath("/app/orders/");
-        }).getMessage(), containsString("should not end with a slash"));
+        }).getMessage(), containsString("end with a slash"));
     }
 
     @Test

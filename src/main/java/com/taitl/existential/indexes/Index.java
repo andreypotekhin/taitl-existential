@@ -8,9 +8,9 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Index maps a single key ({@code K}) to a set of values ({@code V}).
- * Indexes make {@code Exists} expressions more performant.
- * Note: {@code null} is not allowed as a key or as a value.
+ * Index maps a single key (K) to a set of values (V).
+ * Indexes make Exists expressions more performant.
+ * Note: null is not allowed as a key or as a value.
  *
  * @param <K>
  *            Key type
@@ -19,10 +19,11 @@ import static com.taitl.ex.common.helper.State.*;
  */
 public class Index<K, V>
 {
+    private static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
     private static final String ARG_KEY_CLASS = "Argument 'key' class '%s' does not match the key class '%s'"
-            + " required by this index.";
+            + " required by this index. See " + TROUBLESHOOTING_SECTION;
     private static final String ARG_KEY_VALUE = "Argument 'k1' value '%s' does not match key value '%s'"
-            + " returned for object 'v' by 'getKey' function.";
+            + " returned for object 'v' by 'getKey' function. See " + TROUBLESHOOTING_SECTION;
 
     protected Multimap<K, V> storage = new Multimap<>();
     protected Function<V, K> getKey;
@@ -96,7 +97,7 @@ public class Index<K, V>
      *            Key for the value
      * @param v
      *            Value to be removed
-     * @return The value being removed, or {@code null} if the value is not in the index
+     * @return The value being removed, or null if the value is not in the index
      */
     public V remove(K k, V v)
     {

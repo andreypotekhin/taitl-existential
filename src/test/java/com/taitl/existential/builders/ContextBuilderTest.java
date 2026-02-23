@@ -15,6 +15,21 @@ import static org.junit.jupiter.api.Assertions.*;
 class ContextBuilderTest
 {
     @Test
+    void buildAttachesContextToParent()
+    {
+        ConfigBuilder configBuilder = new ConfigBuilder("/app");
+        ContextBuilder contextBuilder = configBuilder.context("/app");
+        Context context = new Context("/app");
+        contextBuilder.contextFactory(() -> context);
+        contextBuilder.invariant(new Invariant<>());
+
+        contextBuilder.build();
+
+        assertEquals(1, configBuilder.contexts.size());
+        assertSame(context, configBuilder.contexts.get(0));
+    }
+
+    @Test
     void preservesContextRuleOrder()
     {
         ConfigBuilder configBuilder = new ConfigBuilder("/app");

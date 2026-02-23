@@ -21,56 +21,41 @@ public class Multimap<K, V>
      */
     public Set<V> get(K key)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
+        requireKey(key);
         Set<V> result = storage.get(key);
         return result == null ? null : Collections.unmodifiableSet(result);
     }
 
     public Set<V> put(K key, V value)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
-        if (value == null)
-        {
-            throw new IllegalArgumentException(ARG_VALUE);
-        }
+        requireKey(key);
+        requireValue(value);
         synchronized (this)
         {
-            Set<V> set = storage.computeIfAbsent(key, k -> new LinkedHashSet<>());
-            if (set.isEmpty())
+            Set<V> values = storage.computeIfAbsent(key, k -> new LinkedHashSet<>());
+            if (values.isEmpty())
             {
                 size++;
                 validateSize();
             }
-            set.add(value);
-            return Collections.unmodifiableSet(set);
+            values.add(value);
+            return Collections.unmodifiableSet(values);
         }
     }
 
     public V remove(Object key, V value)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
-        if (value == null)
-        {
-            throw new IllegalArgumentException(ARG_VALUE);
-        }
+        requireKey(key);
+        requireValue(value);
         synchronized (this)
         {
-            Set<V> set = storage.get(key);
-            if (set == null)
+            Set<V> values = storage.get(key);
+            if (values == null)
             {
                 return null;
             }
-            boolean removed = set.remove(value);
-            if (removed && set.isEmpty())
+            boolean removed = values.remove(value);
+            if (removed && values.isEmpty())
             {
                 size--;
                 validateSize();
@@ -81,23 +66,17 @@ public class Multimap<K, V>
 
     public Set<V> remove(Object key, Predicate<? super V> match)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
-        if (match == null)
-        {
-            throw new IllegalArgumentException(ARG_MATCH);
-        }
+        requireKey(key);
+        requireMatch(match);
         synchronized (this)
         {
-            Set<V> set = storage.get(key);
-            if (set == null)
+            Set<V> values = storage.get(key);
+            if (values == null)
             {
                 return null;
             }
             Set<V> removed = new LinkedHashSet<>();
-            Iterator<V> iterator = set.iterator();
+            Iterator<V> iterator = values.iterator();
             while (iterator.hasNext())
             {
                 V value = iterator.next();
@@ -107,7 +86,7 @@ public class Multimap<K, V>
                     iterator.remove();
                 }
             }
-            if (!removed.isEmpty() && set.isEmpty())
+            if (!removed.isEmpty() && values.isEmpty())
             {
                 size--;
                 validateSize();
@@ -118,14 +97,14 @@ public class Multimap<K, V>
 
     public boolean containsKey(K key)
     {
-        if (key == null)
-        {
-            throw new IllegalArgumentException(ARG_KEY);
-        }
+        requireKey(key);
         Set<V> values = storage.get(key);
         return values != null && !values.isEmpty();
     }
 
+    /**
+     * Returns the number of keys that currently hold at least one value.
+     */
     public int size()
     {
         validateSize();
@@ -162,5 +141,29 @@ public class Multimap<K, V>
         }
         K result = storage.keySet().stream().findFirst().get();
         return (Class<? extends K>) result.getClass();
+    }
+
+    protected void requireKey(Object key)
+    {
+        if (key == null)
+        {
+            throw new IllegalArgumentException(ARG_KEY);
+        }
+    }
+
+    protected void requireValue(Object value)
+    {
+        if (value == null)
+        {
+            throw new IllegalArgumentException(ARG_VALUE);
+        }
+    }
+
+    protected void requireMatch(Object match)
+    {
+        if (match == null)
+        {
+            throw new IllegalArgumentException(ARG_MATCH);
+        }
     }
 }

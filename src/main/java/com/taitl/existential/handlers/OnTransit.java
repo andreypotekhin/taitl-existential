@@ -1,6 +1,7 @@
 package com.taitl.existential.handlers;
 
 import java.util.function.*;
+import com.taitl.ex.common.helper.Descriptions;
 import com.taitl.existential.events.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
@@ -116,15 +117,11 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
      */
     public String description()
     {
-        return description == null ? "" : description;
+        return Descriptions.text(description);
     }
 
     private String handlerMessage(String base)
     {
-        if (description == null || description.isEmpty())
-        {
-            return base;
-        }
-        return base + ": " + description;
+        return Descriptions.message(base, description);
     }
 }

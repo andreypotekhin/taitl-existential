@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
@@ -8,11 +9,14 @@ import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 
+/**
+ * Thread-safe registry of event type bit positions.
+ */
 public class EventMask
 {
-    protected static Map<String, Integer> eventBits = new LinkedHashMap<>();
-    protected static Map<Integer, String> eventTypes = new LinkedHashMap<>();
-    protected static int maxEventBit = -1;
+    protected static Map<String, Integer> eventBits = new ConcurrentHashMap<>();
+    protected static Map<Integer, String> eventTypes = new ConcurrentHashMap<>();
+    protected static volatile int maxEventBit = -1;
 
     static
     {

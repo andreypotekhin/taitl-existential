@@ -27,6 +27,21 @@ Reference:
 - Troubleshooting:
   - See `/Troubleshooting.md#library-configuration-load-failure`
 
+### Operation keys
+Operations are identified by op keys. These are path-like strings used to find matching contexts.
+Examples:
+- `/app/orders/create`
+- `/admin/users/reset-password`
+
+Rules:
+- Must start with a slash (`/`).
+- Must contain at least one path segment (cannot be just `/`).
+- Must not end with a slash.
+- Must not include wildcard characters (`*`).
+
+Troubleshooting:
+- See `/Troubleshooting.md#invalid-operation-key`
+
 #### More details on usage
 See /docs/dev/Specification.md for terminology and complete description of library behavior.
 

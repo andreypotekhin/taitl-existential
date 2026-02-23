@@ -86,7 +86,7 @@ public class TypeKey<T>
 
     public static <T> TypeKey<T> valueOf(Class<?> clz)
     {
-        return new TypeKey<>(clz, "");
+        return new TypeKey<>(clz);
     }
 
     public static <T> TypeKey<T> valueOf(Class<?> clz, String genericQualifier)

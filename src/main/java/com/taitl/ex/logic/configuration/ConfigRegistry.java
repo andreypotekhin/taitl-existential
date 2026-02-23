@@ -49,7 +49,7 @@ public class ConfigRegistry
         sane(config, "config");
         String op = config.name();
         verify(!configs.containsKey(op),
-                String.format("Cannot add Config for '%' - config already exists", op));
+                String.format("Cannot add Config for '%s' - config already exists", op));
         configs.put(op, config);
     }
 

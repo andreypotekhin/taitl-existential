@@ -27,6 +27,7 @@ public class Strings
     public static final String ARG_OP_FORMAT = "Argument 'op' should start with a slash ('/')";
     public static final String ARG_NAME = "Argument 'name' should not be null";
     public static final String ARG_EVENT = "Argument 'event' should not be null";
+    public static final String ARG_TRANSIT = "Argument 'transit' should not be null";
     public static final String ARG_EVENT_KEY = "Argument 'eventKey' should not be null";
     public static final String ARG_PERM_KEY = "Argument 'perm' should not be null";
     public static final String STATE_INDEX_NAME = "Value of 'indexName' field is null";

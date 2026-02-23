@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.function.*;
+import java.nio.file.attribute.*;
 import com.taitl.ex.common.helper.FileSecurity;
 import com.taitl.ex.common.helper.LimitedInputStream;
 import com.taitl.existential.*;
@@ -70,7 +71,7 @@ public class ConfigureLibrary
         verify(size <= MAX_CONFIG_BYTES,
                 String.format("Configuration file is too large (%d bytes). Max allowed is %d bytes. See %s",
                         size, MAX_CONFIG_BYTES, TROUBLESHOOTING_SECTION));
-        try (InputStream stream = Files.newInputStream(file))
+        try (InputStream stream = Files.newInputStream(file, LinkOption.NOFOLLOW_LINKS))
         {
             load(stream, file.toString());
         }
@@ -174,7 +175,9 @@ public class ConfigureLibrary
     {
         try
         {
-            return Files.size(file);
+            BasicFileAttributes attrs =
+                    Files.readAttributes(file, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+            return attrs.size();
         }
         catch (IOException e)
         {

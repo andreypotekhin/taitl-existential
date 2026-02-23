@@ -153,6 +153,7 @@ public class ContextBuilder
         {
             context.transaction(transactionFactory);
         }
+        parent.context(context);
         return parent;
     }
 
