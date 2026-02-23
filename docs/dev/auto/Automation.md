@@ -202,6 +202,7 @@ See 'Security specialist role' section in 'Team roles' of AGENTS.md
 Automation instructions
 
 - Find 1-2 security issues or bugs in the code, provide fixes.
+- Find and update 1-2 pom dependencies.
 - Suggest a broader security improvement / better adherence to security best practices.
 
 ### Consistency scrutinizer role
