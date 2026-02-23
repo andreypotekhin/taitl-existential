@@ -15,7 +15,7 @@ End-user documentation:
 
 ### Development documentation
 
-Development documentation: /docs/dev
+Development documentation: /docs/dev/
 
 - Setup.md: project setup
 - Specification.md: terminology, library claims, user stories
@@ -25,7 +25,7 @@ Development documentation: /docs/dev
 
 ### Agentic and automation documentation
 
-Agentic and automation documentation: /docs/dev/auto
+Agentic and automation documentation: /docs/dev/auto/
 
 - Automation.md: for automation contract and details on agents' parallel work.
 - AutomationFocus.md: document for automation focus and priorities.
@@ -80,8 +80,8 @@ Example: ConfigureClassRules.configure()
 - Intelligently indent contexts, configurables and rules within chained method structure
 
 ## Testing
-Test cases for code units live in src/test/java.
-Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/existential/specs.
+Test cases for code units live in /src/test/java.
+Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/existential/specs/.
 Testing standards, guidelines, structure are coverage limits: see style guide (/docs/dev/Style.md).
 
 ### Documenting
@@ -90,14 +90,14 @@ See 'Documenting' sections in /docs/dev/Style.md for details.
 
 #### Making suggestions
 As you assume team roles as described in 'Team roles' section below, come up with suggestions for improvements.
-Output suggestions into the [action id].[action title].md documents in suggestions dir (docs/dev/suggestions/).
+Output suggestions into the [action id].[action title].md documents in suggestions dir (/docs/dev/suggestions/).
 Focus each suggestion on a specific topic, so it may be implemented in parallel with other tasks.
 
 #### TODO items
 Keep track of the TODO items in [action id].[action title].md files similar to how it is done with suggestions.
-TODO items have similar directory structure and purposes (docs/dev/todo/, docs/dev/todo/approved, docs/dev/todo/done)
-Copy the approved suggestions (docs/dev/suggestions/approved) into corresponding todo files for implementation.
-Upon completion, move TODO items to docs/dev/todo/done upon completion, and move corresponding suggestions to docs/dev/suggestions/done.
+TODO items have similar directory structure and purposes (/docs/dev/todo/, /docs/dev/todo/approved, /docs/dev/todo/done)
+Copy the approved suggestions (/docs/dev/suggestions/approved) into corresponding todo files for implementation.
+Upon completion, move TODO items to docs/dev/todo/done upon completion, and move corresponding suggestions to /docs/dev/suggestions/done.
 
 
 ## Team roles
@@ -134,7 +134,7 @@ Simplify the code and the system without sacrificing functionality, performance,
 ### Planner role
 Plan for multistep tasks such as implementing a feature, refactoring a module, etc.
 Use /docs/dev/auto/Plans.md document for guidance on planning multistep tasks.
-Use approved suggestions (/docs/dev/suggestions/approved) as input for planning tasks.
+Use approved suggestions (/docs/dev/suggestions/approved/) as input for planning tasks.
 
 ### End-user advocate role
 As an end-user advocate, you are the voice of the end user in the development process.
