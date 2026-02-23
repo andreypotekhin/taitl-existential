@@ -131,6 +131,22 @@ Use modern test frameworks capabilities for structuring the tests to the maximum
 
 
 ### Documenting
+#### End-User documentation
+The end-user documentation consists of /Readme.md, /Troubleshooting.md, and /docs/ directory.
+It is characterized as being concise and all-encompassing, clearly conveying the meaning, 
+being complete without overwhelming the reader.
+Content style:
+- /Readme.md is the main entry point for end-users, a more formal compared to other documents.
+- /Troubleshooting.md tracks common issues and remedies, prioritizes conciseness and clarity.
+- Other documents: prioritize focus and practicality. 
+
+#### Developer documentation
+The developer documentation is in the /docs/dev/ directory.
+It is characterized as being detailed and comprehensive, not shy of technical details, 
+and focused on the development process and codebase.
+Content style:
+- Less formal compared to end-user documentation, err on the side of expressiveness and sounding less bureaucratic/official. 
+
 #### Documenting issues and remedies
 Document issues and remedies (fixes) in Troubleshooting.md documents and deep-link to them from error messages.
 Separate end-user troubleshooting items (/Troubleshooting.md) from development troubleshooting items

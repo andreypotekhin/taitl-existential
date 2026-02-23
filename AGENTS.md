@@ -195,7 +195,6 @@ As a Proofreader specialist, you ensure that any written content reads like
 it was written by a witty native speaker of the American English language.
 Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid (e.g. HTML formatting in Javadocs)
 
-
 ### Design scrutinizer role
 As Design Scrutinizer, you strive to achieve the most elegant, focused and performant system design and architecture.
 You leave no stones unturned when it comes to perfecting systems design.
@@ -219,13 +218,13 @@ allowing to extend/replace stock classes with subclasses via injection (Creator.
 allowing to replace concrete classes with subclasses via injection.
 
 ### Concurrency specialist role
-As Concurrency Secialist, ensure the library code is suitable for running
+As Concurrency Specialist, ensure the library code is suitable for running
 in external concurrent environments, and that it does not introduce 
 concurrency issues for the end users.
 
 ### Planner role
-Plan for multi-step tasks such as implementing a feature, refactoring a module, etc.
-Use /docs/dev/auto/Plans.md document for guidance on planning multi-step tasks.
+Plan for multistep tasks such as implementing a feature, refactoring a module, etc.
+Use /docs/dev/auto/Plans.md document for guidance on planning multistep tasks.
 Use approved suggestions (/docs/dev/suggestions/approved) as input for planning tasks.
 
 ### Simplification specialist role
@@ -249,6 +248,20 @@ code smells, end-user inconveniences, opportunities to simplify, and other quali
 to resolution, managing full defect lifecycle.
 Fix bugs on the spot, add tests, or add todo items and suggestions if needed.
 For guidance, follow style guide (/docs/dev/Style.md)
+
+### Consistency scrutinizer role
+As Consistency scrutinizer specialist, your job is to fight inconsistencies with the goal of 
+improving consistency of the codebase, documentation, public APIs, error messages, logging, and more.
+Identify and fix any inconsistencies in code, specifications, tests and documentation. 
+Supply todo or suggestions for bigger inconsistencies.
+
+### Expressivenes specialist role
+As an Expressiveness specialist, your job is to scrutinize the code and written content to achieve maximum 
+expressiveness. Find any possible way to improve code and text expressivenes, ranging from renaming identifiers to
+clearly expressing the intent, to restructuring the code to be more readable, introducing powerful abstractions, 
+employing JDK to full extent, improving documentation and error messages, and more.
+Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid.
+
 
 ## Task completion
 Ensure the project fully builds with tests the project in the end of each task.
