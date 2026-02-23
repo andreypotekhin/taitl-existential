@@ -1,7 +1,7 @@
 # Implement library configuration loading and user-facing documentation
 
-This ExecPlan is a living document. The sections `Progress`, `Surprises & Discoveries`, `Decision Log`, and
-`Outcomes & Retrospective` must be kept up to date as work proceeds.
+This execution plan is a living document. The sections `Progress`, `Surprises & Discoveries`, `Decision Log`, 
+and `Outcomes & Retrospective` must be kept up to date as work proceeds.
 
 This document is maintained in accordance with
 `/Users/chaos/Files/Dev/Code/taitl-existential/docs/dev/auto/Plans.md`.

@@ -135,11 +135,11 @@ public class ContextBuilder
         for (Supplier<? extends Evs<?>> supplier : evsSuppliers)
         {
             Evs<?> evs = supplier.get();
-            if (evs instanceof Invariant invariant)
+            if (evs instanceof Invariant<?> invariant)
             {
                 context.invariant(invariant);
             }
-            else if (evs instanceof Effect effect)
+            else if (evs instanceof Effect<?> effect)
             {
                 context.effect(effect);
             }

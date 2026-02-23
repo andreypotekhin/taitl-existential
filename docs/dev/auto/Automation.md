@@ -33,6 +33,104 @@ Follow 'Documenting' subsections in AGENTS.md for guidance on item id and format
 Observe existing suggestions: move the ones approved for execution to docs/dev/suggestions/approved.
 For an approved suggestion, create the corresponding todo item in docs/dev/todo/approved.
 
+### Design scrutinizer role
+
+See 'Design scrutinizer role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+- Find a poorly designed or design opportunity area in the existing code, suggest improvements
+- Find a poorly designed or design opportunity in library specifications, suggest improvements
+
+### Simplification specialist role
+
+See 'Simplification specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Analyze the codebase for opportunity to simplify, such as areas of overdesign, convolution, or difficulty to understand.
+- If no opportunities found, wrap up.
+- Focus on opportunity that can benefit from simplification the most.
+- Provide fixes and document the rationales for simplification.
+
+Limits
+
+- Only consider stable parts of the codebase that are not under active development.
+
+### Planner role
+
+See 'Planner role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Consider a suggestion under /docs/dev/suggestions/planned
+- Create ExecPlan as described in docs/dev/auto/Plans.md
+- Output the resulting ExecPlan to docs/dev/planning/ with short descriptive name
+- Discuss and refine the plan with human user
+- Upon approval from human user, proceed with plan implementation
+- Move implemented plan to docs/dev/planning/done/
+
+Notes
+
+- Example plan: docs/dev/planning/done/LibraryConfiguration.plan.md
+
+### End-user advocate role
+
+See 'End-user advocate role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 2-3 opportunities to improve the library for end user, and provide fixes.
+  (e.g. better documentation, error messages, exceptions, logging, public code structure for readability and
+  maintainability).
+- Create suggestions for broader refactorings.
+
+Limits
+
+- Focus on public-facing public code, documentation;
+  but be all-encompassing on the error messages/logging (cause they eventually bubble up to end-user).
+- Ensure to follow the style guide (/docs/dev/Style.md)
+
+### Open source specialist role
+
+See 'Open source specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 2-3 opportunities to improve the library for open source contribution and delivery,
+  (e.g. better documentation, better error messages, more helpful exceptions, better logging, better test coverage,
+  better code structure for readability and maintainability)
+- Provide changes or add a todo item document.
+- For more extensive refactorings, add todo items or suggestions
+- Update Changelog.md with recent changes
+
+Limits
+
+- Only consider stable parts of the codebase not under active development.
+- Ensure to follow the style guide (/docs/dev/Style.md)
+
+### Extensibility specialist role
+
+See 'Extensibility specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find library code area with poor extensibility, provide fixes, tests or todo item or suggestions for bigger issues
+- If no issues found, wrap up.
+- Provide suggestion for overall extensibility
+
+### Concurrency specialist role
+
+See 'Concurrency specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Analyze library code for potential problems with external concurrency
+- Analyze library code for potential problems with internal concurrency
+- If no issues found, wrap up.
+- For found potential external concurrency issues, provide fixes, tests and documentation
+- For found internal concurrency issues, provide fixes, tests and documentation
+- Provide suggestion for overall improvements of external concurrency
+
 ### Technical debt specialist role
 
 See 'Technical debt specialist roles' section in 'Team roles' of AGENTS.md
@@ -107,40 +205,65 @@ Automation instructions
 - Find a security issue or bugs in the code, provide a fix or add a todo item.
 - Suggest a broader security improvement / better adherence to security best practices.
 
-### Open source specialist role
+### Consistency scrutinizer role
 
-See 'Open source specialist role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Find 2-3 opportunities to improve the library for open source contribution and delivery,
-  (e.g. better documentation, better error messages, more helpful exceptions, better logging, better test coverage,
-  better code structure for readability and maintainability)
-- Provide changes or add a todo item document.
-- For more extensive refactorings, add todo items or suggestions
-- Update Changelog.md with recent changes 
-
-Limits
-
-- Only consider stable parts of the codebase not under active development.
-- Ensure to follow the style guide (/docs/dev/Style.md)
-
-### End-user advocate role
-
-See 'End-user advocate role' section in 'Team roles' of AGENTS.md
+See 'Consistency scrutinizer role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 
-- Find 2-3 opportunities to improve the library for end user, and provide fixes.
-  (e.g. better documentation, error messages, exceptions, logging, public code structure for readability and
-  maintainability).
-- Create suggestions for broader refactorings.
+- Find 3-4 opportunities to improve consistency in codebase, documentation, public API, error messages, logging,
+  or other aspects.
+- Provide fixes and tests, or add todo items for larger issues
+- Suggests refactorings for bigger inconsistencies
 
 Limits
 
-- Focus on public-facing public code, documentation;
-  but be all-encompassing on the error messages/logging (cause they eventually bubble up to end-user).
-- Ensure to follow the style guide (/docs/dev/Style.md)
+- Only consider stable parts of the codebase that are not under active development.
+
+### Expressivenes specialist role
+
+See 'Expressivenes specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 1-2 code areas with poor expressiveness, provide fixes
+- Find 1-2 documentation areas with poor expressiveness, provide improvements
+
+Limits
+
+- Only consider stable parts of the codebase that are not under active development.
+
+### Style scrutinizer role
+
+See 'Style scrutinizer role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 3-4 code areas with poor styling, provide fixes
+- Find 3-4 with poor Javadoc, provide improvements
+
+### Testing specialist role
+
+See 'Testing specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 1-2 code areas with poor coverage, provide tests
+
+Limits
+
+- Only consider stable parts of the codebase that are not under active development.
+
+### QA specialist role
+
+See 'QA specialist role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 1-2 bugs or quality issues in codebase
+- If no bugs/issues found, wrap up.
+- Provide fixes and tests, or add todo items for larger issues
+- Suggests refactorings to improve end product quality
 
 ### Documentation specialist role
 
@@ -171,125 +294,3 @@ Automation instructions
 - Add/repair .md
 - No logic changes
 
-### Design scrutinizer role
-
-See 'Design scrutinizer role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-- Find a poorly designed or design opportunity area in the existing code, suggest improvements
-- Find a poorly designed or design opportunity in library specifications, suggest improvements
-
-### Style scrutinizer role
-
-See 'Style scrutinizer role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Find 3-4 code areas with poor styling, provide fixes
-- Find 3-4 with poor Javadoc, provide improvements
-
-### Extensibility specialist role
-
-See 'Extensibility specialist role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Find library code area with poor extensibility, provide fixes, tests or todo item or suggestions for bigger issues
-- If no issues found, wrap up.
-- Provide suggestion for overall extensibility
-
-### Concurrency specialist role
-
-See 'Concurrency specialist role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Analyze library code for potential problems with external concurrency
-- Analyze library code for potential problems with internal concurrency
-- If no issues found, wrap up.
-- For found potential external concurrency issues, provide fixes, tests and documentation 
-- For found internal concurrency issues, provide fixes, tests and documentation
-- Provide suggestion for overall improvements of external concurrency
-
-### Planner role
-
-See 'Planner role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Consider a suggestion under /docs/dev/suggestions/approved
-- Create ExecPlan as described in docs/dev/auto/Plans.md
-- Output the resulting ExecPlan to docs/dev/planning/ with short descriptive name
-- Discuss and refine the plan with human user
-- Upon approval from human user, proceed with plan implementation
-- Move implemented plan to docs/dev/planning/done/
-
-Notes
-
-- Example plan: docs/dev/planning/done/LibraryConfiguration.plan.md
-
-### Simplification specialist role
-
-See 'Simplification specialist role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Analyze the codebase for opportunity to simplify, such as areas of overdesign, convolution, or difficulty to understand.
-- If no opportunities found, wrap up.
-- Focus on opportunity that can benefit from simplification the most. 
-- Provide fixes and document the rationales for simplification.
-
-Limits
-
-- Only consider stable parts of the codebase that are not under active development.
-
-### Testing specialist role
-
-See 'Testing specialist role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Find 1-2 code areas with poor coverage, provide tests
-
-Limits
-
-- Only consider stable parts of the codebase that are not under active development.
-
-### QA specialist role
-
-See 'QA specialist role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Find 1-2 bugs or quality issues in codebase
-- If no bugs/issues found, wrap up.
-- Provide fixes and tests, or add todo items for larger issues
-- Suggests refactorings to improve end product quality
-
-### Consistency scrutinizer role
-
-See 'Consistency scrutinizer role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Find 3-4 opportunities to improve consistency in codebase, documentation, public API, error messages, logging, 
-or other aspects.
-- Provide fixes and tests, or add todo items for larger issues
-- Suggests refactorings for bigger inconsistencies
-
-Limits
-
-- Only consider stable parts of the codebase that are not under active development.
-
-### Expressivenes specialist role
-
-See 'Expressivenes specialist role' section in 'Team roles' of AGENTS.md
-
-Automation instructions
-
-- Find 1-2 code areas with poor expressiveness, provide fixes
-- Find 1-2 documentation areas with poor expressiveness, provide improvements
-
-Limits
-
-- Only consider stable parts of the codebase that are not under active development.
