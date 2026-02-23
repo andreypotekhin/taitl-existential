@@ -28,7 +28,7 @@ public class ConfigRegistry
     {
         sane(op, "op");
         Config o = configs.get(op);
-        verify(o != null, "Config not found, id=" + op);
+        verify(o != null, String.format("Config not found for op '%s'", op));
         return o;
     }
 
@@ -36,7 +36,7 @@ public class ConfigRegistry
     {
         sane(op, "op");
         Config o = configs.get(op);
-        verify(o != null, "Config not found, id=" + op);
+        verify(o != null, String.format("Config not found for op '%s'", op));
         synchronized (configs)
         {
             configs.remove(op);

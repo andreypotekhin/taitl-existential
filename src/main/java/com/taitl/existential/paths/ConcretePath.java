@@ -26,6 +26,7 @@ import static com.taitl.existential.constants.Strings.*;
 public class ConcretePath
 {
     private static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#invalid-operation-key";
+    private static final String PARENT_LABEL = "Operation key";
     protected final String op;
 
     public ConcretePath(String op)
@@ -70,7 +71,7 @@ public class ConcretePath
      */
     public ConcretePath getParent()
     {
-        return new ConcretePath(PathSupport.parentOrThrow(op, "OpKey"));
+        return new ConcretePath(PathSupport.parentOrThrow(op, PARENT_LABEL));
     }
 
     public int hashCode()

@@ -22,7 +22,7 @@ To do so, the library allows end users to:
 allowing different sets of rules to apply to different circumstances.
 
 ### Terminology, use cases, user stories
-See Specification.md for terminology and detailed description of library behavior.
+See /docs/dev/Specification.md for terminology and detailed description of library behavior.
 
 ### Architecture
 
@@ -60,7 +60,7 @@ Package structure:
   -  com.taitl.ex.validation: validation logic (e.g. ValidateTransaction)
 
 ### Setup
-See Setup.md for setup and prerequisites.
+See /docs/dev/Setup.md for setup and prerequisites.
 
 ### Building
 Use regular Maven commands to build the project:
@@ -69,5 +69,5 @@ Use regular Maven commands to build the project:
     mvn -T 2C install -am --offline # speed build (offline)
 
 ### Troubleshooting
-Refer to Troubleshooting.md.
+Refer to /docs/dev/Troubleshooting.md.
 If using custom classes, remove them and verify whether the library works without them.

@@ -1,4 +1,4 @@
-## Troubleshooting
+# Troubleshooting
 
 ### Problem (Initialization order): `NullPointerException` during startup
 When: Running tests or app startup after adding/changing constructor collaborators.

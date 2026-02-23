@@ -37,7 +37,7 @@ class ConcretePathTest
         ConcretePath path = new ConcretePath("/app");
 
         assertThat(assertThrows(IllegalStateException.class, path::getParent).getMessage(),
-                containsString("has no parent key"));
+                allOf(containsString("Operation key"), containsString("has no parent key")));
     }
 
     @Test
