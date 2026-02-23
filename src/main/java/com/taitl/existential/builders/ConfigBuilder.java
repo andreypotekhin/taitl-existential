@@ -5,6 +5,7 @@ import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.constants.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -129,6 +130,8 @@ public class ConfigBuilder
         {
             config.addContext(context);
         }
+
+        config.indexes().useFullClassNames(ec.ex().get(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES));
 
         // Create intermediates for consumption by subsequent stages
         ec.onFinishConfiguration(name);

@@ -10,6 +10,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ConfigIndexes
 {
+    boolean useFullClassNames;
     ConfiguredEventKeys configuredEventKeys;
     public ConfiguredEventHandlers configuredEventHandlers;
     public ConfiguredHandlers configuredHandlers;
@@ -49,6 +50,16 @@ public class ConfigIndexes
     public EventField eventField()
     {
         return eventField;
+    }
+
+    public boolean useFullClassNames()
+    {
+        return useFullClassNames;
+    }
+
+    public void useFullClassNames(boolean useFullClassNames)
+    {
+        this.useFullClassNames = useFullClassNames;
     }
 
     public void close()

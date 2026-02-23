@@ -16,7 +16,16 @@ public class Flags
      */
     public static final int BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS = 16;
 
-    public static final int FLAG_6 = 32;
+    /**
+     * Uses fully-qualified class names for library-inferred type keys (event/read/write overloads without TypeKey).
+     */
+    public static final int BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES = 32;
+
+    /**
+     * @deprecated Use BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES.
+     */
+    @Deprecated
+    public static final int FLAG_6 = BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES;
     public static final int FLAG_7 = 64;
     public static final int FLAG_8 = 128;
     public static final int FLAG_9 = 256;

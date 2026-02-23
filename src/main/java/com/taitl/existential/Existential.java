@@ -56,7 +56,10 @@ public final class Existential implements Closeable
     /**
      * Commits an existential transaction.
      * Validates rules configured for the transaction's business operation.
-     * After {@code commit()}, {@code tranID} becomes invalid.
+     * After commit, tranID becomes invalid.
+     *
+     * @param tranID transaction id
+     * @throws ExistentialException when validation or commit fails
      */
     public void commit(String tranID) throws ExistentialException
     {
@@ -71,7 +74,10 @@ public final class Existential implements Closeable
     /**
      * Rolls back an existential transaction.
      * Rule validation is not performed.
-     * After {@code rollback()}, {@code tranID} becomes invalid.
+     * After rollback, tranID becomes invalid.
+     *
+     * @param tranID transaction id
+     * @throws ExistentialException when rollback fails
      */
     public void rollback(String tranID) throws ExistentialException
     {

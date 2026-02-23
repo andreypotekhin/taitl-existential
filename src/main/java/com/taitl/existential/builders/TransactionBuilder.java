@@ -189,13 +189,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder begin(Consumer<? super T> action)
     {
-        sane(action, "action");
-        cycle(new Trancycle<T>() {
-            {
-                begin(action);
-            }
-        });
-        return this;
+        return addLifecycle(action, cycle -> cycle.begin(action));
     }
 
     /**
@@ -209,13 +203,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder commit(Consumer<? super T> action)
     {
-        sane(action, "action");
-        cycle(new Trancycle<T>() {
-            {
-                commit(action);
-            }
-        });
-        return this;
+        return addLifecycle(action, cycle -> cycle.commit(action));
     }
 
     /**
@@ -229,13 +217,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder rollback(Consumer<? super T> action)
     {
-        sane(action, "action");
-        cycle(new Trancycle<T>() {
-            {
-                rollback(action);
-            }
-        });
-        return this;
+        return addLifecycle(action, cycle -> cycle.rollback(action));
     }
 
     /**
@@ -249,13 +231,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder checkpoint(Consumer<? super T> action)
     {
-        sane(action, "action");
-        cycle(new Trancycle<T>() {
-            {
-                checkpoint(action);
-            }
-        });
-        return this;
+        return addLifecycle(action, cycle -> cycle.checkpoint(action));
     }
 
     /**
@@ -266,6 +242,18 @@ public class TransactionBuilder
     public TransactionBuilder done()
     {
         return this;
+    }
+
+    /**
+     * Centralizes lifecycle handler wiring to keep the fluent entry points uniform.
+     */
+    protected <T extends Transaction> TransactionBuilder addLifecycle(Consumer<? super T> action,
+            Consumer<Trancycle<T>> registrar)
+    {
+        sane(action, "action");
+        Trancycle<T> cycle = new Trancycle<>();
+        registrar.accept(cycle);
+        return cycle(cycle);
     }
 
     protected Transaction createInstance()

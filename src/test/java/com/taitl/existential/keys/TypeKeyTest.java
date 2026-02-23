@@ -15,10 +15,13 @@ class TypeKeyTest
     {
         assertThat(new TypeKey("Doc").toString(), is("Doc"));
         assertThat(new TypeKey(TypeKey.class).toString(), is("TypeKey"));
+        assertThat(new TypeKey(TypeKeyTest.class, true).toString(), is("com.taitl.existential.keys.TypeKeyTest"));
         assertThat(new TypeKey(Set.class, "Document").toString(), is("Set<Document>"));
         assertThat(new TypeKey(Set.class, "<Document>").toString(), is("Set<Document>"));
         assertThat(new TypeKey("Set<Document>").toString(), is("Set<Document>"));
         assertThat(new TypeKey(Set.class, "List<Document>").toString(), is("Set<List<Document>>"));
+        assertThat(new TypeKey(Set.class, "List<Document>", true).toString(),
+                is("java.util.Set<List<Document>>"));
         assertThrows(IllegalArgumentException.class, () -> {
             new TypeKey((String) null);
         });
@@ -43,8 +46,14 @@ class TypeKeyTest
     }
 
     @Test
-    void valueOf()
+    void valueOfFull()
     {
+        assertThat(TypeKey.valueOfFull(TypeKeyTest.class).toString(),
+                is("com.taitl.existential.keys.TypeKeyTest"));
+        assertThat(TypeKey.valueOfFull(Set.class, "List<Document>").toString(),
+                is("java.util.Set<List<Document>>"));
+        assertThat(TypeKey.valueOfFull(new TypeKeyTest()).toString(),
+                is("com.taitl.existential.keys.TypeKeyTest"));
     }
 
     @Test

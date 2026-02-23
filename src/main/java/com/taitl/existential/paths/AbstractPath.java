@@ -8,17 +8,17 @@ import static com.taitl.ex.common.helper.Text.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
- * Path-like representation of a business operation, serving as a key for finding
- * appropriate contexts, including wildcard and parent contexts.
+ * Path-like representation of a business operation, serving as a key for locating
+ * matching contexts, including wildcard and parent contexts.
  *
- * Example:
- * {@code /app/orders/update}
- * {@code /app/orders} - parent context
- * {@code /} - root context (parent to all contexts)
- * {@code /app/*a/update} - wildcard context
+ * Examples:
+ * /app/orders/update
+ * /app/orders - parent context
+ * / - root context (parent to all contexts)
+ * /app/*a/update - wildcard context
  *
- * An {@link AbstractPath} cannot end with a slash.
- * The wildcard character ({@code *}) is allowed in a context key.
+ * An AbstractPath cannot end with a slash.
+ * The wildcard character (*) is allowed in a context key.
  *
  * @see Context
  * @see Transaction
@@ -34,7 +34,6 @@ public class AbstractPath
         this.path = trimmed(path, "name");
     }
 
-    @Override
     public String toString()
     {
         return path;
@@ -69,8 +68,8 @@ public class AbstractPath
      * Throws {@link IllegalStateException} if this key is a top-level key (has no parent).
      *
      * Example:
-     * Key: {@code /app/orders/update}
-     * Parent key: {@code /app/orders}
+     * Key: /app/orders/update
+     * Parent key: /app/orders
      *
      * @return A shortened key without the part starting with the last slash.
      * @throws IllegalStateException if this key is a top-level key (has no parent).
@@ -84,13 +83,11 @@ public class AbstractPath
         return new AbstractPath(path.substring(0, path.lastIndexOf(SLASH)));
     }
 
-    @Override
     public int hashCode()
     {
         return path.hashCode();
     }
 
-    @Override
     public boolean equals(Object other)
     {
         if (other == this)
