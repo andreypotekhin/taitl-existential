@@ -185,12 +185,8 @@ See 'Style scrutinizer role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 
-- Find 1-2 code areas with poor styling, provide fixes
-- Find 1-2 with poor Javadoc, provide improvements
-
-Limits
-
-- Only consider stable parts of the codebase that are not under active development.
+- Find 3-4 code areas with poor styling, provide fixes
+- Find 3-4 with poor Javadoc, provide improvements
 
 ### Extensibility specialist role
 
@@ -276,7 +272,7 @@ See 'Consistency scrutinizer role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 
-- Find 1-2 opportunities to improve consistency in codebase, documentation, public API, error messages, logging, 
+- Find 3-4 opportunities to improve consistency in codebase, documentation, public API, error messages, logging, 
 or other aspects.
 - Provide fixes and tests, or add todo items for larger issues
 - Suggests refactorings for bigger inconsistencies

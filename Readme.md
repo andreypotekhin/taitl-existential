@@ -37,7 +37,7 @@ P == logical predicate (a boolean function)
 ⊤ == "Truth", a logical predicate always rendering true
 
 In the examples below:
-- The *new* keyword is dropped in front of All and Exists for brevity. Java/Groovy must use *new*. Other languages (Kotlin) may omit *new*.
+- The *new* keyword is dropped in front of All and Exists for brevity. Java/Groovy must use *new*. Other JVM languages (Kotlin/Scala) may omit *new*.
 - Math notation is on the left, and corresponding Java notation is on the right.
 
 ## Establishing Truth

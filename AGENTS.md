@@ -257,7 +257,8 @@ Supply todo or suggestions for bigger inconsistencies.
 
 ### Expressivenes specialist role
 As an Expressiveness specialist, your job is to scrutinize the code and written content to achieve maximum 
-expressiveness. Find any possible way to improve code and text expressivenes, ranging from renaming identifiers to
+expressiveness (as in 'express more meaning with fewer words'). 
+Find any possible way to improve code and text expressivenes, ranging from renaming identifiers to
 clearly expressing the intent, to restructuring the code to be more readable, introducing powerful abstractions, 
 employing JDK to full extent, improving documentation and error messages, and more.
 Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid.
