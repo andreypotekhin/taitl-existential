@@ -47,7 +47,11 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
 
     public OnTransit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
     {
-        sane(condition, "condition", action, "action", description, "description");
+        sane(condition, "condition", description, "description");
+        if (action != null)
+        {
+            sane(action, "action");
+        }
         this.condition = condition;
         this.action = action;
         this.description = description;
@@ -63,7 +67,11 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
     public OnTransit(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action,
             String description)
     {
-        sane(bicondition, "bicondition", action, "action", description, "description");
+        sane(bicondition, "bicondition", description, "description");
+        if (action != null)
+        {
+            sane(action, "action");
+        }
         this.bicondition = bicondition;
         this.action = action;
         this.description = description;
@@ -86,7 +94,7 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
             throw new IllegalArgumentException(ARG_T0_T1);
         }
 
-        boolean conditionMet = false;
+        boolean conditionMet = true;
 
         if (bicondition != null)
         {
@@ -99,6 +107,11 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
 
         if (conditionMet)
         {
+            if (action == null)
+            {
+                return;
+            }
+
             try
             {
                 action.accept(t0, t1);
@@ -107,6 +120,10 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
             {
                 throw new EventHandlerExecutionException(handlerMessage(EVENT_HANDLER_EXECUTION_FAILED), e);
             }
+        }
+        else if (action == null)
+        {
+            throw new EventHandlerExecutionException(handlerMessage(CONDITION_NOT_MET));
         }
     }
 

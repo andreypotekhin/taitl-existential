@@ -47,7 +47,7 @@ public class OnCU<T> extends On<T> implements EventHandlerWithSideEffects<T>
      */
     public OnCU(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        super(action);
+        super(condition, action);
     }
 
     /**

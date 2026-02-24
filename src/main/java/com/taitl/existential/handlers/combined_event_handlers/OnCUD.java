@@ -46,7 +46,7 @@ public class OnCUD<T> extends On<T> implements EventHandlerWithSideEffects<T>
      */
     public OnCUD(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        super(action);
+        super(condition, action);
     }
 
     /**

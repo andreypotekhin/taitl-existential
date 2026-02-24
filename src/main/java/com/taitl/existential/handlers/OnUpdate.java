@@ -1,7 +1,6 @@
 package com.taitl.existential.handlers;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.function.*;
 import com.taitl.existential.handlers.types.*;
 
 /**
@@ -24,7 +23,7 @@ public class OnUpdate<T> extends On<T> implements EventHandlerWithSideEffects<T>
 
     public OnUpdate(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        super(action);
+        super(condition, action);
     }
 
     public OnUpdate(Predicate<? super T> condition, Consumer<? super T> action, String description)

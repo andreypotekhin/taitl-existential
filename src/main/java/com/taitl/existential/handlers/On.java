@@ -80,6 +80,10 @@ public class On<T> implements EventHandler<T>
     public On(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", description, "description");
+        if (action != null)
+        {
+            sane(action, "action");
+        }
         this.condition = condition;
         this.action = action;
         this.description = description;

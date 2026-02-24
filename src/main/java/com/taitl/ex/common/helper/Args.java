@@ -57,12 +57,7 @@ public class Args
 
     public static void check(boolean condition, String message, Object... args)
     {
-        requireEvenArgs(args);
-        if (!condition)
-        {
-            throw new IllegalArgumentException(message);
-        }
-        ArgPairChecks.requireAllTrue(messageArg -> {
+        ArgPairChecks.requireAllTrue(condition, message, messageArg -> {
             throw new IllegalArgumentException(messageArg);
         }, args);
     }

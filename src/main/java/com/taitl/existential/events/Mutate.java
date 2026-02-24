@@ -7,18 +7,18 @@ import com.taitl.ex.common.helper.*;
 import com.taitl.existential.events.types.*;
 
 /**
- * Indicates a change that has happened to an application entity during current transaction.
- * 
- * Unlike Event<T> classes, provides both initial and final states of entity in the course of transaction. Unlike
- * Permutate<T>, initial and final states guaranteed to not be null.
- * 
- * Initial state (t0): entity state in the beginning of transaction Final state (t1): entity state in the end of
- * transaction
- * 
- * Example: Mutate<Account> is raised when Account entity was updated in the course of current transaction.
- * 
+ * Signals a change to an application entity during the current transaction.
+ *
+ * Unlike {@link Event} classes, provides both the initial and final entity states.
+ * Unlike {@link Transit}, both states are required and non-null.
+ *
+ * Initial state (t0): entity state at the beginning of the transaction.
+ * Final state (t1): entity state at the end of the transaction.
+ *
+ * Example: Mutate<Account> is raised when an Account entity is updated during the current transaction.
+ *
  * Database analog: UPDATE
- * 
+ *
  * @param <T>
  *            Class of application entity
  * @see Event

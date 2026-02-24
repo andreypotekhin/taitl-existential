@@ -6,20 +6,19 @@ import com.taitl.existential.events.types.*;
 import static com.taitl.existential.constants.Strings.*;
 
 /**
- * Indicates that an application entity has been created, changed or deleted during current transaction.
- * 
- * Unlike Event<T> classes, provides both initial and final states of entity in the course of transaction. Unlike
- * Mutate<T>, one of initial or final states is allowed to be null. Null in initial state indicates the entity has been
- * created. Null in final state indicates the entity has been deleted.
- * 
- * Initial state (t0): entity state in the beginning of transaction. Null indicates the entity has been created. Final
- * state (t1): entity state in the end of transaction. Null indicates the entity has been deleted.
- * 
- * Example: Transit<Account> is raised when Account entity has been created, updated or deleted in the course of
+ * Signals that an entity was created, updated, or deleted during the current transaction.
+ *
+ * Unlike {@link Event} classes, provides both the initial and final entity states.
+ * Unlike {@link Mutate}, either state may be null.
+ *
+ * Initial state (t0): entity state at the beginning of the transaction. Null means the entity was created.
+ * Final state (t1): entity state at the end of the transaction. Null means the entity was deleted.
+ *
+ * Example: Transit<Account> is raised when an Account entity is created, updated, or deleted during the
  * current transaction.
- * 
+ *
  * Database analogs: INSERT, UPDATE, DELETE
- * 
+ *
  * @param <T>
  *            Class of application entity
  * @see Event

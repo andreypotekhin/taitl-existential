@@ -19,6 +19,8 @@ import static com.taitl.ex.common.helper.Text.*;
  */
 public class TypeKey<T>
 {
+    private static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#type-key-format";
+    private static final String TROUBLESHOOTING_LINK = " See " + TROUBLESHOOTING_SECTION;
     protected String key;
 
     /**
@@ -26,11 +28,11 @@ public class TypeKey<T>
      * Takes advantage of Java's anonymous class syntax to capture the generic type
      * information at runtime (not available otherwise).
      *
-     * Usage: anonymous subclass of TypeKey with the desired generic type:
-     * new TypeKey<MyClass<GenericParams>>(){}
+     * Usage: create an anonymous subclass of TypeKey with the desired generic type:
+     * {@code new TypeKey<MyClass<GenericParams>>(){}}
      *
-     * Example: TypeKey<Document<JSON>>(){}
-     * Result: "Document<JSON>"
+     * Example: {@code new TypeKey<Document<JSON>>(){}}
+     * Result: {@code "Document<JSON>"}
      */
     protected TypeKey()
     {
@@ -49,8 +51,9 @@ public class TypeKey<T>
         Type superclass = getClass().getGenericSuperclass();
         if (!(superclass instanceof ParameterizedType))
         {
-            throw new IllegalArgumentException("You should call this method with an anonimous subclass of TypeKey,"
-                    + " parameterized with a type. Example: new TypeKey<Document<JSON>>(){}");
+            throw new IllegalArgumentException("You should call this method with an anonymous subclass of TypeKey,"
+                    + " parameterized with a type. Example: new TypeKey<Document<JSON>>(){}"
+                    + TROUBLESHOOTING_LINK);
         }
         // Get TypeKey parameter type, e.g. Document<JSON>
         Type type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
@@ -61,52 +64,52 @@ public class TypeKey<T>
      * Constructs TypeKey for a class without generics.
      * Example: TypeKey(Car.class): "Car"
      *
-     * @param clz Class to construct TypeKey from
+     * @param typeClass Class to construct TypeKey from
      */
-    public TypeKey(Class<?> clz)
+    public TypeKey(Class<?> typeClass)
     {
-        setKey(clz, "", false);
+        setKey(typeClass, "", false);
     }
 
     /**
      * Constructs TypeKey for a class without generics, optionally using fully-qualified class name.
      * Example: TypeKey(Car.class): "Car" or "com.example.Car"
      *
-     * @param clz         Class to construct TypeKey from
+     * @param typeClass   Class to construct TypeKey from
      * @param useFullName If true, uses fully-qualified class name instead of short name
      */
-    public TypeKey(Class<?> clz, boolean useFullName)
+    public TypeKey(Class<?> typeClass, boolean useFullName)
     {
-        setKey(clz, "", useFullName);
+        setKey(typeClass, "", useFullName);
     }
 
     /**
      * Constructs TypeKey for a class with generics.
      * Example: TypeKey(Document.class, "JSON"): "Document<JSON>"
      *
-     * @param clz              Class to construct TypeKey from, like Document.class
+     * @param typeClass        Class to construct TypeKey from, like Document.class
      * @param genericQualifier Generic qualifier, like {@code "JSON"}
      */
-    public TypeKey(Class<?> clz, String genericQualifier)
+    public TypeKey(Class<?> typeClass, String genericQualifier)
     {
-        sane(clz, "clz", genericQualifier, "genericQualifier");
+        sane(typeClass, "typeClass", genericQualifier, "genericQualifier");
         check(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
-        setKey(clz, genericQualifier, false);
+        setKey(typeClass, genericQualifier, false);
     }
 
     /**
      * Constructs TypeKey for a class with generics, optionally using fully-qualified class name.
      * Example: TypeKey(Document.class, "JSON"): "Document<JSON>" or "com.example.Document<JSON>"
      *
-     * @param clz              Class to construct TypeKey from, like Document.class
+     * @param typeClass        Class to construct TypeKey from, like Document.class
      * @param genericQualifier Generic qualifier, like {@code "JSON"}
      * @param useFullName      If true, uses fully-qualified class name instead of short name
      */
-    public TypeKey(Class<?> clz, String genericQualifier, boolean useFullName)
+    public TypeKey(Class<?> typeClass, String genericQualifier, boolean useFullName)
     {
-        sane(clz, "clz", genericQualifier, "genericQualifier");
+        sane(typeClass, "typeClass", genericQualifier, "genericQualifier");
         check(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
-        setKey(clz, genericQualifier, useFullName);
+        setKey(typeClass, genericQualifier, useFullName);
     }
 
     /**
@@ -124,30 +127,30 @@ public class TypeKey<T>
         key = classNameQualifiedWithGenerics;
     }
 
-    public static <T> TypeKey<T> valueOf(Class<?> clz)
+    public static <T> TypeKey<T> valueOf(Class<?> typeClass)
     {
-        return new TypeKey<>(clz);
+        return new TypeKey<>(typeClass);
     }
 
-    public static <T> TypeKey<T> valueOf(Class<?> clz, String genericQualifier)
+    public static <T> TypeKey<T> valueOf(Class<?> typeClass, String genericQualifier)
     {
-        return new TypeKey<>(clz, genericQualifier);
+        return new TypeKey<>(typeClass, genericQualifier);
     }
 
     /**
      * Constructs TypeKey from a class using fully-qualified class name.
      */
-    public static <T> TypeKey<T> valueOfFull(Class<?> clz)
+    public static <T> TypeKey<T> valueOfFull(Class<?> typeClass)
     {
-        return new TypeKey<>(clz, true);
+        return new TypeKey<>(typeClass, true);
     }
 
     /**
      * Constructs TypeKey from a class and generic qualifier using fully-qualified class name.
      */
-    public static <T> TypeKey<T> valueOfFull(Class<?> clz, String genericQualifier)
+    public static <T> TypeKey<T> valueOfFull(Class<?> typeClass, String genericQualifier)
     {
-        return new TypeKey<>(clz, genericQualifier, true);
+        return new TypeKey<>(typeClass, genericQualifier, true);
     }
 
     public static <T> TypeKey<T> valueOf(String classNameQualifiedWithGenerics)
@@ -205,10 +208,10 @@ public class TypeKey<T>
         return key;
     }
 
-    protected void setKey(Class<?> clz, String genericQualifier, boolean useFullName)
+    protected void setKey(Class<?> typeClass, String genericQualifier, boolean useFullName)
     {
-        sane(clz, "clz", genericQualifier, "genericQualifier");
-        String className = useFullName ? clz.getCanonicalName() : clz.getSimpleName();
+        sane(typeClass, "typeClass", genericQualifier, "genericQualifier");
+        String className = useFullName ? typeClass.getCanonicalName() : typeClass.getSimpleName();
         if (genericQualifier.isEmpty())
         {
             key = className;
@@ -227,14 +230,15 @@ public class TypeKey<T>
     protected static void validate(String key)
     {
         key = trimmed(key, "class name");
-        check(!key.isBlank(), "Class name cannot be blank");
+        check(!key.isBlank(), "Class name cannot be blank." + TROUBLESHOOTING_LINK);
         if (key.contains("<") || key.contains(">"))
         {
             check(key.contains("<") && key.contains(">"),
-                    "Class name must be of proper format: 'Class<GenericQualifier>'");
+                    "Class name must be of proper format: 'Class<GenericQualifier>'." + TROUBLESHOOTING_LINK);
             int leftBracket = key.indexOf("<");
             int rightBracket = key.lastIndexOf(">");
-            check(leftBracket < rightBracket, "Right bracket must not come before left bracket");
+            check(leftBracket < rightBracket, "Right bracket must not come before left bracket."
+                    + TROUBLESHOOTING_LINK);
             validate(key.substring(leftBracket + 1, rightBracket));
         }
     }

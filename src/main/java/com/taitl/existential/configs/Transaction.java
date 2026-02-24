@@ -83,6 +83,12 @@ public class Transaction implements Configurable, Evaluable
 
     TransactionIndexes indexes = new TransactionIndexes(this);
 
+    /**
+     * Creates a transaction for the specified operation and name.
+     *
+     * @param op operation name
+     * @param name transaction name
+     */
     public Transaction(String op, String name)
     {
         sane(op, "op", name, "name");
@@ -91,6 +97,12 @@ public class Transaction implements Configurable, Evaluable
         this.id = generateId();
     }
 
+    /**
+     * Returns a transaction-local index by name, creating it when needed.
+     *
+     * @param name index name
+     * @return index instance
+     */
     public <K, V> Index<K, V> index(String name)
     {
         sane(name, "name");
@@ -132,6 +144,12 @@ public class Transaction implements Configurable, Evaluable
         add(invariant);
     }
 
+    /**
+     * Registers an effect collection for this transaction.
+     *
+     * @param effect effect definition to add
+     * @param <T> entity type
+     */
     public <T> void effect(Effect<T> effect)
     {
         sane(effect, "effect");
@@ -147,6 +165,12 @@ public class Transaction implements Configurable, Evaluable
         add(effect);
     }
 
+    /**
+     * Registers a lifecycle rule collection for this transaction.
+     *
+     * @param cycle lifecycle rule set
+     * @param <T> transaction subtype
+     */
     public <T extends Transaction> void cycle(Trancycle<T> cycle)
     {
         sane(cycle, "cycle");
@@ -193,6 +217,12 @@ public class Transaction implements Configurable, Evaluable
         });
     }
 
+    /**
+     * Adds a commit handler to the transaction lifecycle.
+     *
+     * @param action commit action to run
+     * @param <T> transaction subtype
+     */
     public <T extends Transaction> void commit(Consumer<? super T> action)
     {
         sane(action, "action");
@@ -203,6 +233,12 @@ public class Transaction implements Configurable, Evaluable
         });
     }
 
+    /**
+     * Adds a rollback handler to the transaction lifecycle.
+     *
+     * @param action rollback action to run
+     * @param <T> transaction subtype
+     */
     public <T extends Transaction> void rollback(Consumer<? super T> action)
     {
         sane(action, "action");
@@ -213,6 +249,12 @@ public class Transaction implements Configurable, Evaluable
         });
     }
 
+    /**
+     * Adds a checkpoint handler to the transaction lifecycle.
+     *
+     * @param action checkpoint action to run
+     * @param <T> transaction subtype
+     */
     public <T extends Transaction> void checkpoint(Consumer<? super T> action)
     {
         sane(action, "action");
@@ -227,6 +269,12 @@ public class Transaction implements Configurable, Evaluable
      * Configurable interface
      */
 
+    /**
+     * Adds a collection of handlers or expressions to this transaction.
+     *
+     * @param evs handlers or expressions to add
+     * @param <T> entity type
+     */
     public <T> void add(Evs<T> evs)
     {
         sane(evs, "evs");
@@ -234,6 +282,11 @@ public class Transaction implements Configurable, Evaluable
         instructions.addAll(evs);
     }
 
+    /**
+     * Returns all configured event/value specifications for this transaction.
+     *
+     * @return list of specifications
+     */
     public List<Evs<?>> evs()
     {
         return evs;
@@ -248,11 +301,21 @@ public class Transaction implements Configurable, Evaluable
      * Attributes
      */
 
+    /**
+     * Sets the operation name for this transaction.
+     *
+     * @param op operation name
+     */
     public void op(String op)
     {
         this.op = op;
     }
 
+    /**
+     * Sets a human-friendly name for the transaction.
+     *
+     * @param name transaction name
+     */
     public void name(String name)
     {
         this.name = name;
@@ -269,12 +332,20 @@ public class Transaction implements Configurable, Evaluable
         return context;
     }
 
+    /**
+     * Associates this transaction with a context instance.
+     *
+     * @param context context for rule evaluation
+     */
     public void context(Context context)
     {
         sane(context, "context");
         this.context = context;
     }
 
+    /**
+     * Verifies that the transaction has an assigned context.
+     */
     public void validate()
     {
         verify(context != null, "Transaction context is not set, call context(str) first");

@@ -32,7 +32,7 @@ public class AbstractPath
     public AbstractPath(String path)
     {
         validate(path);
-        this.path = trimmed(path, "name");
+        this.path = trimmed(path, "path");
     }
 
     public String toString()
@@ -56,28 +56,28 @@ public class AbstractPath
         return path.contains(WILDCARD);
     }
 
-    public static void validate(String name)
+    public static void validate(String path)
     {
-        name = trimmed(name, "name");
-        check(name.startsWith(SLASH), "Argument 'name' should start with a slash ('/')");
-        check(name.length() == 1 || !name.endsWith(SLASH),
-                "Argument 'name' should not end with a slash ('/')");
+        path = trimmed(path, "path");
+        check(path.startsWith(SLASH), "Argument 'path' should start with a slash ('/')");
+        check(path.length() == 1 || !path.endsWith(SLASH),
+                "Argument 'path' should not end with a slash ('/')");
     }
 
     /**
-     * Gets this key's parent key, if any, without the part starting at the last slash.
-     * Throws {@link IllegalStateException} if this key is a top-level key (has no parent).
+     * Gets this context key's parent key, if any, without the part starting at the last slash.
+     * Throws {@link IllegalStateException} if this context key is a top-level key (has no parent).
      *
      * Example:
      * Key: /app/orders/update
      * Parent key: /app/orders
      *
      * @return A shortened key without the part starting with the last slash.
-     * @throws IllegalStateException if this key is a top-level key (has no parent).
+     * @throws IllegalStateException if this context key is a top-level key (has no parent).
      */
     public AbstractPath getParent()
     {
-        return new AbstractPath(PathSupport.parentOrThrow(path, "ContextKey"));
+        return new AbstractPath(PathSupport.parentOrThrow(path, "Context key"));
     }
 
     public int hashCode()

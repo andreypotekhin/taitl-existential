@@ -8,13 +8,13 @@ import com.taitl.existential.paths.*;
  * configuration and lookup of contexts, including wildcard and parent contexts.
  *
  * Example:
- * {@code /app/orders/update}
- * {@code /app/orders} - parent context of the above context
- * {@code /} - root context (parent to all contexts)
- * {@code /app/*}{@code /update} - wildcard context
+ * /app/orders/update
+ * /app/orders - parent context of the above context
+ * / - root context (parent to all contexts)
+ * /app/{*}/update - wildcard context
  *
  * A context key cannot end with a slash.
- * The wildcard character ({@code *}) is allowed in a context key.
+ * The wildcard character (*) is allowed in a context key.
  *
  * @see AbstractPath
  * @see Context

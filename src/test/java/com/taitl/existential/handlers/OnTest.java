@@ -46,7 +46,7 @@ class OnTest
     @Test
     void description()
     {
-        on = new On<>(c -> "Black".equals(c.color), "Cats are black");
+        on = new On<>(c -> "Black".equals(c.color), null, "Cats are black");
         assertThat(on.description(), is("Cats are black"));
     }
 }

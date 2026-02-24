@@ -3,13 +3,13 @@ package com.taitl.existential.events;
 import com.taitl.existential.events.types.*;
 
 /**
- * Indicates that entity was created, updated or about to be deleted in the course of current transaction.
- * 
- * Example: Modify<Account> is raised when Account entity was created, updated or about to be deleted
- * in the course of current transaction.
- * 
- * Database analogs: INSERT, UPDATE or DELETE
- * 
+ * Signals that an entity was created, updated, or marked for deletion during the current transaction.
+ *
+ * Example: Modify<Account> is raised when an Account entity is created, updated, or marked for deletion
+ * during the current transaction.
+ *
+ * Database analogs: INSERT, UPDATE, DELETE
+ *
  * @param <T>
  *            Class of application entity
  */

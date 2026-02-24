@@ -163,10 +163,10 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
 
     /* Evs implementation */
 
-    public Invariant<T> add(Ev<T> ev)
+    public Invariant<T> add(Ev<T> evaluable)
     {
-        sane(ev, "eh");
-        evs.add(ev);
+        sane(evaluable, "evaluable");
+        evs.add(evaluable);
         return this;
     }
 
@@ -183,10 +183,10 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return tran;
     }
 
-    public void transaction(Transaction tr)
+    public void transaction(Transaction transaction)
     {
-        sane(tr, "tr");
-        tran = tr;
+        sane(transaction, "transaction");
+        tran = transaction;
     }
 
 }

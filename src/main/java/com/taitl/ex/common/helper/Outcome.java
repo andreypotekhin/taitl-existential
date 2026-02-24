@@ -67,12 +67,7 @@ public class Outcome
      */
     public static void verify(boolean condition, String message, Object... args)
     {
-        Args.requireEvenArgs(args);
-        if (!condition)
-        {
-            throw new RuntimeException(message);
-        }
-        ArgPairChecks.requireAllTrue(messageArg -> {
+        ArgPairChecks.requireAllTrue(condition, message, messageArg -> {
             throw new RuntimeException(messageArg);
         }, args);
     }

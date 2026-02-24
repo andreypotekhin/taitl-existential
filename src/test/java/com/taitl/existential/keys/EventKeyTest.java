@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EventKeyTest
 {
@@ -62,6 +63,31 @@ class EventKeyTest
     {
         EventKey key = EventKey.valueOf(Create.class, "String");
         assertThat(key.toString(), is("Create<String>"));
+    }
+
+    @Test
+    void valueOfStringRejectsNull()
+    {
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            EventKey.valueOf((String) null);
+        }).getMessage(), containsString("'key' must not be null"));
+    }
+
+    @Test
+    void valueOfEventRejectsNullParts()
+    {
+        Create<String> event = new Create<>("alpha");
+        TypeKey<String> typeKey = new TypeKey<>() {
+        };
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            EventKey.valueOf(null, typeKey);
+        }).getMessage(), containsString("'event' must not be null"));
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            EventKey.valueOf(event, (TypeKey<String>) null);
+        }).getMessage(), containsString("'typeKey' must not be null"));
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            EventKey.valueOf(event, (String) null);
+        }).getMessage(), containsString("'type' must not be null"));
     }
 
     @Test

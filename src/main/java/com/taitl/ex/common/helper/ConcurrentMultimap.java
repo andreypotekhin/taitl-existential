@@ -94,7 +94,7 @@ public class ConcurrentMultimap<K, V> extends Multimap<K, V>
             {
                 throw new IllegalStateException("You can't call method getKeyClass() on an empty Multimap.");
             }
-            K result = storage.keySet().stream().findFirst().get();
+            K result = Coll.getFirst(storage.keySet());
             return (Class<? extends K>) result.getClass();
         }
     }

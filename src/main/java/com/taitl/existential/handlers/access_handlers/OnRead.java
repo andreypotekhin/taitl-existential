@@ -45,7 +45,7 @@ public class OnRead<T> extends On<T>
      */
     public OnRead(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        super(action);
+        super(condition, action);
     }
 
     /**

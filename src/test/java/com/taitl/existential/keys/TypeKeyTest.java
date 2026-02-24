@@ -52,6 +52,14 @@ class TypeKeyTest
     }
 
     @Test
+    void rejectsRawAnonymousSubclass()
+    {
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            new RawTypeKey();
+        }).getMessage(), containsString("anonymous subclass"));
+    }
+
+    @Test
     void valueOfFull()
     {
         assertThat(TypeKey.valueOfFull(TypeKeyTest.class).toString(),
@@ -137,6 +145,15 @@ class TypeKeyTest
         void setTypeidForTest(Class<?> clz, String genericQualifier, boolean useFullName)
         {
             setKey(clz, genericQualifier, useFullName);
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    static class RawTypeKey extends TypeKey
+    {
+        RawTypeKey()
+        {
+            super(true);
         }
     }
 }

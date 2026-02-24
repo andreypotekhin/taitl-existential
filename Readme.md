@@ -1,15 +1,15 @@
 # Existential
 
-Existential is a constraint library that lets you define and maintain invariants between program entities.
+Existential is a constraint library for expressing and enforcing invariants between program entities.
 
-Existential is a library that enables certain math-like notations for describing application logic.
-It implements two logic quantifiers, ∀ ("for any") and ∃ ("exists"), allowing you to create logical
-expressions about application entities (elements of the business domain), and to guarantee that such
-expressions hold true. For instance, the library allows you to create constraints on a class field,
-multiple fields, and rules that describe how an object may change over time.
+It enables a small set of math-inspired notations for describing application logic. Existential
+implements two logic quantifiers, ∀ ("for any") and ∃ ("exists"), allowing you to create logical
+expressions about application entities (elements of the business domain) and to guarantee those
+expressions hold. For instance, the library lets you constrain a single field, multiple fields,
+or how an object may change over time.
 Performance is achieved by evaluating expressions only at specific
 points in time (transaction boundaries), treating repeated changes between those points as a single change.
-Memory efficiency is achieved by using singleton objects for expressions and reusing expression objects where possible.
+Memory efficiency comes from reusing singleton expression instances where possible.
 
 ## Limitations
 
@@ -33,7 +33,7 @@ entities, and focuses on performance and memory efficiency.
 ∃ == "Exists" (an existential quantification)  
 ∈ == "Element of" (member of a set)  
 | = "Such as" (a set comprehension)   
-P == logical predicate (a boolean function)  
+P == logical predicate (a boolean-valued function)  
 ⊤ == "Truth", a logical predicate always rendering true
 
 In the examples below:
@@ -122,6 +122,11 @@ When multiple entity classes share the same short name across packages, use full
 `TypeKey.valueOfFull(MyEntity.class)` or `TypeKey.valueOfFull(MyEntity.class, "Qualifier")`.
 For library-inferred keys (for example `event(entity, tranID)` overloads), enable
 `Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES` to switch inference to fully-qualified class names.
+
+For generic type capture, use the anonymous subclass pattern:
+`new TypeKey<List<Order>>() {}`.
+
+Troubleshooting: `/Troubleshooting.md#type-key-format`
 
 ## License
 

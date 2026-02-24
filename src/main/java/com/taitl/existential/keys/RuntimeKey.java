@@ -1,6 +1,5 @@
 package com.taitl.existential.keys;
 
-import java.util.*;
 import com.taitl.existential.events.types.*;
 
 import static com.taitl.ex.common.helper.State.*;
@@ -104,7 +103,9 @@ public class RuntimeKey<T>
 
     public int hashCode()
     {
-        return Objects.hash(key.hashCode(), System.identityHashCode(entity));
+        int result = (key == null) ? 0 : key.hashCode();
+        result = 31 * result + System.identityHashCode(entity);
+        return result;
     }
 
     @SuppressWarnings("unchecked")

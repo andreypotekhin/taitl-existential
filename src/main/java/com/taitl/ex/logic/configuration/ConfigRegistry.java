@@ -7,7 +7,7 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.Outcome.*;
 
 /**
- * ConfigRegistry holds references to Configs, keyed by op name.
+ * ConfigRegistry holds references to Configs, keyed by op key.
  */
 public class ConfigRegistry
 {

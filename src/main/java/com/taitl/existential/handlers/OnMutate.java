@@ -11,10 +11,9 @@ import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Declarative handler for {@link Mutate} events that involve two values.
- *
- * <p>The handler can be guarded by a predicate on the new value or a
+ * The handler can be guarded by a predicate on the new value or a
  * bi-predicate on both values. When no action is provided, the handler
- * behaves as a constraint and throws when the condition is not met.</p>
+ * behaves as a constraint and throws when the condition is not met.
  *
  * @param <T>
  *            Type of entity being mutated
@@ -48,7 +47,11 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
 
     public OnMutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
     {
-        sane(condition, "condition", action, "action", description, "description");
+        sane(condition, "condition", description, "description");
+        if (action != null)
+        {
+            sane(action, "action");
+        }
         this.condition = condition;
         this.action = action;
         this.description = description;
@@ -64,7 +67,11 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
     public OnMutate(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action,
             String description)
     {
-        sane(bicondition, "bicondition", action, "action", description, "description");
+        sane(bicondition, "bicondition", description, "description");
+        if (action != null)
+        {
+            sane(action, "action");
+        }
         this.bicondition = bicondition;
         this.action = action;
         this.description = description;
@@ -92,6 +99,15 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
 
         if (action == null)
         {
+            if (bicondition != null)
+            {
+                if (!bicondition.test(t0, t1))
+                {
+                    throw new EventHandlerExecutionException(handlerMessage(CONDITION_NOT_MET));
+                }
+                return;
+            }
+
             State.cool(condition, "condition");
 
             // This is an event handler without side effects.

@@ -1,15 +1,13 @@
 package com.taitl.existential.handlers;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.function.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.handlers.types.*;
 
 /**
  * Declarative handler for {@link Create} events.
- *
- * <p>Extends {@link On} to capture an optional condition, an action, and a
- * human-friendly description for entity creation.</p>
+ * Extends {@link On} to capture an optional condition, an action, and a
+ * human-friendly description for entity creation.
  *
  * @param <T>
  *            Type of entity created

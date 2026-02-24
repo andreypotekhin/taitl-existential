@@ -48,7 +48,7 @@ class AbstractPathTest
         AbstractPath path = new AbstractPath("/app");
 
         assertThat(assertThrows(IllegalStateException.class, path::getParent).getMessage(),
-                containsString("has no parent key"));
+                allOf(containsString("Context key"), containsString("has no parent key")));
     }
 
     @Test

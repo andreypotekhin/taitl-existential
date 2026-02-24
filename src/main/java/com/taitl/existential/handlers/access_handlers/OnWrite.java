@@ -46,7 +46,7 @@ public class OnWrite<T> extends On<T> implements EventHandlerWithSideEffects<T>
      */
     public OnWrite(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        super(action);
+        super(condition, action);
     }
 
     /**

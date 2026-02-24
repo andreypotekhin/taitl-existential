@@ -23,8 +23,8 @@ public class Strings
     public static final String ARG_T = "Argument 't' should not be null";
     public static final String ARG_TR = "Argument 'tr' should not be null";
     public static final String ARG_CLZ = "Argument 'clz' should not be null";
-    public static final String ARG_OP = "Argument 'op' should not be null";
-    public static final String ARG_OP_FORMAT = "Argument 'op' should start with a slash ('/')";
+    public static final String ARG_OP = "Operation key should not be null";
+    public static final String ARG_OP_FORMAT = "Operation key should start with a slash ('/')";
     public static final String ARG_NAME = "Argument 'name' should not be null";
     public static final String ARG_EVENT = "Argument 'event' should not be null";
     public static final String ARG_TRANSIT = "Argument 'transit' should not be null";
@@ -36,9 +36,9 @@ public class Strings
     public static final String ARG_CHECK = "Argument 'check' should not be null";
     public static final String ARG_MATCH = "Argument 'match' must not be null";
     public static final String ARG_NEED_TRANSIT_EVENT = "Please specify event of type Transit<>";
-    public static final String ARG_OP_SINGLE_SLASH = "Argument 'op' cannot be a single slash ('/')";
-    public static final String ARG_OP_END_SLASH = "Argument 'op' cannot end with a slash ('/')";
-    public static final String ARG_OP_NO_WILDCARDS = "Argument 'op' cannot have wildcards ('*')";
+    public static final String ARG_OP_SINGLE_SLASH = "Operation key cannot be a single slash ('/')";
+    public static final String ARG_OP_END_SLASH = "Operation key cannot end with a slash ('/')";
+    public static final String ARG_OP_NO_WILDCARDS = "Operation key cannot have wildcards ('*')";
     public static final String SLASH = "/";
     public static final String WILDCARD = "*";
     public static final String CONDITION_NOT_MET = "The specified condition is not met";

@@ -1,5 +1,7 @@
 package com.taitl.ex.common.helper;
 
+import static com.taitl.existential.constants.Strings.*;
+
 /**
  * Shared checks for vararg pairs with caller-provided exception mapping.
  */
@@ -47,9 +49,29 @@ public class ArgPairChecks
      */
     public static void requireAllTrue(Thrower thrower, Object... args)
     {
-        Args.requireBooleanPairs(args);
+        requireAllTrue(true, "", thrower, args);
+    }
+
+    /**
+     * Throws via provided thrower if condition or any boolean pair is false.
+     * Uses IllegalArgumentException for malformed pair inputs.
+     */
+    public static void requireAllTrue(boolean condition,
+            String message,
+            Thrower thrower,
+            Object... args)
+    {
+        Args.requireEvenArgs(args);
+        if (!condition)
+        {
+            thrower.raise(message);
+        }
         for (int i = 0; i < args.length; i += 2)
         {
+            if (!(args[i] instanceof Boolean))
+            {
+                throw new IllegalArgumentException(String.format(ARGUMENT_MUST_BE_BOOLEAN, i));
+            }
             if (!((Boolean) args[i]))
             {
                 thrower.raise(String.valueOf(args[i + 1]));

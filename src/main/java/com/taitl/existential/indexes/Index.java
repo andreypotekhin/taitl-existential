@@ -22,8 +22,8 @@ public class Index<K, V>
     private static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
     private static final String ARG_KEY_CLASS = "Argument 'key' class '%s' does not match the key class '%s'"
             + " required by this index. See " + TROUBLESHOOTING_SECTION;
-    private static final String ARG_KEY_VALUE = "Argument 'k1' value '%s' does not match key value '%s'"
-            + " returned for object 'v' by 'getKey' function. See " + TROUBLESHOOTING_SECTION;
+    private static final String ARG_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
+            + " returned by 'getKey' function. See " + TROUBLESHOOTING_SECTION;
 
     protected Multimap<K, V> storage = new Multimap<>();
     protected Function<V, K> getKey;
@@ -76,14 +76,14 @@ public class Index<K, V>
 
     public Set<V> add(K k, V v)
     {
-        sane(k, "k");
-        sane(v, "v");
+        sane(k, "key");
+        sane(v, "value");
         return storage.put(k, v);
     }
 
     public Set<V> add(V v)
     {
-        sane(v, "v");
+        sane(v, "value");
         verify(getKey != null, "You need to call 'setGetKey()' first");
         return storage.put(getKey.apply(v), v);
     }
@@ -101,14 +101,14 @@ public class Index<K, V>
      */
     public V remove(K k, V v)
     {
-        sane(k, "k");
-        sane(v, "v");
+        sane(k, "key");
+        sane(v, "value");
         return storage.remove(k, v);
     }
 
     public Set<V> remove(K k, Predicate<? super V> match)
     {
-        sane(k, "k");
+        sane(k, "key");
         sane(match, "match");
         return storage.remove(k, match);
     }
@@ -123,9 +123,9 @@ public class Index<K, V>
      */
     public void rekey(K k0, K k1, V v)
     {
-        sane(k0, "k0");
-        sane(k1, "k1");
-        sane(v, "v");
+        sane(k0, "oldKey");
+        sane(k1, "newKey");
+        sane(v, "value");
         if (getKey != null)
         {
             K k = getKey.apply(v);

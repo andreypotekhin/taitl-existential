@@ -7,7 +7,7 @@ See /Readme.md for library overview.
 See /Readme.md for general usage.
 
 ### Library configuration
-Library startup loads library options in this order:
+Library startup loads options in this order:
 - Load classpath resource `existential.properties` first (default values).
 - If env var `EXISTENTIAL_CONFIG_FILE` is set and non-empty, load that file next (override defaults).
 
@@ -28,7 +28,7 @@ Reference:
   - See `/Troubleshooting.md#library-configuration-load-failure`
 
 ### Operation keys
-Operations are identified by op keys. These are path-like strings used to find matching contexts.
+Operations are identified by operation keys. These are path-like strings used to find matching contexts.
 Examples:
 - `/app/orders/create`
 - `/admin/users/reset-password`
@@ -48,8 +48,8 @@ See /docs/dev/Specification.md for terminology and complete description of libra
 ### Extending the library
 Regular use of the library does not require custom classes; the stock classes should work for most cases.
 
-For the rare cases where you want to significantly affect library behavior, we provide a few options. See the
-section 'Extending the classes' below.
+For the rare cases where you want to significantly affect library behavior, we provide a few options.
+See the section "Extending the library with custom classes" below.
 
 ### Code structure
 Package structure:
@@ -72,16 +72,16 @@ For the rare cases where you aim to significantly affect the library's behavior 
 means), you can extend the library with your own versions of the classes, but do so at your own risk.
 
 This is worth repeating:
-
-    ! 1. Do this at your own risk!
-    ! 2. Do not ask for help/support or file issues if your case involves custom classes
+1. Do this at your own risk.
+2. Do not ask for help or file issues if your case involves custom classes.
 
 For troubleshooting, remove custom classes and see if the library works without them.
 
 Here are some ways to put custom classes in use:
-- By using a *Factory() method on an existing class (e.g. Context.transactionFactory()).
+- By using a `*Factory()` method on an existing class (e.g. Context.transactionFactory()).
 - By calling Creator.inject(). This creates a global default factory for the class.
-- If using Creator.inject(), call it early in the application lifecycle to avoid creating instances before injection.
+- If using Creator.inject(), call it early in the application lifecycle to avoid creating instances before
+  injection.
 - By modifying the FACTORY field on an existing library class (e.g. Transaction.FACTORY).
 - For the classes the end user creates with new (e.g. Exists, Invariant), subclass the concrete implementations
   (e.g. ConcreteExists, ConcreteInvariant).
@@ -92,13 +92,26 @@ To keep extension possible, we allow a few freedoms:
 - Creator.inject() is declared public.
 
 But remember, with this freedom comes responsibility:
-- If using custom classes, you are on your own. 
-- Future versions of the library can completely rewrite its implementation, including any and all non-public classes.
+- If using custom classes, you are on your own.
+- Future versions of the library can completely rewrite its implementation, including any and all non-public
+  classes.
 
-In short, you should treat extending the library with own classes as "hacking",
-which relies on undocumented features or features that are not guaranteed to survive multiple versions.
+In short, treat extending the library with your own classes as hacking, which relies on undocumented
+features or features that are not guaranteed to survive multiple versions.
 
 ### Transaction lifecycle
 Transactions start with `begin()` and are valid until `commit()` or `rollback()`.
 After `commit()` or `rollback()`, the transaction id becomes invalid and cannot be reused.
 Attempting to use an invalid or unknown id will fail with a `NotFoundException`.
+
+### Type keys
+Use fully-qualified type keys when different packages share a short class name:
+`TypeKey.valueOfFull(MyEntity.class)` or `TypeKey.valueOfFull(MyEntity.class, "Qualifier")`.
+
+For generic keys based on runtime type capture, prefer the anonymous subclass pattern:
+`new TypeKey<List<Order>>() {}`.
+
+For string-based keys, use `Class<Qualifier>` formatting with matching angle brackets.
+
+Troubleshooting:
+- See `/Troubleshooting.md#type-key-format`

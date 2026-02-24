@@ -35,6 +35,18 @@ class RuntimeKeyTest
     }
 
     @Test
+    void hashCodeMatchesEquals()
+    {
+        String value = new String("alpha");
+        Create<String> event = new Create<>(value);
+        TypeKey<String> type = new TypeKey<>(String.class);
+        RuntimeKey<String> key1 = RuntimeKey.valueOf(event, type, value);
+        RuntimeKey<String> key2 = RuntimeKey.valueOf(event, type, value);
+        assertThat(key1.equals(key2), is(true));
+        assertThat(key1.hashCode(), is(key2.hashCode()));
+    }
+
+    @Test
     void validateRequiresKeyAndEntity()
     {
         RuntimeKeyProbe<String> probe = new RuntimeKeyProbe<>("alpha");

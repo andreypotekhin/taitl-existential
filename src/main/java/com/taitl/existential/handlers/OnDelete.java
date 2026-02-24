@@ -1,7 +1,6 @@
 package com.taitl.existential.handlers;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.function.*;
 import com.taitl.existential.handlers.types.*;
 
 /**

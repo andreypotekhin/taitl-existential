@@ -3,12 +3,12 @@ package com.taitl.existential.events;
 import com.taitl.existential.events.types.EntityEvent;
 
 /**
- * Indicates that entity was created in the course of current transaction.
- * 
- * Example: Create<Account> is raised when Account entity was created in the course of current transaction.
- * 
+ * Signals that an entity was created during the current transaction.
+ *
+ * Example: Create<Account> is raised when an Account entity is created during the current transaction.
+ *
  * Database analog: INSERT
- * 
+ *
  * @param <T>
  *            Class of application entity
  */

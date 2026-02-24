@@ -69,12 +69,7 @@ public class State
      */
     public static void verify(boolean condition, String message, Object... args)
     {
-        Args.requireEvenArgs(args);
-        if (!condition)
-        {
-            throw new IllegalStateException(message);
-        }
-        ArgPairChecks.requireAllTrue(messageArg -> {
+        ArgPairChecks.requireAllTrue(condition, message, messageArg -> {
             throw new IllegalStateException(messageArg);
         }, args);
     }

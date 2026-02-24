@@ -166,6 +166,8 @@ class IndexTest
         index.add("Black", cat);
         assertDoesNotThrow(() -> index.rekey("Black", new String("Black"), cat));
         assertTrue(index.contains("Black", cat));
-        assertThrows(IllegalArgumentException.class, () -> index.rekey("Black", "Orange", cat));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> index.rekey("Black", "Orange", cat));
+        assertTrue(ex.getMessage().contains("newKey"));
     }
 }

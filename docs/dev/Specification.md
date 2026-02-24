@@ -10,8 +10,13 @@ The (+) signs indicate items already completed and covered by tests.
 
 ### Terminology
 
+<<<<<<< ours
 Op: a business operation. Op name: the business operation identifier, such as "/api/user/update"   
-Path: OS path-like notation for op names   
+Path: OS-style path notation for op names   
+=======
+Op: a business operation. Operation key: the business operation identifier, such as "/api/user/update"   
+Path: OS path-like notation for operation keys   
+>>>>>>> theirs
   - Abstract path can contain wildcards, such as "/api/*/update"
   - Concrete path doesn't contain wildcards
 Evaluable: anything that can be evaluated  
@@ -29,27 +34,34 @@ Event: an application or library event, such as:
   - Events are sent to the library by calling the event() method
   - Access events are sent to the library by calling read() and write()
   - Transaction events are automatically sent to the library when initiating or completing a transaction (begin(), commit(), rollback(), checkpoint() methods)
-Runtime event: an event that is sent to library during execution of a transaction. Includes event type, entity type and reference to the affected entity.   
+Runtime event: an event that is sent to the library during transaction execution. Includes event type, entity type and reference to the affected entity.   
 Context: a set of rules associated with a business operation 
-  - A Context uses Op name to associate with an Op 
-  - A Context can be defined with a wildcard Op name
+  - A Context uses operation key to associate with an Op 
+  - A Context can be defined with a wildcard operation key
   - Parent context is any Context whose name matches, without being equal to, the Context's name
   - Matching context is any wildcard context whose name matches, without being equal to, the Context's name
   - The rules from parent apply to child contexts
   - The rules from matching contexts apply to matched contexts
 Transaction: a set of rules associated with a Context
   - Transactions are defined within a Context
-  - Transactions are more dynamic than the Contexts, allowing use of local scope (method parameters,
-  local variables) and members of the defining class (for anonymous nested classes) in event handlers' code
+<<<<<<< ours
+  - Transactions are more dynamic than Contexts, allowing event handlers to use local scope
+  (method parameters, local variables) and members of the defining class (for anonymous nested classes)
 Library Transaction (Tr): a unit of execution in the library, associated with an Op name
   - Association with an Op name allows to select relevant Contexts and Transactions for evaluation
+=======
+  - Transactions are more dynamic than the Contexts, allowing use of local scope (method parameters,
+  local variables) and members of the defining class (for anonymous nested classes) in event handlers' code
+Library Transaction (Tr): a unit of execution in the library, associated with an operation key
+  - Association with an operation key allows to select relevant Contexts and Transactions for evaluation
+>>>>>>> theirs
   - Transaction lifecycle is triggered by calling begin(), ending with commit(), rollback(), optional checkpoint()
   - For each relevant Context and Transaction, their configured rules are evaluated
   - The rules are evaluated at the end of transaction (commit or checkpoint), unless assigned to an earlier stage
   - In case of a constraint violation, an exception is raised and violations are reported
 Quantifier: a logical expression such as All or Exists
 Mutation: an event that records both before and after states of an entity 
-Transition: a Mutation that can have a null in the before or after state (but not in both) 
+Transition: a Mutation that can have a null in the before or after state (but not both) 
   - The null in 'before' state indicates creation of an entity
   - The null in 'after' state indicates deletion of an entity
   - Both 'before' and 'after' states being non-null indicate a change (mutation) of an entity
@@ -85,8 +97,8 @@ User can configure transaction lifecycle rules for a class.
 +User can roll back a transaction.
 +User can initiate transaction checkpoint.
 +User can send events to record entity modification.
-+User can send events to record entity access .
-User can't send events outside a transaction .
++User can send events to record entity access.
+User can't send events outside a transaction.
 +User can't send events if no rules have been configured.
 
 #### Library lifecycle phases
@@ -106,7 +118,7 @@ In the validation phase, the library executes validation-time side effects.
 ##### Configuring contexts
 
 User can configure the rules (constraints) on a class with a custom Context.
-Contexts are keyed by op name.
+Contexts are keyed by operation key.
 The rules from parent contexts apply to child contexts.
 The rules from parent contexts execute before the rules of child contexts.
 User can specify a custom factory for creation of all Contexts.
@@ -115,7 +127,7 @@ User can't configure a context without defining any rules.
 
 ##### Wildcard contexts
 
-User can define a Context for an op name with a wildcard in it.
+User can define a Context for an operation key with a wildcard in it.
 The wildcard contexts whose paths match a concrete op participate in its validation.
 The wildcard contexts matching the currently evaluated context participate in its validation.
 The rules from matching contexts apply to the context.
@@ -163,7 +175,7 @@ Evaluation is the process of executing the rules (evaluating expressions, callin
 Evaluations start when an existential transaction begins and end when it ends.
 There is a separate evaluation per stage: Precondition, Runtime and Validation.
 
-Each existential transaction is associated with a business op name, and through that with the closest matching context, its parent contexts,  
+Each existential transaction is associated with a business operation key, and through that with the closest matching context, its parent contexts,  
 matching wildcard contexts, any configured Transaction factory and any passed-in Transaction instance. The rules 
 configured in these contexts and transactions participate in evaluations. 
 Evaluation of Early stage rules is called Preconditions evaluation. It is invoked upon transaction start.
