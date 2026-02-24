@@ -50,17 +50,19 @@ class UserCanConfigureContexts extends SpecBase
     void configuringContexts()
     {
         assertDoesNotThrow(() -> {
+            // @formatter:off
             Ex.configure("/api/cats/create")
-                    .context("/api/cats")
+                .context("/api/cats")
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
                     .done()
                     .build()
-                    .context("/api/cats/create")
+                .context("/api/cats/create")
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
                     .done()
                     .build();
+            // @formatter:on
 
             String tran = ex.begin("/api/cats/create");
             ex.event("ok", tran);
@@ -74,17 +76,19 @@ class UserCanConfigureContexts extends SpecBase
     {
         List<String> effectOrder = new ArrayList<>();
 
+        // @formatter:off
         Ex.configure("/api/cats/create")
-                .context("/api/cats")
+            .context("/api/cats")
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("parent"))
                 .done()
                 .build()
-                .context("/api/cats/create")
+            .context("/api/cats/create")
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("child"))
                 .done()
                 .build();
+        // @formatter:on
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create");
@@ -102,9 +106,10 @@ class UserCanConfigureContexts extends SpecBase
         AtomicReference<Class<?>> rootType = new AtomicReference<>();
         AtomicReference<Class<?>> specificType = new AtomicReference<>();
 
+        // @formatter:off
         Ex.configure("/api/cats/create")
-                .contextFactory(() -> new GlobalContext("/unused"))
-                .context("/api/cats")
+            .contextFactory(() -> new GlobalContext("/unused"))
+            .context("/api/cats")
                 .invariant(Cat.class)
                 .create(v -> true, "ok")
                 .done()
@@ -114,7 +119,7 @@ class UserCanConfigureContexts extends SpecBase
                     return tr;
                 })
                 .build()
-                .context("/api/cats/create")
+            .context("/api/cats/create")
                 .contextFactory(() -> new SpecificContext("/unused"))
                 .invariant(Cat.class)
                 .create(v -> true, "ok")
@@ -125,6 +130,7 @@ class UserCanConfigureContexts extends SpecBase
                     return tr;
                 })
                 .build();
+        // @formatter:on
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create");
@@ -142,17 +148,19 @@ class UserCanConfigureContexts extends SpecBase
     {
         List<String> effectOrder = new ArrayList<>();
 
+        // @formatter:off
         Ex.configure("/api/cats/create")
-                .context("/api/*/create")
+            .context("/api/*/create")
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("wildcard"))
                 .done()
                 .build()
-                .context("/api/cats/create")
+            .context("/api/cats/create")
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("concrete"))
                 .done()
                 .build();
+        // @formatter:on
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create");
@@ -167,10 +175,15 @@ class UserCanConfigureContexts extends SpecBase
     @DisplayName("Configuring contexts - cannot define empty context")
     void cannotDefineEmptyContext()
     {
-        IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> Ex.configure("/api/cats/create")
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> {
+                    // @formatter:off
+                    Ex.configure("/api/cats/create")
                         .context("/api/cats/create")
-                        .build());
+                        .build();
+                    // @formatter:on
+                });
 
         assertTrue(ex.getMessage().contains("Cannot configure context without defining rules"));
     }

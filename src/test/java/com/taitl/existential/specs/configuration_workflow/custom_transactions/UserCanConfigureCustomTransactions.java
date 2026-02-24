@@ -77,15 +77,17 @@ class UserCanConfigureCustomTransactions extends SpecBase
         AtomicInteger created = new AtomicInteger();
         AtomicReference<String> transactionType = new AtomicReference<>();
 
+        // @formatter:off
         Ex.configure("/api/cats/create")
-                .context("/api/cats/create")
+            .context("/api/cats/create")
                 .transaction(() -> {
                     created.incrementAndGet();
                     return new ChildTransaction("/api/cats/create");
                 })
                 .begin((ChildTransaction tr) -> transactionType.set(tr.getClass().getSimpleName()))
                 .build()
-                .build();
+            .build();
+        // @formatter:on
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create");
@@ -103,16 +105,18 @@ class UserCanConfigureCustomTransactions extends SpecBase
     {
         List<String> transactionTypes = new ArrayList<>();
 
+        // @formatter:off
         Ex.configure("/api/cats")
-                .context("/api/cats")
+            .context("/api/cats")
                 .transaction(() -> new RootTransaction("/api/cats"))
                 .begin((RootTransaction tr) -> transactionTypes.add(tr.getClass().getSimpleName()))
                 .build()
-                .context("/api/cats/create")
+            .context("/api/cats/create")
                 .transaction(() -> new ChildTransaction("/api/cats/create"))
                 .begin((ChildTransaction tr) -> transactionTypes.add(tr.getClass().getSimpleName()))
                 .build()
-                .build();
+            .build();
+        // @formatter:on
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create");

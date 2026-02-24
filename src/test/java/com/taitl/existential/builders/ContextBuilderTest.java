@@ -41,19 +41,23 @@ class ContextBuilderTest
         inv1.on(s -> true, "inv1");
         contextBuilder.invariant(inv1);
 
+        // @formatter:off
         contextBuilder.invariant(String.class)
-                .create(s -> true, "inv2")
-                .done();
+            .create(s -> true, "inv2")
+            .done();
+        // @formatter:on
 
         Effect<String> eff1 = new Effect<>();
         eff1.on(s -> {
         }, "eff1");
         contextBuilder.effect(eff1);
 
+        // @formatter:off
         contextBuilder.effect(String.class)
-                .create(s -> {
-                }, "eff2")
-                .done();
+            .create(s -> {
+            }, "eff2")
+            .done();
+        // @formatter:on
 
         contextBuilder.build();
 
@@ -79,19 +83,23 @@ class ContextBuilderTest
         transactionBuilder.begin((Transaction tr) -> {
         });
 
+        // @formatter:off
         transactionBuilder.invariant(String.class)
-                .create(s -> true, "inv2")
-                .doneTran();
+            .create(s -> true, "inv2")
+            .doneTran();
+        // @formatter:on
 
         Effect<String> eff1 = new Effect<>();
         eff1.on(s -> {
         }, "eff1");
         transactionBuilder.effect(eff1);
 
+        // @formatter:off
         transactionBuilder.effect(String.class)
-                .create(s -> {
-                }, "eff2")
-                .doneTran();
+            .create(s -> {
+            }, "eff2")
+            .doneTran();
+        // @formatter:on
 
         List<Supplier<? extends Evs<?>>> suppliers = transactionBuilder.evsSuppliers;
         assertEquals(5, suppliers.size());
