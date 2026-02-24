@@ -1,6 +1,7 @@
 package com.taitl.existential.keys;
 
 import java.util.*;
+import com.taitl.ex.examples.night_city.model.*;
 import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -13,6 +14,9 @@ class TypeKeyTest
     @Test
     void constructors()
     {
+        assertThat(new TypeKey<TypeKey<Cat>>() {}.toString(), is("TypeKey<Cat>"));
+        assertThat(new TypeKey<TypeKey<Cat>>(true) {}.toString(),
+                is("com.taitl.existential.keys.TypeKey<com.taitl.ex.examples.night_city.model.Cat>"));
         assertThat(new TypeKey("Doc").toString(), is("Doc"));
         assertThat(new TypeKey(TypeKey.class).toString(), is("TypeKey"));
         assertThat(new TypeKey(TypeKeyTest.class, true).toString(), is("com.taitl.existential.keys.TypeKeyTest"));
@@ -130,7 +134,7 @@ class TypeKeyTest
 
         void setTypeidForTest(Class<?> clz, String genericQualifier, boolean useFullName)
         {
-            setTypeid(clz, genericQualifier, useFullName);
+            setKey(clz, genericQualifier, useFullName);
         }
     }
 }

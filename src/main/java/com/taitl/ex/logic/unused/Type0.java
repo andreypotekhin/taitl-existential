@@ -1,7 +1,7 @@
 package com.taitl.ex.logic.unused;
 
+import java.util.*;
 import com.taitl.existential.constants.*;
-import java.util.Objects;
 
 /**
  * A string representing a class, along with its generics, for example "Doc<MD>".
@@ -18,11 +18,11 @@ import java.util.Objects;
  * @deprecated Use EventKey
  */
 @Deprecated
-public class Type
+public class Type0
 {
     protected String typeid;
 
-    public Type(Object t, String genericQualifier)
+    public Type0(Object t, String genericQualifier)
     {
         if (t == null)
         {
@@ -31,7 +31,7 @@ public class Type
         setTypeid(t.getClass(), genericQualifier);
     }
 
-    public Type(Class<?> clz, String genericQualifier)
+    public Type0(Class<?> clz, String genericQualifier)
     {
         if (clz == null)
         {
@@ -40,7 +40,7 @@ public class Type
         setTypeid(clz, genericQualifier);
     }
 
-    public Type(String classNameQualifiedWithGenerics)
+    public Type0(String classNameQualifiedWithGenerics)
     {
         typeid = classNameQualifiedWithGenerics;
     }
@@ -73,11 +73,11 @@ public class Type
         {
             return true;
         }
-        if (!(other instanceof Type))
+        if (!(other instanceof Type0))
         {
             return false;
         }
-        Type that = (Type) other;
+        Type0 that = (Type0) other;
         return Objects.equals(typeid, that.typeid);
     }
 

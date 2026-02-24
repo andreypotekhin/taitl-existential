@@ -1,5 +1,9 @@
 package com.taitl.existential.keys;
 
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.stream.*;
+
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.Text.*;
 
@@ -15,34 +19,70 @@ import static com.taitl.ex.common.helper.Text.*;
  */
 public class TypeKey<T>
 {
-    protected String typeid;
+    protected String key;
+
+    /**
+     * Constructs TypeKey for a class, possibly with generics, using Java reflection.
+     * Takes advantage of Java's anonymous class syntax to capture the generic type
+     * information at runtime (not available otherwise).
+     *
+     * Usage: anonymous subclass of TypeKey with the desired generic type:
+     * new TypeKey<MyClass<GenericParams>>(){}
+     *
+     * Example: TypeKey<Document<JSON>>(){}
+     * Result: "Document<JSON>"
+     */
+    protected TypeKey()
+    {
+        this(false);
+    }
+
+    /**
+     * Variant of TypeKey() that takes a boolean parameter to use class's
+     * fully qualified name (java.lang.String) or simple name (String)
+     *
+     * @param useFullName Use fully qualified name (clz.getCanonicalName())
+     */
+    protected TypeKey(boolean useFullName)
+    {
+        // Get generic superclass, e.g. TypeKey<Document<JSON>>
+        Type superclass = getClass().getGenericSuperclass();
+        if (!(superclass instanceof ParameterizedType))
+        {
+            throw new IllegalArgumentException("You should call this method with an anonimous subclass of TypeKey,"
+                    + " parameterized with a type. Example: new TypeKey<Document<JSON>>(){}");
+        }
+        // Get TypeKey parameter type, e.g. Document<JSON>
+        Type type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
+        key = getRecursiveTypeName(type, useFullName);
+    }
 
     /**
      * Constructs TypeKey for a class without generics.
-     * Example: TypeKey("Car")
+     * Example: TypeKey(Car.class): "Car"
      *
      * @param clz Class to construct TypeKey from
      */
     public TypeKey(Class<?> clz)
     {
-        setTypeid(clz, "", false);
+        setKey(clz, "", false);
     }
 
     /**
      * Constructs TypeKey for a class without generics, optionally using fully-qualified class name.
-     * Example: TypeKey("com.example.Car") or TypeKey("Car")
+     * Example: TypeKey(Car.class): "Car" or "com.example.Car"
      *
      * @param clz         Class to construct TypeKey from
      * @param useFullName If true, uses fully-qualified class name instead of short name
      */
     public TypeKey(Class<?> clz, boolean useFullName)
     {
-        setTypeid(clz, "", useFullName);
+        setKey(clz, "", useFullName);
     }
 
     /**
      * Constructs TypeKey for a class with generics.
-     * Example: TypeKey(Document.class, "JSON")
+     * Example: TypeKey(Document.class, "JSON"): "Document<JSON>"
      *
      * @param clz              Class to construct TypeKey from, like Document.class
      * @param genericQualifier Generic qualifier, like {@code "JSON"}
@@ -51,12 +91,12 @@ public class TypeKey<T>
     {
         sane(clz, "clz", genericQualifier, "genericQualifier");
         check(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
-        setTypeid(clz, genericQualifier, false);
+        setKey(clz, genericQualifier, false);
     }
 
     /**
      * Constructs TypeKey for a class with generics, optionally using fully-qualified class name.
-     * Example: TypeKey(Document.class, "JSON") or TypeKey("com.example.Document", "JSON")
+     * Example: TypeKey(Document.class, "JSON"): "Document<JSON>" or "com.example.Document<JSON>"
      *
      * @param clz              Class to construct TypeKey from, like Document.class
      * @param genericQualifier Generic qualifier, like {@code "JSON"}
@@ -66,12 +106,12 @@ public class TypeKey<T>
     {
         sane(clz, "clz", genericQualifier, "genericQualifier");
         check(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
-        setTypeid(clz, genericQualifier, useFullName);
+        setKey(clz, genericQualifier, useFullName);
     }
 
     /**
      * Constructs TypeKey for a class name string with possible generic qualifier.
-     * Example: {@code TypeKey("Document<JSON>")}
+     * Example: TypeKey("Document<JSON>"): "Document<JSON>"
      *
      * @param classNameQualifiedWithGenerics Class name qualified with generics, like {@code "Document<JSON>"}
      */
@@ -80,8 +120,8 @@ public class TypeKey<T>
         sane(classNameQualifiedWithGenerics, "classNameQualifiedWithGenerics");
         check(!classNameQualifiedWithGenerics.isBlank(),
                 "Argument 'classNameQualifiedWithGenerics' cannot be blank");
-        requireValidTypeKey(classNameQualifiedWithGenerics);
-        typeid = classNameQualifiedWithGenerics;
+        validate(classNameQualifiedWithGenerics);
+        key = classNameQualifiedWithGenerics;
     }
 
     public static <T> TypeKey<T> valueOf(Class<?> clz)
@@ -135,7 +175,7 @@ public class TypeKey<T>
 
     public int hashCode()
     {
-        return typeid.hashCode();
+        return key.hashCode();
     }
 
     public boolean equals(Object other)
@@ -153,38 +193,38 @@ public class TypeKey<T>
             return false;
         }
         TypeKey<?> o = (TypeKey<?>) other;
-        if (o.typeid == null)
+        if (o.key == null)
         {
-            return (this.typeid == null);
+            return (this.key == null);
         }
-        return o.typeid.equals(this.typeid);
+        return o.key.equals(this.key);
     }
 
     public String toString()
     {
-        return typeid;
+        return key;
     }
 
-    protected void setTypeid(Class<?> clz, String genericQualifier, boolean useFullName)
+    protected void setKey(Class<?> clz, String genericQualifier, boolean useFullName)
     {
         sane(clz, "clz", genericQualifier, "genericQualifier");
-        String className = useFullName ? clz.getName() : clz.getSimpleName();
+        String className = useFullName ? clz.getCanonicalName() : clz.getSimpleName();
         if (genericQualifier.isEmpty())
         {
-            typeid = className;
+            key = className;
         }
         else if (genericQualifier.startsWith("<") && genericQualifier.endsWith(">"))
         {
-            typeid = className + genericQualifier;
+            key = className + genericQualifier;
         }
         else
         {
-            typeid = className + "<" + genericQualifier + ">";
+            key = className + "<" + genericQualifier + ">";
         }
-        requireValidTypeKey(typeid);
+        validate(key);
     }
 
-    protected static void requireValidTypeKey(String key)
+    protected static void validate(String key)
     {
         key = trimmed(key, "class name");
         check(!key.isBlank(), "Class name cannot be blank");
@@ -195,7 +235,36 @@ public class TypeKey<T>
             int leftBracket = key.indexOf("<");
             int rightBracket = key.lastIndexOf(">");
             check(leftBracket < rightBracket, "Right bracket must not come before left bracket");
-            requireValidTypeKey(key.substring(leftBracket + 1, rightBracket));
+            validate(key.substring(leftBracket + 1, rightBracket));
         }
+    }
+
+    /**
+     * Recursively constructs string representation of a type, including its generic parameters.
+     * Example: for Document<JSON>, returns "Document<JSON>" or "com.package.Document<com.other.package.JSON>".
+     */
+    protected String getRecursiveTypeName(Type type, boolean useFullName)
+    {
+        // For a simple class (like String or JSON), return its name
+        if (type instanceof Class<?>)
+        {
+            Class<?> clz = (Class<?>) type;
+            return useFullName ? clz.getCanonicalName() : clz.getSimpleName();
+        }
+
+        // If it's a nested parameterized type (like Document<JSON>)
+        if (type instanceof ParameterizedType)
+        {
+            ParameterizedType pType = (ParameterizedType) type;
+            Class<?> clz = (Class<?>) pType.getRawType();
+            String rawType = useFullName ? clz.getCanonicalName() : clz.getSimpleName();
+            // Recurse for each type argument inside the angle brackets
+            String arguments = Arrays.stream(pType.getActualTypeArguments())
+                    .map(t -> getRecursiveTypeName(t, useFullName)) // RECURSION
+                    .collect(Collectors.joining(", "));
+            return rawType + "<" + arguments + ">";
+        }
+
+        return type.toString();
     }
 }

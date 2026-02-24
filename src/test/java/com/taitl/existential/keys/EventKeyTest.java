@@ -5,7 +5,6 @@ import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class EventKeyTest
 {
@@ -35,7 +34,8 @@ class EventKeyTest
     void valueOfEventAndTypeKey()
     {
         Create<String> event = new Create<>("alpha");
-        TypeKey<String> typeKey = new TypeKey<>(String.class);
+        TypeKey<String> typeKey = new TypeKey<>() {
+        };
         EventKey key = EventKey.valueOf(event, typeKey);
         assertThat(key.toString(), is("Create<String>"));
     }

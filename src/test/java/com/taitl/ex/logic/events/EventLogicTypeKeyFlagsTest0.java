@@ -1,7 +1,6 @@
 package com.taitl.ex.logic.events;
 
 import java.util.*;
-import org.junit.jupiter.api.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.indexing.*;
 import com.taitl.existential.*;
@@ -9,11 +8,12 @@ import com.taitl.existential.constants.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
+import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
-class EventLogicTypeKeyFlagsTest
+class EventLogicTypeKeyFlagsTest0
 {
     Existential ex;
 
@@ -32,7 +32,7 @@ class EventLogicTypeKeyFlagsTest
         ex = new Existential();
         EventLogic logic = new EventLogic(new ExistentialEvents(ex));
 
-        assertThat(logic.inferredType("ok").toString(), is("String"));
+        assertThat(logic.typeKey("ok").toString(), is("String"));
     }
 
     @Test
@@ -42,7 +42,7 @@ class EventLogicTypeKeyFlagsTest
         ex.on(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES);
         EventLogic logic = new EventLogic(new ExistentialEvents(ex));
 
-        assertThat(logic.inferredType("ok").toString(), is("java.lang.String"));
+        assertThat(logic.typeKey("ok").toString(), is("java.lang.String"));
     }
 
     @Test
@@ -56,7 +56,7 @@ class EventLogicTypeKeyFlagsTest
         Tr tr = new Tr("/api/test", UUID.randomUUID());
 
         Change<String> event = new Change<>("ok");
-        TypeKey<String> type = logic.inferredType("ok");
+        TypeKey<String> type = logic.typeKey("ok");
         indexing.indexEvent(event, "ok", type, tr);
 
         assertThat(tr.runtimeIndexes().encounteredTypeKeys.contains(TypeKey.valueOfFull(String.class)), is(true));

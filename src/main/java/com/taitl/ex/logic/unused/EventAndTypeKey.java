@@ -1,7 +1,7 @@
 package com.taitl.ex.logic.unused;
 
+import java.util.*;
 import com.taitl.existential.events.types.*;
-import java.util.Objects;
 
 /**
  * Implements a key for collections keyed by Event + Type.
@@ -12,7 +12,7 @@ import java.util.Objects;
  * 
  * @see Event
  * @see BiEvent
- * @see Type
+ * @see Type0
  * @deprecated Use EventKey
  */
 @Deprecated
@@ -20,7 +20,7 @@ public class EventAndTypeKey<T>
 {
     String key;
 
-    EventAndTypeKey(Event<T> e, Type type)
+    EventAndTypeKey(Event<T> e, Type0 type)
     {
         String eventClass = e.getClass().getSimpleName();
         if ("Event".equals(eventClass))
@@ -35,7 +35,7 @@ public class EventAndTypeKey<T>
         }
     }
 
-    EventAndTypeKey(Class<T> clz, Type type)
+    EventAndTypeKey(Class<T> clz, Type0 type)
     {
         String eventClass = clz.getSimpleName();
         if ("Event".equals(eventClass))
@@ -50,7 +50,7 @@ public class EventAndTypeKey<T>
         }
     }
 
-    EventAndTypeKey(BiEvent<T> e, Type type)
+    EventAndTypeKey(BiEvent<T> e, Type0 type)
     {
         String eventClass = e.getClass().getSimpleName();
         key = eventClass + "<" + type.toString() + ">";
