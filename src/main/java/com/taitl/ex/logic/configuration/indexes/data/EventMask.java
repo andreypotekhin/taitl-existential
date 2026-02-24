@@ -20,15 +20,24 @@ public class EventMask
 
     static
     {
-        registerEventType(TypeKey.valueOf(Event.class));
-        registerEventType(TypeKey.valueOf(Create.class));
-        registerEventType(TypeKey.valueOf(Update.class));
-        registerEventType(TypeKey.valueOf(CU.class));
-        registerEventType(TypeKey.valueOf(Delete.class));
-        registerEventType(TypeKey.valueOf(Read.class));
-        registerEventType(TypeKey.valueOf(BiEvent.class));
-        registerEventType(TypeKey.valueOf(Mutate.class));
-        registerEventType(TypeKey.valueOf(Transit.class));
+        registerEventType(new TypeKey<Event>() {
+        });
+        registerEventType(new TypeKey<Create>() {
+        });
+        registerEventType(new TypeKey<Update>() {
+        });
+        registerEventType(new TypeKey<CU>() {
+        });
+        registerEventType(new TypeKey<Delete>() {
+        });
+        registerEventType(new TypeKey<Read>() {
+        });
+        registerEventType(new TypeKey<BiEvent>() {
+        });
+        registerEventType(new TypeKey<Mutate>() {
+        });
+        registerEventType(new TypeKey<Transit>() {
+        });
     }
 
     /**

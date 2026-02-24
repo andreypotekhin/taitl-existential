@@ -32,7 +32,11 @@ class EventLogicTypeKeyFlagsTest0
         ex = new Existential();
         EventLogic logic = new EventLogic(new ExistentialEvents(ex));
 
-        assertThat(logic.typeKey("ok").toString(), is("String"));
+        TypeKey<String> a = logic.typeKey("ok");
+        TypeKey<String> b = logic.typeKey("again");
+
+        assertThat(a.toString(), is("String"));
+        assertThat(a == b, is(true));
     }
 
     @Test

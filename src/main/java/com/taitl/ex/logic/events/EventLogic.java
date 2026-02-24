@@ -20,12 +20,14 @@ public class EventLogic implements Closeable
     protected Existential ex;
     protected ExistentialEvents ev;
     protected ReceiveEvent receiveEvent;
+    protected TypeKeyCache typeKeys;
 
     public EventLogic(ExistentialEvents ev)
     {
         this.ev = ev;
         this.ex = ev.ex();
         this.receiveEvent = Creator.create(ReceiveEvent.class, new Class[] { EventLogic.class }, this);
+        this.typeKeys = new TypeKeyCache();
     }
 
     public <T> void event(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
@@ -83,7 +85,6 @@ public class EventLogic implements Closeable
 
     protected <T> TypeKey<T> typeKey(T t)
     {
-        return ex.get(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES) ? TypeKey.valueOfFull(t)
-                : TypeKey.valueOf(t);
+        return typeKeys.get(t, ex.get(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES));
     }
 }

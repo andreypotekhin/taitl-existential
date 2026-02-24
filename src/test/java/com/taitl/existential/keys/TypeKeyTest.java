@@ -14,8 +14,10 @@ class TypeKeyTest
     @Test
     void constructors()
     {
-        assertThat(new TypeKey<TypeKey<Cat>>() {}.toString(), is("TypeKey<Cat>"));
-        assertThat(new TypeKey<TypeKey<Cat>>(true) {}.toString(),
+        assertThat(new TypeKey<TypeKey<Cat>>() {
+        }.toString(), is("TypeKey<Cat>"));
+        assertThat(new TypeKey<TypeKey<Cat>>(true) {
+        }.toString(),
                 is("com.taitl.existential.keys.TypeKey<com.taitl.ex.examples.night_city.model.Cat>"));
         assertThat(new TypeKey("Doc").toString(), is("Doc"));
         assertThat(new TypeKey(TypeKey.class).toString(), is("TypeKey"));
