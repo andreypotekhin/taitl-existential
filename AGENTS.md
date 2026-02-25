@@ -264,8 +264,8 @@ Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid (e.
 
 
 ## Task completion
-Ensure the project fully builds with tests the project in the end of each task.
-Resolve any build or test issues resulved before completing the task.
+Ensure the project fully builds with tests at the end of each task.
+Resolve any build or test issues revealed before completing the task.
 
 TODO items
 - Upon completion, move TODO items to docs/dev/todo/done.

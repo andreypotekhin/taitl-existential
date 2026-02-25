@@ -56,21 +56,42 @@ public class Config
     }
 
     /* Attributes */
+
+    /**
+     * Returns the operation name associated with this configuration.
+     *
+     * @return Operation name
+     */
     public String name()
     {
         return name;
     }
 
+    /**
+     * Sets the operation name for this configuration.
+     *
+     * @param name Operation name
+     */
     public void name(String name)
     {
         this.name = name;
     }
 
+    /**
+     * Returns all contexts declared for this operation, in declaration order.
+     *
+     * @return Ordered list of contexts
+     */
     public List<Context> contexts()
     {
         return contexts;
     }
 
+    /**
+     * Returns configuration indexes used for rule lookup and evaluation.
+     *
+     * @return Configuration indexes
+     */
     public ConfigIndexes indexes()
     {
         return configIndexes;

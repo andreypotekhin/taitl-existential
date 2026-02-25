@@ -56,12 +56,23 @@ public class Context implements Configurable, Evaluable
     /** EventSplitter factory */
     protected Supplier<? extends EventSplitter> eventSplitterFactory = EventSplitter.FACTORY;
 
+    /**
+     * Creates a context with the provided operation name.
+     *
+     * @param name Operation name or context path
+     */
     public Context(String name)
     {
         sane(name, "name");
         this.name = name;
     }
 
+    /**
+     * Creates a child context with the provided name and parent context.
+     *
+     * @param name   Operation name or context path
+     * @param parent Parent context
+     */
     public Context(String name, Context parent)
     {
         sane(name, "name", parent, "parent");
@@ -154,6 +165,12 @@ public class Context implements Configurable, Evaluable
         return this;
     }
 
+    /**
+     * Overrides the event splitter factory used for this context.
+     *
+     * @param supplier Event splitter factory
+     * @return This context for chaining
+     */
     public Context eventSplitter(Supplier<? extends EventSplitter> supplier)
     {
         sane(supplier, "supplier");
@@ -165,6 +182,12 @@ public class Context implements Configurable, Evaluable
      * Configurable interface
      */
 
+    /**
+     * Adds a rule set to this context and registers its handlers.
+     *
+     * @param evs Rule set to add
+     * @param <T> Entity type
+     */
     public <T> void add(Evs<T> evs)
     {
         sane(evs, "ev");
@@ -172,6 +195,12 @@ public class Context implements Configurable, Evaluable
         instructions.addAll(evs);
     }
 
+    /**
+     * Merges all rules and instructions from another context into this one.
+     *
+     * @param other Context to merge from
+     * @return This context for chaining
+     */
     public Context addAll(Context other)
     {
         sane(other, "other");
@@ -189,31 +218,62 @@ public class Context implements Configurable, Evaluable
      * Attributes
      */
 
+    /**
+     * Returns true if this context has a parent context.
+     *
+     * @return Whether a parent context is set
+     */
     public boolean hasParent()
     {
         return parent != null;
     }
 
+    /**
+     * Returns the parent context, if any.
+     *
+     * @return Parent context or null
+     */
     public Context parent()
     {
         return parent;
     }
 
+    /**
+     * Sets the parent context.
+     *
+     * @param parent Parent context
+     */
     public void parent(Context parent)
     {
         this.parent = parent;
     }
 
+    /**
+     * Returns the context name/path.
+     *
+     * @return Context name
+     */
     public String name()
     {
         return name;
     }
 
+    /**
+     * Sets the operation name for this context.
+     *
+     * @param op Operation name
+     */
     public void op(String op)
     {
         this.name = op;
     }
 
+    /**
+     * Returns the transaction factory used for this context,
+     * inheriting from the parent when not set.
+     *
+     * @return Transaction factory
+     */
     public Supplier<? extends Transaction> transactionFactory()
     {
         if (transactionFactory != null)
@@ -223,6 +283,11 @@ public class Context implements Configurable, Evaluable
         return parent != null ? parent.transactionFactory() : Transaction.FACTORY;
     }
 
+    /**
+     * Returns the event splitter factory used for this context.
+     *
+     * @return Event splitter factory
+     */
     public Supplier<? extends EventSplitter> eventSplitterFactory()
     {
         return eventSplitterFactory;

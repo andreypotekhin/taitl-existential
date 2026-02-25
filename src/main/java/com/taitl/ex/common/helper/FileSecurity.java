@@ -17,31 +17,12 @@ public class FileSecurity
 {
     public static void verifySecurePosixFile(Path file, String fileLabel, String troubleshootingSection)
     {
-        sane(file, "file", fileLabel, "fileLabel", troubleshootingSection, "troubleshootingSection");
+        verifySecurePosixEntry(file, fileLabel, troubleshootingSection);
+    }
 
-        PosixFileAttributeView view =
-                Files.getFileAttributeView(file, PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS);
-        if (view == null)
-        {
-            return;
-        }
-        try
-        {
-            Set<PosixFilePermission> permissions = view.readAttributes().permissions();
-            boolean groupWritable = permissions.contains(PosixFilePermission.GROUP_WRITE);
-            boolean otherWritable = permissions.contains(PosixFilePermission.OTHERS_WRITE);
-            verify(!groupWritable && !otherWritable,
-                    String.format("%s is group/world writable: %s. See %s",
-                            fileLabel, file, troubleshootingSection));
-            verifyOwnedByCurrentUser(file, fileLabel, troubleshootingSection);
-        }
-        catch (IOException e)
-        {
-            throw new IllegalStateException(
-                    String.format("Could not read %s permissions '%s'. See %s",
-                            fileLabel, file, troubleshootingSection),
-                    e);
-        }
+    public static void verifySecurePosixDirectory(Path directory, String directoryLabel, String troubleshootingSection)
+    {
+        verifySecurePosixEntry(directory, directoryLabel, troubleshootingSection);
     }
 
     public static void verifyOwnedByCurrentUser(Path file, String fileLabel, String troubleshootingSection)
@@ -67,6 +48,35 @@ public class FileSecurity
             throw new IllegalStateException(
                     String.format("Could not read %s ownership '%s'. See %s",
                             fileLabel, file, troubleshootingSection),
+                    e);
+        }
+    }
+
+    private static void verifySecurePosixEntry(Path path, String label, String troubleshootingSection)
+    {
+        sane(path, "path", label, "label", troubleshootingSection, "troubleshootingSection");
+
+        PosixFileAttributeView view =
+                Files.getFileAttributeView(path, PosixFileAttributeView.class, LinkOption.NOFOLLOW_LINKS);
+        if (view == null)
+        {
+            return;
+        }
+        try
+        {
+            Set<PosixFilePermission> permissions = view.readAttributes().permissions();
+            boolean groupWritable = permissions.contains(PosixFilePermission.GROUP_WRITE);
+            boolean otherWritable = permissions.contains(PosixFilePermission.OTHERS_WRITE);
+            verify(!groupWritable && !otherWritable,
+                    String.format("%s is group/world writable: %s. See %s",
+                            label, path, troubleshootingSection));
+            verifyOwnedByCurrentUser(path, label, troubleshootingSection);
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException(
+                    String.format("Could not read %s permissions '%s'. See %s",
+                            label, path, troubleshootingSection),
                     e);
         }
     }

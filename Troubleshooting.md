@@ -8,6 +8,7 @@ Common causes:
 - `EXISTENTIAL_CONFIG_FILE` points to a missing or unreadable file.
 - `EXISTENTIAL_CONFIG_FILE` points to a symlink or an oversized file.
 - `EXISTENTIAL_CONFIG_FILE` points to a file with insecure permissions or unexpected ownership.
+- `EXISTENTIAL_CONFIG_FILE` is stored under a group/world writable directory.
 - Properties file contains an unknown key.
 - Boolean value is not `true` or `false` (case-sensitive).
 
@@ -16,10 +17,12 @@ Fix:
 2. Ensure the configuration file is a real file (not a symlink) and under 1 MB.
 3. On POSIX systems, ensure the file is owned by the current user and not group/world writable (for example,
    `chmod 600 /path/to/config.properties`).
-4. Keep only supported keys:
+4. On POSIX systems, ensure the configuration directory is owned by the current user and not group/world writable
+   (for example, `chmod 700 /path/to`).
+5. Keep only supported keys:
    - `behavior.rules.requireDescriptions`
-5. Use only `true` or `false` for boolean values.
-6. Unset `EXISTENTIAL_CONFIG_FILE` to fall back to classpath `existential.properties`.
+6. Use only `true` or `false` for boolean values.
+7. Unset `EXISTENTIAL_CONFIG_FILE` to fall back to classpath `existential.properties`.
 
 ## Condition Not Met
 
@@ -66,17 +69,10 @@ Fix:
 **Problem: A call fails with an IllegalArgumentException stating the operation key is invalid**
 
 Typical error messages:
-<<<<<<< ours
-- `Argument 'op' should start with a slash ('/')`
-- `Argument 'op' cannot be a single slash ('/')`
-- `Argument 'op' cannot end with a slash ('/')`
-- `Argument 'op' cannot have wildcards ('*')`
-=======
 - `Operation key should start with a slash ('/')`
 - `Operation key cannot be a single slash ('/')`
 - `Operation key cannot end with a slash ('/')`
 - `Operation key cannot have wildcards ('*')`
->>>>>>> theirs
 
 Fix:
 1. Use a leading slash and at least one path segment, for example `/app/orders/update`.
