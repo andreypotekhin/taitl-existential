@@ -28,28 +28,56 @@ public class Index<K, V>
     protected Multimap<K, V> storage = new Multimap<>();
     protected Function<V, K> getKey;
 
+    /**
+     * Creates an empty index without a key extractor.
+     * Call {@link #setGetKey(Function)} or use {@link #add(Object, Object)}.
+     */
     public Index()
     {
     }
 
+    /**
+     * Creates an index with a key extractor for value-based inserts.
+     *
+     * @param getKey Function to extract keys from values
+     */
     public Index(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
         setGetKey(getKey);
     }
 
+    /**
+     * Returns the values stored under the provided key.
+     *
+     * @param key Key to look up
+     * @return Set of values for the key
+     */
     public Set<V> get(K key)
     {
         sane(key, "key");
         return storage.get(key);
     }
 
+    /**
+     * Returns true if the key is present in the index.
+     *
+     * @param key Key to check
+     * @return True when the key exists in the index
+     */
     public boolean contains(K key)
     {
         sane(key, "key");
         return storage.containsKey(key);
     }
 
+    /**
+     * Returns true if the key exists and the value is stored under it.
+     *
+     * @param key   Key to check
+     * @param value Value to check
+     * @return True when the value is present under the key
+     */
     public boolean contains(K key, V value)
     {
         sane(key, "key");
@@ -62,6 +90,13 @@ public class Index<K, V>
         return set.contains(value);
     }
 
+    /**
+     * Returns true if the key exists and the set of values matches the predicate.
+     *
+     * @param key   Key to check
+     * @param match Predicate applied to the value set
+     * @return True when the predicate matches
+     */
     public boolean contains(K key, Predicate<Set<V>> match)
     {
         sane(key, "key");
@@ -74,6 +109,13 @@ public class Index<K, V>
         return match.test(set);
     }
 
+    /**
+     * Adds a value under the provided key.
+     *
+     * @param k Key to add under
+     * @param v Value to add
+     * @return Set of values stored under the key
+     */
     public Set<V> add(K k, V v)
     {
         sane(k, "key");
@@ -81,6 +123,12 @@ public class Index<K, V>
         return storage.put(k, v);
     }
 
+    /**
+     * Adds a value using the configured key extractor.
+     *
+     * @param v Value to add
+     * @return Set of values stored under the derived key
+     */
     public Set<V> add(V v)
     {
         sane(v, "value");
@@ -106,6 +154,13 @@ public class Index<K, V>
         return storage.remove(k, v);
     }
 
+    /**
+     * Removes values under a key that match the predicate.
+     *
+     * @param k     Key to remove under
+     * @param match Predicate to match values for removal
+     * @return Set of removed values
+     */
     public Set<V> remove(K k, Predicate<? super V> match)
     {
         sane(k, "key");
@@ -166,12 +221,20 @@ public class Index<K, V>
         return storage.get((K) key);
     }
 
+    /**
+     * Sets the key extractor used by {@link #add(Object)}.
+     *
+     * @param getKey Function to extract keys from values
+     */
     public void setGetKey(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
         this.getKey = getKey;
     }
 
+    /**
+     * Removes all entries from the index.
+     */
     public void clear()
     {
         storage.clear();

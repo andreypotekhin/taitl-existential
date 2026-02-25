@@ -66,6 +66,11 @@ public class ConfigureLibrary
                 String.format("Configuration path is not a file: %s. See %s", file, TROUBLESHOOTING_SECTION));
         verify(Files.isReadable(file),
                 String.format("Configuration file is not readable: %s. See %s", file, TROUBLESHOOTING_SECTION));
+        Path parent = file.toAbsolutePath().getParent();
+        if (parent != null)
+        {
+            FileSecurity.verifySecurePosixDirectory(parent, "Configuration directory", TROUBLESHOOTING_SECTION);
+        }
         FileSecurity.verifySecurePosixFile(file, "Configuration file", TROUBLESHOOTING_SECTION);
         long size = fileSize(file);
         verify(size <= MAX_CONFIG_BYTES,

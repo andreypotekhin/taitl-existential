@@ -189,6 +189,42 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    void rejectGroupWritableEnvDirectory()
+    {
+        try
+        {
+            Path tempDir = Files.createTempDirectory("ex-config-dir");
+            PosixFileAttributeView view = Files.getFileAttributeView(tempDir, PosixFileAttributeView.class);
+            Assumptions.assumeTrue(view != null, "POSIX permissions not supported");
+            Path temp = tempDir.resolve("config.properties");
+            try
+            {
+                Files.write(temp, "behavior.rules.requireDescriptions=false".getBytes(StandardCharsets.UTF_8));
+                Files.setPosixFilePermissions(tempDir, PosixFilePermissions.fromString("rwxrwxr-x"));
+                Files.setPosixFilePermissions(temp, PosixFilePermissions.fromString("rw-------"));
+
+                ConfigureLibrary loader = new ConfigureLibrary(ex,
+                        name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? temp.toString() : null,
+                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                "behavior.rules.requireDescriptions=false")));
+
+                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                assertThat(message, containsString("Configuration directory is group/world writable"));
+                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+            }
+            finally
+            {
+                deleteTempFile(temp);
+                deleteTempDirectory(tempDir);
+            }
+        }
+        catch (IOException e)
+        {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Test
     void startupDelegatesToConfigureLibrary()
     {
         StubConfigureLibrary loader = new StubConfigureLibrary(ex);

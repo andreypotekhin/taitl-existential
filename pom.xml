@@ -18,11 +18,11 @@
         <maven-failsafe-plugin-version>3.0.0-M5</maven-failsafe-plugin-version>
         <maven-assembly-plugin-version>3.3.0</maven-assembly-plugin-version>
         <maven-javadoc-plugin-version>3.3.1</maven-javadoc-plugin-version>
-        <junit-5-version>5.8.1</junit-5-version>
+        <junit-5-version>5.14.3</junit-5-version>
         <jacoco-maven-plugin-version>0.8.7</jacoco-maven-plugin-version>
         <mockito-version>4.2.0</mockito-version>
         <powermock-version>2.0.9</powermock-version>
-        <hamcrest-version>2.2</hamcrest-version>
+        <hamcrest-version>3.0</hamcrest-version>
         <maven-checkstyle-plugin-version>3.1.2</maven-checkstyle-plugin-version>
         <!-- maven-pmd-plugin 3.15.0 uses PMD 6.38.0  -->
         <maven-pmd-plugin-version>3.15.0</maven-pmd-plugin-version>
@@ -84,9 +84,9 @@
                 <configuration>
                     <configFile>${project.basedir}/src/tools/configs/java-code-formatter/java-code-formatter.xml
                     </configFile>
-                    <compilerSource>${maven.compiler.source}</compilerSource>
-                    <compilerCompliance>${maven.compiler.source}</compilerCompliance>
-                    <compilerTargetPlatform>${maven.compiler.target}</compilerTargetPlatform>
+                    <compilerSource>${maven.compiler.release}</compilerSource>
+                    <compilerCompliance>${maven.compiler.release}</compilerCompliance>
+                    <compilerTargetPlatform>${maven.compiler.release}</compilerTargetPlatform>
                     <excludes>
                         <exclude>com/any/generated/files/you/have/</exclude>
                     </excludes>
