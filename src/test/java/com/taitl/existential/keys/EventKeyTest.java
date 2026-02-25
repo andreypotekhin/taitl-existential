@@ -45,7 +45,7 @@ class EventKeyTest
     void valueOfEventAndTypeKeyFull()
     {
         Create<String> event = new Create<>("alpha");
-        TypeKey<String> typeKey = TypeKey.valueOfFull(String.class);
+        TypeKey<String> typeKey = TypeKey.valueOf(String.class, false);
         EventKey key = EventKey.valueOf(event, typeKey, true);
         assertThat(key.toString(), is(event.getClass().getName() + "<" + typeKey + ">"));
     }
