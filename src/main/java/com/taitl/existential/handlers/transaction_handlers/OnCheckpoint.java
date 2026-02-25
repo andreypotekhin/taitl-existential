@@ -2,6 +2,8 @@ package com.taitl.existential.handlers.transaction_handlers;
 
 import java.util.function.*;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.events.transaction_events.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.*;
 
 /**
@@ -62,5 +64,10 @@ public class OnCheckpoint<T extends Transaction> extends On<T>
     public OnCheckpoint(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         super(condition, action, description);
+    }
+
+    public EventType eventType()
+    {
+        return EventType.valueOf(Checkpoint.class);
     }
 }

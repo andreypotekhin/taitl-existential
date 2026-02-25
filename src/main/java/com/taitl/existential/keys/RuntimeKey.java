@@ -14,7 +14,7 @@ import static com.taitl.ex.common.helper.State.*;
  */
 public class RuntimeKey<T>
 {
-    protected EventKey key;
+    protected final EventKey key;
     protected T entity;
 
     public static <T> RuntimeKey<T> valueOf(T t)
@@ -64,8 +64,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(T t, boolean useFullName)
     {
-        key = useFullName ? EventKey.valueOfFull(t) : EventKey.valueOf(t);
-        entity = t;
+        this(useFullName ? EventKey.valueOfFull(t) : EventKey.valueOf(t), t);
     }
 
     public RuntimeKey(Event<T> e, TypeKey<T> typeKey, T t)
@@ -75,8 +74,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(Event<T> e, TypeKey<T> typeKey, T t, boolean useFullName)
     {
-        key = useFullName ? EventKey.valueOfFull(e, typeKey) : EventKey.valueOf(e, typeKey);
-        entity = t;
+        this(useFullName ? EventKey.valueOfFull(e, typeKey) : EventKey.valueOf(e, typeKey), t);
     }
 
     public RuntimeKey(Event<T> e, String type, T t)
@@ -86,8 +84,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(Event<T> e, String type, T t, boolean useFullName)
     {
-        key = useFullName ? EventKey.valueOfFull(e, type) : EventKey.valueOf(e, type);
-        entity = t;
+        this(useFullName ? EventKey.valueOfFull(e, type) : EventKey.valueOf(e, type), t);
     }
 
     public RuntimeKey(Class<T> clz, String type, T t)
@@ -97,8 +94,13 @@ public class RuntimeKey<T>
 
     public RuntimeKey(Class<T> clz, String type, T t, boolean useFullName)
     {
-        key = useFullName ? EventKey.valueOfFull(clz, type) : EventKey.valueOf(clz, type);
-        entity = t;
+        this(useFullName ? EventKey.valueOfFull(clz, type) : EventKey.valueOf(clz, type), t);
+    }
+
+    protected RuntimeKey(EventKey key, T entity)
+    {
+        this.key = key;
+        this.entity = entity;
     }
 
     public int hashCode()

@@ -1,10 +1,9 @@
 package com.taitl.existential.keys;
 
 import java.lang.reflect.*;
-import java.util.*;
-import java.util.stream.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Generics.*;
 import static com.taitl.ex.common.helper.Text.*;
 
 /**
@@ -21,7 +20,7 @@ public class TypeKey<T>
 {
     private static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#type-key-format";
     private static final String TROUBLESHOOTING_LINK = " See " + TROUBLESHOOTING_SECTION;
-    protected String key;
+    protected final String key;
 
     /**
      * Constructs TypeKey for a class, possibly with generics, using Java reflection.
@@ -47,17 +46,8 @@ public class TypeKey<T>
      */
     protected TypeKey(boolean useFullName)
     {
-        // Get generic superclass, e.g. TypeKey<Document<JSON>>
-        Type superclass = getClass().getGenericSuperclass();
-        if (!(superclass instanceof ParameterizedType))
-        {
-            throw new IllegalArgumentException("You should call this method with an anonymous subclass of TypeKey,"
-                    + " parameterized with a type. Example: new TypeKey<Document<JSON>>(){}"
-                    + TROUBLESHOOTING_LINK);
-        }
-        // Get TypeKey parameter type, e.g. Document<JSON>
-        Type type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
-        key = getRecursiveTypeName(type, useFullName);
+        Type type = anonymousSuperclassTypeArgument(getClass(), TypeKey.class);
+        this.key = typeName(type, useFullName);
     }
 
     /**
@@ -68,7 +58,7 @@ public class TypeKey<T>
      */
     public TypeKey(Class<?> typeClass)
     {
-        setKey(typeClass, "", false);
+        this.key = createKey(typeClass, "", false);
     }
 
     /**
@@ -80,7 +70,7 @@ public class TypeKey<T>
      */
     public TypeKey(Class<?> typeClass, boolean useFullName)
     {
-        setKey(typeClass, "", useFullName);
+        this.key = createKey(typeClass, "", useFullName);
     }
 
     /**
@@ -94,7 +84,7 @@ public class TypeKey<T>
     {
         sane(typeClass, "typeClass", genericQualifier, "genericQualifier");
         check(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
-        setKey(typeClass, genericQualifier, false);
+        this.key = createKey(typeClass, genericQualifier, false);
     }
 
     /**
@@ -109,7 +99,7 @@ public class TypeKey<T>
     {
         sane(typeClass, "typeClass", genericQualifier, "genericQualifier");
         check(!genericQualifier.isBlank(), "Argument 'genericQualifier' cannot be blank");
-        setKey(typeClass, genericQualifier, useFullName);
+        this.key = createKey(typeClass, genericQualifier, useFullName);
     }
 
     /**
@@ -124,7 +114,7 @@ public class TypeKey<T>
         check(!classNameQualifiedWithGenerics.isBlank(),
                 "Argument 'classNameQualifiedWithGenerics' cannot be blank");
         validate(classNameQualifiedWithGenerics);
-        key = classNameQualifiedWithGenerics;
+        this.key = classNameQualifiedWithGenerics;
     }
 
     public static <T> TypeKey<T> valueOf(Class<?> typeClass)
@@ -156,6 +146,16 @@ public class TypeKey<T>
     public static <T> TypeKey<T> valueOf(String classNameQualifiedWithGenerics)
     {
         return new TypeKey<>(classNameQualifiedWithGenerics);
+    }
+
+    public static <T> TypeKey<T> valueOf(Type type)
+    {
+        return new TypeKey<>(type, false);
+    }
+
+    public static <T> TypeKey<T> valueOfFull(Type type)
+    {
+        return new TypeKey<>(type, true);
     }
 
     public static <T> TypeKey<T> valueOf(T t, String genericQualifier)
@@ -208,10 +208,18 @@ public class TypeKey<T>
         return key;
     }
 
-    protected void setKey(Class<?> typeClass, String genericQualifier, boolean useFullName)
+    protected TypeKey(Type type, boolean useFullName)
+    {
+        sane(type, "type");
+        this.key = typeName(type, useFullName);
+        validate(this.key);
+    }
+
+    protected static String createKey(Class<?> typeClass, String genericQualifier, boolean useFullName)
     {
         sane(typeClass, "typeClass", genericQualifier, "genericQualifier");
         String className = useFullName ? typeClass.getCanonicalName() : typeClass.getSimpleName();
+        String key;
         if (genericQualifier.isEmpty())
         {
             key = className;
@@ -225,6 +233,7 @@ public class TypeKey<T>
             key = className + "<" + genericQualifier + ">";
         }
         validate(key);
+        return key;
     }
 
     protected static void validate(String key)
@@ -241,34 +250,5 @@ public class TypeKey<T>
                     + TROUBLESHOOTING_LINK);
             validate(key.substring(leftBracket + 1, rightBracket));
         }
-    }
-
-    /**
-     * Recursively constructs string representation of a type, including its generic parameters.
-     * Example: for Document<JSON>, returns "Document<JSON>" or "com.package.Document<com.other.package.JSON>".
-     */
-    protected String getRecursiveTypeName(Type type, boolean useFullName)
-    {
-        // For a simple class (like String or JSON), return its name
-        if (type instanceof Class<?>)
-        {
-            Class<?> clz = (Class<?>) type;
-            return useFullName ? clz.getCanonicalName() : clz.getSimpleName();
-        }
-
-        // If it's a nested parameterized type (like Document<JSON>)
-        if (type instanceof ParameterizedType)
-        {
-            ParameterizedType pType = (ParameterizedType) type;
-            Class<?> clz = (Class<?>) pType.getRawType();
-            String rawType = useFullName ? clz.getCanonicalName() : clz.getSimpleName();
-            // Recurse for each type argument inside the angle brackets
-            String arguments = Arrays.stream(pType.getActualTypeArguments())
-                    .map(t -> getRecursiveTypeName(t, useFullName)) // RECURSION
-                    .collect(Collectors.joining(", "));
-            return rawType + "<" + arguments + ">";
-        }
-
-        return type.toString();
     }
 }

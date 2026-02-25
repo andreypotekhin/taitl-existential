@@ -6,6 +6,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -50,7 +51,13 @@ public class ContextBuilder
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
     {
         sane(cls, "cls");
-        InvariantBuilder<T> ib = new InvariantBuilder<>(this);
+        return invariant(new TypeKey<>(cls));
+    }
+
+    public <T> InvariantBuilder<T> invariant(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        InvariantBuilder<T> ib = new InvariantBuilder<>(this, typeKey);
         evsSuppliers.add(() -> ib.build());
         return ib;
     }
@@ -83,7 +90,13 @@ public class ContextBuilder
     public <T> EffectBuilder<T> effect(Class<T> cls)
     {
         sane(cls, "cls");
-        EffectBuilder<T> eb = new EffectBuilder<>(this);
+        return effect(new TypeKey<>(cls));
+    }
+
+    public <T> EffectBuilder<T> effect(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        EffectBuilder<T> eb = new EffectBuilder<>(this, typeKey);
         evsSuppliers.add(() -> eb.build());
         return eb;
     }

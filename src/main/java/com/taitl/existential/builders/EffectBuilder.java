@@ -2,6 +2,7 @@ package com.taitl.existential.builders;
 
 import java.util.function.*;
 import com.taitl.existential.effects.*;
+import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -15,16 +16,41 @@ public class EffectBuilder<T> implements EvsBuilder<T>
 {
     ContextBuilder parent;
     TransactionBuilder parent2;
-    Effect<T> target = new Effect<>();
+    Effect<T> target;
 
     public EffectBuilder(ContextBuilder parent)
     {
+        sane(parent, "parent");
+        throw new IllegalStateException("EffectBuilder requires a TypeKey. Use ContextBuilder.effect(Class<T>) "
+                + "or ContextBuilder.effect(TypeKey<T>).");
+    }
+
+    public EffectBuilder(ContextBuilder parent, TypeKey<T> typeKey)
+    {
+        sane(parent, "parent", typeKey, "typeKey");
         this.parent = parent;
+        this.target = new Effect<>(typeKey);
     }
 
     public EffectBuilder(TransactionBuilder parent2)
     {
+        sane(parent2, "parent2");
+        throw new IllegalStateException("EffectBuilder requires a TypeKey. Use TransactionBuilder.effect(Class<T>) "
+                + "or TransactionBuilder.effect(TypeKey<T>).");
+    }
+
+    public EffectBuilder(TransactionBuilder parent2, TypeKey<T> typeKey)
+    {
+        sane(parent2, "parent2", typeKey, "typeKey");
         this.parent2 = parent2;
+        this.target = new Effect<>(typeKey);
+    }
+
+    public EffectBuilder<T> typeKey(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        target.typeKey(typeKey);
+        return this;
     }
 
     public EffectBuilder<T> create(Consumer<? super T> action)

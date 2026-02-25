@@ -1,6 +1,7 @@
 package com.taitl.existential.handlers.types;
 
 import com.taitl.existential.evaluables.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.interfaces.*;
 
 /**
@@ -11,4 +12,8 @@ import com.taitl.existential.interfaces.*;
  */
 public interface EventHandler<T> extends Ev<T>, Describable
 {
+    default EventType eventType()
+    {
+        return EventType.valueOf(Event.class);
+    }
 }

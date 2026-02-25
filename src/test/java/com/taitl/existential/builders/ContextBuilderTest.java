@@ -7,6 +7,7 @@ import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ContextBuilderTest
 {
+    static class CustomTransaction extends Transaction
+    {
+        CustomTransaction()
+        {
+            super("/app", "custom");
+        }
+    }
+
     @Test
     void buildAttachesContextToParent()
     {
@@ -21,7 +30,7 @@ class ContextBuilderTest
         ContextBuilder contextBuilder = configBuilder.context();
         Context context = new Context("/app");
         contextBuilder.contextFactory(() -> context);
-        contextBuilder.invariant(new Invariant<>());
+        contextBuilder.invariant(new Invariant<>(String.class));
 
         contextBuilder.build();
 
@@ -48,7 +57,7 @@ class ContextBuilderTest
         Context context = new Context("/app");
         contextBuilder.contextFactory(() -> context);
 
-        Invariant<String> inv1 = new Invariant<>();
+        Invariant<String> inv1 = new Invariant<>(String.class);
         inv1.on(s -> true, "inv1");
         contextBuilder.invariant(inv1);
 
@@ -58,7 +67,7 @@ class ContextBuilderTest
             .done();
         // @formatter:on
 
-        Effect<String> eff1 = new Effect<>();
+        Effect<String> eff1 = new Effect<>(String.class);
         eff1.on(s -> {
         }, "eff1");
         contextBuilder.effect(eff1);
@@ -87,7 +96,7 @@ class ContextBuilderTest
         ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
         TransactionBuilder transactionBuilder = contextBuilder.transaction(() -> new Transaction("/app", "test"));
 
-        Invariant<String> inv1 = new Invariant<>();
+        Invariant<String> inv1 = new Invariant<>(String.class);
         inv1.on(s -> true, "inv1");
         transactionBuilder.invariant(inv1);
 
@@ -100,7 +109,7 @@ class ContextBuilderTest
             .doneTran();
         // @formatter:on
 
-        Effect<String> eff1 = new Effect<>();
+        Effect<String> eff1 = new Effect<>(String.class);
         eff1.on(s -> {
         }, "eff1");
         transactionBuilder.effect(eff1);
@@ -119,5 +128,71 @@ class ContextBuilderTest
         assertTrue(((Invariant<?>) suppliers.get(2).get()).list().get(0) instanceof OnCreate);
         assertSame(eff1, suppliers.get(3).get());
         assertTrue(((Effect<?>) suppliers.get(4).get()).list().get(0) instanceof OnCreate);
+    }
+
+    @Test
+    void contextBuilderAttachesTypeKeysFromClassAndTypeKeyOverloads()
+    {
+        ConfigBuilder configBuilder = new ConfigBuilder("/app");
+        ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+        Context context = new Context("/app");
+        contextBuilder.contextFactory(() -> context);
+        TypeKey<List<String>> reflectionType = new TypeKey<List<String>>() {
+        };
+        TypeKey<String> stringType = new TypeKey<>("String");
+
+        contextBuilder.invariant(String.class).create(s -> true, "inv").done();
+        contextBuilder.invariant(reflectionType).create(v -> true, "list inv").done();
+        contextBuilder.effect(stringType).create(s -> {
+        }, "eff").done();
+
+        contextBuilder.build();
+
+        List<Evs<?>> evs = context.evs();
+        assertEquals(TypeKey.valueOf(String.class), evs.get(0).typeKey());
+        assertEquals(reflectionType, evs.get(1).typeKey());
+        assertEquals(stringType, evs.get(2).typeKey());
+    }
+
+    @Test
+    void transactionLifecycleOverloadsAssignTypeKeyToTrancycle()
+    {
+        ConfigBuilder configBuilder = new ConfigBuilder("/app");
+        ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+        TransactionBuilder transactionBuilder = contextBuilder.transaction(CustomTransaction::new);
+        TypeKey<CustomTransaction> reflectionFullNameType = new TypeKey<CustomTransaction>(true) {
+        };
+
+        transactionBuilder.begin(CustomTransaction.class, tr -> {
+        });
+        transactionBuilder.commit(reflectionFullNameType, tr -> {
+        });
+
+        Trancycle<?> beginCycle = (Trancycle<?>) transactionBuilder.evsSuppliers.get(0).get();
+        Trancycle<?> commitCycle = (Trancycle<?>) transactionBuilder.evsSuppliers.get(1).get();
+
+        assertEquals(TypeKey.valueOf(CustomTransaction.class), beginCycle.typeKey());
+        assertEquals(reflectionFullNameType, commitCycle.typeKey());
+    }
+
+    @Test
+    void evsTypeKeyContractIsNeverNull()
+    {
+        Invariant<String> invariant = new Invariant<>(String.class);
+        Effect<String> effect = new Effect<>(new TypeKey<String>() {
+        });
+        Trancycle<Transaction> trancycle = new Trancycle<>(Transaction.class);
+        Invariant<List<String>> reflected = new Invariant<List<String>>() {
+        };
+
+        assertNotNull(invariant.typeKey());
+        assertNotNull(effect.typeKey());
+        assertNotNull(trancycle.typeKey());
+        assertEquals(new TypeKey<>(String.class), invariant.typeKey());
+        assertEquals(new TypeKey<String>() {
+        }, effect.typeKey());
+        assertEquals(new TypeKey<Transaction>(Transaction.class), trancycle.typeKey());
+        assertEquals(new TypeKey<List<String>>() {
+        }, reflected.typeKey());
     }
 }

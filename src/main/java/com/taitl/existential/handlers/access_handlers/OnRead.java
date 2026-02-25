@@ -1,6 +1,8 @@
 package com.taitl.existential.handlers.access_handlers;
 
 import java.util.function.*;
+import com.taitl.existential.events.access_events.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.*;
 
 /**
@@ -61,5 +63,10 @@ public class OnRead<T> extends On<T>
     public OnRead(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         super(condition, action, description);
+    }
+
+    public EventType eventType()
+    {
+        return EventType.valueOf(Read.class);
     }
 }

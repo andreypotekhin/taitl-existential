@@ -1,12 +1,15 @@
 package com.taitl.existential.specs.library_usage;
 
+import java.util.*;
+import java.util.concurrent.atomic.*;
+import com.taitl.existential.keys.*;
 import com.taitl.existential.specs.SpecBase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserCanConfigureClassRules extends SpecBase
 {
@@ -78,5 +81,29 @@ class UserCanConfigureClassRules extends SpecBase
             String tran = ex.begin(op).id();
             ex.event(cat, tran);
         });
+    }
+
+    @Test
+    @DisplayName("User can configure class rules with a TypeKey for generic type")
+    void configureRulesWithTypeKeyForGenericType()
+    {
+        AtomicInteger calls = new AtomicInteger();
+        TypeKey<List<String>> typeKey = new TypeKey<List<String>>() {
+        };
+
+        assertDoesNotThrow(() -> {
+            ex.configure(op)
+                    .context()
+                    .effect(typeKey)
+                    .create(v -> calls.incrementAndGet(), "track list creates")
+                    .done()
+                    .build();
+            String tran = ex.begin(op).id();
+            List<String> values = new ArrayList<>();
+            ex.event(null, values, typeKey, tran);
+            ex.commit(tran);
+        });
+
+        assertEquals(1, calls.get());
     }
 }

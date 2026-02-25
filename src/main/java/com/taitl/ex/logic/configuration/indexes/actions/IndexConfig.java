@@ -38,11 +38,27 @@ public class IndexConfig
 
     class TraverseContext implements Evaluator
     {
+        protected TypeKey<?> currentTypeKey;
+
+        @Override
+        public <T> void visit(Evs<T> evs)
+        {
+            TypeKey<?> previous = currentTypeKey;
+            currentTypeKey = evs.typeKey();
+            try
+            {
+                Evaluator.super.visit(evs);
+            }
+            finally
+            {
+                currentTypeKey = previous;
+            }
+        }
+
+        @Override
         public <T> void visit(Ev<T> ev)
         {
-            // Bug: we need to know a TypeKey to create a proper EventKey
-            // Without it, it is just 'Event'!
-            EventKey eventKey = ci.useFullClassNames() ? EventKey.valueOfFull(ev) : EventKey.valueOf(ev);
+            EventKey eventKey = eventKey(ev);
             if (ev instanceof EventHandler<?>)
             {
                 ci.configuredEventHandlers.put(eventKey, (EventHandler<T>) ev);
@@ -58,6 +74,30 @@ public class IndexConfig
             ci.configuredHandlers.put(eventKey, ev);
 
             // TODO: add to EventField
+        }
+
+        protected <T> EventKey eventKey(Ev<T> ev)
+        {
+            EventKey typed = typedEventKey(ev);
+            if (typed != null)
+            {
+                return typed;
+            }
+            return ci.useFullClassNames() ? EventKey.valueOfFull(ev) : EventKey.valueOf(ev);
+        }
+
+        @SuppressWarnings("unchecked")
+        protected <T> EventKey typedEventKey(Ev<T> ev)
+        {
+            if (!(ev instanceof EventHandler<?>))
+            {
+                return null;
+            }
+            EventHandler<T> handler = (EventHandler<T>) ev;
+            TypeKey<T> typeKey = (TypeKey<T>) currentTypeKey;
+            Class<?> eventClass = handler.eventType().eventClass();
+            return ci.useFullClassNames() ? EventKey.valueOfFull(eventClass, typeKey)
+                    : EventKey.valueOf(eventClass, typeKey);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.taitl.existential.builders;
 
 import java.util.function.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -15,7 +16,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
 {
     ContextBuilder parent;
     TransactionBuilder parent2;
-    Invariant<T> target = new Invariant<>();
+    Invariant<T> target;
 
     /**
      * Creates an invariant builder bound to a context builder.
@@ -25,7 +26,16 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder(ContextBuilder parent)
     {
+        sane(parent, "parent");
+        throw new IllegalStateException("InvariantBuilder requires a TypeKey. Use ContextBuilder.invariant(Class<T>) "
+                + "or ContextBuilder.invariant(TypeKey<T>).");
+    }
+
+    public InvariantBuilder(ContextBuilder parent, TypeKey<T> typeKey)
+    {
+        sane(parent, "parent", typeKey, "typeKey");
         this.parent = parent;
+        this.target = new Invariant<>(typeKey);
     }
 
     /**
@@ -36,7 +46,24 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder(TransactionBuilder parent2)
     {
+        sane(parent2, "parent2");
+        throw new IllegalStateException(
+                "InvariantBuilder requires a TypeKey. Use TransactionBuilder.invariant(Class<T>) "
+                        + "or TransactionBuilder.invariant(TypeKey<T>).");
+    }
+
+    public InvariantBuilder(TransactionBuilder parent2, TypeKey<T> typeKey)
+    {
+        sane(parent2, "parent2", typeKey, "typeKey");
         this.parent2 = parent2;
+        this.target = new Invariant<>(typeKey);
+    }
+
+    public InvariantBuilder<T> typeKey(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        target.typeKey(typeKey);
+        return this;
     }
 
     /**

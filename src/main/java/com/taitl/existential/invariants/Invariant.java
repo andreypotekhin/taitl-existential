@@ -8,9 +8,11 @@ import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.access_handlers.*;
 import com.taitl.existential.handlers.combined_event_handlers.*;
 import com.taitl.existential.interfaces.*;
+import com.taitl.existential.keys.*;
 import com.taitl.existential.quantifiers.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Generics.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
@@ -28,11 +30,29 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * transaction level, e.g. invariants declared in a Context.
      */
     Transaction tran;
+    TypeKey<T> typeKey;
 
     /**
      * Entity event handlers.
      */
     List<Ev<T>> evs = new ArrayList<>();
+
+    public Invariant()
+    {
+        this.typeKey = inferTypeKeyFromAnonymousSubclass(getClass(), Invariant.class, "Invariant");
+    }
+
+    public Invariant(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        this.typeKey = typeKey;
+    }
+
+    public Invariant(Class<T> typeClass)
+    {
+        sane(typeClass, "typeClass");
+        this.typeKey = new TypeKey<>(typeClass);
+    }
 
     /* Event handler methods */
 
@@ -175,6 +195,11 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return evs;
     }
 
+    public TypeKey<T> typeKey()
+    {
+        return typeKey;
+    }
+
     /* Attributes */
 
     public Transaction transaction()
@@ -187,6 +212,12 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     {
         sane(transaction, "transaction");
         tran = transaction;
+    }
+
+    public void typeKey(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        this.typeKey = typeKey;
     }
 
 }

@@ -14,7 +14,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class EventKey
 {
-    protected String key;
+    protected final String key;
 
     public static EventKey valueOf(String s)
     {
@@ -64,7 +64,7 @@ public class EventKey
     public EventKey(String s)
     {
         sane(s, "key");
-        key = s;
+        this.key = s;
     }
 
     public <T> EventKey(T instance)
@@ -75,7 +75,7 @@ public class EventKey
     public <T> EventKey(T instance, boolean useFullName)
     {
         sane(instance, "instance");
-        key = useFullName ? instance.getClass().getName() : instance.getClass().getSimpleName();
+        this.key = useFullName ? instance.getClass().getName() : instance.getClass().getSimpleName();
     }
 
     public <T> EventKey(Event<T> event, TypeKey<T> typeKey)
@@ -88,7 +88,7 @@ public class EventKey
         sane(event, "event", typeKey, "typeKey");
         String eventClass = useFullName ? event.getClass().getName() : event.getClass().getSimpleName();
         // Use event type + type key, like 'Create<Doc<JSON>>'
-        key = eventClass + "<" + typeKey.toString() + ">";
+        this.key = eventClass + "<" + typeKey.toString() + ">";
     }
 
     public <T> EventKey(Event<T> event, String type)
@@ -101,7 +101,7 @@ public class EventKey
         sane(event, "event", type, "type");
         String eventClass = useFullName ? event.getClass().getName() : event.getClass().getSimpleName();
         // Use event type + type name, like 'Create<Doc<JSON>>'
-        key = eventClass + "<" + type + ">";
+        this.key = eventClass + "<" + type + ">";
     }
 
     public <T> EventKey(Class<T> eventClass, String type)
@@ -109,12 +109,34 @@ public class EventKey
         this(eventClass, type, false);
     }
 
+    public EventKey(Class<?> eventClass, TypeKey<?> typeKey)
+    {
+        this(eventClass, typeKey, false);
+    }
+
+    public EventKey(Class<?> eventClass, TypeKey<?> typeKey, boolean useFullName)
+    {
+        sane(eventClass, "eventClass", typeKey, "typeKey");
+        String eventClassName = useFullName ? eventClass.getName() : eventClass.getSimpleName();
+        this.key = eventClassName + "<" + typeKey + ">";
+    }
+
     public <T> EventKey(Class<T> eventClass, String type, boolean useFullName)
     {
         sane(eventClass, "eventClass", type, "type");
         String eventClassName = useFullName ? eventClass.getName() : eventClass.getSimpleName();
         // Use event type + type name, like 'Create<Doc<JSON>>'
-        key = eventClassName + "<" + type + ">";
+        this.key = eventClassName + "<" + type + ">";
+    }
+
+    public static EventKey valueOf(Class<?> eventClass, TypeKey<?> typeKey)
+    {
+        return new EventKey(eventClass, typeKey);
+    }
+
+    public static EventKey valueOfFull(Class<?> eventClass, TypeKey<?> typeKey)
+    {
+        return new EventKey(eventClass, typeKey, true);
     }
 
     public int hashCode()

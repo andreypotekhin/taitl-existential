@@ -150,11 +150,14 @@ User can specify an instance of Transaction class to use in a library transactio
 
 User can specify an invariant (predicate) for a class event.
 User can specify an invariant (predicate) for transaction lifecycle event (begin, commit, rollback).
++User can specify an invariant for generic types using a TypeKey.
 
 ##### Configuring Effects
 
 User can specify side effect (event handler) for a class event.
 User can specify side effect for transaction lifecycle event (begin, commit, rollback).
++User can specify side effect for generic types using a TypeKey.
++User can specify transaction lifecycle side effect for custom transaction type using a TypeKey.
 
 ##### Configuring Intents
 

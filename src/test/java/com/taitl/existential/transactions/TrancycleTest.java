@@ -14,7 +14,7 @@ class TrancycleTest
     @Test
     void beginPreservesDescriptionForConditionalHandler()
     {
-        Trancycle<Transaction> trancycle = new Trancycle<>();
+        Trancycle<Transaction> trancycle = new Trancycle<>(Transaction.class);
         Predicate<Transaction> condition = tr -> true;
         Consumer<Transaction> action = tr -> {
         };

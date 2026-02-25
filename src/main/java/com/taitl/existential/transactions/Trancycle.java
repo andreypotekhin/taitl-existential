@@ -7,8 +7,10 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.transaction_handlers.*;
 import com.taitl.existential.interfaces.*;
+import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Generics.*;
 
 /**
  * Holds handlers for transaction lifecycle events, such as Begin, Commit, Rollback.
@@ -22,11 +24,29 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      * transaction level, e.g. declared in a context.
      */
     Transaction tran;
+    TypeKey<T> typeKey;
 
     /**
      * Transaction event handlers
      */
     List<Ev<T>> evs = new ArrayList<>();
+
+    public Trancycle()
+    {
+        this.typeKey = inferTypeKeyFromAnonymousSubclass(getClass(), Trancycle.class, "Trancycle");
+    }
+
+    public Trancycle(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        this.typeKey = typeKey;
+    }
+
+    public Trancycle(Class<T> typeClass)
+    {
+        sane(typeClass, "typeClass");
+        this.typeKey = new TypeKey<>(typeClass);
+    }
 
     /* Event handler methods */
 
@@ -296,6 +316,11 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
         return evs;
     }
 
+    public TypeKey<T> typeKey()
+    {
+        return typeKey;
+    }
+
     /* Attributes */
 
     /**
@@ -319,5 +344,11 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
     {
         sane(tr, "tr");
         tran = tr;
+    }
+
+    public void typeKey(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        this.typeKey = typeKey;
     }
 }

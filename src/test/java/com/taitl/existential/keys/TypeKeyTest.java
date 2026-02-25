@@ -126,13 +126,10 @@ class TypeKeyTest
     }
 
     @Test
-    void setTypeid()
+    void createKey()
     {
-        TypeKeyProbe<?> probe = new TypeKeyProbe<>(TypeKeyTest.class);
-        probe.setTypeidForTest(Set.class, "<Doc>", false);
-        assertThat(probe.toString(), is("Set<Doc>"));
-        probe.setTypeidForTest(Set.class, "", true);
-        assertThat(probe.toString(), is("java.util.Set"));
+        assertThat(TypeKeyProbe.createKeyForTest(Set.class, "<Doc>", false), is("Set<Doc>"));
+        assertThat(TypeKeyProbe.createKeyForTest(Set.class, "", true), is("java.util.Set"));
     }
 
     static class TypeKeyProbe<T> extends TypeKey<T>
@@ -142,9 +139,9 @@ class TypeKeyTest
             super(clz);
         }
 
-        void setTypeidForTest(Class<?> clz, String genericQualifier, boolean useFullName)
+        static String createKeyForTest(Class<?> clz, String genericQualifier, boolean useFullName)
         {
-            setKey(clz, genericQualifier, useFullName);
+            return createKey(clz, genericQualifier, useFullName);
         }
     }
 

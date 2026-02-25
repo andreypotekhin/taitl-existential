@@ -210,7 +210,7 @@ public class Transaction implements Configurable, Evaluable
     public <T extends Transaction> void begin(Consumer<? super T> action)
     {
         sane(action, "action");
-        cycle(new Trancycle<T>() {
+        cycle(new Trancycle<T>(transactionTypeKey()) {
             {
                 begin(action);
             }
@@ -226,7 +226,7 @@ public class Transaction implements Configurable, Evaluable
     public <T extends Transaction> void commit(Consumer<? super T> action)
     {
         sane(action, "action");
-        cycle(new Trancycle<T>() {
+        cycle(new Trancycle<T>(transactionTypeKey()) {
             {
                 commit(action);
             }
@@ -242,7 +242,7 @@ public class Transaction implements Configurable, Evaluable
     public <T extends Transaction> void rollback(Consumer<? super T> action)
     {
         sane(action, "action");
-        cycle(new Trancycle<T>() {
+        cycle(new Trancycle<T>(transactionTypeKey()) {
             {
                 rollback(action);
             }
@@ -258,7 +258,7 @@ public class Transaction implements Configurable, Evaluable
     public <T extends Transaction> void checkpoint(Consumer<? super T> action)
     {
         sane(action, "action");
-        cycle(new Trancycle<T>() {
+        cycle(new Trancycle<T>(transactionTypeKey()) {
             {
                 checkpoint(action);
             }
@@ -280,6 +280,13 @@ public class Transaction implements Configurable, Evaluable
         sane(evs, "evs");
         this.evs.add(evs);
         instructions.addAll(evs);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <T extends Transaction> com.taitl.existential.keys.TypeKey<T> transactionTypeKey()
+    {
+        return (com.taitl.existential.keys.TypeKey<T>) new com.taitl.existential.keys.TypeKey<Transaction>(
+                Transaction.class);
     }
 
     /**

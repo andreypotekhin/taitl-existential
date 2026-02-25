@@ -80,7 +80,7 @@ class EventKeyTest
         TypeKey<String> typeKey = new TypeKey<>() {
         };
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            EventKey.valueOf(null, typeKey);
+            EventKey.valueOf((com.taitl.existential.events.types.Event<String>) null, typeKey);
         }).getMessage(), containsString("'event' must not be null"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
             EventKey.valueOf(event, (TypeKey<String>) null);

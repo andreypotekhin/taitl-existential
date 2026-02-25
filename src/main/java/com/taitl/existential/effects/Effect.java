@@ -9,8 +9,10 @@ import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.access_handlers.*;
 import com.taitl.existential.handlers.combined_event_handlers.*;
 import com.taitl.existential.interfaces.*;
+import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Generics.*;
 
 /**
  * Declares side effects for a business operation by registering handlers for
@@ -30,11 +32,29 @@ public class Effect<T> implements Evs<T>, Immediate<T>
      * transaction level, e.g. for the effects declared in a context.
      */
     Transaction tran;
+    TypeKey<T> typeKey;
 
     /**
      * Entity event handlers
      */
     List<Ev<T>> evs = new ArrayList<>();
+
+    public Effect()
+    {
+        this.typeKey = inferTypeKeyFromAnonymousSubclass(getClass(), Effect.class, "Effect");
+    }
+
+    public Effect(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        this.typeKey = typeKey;
+    }
+
+    public Effect(Class<T> typeClass)
+    {
+        sane(typeClass, "typeClass");
+        this.typeKey = new TypeKey<>(typeClass);
+    }
 
     /**
      * Expressions, such as All<T>, defined in this context.
@@ -384,6 +404,11 @@ public class Effect<T> implements Evs<T>, Immediate<T>
         return evs;
     }
 
+    public TypeKey<T> typeKey()
+    {
+        return typeKey;
+    }
+
     /* Attributes */
 
     /**
@@ -407,6 +432,12 @@ public class Effect<T> implements Evs<T>, Immediate<T>
     {
         sane(tr, "tr");
         tran = tr;
+    }
+
+    public void typeKey(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        this.typeKey = typeKey;
     }
 
 }
