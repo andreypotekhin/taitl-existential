@@ -1,7 +1,5 @@
 package com.taitl.ex.common.helper;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Lightweight checking/validations for method arguments.
  * Throws IllegalArgumentException if a condition is not met.
@@ -25,7 +23,7 @@ public class Args
     {
         if (o == null)
         {
-            throw new IllegalArgumentException(String.format(ARGUMENT_MUST_NOT_BE_NULL, argName));
+            throw new IllegalArgumentException(String.format("Argument '%s' must not be null", argName));
         }
     }
 
@@ -36,8 +34,8 @@ public class Args
     {
         ArgPairChecks.requireNonNullPairs(o,
                 argName,
-                ARGUMENT_MUST_NOT_BE_NULL,
-                ARGUMENT_MUST_NOT_BE_NULL,
+                "Argument '%s' must not be null",
+                "Argument '%s' must not be null",
                 message -> {
                     throw new IllegalArgumentException(message);
                 },
@@ -69,12 +67,12 @@ public class Args
     {
         if (args == null)
         {
-            throw new IllegalArgumentException(String.format(ARGUMENT_MUST_NOT_BE_NULL, "args"));
+            throw new IllegalArgumentException(String.format("Argument '%s' must not be null", "args"));
         }
         if (args.length % 2 != 0)
         {
             throw new IllegalArgumentException(
-                    String.format(ARGUMENT_ARRAY_MUST_BE_EVEN_LENGTH, "args"));
+                    String.format("Argument '%s' must be of even length", "args"));
         }
     }
 
@@ -88,7 +86,7 @@ public class Args
         {
             if (!(args[i] instanceof Boolean))
             {
-                throw new IllegalArgumentException(String.format(ARGUMENT_MUST_BE_BOOLEAN, i));
+                throw new IllegalArgumentException(String.format("Argument '%s' must be boolean expression", i));
             }
         }
     }

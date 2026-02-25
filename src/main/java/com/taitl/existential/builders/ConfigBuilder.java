@@ -145,7 +145,7 @@ public class ConfigBuilder
             config.addContext(context);
         }
 
-        config.indexes().useFullClassNames(ec.ex().get(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES));
+        config.indexes().useFullClassNames(ec.ex().get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES));
 
         // Create intermediates for consumption by subsequent stages
         ec.onFinishConfiguration(name);

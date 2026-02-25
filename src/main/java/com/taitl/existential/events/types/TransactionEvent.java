@@ -1,7 +1,6 @@
 package com.taitl.existential.events.types;
 
 import com.taitl.existential.configs.*;
-import com.taitl.existential.constants.*;
 import com.taitl.existential.events.transaction_events.*;
 
 /**
@@ -22,7 +21,7 @@ public class TransactionEvent<T extends Transaction> implements Event<T>
     {
         if (t == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_T);
+            throw new IllegalArgumentException("Argument 't' should not be null");
         }
         this.t = t;
     }

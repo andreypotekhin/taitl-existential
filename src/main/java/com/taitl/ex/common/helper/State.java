@@ -1,7 +1,5 @@
 package com.taitl.ex.common.helper;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Lightweight checks for method in-conditions.
  * Throws IllegalStateException if in-condition is not met.
@@ -45,8 +43,8 @@ public class State
     {
         ArgPairChecks.requireNonNullPairs(o,
                 objName,
-                ARGUMENT_MUST_NOT_BE_NULL,
-                ARGUMENT_MUST_NOT_BE_NULL,
+                "Argument '%s' must not be null",
+                "Argument '%s' must not be null",
                 message -> {
                     throw new IllegalStateException(message);
                 },

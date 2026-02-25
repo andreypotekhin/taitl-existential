@@ -25,7 +25,7 @@ public class IndexingLogic implements Closeable
     public <T> void indexEvent(Event<T> event, T o, TypeKey<T> type, Tr tr)
     {
         IndexData indexData = tr.runtimeIndexes();
-        boolean fullNames = ex.get(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES);
+        boolean fullNames = ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
         EventKey eventKey = fullNames ? EventKey.valueOfFull(event, type) : EventKey.valueOf(event, type);
         RuntimeKey<T> runtimeKey = fullNames ? RuntimeKey.valueOfFull(event, type, o)
                 : RuntimeKey.valueOf(event, type, o);
@@ -37,7 +37,7 @@ public class IndexingLogic implements Closeable
     public <T> void indexEvent(BiEvent<T> event, TypeKey<T> type, Tr tr)
     {
         IndexData indexData = tr.runtimeIndexes();
-        boolean fullNames = ex.get(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES);
+        boolean fullNames = ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
         EventKey eventKey = fullNames ? EventKey.valueOfFull(event, type) : EventKey.valueOf(event, type);
         // TODO: add clarification, perhaps a business rule, around choice of using event.t1
         RuntimeKey<T> runtimeKey = fullNames ? RuntimeKey.valueOfFull(event, type, event.t1)

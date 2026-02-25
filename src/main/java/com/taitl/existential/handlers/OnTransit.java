@@ -7,7 +7,6 @@ import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Declarative handler for {@link Transit} events that involve two values.
@@ -91,7 +90,7 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
     {
         if (t0 == null && t1 == null)
         {
-            throw new IllegalArgumentException(ARG_T0_T1);
+            throw new IllegalArgumentException("Arguments 't0' and 't1' should not be both null");
         }
 
         boolean conditionMet = true;
@@ -118,12 +117,12 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
             }
             catch (Exception e)
             {
-                throw new EventHandlerExecutionException(handlerMessage(EVENT_HANDLER_EXECUTION_FAILED), e);
+                throw new EventHandlerExecutionException(handlerMessage("Event handler execution failed"), e);
             }
         }
         else if (action == null)
         {
-            throw new EventHandlerExecutionException(handlerMessage(CONDITION_NOT_MET));
+            throw new EventHandlerExecutionException(handlerMessage("The specified condition is not met"));
         }
     }
 

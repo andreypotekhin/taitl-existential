@@ -6,7 +6,6 @@ import com.taitl.ex.common.helper.PathSupport;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.Text.*;
-import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Path-like representation of a business operation, used for identification of
@@ -53,10 +52,10 @@ public class ConcretePath
     public static void validate(String op)
     {
         op = trimmed(op, "op");
-        check(op.startsWith(SLASH), ARG_OP_FORMAT + " See " + TROUBLESHOOTING_SECTION);
-        check(!SLASH.equals(op), ARG_OP_SINGLE_SLASH + " See " + TROUBLESHOOTING_SECTION);
-        check(!op.endsWith(SLASH), ARG_OP_END_SLASH + " See " + TROUBLESHOOTING_SECTION);
-        check(!op.contains(WILDCARD), ARG_OP_NO_WILDCARDS + " See " + TROUBLESHOOTING_SECTION);
+        check(op.startsWith("/"), "Operation key should start with a slash ('/')" + " See " + TROUBLESHOOTING_SECTION);
+        check(!"/".equals(op), "Operation key cannot be a single slash ('/')" + " See " + TROUBLESHOOTING_SECTION);
+        check(!op.endsWith("/"), "Operation key cannot end with a slash ('/')" + " See " + TROUBLESHOOTING_SECTION);
+        check(!op.contains("*"), "Operation key cannot have wildcards ('*')" + " See " + TROUBLESHOOTING_SECTION);
     }
 
     /**

@@ -1,11 +1,9 @@
 package com.taitl.existential.exceptions;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Signals that an event handler failed during execution.
- * Defaults to {@link com.taitl.existential.constants.Strings#EVENT_HANDLER_EXECUTION_FAILED}
- * when no explicit message is provided.
+ * Defaults to "Event handler execution failed" when no explicit message is
+ * provided.
  */
 public class EventHandlerExecutionException extends ExistentialException
 {
@@ -14,7 +12,7 @@ public class EventHandlerExecutionException extends ExistentialException
      */
     public EventHandlerExecutionException()
     {
-        super(EVENT_HANDLER_EXECUTION_FAILED);
+        super("Event handler execution failed");
     }
 
     /**
@@ -24,7 +22,7 @@ public class EventHandlerExecutionException extends ExistentialException
      */
     public EventHandlerExecutionException(String message)
     {
-        super(message != null ? message : EVENT_HANDLER_EXECUTION_FAILED);
+        super(message != null ? message : "Event handler execution failed");
     }
 
     /**
@@ -34,7 +32,7 @@ public class EventHandlerExecutionException extends ExistentialException
      */
     public EventHandlerExecutionException(Throwable cause)
     {
-        super(EVENT_HANDLER_EXECUTION_FAILED, cause);
+        super("Event handler execution failed", cause);
     }
 
     /**
@@ -45,6 +43,6 @@ public class EventHandlerExecutionException extends ExistentialException
      */
     public EventHandlerExecutionException(String message, Throwable cause)
     {
-        super(message != null ? message : EVENT_HANDLER_EXECUTION_FAILED, cause);
+        super(message != null ? message : "Event handler execution failed", cause);
     }
 }

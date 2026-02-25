@@ -1,7 +1,5 @@
 package com.taitl.ex.common.helper;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Shared checks for vararg pairs with caller-provided exception mapping.
  */
@@ -70,7 +68,7 @@ public class ArgPairChecks
         {
             if (!(args[i] instanceof Boolean))
             {
-                throw new IllegalArgumentException(String.format(ARGUMENT_MUST_BE_BOOLEAN, i));
+                throw new IllegalArgumentException(String.format("Argument '%s' must be boolean expression", i));
             }
             if (!((Boolean) args[i]))
             {

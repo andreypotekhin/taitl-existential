@@ -47,7 +47,7 @@ class EventLogicTypeKeyFlagsTest
     void inferredTypeUsesFullClassNameWhenFlagEnabled()
     {
         ex = new Existential();
-        ex.on(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES);
+        ex.on(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
         EventLogic logic = new EventLogic(new ExistentialEvents(ex));
 
         assertThat(logic.typeKey("ok").toString(), is("java.lang.String"));
@@ -57,7 +57,7 @@ class EventLogicTypeKeyFlagsTest
     void runtimeIndexingUsesFullNamesAcrossTypeAndEventKeysWhenFlagEnabled()
     {
         ex = new Existential();
-        ex.on(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES);
+        ex.on(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
         ExistentialEvents ev = new ExistentialEvents(ex);
         EventLogic logic = new EventLogic(ev);
         IndexingLogic indexing = new IndexingLogic(ev);

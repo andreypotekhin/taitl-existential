@@ -1,7 +1,5 @@
 package com.taitl.existential.exceptions;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Signals that a requested entity or resource could not be found.
  */
@@ -12,7 +10,7 @@ public class NotFoundException extends ExistentialException
      */
     public NotFoundException()
     {
-        super(NOT_FOUND);
+        super("Requested item was not found");
     }
 
     /**
@@ -24,7 +22,7 @@ public class NotFoundException extends ExistentialException
      */
     public NotFoundException(String message)
     {
-        super(message != null ? message : NOT_FOUND);
+        super(message != null ? message : "Requested item was not found");
     }
 
     /**
@@ -35,7 +33,7 @@ public class NotFoundException extends ExistentialException
      */
     public NotFoundException(Throwable cause)
     {
-        super(NOT_FOUND, cause);
+        super("Requested item was not found", cause);
     }
 
     /**
@@ -49,6 +47,6 @@ public class NotFoundException extends ExistentialException
      */
     public NotFoundException(String message, Throwable cause)
     {
-        super(message != null ? message : NOT_FOUND, cause);
+        super(message != null ? message : "Requested item was not found", cause);
     }
 }

@@ -5,8 +5,6 @@ import com.taitl.ex.common.helper.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Maps entity type to a set of configured event handlers, Set<On[E]<T<U>>>
  * Example: Doc<JSON> -> Set<On[Е]<Doc<JSON>>>
@@ -31,7 +29,7 @@ public class TypeKeyToEventHandlers<T>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(ARG_KEY);
+            throw new IllegalArgumentException("Argument 'key' must not be null");
         }
         Set<EventHandler<T>> result = handlers.get(key.toString());
         if (result != null && result.isEmpty())
@@ -45,7 +43,7 @@ public class TypeKeyToEventHandlers<T>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(ARG_KEY);
+            throw new IllegalArgumentException("Argument 'key' must not be null");
         }
         return handlers.containsKey(key.toString());
     }
@@ -54,11 +52,11 @@ public class TypeKeyToEventHandlers<T>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(ARG_KEY);
+            throw new IllegalArgumentException("Argument 'key' must not be null");
         }
         if (value == null)
         {
-            throw new IllegalArgumentException(ARG_VALUE);
+            throw new IllegalArgumentException("Argument 'value' must not be null");
         }
         return handlers.put(key.toString(), value);
     }

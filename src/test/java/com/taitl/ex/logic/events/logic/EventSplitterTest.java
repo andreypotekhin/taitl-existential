@@ -4,7 +4,6 @@ import java.util.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
-import com.taitl.existential.constants.Strings;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,6 +44,6 @@ class EventSplitterTest
         IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
                 () -> splitter.splitTransitPublic(null, new LinkedHashSet<>()));
 
-        assertEquals(Strings.ARG_EVENT, error.getMessage());
+        assertEquals("Argument 'event' should not be null", error.getMessage());
     }
 }

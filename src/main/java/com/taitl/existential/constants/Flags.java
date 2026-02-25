@@ -19,23 +19,10 @@ public class Flags
     /**
      * Uses fully-qualified class names for library-inferred type keys (event/read/write overloads without TypeKey).
      */
-    public static final int BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES = 32;
-
-    /**
-     * @deprecated Use BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES.
-     */
-    @Deprecated
-    public static final int FLAG_6 = BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES;
-    public static final int FLAG_7 = 64;
-    public static final int FLAG_8 = 128;
-    public static final int FLAG_9 = 256;
-    public static final int FLAG_10 = 512;
-    public static final int FLAG_11 = 1024;
-    public static final int FLAG_12 = 2048;
-    public static final int FLAG_13 = 4096;
+    public static final int TYPE_KEYS_USE_FULL_CLASS_NAMES = 32;
 
     /**
      * Highest supported flag value in this registry.
      */
-    public static final int MAX_FLAG = FLAG_13;
+    public static final int MAX_FLAG = 4096;
 }

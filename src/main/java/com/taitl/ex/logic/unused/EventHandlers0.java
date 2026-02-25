@@ -2,7 +2,6 @@ package com.taitl.ex.logic.unused;
 
 import java.util.*;
 import com.taitl.ex.common.helper.*;
-import com.taitl.existential.constants.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.types.*;
 
@@ -35,7 +34,7 @@ public class EventHandlers0<T>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_KEY);
+            throw new IllegalArgumentException("Argument 'key' must not be null");
         }
         Set<EventHandlerWithSideEffects<T>> result = storage.get(key);
         if (result != null && result.isEmpty())

@@ -6,7 +6,6 @@ import com.taitl.ex.common.helper.PathSupport;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.Text.*;
-import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Path-like representation of a business operation, serving as a key for locating
@@ -53,14 +52,14 @@ public class AbstractPath
 
     public boolean isWildcard()
     {
-        return path.contains(WILDCARD);
+        return path.contains("*");
     }
 
     public static void validate(String path)
     {
         path = trimmed(path, "path");
-        check(path.startsWith(SLASH), "Argument 'path' should start with a slash ('/')");
-        check(path.length() == 1 || !path.endsWith(SLASH),
+        check(path.startsWith("/"), "Argument 'path' should start with a slash ('/')");
+        check(path.length() == 1 || !path.endsWith("/"),
                 "Argument 'path' should not end with a slash ('/')");
     }
 

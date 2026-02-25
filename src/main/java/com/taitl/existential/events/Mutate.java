@@ -1,8 +1,5 @@
 package com.taitl.existential.events;
 
-import static com.taitl.existential.constants.Strings.ARG_T0;
-import static com.taitl.existential.constants.Strings.ARG_T1;
-
 import com.taitl.ex.common.helper.*;
 import com.taitl.existential.events.types.*;
 
@@ -29,6 +26,6 @@ public class Mutate<T> extends BiEvent<T>
     public Mutate(T t0, T t1)
     {
         super(t0, t1);
-        PairArgs.requireBothNonNull(t0, t1, ARG_T0, ARG_T1);
+        PairArgs.requireBothNonNull(t0, t1, "Argument 't0' should not be null", "Argument 't1' should not be null");
     }
 }

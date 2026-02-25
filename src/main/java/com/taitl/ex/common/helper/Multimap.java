@@ -3,8 +3,6 @@ package com.taitl.ex.common.helper;
 import java.util.*;
 import java.util.function.*;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Maps key to a set of values.
  * Multimap<K, V> == Map<K, Set<V>>
@@ -147,7 +145,7 @@ public class Multimap<K, V>
     {
         if (key == null)
         {
-            throw new IllegalArgumentException(ARG_KEY);
+            throw new IllegalArgumentException("Argument 'key' must not be null");
         }
     }
 
@@ -155,7 +153,7 @@ public class Multimap<K, V>
     {
         if (value == null)
         {
-            throw new IllegalArgumentException(ARG_VALUE);
+            throw new IllegalArgumentException("Argument 'value' must not be null");
         }
     }
 
@@ -163,7 +161,7 @@ public class Multimap<K, V>
     {
         if (match == null)
         {
-            throw new IllegalArgumentException(ARG_MATCH);
+            throw new IllegalArgumentException("Argument 'match' must not be null");
         }
     }
 }

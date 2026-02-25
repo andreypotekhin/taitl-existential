@@ -1,7 +1,5 @@
 package com.taitl.ex.common.helper;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Lightweight checks for method post-conditions.
  * Throws RuntimeException if post-condition is not met.
@@ -30,7 +28,7 @@ public class Outcome
     {
         if (o == null)
         {
-            throw new RuntimeException(String.format(VALUE_MUST_NOT_BE_NULL, objName));
+            throw new RuntimeException(String.format("Value '%s' must not be null", objName));
         }
 
         return o;
@@ -43,8 +41,8 @@ public class Outcome
     {
         ArgPairChecks.requireNonNullPairs(o,
                 objName,
-                VALUE_MUST_NOT_BE_NULL,
-                VALUE_MUST_NOT_BE_NULL,
+                "Value '%s' must not be null",
+                "Value '%s' must not be null",
                 message -> {
                     throw new RuntimeException(message);
                 },

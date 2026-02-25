@@ -2,7 +2,6 @@ package com.taitl.ex.logic.configuration.indexes.data;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.combined_events.*;
@@ -116,7 +115,7 @@ public class EventMask
     {
         if (type == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_TYPE);
+            throw new IllegalArgumentException("Argument 'type' should not be null");
         }
         String typeString = type.toString();
         if (eventBits.containsKey(typeString))

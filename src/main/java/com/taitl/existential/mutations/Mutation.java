@@ -1,8 +1,5 @@
 package com.taitl.existential.mutations;
 
-import static com.taitl.existential.constants.Strings.ARG_T0;
-import static com.taitl.existential.constants.Strings.ARG_T1;
-
 import com.taitl.ex.common.helper.*;
 
 /**
@@ -23,7 +20,7 @@ public final class Mutation<T>
 
     public Mutation(T t0, T t1)
     {
-        PairArgs.requireBothNonNull(t0, t1, ARG_T0, ARG_T1);
+        PairArgs.requireBothNonNull(t0, t1, "Argument 't0' should not be null", "Argument 't1' should not be null");
         this.t0 = t0;
         this.t1 = t1;
     }

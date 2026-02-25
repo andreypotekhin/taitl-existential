@@ -1,7 +1,6 @@
 package com.taitl.ex.logic.unused;
 
 import java.util.*;
-import com.taitl.existential.constants.*;
 
 /**
  * A string representing a class, along with its generics, for example "Doc<MD>".
@@ -26,7 +25,7 @@ public class Type0
     {
         if (t == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_T);
+            throw new IllegalArgumentException("Argument 't' should not be null");
         }
         setTypeid(t.getClass(), genericQualifier);
     }
@@ -35,7 +34,7 @@ public class Type0
     {
         if (clz == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_CLZ);
+            throw new IllegalArgumentException("Argument 'clz' should not be null");
         }
         setTypeid(clz, genericQualifier);
     }
@@ -54,7 +53,7 @@ public class Type0
     {
         if (clz == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_CLZ);
+            throw new IllegalArgumentException("Argument 'clz' should not be null");
         }
         if (genericQualifier == null || genericQualifier.isEmpty())
         {

@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.combined_events.*;
@@ -83,7 +82,7 @@ public class EventSplitter
         {
             return splitTransit((Transit<T>) event, events);
         }
-        check(!(event instanceof Mutate), Strings.ARG_NEED_TRANSIT_EVENT);
+        check(!(event instanceof Mutate), "Please specify event of type Transit<>");
         // TODO: Mutate
         if (event instanceof ReadAndLock)
         {
@@ -98,11 +97,11 @@ public class EventSplitter
     {
         if (transit == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_EVENT);
+            throw new IllegalArgumentException("Argument 'event' should not be null");
         }
         if (events == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_SET);
+            throw new IllegalArgumentException("Argument 'set' should not be null");
         }
         // Transit -> EntityEvent, Mutate, Transit
         if (transit.t0 != null && transit.t1 != null)
@@ -142,11 +141,11 @@ public class EventSplitter
     {
         if (event == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_EVENT);
+            throw new IllegalArgumentException("Argument 'event' should not be null");
         }
         if (events == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_SET);
+            throw new IllegalArgumentException("Argument 'set' should not be null");
         }
         events.add(new Read<>(event.t));
         return events;

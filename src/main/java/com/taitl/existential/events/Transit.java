@@ -3,8 +3,6 @@ package com.taitl.existential.events;
 import com.taitl.ex.common.helper.*;
 import com.taitl.existential.events.types.*;
 
-import static com.taitl.existential.constants.Strings.*;
-
 /**
  * Signals that an entity was created, updated, or deleted during the current transaction.
  *
@@ -29,6 +27,6 @@ public class Transit<T> extends BiEvent<T>
     public Transit(T t0, T t1)
     {
         super(t0, t1);
-        PairArgs.requireNotBothNull(t0, t1, ARG_T0_T1);
+        PairArgs.requireNotBothNull(t0, t1, "Arguments 't0' and 't1' should not be both null");
     }
 }

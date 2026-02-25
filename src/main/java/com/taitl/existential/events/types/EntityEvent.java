@@ -1,6 +1,5 @@
 package com.taitl.existential.events.types;
 
-import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.combined_events.*;
@@ -32,7 +31,7 @@ public class EntityEvent<T> implements Event<T>
     {
         if (t == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_T);
+            throw new IllegalArgumentException("Argument 't' should not be null");
         }
         this.t = t;
     }

@@ -7,7 +7,6 @@ import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.existential.constants.Strings.*;
 
 /**
  * Declarative handler for {@link Mutate} events that involve two values.
@@ -103,7 +102,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             {
                 if (!bicondition.test(t0, t1))
                 {
-                    throw new EventHandlerExecutionException(handlerMessage(CONDITION_NOT_MET));
+                    throw new EventHandlerExecutionException(handlerMessage("The specified condition is not met"));
                 }
                 return;
             }
@@ -114,7 +113,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             // Check the condition and throw an exception if it is not met.
             if (!condition.test(t1))
             {
-                throw new EventHandlerExecutionException(handlerMessage(CONDITION_NOT_MET));
+                throw new EventHandlerExecutionException(handlerMessage("The specified condition is not met"));
             }
 
             return;
@@ -128,7 +127,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             }
             catch (Exception e)
             {
-                throw new EventHandlerExecutionException(handlerMessage(EVENT_HANDLER_EXECUTION_FAILED), e);
+                throw new EventHandlerExecutionException(handlerMessage("Event handler execution failed"), e);
             }
         }
     }

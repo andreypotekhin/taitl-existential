@@ -85,6 +85,6 @@ public class EventLogic implements Closeable
 
     protected <T> TypeKey<T> typeKey(T t)
     {
-        return typeKeys.get(t, ex.get(Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES));
+        return typeKeys.get(t, ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES));
     }
 }

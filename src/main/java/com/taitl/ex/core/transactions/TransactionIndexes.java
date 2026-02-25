@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.constants.*;
 import com.taitl.existential.indexes.*;
 
 public class TransactionIndexes
@@ -21,7 +20,7 @@ public class TransactionIndexes
     {
         if (name == null)
         {
-            throw new IllegalArgumentException(Strings.ARG_NAME);
+            throw new IllegalArgumentException("Argument 'name' should not be null");
         }
         Index<K, V> index = (createIndex != null) ? createIndex.get() : new Index<>();
         if (getKey != null)
