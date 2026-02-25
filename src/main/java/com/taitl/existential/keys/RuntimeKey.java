@@ -1,8 +1,8 @@
 package com.taitl.existential.keys;
 
-import com.taitl.existential.events.types.*;
+import com.taitl.existential.events.types.Event;
 
-import static com.taitl.ex.common.helper.State.*;
+import static com.taitl.ex.common.helper.State.verify;
 
 /**
  * Combines an event key (event type + type key) with Object identity for execution of configured rules.
@@ -44,7 +44,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(T t, boolean useFullName)
     {
-        this(useFullName ? EventKey.valueOfFull(t) : EventKey.valueOf(t), t);
+        this(EventKey.valueOf(t, useFullName), t);
     }
 
     public RuntimeKey(Event<T> e, TypeKey<T> typeKey, T t)
@@ -54,7 +54,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(Event<T> e, TypeKey<T> typeKey, T t, boolean useFullName)
     {
-        this(useFullName ? EventKey.valueOfFull(e, typeKey) : EventKey.valueOf(e, typeKey), t);
+        this(EventKey.valueOf(e, typeKey, useFullName), t);
     }
 
     public RuntimeKey(Event<T> e, String type, T t)
@@ -64,7 +64,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(Event<T> e, String type, T t, boolean useFullName)
     {
-        this(useFullName ? EventKey.valueOfFull(e, type) : EventKey.valueOf(e, type), t);
+        this(EventKey.valueOf(e, type, useFullName), t);
     }
 
     public RuntimeKey(Class<T> clz, String type, T t)
@@ -74,7 +74,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(Class<T> clz, String type, T t, boolean useFullName)
     {
-        this(useFullName ? EventKey.valueOfFull(clz, type) : EventKey.valueOf(clz, type), t);
+        this(EventKey.valueOf(clz, type, useFullName), t);
     }
 
     protected RuntimeKey(EventKey key, T entity)

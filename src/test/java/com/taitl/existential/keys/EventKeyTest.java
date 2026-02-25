@@ -20,14 +20,14 @@ class EventKeyTest
     @Test
     void valueOfObject()
     {
-        EventKey key = EventKey.valueOf(new Sample());
+        EventKey key = EventKey.valueOf(new Sample(), false);
         assertThat(key.toString(), is("Sample"));
     }
 
     @Test
     void valueOfFullObject()
     {
-        EventKey key = EventKey.valueOfFull(new Sample());
+        EventKey key = EventKey.valueOf(new Sample(), true);
         assertThat(key.toString(), is(Sample.class.getName()));
     }
 
@@ -37,7 +37,7 @@ class EventKeyTest
         Create<String> event = new Create<>("alpha");
         TypeKey<String> typeKey = new TypeKey<>() {
         };
-        EventKey key = EventKey.valueOf(event, typeKey);
+        EventKey key = EventKey.valueOf(event, typeKey, false);
         assertThat(key.toString(), is("Create<String>"));
     }
 
@@ -45,8 +45,8 @@ class EventKeyTest
     void valueOfEventAndTypeKeyFull()
     {
         Create<String> event = new Create<>("alpha");
-        TypeKey<String> typeKey = TypeKey.valueOf(String.class, true);
-        EventKey key = EventKey.valueOfFull(event, typeKey);
+        TypeKey<String> typeKey = TypeKey.valueOfFull(String.class);
+        EventKey key = EventKey.valueOf(event, typeKey, true);
         assertThat(key.toString(), is(event.getClass().getName() + "<" + typeKey + ">"));
     }
 
@@ -54,14 +54,14 @@ class EventKeyTest
     void valueOfEventAndType()
     {
         Create<String> event = new Create<>("alpha");
-        EventKey key = EventKey.valueOf(event, "String");
+        EventKey key = EventKey.valueOf(event, "String", false);
         assertThat(key.toString(), is("Create<String>"));
     }
 
     @Test
     void valueOfClassAndType()
     {
-        EventKey key = EventKey.valueOf(Create.class, "String");
+        EventKey key = EventKey.valueOf(Create.class, "String", false);
         assertThat(key.toString(), is("Create<String>"));
     }
 
@@ -80,13 +80,13 @@ class EventKeyTest
         TypeKey<String> typeKey = new TypeKey<>() {
         };
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            EventKey.valueOf((com.taitl.existential.events.types.Event<String>) null, typeKey);
+            EventKey.valueOf((com.taitl.existential.events.types.Event<String>) null, typeKey, false);
         }).getMessage(), containsString("'event' must not be null"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            EventKey.valueOf(event, (TypeKey<String>) null);
+            EventKey.valueOf(event, (TypeKey<String>) null, false);
         }).getMessage(), containsString("'typeKey' must not be null"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            EventKey.valueOf(event, (String) null);
+            EventKey.valueOf(event, (String) null, false);
         }).getMessage(), containsString("'type' must not be null"));
     }
 

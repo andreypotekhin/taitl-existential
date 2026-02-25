@@ -63,11 +63,12 @@ See 'Planner role' section in 'Team roles' of AGENTS.md
 
 Automation instructions
 
-- Consider a suggestion under /docs/dev/suggestions/planned
-- Create ExecPlan as described in /docs/dev/auto/Plans.md
+- Take a suggestion from /docs/dev/suggestions/planned
+- Create ExecPlan to implement the suggestion, as described in /docs/dev/auto/Plans.md
 - Output the resulting ExecPlan to /docs/dev/planning/ with short descriptive name
+- Switch to Plan Mode (as in /plan-mode)
 - Discuss and refine the plan with human user
-- Upon approval from human user, proceed with plan implementation
+- Upon approval from human user, implement the plan
 - Move implemented plan to /docs/dev/planning/done/
 
 Notes
