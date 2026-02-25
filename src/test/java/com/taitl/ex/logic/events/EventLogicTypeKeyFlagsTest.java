@@ -68,7 +68,7 @@ class EventLogicTypeKeyFlagsTest
         indexing.indexEvent(event, "ok", type, tr);
 
         assertThat(tr.runtimeIndexes().encounteredTypeKeys.contains(TypeKey.valueOfFull(String.class)), is(true));
-        assertThat(tr.runtimeIndexes().encounteredEventKeys.contains(EventKey.valueOfFull(event, type)), is(true));
+        assertThat(tr.runtimeIndexes().encounteredEventKeys.contains(EventKey.valueOf(event, type, true)), is(true));
         assertThat(tr.runtimeIndexes().encounteredUniqueEvents.contains(RuntimeKey.valueOfFull(event, type, "ok")),
                 is(true));
     }

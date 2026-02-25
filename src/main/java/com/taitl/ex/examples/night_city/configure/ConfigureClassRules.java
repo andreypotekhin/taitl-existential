@@ -1,10 +1,12 @@
 package com.taitl.ex.examples.night_city.configure;
 
-import com.taitl.ex.examples.night_city.model.*;
-import com.taitl.existential.*;
-import com.taitl.existential.configs.*;
-import com.taitl.existential.effects.*;
-import com.taitl.existential.invariants.*;
+import com.taitl.ex.examples.night_city.model.Cat;
+import com.taitl.ex.examples.night_city.model.Location;
+import com.taitl.existential.Ex;
+import com.taitl.existential.configs.Context;
+import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.effects.Effect;
+import com.taitl.existential.invariants.Invariant;
 
 public class ConfigureClassRules
 {
@@ -46,29 +48,26 @@ public class ConfigureClassRules
 
     public void configureWithInstances()
     {
+        // @formatter:off
         Ex.configure("/api/cats")
-                .context(new Context("/api/cats/create") {
-                    {
-                        invariant(new Invariant<Cat>() {
-                            {
-                                create(c -> "Black".equals(c.color), "Cats are born black");
-                            }
-                        });
-                        effect(new Effect<Cat>() {
-                            {
-                                create(c -> c.location = new Location("Park"), "Set location for all new cats");
-                            }
-                        });
-                    }
-                });
+            .context(new Context("/api/cats/create") {{
+                invariant(new Invariant<Cat>() {{
+                    create(c -> "Black".equals(c.color), "Cats are born black");
+                }});
+                effect(new Effect<Cat>() {{
+                    create(c -> c.location = new Location("Park"), "Set location for all new cats");
+                }});
+            }});
+        // @formatter:on
     }
 
     public void configureMixingFluentAndBuilders()
     {
+        // @formatter:off
         Ex.configure("/api/cats")
-                .context("/api/cats/create")
+            .context("/api/cats/create")
                 .invariant(Cat.class)
-                .create(c -> "Black".equals(c.color), "Cats are born black")
+                    .create(c -> "Black".equals(c.color), "Cats are born black")
                 .done()
                 .effect(new Effect<Cat>() {
                     {
@@ -76,19 +75,22 @@ public class ConfigureClassRules
                     }
                 })
                 .done()
-                .build();
+            .build();
+        // @formatter:on
     }
 
     public void configureTransactionRules()
     {
+        // @formatter:off
         Ex.configure("/api/cats")
-                .context("/api/cats")
+            .context("/api/cats")
                 .transaction("/api/cats/transaction")
-                .begin((Transaction tr) -> tr.index("cats").clear())
-                .commit((Transaction tr) -> tr.index("cats").clear())
-                .rollback((Transaction tr) -> tr.index("cats").clear())
-                .checkpoint((Transaction tr) -> tr.index("cats").clear())
+                    .begin((Transaction tr) -> tr.index("cats").clear())
+                    .commit((Transaction tr) -> tr.index("cats").clear())
+                    .rollback((Transaction tr) -> tr.index("cats").clear())
+                    .checkpoint((Transaction tr) -> tr.index("cats").clear())
                 .build()
-                .build();
+            .build();
+        // @formatter:on
     }
 }

@@ -1,13 +1,17 @@
 package com.taitl.ex.logic.configuration.indexes.actions;
 
-import com.taitl.ex.logic.configuration.indexes.*;
-import com.taitl.existential.configs.*;
-import com.taitl.existential.evaluables.*;
-import com.taitl.existential.expressions.*;
-import com.taitl.existential.handlers.types.*;
-import com.taitl.existential.keys.*;
+import com.taitl.ex.logic.configuration.indexes.ConfigIndexes;
+import com.taitl.existential.configs.Config;
+import com.taitl.existential.configs.Context;
+import com.taitl.existential.evaluables.Ev;
+import com.taitl.existential.evaluables.Evaluator;
+import com.taitl.existential.evaluables.Evs;
+import com.taitl.existential.expressions.Expression;
+import com.taitl.existential.handlers.types.EventHandler;
+import com.taitl.existential.keys.EventKey;
+import com.taitl.existential.keys.TypeKey;
 
-import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Args.sane;
 
 public class IndexConfig
 {
@@ -83,7 +87,7 @@ public class IndexConfig
             {
                 return typed;
             }
-            return ci.useFullClassNames() ? EventKey.valueOfFull(ev) : EventKey.valueOf(ev);
+            return EventKey.valueOf(ev, ci.useFullClassNames());
         }
 
         @SuppressWarnings("unchecked")

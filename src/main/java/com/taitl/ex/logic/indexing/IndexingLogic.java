@@ -1,13 +1,18 @@
 package com.taitl.ex.logic.indexing;
 
-import java.io.*;
-import com.taitl.ex.core.existential.*;
-import com.taitl.ex.logic.indexing.data.*;
-import com.taitl.existential.*;
-import com.taitl.existential.constants.*;
-import com.taitl.existential.events.types.*;
-import com.taitl.existential.keys.*;
-import com.taitl.existential.transactions.*;
+import com.taitl.ex.core.existential.ExistentialConfigs;
+import com.taitl.ex.core.existential.ExistentialEvents;
+import com.taitl.ex.logic.indexing.data.IndexData;
+import com.taitl.existential.Existential;
+import com.taitl.existential.constants.Flags;
+import com.taitl.existential.events.types.BiEvent;
+import com.taitl.existential.events.types.Event;
+import com.taitl.existential.keys.EventKey;
+import com.taitl.existential.keys.RuntimeKey;
+import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.transactions.Tr;
+
+import java.io.Closeable;
 
 public class IndexingLogic implements Closeable
 {
@@ -26,7 +31,7 @@ public class IndexingLogic implements Closeable
     {
         IndexData indexData = tr.runtimeIndexes();
         boolean fullNames = ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
-        EventKey eventKey = fullNames ? EventKey.valueOfFull(event, type) : EventKey.valueOf(event, type);
+        EventKey eventKey = EventKey.valueOf(event, type, fullNames);
         RuntimeKey<T> runtimeKey = fullNames ? RuntimeKey.valueOfFull(event, type, o)
                 : RuntimeKey.valueOf(event, type, o);
         indexData.encounteredUniqueEvents.add(runtimeKey);
@@ -38,7 +43,7 @@ public class IndexingLogic implements Closeable
     {
         IndexData indexData = tr.runtimeIndexes();
         boolean fullNames = ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
-        EventKey eventKey = fullNames ? EventKey.valueOfFull(event, type) : EventKey.valueOf(event, type);
+        EventKey eventKey = EventKey.valueOf(event, type, fullNames);
         // TODO: add clarification, perhaps a business rule, around choice of using event.t1
         RuntimeKey<T> runtimeKey = fullNames ? RuntimeKey.valueOfFull(event, type, event.t1)
                 : RuntimeKey.valueOf(event, type, event.t1);
