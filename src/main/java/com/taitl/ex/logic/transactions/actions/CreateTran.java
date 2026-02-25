@@ -2,6 +2,7 @@ package com.taitl.ex.logic.transactions.actions;
 
 import java.util.*;
 import java.util.function.*;
+import com.taitl.ex.logic.configuration.rules.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
@@ -79,9 +80,26 @@ public class CreateTran extends TranAction
     public static Transaction forContext(Context context)
     {
         Transaction t = context.transactionFactory().get();
+        requireTransactionOpMatchesContext(t, context);
         t.op(context.name());
         t.name(context.name());
         t.context(context);
         return t;
+    }
+
+    static void requireTransactionOpMatchesContext(Transaction transaction, Context context)
+    {
+        sane(transaction, "transaction", context, "context");
+        if (isDefaultPlaceholderTransaction(transaction))
+        {
+            return;
+        }
+        MatchParentName.require(transaction.op, context.name(), "parent context");
+    }
+
+    static boolean isDefaultPlaceholderTransaction(Transaction transaction)
+    {
+        return "undefined".equals(transaction.op)
+                && "undefined".equals(transaction.name);
     }
 }

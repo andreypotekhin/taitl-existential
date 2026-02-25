@@ -52,8 +52,50 @@ class CreateTranTest
         assertThat(tr.transactions.get(1).op, is("/op2"));
     }
 
+    @Test
+    void forContextRejectsMismatchedTransactionOp()
+    {
+        Context context = new Context("/ctx").transaction(() -> new Transaction("/other", "custom"));
+
+        IllegalArgumentException e =
+                Assertions.assertThrows(IllegalArgumentException.class, () -> CreateTran.forContext(context));
+
+        assertThat(e.getMessage(), containsString("must match parent context '/ctx'"));
+    }
+
+    @Test
+    void forContextAllowsChildTransactionOp()
+    {
+        Context context = new Context("/ctx").transaction(() -> new Transaction("/ctx/child", "custom"));
+
+        Transaction tr = CreateTran.forContext(context);
+
+        assertThat(tr.op, is("/ctx"));
+    }
+
+    @Test
+    void forContextAllowsWildcardTransactionOp()
+    {
+        Context context = new Context("/api/cats/create").transaction(() -> new Transaction("/api/*", "custom"));
+
+        Transaction tr = CreateTran.forContext(context);
+
+        assertThat(tr.op, is("/api/cats/create"));
+    }
+
+    @Test
+    void forContextRejectsShorterTransactionOp()
+    {
+        Context context = new Context("/ctx/child").transaction(() -> new Transaction("/ctx", "custom"));
+
+        IllegalArgumentException e =
+                Assertions.assertThrows(IllegalArgumentException.class, () -> CreateTran.forContext(context));
+
+        assertThat(e.getMessage(), containsString("must match parent context '/ctx/child'"));
+    }
+
     private static Context context(String name)
     {
-        return new Context(name).transaction(() -> new Transaction("seed", "seed"));
+        return new Context(name).transaction(() -> new Transaction(name, "seed"));
     }
 }
