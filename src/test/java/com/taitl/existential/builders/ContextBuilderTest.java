@@ -18,7 +18,7 @@ class ContextBuilderTest
     void buildAttachesContextToParent()
     {
         ConfigBuilder configBuilder = new ConfigBuilder("/app");
-        ContextBuilder contextBuilder = configBuilder.context("/app");
+        ContextBuilder contextBuilder = configBuilder.context();
         Context context = new Context("/app");
         contextBuilder.contextFactory(() -> context);
         contextBuilder.invariant(new Invariant<>());
@@ -27,6 +27,17 @@ class ContextBuilderTest
 
         assertEquals(1, configBuilder.contexts.size());
         assertSame(context, configBuilder.contexts.get(0));
+    }
+
+    @Test
+    void parameterlessSiblingContextDelegatesToParentConfigOp()
+    {
+        ConfigBuilder configBuilder = new ConfigBuilder("/app");
+        ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+
+        ContextBuilder sibling = contextBuilder.context();
+
+        assertEquals("/app", sibling.op);
     }
 
     @Test

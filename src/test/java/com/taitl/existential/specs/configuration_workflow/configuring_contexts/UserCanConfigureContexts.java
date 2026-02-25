@@ -51,8 +51,8 @@ class UserCanConfigureContexts extends SpecBase
     {
         assertDoesNotThrow(() -> {
             // @formatter:off
-            Ex.configure("/api/cats/create")
-                .context("/api/cats")
+            Ex.configure("/api/cats")
+                .context()
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
                     .done()
@@ -77,8 +77,8 @@ class UserCanConfigureContexts extends SpecBase
         List<String> effectOrder = new ArrayList<>();
 
         // @formatter:off
-        Ex.configure("/api/cats/create")
-            .context("/api/cats")
+        Ex.configure("/api/cats")
+            .context()
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("parent"))
                 .done()
@@ -106,33 +106,33 @@ class UserCanConfigureContexts extends SpecBase
         AtomicReference<Class<?>> rootType = new AtomicReference<>();
         AtomicReference<Class<?>> specificType = new AtomicReference<>();
 
-        // @formatter:off
-        Ex.configure("/api/cats/create")
-            .contextFactory(() -> new GlobalContext("/unused"))
-            .context("/api/cats")
-                .invariant(Cat.class)
-                .create(v -> true, "ok")
-                .done()
-                .transaction(() -> {
-                    Transaction tr = new Transaction("/api/cats/create", "root");
-                    tr.begin((Transaction current) -> rootType.set(current.context().getClass()));
-                    return tr;
-                })
-                .build()
-            .context("/api/cats/create")
-                .contextFactory(() -> new SpecificContext("/unused"))
-                .invariant(Cat.class)
-                .create(v -> true, "ok")
-                .done()
-                .transaction(() -> {
-                    Transaction tr = new Transaction("/api/cats/create", "specific");
-                    tr.begin((Transaction current) -> specificType.set(current.context().getClass()));
-                    return tr;
-                })
-                .build();
-        // @formatter:on
-
         assertDoesNotThrow(() -> {
+            // @formatter:off
+            Ex.configure("/api/cats")
+                .contextFactory(() -> new GlobalContext("/unused"))
+                .context()
+                    .invariant(Cat.class)
+                    .create(v -> true, "ok")
+                    .done()
+                    .transaction(() -> {
+                        Transaction tr = new Transaction("/api/cats/create", "root");
+                        tr.begin((Transaction current) -> rootType.set(current.context().getClass()));
+                        return tr;
+                    })
+                    .build()
+                .context("/api/cats/create")
+                    .contextFactory(() -> new SpecificContext("/unused"))
+                    .invariant(Cat.class)
+                    .create(v -> true, "ok")
+                    .done()
+                    .transaction(() -> {
+                        Transaction tr = new Transaction("/api/cats/create", "specific");
+                        tr.begin((Transaction current) -> specificType.set(current.context().getClass()));
+                        return tr;
+                    })
+                    .build();
+            // @formatter:on
+
             String tran = ex.begin("/api/cats/create");
             ex.event("ok", tran);
             ex.commit(tran);
@@ -155,7 +155,7 @@ class UserCanConfigureContexts extends SpecBase
                 .create(v -> effectOrder.add("wildcard"))
                 .done()
                 .build()
-            .context("/api/cats/create")
+            .context()
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("concrete"))
                 .done()
@@ -172,15 +172,47 @@ class UserCanConfigureContexts extends SpecBase
     }
 
     @Test
+    @DisplayName("Configuring contexts - parent context cannot be added under child config")
+    void parentContextCannotBeAddedUnderChildConfig()
+    {
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                // @formatter:off
+                    Ex.configure("/api/cats/create")
+                        .context("/api/cats");
+                    // @formatter:on
+                });
+
+        assertTrue(ex.getMessage().contains("must match"));
+    }
+
+    @Test
+    @DisplayName("Configuring contexts - unrelated context name is rejected")
+    void unrelatedContextNameIsRejected()
+    {
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                // @formatter:off
+                    Ex.configure("/api/cats/create")
+                        .context("/admin/users");
+                    // @formatter:on
+                });
+
+        assertTrue(ex.getMessage().contains("must match"));
+    }
+
+    @Test
     @DisplayName("Configuring contexts - cannot define empty context")
     void cannotDefineEmptyContext()
     {
         IllegalStateException ex = assertThrows(
                 IllegalStateException.class,
                 () -> {
-                    // @formatter:off
+                // @formatter:off
                     Ex.configure("/api/cats/create")
-                        .context("/api/cats/create")
+                        .context()
                         .build();
                     // @formatter:on
                 });

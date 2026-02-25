@@ -79,7 +79,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
 
         // @formatter:off
         Ex.configure("/api/cats/create")
-            .context("/api/cats/create")
+            .context()
                 .transaction(() -> {
                     created.incrementAndGet();
                     return new ChildTransaction("/api/cats/create");
@@ -107,7 +107,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
 
         // @formatter:off
         Ex.configure("/api/cats")
-            .context("/api/cats")
+            .context()
                 .transaction(() -> new RootTransaction("/api/cats"))
                 .begin((RootTransaction tr) -> transactionTypes.add(tr.getClass().getSimpleName()))
                 .build()

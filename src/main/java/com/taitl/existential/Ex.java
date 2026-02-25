@@ -14,7 +14,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * This convenience implies a single {@link Existential} instance per JVM. This is fine for
  * most applications, but it can be limiting in library code.
  *
- * Usage: {@code Ex.configure("api/resource").context("api/resource/create")...}
+ * Usage: {@code Ex.configure("/api/resource/create").context()...}
  * Documentation: https://github.com/andreypotekhin/taitl-existential
  *
  * @author Andrey Potekhin

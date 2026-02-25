@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
+import com.taitl.ex.logic.configuration.rules.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.keys.*;
@@ -60,7 +61,17 @@ public class ConfigBuilder
      */
     public ContextBuilder context(String name)
     {
-        return new ContextBuilder(this, name);
+        return new ContextBuilder(this, requireContextNameMatchesConfigOp(name));
+    }
+
+    /**
+     * Create ConfigBuilder for the main context of this operation.
+     *
+     * @return ConfigBuilder for Context class
+     */
+    public ContextBuilder context()
+    {
+        return context(name);
     }
 
     /**
@@ -96,6 +107,9 @@ public class ConfigBuilder
      */
     public ConfigBuilder context(Context context)
     {
+        sane(context, "context");
+        context.op(requireContextNameMatchesConfigOp(context.name()));
+
         // Guard against multiple calls to .context() with same argument,
         // for instance, if such call exists somewhere in the middle of
         // ordinary request processing (e.g. in a controller)
@@ -196,5 +210,15 @@ public class ConfigBuilder
         sane(cont, "cont");
         verify(!contexts.contains(cont), "This context is already added");
         contexts.add(cont);
+    }
+
+    protected String requireContextNameMatchesConfigOp(String contextName)
+    {
+        return MatchParentName.require(contextName, name, "config op key");
+    }
+
+    protected String requireContextNameMatchesParentContext(String contextName, String parentContextName)
+    {
+        return MatchParentName.require(contextName, parentContextName, "parent context");
     }
 }

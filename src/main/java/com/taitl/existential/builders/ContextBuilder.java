@@ -114,7 +114,17 @@ public class ContextBuilder
     public ContextBuilder context(String name)
     {
         sane(name, "name");
-        return parent.context(name);
+        return parent.context(parent.requireContextNameMatchesParentContext(name, op));
+    }
+
+    /**
+     * Starts building the main context on the parent builder.
+     *
+     * @return Context builder for the parent config op key
+     */
+    public ContextBuilder context()
+    {
+        return parent.context();
     }
 
     // TODO: intent()
