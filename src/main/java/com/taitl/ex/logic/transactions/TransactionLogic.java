@@ -1,17 +1,18 @@
 package com.taitl.ex.logic.transactions;
 
-import java.io.*;
-import com.taitl.ex.core.existential.*;
+import com.taitl.ex.core.existential.ExistentialTransactions;
 import com.taitl.ex.logic.transactions.actions.*;
-import com.taitl.ex.logic.transactions.data.*;
-import com.taitl.ex.logic.validation.*;
-import com.taitl.existential.*;
-import com.taitl.existential.configs.*;
-import com.taitl.existential.exceptions.*;
-import com.taitl.existential.keys.*;
-import com.taitl.existential.transactions.*;
+import com.taitl.ex.logic.transactions.data.TrRegistry;
+import com.taitl.ex.logic.validation.ValidationLogic;
+import com.taitl.existential.Existential;
+import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.keys.OpKey;
+import com.taitl.existential.transactions.Tr;
 
-import static com.taitl.ex.common.helper.Args.*;
+import java.io.Closeable;
+
+import static com.taitl.ex.common.helper.Args.sane;
 
 public class TransactionLogic implements Closeable
 {
@@ -38,37 +39,47 @@ public class TransactionLogic implements Closeable
         this.validationLogic = new ValidationLogic(this);
     }
 
-    public String begin(String op) throws ExistentialException
+    public Tr begin(String op) throws ExistentialException
     {
         sane(op, "op");
         OpKey.validate(op);
         ee.ex().configs().done();
         Tr tr = registry.create(op, null);
         beginTran.call(tr);
-        return tr.id.toString();
+        return tr;
     }
 
-    public String begin(String op, Transaction custom) throws ExistentialException
+    public Tr begin(String op, Transaction custom) throws ExistentialException
     {
         sane(op, "op");
         OpKey.validate(op);
         ee.ex().configs().done();
         Tr tr = registry.create(op, custom);
         beginTran.call(tr);
-        return tr.id.toString();
+        return tr;
     }
 
     public void checkpoint(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
-        Tr tr = tr(tranID);
+        checkpoint(tr(tranID));
+    }
+
+    public void checkpoint(Tr tr) throws ExistentialException
+    {
+        sane(tr, "tr");
         checkpointTran.call(tr);
     }
 
     public void commit(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
-        Tr tr = tr(tranID);
+        commit(tr(tranID));
+    }
+
+    public void commit(Tr tr) throws ExistentialException
+    {
+        sane(tr, "tr");
         commitTran.call(tr);
         disposeTran.call(tr);
     }
@@ -76,7 +87,12 @@ public class TransactionLogic implements Closeable
     public void rollback(String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
-        Tr tr = tr(tranID);
+        rollback(tr(tranID));
+    }
+
+    public void rollback(Tr tr) throws ExistentialException
+    {
+        sane(tr, "tr");
         rollbackTran.call(tr);
         disposeTran.call(tr);
     }

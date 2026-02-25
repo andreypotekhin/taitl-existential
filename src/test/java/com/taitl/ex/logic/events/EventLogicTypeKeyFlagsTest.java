@@ -1,19 +1,23 @@
 package com.taitl.ex.logic.events;
 
-import java.util.*;
-import com.taitl.ex.core.existential.*;
-import com.taitl.ex.logic.indexing.*;
-import com.taitl.existential.*;
-import com.taitl.existential.constants.*;
-import com.taitl.existential.events.access_events.*;
-import com.taitl.existential.keys.*;
-import com.taitl.existential.transactions.*;
-import org.junit.jupiter.api.*;
+import com.taitl.ex.core.existential.ExistentialEvents;
+import com.taitl.ex.logic.indexing.IndexingLogic;
+import com.taitl.existential.Existential;
+import com.taitl.existential.constants.Flags;
+import com.taitl.existential.events.access_events.Change;
+import com.taitl.existential.keys.EventKey;
+import com.taitl.existential.keys.RuntimeKey;
+import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.transactions.Tr;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import java.util.UUID;
 
-class EventLogicTypeKeyFlagsTest0
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+class EventLogicTypeKeyFlagsTest
 {
     Existential ex;
 
@@ -57,7 +61,7 @@ class EventLogicTypeKeyFlagsTest0
         ExistentialEvents ev = new ExistentialEvents(ex);
         EventLogic logic = new EventLogic(ev);
         IndexingLogic indexing = new IndexingLogic(ev);
-        Tr tr = new Tr("/api/test", UUID.randomUUID());
+        Tr tr = new Tr("/api/test", UUID.randomUUID(), ex.transactions().logic());
 
         Change<String> event = new Change<>("ok");
         TypeKey<String> type = logic.typeKey("ok");

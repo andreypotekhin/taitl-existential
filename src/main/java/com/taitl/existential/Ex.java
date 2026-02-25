@@ -1,12 +1,14 @@
 package com.taitl.existential;
 
-import com.taitl.ex.core.existential.*;
-import com.taitl.existential.builders.*;
-import com.taitl.existential.configs.*;
-import com.taitl.existential.exceptions.*;
-import com.taitl.existential.keys.*;
+import com.taitl.ex.core.existential.ExistentialConfigs;
+import com.taitl.ex.core.existential.ExistentialTransactions;
+import com.taitl.existential.builders.ConfigBuilder;
+import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.transactions.Tr;
 
-import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.Args.sane;
 
 /**
  * Static facade for the Existential library.
@@ -66,10 +68,10 @@ public final class Ex
      * Begins a transaction for the specified operation.
      *
      * @param op operation name
-     * @return transaction identifier
+     * @return transaction object
      * @throws ExistentialException when transaction start fails
      */
-    public static String begin(String op) throws ExistentialException
+    public static Tr begin(String op) throws ExistentialException
     {
         return instance().begin(op);
     }
@@ -79,10 +81,10 @@ public final class Ex
      *
      * @param op operation name
      * @param custom transaction instance to use
-     * @return transaction identifier
+     * @return transaction object
      * @throws ExistentialException when transaction start fails
      */
-    public static String begin(String op, Transaction custom) throws ExistentialException
+    public static Tr begin(String op, Transaction custom) throws ExistentialException
     {
         return instance().begin(op, custom);
     }
@@ -101,6 +103,19 @@ public final class Ex
     }
 
     /**
+     * Commits an existential transaction.
+     * Performs validation of the rules configured for the transaction's business operation.
+     * After commit, tranID becomes invalid.
+     *
+     * @param tr transaction object
+     * @throws ExistentialException when validation or commit fails
+     */
+    public static void commit(Tr tr) throws ExistentialException
+    {
+        instance().commit(tr);
+    }
+
+    /**
      * Creates a checkpoint in the transaction lifecycle.
      *
      * @param tranID transaction identifier
@@ -109,6 +124,11 @@ public final class Ex
     public static void checkpoint(String tranID) throws ExistentialException
     {
         instance().checkpoint(tranID);
+    }
+
+    public static void checkpoint(Tr tr) throws ExistentialException
+    {
+        instance().checkpoint(tr);
     }
 
     /**
@@ -122,6 +142,11 @@ public final class Ex
     public static void rollback(String tranID) throws ExistentialException
     {
         instance().rollback(tranID);
+    }
+
+    public static void rollback(Tr tr) throws ExistentialException
+    {
+        instance().rollback(tr);
     }
 
     /**

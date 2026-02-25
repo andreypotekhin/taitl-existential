@@ -1,12 +1,13 @@
 package com.taitl.ex.logic.transactions.data;
 
-import com.taitl.ex.core.existential.*;
-import com.taitl.ex.logic.transactions.*;
-import com.taitl.existential.*;
-import org.junit.jupiter.api.*;
+import com.taitl.ex.core.existential.ExistentialTransactions;
+import com.taitl.ex.logic.transactions.TransactionLogic;
+import com.taitl.existential.Existential;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 class TrRegistryTest
 {
@@ -32,11 +33,6 @@ class TrRegistryTest
         TestTransactions(Existential ex)
         {
             super(ex);
-        }
-
-        TransactionLogic logic()
-        {
-            return transactionLogic;
         }
     }
 }

@@ -1,13 +1,16 @@
 package com.taitl.existential.transactions;
 
-import java.util.*;
-import com.taitl.ex.common.helper.*;
-import com.taitl.ex.logic.indexing.data.*;
-import com.taitl.ex.logic.validation.data.*;
-import com.taitl.existential.configs.*;
-import com.taitl.existential.keys.*;
+import com.taitl.ex.common.helper.State;
+import com.taitl.ex.logic.indexing.data.IndexData;
+import com.taitl.ex.logic.transactions.TransactionLogic;
+import com.taitl.ex.logic.validation.data.ValidationData;
+import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.keys.OpKey;
 
-import static com.taitl.ex.common.helper.Args.*;
+import java.util.*;
+
+import static com.taitl.ex.common.helper.Args.sane;
 
 /**
  * Defines an existential transaction, the backbone of the library transaction model.
@@ -22,10 +25,11 @@ public class Tr
 {
     public final UUID id;
     public String op;
-    List<Transaction> transactions = new ArrayList<>();
-    Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
-    IndexData runtimeIndexes;
-    ValidationData validationData;
+    protected TransactionLogic tl;
+    protected List<Transaction> transactions = new ArrayList<>();
+    protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
+    protected IndexData runtimeIndexes;
+    protected ValidationData validationData;
 
     /**
      * Creates a transaction instance for the given operation and id.
@@ -35,12 +39,13 @@ public class Tr
      * @param id
      *            Transaction identifier
      */
-    public Tr(String op, UUID id)
+    public Tr(String op, UUID id, TransactionLogic tl)
     {
         sane(op, "op", id, "id");
         OpKey.validate(op);
         this.op = op;
         this.id = id;
+        this.tl = tl;
         runtimeIndexes = new IndexData();
         validationData = new ValidationData(this);
     }
@@ -59,13 +64,43 @@ public class Tr
         transactions.add(tr);
     }
 
-    // TODO
-    // begin()
-    // commit()
-    // Commit transactions - run handlers and evaluate validation expressions
-    // Close transactions, remove op transaction from registry
-    // rollback()
-    // checkpoint()
+    /**
+     * Creates a checkpoint in the transaction lifecycle.
+     * Performs validation of the rules configured for the transaction's business operation.
+     * After commit, transaction object is still usable: more events can be sent.
+     *
+     * @throws ExistentialException when checkpoint fails
+     */
+    public void checkpoint() throws ExistentialException
+    {
+        tl.checkpoint(this);
+    }
+
+    /**
+     * Commits a transaction.
+     * Performs validation of the rules configured for the transaction's business operation.
+     * After commit, transaction object becomes unusable, tranID becomes invalid.
+     *
+     * @throws ExistentialException when validation or commit fails
+     */
+    public void commit() throws ExistentialException
+    {
+        tl.commit(this);
+    }
+
+    /**
+     * Rolls back transaction.
+     * Rule validation is not performed.
+     * After commit, transaction object becomes unusable, tranID becomes invalid.
+     *
+     * @throws ExistentialException when rollback fails
+     */
+    public void rollback() throws ExistentialException
+    {
+        tl.rollback(this);
+    }
+
+    /* Lifecycle events */
 
     /**
      * Called when a transaction begins.
@@ -100,15 +135,26 @@ public class Tr
     {
     }
 
+    /* Attributes */
+
     /**
-     * Releases transaction resources and clears internal collections.
+     * Returns the transaction identifier as a UUID string.
+     * @return Transaction id string
      */
-    public void close()
+    public String id()
     {
-        validationData.close();
-        validationData = null;
-        transactions = null;
-        already = null;
+        return id.toString();
+    }
+
+    /**
+     * Returns the list of Transaction objects associated with this transaction,
+     * in the order of their Context declaration.
+     *
+     * @return List of Transaction configurations
+     */
+    public List<Transaction> transactions()
+    {
+        return transactions;
     }
 
     /**
@@ -119,5 +165,17 @@ public class Tr
     public IndexData runtimeIndexes()
     {
         return runtimeIndexes;
+    }
+
+    /**
+     * Releases transaction resources and clears internal collections.
+     */
+    public void close()
+    {
+        validationData.close();
+        validationData = null;
+        transactions = null;
+        tl = null;
+        already = null;
     }
 }

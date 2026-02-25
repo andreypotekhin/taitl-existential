@@ -1,9 +1,12 @@
 package com.taitl.existential.specs.library_usage;
 
-import com.taitl.ex.examples.night_city.model.*;
-import com.taitl.existential.keys.*;
-import com.taitl.existential.specs.*;
-import org.junit.jupiter.api.*;
+import com.taitl.ex.examples.night_city.model.Cat;
+import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.specs.SpecBase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class UserCanSendEntityEvents extends SpecBase
 {
@@ -23,7 +26,7 @@ class UserCanSendEntityEvents extends SpecBase
     @DisplayName("User can send an entity event to library")
     void sendEntityEvent() throws Exception
     {
-        String tran = ex.begin(op);
+        String tran = ex.begin(op).id();
         ex.event(null, cat, tran);
         ex.commit(tran);
     }
@@ -32,7 +35,7 @@ class UserCanSendEntityEvents extends SpecBase
     @DisplayName("User can send an entity event using a type key")
     void sendEntityEventWithTypeKey() throws Exception
     {
-        String tran = ex.begin(op);
+        String tran = ex.begin(op).id();
         ex.event(null, cat, new TypeKey<Cat>(Cat.class), tran);
         ex.commit(tran);
     }

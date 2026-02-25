@@ -1,12 +1,15 @@
 package com.taitl.existential.specs.library_usage;
 
-import com.taitl.existential.specs.*;
-import org.junit.jupiter.api.*;
+import com.taitl.existential.specs.SpecBase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyString;
 
 class UserCanInitiateTransactions extends SpecBase
 {
@@ -26,7 +29,7 @@ class UserCanInitiateTransactions extends SpecBase
     @DisplayName("User can start a transaction")
     void begin() throws Exception
     {
-        String tran = ex.begin(op);
+        String tran = ex.begin(op).id();
         assertThat(tran, is(not(emptyString())));
     }
 
@@ -34,7 +37,7 @@ class UserCanInitiateTransactions extends SpecBase
     @DisplayName("User can commit transaction")
     void commit() throws Exception
     {
-        String tran = ex.begin(op);
+        String tran = ex.begin(op).id();
         ex.event(cat, tran);
         ex.commit(tran);
     }
@@ -43,7 +46,7 @@ class UserCanInitiateTransactions extends SpecBase
     @DisplayName("User can rollback transaction")
     void rollback() throws Exception
     {
-        String tran = ex.begin(op);
+        String tran = ex.begin(op).id();
         ex.event(cat, tran);
         ex.rollback(tran);
     }
@@ -52,7 +55,7 @@ class UserCanInitiateTransactions extends SpecBase
     @DisplayName("User can use checkpoint to manually trigger validation")
     void checkpoint() throws Exception
     {
-        String tran = ex.begin(op);
+        String tran = ex.begin(op).id();
         ex.event(cat, tran);
         ex.checkpoint(tran);
     }

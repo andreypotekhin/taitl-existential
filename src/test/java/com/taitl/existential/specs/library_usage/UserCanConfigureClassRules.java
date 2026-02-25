@@ -1,9 +1,12 @@
 package com.taitl.existential.specs.library_usage;
 
-import com.taitl.existential.specs.*;
-import org.junit.jupiter.api.*;
+import com.taitl.existential.specs.SpecBase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class UserCanConfigureClassRules extends SpecBase
 {
@@ -39,7 +42,7 @@ class UserCanConfigureClassRules extends SpecBase
     {
         assertDoesNotThrow(() -> {
             configure();
-            String tran = ex.begin(op);
+            String tran = ex.begin(op).id();
             ex.event(cat, tran);
         });
     }
@@ -50,7 +53,7 @@ class UserCanConfigureClassRules extends SpecBase
     {
         assertDoesNotThrow(() -> {
             configureWithInstances();
-            String tran = ex.begin(op);
+            String tran = ex.begin(op).id();
             ex.event(cat, tran);
         });
     }
@@ -61,7 +64,7 @@ class UserCanConfigureClassRules extends SpecBase
     {
         assertDoesNotThrow(() -> {
             configure();
-            String tran = ex.begin(op);
+            String tran = ex.begin(op).id();
             ex.event(cat, tran);
         });
     }
@@ -72,7 +75,7 @@ class UserCanConfigureClassRules extends SpecBase
     {
         assertDoesNotThrow(() -> {
             configureMixingFluentAndBuilders();
-            String tran = ex.begin(op);
+            String tran = ex.begin(op).id();
             ex.event(cat, tran);
         });
     }

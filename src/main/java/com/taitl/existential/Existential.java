@@ -1,12 +1,14 @@
 package com.taitl.existential;
 
-import java.io.*;
-import com.taitl.ex.common.creator.*;
+import com.taitl.ex.common.creator.Creator;
 import com.taitl.ex.core.existential.*;
-import com.taitl.existential.builders.*;
-import com.taitl.existential.configs.*;
-import com.taitl.existential.exceptions.*;
-import com.taitl.existential.keys.*;
+import com.taitl.existential.builders.ConfigBuilder;
+import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.transactions.Tr;
+
+import java.io.Closeable;
 
 /**
  * Entry point to the Existential library.
@@ -56,7 +58,7 @@ public final class Existential implements Closeable
      * @return transaction identifier
      * @throws ExistentialException when transaction start fails
      */
-    public String begin(String op) throws ExistentialException
+    public Tr begin(String op) throws ExistentialException
     {
         return transactions.begin(op);
     }
@@ -69,7 +71,7 @@ public final class Existential implements Closeable
      * @return transaction identifier
      * @throws ExistentialException when transaction start fails
      */
-    public String begin(String op, Transaction custom) throws ExistentialException
+    public Tr begin(String op, Transaction custom) throws ExistentialException
     {
         return transactions.begin(op, custom);
     }
@@ -88,6 +90,19 @@ public final class Existential implements Closeable
     }
 
     /**
+     * Commits an existential transaction.
+     * Validates rules configured for the transaction's business operation.
+     * After commit, tranID becomes invalid.
+     *
+     * @param tr transaction object
+     * @throws ExistentialException when validation or commit fails
+     */
+    public void commit(Tr tr) throws ExistentialException
+    {
+        transactions.commit(tr);
+    }
+
+    /**
      * Creates a checkpoint in the transaction lifecycle.
      *
      * @param tranID transaction identifier
@@ -96,6 +111,11 @@ public final class Existential implements Closeable
     public void checkpoint(String tranID) throws ExistentialException
     {
         transactions.checkpoint(tranID);
+    }
+
+    public void checkpoint(Tr tr) throws ExistentialException
+    {
+        transactions.checkpoint(tr);
     }
 
     /**
@@ -109,6 +129,11 @@ public final class Existential implements Closeable
     public void rollback(String tranID) throws ExistentialException
     {
         transactions.rollback(tranID);
+    }
+
+    public void rollback(Tr tr) throws ExistentialException
+    {
+        transactions.rollback(tr);
     }
 
     /**
