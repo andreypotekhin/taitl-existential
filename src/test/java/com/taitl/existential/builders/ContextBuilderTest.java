@@ -149,7 +149,7 @@ class ContextBuilderTest
         contextBuilder.build();
 
         List<Evs<?>> evs = context.evs();
-        assertEquals(TypeKey.valueOf(String.class), evs.get(0).typeKey());
+        assertEquals(TypeKey.valueOf(String.class, false), evs.get(0).typeKey());
         assertEquals(reflectionType, evs.get(1).typeKey());
         assertEquals(stringType, evs.get(2).typeKey());
     }
@@ -171,7 +171,7 @@ class ContextBuilderTest
         Trancycle<?> beginCycle = (Trancycle<?>) transactionBuilder.evsSuppliers.get(0).get();
         Trancycle<?> commitCycle = (Trancycle<?>) transactionBuilder.evsSuppliers.get(1).get();
 
-        assertEquals(TypeKey.valueOf(CustomTransaction.class), beginCycle.typeKey());
+        assertEquals(TypeKey.valueOf(CustomTransaction.class, false), beginCycle.typeKey());
         assertEquals(reflectionFullNameType, commitCycle.typeKey());
     }
 

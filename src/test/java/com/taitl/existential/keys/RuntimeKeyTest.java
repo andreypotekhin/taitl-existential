@@ -16,9 +16,9 @@ class RuntimeKeyTest
         String one = new String("alpha");
         String two = new String("alpha");
         Create<String> event = new Create<>(one);
-        RuntimeKey<String> key1 = RuntimeKey.valueOf(event, new TypeKey<>(String.class), one);
-        RuntimeKey<String> key2 = RuntimeKey.valueOf(event, new TypeKey<>(String.class), one);
-        RuntimeKey<String> key3 = RuntimeKey.valueOf(event, new TypeKey<>(String.class), two);
+        RuntimeKey<String> key1 = RuntimeKey.valueOf(event, new TypeKey<>(String.class), one, false);
+        RuntimeKey<String> key2 = RuntimeKey.valueOf(event, new TypeKey<>(String.class), one, false);
+        RuntimeKey<String> key3 = RuntimeKey.valueOf(event, new TypeKey<>(String.class), two, false);
         assertThat(key1.equals(key2), is(true));
         assertThat(key1.equals(key3), is(false));
         assertThat(key1.equals(null), is(false));
@@ -30,7 +30,7 @@ class RuntimeKeyTest
     {
         String value = "alpha";
         Create<String> event = new Create<>(value);
-        RuntimeKey<String> key = RuntimeKey.valueOf(event, new TypeKey<>(String.class), value);
+        RuntimeKey<String> key = RuntimeKey.valueOf(event, new TypeKey<>(String.class), value, false);
         assertThat(key.toString(), is("Create<String>+alpha"));
     }
 
@@ -40,8 +40,8 @@ class RuntimeKeyTest
         String value = new String("alpha");
         Create<String> event = new Create<>(value);
         TypeKey<String> type = new TypeKey<>(String.class);
-        RuntimeKey<String> key1 = RuntimeKey.valueOf(event, type, value);
-        RuntimeKey<String> key2 = RuntimeKey.valueOf(event, type, value);
+        RuntimeKey<String> key1 = RuntimeKey.valueOf(event, type, value, false);
+        RuntimeKey<String> key2 = RuntimeKey.valueOf(event, type, value, false);
         assertThat(key1.equals(key2), is(true));
         assertThat(key1.hashCode(), is(key2.hashCode()));
     }

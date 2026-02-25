@@ -60,26 +60,26 @@ class TypeKeyTest
     }
 
     @Test
-    void valueOfFull()
+    void valueOfUsesFullNameFlag()
     {
-        assertThat(TypeKey.valueOfFull(TypeKeyTest.class).toString(),
+        assertThat(TypeKey.valueOf(TypeKeyTest.class, true).toString(),
                 is("com.taitl.existential.keys.TypeKeyTest"));
-        assertThat(TypeKey.valueOfFull(Set.class, "List<Document>").toString(),
+        assertThat(TypeKey.valueOf(Set.class, "List<Document>", true).toString(),
                 is("java.util.Set<List<Document>>"));
-        assertThat(TypeKey.valueOfFull(new TypeKeyTest()).toString(),
+        assertThat(TypeKey.valueOf(new TypeKeyTest(), true).toString(),
                 is("com.taitl.existential.keys.TypeKeyTest"));
     }
 
     @Test
     void testValueOf()
     {
-        assertThat(TypeKey.valueOf(TypeKeyTest.class).toString(), is("TypeKeyTest"));
+        assertThat(TypeKey.valueOf(TypeKeyTest.class, false).toString(), is("TypeKeyTest"));
     }
 
     @Test
     void testValueOf1()
     {
-        assertThat(TypeKey.valueOf(Set.class, "Document").toString(), is("Set<Document>"));
+        assertThat(TypeKey.valueOf(Set.class, "Document", false).toString(), is("Set<Document>"));
     }
 
     @Test
@@ -92,8 +92,8 @@ class TypeKeyTest
     void testValueOf3()
     {
         TypeKeyTest t = new TypeKeyTest();
-        assertThat(TypeKey.valueOf(t).toString(), is("TypeKeyTest"));
-        assertThat(TypeKey.valueOf(t, "JSON").toString(), is("TypeKeyTest<JSON>"));
+        assertThat(TypeKey.valueOf(t, false).toString(), is("TypeKeyTest"));
+        assertThat(TypeKey.valueOf(t, "JSON", false).toString(), is("TypeKeyTest<JSON>"));
     }
 
     @Test

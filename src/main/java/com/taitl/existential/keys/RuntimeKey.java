@@ -17,44 +17,24 @@ public class RuntimeKey<T>
     protected final EventKey key;
     protected T entity;
 
-    public static <T> RuntimeKey<T> valueOf(T t)
+    public static <T> RuntimeKey<T> valueOf(T t, boolean useFullName)
     {
-        return new RuntimeKey<>(t);
+        return new RuntimeKey<>(t, useFullName);
     }
 
-    public static <T> RuntimeKey<T> valueOfFull(T t)
+    public static <T> RuntimeKey<T> valueOf(Event<T> e, TypeKey<T> typeKey, T t, boolean useFullName)
     {
-        return new RuntimeKey<>(t, true);
+        return new RuntimeKey<>(e, typeKey, t, useFullName);
     }
 
-    public static <T> RuntimeKey<T> valueOf(Event<T> e, TypeKey<T> typeKey, T t)
+    public static <T> RuntimeKey<T> valueOf(Event<T> e, String type, T t, boolean useFullName)
     {
-        return new RuntimeKey<>(e, typeKey, t);
+        return new RuntimeKey<>(e, type, t, useFullName);
     }
 
-    public static <T> RuntimeKey<T> valueOfFull(Event<T> e, TypeKey<T> typeKey, T t)
+    public static <T> RuntimeKey<T> valueOf(Class<T> clz, String type, T t, boolean useFullName)
     {
-        return new RuntimeKey<>(e, typeKey, t, true);
-    }
-
-    public static <T> RuntimeKey<T> valueOf(Event<T> e, String type, T t)
-    {
-        return new RuntimeKey<>(e, type, t);
-    }
-
-    public static <T> RuntimeKey<T> valueOfFull(Event<T> e, String type, T t)
-    {
-        return new RuntimeKey<>(e, type, t, true);
-    }
-
-    public static <T> RuntimeKey<T> valueOf(Class<T> clz, String type, T t)
-    {
-        return new RuntimeKey<>(clz, type, t);
-    }
-
-    public static <T> RuntimeKey<T> valueOfFull(Class<T> clz, String type, T t)
-    {
-        return new RuntimeKey<>(clz, type, t, true);
+        return new RuntimeKey<>(clz, type, t, useFullName);
     }
 
     public RuntimeKey(T t)

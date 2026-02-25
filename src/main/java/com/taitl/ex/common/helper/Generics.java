@@ -43,7 +43,7 @@ public class Generics
         try
         {
             return (TypeKey<T>) (TypeKey<?>) TypeKey
-                    .valueOf(anonymousSuperclassTypeArgument(subclass, expectedRawSuperclass));
+                    .valueOf(anonymousSuperclassTypeArgument(subclass, expectedRawSuperclass), false);
         }
         catch (IllegalArgumentException e)
         {

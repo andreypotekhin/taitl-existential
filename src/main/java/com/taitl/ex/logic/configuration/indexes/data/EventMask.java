@@ -99,7 +99,7 @@ public class EventMask
      *   // Define custom event type
      *   class Receive<T> extends EntityEvent<T> ...
      *   // Register custom event type
-     *   EventMask.registerEventType(TypeKey.valueOf(Receive.class))
+     *   EventMask.registerEventType(TypeKey.valueOf(Receive.class, false))
      *   // Declare custom event handler class
      *   class OnReceive<T> extends On<T>  ...
      *   // Use custom event in custom event handler
@@ -108,7 +108,7 @@ public class EventMask
      * }</pre>
      *
      * @param <T> Custom event type to register
-     * @param type Typekey describing the new event, for instance, TypeKey.valueOf(MyEvent.class)
+     * @param type Typekey describing the new event, for instance, TypeKey.valueOf(MyEvent.class, false)
      * @return The bit number for the newly registered event type
      */
     public static synchronized <T extends Event<?>> int registerEventType(TypeKey<T> type)

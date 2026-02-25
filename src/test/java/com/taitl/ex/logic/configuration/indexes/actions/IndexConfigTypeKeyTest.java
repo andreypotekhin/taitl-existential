@@ -39,7 +39,7 @@ class IndexConfigTypeKeyTest
 
         assertTrue(
                 config.indexes().configuredHandlers.contains(EventKey.valueOf(com.taitl.existential.events.Create.class,
-                        TypeKey.valueOf(String.class))));
+                        TypeKey.valueOf(String.class, false))));
         assertTrue(
                 config.indexes().configuredHandlers.contains(EventKey.valueOf(com.taitl.existential.events.Create.class,
                         stringTypeKey)));

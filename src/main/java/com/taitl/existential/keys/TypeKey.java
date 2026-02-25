@@ -117,30 +117,14 @@ public class TypeKey<T>
         this.key = classNameQualifiedWithGenerics;
     }
 
-    public static <T> TypeKey<T> valueOf(Class<?> typeClass)
+    public static <T> TypeKey<T> valueOf(Class<?> typeClass, boolean useFullName)
     {
-        return new TypeKey<>(typeClass);
+        return new TypeKey<>(typeClass, useFullName);
     }
 
-    public static <T> TypeKey<T> valueOf(Class<?> typeClass, String genericQualifier)
+    public static <T> TypeKey<T> valueOf(Class<?> typeClass, String genericQualifier, boolean useFullName)
     {
-        return new TypeKey<>(typeClass, genericQualifier);
-    }
-
-    /**
-     * Constructs TypeKey from a class using fully-qualified class name.
-     */
-    public static <T> TypeKey<T> valueOfFull(Class<?> typeClass)
-    {
-        return new TypeKey<>(typeClass, true);
-    }
-
-    /**
-     * Constructs TypeKey from a class and generic qualifier using fully-qualified class name.
-     */
-    public static <T> TypeKey<T> valueOfFull(Class<?> typeClass, String genericQualifier)
-    {
-        return new TypeKey<>(typeClass, genericQualifier, true);
+        return new TypeKey<>(typeClass, genericQualifier, useFullName);
     }
 
     public static <T> TypeKey<T> valueOf(String classNameQualifiedWithGenerics)
@@ -148,32 +132,19 @@ public class TypeKey<T>
         return new TypeKey<>(classNameQualifiedWithGenerics);
     }
 
-    public static <T> TypeKey<T> valueOf(Type type)
+    public static <T> TypeKey<T> valueOf(Type type, boolean useFullName)
     {
-        return new TypeKey<>(type, false);
+        return new TypeKey<>(type, useFullName);
     }
 
-    public static <T> TypeKey<T> valueOfFull(Type type)
+    public static <T> TypeKey<T> valueOf(T t, String genericQualifier, boolean useFullName)
     {
-        return new TypeKey<>(type, true);
+        return new TypeKey<>(t.getClass(), genericQualifier, useFullName);
     }
 
-    public static <T> TypeKey<T> valueOf(T t, String genericQualifier)
+    public static <T> TypeKey<T> valueOf(T t, boolean useFullName)
     {
-        return new TypeKey<>(t.getClass(), genericQualifier);
-    }
-
-    public static <T> TypeKey<T> valueOf(T t)
-    {
-        return new TypeKey<>(t.getClass());
-    }
-
-    /**
-     * Constructs TypeKey from an object instance using fully-qualified class name.
-     */
-    public static <T> TypeKey<T> valueOfFull(T t)
-    {
-        return new TypeKey<>(t.getClass(), true);
+        return new TypeKey<>(t.getClass(), useFullName);
     }
 
     public int hashCode()

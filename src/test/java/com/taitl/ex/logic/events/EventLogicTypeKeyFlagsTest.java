@@ -67,9 +67,9 @@ class EventLogicTypeKeyFlagsTest
         TypeKey<String> type = logic.typeKey("ok");
         indexing.indexEvent(event, "ok", type, tr);
 
-        assertThat(tr.runtimeIndexes().encounteredTypeKeys.contains(TypeKey.valueOfFull(String.class)), is(true));
+        assertThat(tr.runtimeIndexes().encounteredTypeKeys.contains(TypeKey.valueOf(String.class, true)), is(true));
         assertThat(tr.runtimeIndexes().encounteredEventKeys.contains(EventKey.valueOfFull(event, type)), is(true));
-        assertThat(tr.runtimeIndexes().encounteredUniqueEvents.contains(RuntimeKey.valueOfFull(event, type, "ok")),
+        assertThat(tr.runtimeIndexes().encounteredUniqueEvents.contains(RuntimeKey.valueOf(event, type, "ok", true)),
                 is(true));
     }
 }
