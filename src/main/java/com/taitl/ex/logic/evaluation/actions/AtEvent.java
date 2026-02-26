@@ -1,7 +1,6 @@
-package com.taitl.ex.logic.evaluation.iterate;
+package com.taitl.ex.logic.evaluation.actions;
 
 import com.taitl.ex.logic.configuration.indexes.data.*;
-import com.taitl.ex.logic.evaluation.actions.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
