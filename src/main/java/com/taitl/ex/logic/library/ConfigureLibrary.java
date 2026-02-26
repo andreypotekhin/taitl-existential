@@ -175,7 +175,8 @@ public class ConfigureLibrary
             throw new IllegalStateException(
                     String.format(
                             "Invalid boolean value '%s' for key '%s' in '%s'. Use true/false. See %s",
-                            value, key, source, TROUBLESHOOTING_SECTION));
+                            value, key, source, TROUBLESHOOTING_SECTION),
+                    e);
         }
     }
 

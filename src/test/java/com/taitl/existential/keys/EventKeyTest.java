@@ -1,6 +1,7 @@
 package com.taitl.existential.keys;
 
 import com.taitl.existential.events.*;
+import com.taitl.existential.events.types.*;
 import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -80,7 +81,7 @@ class EventKeyTest
         TypeKey<String> typeKey = new TypeKey<>() {
         };
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            EventKey.valueOf((com.taitl.existential.events.types.Event<String>) null, typeKey, false);
+            EventKey.valueOf((Event<String>) null, typeKey, false);
         }).getMessage(), containsString("'event' must not be null"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
             EventKey.valueOf(event, (TypeKey<String>) null, false);
