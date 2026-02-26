@@ -73,6 +73,7 @@ public class EventSplitter
 {
     public static Supplier<? extends EventSplitter> FACTORY =
             () -> Creator.create(EventSplitter.class);
+    protected final SplitByGenericsDimension splitByGenericsDimension = new SplitByGenericsDimension();
 
     public <T> Set<Event<T>> split(Event<T> event)
     {
@@ -100,11 +101,14 @@ public class EventSplitter
         Event<T> event = runtimeKey.event();
         check(event != null, "RuntimeKey event should not be null");
         Set<Event<T>> events = split(event);
+        Set<TypeKey<T>> typeKeys = splitByGenericsDimension.split(runtimeKey.typeKey());
         Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
         for (Event<T> splitEvent : events)
         {
-            runtimeKeys.add(
-                    new RuntimeKey<>(splitEvent, runtimeKey.typeKey(), runtimeEntity(splitEvent, runtimeKey), false));
+            for (TypeKey<T> typeKey : typeKeys)
+            {
+                runtimeKeys.add(new RuntimeKey<>(splitEvent, typeKey, runtimeEntity(splitEvent, runtimeKey), false));
+            }
         }
         return runtimeKeys;
     }
