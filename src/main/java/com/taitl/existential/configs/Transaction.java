@@ -106,7 +106,7 @@ public class Transaction implements Configurable, Evaluable
     public <K, V> Index<K, V> index(String name)
     {
         sane(name, "name");
-        return indexes.get(name);
+        return indexes.getOrCreate(name);
     }
 
     /*
