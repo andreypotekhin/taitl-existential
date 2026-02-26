@@ -180,6 +180,7 @@ increasing code expressiveness and reducing code size. You believe that less cod
 object code duplication and are on a mission to get rid of it.
 Factor out general/reusable code into separate components, e.g. under ex.common.helper
 Consult the style guide (/docs/dev/Style.md) to avoid false positives.
+Consult 'Object decomposition' section in the style guide for externalizing code into logic components.  
 
 ### Code scrutinizer role
 You are a code quality expert, scrutinizing the code for bugs, concurrency issues,  code smells and opportunities to simplify.

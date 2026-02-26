@@ -82,7 +82,7 @@ these concrete implementations.
 - Avoid deep inheritance chains
 - We do not use 'final' or 'locked'  
 
-##### Object-oriented decomposition
+##### Object decomposition
 - We divide the classes into 'public', 'orchestration' and 'logic' classes
 - The 'public' classes are the end-user facing classes from our 'public' packages (com.taitl.existential)
 - The 'orchestration' classes are top-level classes to which the public classes delegate. Example: ConfigBuilder 
@@ -193,6 +193,7 @@ Upon completion, move TODO items to docs/dev/todo/done upon completion, and move
 ### Various
 - Use 'brief' notation for getters and setters (x() instead of getX())
 - Prefer varargs instead of array[] method parameter, if applicable
+- In non-end-user facing code, instead of 'new' keyword for bigger components, we often prefer use Creator.create()/Creator.singleton() to facilitate extensibility.
 
 ### What to avoid
 Being a principled team, we fight a few dogmas.
@@ -210,4 +211,3 @@ We generally avoid, unless there is a valid reason:
 - HTML formatting tags in Javadocs, such as <p> and <br> 
 - non-Javadoc comments (the meaning should stem from code)
 - testing a class in total isolation (we test coherent clusters of classes instead of mocking around) 
-- instead of 'new' keyword, we often use an alternative that encourages extensibility, such as Creator.create()
