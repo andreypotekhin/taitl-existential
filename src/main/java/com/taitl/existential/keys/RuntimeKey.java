@@ -15,6 +15,8 @@ import static com.taitl.ex.common.helper.State.verify;
 public class RuntimeKey<T>
 {
     protected final EventKey key;
+    protected final TypeKey<T> typeKey;
+    protected final Event<T> event;
     protected T entity;
 
     public static <T> RuntimeKey<T> valueOf(T t, boolean useFullName)
@@ -44,7 +46,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(T t, boolean useFullName)
     {
-        this(EventKey.valueOf(t, useFullName), t);
+        this(EventKey.valueOf(t, useFullName), TypeKey.valueOf(t, useFullName), null, t);
     }
 
     public RuntimeKey(Event<T> e, TypeKey<T> typeKey, T t)
@@ -54,7 +56,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(Event<T> e, TypeKey<T> typeKey, T t, boolean useFullName)
     {
-        this(EventKey.valueOf(e, typeKey, useFullName), t);
+        this(EventKey.valueOf(e, typeKey, useFullName), typeKey, e, t);
     }
 
     public RuntimeKey(Event<T> e, String type, T t)
@@ -64,7 +66,7 @@ public class RuntimeKey<T>
 
     public RuntimeKey(Event<T> e, String type, T t, boolean useFullName)
     {
-        this(EventKey.valueOf(e, type, useFullName), t);
+        this(EventKey.valueOf(e, type, useFullName), TypeKey.valueOf(type), e, t);
     }
 
     public RuntimeKey(Class<T> clz, String type, T t)
@@ -74,13 +76,40 @@ public class RuntimeKey<T>
 
     public RuntimeKey(Class<T> clz, String type, T t, boolean useFullName)
     {
-        this(EventKey.valueOf(clz, type, useFullName), t);
+        this(EventKey.valueOf(clz, type, useFullName), TypeKey.valueOf(type), null, t);
     }
 
     protected RuntimeKey(EventKey key, T entity)
     {
+        this(key, (TypeKey<T>) key.typeKey(), null, entity);
+    }
+
+    protected RuntimeKey(EventKey key, TypeKey<T> typeKey, Event<T> event, T entity)
+    {
         this.key = key;
+        this.typeKey = typeKey;
+        this.event = event;
         this.entity = entity;
+    }
+
+    public EventKey key()
+    {
+        return key;
+    }
+
+    public TypeKey<T> typeKey()
+    {
+        return typeKey;
+    }
+
+    public Event<T> event()
+    {
+        return event;
+    }
+
+    public T entity()
+    {
+        return entity;
     }
 
     public int hashCode()
@@ -123,6 +152,7 @@ public class RuntimeKey<T>
     public void validate()
     {
         verify(key != null, "RuntimeKey cannot should not be null");
+        verify(typeKey != null, "RuntimeKey typeKey should not be empty");
         verify(entity != null, "RuntimeKey entity should not be empty");
     }
 }

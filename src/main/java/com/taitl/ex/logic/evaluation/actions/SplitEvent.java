@@ -3,6 +3,7 @@ package com.taitl.ex.logic.evaluation.actions;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.evaluation.logic.*;
 import com.taitl.existential.events.types.*;
+import com.taitl.existential.keys.*;
 
 import java.util.*;
 
@@ -23,6 +24,11 @@ public class SplitEvent
     public <T> Set<Event<T>> split(Event<T> event)
     {
         return eventSplitter.split(event);
+    }
+
+    public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
+    {
+        return eventSplitter.split(runtimeKey);
     }
 
 }

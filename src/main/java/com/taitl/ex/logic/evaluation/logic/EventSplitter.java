@@ -8,6 +8,7 @@ import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
+import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -91,6 +92,35 @@ public class EventSplitter
         // TODO: other
 
         return events;
+    }
+
+    public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
+    {
+        sane(runtimeKey, "runtimeKey");
+        Event<T> event = runtimeKey.event();
+        check(event != null, "RuntimeKey event should not be null");
+        Set<Event<T>> events = split(event);
+        Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
+        for (Event<T> splitEvent : events)
+        {
+            runtimeKeys.add(
+                    new RuntimeKey<>(splitEvent, runtimeKey.typeKey(), runtimeEntity(splitEvent, runtimeKey), false));
+        }
+        return runtimeKeys;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T runtimeEntity(Event<T> event, RuntimeKey<T> runtimeKey)
+    {
+        if (event instanceof BiEvent<?>)
+        {
+            return ((BiEvent<T>) event).t1;
+        }
+        if (event instanceof EntityEvent<?>)
+        {
+            return ((EntityEvent<T>) event).t;
+        }
+        return runtimeKey.entity();
     }
 
     protected <T> Set<Event<T>> splitTransit(Transit<T> transit, Set<Event<T>> events)
