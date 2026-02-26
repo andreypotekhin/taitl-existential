@@ -32,7 +32,7 @@ public class EvaluationLogic implements Closeable
         sane(tr, "tr", report, "report");
         EventField eventField = eventField(tr);
         EvaluateEvent evaluateEvent = Creator.create(EvaluateEvent.class);
-        for(RuntimeKey<?> runtimeKey: tr.runtimeIndexes().encounteredUniqueEvents)
+        for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
         {
             evaluateEvent.call(runtimeKey, eventField, report);
         }
