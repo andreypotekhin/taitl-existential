@@ -2,11 +2,12 @@ package com.taitl.ex.logic.library;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.*;
-import java.util.function.*;
 import java.nio.file.attribute.*;
+import java.util.function.*;
 import com.taitl.ex.common.helper.FileSecurity;
 import com.taitl.ex.common.helper.LimitedInputStream;
+import com.taitl.ex.common.helper.Properties;
+import com.taitl.ex.common.logic.LoadProperties;
 import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
 
@@ -23,12 +24,11 @@ public class ConfigureLibrary
 
     private static final String OPT_REQUIRE_DESCRIPTIONS = "behavior.rules.requireDescriptions";
     private static final long MAX_CONFIG_BYTES = 1024 * 1024;
-    private static final Set<String> BOOL_TRUES = Set.of("true", "TRUE", "True");
-    private static final Set<String> BOOL_FALSES = Set.of("false", "FALSE", "False");
 
     protected Existential ex;
     protected Function<String, String> env;
     protected ClassLoader classLoader;
+    protected LoadProperties loadProperties;
 
     public ConfigureLibrary(Existential ex)
     {
@@ -41,6 +41,7 @@ public class ConfigureLibrary
         this.ex = ex;
         this.env = env;
         this.classLoader = classLoader;
+        this.loadProperties = new LoadProperties(classLoader, MAX_CONFIG_BYTES);
     }
 
     public void configure()
@@ -76,9 +77,9 @@ public class ConfigureLibrary
         verify(size <= MAX_CONFIG_BYTES,
                 String.format("Configuration file is too large (%d bytes). Max allowed is %d bytes. See %s",
                         size, MAX_CONFIG_BYTES, TROUBLESHOOTING_SECTION));
-        try (InputStream stream = Files.newInputStream(file, LinkOption.NOFOLLOW_LINKS))
+        try (InputStream stream = loadProperties.openFile(file))
         {
-            load(stream, file.toString());
+            apply(read(stream, file.toString()), file.toString());
         }
         catch (IOException e)
         {
@@ -92,14 +93,16 @@ public class ConfigureLibrary
     public void fromClasspath(String resource)
     {
         sane(resource, "resource");
-        InputStream stream = classLoader.getResourceAsStream(resource);
-        verify(stream != null,
-                String.format("Classpath configuration resource '%s' not found. See %s",
-                        resource, TROUBLESHOOTING_SECTION));
-
-        try (InputStream opened = stream)
+        try (InputStream opened = loadProperties.openResource(resource))
         {
-            load(opened, "classpath:" + resource);
+            apply(read(opened, "classpath:" + resource), "classpath:" + resource);
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new IllegalStateException(
+                    String.format("Classpath configuration resource '%s' not found. See %s",
+                            resource, TROUBLESHOOTING_SECTION),
+                    e);
         }
         catch (IOException e)
         {
@@ -110,12 +113,11 @@ public class ConfigureLibrary
         }
     }
 
-    protected void load(InputStream stream, String source)
+    protected java.util.Properties read(InputStream stream, String source)
     {
-        Properties props = new Properties();
         try
         {
-            props.load(new LimitedInputStream(stream, MAX_CONFIG_BYTES));
+            return loadProperties.fromStream(stream);
         }
         catch (LimitedInputStream.MaxSizeExceededException e)
         {
@@ -131,7 +133,10 @@ public class ConfigureLibrary
                             source, TROUBLESHOOTING_SECTION),
                     e);
         }
+    }
 
+    protected void apply(java.util.Properties props, String source)
+    {
         for (String key : props.stringPropertyNames())
         {
             String value = props.getProperty(key);
@@ -161,19 +166,18 @@ public class ConfigureLibrary
         verify(value != null,
                 String.format("Configuration key '%s' has no value in '%s'. See %s",
                         key, source, TROUBLESHOOTING_SECTION));
-        String trimmed = value.trim();
-        if (BOOL_TRUES.contains(trimmed))
+        try
         {
-            return true;
+            return Properties.parseBoolean(value);
         }
-        if (BOOL_FALSES.contains(trimmed))
+        catch (IllegalArgumentException e)
         {
-            return false;
+            throw new IllegalStateException(
+                    String.format(
+                            "Invalid boolean value '%s' for key '%s' in '%s'. Use true/false. See %s",
+                            value, key, source, TROUBLESHOOTING_SECTION),
+                    e);
         }
-        throw new IllegalStateException(
-                String.format(
-                        "Invalid boolean value '%s' for key '%s' in '%s'. Use true/false. See %s",
-                        value, key, source, TROUBLESHOOTING_SECTION));
     }
 
     protected long fileSize(Path file)
