@@ -1,9 +1,11 @@
 package com.taitl.ex.logic.unused;
 
-import java.util.*;
-import com.taitl.ex.common.helper.*;
-import com.taitl.existential.events.types.*;
-import com.taitl.existential.handlers.types.*;
+import com.taitl.ex.common.helper.SetMap;
+import com.taitl.existential.events.types.BiEvent;
+import com.taitl.existential.events.types.Event;
+import com.taitl.existential.handlers.types.EventHandlerWithSideEffects;
+
+import java.util.Set;
 
 /**
  * Multimap mapping event key (Event E<T> + Type) to a set of corresponding event handlers: Set<On[E]<T>>
@@ -21,7 +23,7 @@ import com.taitl.existential.handlers.types.*;
 @Deprecated
 public class EventHandlers0<T>
 {
-    Multimap<EventAndTypeKey<T>, EventHandlerWithSideEffects<T>> storage = new Multimap<>();
+    SetMap<EventAndTypeKey<T>, EventHandlerWithSideEffects<T>> storage = new SetMap<>();
 
     /**
      * Gets event handlers for an event key (combination of Event E<T> + Type ).

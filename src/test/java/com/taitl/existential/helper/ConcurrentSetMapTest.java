@@ -1,21 +1,25 @@
 package com.taitl.existential.helper;
 
-import java.util.*;
-import com.taitl.ex.common.helper.*;
-import com.taitl.ex.examples.night_city.model.*;
-import org.junit.jupiter.api.*;
+import com.taitl.ex.common.helper.ConcurrentSetMap;
+import com.taitl.ex.examples.night_city.model.Cat;
+import com.taitl.ex.examples.night_city.model.Location;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 
 import static com.taitl.ex.examples.night_city.data.CityTestData.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ConcurrentMultimapTest
+class ConcurrentSetMapTest
 {
-    ConcurrentMultimap<Location, Cat> o;
+    ConcurrentSetMap<Location, Cat> o;
 
     @BeforeEach
     void setUp()
     {
-        o = new ConcurrentMultimap<Location, Cat>();
+        o = new ConcurrentSetMap<Location, Cat>();
         o.put(LOCATION_PARK, GREY_CAT);
         o.put(LOCATION_PARK, YELLOW_CAT);
     }

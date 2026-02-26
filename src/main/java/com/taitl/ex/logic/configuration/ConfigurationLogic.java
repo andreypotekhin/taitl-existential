@@ -1,7 +1,5 @@
 package com.taitl.ex.logic.configuration;
 
-import java.io.*;
-import java.util.*;
 import com.taitl.ex.common.helper.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
@@ -9,13 +7,16 @@ import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
 
+import java.io.*;
+import java.util.*;
+
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 public class ConfigurationLogic implements Closeable
 {
     protected Map<String, ConfigBuilder> configBuilders = new LinkedHashMap<>();
-    public Multimap<String, Context> contexts = new Multimap<>();
+    public SetMap<String, Context> contexts = new SetMap<>();
 
     protected ExistentialConfigs ec;
 
@@ -95,6 +96,16 @@ public class ConfigurationLogic implements Closeable
         contexts.clear();
     }
 
+    /**
+     * Add all configured rules to the indexes.
+     */
+    public void indexConfig(String op)
+    {
+        sane(op, "op");
+        Config config = registry.get(op);
+        config.indexes().indexConfig(op, config);
+    }
+
     /* Attributes */
 
     public boolean isEmpty()
@@ -128,15 +139,5 @@ public class ConfigurationLogic implements Closeable
         Config config = registry.configs().get(op);
         verify(config != null, String.format("Config not found for op '%s'", op));
         return config;
-    }
-
-    /**
-     * Add all configured rules to indexes.
-     */
-    public void indexConfig(String op)
-    {
-        sane(op, "op");
-        Config config = registry.get(op);
-        config.indexes().indexConfig(op, config);
     }
 }

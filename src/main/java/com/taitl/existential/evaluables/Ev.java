@@ -12,4 +12,12 @@ public interface Ev<T>
     {
         evaluator.visit(this);
     }
+
+    /**
+     * Is this a single statement?
+     */
+    default boolean single()
+    {
+        return true;
+    }
 }

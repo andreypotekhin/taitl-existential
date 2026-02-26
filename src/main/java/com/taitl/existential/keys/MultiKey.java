@@ -1,12 +1,12 @@
 package com.taitl.existential.keys;
 
-import com.taitl.ex.logic.configuration.indexes.data.EventField;
-import com.taitl.ex.logic.events.logic.EventSplitter;
+import com.taitl.ex.logic.configuration.indexes.data.*;
+import com.taitl.ex.logic.events.logic.*;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Combines several event keys {@link EventKey} into a single key.
@@ -15,8 +15,8 @@ import static com.taitl.ex.common.helper.Args.sane;
  * MultiKey for accessing the EventField.
  *
  * Example:
- * Event keys: Create<Doc<JSON>>, Create<Doc<?>>, Create<Doc>
- * MultuKey:  "Create<Doc<JSON>>,Create<Doc<?>>,Create<Doc>"
+ * Event keys: "Create<Doc<JSON>>", "Create<Doc<?>>", "Create<Doc>"
+ * MultiKey:  "Create<Doc<JSON>>,Create<Doc<?>>,Create<Doc>"
  *
  * @see EventKey
  * @see TypeKey
@@ -27,6 +27,7 @@ import static com.taitl.ex.common.helper.Args.sane;
 public class MultiKey
 {
     protected final String key;
+    protected final List<EventKey> eventKeys;
 
     public static <T> MultiKey valueOf(EventKey... events)
     {
@@ -36,6 +37,7 @@ public class MultiKey
     public <T> MultiKey(EventKey... events)
     {
         sane(events, "events");
+        this.eventKeys = Arrays.asList(events);
         this.key = Arrays.stream(events)
                 .map(e -> e.toString())
                 .collect(Collectors.joining(","));
@@ -66,6 +68,11 @@ public class MultiKey
             return (this.key == null);
         }
         return o.key.equals(this.key);
+    }
+
+    public List<EventKey> eventKeys()
+    {
+        return eventKeys;
     }
 
     public String toString()

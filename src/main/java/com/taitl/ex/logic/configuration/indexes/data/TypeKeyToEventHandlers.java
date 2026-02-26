@@ -1,9 +1,10 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
-import java.util.*;
-import com.taitl.ex.common.helper.*;
-import com.taitl.existential.handlers.types.*;
-import com.taitl.existential.keys.*;
+import com.taitl.ex.common.helper.SetMap;
+import com.taitl.existential.handlers.types.EventHandler;
+import com.taitl.existential.keys.TypeKey;
+
+import java.util.Set;
 
 /**
  * Maps entity type to a set of configured event handlers, Set<On[E]<T<U>>>
@@ -16,7 +17,7 @@ import com.taitl.existential.keys.*;
  */
 public class TypeKeyToEventHandlers<T>
 {
-    Multimap<String, EventHandler<T>> handlers = new Multimap<>();
+    SetMap<String, EventHandler<T>> handlers = new SetMap<>();
 
     /**
      * Gets event handlers for the specified type.

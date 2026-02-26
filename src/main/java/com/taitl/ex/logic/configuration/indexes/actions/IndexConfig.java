@@ -1,17 +1,13 @@
 package com.taitl.ex.logic.configuration.indexes.actions;
 
-import com.taitl.ex.logic.configuration.indexes.ConfigIndexes;
-import com.taitl.existential.configs.Config;
-import com.taitl.existential.configs.Context;
-import com.taitl.existential.evaluables.Ev;
-import com.taitl.existential.evaluables.Evaluator;
-import com.taitl.existential.evaluables.Evs;
-import com.taitl.existential.expressions.Expression;
-import com.taitl.existential.handlers.types.EventHandler;
-import com.taitl.existential.keys.EventKey;
-import com.taitl.existential.keys.TypeKey;
+import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.existential.configs.*;
+import com.taitl.existential.evaluables.*;
+import com.taitl.existential.expressions.*;
+import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.keys.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.Args.*;
 
 public class IndexConfig
 {
@@ -38,6 +34,7 @@ public class IndexConfig
             TraverseContext tc = new TraverseContext();
             tc.visit(context);
         }
+        ci.doneIndexing();
     }
 
     class TraverseContext implements Evaluator
@@ -62,10 +59,9 @@ public class IndexConfig
         @Override
         public <T> void visit(Ev<T> ev)
         {
-            EventKey eventKey = eventKey(ev);
             if (ev instanceof EventHandler<?>)
             {
-                ci.configuredEventHandlers.put(eventKey, (EventHandler<T>) ev);
+                // ci.configuredEventHandlers.put(eventKey, (EventHandler<T>) ev);
             }
             else if (ev instanceof Expression<?>)
             {
@@ -75,9 +71,8 @@ public class IndexConfig
             {
                 throw new RuntimeException("Unknown rule type: " + ev.getClass());
             }
-            ci.configuredHandlers.put(eventKey, ev);
-
-            // TODO: add to EventField
+            EventKey eventKey = eventKey(ev);
+            ci.addHandler(eventKey, ev);
         }
 
         protected <T> EventKey eventKey(Ev<T> ev)

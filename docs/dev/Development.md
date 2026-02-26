@@ -22,7 +22,8 @@ To do so, the library allows end users to:
 allowing different sets of rules to apply to different circumstances.
 
 ### Terminology, use cases, user stories
-See /docs/dev/Specification.md for terminology and detailed description of library behavior.
+See /docs/dev/Terminology.md for terminology.
+See /docs/dev/Specification.md for detailed description of library behavior.
 
 ### Architecture
 
@@ -42,6 +43,7 @@ The library emphasizes performance for the parts that run as part of a business 
 - Evaluating the rules (typically at transaction end)
 
 ### Source code
+Main doc: Source.md 
 
 #### Code structure
 Package structure:

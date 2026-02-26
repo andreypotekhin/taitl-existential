@@ -1,7 +1,8 @@
 package com.taitl.existential.evaluables;
 
-import java.util.*;
-import com.taitl.existential.keys.*;
+import com.taitl.existential.keys.TypeKey;
+
+import java.util.List;
 
 /**
  * Marker interface for a list of evaluated statements (Evs) on a single type.
@@ -20,5 +21,13 @@ public interface Evs<T> extends Ev<T>
     default void accept(Evaluator evaluator)
     {
         evaluator.visit(this);
+    }
+
+    /**
+     * Is this a single statement?
+     */
+    default boolean single()
+    {
+        return false;
     }
 }

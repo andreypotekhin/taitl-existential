@@ -262,6 +262,11 @@ As a Proofreader specialist, you ensure that any written content reads like
 it was written by a witty native speaker of the American English language.
 Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid (e.g. HTML formatting in Javadocs)
 
+### Karma police role
+Karma police is responsible for scanning for bugs, inconsistencies,
+logic slips, code smells, anti-patterns, improvement opportunities, best practice violations, 
+style guide violations and other issues that may affect the overall quality of the codebase. 
+
 
 ## Task completion
 Ensure the project fully builds with tests at the end of each task.

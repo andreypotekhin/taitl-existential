@@ -19,6 +19,7 @@
         <maven-assembly-plugin-version>3.3.0</maven-assembly-plugin-version>
         <maven-javadoc-plugin-version>3.3.1</maven-javadoc-plugin-version>
         <junit-5-version>5.14.3</junit-5-version>
+        <junit-platform-launcher-version>1.14.3</junit-platform-launcher-version>
         <jacoco-maven-plugin-version>0.8.7</jacoco-maven-plugin-version>
         <mockito-version>4.2.0</mockito-version>
         <powermock-version>2.0.9</powermock-version>
@@ -35,6 +36,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit-5-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-platform-launcher-version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

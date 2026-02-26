@@ -1,9 +1,11 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
-import java.util.*;
 import com.taitl.ex.common.helper.*;
+import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
+
+import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -19,7 +21,15 @@ import static com.taitl.ex.common.helper.Args.*;
 public class ConfiguredHandlers
 {
     // EventKey to Set<EventHandler<>>
-    Multimap<String, Ev<?>> handlers = new Multimap<>();
+    protected SetMap<String, OrderlyEv<?>> handlers = new SetMap<>();
+    protected boolean ready = false;
+
+    protected ConfigIndexes ci;
+
+    public ConfiguredHandlers(ConfigIndexes ci)
+    {
+        this.ci = ci;
+    }
 
     /**
      * Gets event handlers for the specified event key.
@@ -28,10 +38,10 @@ public class ConfiguredHandlers
      *            TypeKey to search for.
      * @return Set<Ev<T>>, or null if no handlers defined for the type.
      */
-    public Set<Ev<?>> get(EventKey key)
+    public Set<OrderlyEv<?>> get(EventKey key)
     {
         sane(key, "key");
-        Set<Ev<?>> result = handlers.get(key.toString());
+        Set<OrderlyEv<?>> result = handlers.get(key.toString());
         if (result != null && result.isEmpty())
         {
             result = null;
@@ -45,11 +55,30 @@ public class ConfiguredHandlers
         return handlers.containsKey(key.toString());
     }
 
-    public <T> Set<Ev<?>> put(EventKey key, Ev<T> value)
+    public <T> Set<OrderlyEv<?>> put(EventKey key, Ev<T> value)
     {
         sane(key, "key");
         sane(value, "value");
-        return handlers.put(key.toString(), value);
+        check(value.single(), "Only single event handlers (Ev<T>) are supported,"
+                + " but the passed-in is a compound one (like Evs<T>).");
+        synchronized (this)
+        {
+            OrderlyEv<T> orderedValue = ci.maintainGlobalOrder.globallyOrdered(value);
+            return handlers.put(key.toString(), orderedValue);
+        }
+    }
+
+    /**
+     * Is indexing finalized?
+     */
+    public boolean ready()
+    {
+        return ready;
+    }
+
+    public void ready(boolean ready)
+    {
+        this.ready = ready;
     }
 
     public void clear()

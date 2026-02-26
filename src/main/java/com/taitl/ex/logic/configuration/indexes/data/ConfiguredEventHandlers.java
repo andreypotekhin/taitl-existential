@@ -1,9 +1,10 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
-import java.util.*;
 import com.taitl.ex.common.helper.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
+
+import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -16,10 +17,11 @@ import static com.taitl.ex.common.helper.Args.*;
  *   To retrieve the event handlers defined for the type "Create<Doc<JSON>>":
  *   Set<EventHandler> handlers = eventHandlers.get("Create<Doc<JSON>>")
  */
+@Deprecated
 public class ConfiguredEventHandlers
 {
     // EventKey to Set<EventHandler<>>
-    Multimap<String, EventHandler<?>> handlers = new Multimap<>();
+    SetMap<String, EventHandler<?>> handlers = new SetMap<>();
 
     /**
      * Gets event handlers for the specified event key.

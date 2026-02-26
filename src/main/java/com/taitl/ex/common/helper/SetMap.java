@@ -5,12 +5,30 @@ import java.util.function.*;
 
 /**
  * Maps key to a set of values.
- * Multimap<K, V> == Map<K, Set<V>>
+ * SetMap<K, V> == Map<K, Set<V>>
  */
-public class Multimap<K, V>
+public class SetMap<K, V>
 {
-    protected Map<K, Set<V>> storage = new LinkedHashMap<>();
+    public final Supplier<Map<K, Set<V>>> DEFAULT_MAP_FACTORY = LinkedHashMap::new;
+    public final Supplier<Set<V>> DEFAULT_SET_FACTORY = LinkedHashSet::new;
+
+    protected Supplier<Map<K, Set<V>>> mapFactory = DEFAULT_MAP_FACTORY;
+    protected Supplier<Set<V>> setFactory = DEFAULT_SET_FACTORY;
+
+    protected Map<K, Set<V>> storage;
     protected int size = 0;
+
+    public SetMap()
+    {
+        this.storage = mapFactory.get();
+    }
+
+    public SetMap(Supplier<Map<K, Set<V>>> mapFactory, Supplier<Set<V>> setFactory)
+    {
+        this.mapFactory = mapFactory;
+        this.setFactory = setFactory;
+        this.storage = mapFactory.get();
+    }
 
     /**
      * Gets an element of multimap, in the form of Set<V>
@@ -30,7 +48,7 @@ public class Multimap<K, V>
         requireValue(value);
         synchronized (this)
         {
-            Set<V> values = storage.computeIfAbsent(key, k -> new LinkedHashSet<>());
+            Set<V> values = storage.computeIfAbsent(key, k -> setFactory.get());
             if (values.isEmpty())
             {
                 size++;
@@ -73,7 +91,7 @@ public class Multimap<K, V>
             {
                 return null;
             }
-            Set<V> removed = new LinkedHashSet<>();
+            Set<V> removed = setFactory.get();
             Iterator<V> iterator = values.iterator();
             while (iterator.hasNext())
             {

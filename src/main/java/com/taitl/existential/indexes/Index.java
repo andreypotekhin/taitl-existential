@@ -1,11 +1,13 @@
 package com.taitl.existential.indexes;
 
-import java.util.*;
-import java.util.function.*;
-import com.taitl.ex.common.helper.*;
+import com.taitl.ex.common.helper.SetMap;
 
-import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.State.*;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.State.verify;
 
 /**
  * Index maps a single key (K) to a set of values (V).
@@ -25,7 +27,7 @@ public class Index<K, V>
     private static final String ARG_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
             + " returned by 'getKey' function. See " + TROUBLESHOOTING_SECTION;
 
-    protected Multimap<K, V> storage = new Multimap<>();
+    protected SetMap<K, V> storage = new SetMap<>();
     protected Function<V, K> getKey;
 
     /**

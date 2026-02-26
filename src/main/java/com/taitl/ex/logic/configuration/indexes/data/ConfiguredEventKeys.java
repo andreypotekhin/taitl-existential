@@ -1,9 +1,10 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
-import java.util.*;
 import com.taitl.ex.logic.events.logic.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
+
+import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -24,6 +25,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * @see Tr
  * @see EventSplitter
  */
+@Deprecated
 public class ConfiguredEventKeys
 {
     Set<String> eventKeys = new LinkedHashSet<>();

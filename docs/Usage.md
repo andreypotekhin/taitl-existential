@@ -1,33 +1,74 @@
-## Existential Library Usage
+# Existential Library Usage
 
-### Overview
+## Overview
 See /Readme.md for library overview.
 
-### Using the library
-See /Readme.md for general usage.
+## Getting started
+(TODO) Main document: GettingStarted.md
+
+### Adding the library to your project
+TODO
+
+### Creating a constraint on an entity
+Constraints are created in the context of a business operation, 
+such as "creating an order" or "updating an account".
+
+    Ex.configure("/api/accounts")
+      .context("/api/accounts/update")
+          .invariant(Account.class)
+              .create(a -> validEmail(a.emailAddress()), "Ensure valid email address")
+              .update(a -> !a.locked(), "Can't update a locked account")
+              .delete(a -> !balancePresent(a), "Can't delete an account with a balance")
+              .done()
+          .build();
+
+Constraints can be created for entity creation, deletion or modification, 
+entity access (such as loading from the database), entity changes (diff) during business transaction.
+The can also involve multiple entities, such as all entities in a collection (All<> quantifier).
+
+### Sending an event to library
+In order for the library to be able to evaluate constraints on an entity, 
+it needs to be aware of the entity changes. This is done by sending an 
+event to the library, such as Update or Read.
+
+    // in implementation, for instance, in the handler for '/api/accounts/update':
+    Ex.send(new Update<Account>(user));
+
+### Constraint validation
+Constraint validation is triggered automatically upon committing a transaction.
+
+    Ex.commit(); // Detect and report constraint violations. 
+
+Constraint violations will be reported in the exception thrown by commit (ExistentialException).
+
+
+## Configuration
 
 ### Library configuration
 Library startup loads options in this order:
-- Load classpath resource `existential.properties` first (default values).
-- If env var `EXISTENTIAL_CONFIG_FILE` is set and non-empty, load that file next (override defaults).
+- Classpath resource `existential.properties` (default values).
+- If env var `EXISTENTIAL_CONFIG_FILE` is set, load that file next (override defaults).
 
-Quickstart:
+Workflow:
 1. Create a properties file:
-   - `behavior.rules.requireDescriptions=true`
-2. Set env var before starting your application:
-   - `export EXISTENTIAL_CONFIG_FILE=/path/to/existential.properties`
-3. Start your application. The library applies options on startup.
+  - File: existential.properties
+  - Example property: `behavior.rules.requireDescriptions=true`
+2. Set EXISTENTIAL_CONFIG_FILE env variable to point to properties file:
+  - `export EXISTENTIAL_CONFIG_FILE=/path/to/existential.properties`
 
-Reference:
-- Format: Java `.properties`
-- Supported keys:
-  - `behavior.rules.requireDescriptions` (`true`/`false`)
-- Source precedence:
-  - Classpath defaults load first, then env-selected file overrides.
-- Troubleshooting:
-  - See `/Troubleshooting.md#library-configuration-load-failure`
 
-### Operation keys
+## Development
+See /docs/dev/ for development documentation.
+/docs/dev/Development.md is starting point.
+
+### Terminology
+See /docs/dev/Terminology.md for concepts and terminology.
+
+### User stories and use cases
+See /docs/dev/Specification.md for complete description of library behavior, in the form of user stories and use cases.
+
+### Concepts
+#### Operation keys
 Operations are identified by operation keys. These are path-like strings used to find matching contexts.
 Examples:
 - `/app/orders/create`
@@ -39,11 +80,25 @@ Rules:
 - Must not end with a slash.
 - Must not include wildcard characters (`*`).
 
-Troubleshooting:
-- See `/Troubleshooting.md#invalid-operation-key`
+#### Transaction lifecycle
+Transactions start with `begin()` and are valid until `commit()` or `rollback()`.
+After `commit()` or `rollback()`, the transaction id becomes invalid and cannot be reused.
+Attempting to use an invalid or unknown id will fail with a `NotFoundException`.
 
-#### More details on usage
-See /docs/dev/Specification.md for terminology and complete description of library behavior.
+#### Type keys
+Use fully-qualified type keys when different packages share a short class name:
+`TypeKey.valueOfFull(MyEntity.class)` or `TypeKey.valueOfFull(MyEntity.class, "Qualifier")`.
+
+For generic keys based on runtime type capture, prefer the anonymous subclass pattern:
+`new TypeKey<List<Order>>() {}`.
+
+For string-based keys, use `Class<Qualifier>` formatting with matching angle brackets.
+
+### Building the library
+1. Clone source code repository
+   https://github.com/andreypotekhin/taitl-existential 
+2. Build with maven:
+   `mvn clean install`
 
 ### Extending the library
 Regular use of the library does not require custom classes; the stock classes should work for most cases.
@@ -99,19 +154,6 @@ But remember, with this freedom comes responsibility:
 In short, treat extending the library with your own classes as hacking, which relies on undocumented
 features or features that are not guaranteed to survive multiple versions.
 
-### Transaction lifecycle
-Transactions start with `begin()` and are valid until `commit()` or `rollback()`.
-After `commit()` or `rollback()`, the transaction id becomes invalid and cannot be reused.
-Attempting to use an invalid or unknown id will fail with a `NotFoundException`.
-
-### Type keys
-Use fully-qualified type keys when different packages share a short class name:
-`TypeKey.valueOfFull(MyEntity.class)` or `TypeKey.valueOfFull(MyEntity.class, "Qualifier")`.
-
-For generic keys based on runtime type capture, prefer the anonymous subclass pattern:
-`new TypeKey<List<Order>>() {}`.
-
-For string-based keys, use `Class<Qualifier>` formatting with matching angle brackets.
-
+## Troubleshooting
 Troubleshooting:
 - See `/Troubleshooting.md#type-key-format`

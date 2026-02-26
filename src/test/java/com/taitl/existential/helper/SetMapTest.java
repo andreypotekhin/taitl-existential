@@ -1,24 +1,28 @@
 package com.taitl.existential.helper;
 
-import java.util.*;
-import java.util.function.*;
+import com.taitl.ex.common.helper.SetMap;
+import com.taitl.ex.examples.night_city.model.Cat;
+import com.taitl.ex.examples.night_city.model.Location;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import com.taitl.ex.common.helper.*;
-import com.taitl.ex.examples.night_city.model.*;
-import org.junit.jupiter.api.*;
+import java.util.function.Predicate;
 
 import static com.taitl.ex.examples.night_city.data.CityTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class MultimapTest
+class SetMapTest
 {
-    Multimap<Location, Cat> o;
+    SetMap<Location, Cat> o;
     Set<Cat> cats;
 
     @BeforeEach
     void setUp()
     {
-        o = new Multimap<Location, Cat>();
+        o = new SetMap<Location, Cat>();
         o.put(LOCATION_PARK, GREY_CAT);
         o.put(LOCATION_PARK, YELLOW_CAT);
     }

@@ -1,13 +1,15 @@
 package com.taitl.ex.common.helper;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Thread-safe multimap variant.
  * Returned sets are snapshots to avoid exposing mutable internal state across threads.
  */
-public class ConcurrentMultimap<K, V> extends Multimap<K, V>
+public class ConcurrentSetMap<K, V> extends SetMap<K, V>
 {
     public Set<V> get(K key)
     {
@@ -25,7 +27,7 @@ public class ConcurrentMultimap<K, V> extends Multimap<K, V>
         requireValue(value);
         synchronized (this)
         {
-            Set<V> set = storage.computeIfAbsent(key, k -> new LinkedHashSet<>());
+            Set<V> set = storage.computeIfAbsent(key, k -> setFactory.get());
             if (set.isEmpty())
             {
                 size++;
