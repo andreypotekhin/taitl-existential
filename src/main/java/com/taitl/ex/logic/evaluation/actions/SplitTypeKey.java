@@ -1,24 +1,21 @@
-package com.taitl.ex.logic.evaluation.logic;
+package com.taitl.ex.logic.evaluation.actions;
 
-import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.keys.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Splits a type key into a set of less-generic type keys, by reducing generic parameter detail.
  *
  * Examples:
  * <pre>
- * T&lt;A&lt;X&gt;&gt; -&gt; T&lt;A&lt;X&gt;&gt;, T&lt;A&lt;?&gt;&gt;, T&lt;A&gt;
- * T&lt;A&lt;X&gt;,B&lt;Y&gt;&gt; -&gt; T&lt;A&lt;X&gt;,B&lt;Y&gt;&gt;, T&lt;A&lt;X&gt;,B&lt;?&gt;&gt;, T&lt;A&lt;X&gt;,B&gt;, ..., T&lt;A,B&gt;
+ * T<A<X>> -> T<A<X>>, T<A<?>>, T<A>
+ * T<A<X>,B<Y>> -> T<A<X>,B<Y>>, T<A<?>,B<Y>>, T<A<X>,B<Y>>, T<A<X>,B<?>>, T<A<X>,B>, T<A<?>,B<Y>>, T<A<?>,B<?>>, T<A<?>,B>, , T<A,B<Y>>, T<A,B<?>>, T<A,B>
  * </pre>
  */
-public class SplitByGenericsDimension
+public class SplitTypeKey
 {
     public <T> Set<TypeKey<T>> split(TypeKey<T> typeKey)
     {

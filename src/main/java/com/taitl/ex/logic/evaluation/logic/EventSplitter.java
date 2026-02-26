@@ -1,14 +1,16 @@
 package com.taitl.ex.logic.evaluation.logic;
 
-import java.util.*;
-import java.util.function.*;
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.evaluation.actions.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
+
+import java.util.*;
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -73,7 +75,7 @@ public class EventSplitter
 {
     public static Supplier<? extends EventSplitter> FACTORY =
             () -> Creator.create(EventSplitter.class);
-    protected final SplitByGenericsDimension splitByGenericsDimension = new SplitByGenericsDimension();
+    protected final SplitTypeKey splitTypeKey = new SplitTypeKey();
 
     public <T> Set<Event<T>> split(Event<T> event)
     {
@@ -101,7 +103,7 @@ public class EventSplitter
         Event<T> event = runtimeKey.event();
         check(event != null, "RuntimeKey event should not be null");
         Set<Event<T>> events = split(event);
-        Set<TypeKey<T>> typeKeys = splitByGenericsDimension.split(runtimeKey.typeKey());
+        Set<TypeKey<T>> typeKeys = splitTypeKey.split(runtimeKey.typeKey());
         Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
         for (Event<T> splitEvent : events)
         {

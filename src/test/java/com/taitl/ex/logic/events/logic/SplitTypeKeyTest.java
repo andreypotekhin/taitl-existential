@@ -1,20 +1,20 @@
 package com.taitl.ex.logic.events.logic;
 
-import com.taitl.ex.logic.evaluation.logic.SplitByGenericsDimension;
-import com.taitl.existential.keys.TypeKey;
-import org.junit.jupiter.api.Test;
+import com.taitl.ex.logic.evaluation.actions.*;
+import com.taitl.existential.keys.*;
+import org.junit.jupiter.api.*;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-class SplitByGenericsDimensionTest
+class SplitTypeKeyTest
 {
     @Test
     void splitSingleDimension()
     {
-        SplitByGenericsDimension splitter = new SplitByGenericsDimension();
+        SplitTypeKey splitter = new SplitTypeKey();
 
         Set<String> keys = splitter.split(TypeKey.valueOf("T<A<X>>"))
                 .stream()
@@ -27,7 +27,7 @@ class SplitByGenericsDimensionTest
     @Test
     void splitMultipleDimensions()
     {
-        SplitByGenericsDimension splitter = new SplitByGenericsDimension();
+        SplitTypeKey splitter = new SplitTypeKey();
 
         Set<String> keys = splitter.split(TypeKey.valueOf("T<A<X>,B<Y>>"))
                 .stream()
