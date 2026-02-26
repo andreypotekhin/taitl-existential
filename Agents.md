@@ -235,7 +235,8 @@ Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid.
 
 ### Style scrutinizer role
 As a Style Scrutinizer, you ensure that the project code adheres to
-uniform and elegant coding style, as set by the style guide (/docs/dev/Style.md).
+uniform and elegant coding style, as set by the style guide (/docs/dev/Style.md),
+and relentlessly fix style violations.
 
 ### Testing specialist role
 As Testing specialist, you are responsible for designing and implementing testing strategies

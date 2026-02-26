@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation;
 
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.actions.*;
 import com.taitl.ex.logic.transactions.*;
@@ -17,8 +18,6 @@ import static com.taitl.ex.common.helper.Args.*;
 public class EvaluationLogic implements Closeable
 {
     protected TransactionLogic tl;
-    protected AtEvent atEvent = new AtEvent();
-    protected ExecuteHandlers executeHandlers = new ExecuteHandlers();
 
     public EvaluationLogic(TransactionLogic tl)
     {
@@ -33,12 +32,17 @@ public class EvaluationLogic implements Closeable
     {
         sane(tr, "tr", report, "report");
         EventField eventField = eventField(tr);
+        EvaluateEvent evaluateEvent = Creator.create(EvaluateEvent.class);
 
         Iterator<RuntimeKey<?>> events = tr.runtimeIndexes().encounteredUniqueEvents.stream().iterator();
         while (events.hasNext())
         {
-            evaluateRuntimeKey(events.next(), eventField, report);
+            evaluateEvent.call(events.next(), eventField, report);
         }
+    }
+
+    public void close()
+    {
     }
 
     protected EventField eventField(Tr tr)
@@ -47,16 +51,5 @@ public class EvaluationLogic implements Closeable
         Config config = tl.ex().configs().config(tr.op);
         sane(config, "config");
         return config.indexes().eventField();
-    }
-
-    protected void evaluateRuntimeKey(RuntimeKey<?> runtimeKey, EventField eventField, ValidationReport report)
-            throws ExistentialException
-    {
-        AtEvent.Slice slice = atEvent.call(runtimeKey, eventField);
-        executeHandlers.call(slice.evs(), slice.splitKeys(), report);
-    }
-
-    public void close()
-    {
     }
 }

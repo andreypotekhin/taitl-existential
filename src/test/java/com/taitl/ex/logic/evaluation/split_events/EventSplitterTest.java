@@ -1,13 +1,12 @@
-package com.taitl.ex.logic.events.logic;
+package com.taitl.ex.logic.evaluation.split_events;
 
-import java.util.*;
-
-import com.taitl.ex.logic.evaluation.logic.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +27,7 @@ class EventSplitterTest
         String oldValue = new String("old");
         String newValue = new String("new");
 
-        Set<Event<String>> events = splitter.split(new Transit<>(oldValue, newValue));
+        Set<Event<String>> events = splitter.splitEvent(new Transit<>(oldValue, newValue));
 
         Change<String> change = events.stream()
                 .filter(event -> event instanceof Change<?>)

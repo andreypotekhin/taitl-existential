@@ -1,7 +1,6 @@
-package com.taitl.ex.logic.evaluation.logic;
+package com.taitl.ex.logic.evaluation.split_events;
 
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.logic.evaluation.actions.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
@@ -67,9 +66,6 @@ import static com.taitl.ex.common.helper.Args.*;
  * @see Write
  * @see Mutate
  * @see Transit
- *
- * TODO Add the ability to return set of applicable EventKey's:
- * e.g. for "ReadAndLock<Doc<JSON>>" also return "ReadAndLock<Doc>", "Read<Doc<JSON>>", "Read<Doc>"
  */
 public class EventSplitter
 {
@@ -77,7 +73,25 @@ public class EventSplitter
             () -> Creator.create(EventSplitter.class);
     protected final SplitTypeKey splitTypeKey = new SplitTypeKey();
 
-    public <T> Set<Event<T>> split(Event<T> event)
+    public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
+    {
+        sane(runtimeKey, "runtimeKey");
+        Event<T> event = runtimeKey.event();
+        check(event != null, "RuntimeKey event should not be null");
+        Set<Event<T>> events = splitEvent(event);
+        Set<TypeKey<T>> typeKeys = splitTypeKey.split(runtimeKey.typeKey());
+        Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
+        for (Event<T> splitEvent : events)
+        {
+            for (TypeKey<T> typeKey : typeKeys)
+            {
+                runtimeKeys.add(new RuntimeKey<>(splitEvent, typeKey, runtimeEntity(splitEvent, runtimeKey), false));
+            }
+        }
+        return runtimeKeys;
+    }
+
+    protected <T> Set<Event<T>> splitEvent(Event<T> event)
     {
         sane(event, "event");
         Set<Event<T>> events = new LinkedHashSet<>();
@@ -95,24 +109,6 @@ public class EventSplitter
         // TODO: other
 
         return events;
-    }
-
-    public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
-    {
-        sane(runtimeKey, "runtimeKey");
-        Event<T> event = runtimeKey.event();
-        check(event != null, "RuntimeKey event should not be null");
-        Set<Event<T>> events = split(event);
-        Set<TypeKey<T>> typeKeys = splitTypeKey.split(runtimeKey.typeKey());
-        Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
-        for (Event<T> splitEvent : events)
-        {
-            for (TypeKey<T> typeKey : typeKeys)
-            {
-                runtimeKeys.add(new RuntimeKey<>(splitEvent, typeKey, runtimeEntity(splitEvent, runtimeKey), false));
-            }
-        }
-        return runtimeKeys;
     }
 
     @SuppressWarnings("unchecked")

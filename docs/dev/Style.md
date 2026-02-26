@@ -123,7 +123,7 @@ Use modern test frameworks capabilities to the maximum for structuring the tests
 - Use user story/specification item text as name for nesting test case
 - Use test parameterization and other advanced techniques to cut down on test code size
 - Prefer no empty lines/rare empty lines in test method code
-- Use @DisplayName if test method name becomes sentence-like multi-word identifier  
+- Prefer @DisplayName if test method name is a sentence-like multi-word identifier  
 
 ##### Test coverage and isolation
 - Try to achieve significant (89%) coverage, but do not insist on coverage of units which are in active development
@@ -132,6 +132,8 @@ Use modern test frameworks capabilities to the maximum for structuring the tests
 - We include all tests into test coverage
 - Regression tests refer to issue number in name and title in test description
 
+##### Testing - various
+- Prefer entities to primitives/stock classes when testing events/rules (e.g. OnCreate<Cat> rather than OnCreate<String>)
 
 ### Documenting
 #### End-User documentation

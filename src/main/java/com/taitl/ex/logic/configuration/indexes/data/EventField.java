@@ -2,7 +2,7 @@ package com.taitl.ex.logic.configuration.indexes.data;
 
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.logic.configuration.indexes.*;
-import com.taitl.ex.logic.evaluation.logic.*;
+import com.taitl.ex.logic.evaluation.split_events.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 

@@ -14,33 +14,33 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ExecuteHandlers
 {
-    public void call(List<Ev<?>> evs, Set<RuntimeKey<?>> splitKeys, ValidationReport report) throws ExistentialException
+    public void call(List<Ev<?>> evs, Set<RuntimeKey<?>> keys, ValidationReport report) throws ExistentialException
     {
-        sane(evs, "evs", splitKeys, "splitKeys", report, "report");
+        sane(evs, "evs", keys, "splitKeys", report, "report");
         for (Ev<?> ev : evs)
         {
             if (!(ev instanceof EventHandler<?>))
             {
                 continue;
             }
-            execute((EventHandler<?>) ev, splitKeys, report);
+            executeHandler((EventHandler<?>) ev, keys, report);
         }
     }
 
-    protected void execute(EventHandler<?> handler, Set<RuntimeKey<?>> splitKeys, ValidationReport report)
+    protected void executeHandler(EventHandler<?> handler, Set<RuntimeKey<?>> keys, ValidationReport report)
             throws ExistentialException
     {
-        sane(handler, "handler", splitKeys, "splitKeys", report, "report");
-        for (RuntimeKey<?> splitKey : splitKeys)
+        sane(handler, "handler", keys, "splitKeys", report, "report");
+        for (RuntimeKey<?> key : keys)
         {
-            if (!matches(handler, splitKey))
+            if (!matches(handler, key))
             {
                 continue;
             }
 
             try
             {
-                executeHandler(handler, splitKey);
+                callEventHandler(handler, key);
             }
             catch (ExistentialException ex)
             {
@@ -50,28 +50,28 @@ public class ExecuteHandlers
         }
     }
 
-    protected boolean matches(EventHandler<?> handler, RuntimeKey<?> runtimeKey)
+    protected boolean matches(EventHandler<?> handler, RuntimeKey<?> key)
     {
-        sane(handler, "handler", runtimeKey, "runtimeKey");
+        sane(handler, "handler", key, "runtimeKey");
         Class<?> eventClass = handler.eventType().eventClass();
-        Event<?> event = runtimeKey.event();
+        Event<?> event = key.event();
         return event != null && eventClass.isInstance(event);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected void executeHandler(EventHandler<?> handler, RuntimeKey<?> runtimeKey) throws ExistentialException
+    protected void callEventHandler(EventHandler<?> handler, RuntimeKey<?> key) throws ExistentialException
     {
-        sane(handler, "handler", runtimeKey, "runtimeKey");
+        sane(handler, "handler", key, "runtimeKey");
 
         if (handler instanceof On<?>)
         {
-            ExecuteHandler.handle((On) handler, runtimeKey.entity());
+            ExecuteHandler.handle((On) handler, key.entity());
             return;
         }
 
         if (handler instanceof BiEventHandlerWithSideEffects<?>)
         {
-            Event<?> event = runtimeKey.event();
+            Event<?> event = key.event();
             if (!(event instanceof BiEvent<?>))
             {
                 throw new IllegalStateException(
@@ -84,7 +84,7 @@ public class ExecuteHandlers
 
         if (handler instanceof EventHandlerWithSideEffects<?>)
         {
-            ((EventHandlerWithSideEffects) handler).handle(runtimeKey.entity());
+            ((EventHandlerWithSideEffects) handler).handle(key.entity());
             return;
         }
 

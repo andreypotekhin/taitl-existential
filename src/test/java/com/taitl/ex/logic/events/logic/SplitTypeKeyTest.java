@@ -1,6 +1,6 @@
 package com.taitl.ex.logic.events.logic;
 
-import com.taitl.ex.logic.evaluation.actions.*;
+import com.taitl.ex.logic.evaluation.split_events.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
 

@@ -137,7 +137,7 @@ public class ConfigurationLogic implements Closeable
     {
         sane(op, "op");
         Config config = registry.configs().get(op);
-        verify(config != null, String.format("Config not found for op '%s'", op));
+        verify(config != null, String.format("Config not find for op '%s'", op));
         return config;
     }
 }

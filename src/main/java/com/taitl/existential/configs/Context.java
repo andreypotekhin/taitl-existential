@@ -1,7 +1,7 @@
 package com.taitl.existential.configs;
 
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.logic.evaluation.logic.*;
+import com.taitl.ex.logic.evaluation.split_events.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.*;

@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.evaluation.actions;
+package com.taitl.ex.logic.evaluation.split_events;
 
 import com.taitl.existential.keys.*;
 

@@ -11,22 +11,16 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ConfigurationIndexes
 {
-    // public ConfiguredEventHandlers configuredEventHandlers;
     public ConfiguredHandlers configuredHandlers;
-    // public ConfiguredEventKeys configuredEventKeys;
     protected EventField eventField;
     protected IndexConfig indexConfig;
-    // BitSet eventTypesMask;
     protected boolean useFullClassNames;
     public MaintainGlobalOrder maintainGlobalOrder;
 
     public ConfigurationIndexes()
     {
         this.maintainGlobalOrder = new MaintainGlobalOrder();
-        // this.configuredEventKeys = new ConfiguredEventKeys();
-        // this.configuredEventHandlers = new ConfiguredEventHandlers();
         this.configuredHandlers = new ConfiguredHandlers(this);
-        // this.eventTypesMask = new BitSet(64);
         this.indexConfig = new IndexConfig(this);
         this.eventField = new EventField(this);
     }
@@ -60,16 +54,6 @@ public class ConfigurationIndexes
 
     /* Attributes */
 
-    // public ConfiguredEventKeys eventKeys()
-    // {
-    // return configuredEventKeys;
-    // }
-
-    // public BitSet eventTypeMask()
-    // {
-    // return eventTypesMask;
-    // }
-
     public EventField eventField()
     {
         return eventField;
@@ -88,8 +72,5 @@ public class ConfigurationIndexes
     public void close()
     {
         configuredHandlers.clear();
-        // configuredEventHandlers.clear();
-        // configuredEventKeys.clear();
-        // eventTypesMask = null;
     }
 }

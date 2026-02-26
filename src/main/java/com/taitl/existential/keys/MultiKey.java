@@ -1,7 +1,7 @@
 package com.taitl.existential.keys;
 
 import com.taitl.ex.logic.configuration.indexes.data.*;
-import com.taitl.ex.logic.evaluation.logic.*;
+import com.taitl.ex.logic.evaluation.split_events.*;
 
 import java.util.*;
 import java.util.stream.*;
