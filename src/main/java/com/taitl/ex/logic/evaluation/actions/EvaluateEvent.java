@@ -18,6 +18,6 @@ public class EvaluateEvent
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField");
         SplitResult splitResult = splitEvent.call(runtimeKey, eventField);
-        executeHandlers.call(splitResult.evs(), splitResult.keys(), report);
+        executeHandlers.call(splitResult.evs(), splitResult.event(), report);
     }
 }

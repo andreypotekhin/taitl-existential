@@ -29,7 +29,7 @@ public class SplitEvent
         Set<RuntimeKey<?>> splitKeys = split(runtimeKey);
         MultiKey multiKey = multiKey(splitKeys);
         List<Ev<?>> evs = eventField.get(multiKey);
-        return new SplitResult(splitKeys, evs);
+        return new SplitResult(evs, runtimeKey.event());
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

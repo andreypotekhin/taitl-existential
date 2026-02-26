@@ -1,22 +1,20 @@
 package com.taitl.ex.logic.evaluation.split_events;
 
 import com.taitl.existential.evaluables.*;
-import com.taitl.existential.keys.*;
+import com.taitl.existential.events.types.*;
 
 import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Result SplitEvent.call() - the keys that were split off main event,
- * and event handlers for the rules that correspond to the keys.
+ * Result of SplitEvent.call(): resolved event handlers plus the original event
+ * used to derive runtime payload for handler execution.
  * The event handlers are ordered in the order of rules declaration.
  *
  * Example:
  * Main event: ReadAndLock<Doc<JSON>>
  * Split results:
- * Keys: "ReadAndLock<Doc<JSON>>", "ReadAndLock<Doc<?>>", "ReadAndLock<Doc>",
- * "Read<Doc<JSON>>", "Read<Doc<?>>", "Read<Doc>"
  * Event handlers: event handlers for these keys, retrieved
  * from the configuration index (EventField) of this business operation,
  * ordered in the order of rules' declaration.
@@ -27,23 +25,23 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class SplitResult
 {
-    protected final Set<RuntimeKey<?>> keys;
     protected final List<Ev<?>> evs;
+    protected final Event<?> event;
 
-    public SplitResult(Set<RuntimeKey<?>> keys, List<Ev<?>> evs)
+    public SplitResult(List<Ev<?>> evs, Event<?> event)
     {
-        sane(keys, "splitKeys", evs, "evs");
-        this.keys = keys;
+        sane(evs, "evs", event, "event");
         this.evs = evs;
-    }
-
-    public Set<RuntimeKey<?>> keys()
-    {
-        return keys;
+        this.event = event;
     }
 
     public List<Ev<?>> evs()
     {
         return evs;
+    }
+
+    public Event<?> event()
+    {
+        return event;
     }
 }
