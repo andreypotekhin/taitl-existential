@@ -16,6 +16,7 @@ import static com.taitl.ex.common.helper.Args.*;
 public class EventKey
 {
     protected final String key;
+    protected final TypeKey<?> typeKey;
 
     public static EventKey valueOf(String s)
     {
@@ -46,6 +47,7 @@ public class EventKey
     {
         sane(s, "key");
         this.key = s;
+        this.typeKey = typeKeyFromSerializedKey(s);
     }
 
     public <T> EventKey(T instance)
@@ -56,7 +58,9 @@ public class EventKey
     public <T> EventKey(T instance, boolean useFullName)
     {
         sane(instance, "instance");
-        this.key = useFullName ? instance.getClass().getName() : instance.getClass().getSimpleName();
+        this.typeKey = TypeKey.valueOf(instance, useFullName);
+        String eventClassName = useFullName ? instance.getClass().getName() : instance.getClass().getSimpleName();
+        this.key = eventClassName + "<" + typeKey + ">";
     }
 
     public <T> EventKey(Event<T> event, TypeKey<T> typeKey)
@@ -67,6 +71,7 @@ public class EventKey
     public <T> EventKey(Event<T> event, TypeKey<T> typeKey, boolean useFullName)
     {
         sane(event, "event", typeKey, "typeKey");
+        this.typeKey = typeKey;
         String eventClass = useFullName ? event.getClass().getName() : event.getClass().getSimpleName();
         // Use event type + type key, like 'Create<Doc<JSON>>'
         this.key = eventClass + "<" + typeKey.toString() + ">";
@@ -80,6 +85,7 @@ public class EventKey
     public <T> EventKey(Event<T> event, String type, boolean useFullName)
     {
         sane(event, "event", type, "type");
+        this.typeKey = TypeKey.valueOf(type);
         String eventClass = useFullName ? event.getClass().getName() : event.getClass().getSimpleName();
         // Use event type + type name, like 'Create<Doc<JSON>>'
         this.key = eventClass + "<" + type + ">";
@@ -98,6 +104,7 @@ public class EventKey
     public EventKey(Class<?> eventClass, TypeKey<?> typeKey, boolean useFullName)
     {
         sane(eventClass, "eventClass", typeKey, "typeKey");
+        this.typeKey = typeKey;
         String eventClassName = useFullName ? eventClass.getName() : eventClass.getSimpleName();
         this.key = eventClassName + "<" + typeKey + ">";
     }
@@ -105,9 +112,27 @@ public class EventKey
     public <T> EventKey(Class<T> eventClass, String type, boolean useFullName)
     {
         sane(eventClass, "eventClass", type, "type");
+        this.typeKey = TypeKey.valueOf(type);
         String eventClassName = useFullName ? eventClass.getName() : eventClass.getSimpleName();
         // Use event type + type name, like 'Create<Doc<JSON>>'
         this.key = eventClassName + "<" + type + ">";
+    }
+
+    public TypeKey<?> typeKey()
+    {
+        return typeKey;
+    }
+
+    protected static TypeKey<?> typeKeyFromSerializedKey(String key)
+    {
+        int open = key.indexOf('<');
+        int close = key.lastIndexOf('>');
+        if (open >= 0 && close > open)
+        {
+            String typePart = key.substring(open + 1, close);
+            return TypeKey.valueOf(typePart);
+        }
+        return TypeKey.valueOf(key);
     }
 
     public static EventKey valueOf(Class<?> eventClass, TypeKey<?> typeKey)

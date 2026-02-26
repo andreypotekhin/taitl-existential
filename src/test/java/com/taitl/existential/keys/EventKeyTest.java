@@ -16,20 +16,28 @@ class EventKeyTest
     {
         EventKey key = EventKey.valueOf("Create<String>");
         assertThat(key.toString(), is("Create<String>"));
+        assertThat(key.typeKey().toString(), is("String"));
     }
 
     @Test
     void valueOfObject()
     {
         EventKey key = EventKey.valueOf(new Sample(), false);
-        assertThat(key.toString(), is("Sample"));
+        assertThat(key.toString(), is("Sample<Sample>"));
+    }
+
+    @Test
+    void valueOfObjectStoresTypeKey()
+    {
+        EventKey key = EventKey.valueOf(new Sample(), false);
+        assertThat(key.typeKey().toString(), is("Sample"));
     }
 
     @Test
     void valueOfFullObject()
     {
         EventKey key = EventKey.valueOf(new Sample(), true);
-        assertThat(key.toString(), is(Sample.class.getName()));
+        assertThat(key.toString(), is(Sample.class.getName() + "<" + Sample.class.getName() + ">"));
     }
 
     @Test

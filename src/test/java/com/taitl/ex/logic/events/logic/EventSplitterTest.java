@@ -6,6 +6,7 @@ import com.taitl.ex.logic.evaluation.logic.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
+import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,6 +37,21 @@ class EventSplitterTest
                 .orElseThrow(() -> new AssertionError("Change event not found"));
 
         assertSame(newValue, change.t);
+    }
+
+    @Test
+    void splitRuntimeKeySplitsByUnderlyingEventAndKeepsTypeKey()
+    {
+        EventSplitter splitter = new EventSplitter();
+        String oldValue = new String("old");
+        String newValue = new String("new");
+        TypeKey<String> typeKey = new TypeKey<>(String.class);
+        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Transit<>(oldValue, newValue), typeKey, newValue, false);
+
+        Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
+
+        assertTrue(splitKeys.stream().anyMatch(key -> key.toString().startsWith("Mutate<String>+")));
+        assertTrue(splitKeys.stream().allMatch(key -> key.typeKey().equals(typeKey)));
     }
 
     @Test
