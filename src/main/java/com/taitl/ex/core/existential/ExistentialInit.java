@@ -1,11 +1,12 @@
 package com.taitl.ex.core.existential;
 
-import java.io.*;
-import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.library.*;
 import com.taitl.existential.*;
 import com.taitl.existential.configs.*;
+
+import java.io.*;
+import java.util.function.*;
 
 public class ExistentialInit implements Closeable
 {
@@ -21,7 +22,7 @@ public class ExistentialInit implements Closeable
     public ExistentialInit(Existential ex)
     {
         this.ex = ex;
-        this.configureLibrary = new ConfigureLibrary(ex);
+        this.configureLibrary = Creator.create(ConfigureLibrary.class, new Class<?>[] { Existential.class }, ex);
     }
 
     /* Testing-only */
