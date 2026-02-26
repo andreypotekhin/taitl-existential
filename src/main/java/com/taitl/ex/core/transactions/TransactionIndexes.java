@@ -49,4 +49,14 @@ public class TransactionIndexes
     {
         return (Index<K, V>) indexes.get(name);
     }
+
+    @SuppressWarnings("unchecked")
+    public <K, V> Index<K, V> getOrCreate(String name)
+    {
+        if (name == null)
+        {
+            throw new IllegalArgumentException("Argument 'name' should not be null");
+        }
+        return (Index<K, V>) indexes.computeIfAbsent(name, ignored -> new Index<>());
+    }
 }
