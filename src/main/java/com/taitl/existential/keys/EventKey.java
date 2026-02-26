@@ -1,8 +1,8 @@
 package com.taitl.existential.keys;
 
-import com.taitl.existential.events.types.Event;
+import com.taitl.existential.events.types.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Combines an event type with a {@link TypeKey} to address configured handlers.
@@ -27,40 +27,20 @@ public class EventKey
         return new EventKey(instance, useFullName);
     }
 
-    // public static <T> EventKey valueOfFull(T instance)
-    // {
-    // return new EventKey(instance, true);
-    // }
-
     public static <T> EventKey valueOf(Event<T> event, TypeKey<T> typeKey, boolean useFullName)
     {
         return new EventKey(event, typeKey, useFullName);
     }
-
-    // public static <T> EventKey valueOfFull(Event<T> event, TypeKey<T> typeKey)
-    // {
-    // return new EventKey(event, typeKey, true);
-    // }
 
     public static <T> EventKey valueOf(Event<T> event, String type, boolean useFullName)
     {
         return new EventKey(event, type, useFullName);
     }
 
-    // public static <T> EventKey valueOfFull(Event<T> event, String type)
-    // {
-    // return new EventKey(event, type, true);
-    // }
-
     public static <T> EventKey valueOf(Class<T> eventClass, String type, boolean useFullName)
     {
         return new EventKey(eventClass, type, useFullName);
     }
-
-    // public static <T> EventKey valueOfFull(Class<T> eventClass, String type)
-    // {
-    // return new EventKey(eventClass, type, true);
-    // }
 
     public EventKey(String s)
     {

@@ -1,11 +1,12 @@
 package com.taitl.existential.handlers;
 
-import java.util.function.*;
-import com.taitl.ex.common.helper.strings.Descriptions;
+import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
+
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -13,7 +14,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * Declarative handler for {@link Transit} events that involve two values.
  * The handler can be guarded by a predicate on the new value or a bi-predicate
  * on both values. When the condition passes, the action is invoked and any
- * execution failures are wrapped as {@link EventHandlerExecutionException}.
+ * execution failures are wrapped as {@link EventHandlerException}.
  *
  * @param <T>
  *            Type of entity transitioning between values
@@ -118,12 +119,12 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
             }
             catch (Exception e)
             {
-                throw new EventHandlerExecutionException(handlerMessage("Event handler execution failed"), e);
+                throw new EventHandlerException(handlerMessage("Event handler execution failed"), e);
             }
         }
         else if (action == null)
         {
-            throw new EventHandlerExecutionException(handlerMessage("The specified condition is not met"));
+            throw new EventHandlerException(handlerMessage("The specified condition is not met"));
         }
     }
 

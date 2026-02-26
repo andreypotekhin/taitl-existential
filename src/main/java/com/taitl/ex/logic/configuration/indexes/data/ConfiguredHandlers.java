@@ -16,7 +16,7 @@ import static com.taitl.ex.common.helper.Args.*;
  *
  * Example:
  *   To retrieve the event handlers/expressions defined for the type "Create<Doc<JSON>>":
- *   Set<OrderlyEv> handlers = evHandlers.get("Create<Doc<JSON>>")
+ *   Set<OrderlyEv> handlers = configuredHandlers.get(EventKey.valueOf(new TypeKey<Create<Doc<JSON>>(){}))
  */
 public class ConfiguredHandlers
 {

@@ -308,3 +308,17 @@ Automation instructions
 Limits
 
 - Only consider stable parts of the codebase that are not under active development.
+
+### Edge scrutinizer role
+
+See 'Edge scrutinizer role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 1-2 edge issues in the code, provide resolutions.
+- Find and resolve 1-2 edge issues in the library specification and documentation.
+- Suggest broader improvements.
+
+Limits
+
+- Only consider stable parts of the codebase that are not under active development.

@@ -1,12 +1,13 @@
 package com.taitl.existential.handlers;
 
-import java.util.function.*;
 import com.taitl.ex.common.helper.*;
 import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
+
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -104,7 +105,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             {
                 if (!bicondition.test(t0, t1))
                 {
-                    throw new EventHandlerExecutionException(handlerMessage("The specified condition is not met"));
+                    throw new EventHandlerException(handlerMessage("The specified condition is not met"));
                 }
                 return;
             }
@@ -115,7 +116,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             // Check the condition and throw an exception if it is not met.
             if (!condition.test(t1))
             {
-                throw new EventHandlerExecutionException(handlerMessage("The specified condition is not met"));
+                throw new EventHandlerException(handlerMessage("The specified condition is not met"));
             }
 
             return;
@@ -129,7 +130,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
             }
             catch (Exception e)
             {
-                throw new EventHandlerExecutionException(handlerMessage("Event handler execution failed"), e);
+                throw new EventHandlerException(handlerMessage("Event handler execution failed"), e);
             }
         }
     }

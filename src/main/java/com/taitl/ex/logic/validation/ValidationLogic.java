@@ -24,7 +24,7 @@ public class ValidationLogic
     {
         this.tl = transactionLogic;
         this.el = transactionLogic.evaluationLogic;
-        this.report = new ValidationReport();
+        this.report = Creator.create(ValidationReport.class);
     }
 
     /**
@@ -40,10 +40,7 @@ public class ValidationLogic
      */
     public void run(Tr tr) throws ValidationStageExceptions
     {
-        // TODO: Implement validation logic
-        // Evaluate validation expressions and call event handlers
-        // Output any violations to ValidationReport
-        // In case of violations, raise exception and supply validation report
+        el.evaluate(tr, report);
         if (!report.isEmpty())
         {
             throw new ValidationStageExceptions(

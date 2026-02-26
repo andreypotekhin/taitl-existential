@@ -19,7 +19,7 @@ class OnTransitTest
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("White", "Park");
 
-        var ex = assertThrows(EventHandlerExecutionException.class,
+        var ex = assertThrows(EventHandlerException.class,
                 () -> handler.handle(before, after));
 
         assertThat(ex.getMessage(), containsString("Cats are black"));
@@ -42,7 +42,7 @@ class OnTransitTest
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("White", "Park");
 
-        var ex = assertThrows(EventHandlerExecutionException.class,
+        var ex = assertThrows(EventHandlerException.class,
                 () -> handler.handle(before, after));
 
         assertThat(ex.getMessage(), containsString("Colors must match"));

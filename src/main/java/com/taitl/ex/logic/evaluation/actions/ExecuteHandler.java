@@ -64,7 +64,7 @@ public class ExecuteHandler
         }
         catch (Exception e)
         {
-            throw new EventHandlerExecutionException(e);
+            throw new EventHandlerException(e);
         }
     }
 }

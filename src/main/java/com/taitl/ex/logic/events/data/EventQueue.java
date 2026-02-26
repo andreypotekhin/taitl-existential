@@ -1,7 +1,8 @@
-package com.taitl.ex.logic.events.input;
+package com.taitl.ex.logic.events.data;
+
+import com.taitl.existential.events.types.*;
 
 import java.util.*;
-import com.taitl.existential.events.types.*;
 
 /**
  * Queues events (EntityEvent<T>, Mutation<T>, Transit<T>) for a duration of business transaction,

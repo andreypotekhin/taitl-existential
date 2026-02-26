@@ -1,13 +1,12 @@
 package com.taitl.existential.handlers;
 
-import com.taitl.ex.examples.night_city.model.Cat;
-import com.taitl.existential.exceptions.EventHandlerExecutionException;
-import org.junit.jupiter.api.Test;
+import com.taitl.ex.examples.night_city.model.*;
+import com.taitl.existential.exceptions.*;
+import org.junit.jupiter.api.*;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class OnMutateTest
 {
@@ -18,7 +17,7 @@ class OnMutateTest
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("White", "Park");
 
-        EventHandlerExecutionException ex = assertThrows(EventHandlerExecutionException.class,
+        EventHandlerException ex = assertThrows(EventHandlerException.class,
                 () -> handler.handle(before, after));
 
         assertThat(ex.getMessage(), containsString("Cats are black"));
@@ -41,7 +40,7 @@ class OnMutateTest
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("White", "Park");
 
-        EventHandlerExecutionException ex = assertThrows(EventHandlerExecutionException.class,
+        EventHandlerException ex = assertThrows(EventHandlerException.class,
                 () -> handler.handle(before, after));
 
         assertThat(ex.getMessage(), containsString("Colors must match"));
