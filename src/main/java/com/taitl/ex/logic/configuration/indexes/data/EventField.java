@@ -59,7 +59,10 @@ public class EventField
         for (EventKey eventKey : multiKey.eventKeys())
         {
             Set<OrderlyEv<?>> set = ci.configuredHandlers.get(eventKey);
-            handlers.addAll(set);
+            if (set != null)
+            {
+                handlers.addAll(set);
+            }
         }
         ci.maintainGlobalOrder.sort(handlers);
         cached = new LinkedList<>();

@@ -81,7 +81,7 @@ public class RuntimeKey<T>
 
     protected RuntimeKey(EventKey key, T entity)
     {
-        this(key, (TypeKey<T>) key.typeKey(), null, entity);
+        this(key, key != null ? (TypeKey<T>) key.typeKey() : null, null, entity);
     }
 
     protected RuntimeKey(EventKey key, TypeKey<T> typeKey, Event<T> event, T entity)

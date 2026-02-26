@@ -1,6 +1,7 @@
 package com.taitl.existential.keys;
 
 import java.lang.reflect.*;
+import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.lang.Generics.*;
@@ -189,7 +190,7 @@ public class TypeKey<T>
     protected static String createKey(Class<?> typeClass, String genericQualifier, boolean useFullName)
     {
         sane(typeClass, "typeClass", genericQualifier, "genericQualifier");
-        String className = useFullName ? typeClass.getCanonicalName() : typeClass.getSimpleName();
+        String className = useFullName ? typeClass.getName() : typeClass.getSimpleName();
         String key;
         if (genericQualifier.isEmpty())
         {
@@ -211,15 +212,62 @@ public class TypeKey<T>
     {
         key = trimmed(key, "class name");
         check(!key.isBlank(), "Class name cannot be blank." + TROUBLESHOOTING_LINK);
-        if (key.contains("<") || key.contains(">"))
+        boolean hasLeft = key.contains("<");
+        boolean hasRight = key.contains(">");
+        if (hasLeft || hasRight)
         {
-            check(key.contains("<") && key.contains(">"),
+            check(hasLeft && hasRight,
                     "Class name must be of proper format: 'Class<GenericQualifier>'." + TROUBLESHOOTING_LINK);
             int leftBracket = key.indexOf("<");
             int rightBracket = key.lastIndexOf(">");
             check(leftBracket < rightBracket, "Right bracket must not come before left bracket."
                     + TROUBLESHOOTING_LINK);
-            validate(key.substring(leftBracket + 1, rightBracket));
+            check(rightBracket == key.length() - 1,
+                    "Class name must be of proper format: 'Class<GenericQualifier>'." + TROUBLESHOOTING_LINK);
+            String inner = key.substring(leftBracket + 1, rightBracket);
+            for (String part : splitTopLevelGenericArgs(inner))
+            {
+                validate(part);
+            }
         }
+    }
+
+    protected static List<String> splitTopLevelGenericArgs(String inner)
+    {
+        String value = trimmed(inner, "generic qualifier");
+        check(!value.isBlank(), "Class name must be of proper format: 'Class<GenericQualifier>'."
+                + TROUBLESHOOTING_LINK);
+
+        List<String> parts = new ArrayList<>();
+        int depth = 0;
+        int start = 0;
+        for (int i = 0; i < value.length(); i++)
+        {
+            char c = value.charAt(i);
+            if (c == '<')
+            {
+                depth++;
+            }
+            else if (c == '>')
+            {
+                depth--;
+                check(depth >= 0, "Right bracket must not come before left bracket." + TROUBLESHOOTING_LINK);
+            }
+            else if (c == ',' && depth == 0)
+            {
+                String part = value.substring(start, i).trim();
+                check(!part.isEmpty(), "Class name must be of proper format: 'Class<GenericQualifier>'."
+                        + TROUBLESHOOTING_LINK);
+                parts.add(part);
+                start = i + 1;
+            }
+        }
+
+        check(depth == 0, "Class name must be of proper format: 'Class<GenericQualifier>'." + TROUBLESHOOTING_LINK);
+        String tail = value.substring(start).trim();
+        check(!tail.isEmpty(), "Class name must be of proper format: 'Class<GenericQualifier>'."
+                + TROUBLESHOOTING_LINK);
+        parts.add(tail);
+        return parts;
     }
 }

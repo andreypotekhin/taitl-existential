@@ -27,6 +27,10 @@ public class SplitByGenericsDimension
         Set<TypeKey<T>> result = new LinkedHashSet<>();
         for (String key : variants(node))
         {
+            if (!node.args.isEmpty() && node.name.equals(key))
+            {
+                continue;
+            }
             result.add(TypeKey.valueOf(key));
         }
         return result;

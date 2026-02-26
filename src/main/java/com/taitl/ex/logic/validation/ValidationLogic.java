@@ -38,7 +38,7 @@ public class ValidationLogic
     /**
      * Evaluate validation expressions and call event handlers.
      */
-    public void run(Tr tr) throws ValidationStageExceptions
+    public void run(Tr tr) throws ExistentialException
     {
         el.evaluate(tr, report);
         if (!report.isEmpty())
