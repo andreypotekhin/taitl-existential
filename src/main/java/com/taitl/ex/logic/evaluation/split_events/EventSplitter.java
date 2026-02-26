@@ -72,6 +72,7 @@ public class EventSplitter
     public static Supplier<? extends EventSplitter> FACTORY =
             () -> Creator.create(EventSplitter.class);
     protected final SplitTypeKey splitTypeKey = new SplitTypeKey();
+    protected SplitByEventType splitByEventType = new SplitByEventType();
 
     public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
     {
@@ -96,19 +97,7 @@ public class EventSplitter
         sane(event, "event");
         Set<Event<T>> events = new LinkedHashSet<>();
         events.add(event);
-        if (event instanceof Transit)
-        {
-            return splitTransit((Transit<T>) event, events);
-        }
-        check(!(event instanceof Mutate), "Please specify event of type Transit<>");
-        // TODO: Mutate
-        if (event instanceof ReadAndLock)
-        {
-            return splitReadAndLock((ReadAndLock<T>) event, events);
-        }
-        // TODO: other
-
-        return events;
+        return splitByEventType.call(event, events);
     }
 
     @SuppressWarnings("unchecked")
@@ -127,59 +116,11 @@ public class EventSplitter
 
     protected <T> Set<Event<T>> splitTransit(Transit<T> transit, Set<Event<T>> events)
     {
-        if (transit == null)
-        {
-            throw new IllegalArgumentException("Argument 'event' should not be null");
-        }
-        if (events == null)
-        {
-            throw new IllegalArgumentException("Argument 'set' should not be null");
-        }
-        // Transit -> EntityEvent, Mutate, Transit
-        if (transit.t0 != null && transit.t1 != null)
-        {
-            events.add(new Mutate<>(transit.t0, transit.t1));
-        }
-        if (transit.t1 != null)
-        {
-            events.add(new EntityEvent<>(transit.t1));
-        }
-        // Create
-        if (transit.t0 == null)
-        {
-            events.add(new Create<>(transit.t1));
-            events.add(new CU<>(transit.t1));
-            events.add(new Write<>(transit.t1));
-        }
-        // Update
-        if (transit.t0 != null && transit.t1 != null)
-        {
-            events.add(new Change<>(transit.t1));
-            events.add(new Update<>(transit.t1));
-            events.add(new CU<>(transit.t1));
-            events.add(new Write<>(transit.t1));
-        }
-        // Delete
-        if (transit.t1 == null)
-        {
-            events.add(new Change<>(transit.t0));
-            events.add(new Delete<>(transit.t0));
-            events.add(new Write<>(transit.t0));
-        }
-        return events;
+        return splitByEventType.splitTransit(transit, events);
     }
 
     protected <T> Set<Event<T>> splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> events)
     {
-        if (event == null)
-        {
-            throw new IllegalArgumentException("Argument 'event' should not be null");
-        }
-        if (events == null)
-        {
-            throw new IllegalArgumentException("Argument 'set' should not be null");
-        }
-        events.add(new Read<>(event.t));
-        return events;
+        return splitByEventType.splitReadAndLock(event, events);
     }
 }

@@ -13,6 +13,8 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ExecuteHandlers
 {
+    protected OnException onException = new OnException();
+
     public void call(List<Ev<?>> evs, Event<?> event, ValidationReport report)
             throws ExistentialException
     {
@@ -91,36 +93,11 @@ public class ExecuteHandlers
 
     protected void routeHandlerException(ExistentialException ex, ValidationReport report) throws ExistentialException
     {
-        sane(ex, "ex", report, "report");
-        if (constraintViolation(ex))
-        {
-            report.addException(ex);
-            return;
-        }
-        throw ex;
+        onException.call(ex, report);
     }
 
     protected boolean constraintViolation(ExistentialException ex)
     {
-        sane(ex, "ex");
-        if (ex instanceof ConditionNotMetException || ex instanceof InvariantViolation)
-        {
-            return true;
-        }
-        if (!(ex instanceof EventHandlerException))
-        {
-            return false;
-        }
-        if (ex.getCause() != null)
-        {
-            return false;
-        }
-        String message = ex.getMessage();
-        if (message == null)
-        {
-            return false;
-        }
-        String normalized = message.toLowerCase(Locale.ROOT);
-        return normalized.contains("condition is not met") || normalized.contains("condition not met");
+        return onException.constraintViolation(ex);
     }
 }
