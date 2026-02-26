@@ -51,7 +51,32 @@ class EventSplitterTest
         Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
 
         assertTrue(splitKeys.stream().anyMatch(key -> key.toString().startsWith("Mutate<String>+")));
-        assertTrue(splitKeys.stream().allMatch(key -> key.typeKey().equals(typeKey)));
+        assertTrue(splitKeys.stream().allMatch(key -> key.typeKey().toString().equals("String")));
+    }
+
+    @Test
+    void splitRuntimeKeyAlsoSplitsTypeKeyByGenericsDimension()
+    {
+        EventSplitter splitter = new EventSplitter();
+        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(
+                new Read<>("value"),
+                TypeKey.valueOf("T<A<X>,B<Y>>"),
+                "value",
+                false);
+
+        Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
+        Set<String> keys = splitKeys.stream().map(Object::toString).collect(java.util.stream.Collectors.toSet());
+
+        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B<Y>>>+")));
+        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B<?>>>+")));
+        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B>>+")));
+        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B<Y>>>+")));
+        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B<?>>>+")));
+        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B>>+")));
+        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B<Y>>>+")));
+        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B<?>>>+")));
+        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B>>+")));
+        assertTrue(keys.stream().allMatch(k -> k.startsWith("Read<")));
     }
 
     @Test
