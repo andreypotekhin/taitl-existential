@@ -295,3 +295,16 @@ Automation instructions
 - Add/repair .md
 - No logic changes
 
+### Karma police role
+
+See 'Karma police role' section in 'Team roles' of AGENTS.md
+
+Automation instructions
+
+- Find 1-2 karma issues in the code, provide fixes.
+- Find and update 1-2 karma issues in the documentation.
+- Suggest broader improvements.
+
+Limits
+
+- Only consider stable parts of the codebase that are not under active development.

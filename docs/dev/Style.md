@@ -210,3 +210,4 @@ We generally avoid, unless there is a valid reason:
 - HTML formatting tags in Javadocs, such as <p> and <br> 
 - non-Javadoc comments (the meaning should stem from code)
 - testing a class in total isolation (we test coherent clusters of classes instead of mocking around) 
+- instead of 'new' keyword, we often use an alternative that encourages extensibility, such as Creator.create()
