@@ -18,7 +18,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * @see Tr
  * @see EventSplitter
  */
-public class EncounteredUniqueEvents
+public class EncounteredUniqueEvents implements Iterable<RuntimeKey<?>>
 {
     protected Set<RuntimeKey<?>> runtimeKeys = new LinkedHashSet<>();
 
@@ -37,5 +37,10 @@ public class EncounteredUniqueEvents
     public <T> Stream<RuntimeKey<?>> stream()
     {
         return runtimeKeys.stream();
+    }
+
+    public Iterator<RuntimeKey<?>> iterator()
+    {
+        return runtimeKeys.iterator();
     }
 }

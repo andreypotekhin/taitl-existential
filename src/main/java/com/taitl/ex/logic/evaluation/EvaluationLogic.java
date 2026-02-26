@@ -11,7 +11,6 @@ import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
 import java.io.*;
-import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -33,11 +32,9 @@ public class EvaluationLogic implements Closeable
         sane(tr, "tr", report, "report");
         EventField eventField = eventField(tr);
         EvaluateEvent evaluateEvent = Creator.create(EvaluateEvent.class);
-
-        Iterator<RuntimeKey<?>> events = tr.runtimeIndexes().encounteredUniqueEvents.stream().iterator();
-        while (events.hasNext())
+        for(RuntimeKey<?> runtimeKey: tr.runtimeIndexes().encounteredUniqueEvents)
         {
-            evaluateEvent.call(events.next(), eventField, report);
+            evaluateEvent.call(runtimeKey, eventField, report);
         }
     }
 
