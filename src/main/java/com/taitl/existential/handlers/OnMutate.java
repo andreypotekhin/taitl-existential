@@ -2,6 +2,7 @@ package com.taitl.existential.handlers;
 
 import java.util.function.*;
 import com.taitl.ex.common.helper.*;
+import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;

@@ -12,7 +12,7 @@ import com.taitl.existential.keys.*;
 import com.taitl.existential.quantifiers.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.Generics.*;
+import static com.taitl.ex.common.helper.lang.Generics.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**

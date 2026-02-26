@@ -11,9 +11,9 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class IndexConfig
 {
-    protected ConfigIndexes ci;
+    protected ConfigurationIndexes ci;
 
-    public IndexConfig(ConfigIndexes ci)
+    public IndexConfig(ConfigurationIndexes ci)
     {
         this.ci = ci;
     }

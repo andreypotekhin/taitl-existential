@@ -7,7 +7,7 @@ import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.indexes.*;
 import org.junit.jupiter.api.*;
 
-import static com.taitl.ex.common.helper.Coll.*;
+import static com.taitl.ex.common.helper.collections.Coll.*;
 import static com.taitl.ex.examples.night_city.data.CityTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
 

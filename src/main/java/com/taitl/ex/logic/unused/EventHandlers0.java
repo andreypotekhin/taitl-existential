@@ -1,6 +1,6 @@
 package com.taitl.ex.logic.unused;
 
-import com.taitl.ex.common.helper.SetMap;
+import com.taitl.ex.common.helper.collections.SetMap;
 import com.taitl.existential.events.types.BiEvent;
 import com.taitl.existential.events.types.Event;
 import com.taitl.existential.handlers.types.EventHandlerWithSideEffects;

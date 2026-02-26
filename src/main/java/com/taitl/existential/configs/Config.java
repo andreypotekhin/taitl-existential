@@ -40,7 +40,7 @@ public class Config
     /**
      * Configuration indexes for performance.
      */
-    protected ConfigIndexes configIndexes = Creator.create(ConfigIndexes.class);
+    protected ConfigurationIndexes configurationIndexes = Creator.create(ConfigurationIndexes.class);
 
     /**
      * Adds a {@link Context} instance to the operation.
@@ -92,9 +92,9 @@ public class Config
      *
      * @return Configuration indexes
      */
-    public ConfigIndexes indexes()
+    public ConfigurationIndexes indexes()
     {
-        return configIndexes;
+        return configurationIndexes;
     }
 
 }

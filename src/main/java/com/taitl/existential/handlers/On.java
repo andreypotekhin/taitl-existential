@@ -1,8 +1,9 @@
 package com.taitl.existential.handlers;
 
 import java.util.function.*;
-import com.taitl.ex.logic.events.actions.*;
-import com.taitl.ex.common.helper.Descriptions;
+
+import com.taitl.ex.logic.evaluation.actions.*;
+import com.taitl.ex.common.helper.strings.Descriptions;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
 

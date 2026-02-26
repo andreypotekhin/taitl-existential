@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.validation;
 
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.validation.actions.*;
 import com.taitl.ex.logic.validation.output.*;
@@ -14,6 +15,7 @@ import com.taitl.existential.transactions.*;
 public class ValidationLogic
 {
     TransactionLogic tl;
+    EvaluationLogic el;
     ValidationReport report;
     PrepareTransaction prepareTransaction =
             Creator.singleton(PrepareTransaction.class);
@@ -21,6 +23,7 @@ public class ValidationLogic
     public ValidationLogic(TransactionLogic transactionLogic)
     {
         this.tl = transactionLogic;
+        this.el = transactionLogic.evaluationLogic;
         this.report = new ValidationReport();
     }
 

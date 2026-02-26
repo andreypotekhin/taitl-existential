@@ -3,8 +3,8 @@ package com.taitl.existential.keys;
 import java.lang.reflect.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.Generics.*;
-import static com.taitl.ex.common.helper.Text.*;
+import static com.taitl.ex.common.helper.lang.Generics.*;
+import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
  * String representation of a type along with its generic qualifier, for example "Set<Car>".

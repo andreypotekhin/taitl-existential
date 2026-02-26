@@ -1,15 +1,15 @@
 package com.taitl.ex.core.existential;
 
-import com.taitl.ex.logic.transactions.TransactionLogic;
-import com.taitl.existential.Existential;
-import com.taitl.existential.configs.Transaction;
-import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.keys.OpKey;
-import com.taitl.existential.transactions.Tr;
+import com.taitl.ex.logic.transactions.*;
+import com.taitl.existential.*;
+import com.taitl.existential.configs.*;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
-import java.io.Closeable;
+import java.io.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.Args.*;
 
 public class ExistentialTransactions implements Closeable
 {

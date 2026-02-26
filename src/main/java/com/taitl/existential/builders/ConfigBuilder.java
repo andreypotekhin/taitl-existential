@@ -11,7 +11,7 @@ import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
-import static com.taitl.ex.common.helper.Text.*;
+import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
  * Builds a Config object for a single business operation as a set of Context

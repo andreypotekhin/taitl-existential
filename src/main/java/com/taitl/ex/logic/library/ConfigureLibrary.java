@@ -4,16 +4,16 @@ import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.*;
 import java.util.function.*;
-import com.taitl.ex.common.helper.FileSecurity;
-import com.taitl.ex.common.helper.LimitedInputStream;
+import com.taitl.ex.common.helper.security.FileSecurity;
+import com.taitl.ex.common.helper.io.LimitedInputStream;
 import com.taitl.ex.common.helper.Properties;
-import com.taitl.ex.common.logic.LoadProperties;
+import com.taitl.ex.common.helper.logic.LoadProperties;
 import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
-import static com.taitl.ex.common.helper.Text.*;
+import static com.taitl.ex.common.helper.strings.Text.*;
 
 public class ConfigureLibrary
 {

@@ -2,10 +2,10 @@ package com.taitl.existential.paths;
 
 import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
-import com.taitl.ex.common.helper.PathSupport;
+import com.taitl.ex.common.helper.strings.PathStrings;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.Text.*;
+import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
  * Path-like representation of a business operation, serving as a key for locating
@@ -47,7 +47,7 @@ public class AbstractPath
 
     public boolean hasParent()
     {
-        return PathSupport.hasParent(path);
+        return PathStrings.hasParent(path);
     }
 
     public boolean isWildcard()
@@ -76,7 +76,7 @@ public class AbstractPath
      */
     public AbstractPath getParent()
     {
-        return new AbstractPath(PathSupport.parentOrThrow(path, "Context key"));
+        return new AbstractPath(PathStrings.parentOrThrow(path, "Context key"));
     }
 
     public int hashCode()

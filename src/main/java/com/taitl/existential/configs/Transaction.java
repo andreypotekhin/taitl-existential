@@ -1,16 +1,16 @@
 package com.taitl.existential.configs;
 
-import java.util.*;
-import java.util.function.*;
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.core.instructions.*;
-import com.taitl.ex.core.transactions.*;
+import com.taitl.ex.core.indexes.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.indexes.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
 import com.taitl.existential.transactions.*;
+
+import java.util.*;
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -79,7 +79,7 @@ public class Transaction implements Configurable, Evaluable
      * Instructions - event handlers. Includes all event handlers (rules)
      * defined in this context.
      */
-    public Instructions instructions = new Instructions();
+    // public Instructions instructions = new Instructions();
 
     TransactionIndexes indexes = new TransactionIndexes(this);
 
@@ -279,7 +279,7 @@ public class Transaction implements Configurable, Evaluable
     {
         sane(evs, "evs");
         this.evs.add(evs);
-        instructions.addAll(evs);
+        // instructions.addAll(evs);
     }
 
     @SuppressWarnings("unchecked")

@@ -1,6 +1,6 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
-import com.taitl.ex.common.helper.*;
+import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
@@ -16,7 +16,7 @@ import static com.taitl.ex.common.helper.Args.*;
  *
  * Example:
  *   To retrieve the event handlers/expressions defined for the type "Create<Doc<JSON>>":
- *   Set<EventHandler> handlers = evHandlers.get("Create<Doc<JSON>>")
+ *   Set<OrderlyEv> handlers = evHandlers.get("Create<Doc<JSON>>")
  */
 public class ConfiguredHandlers
 {
@@ -24,9 +24,9 @@ public class ConfiguredHandlers
     protected SetMap<String, OrderlyEv<?>> handlers = new SetMap<>();
     protected boolean ready = false;
 
-    protected ConfigIndexes ci;
+    protected ConfigurationIndexes ci;
 
-    public ConfiguredHandlers(ConfigIndexes ci)
+    public ConfiguredHandlers(ConfigurationIndexes ci)
     {
         this.ci = ci;
     }

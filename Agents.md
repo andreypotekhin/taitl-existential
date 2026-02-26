@@ -264,7 +264,7 @@ Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid (e.
 
 ### Karma police role
 Karma police is responsible for scanning for bugs, inconsistencies,
-logic slips, code smells, anti-patterns, improvement opportunities, best practice violations, 
+logic slips, code smells, antipatterns, improvement opportunities, best practice violations, 
 style guide violations and other issues that may affect the overall quality of the codebase. 
 
 

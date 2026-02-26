@@ -1,6 +1,6 @@
 package com.taitl.existential.indexes;
 
-import com.taitl.ex.common.helper.SetMap;
+import com.taitl.ex.common.helper.collections.SetMap;
 
 import java.util.Set;
 import java.util.function.Function;

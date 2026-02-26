@@ -3,7 +3,7 @@ package com.taitl.ex.logic.configuration.rules;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.Text.*;
+import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
  * Validates that a child context name matches a parent configuration/context name.

@@ -1,5 +1,6 @@
 package com.taitl.ex.common.logic;
 
+import com.taitl.ex.common.helper.logic.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;

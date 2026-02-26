@@ -2,10 +2,10 @@ package com.taitl.existential.paths;
 
 import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;
-import com.taitl.ex.common.helper.PathSupport;
+import com.taitl.ex.common.helper.strings.PathStrings;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.Text.*;
+import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
  * Path-like representation of a business operation, used for identification of
@@ -46,7 +46,7 @@ public class ConcretePath
 
     public boolean hasParent()
     {
-        return PathSupport.hasParent(op);
+        return PathStrings.hasParent(op);
     }
 
     public static void validate(String op)
@@ -70,7 +70,7 @@ public class ConcretePath
      */
     public ConcretePath getParent()
     {
-        return new ConcretePath(PathSupport.parentOrThrow(op, PARENT_LABEL));
+        return new ConcretePath(PathStrings.parentOrThrow(op, PARENT_LABEL));
     }
 
     public int hashCode()

@@ -1,8 +1,8 @@
 package com.taitl.ex.logic.events;
 
-import java.io.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
+import com.taitl.ex.cross.caching.*;
 import com.taitl.ex.logic.events.actions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
@@ -13,6 +13,8 @@ import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
+import java.io.*;
+
 import static com.taitl.ex.common.helper.Args.*;
 
 public class EventLogic implements Closeable
@@ -20,14 +22,14 @@ public class EventLogic implements Closeable
     protected Existential ex;
     protected ExistentialEvents ev;
     protected ReceiveEvent receiveEvent;
-    protected TypeKeyCache typeKeys;
+    protected TypeKeyCache typeKeyCache;
 
     public EventLogic(ExistentialEvents ev)
     {
         this.ev = ev;
         this.ex = ev.ex();
         this.receiveEvent = Creator.create(ReceiveEvent.class, new Class[] { EventLogic.class }, this);
-        this.typeKeys = new TypeKeyCache();
+        this.typeKeyCache = new TypeKeyCache();
     }
 
     public <T> void event(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
@@ -85,6 +87,6 @@ public class EventLogic implements Closeable
 
     protected <T> TypeKey<T> typeKey(T t)
     {
-        return typeKeys.get(t, ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES));
+        return typeKeyCache.get(t, ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES));
     }
 }

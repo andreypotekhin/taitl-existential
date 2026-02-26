@@ -12,7 +12,7 @@ import com.taitl.existential.interfaces.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.Generics.*;
+import static com.taitl.ex.common.helper.lang.Generics.*;
 
 /**
  * Declares side effects for a business operation by registering handlers for

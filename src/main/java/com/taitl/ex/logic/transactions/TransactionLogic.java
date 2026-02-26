@@ -1,18 +1,20 @@
 package com.taitl.ex.logic.transactions;
 
-import com.taitl.ex.core.existential.ExistentialTransactions;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.core.existential.*;
+import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.transactions.actions.*;
-import com.taitl.ex.logic.transactions.data.TrRegistry;
-import com.taitl.ex.logic.validation.ValidationLogic;
-import com.taitl.existential.Existential;
-import com.taitl.existential.configs.Transaction;
-import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.keys.OpKey;
-import com.taitl.existential.transactions.Tr;
+import com.taitl.ex.logic.transactions.data.*;
+import com.taitl.ex.logic.validation.*;
+import com.taitl.existential.*;
+import com.taitl.existential.configs.*;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
-import java.io.Closeable;
+import java.io.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.Args.*;
 
 public class TransactionLogic implements Closeable
 {
@@ -24,6 +26,7 @@ public class TransactionLogic implements Closeable
     protected CheckpointTran checkpointTran;
     protected RollbackTran rollbackTran;
     protected DisposeTran disposeTran;
+    public EvaluationLogic evaluationLogic;
     public ValidationLogic validationLogic;
 
     public TransactionLogic(ExistentialTransactions ee)
@@ -36,7 +39,8 @@ public class TransactionLogic implements Closeable
         this.checkpointTran = new CheckpointTran(this);
         this.rollbackTran = new RollbackTran(this);
         this.disposeTran = new DisposeTran(this);
-        this.validationLogic = new ValidationLogic(this);
+        this.validationLogic = Creator.create(ValidationLogic.class, new Class[] { TransactionLogic.class }, this);
+        this.evaluationLogic = Creator.create(EvaluationLogic.class, new Class[] { TransactionLogic.class }, this);
     }
 
     public Tr begin(String op) throws ExistentialException

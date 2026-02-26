@@ -1,8 +1,8 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
-import com.taitl.ex.common.helper.*;
+import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.logic.configuration.indexes.*;
-import com.taitl.ex.logic.events.logic.*;
+import com.taitl.ex.logic.evaluation.logic.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
@@ -34,9 +34,9 @@ import static com.taitl.ex.common.helper.State.*;
 public class EventField
 {
     protected ListMap<MultiKey, Ev<?>> map = new ListMap<>();
-    protected ConfigIndexes ci;
+    protected ConfigurationIndexes ci;
 
-    public EventField(ConfigIndexes ci)
+    public EventField(ConfigurationIndexes ci)
     {
         this.ci = ci;
     }

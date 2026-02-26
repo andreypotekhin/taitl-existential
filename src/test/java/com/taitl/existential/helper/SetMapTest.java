@@ -1,6 +1,6 @@
 package com.taitl.existential.helper;
 
-import com.taitl.ex.common.helper.SetMap;
+import com.taitl.ex.common.helper.collections.SetMap;
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.model.Location;
 import org.junit.jupiter.api.AfterEach;

@@ -1,6 +1,6 @@
 package com.taitl.existential.helper;
 
-import com.taitl.ex.common.helper.ConcurrentSetMap;
+import com.taitl.ex.common.helper.collections.ConcurrentSetMap;
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.model.Location;
 import org.junit.jupiter.api.BeforeEach;

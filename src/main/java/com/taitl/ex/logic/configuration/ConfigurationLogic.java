@@ -1,6 +1,6 @@
 package com.taitl.ex.logic.configuration;
 
-import com.taitl.ex.common.helper.*;
+import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
 import com.taitl.existential.*;

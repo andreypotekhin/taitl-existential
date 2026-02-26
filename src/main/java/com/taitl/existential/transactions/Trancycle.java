@@ -10,7 +10,7 @@ import com.taitl.existential.interfaces.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.Generics.*;
+import static com.taitl.ex.common.helper.lang.Generics.*;
 
 /**
  * Holds handlers for transaction lifecycle events, such as Begin, Commit, Rollback.

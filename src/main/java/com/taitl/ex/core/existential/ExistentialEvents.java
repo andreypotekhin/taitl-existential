@@ -1,22 +1,32 @@
 package com.taitl.ex.core.existential;
 
-import java.io.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.events.*;
+import com.taitl.ex.logic.indexing.*;
 import com.taitl.existential.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+
+import java.io.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
 public class ExistentialEvents implements Closeable
 {
     protected Existential ex;
-    protected EventLogic eventLogic;
+    public EventLogic eventLogic;
+    public IndexingLogic indexingLogic;
 
     public ExistentialEvents(Existential ex)
     {
         this.ex = ex;
-        eventLogic = new EventLogic(this);
+        this.eventLogic = Creator.create(EventLogic.class,
+                new Class[] { ExistentialEvents.class },
+                this);
+        this.indexingLogic = Creator.create(IndexingLogic.class,
+                new Class[] { ExistentialEvents.class },
+                this);
+
     }
 
     public <T> void event(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException

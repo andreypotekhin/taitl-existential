@@ -1,14 +1,14 @@
 package com.taitl.existential.configs;
 
-import java.util.*;
-import java.util.function.*;
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.core.instructions.*;
-import com.taitl.ex.logic.events.logic.*;
+import com.taitl.ex.logic.evaluation.logic.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
+
+import java.util.*;
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -48,7 +48,7 @@ public class Context implements Configurable, Evaluable
      * Instructions - event handlers. Includes all event handlers (rules)
      * defined in this context.
      */
-    protected Instructions instructions = new Instructions();
+    // protected Instructions instructions = new Instructions();
 
     /** Transaction factory */
     protected Supplier<? extends Transaction> transactionFactory = Transaction.FACTORY;
@@ -192,7 +192,7 @@ public class Context implements Configurable, Evaluable
     {
         sane(evs, "ev");
         this.evs.add(evs);
-        instructions.addAll(evs);
+        // instructions.addAll(evs);
     }
 
     /**
@@ -205,7 +205,7 @@ public class Context implements Configurable, Evaluable
     {
         sane(other, "other");
         evs.addAll(other.evs);
-        instructions.addAll(other.instructions);
+        // instructions.addAll(other.instructions);
         return this;
     }
 
