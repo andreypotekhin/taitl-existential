@@ -7,7 +7,9 @@ import com.taitl.existential.Existential;
 import com.taitl.existential.events.*;
 import com.taitl.existential.exceptions.ConditionNotMetException;
 import com.taitl.existential.exceptions.EventHandlerException;
+import com.taitl.existential.exceptions.PredicateFailure;
 import com.taitl.existential.handlers.*;
+import com.taitl.existential.invariants.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.Tr;
 import org.junit.jupiter.api.AfterEach;
@@ -97,6 +99,30 @@ class EvaluationLogicTest
         assertInstanceOf(IllegalStateException.class, error.getCause());
         assertEquals(1, report.exceptions().size());
         assertInstanceOf(ConditionNotMetException.class, report.exceptions().get(0));
+    }
+
+    @Test
+    void evaluateCollectsPredicateFailureFromInvariantAll() throws Exception
+    {
+        ex = new Existential();
+        TypeKey<String> typeKey = new TypeKey<>(String.class);
+        ConfigurationIndexes indexes = new ConfigurationIndexes();
+
+        Invariant<String> invariant = new Invariant<>(String.class);
+        invariant.all(v -> false, "must pass all");
+        for (var ev : invariant.list())
+        {
+            indexes.addHandler(EventKey.valueOf(Create.class, typeKey), ev);
+        }
+        indexes.doneIndexing();
+
+        Tr tr = transitTr("/api/eval/predicate-failure", typeKey, null, "value");
+        EvaluationLogic logic = new TestEvaluationLogic(ex.transactions().logic(), indexes.eventField());
+
+        ValidationReport report = new ValidationReport();
+        assertDoesNotThrow(() -> logic.evaluate(tr, report));
+        assertEquals(1, report.exceptions().size());
+        assertInstanceOf(PredicateFailure.class, report.exceptions().get(0));
     }
 
     private <T> Tr transitTr(String op, TypeKey<T> typeKey, T t0, T t1)

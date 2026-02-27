@@ -23,7 +23,9 @@ public class OnException
     protected boolean constraintViolation(ExistentialException ex)
     {
         sane(ex, "ex");
-        if (ex instanceof ConditionNotMetException || ex instanceof InvariantViolation)
+        if (ex instanceof ConditionNotMetException
+                || ex instanceof InvariantViolation
+                || ex instanceof PredicateFailure)
         {
             return true;
         }

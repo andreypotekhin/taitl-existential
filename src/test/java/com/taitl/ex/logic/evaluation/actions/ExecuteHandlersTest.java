@@ -3,7 +3,10 @@ package com.taitl.ex.logic.evaluation.actions;
 import com.taitl.ex.logic.validation.output.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.*;
+import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;
+import com.taitl.existential.invariants.*;
+import com.taitl.existential.quantifiers.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -45,5 +48,46 @@ class ExecuteHandlersTest
         assertEquals(1, unaryCalls.get());
         assertEquals(2, biCalls.get());
         assertTrue(report.exceptions().isEmpty());
+    }
+
+    @Test
+    void callEvaluatesAllExpression() throws Exception
+    {
+        ExecuteHandlers executeHandlers = new ExecuteHandlers();
+        ValidationReport report = new ValidationReport();
+        AtomicInteger calls = new AtomicInteger();
+
+        List<Ev<?>> evs = List.of(new All<String>(value -> {
+            calls.incrementAndGet();
+            return value.startsWith("n");
+        }, "value should start with 'n'"));
+
+        executeHandlers.call(evs, new Create<>("new"), report);
+
+        assertEquals(1, calls.get());
+        assertTrue(report.exceptions().isEmpty());
+    }
+
+    @Test
+    void callEvaluatesInvariantAllAndCollectsPredicateFailure() throws Exception
+    {
+        ExecuteHandlers executeHandlers = new ExecuteHandlers();
+        ValidationReport report = new ValidationReport();
+        AtomicInteger calls = new AtomicInteger();
+
+        Invariant<String> invariant = new Invariant<>(String.class);
+        invariant.all(value -> {
+            calls.incrementAndGet();
+            return value.startsWith("n");
+        }, "value should start with 'n'");
+
+        List<Ev<?>> evs = new ArrayList<>();
+        evs.addAll(invariant.list());
+
+        executeHandlers.call(evs, new Create<>("old"), report);
+
+        assertEquals(1, calls.get());
+        assertEquals(1, report.exceptions().size());
+        assertInstanceOf(PredicateFailure.class, report.exceptions().get(0));
     }
 }

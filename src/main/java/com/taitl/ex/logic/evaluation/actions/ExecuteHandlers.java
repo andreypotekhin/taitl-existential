@@ -4,6 +4,7 @@ import com.taitl.ex.logic.validation.output.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
+import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 
@@ -21,11 +22,18 @@ public class ExecuteHandlers
         sane(evs, "evs", event, "event", report, "report");
         for (Ev<?> ev : evs)
         {
-            if (!(ev instanceof EventHandler<?>))
+            if (ev instanceof EventHandler<?>)
             {
-                continue;
+                executeHandler((EventHandler<?>) ev, event, report);
             }
-            executeHandler((EventHandler<?>) ev, event, report);
+            else if (ev instanceof Expression<?>)
+            {
+                executeExpression((Expression<?>) ev, event, report);
+            }
+            else
+            {
+                throw new IllegalStateException("Unsupported evaluable type: " + ev.getClass().getName());
+            }
         }
     }
 
@@ -36,6 +44,20 @@ public class ExecuteHandlers
         try
         {
             callEventHandler(handler, event);
+        }
+        catch (ExistentialException ex)
+        {
+            routeHandlerException(ex, report);
+        }
+    }
+
+    protected void executeExpression(Expression<?> expression, Event<?> event, ValidationReport report)
+            throws ExistentialException
+    {
+        sane(expression, "expression", event, "event", report, "report");
+        try
+        {
+            callExpression(expression, event);
         }
         catch (ExistentialException ex)
         {
@@ -73,6 +95,13 @@ public class ExecuteHandlers
         }
 
         throw new IllegalStateException("Unsupported event handler type: " + handler.getClass().getName());
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected void callExpression(Expression<?> expression, Event<?> event) throws ExistentialException
+    {
+        sane(expression, "expression", event, "event");
+        ((Expression) expression).evaluate(entity(event));
     }
 
     protected Object entity(Event<?> event)
