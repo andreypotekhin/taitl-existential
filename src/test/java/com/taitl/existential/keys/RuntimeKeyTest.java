@@ -72,7 +72,7 @@ class RuntimeKeyTest
             new RuntimeKeyProbe<>(EventKey.valueOf("Create<String>"), null).validate();
         }
 
-        RuntimeKeyProbe(EventKey key, T entity)
+        RuntimeKeyProbe(EventKey<T> key, T entity)
         {
             super(key, entity);
         }

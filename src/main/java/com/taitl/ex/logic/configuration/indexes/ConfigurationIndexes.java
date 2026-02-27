@@ -38,7 +38,7 @@ public class ConfigurationIndexes
      * Adds event handler to the indexes.
      * Called from IndexConfig.
      */
-    public <T> void addHandler(EventKey eventKey, Ev<T> ev)
+    public <T> void addHandler(EventKey<?> eventKey, Ev<T> ev)
     {
         configuredHandlers.put(eventKey, ev);
     }

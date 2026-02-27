@@ -27,7 +27,7 @@ public class SplitEvent
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField");
         Set<RuntimeKey<?>> splitKeys = split(runtimeKey);
-        MultiKey multiKey = multiKey(splitKeys);
+        MultiKey<?> multiKey = multiKey(splitKeys);
         List<Ev<?>> evs = eventField.get(multiKey);
         return new SplitResult(evs, runtimeKey.event());
     }
@@ -38,7 +38,8 @@ public class SplitEvent
         return (Set) eventSplitter.split(runtimeKey);
     }
 
-    protected MultiKey multiKey(Set<RuntimeKey<?>> splitKeys)
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected MultiKey<?> multiKey(Set<RuntimeKey<?>> splitKeys)
     {
         sane(splitKeys, "splitKeys");
         EventKey[] eventKeys = splitKeys.stream().map(RuntimeKey::key).toArray(EventKey[]::new);

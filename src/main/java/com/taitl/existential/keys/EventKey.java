@@ -12,35 +12,34 @@ import static com.taitl.ex.common.helper.Args.*;
  * @see TypeKey
  * @see Event
  */
-// Todo: introduce type parameter
-public class EventKey
+public class EventKey<T>
 {
     protected final String key;
-    protected final TypeKey<?> typeKey;
+    protected final TypeKey<T> typeKey;
 
-    public static EventKey valueOf(String s)
+    public static EventKey<?> valueOf(String s)
     {
-        return new EventKey(s);
+        return new EventKey<>(s);
     }
 
-    public static <T> EventKey valueOf(T instance, boolean useFullName)
+    public static <T> EventKey<T> valueOf(T instance, boolean useFullName)
     {
-        return new EventKey(instance, useFullName);
+        return new EventKey<>(instance, useFullName);
     }
 
-    public static <T> EventKey valueOf(Event<T> event, TypeKey<T> typeKey, boolean useFullName)
+    public static <T> EventKey<T> valueOf(Event<T> event, TypeKey<T> typeKey, boolean useFullName)
     {
-        return new EventKey(event, typeKey, useFullName);
+        return new EventKey<>(event, typeKey, useFullName);
     }
 
-    public static <T> EventKey valueOf(Event<T> event, String type, boolean useFullName)
+    public static <T> EventKey<T> valueOf(Event<T> event, String type, boolean useFullName)
     {
-        return new EventKey(event, type, useFullName);
+        return new EventKey<>(event, type, useFullName);
     }
 
-    public static <T> EventKey valueOf(Class<T> eventClass, String type, boolean useFullName)
+    public static <T> EventKey<T> valueOf(Class<?> eventClass, String type, boolean useFullName)
     {
-        return new EventKey(eventClass, type, useFullName);
+        return new EventKey<>(eventClass, type, useFullName);
     }
 
     public EventKey(String s)
@@ -50,12 +49,12 @@ public class EventKey
         this.typeKey = typeKeyFromSerializedKey(s);
     }
 
-    public <T> EventKey(T instance)
+    public EventKey(T instance)
     {
         this(instance, false);
     }
 
-    public <T> EventKey(T instance, boolean useFullName)
+    public EventKey(T instance, boolean useFullName)
     {
         sane(instance, "instance");
         this.typeKey = TypeKey.valueOf(instance, useFullName);
@@ -63,12 +62,12 @@ public class EventKey
         this.key = eventClassName + "<" + typeKey + ">";
     }
 
-    public <T> EventKey(Event<T> event, TypeKey<T> typeKey)
+    public EventKey(Event<T> event, TypeKey<T> typeKey)
     {
         this(event, typeKey, false);
     }
 
-    public <T> EventKey(Event<T> event, TypeKey<T> typeKey, boolean useFullName)
+    public EventKey(Event<T> event, TypeKey<T> typeKey, boolean useFullName)
     {
         sane(event, "event", typeKey, "typeKey");
         this.typeKey = typeKey;
@@ -77,12 +76,12 @@ public class EventKey
         this.key = eventClass + "<" + typeKey.toString() + ">";
     }
 
-    public <T> EventKey(Event<T> event, String type)
+    public EventKey(Event<T> event, String type)
     {
         this(event, type, false);
     }
 
-    public <T> EventKey(Event<T> event, String type, boolean useFullName)
+    public EventKey(Event<T> event, String type, boolean useFullName)
     {
         sane(event, "event", type, "type");
         this.typeKey = TypeKey.valueOf(type);
@@ -91,17 +90,17 @@ public class EventKey
         this.key = eventClass + "<" + type + ">";
     }
 
-    public <T> EventKey(Class<T> eventClass, String type)
+    public EventKey(Class<?> eventClass, String type)
     {
         this(eventClass, type, false);
     }
 
-    public EventKey(Class<?> eventClass, TypeKey<?> typeKey)
+    public EventKey(Class<?> eventClass, TypeKey<T> typeKey)
     {
         this(eventClass, typeKey, false);
     }
 
-    public EventKey(Class<?> eventClass, TypeKey<?> typeKey, boolean useFullName)
+    public EventKey(Class<?> eventClass, TypeKey<T> typeKey, boolean useFullName)
     {
         sane(eventClass, "eventClass", typeKey, "typeKey");
         this.typeKey = typeKey;
@@ -109,7 +108,7 @@ public class EventKey
         this.key = eventClassName + "<" + typeKey + ">";
     }
 
-    public <T> EventKey(Class<T> eventClass, String type, boolean useFullName)
+    public EventKey(Class<?> eventClass, String type, boolean useFullName)
     {
         sane(eventClass, "eventClass", type, "type");
         this.typeKey = TypeKey.valueOf(type);
@@ -118,12 +117,12 @@ public class EventKey
         this.key = eventClassName + "<" + type + ">";
     }
 
-    public TypeKey<?> typeKey()
+    public TypeKey<T> typeKey()
     {
         return typeKey;
     }
 
-    protected static TypeKey<?> typeKeyFromSerializedKey(String key)
+    protected static <T> TypeKey<T> typeKeyFromSerializedKey(String key)
     {
         int open = key.indexOf('<');
         int close = key.lastIndexOf('>');
@@ -135,14 +134,14 @@ public class EventKey
         return TypeKey.valueOf(key);
     }
 
-    public static EventKey valueOf(Class<?> eventClass, TypeKey<?> typeKey)
+    public static <T> EventKey<T> valueOf(Class<?> eventClass, TypeKey<T> typeKey)
     {
-        return new EventKey(eventClass, typeKey);
+        return new EventKey<>(eventClass, typeKey);
     }
 
-    public static EventKey valueOfFull(Class<?> eventClass, TypeKey<?> typeKey)
+    public static <T> EventKey<T> valueOfFull(Class<?> eventClass, TypeKey<T> typeKey)
     {
-        return new EventKey(eventClass, typeKey, true);
+        return new EventKey<>(eventClass, typeKey, true);
     }
 
     public int hashCode()
@@ -160,11 +159,11 @@ public class EventKey
         {
             return false;
         }
-        if (!(other instanceof EventKey))
+        if (!(other instanceof EventKey<?>))
         {
             return false;
         }
-        EventKey o = (EventKey) other;
+        EventKey<?> o = (EventKey<?>) other;
         if (o.key == null)
         {
             return (this.key == null);

@@ -23,24 +23,36 @@ import static com.taitl.ex.common.helper.Args.*;
  * @see EventSplitter
  * @see EventField
  */
-// Todo: introduce type parameter
-public class MultiKey
+public class MultiKey<T>
 {
     protected final String key;
-    protected final List<EventKey> eventKeys;
+    protected final List<EventKey<T>> eventKeys;
 
-    public static <T> MultiKey valueOf(EventKey... events)
+    @SafeVarargs
+    public static <T> MultiKey<T> valueOf(EventKey<? extends T>... events)
     {
-        return new MultiKey(events);
+        return new MultiKey<>(events);
     }
 
-    public <T> MultiKey(EventKey... events)
+    @SafeVarargs
+    public MultiKey(EventKey<? extends T>... events)
     {
         sane(events, "events");
-        this.eventKeys = Arrays.asList(events);
-        this.key = Arrays.stream(events)
-                .map(e -> e.toString())
+        this.eventKeys = castEventKeys(events);
+        this.key = eventKeys.stream()
+                .map(Object::toString)
                 .collect(Collectors.joining(","));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <T> List<EventKey<T>> castEventKeys(EventKey<? extends T>[] eventKeys)
+    {
+        List<EventKey<T>> typed = new ArrayList<>(eventKeys.length);
+        for (EventKey<? extends T> eventKey : eventKeys)
+        {
+            typed.add((EventKey<T>) eventKey);
+        }
+        return typed;
     }
 
     public int hashCode()
@@ -58,11 +70,11 @@ public class MultiKey
         {
             return false;
         }
-        if (!(other instanceof MultiKey))
+        if (!(other instanceof MultiKey<?>))
         {
             return false;
         }
-        MultiKey o = (MultiKey) other;
+        MultiKey<?> o = (MultiKey<?>) other;
         if (o.key == null)
         {
             return (this.key == null);
@@ -70,7 +82,7 @@ public class MultiKey
         return o.key.equals(this.key);
     }
 
-    public List<EventKey> eventKeys()
+    public List<EventKey<T>> eventKeys()
     {
         return eventKeys;
     }

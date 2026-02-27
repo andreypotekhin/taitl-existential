@@ -14,7 +14,7 @@ import static com.taitl.ex.common.helper.State.verify;
  */
 public class RuntimeKey<T>
 {
-    protected final EventKey key;
+    protected final EventKey<T> key;
     protected final TypeKey<T> typeKey;
     protected final Event<T> event;
     protected T entity;
@@ -79,12 +79,12 @@ public class RuntimeKey<T>
         this(EventKey.valueOf(clz, type, useFullName), TypeKey.valueOf(type), null, t);
     }
 
-    protected RuntimeKey(EventKey key, T entity)
+    protected RuntimeKey(EventKey<T> key, T entity)
     {
-        this(key, key != null ? (TypeKey<T>) key.typeKey() : null, null, entity);
+        this(key, key != null ? key.typeKey() : null, null, entity);
     }
 
-    protected RuntimeKey(EventKey key, TypeKey<T> typeKey, Event<T> event, T entity)
+    protected RuntimeKey(EventKey<T> key, TypeKey<T> typeKey, Event<T> event, T entity)
     {
         this.key = key;
         this.typeKey = typeKey;
@@ -92,7 +92,7 @@ public class RuntimeKey<T>
         this.entity = entity;
     }
 
-    public EventKey key()
+    public EventKey<T> key()
     {
         return key;
     }
@@ -119,7 +119,6 @@ public class RuntimeKey<T>
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     public boolean equals(Object other)
     {
         if (other == this)
@@ -130,11 +129,11 @@ public class RuntimeKey<T>
         {
             return false;
         }
-        if (!(other instanceof RuntimeKey))
+        if (!(other instanceof RuntimeKey<?>))
         {
             return false;
         }
-        RuntimeKey<T> o = (RuntimeKey<T>) other;
+        RuntimeKey<?> o = (RuntimeKey<?>) other;
         if (o.key == null)
         {
             return (this.key == null);

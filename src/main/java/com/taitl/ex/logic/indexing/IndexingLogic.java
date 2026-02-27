@@ -26,7 +26,7 @@ public class IndexingLogic implements Closeable
     {
         IndexData indexData = tr.runtimeIndexes();
         boolean fullNames = ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
-        EventKey eventKey = EventKey.valueOf(event, type, fullNames);
+        EventKey<T> eventKey = EventKey.valueOf(event, type, fullNames);
         RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, o, fullNames);
         indexData.encounteredUniqueEvents.add(runtimeKey);
         indexData.encounteredEventKeys.add(eventKey);
@@ -37,7 +37,7 @@ public class IndexingLogic implements Closeable
     {
         IndexData indexData = tr.runtimeIndexes();
         boolean fullNames = ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
-        EventKey eventKey = EventKey.valueOf(event, type, fullNames);
+        EventKey<T> eventKey = EventKey.valueOf(event, type, fullNames);
         // TODO: add clarification, perhaps a business rule, around choice of using event.t1
         RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, event.t1, fullNames);
         indexData.encounteredUniqueEvents.add(runtimeKey);
