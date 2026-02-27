@@ -1,8 +1,12 @@
 package com.taitl.ex.logic.validation.output;
 
-import java.util.*;
 import com.taitl.existential.exceptions.*;
 
+import java.util.*;
+
+/**
+ * Results of validation - a record of constraint violations.
+ */
 public class ValidationReport
 {
     List<ExistentialException> exceptions = new ArrayList<>();

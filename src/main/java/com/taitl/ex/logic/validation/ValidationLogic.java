@@ -17,13 +17,15 @@ public class ValidationLogic
     TransactionLogic tl;
     EvaluationLogic el;
     ValidationReport report;
-    PrepareTransaction prepareTransaction =
-            Creator.singleton(PrepareTransaction.class);
+    PrepareTransaction prepareTransaction;
+    ValidateTransaction validateTransaction;
 
     public ValidationLogic(TransactionLogic transactionLogic)
     {
         this.tl = transactionLogic;
         this.el = transactionLogic.evaluationLogic;
+        prepareTransaction = Creator.singleton(PrepareTransaction.class);
+        validateTransaction = Creator.singleton(ValidateTransaction.class);
         this.report = Creator.create(ValidationReport.class);
     }
 
@@ -40,11 +42,6 @@ public class ValidationLogic
      */
     public void run(Tr tr) throws ExistentialException
     {
-        el.evaluate(tr, report);
-        if (!report.isEmpty())
-        {
-            throw new ValidationStageExceptions(
-                    report.exceptions().toArray(new ExistentialException[] {}));
-        }
+        validateTransaction.call(tr, el, report);
     }
 }

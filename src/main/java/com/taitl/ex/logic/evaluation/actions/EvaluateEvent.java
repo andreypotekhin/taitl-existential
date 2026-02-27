@@ -16,7 +16,7 @@ public class EvaluateEvent
     public void call(RuntimeKey<?> runtimeKey, EventField eventField, ValidationReport report)
             throws ExistentialException
     {
-        sane(runtimeKey, "runtimeKey", eventField, "eventField");
+        sane(runtimeKey, "runtimeKey", eventField, "eventField", report, "report");
         SplitResult splitResult = splitEvent.call(runtimeKey, eventField);
         executeHandlers.call(splitResult.evs(), splitResult.event(), report);
     }

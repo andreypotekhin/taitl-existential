@@ -6,9 +6,7 @@ import com.taitl.existential.transactions.*;
 /**
  * Intermediary data, such as event and handler indexes,
  * to use in validation stage.
- * The data in this class is scoped to a single transaction.
- * An instance of ValidationData is owned by Tr class (Tr.indexData).
- * Used by ValidationLogic.
+ * An instance of this class is owned by Tr class.
  *
  * @see Tr
  */

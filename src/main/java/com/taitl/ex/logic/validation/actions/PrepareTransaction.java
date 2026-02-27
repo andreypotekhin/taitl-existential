@@ -12,7 +12,5 @@ public class PrepareTransaction
 {
     public void call(Tr tr, ValidationLogic vl)
     {
-        // Create intermediateries such as Instructions
-        // for all transactions in Tr
     }
 }

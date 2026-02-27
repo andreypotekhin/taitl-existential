@@ -1,7 +1,6 @@
 package com.taitl.existential.configs;
 
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.logic.evaluation.split_events.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.*;
@@ -52,9 +51,6 @@ public class Context implements Configurable, Evaluable
 
     /** Transaction factory */
     protected Supplier<? extends Transaction> transactionFactory = Transaction.FACTORY;
-
-    /** EventSplitter factory */
-    protected Supplier<? extends EventSplitter> eventSplitterFactory = EventSplitter.FACTORY;
 
     /**
      * Creates a context with the provided operation name.
@@ -165,19 +161,6 @@ public class Context implements Configurable, Evaluable
         return this;
     }
 
-    /**
-     * Overrides the event splitter factory used for this context.
-     *
-     * @param supplier Event splitter factory
-     * @return This context for chaining
-     */
-    public Context eventSplitter(Supplier<? extends EventSplitter> supplier)
-    {
-        sane(supplier, "supplier");
-        eventSplitterFactory = supplier;
-        return this;
-    }
-
     /*
      * Configurable interface
      */
@@ -281,15 +264,5 @@ public class Context implements Configurable, Evaluable
             return transactionFactory;
         }
         return parent != null ? parent.transactionFactory() : Transaction.FACTORY;
-    }
-
-    /**
-     * Returns the event splitter factory used for this context.
-     *
-     * @return Event splitter factory
-     */
-    public Supplier<? extends EventSplitter> eventSplitterFactory()
-    {
-        return eventSplitterFactory;
     }
 }
