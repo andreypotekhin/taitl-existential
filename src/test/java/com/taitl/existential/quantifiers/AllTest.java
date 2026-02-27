@@ -1,7 +1,7 @@
 package com.taitl.existential.quantifiers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.AfterEach;
@@ -37,8 +37,8 @@ class AllTest
     void constructWithPredicate()
     {
         o = new All<>(h -> h.hasRoof());
-        assertNull(o.condition);
-        assertNotNull(o.predicate);
+        assertNotNull(o.concrete);
+        assertEquals("", o.description());
         assertThrows(IllegalArgumentException.class, () -> {
             new All<>(null);
         });
@@ -48,8 +48,7 @@ class AllTest
     void constructWithConditionAndPredicate()
     {
         o = new All<>(h -> true, h -> h.hasRoof());
-        assertNotNull(o.condition);
-        assertNotNull(o.predicate);
+        assertNotNull(o.concrete);
         assertThrows(IllegalArgumentException.class, () -> {
             new All<House>(null, h -> h.hasRoof());
         });
@@ -62,9 +61,8 @@ class AllTest
     void constructWithDescription()
     {
         o = new All<>(h -> true, h -> h.hasRoof(), "description");
-        assertNotNull(o.condition);
-        assertNotNull(o.predicate);
-        assertNotNull(o.description);
+        assertNotNull(o.concrete);
+        assertNotNull(o.description());
         assertThrows(IllegalArgumentException.class, () -> {
             new All<House>(h -> true, h -> h.hasRoof(), null);
         });
