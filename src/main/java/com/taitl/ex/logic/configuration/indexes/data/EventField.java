@@ -35,7 +35,7 @@ import static com.taitl.ex.common.helper.State.*;
  */
 public class EventField
 {
-    protected ListMap<MultiKey<?>, Ev<?>> map = new ListMap<>();
+    protected ListMap<String, Ev<?>> map = new ListMap<>();
     protected ConfigurationIndexes ci;
 
     public EventField(ConfigurationIndexes ci)
@@ -48,17 +48,18 @@ public class EventField
      * sorts them by their declaration order and returns as a list of Ev<?>.
      * Caches the result for subsequent retrievals.
      */
-    public List<Ev<?>> get(MultiKey<?> multiKey)
+    public <T> List<Ev<?>> get(MultiKey<T> multiKey)
     {
         sane(multiKey, "multiKey");
-        List<Ev<?>> cached = map.get(multiKey);
+        String key = multiKey.toString();
+        List<Ev<?>> cached = map.get(key);
         if (cached != null)
         {
             return cached;
         }
         verify(ci.configuredHandlers.ready(), "Configured handlers index is not ready");
         List<OrderlyEv<?>> handlers = new ArrayList<>();
-        for (EventKey<?> eventKey : multiKey.eventKeys())
+        for (EventKey<T> eventKey : multiKey.eventKeys())
         {
             Set<OrderlyEv<?>> set = ci.configuredHandlers.get(eventKey);
             if (set != null)
@@ -74,7 +75,7 @@ public class EventField
         }
         synchronized (this)
         {
-            map.putList(multiKey, cached);
+            map.putList(key, cached);
         }
         return cached;
     }

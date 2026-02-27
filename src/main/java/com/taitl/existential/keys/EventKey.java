@@ -17,7 +17,7 @@ public class EventKey<T>
     protected final String key;
     protected final TypeKey<T> typeKey;
 
-    public static EventKey<?> valueOf(String s)
+    public static <T> EventKey<T> valueOf(String s)
     {
         return new EventKey<>(s);
     }

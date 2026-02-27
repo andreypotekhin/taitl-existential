@@ -30,7 +30,7 @@ public class ConfiguredEventHandlers
      *            TypeKey to search for.
      * @return Set<EventHandler<T>>, or null if no handlers defined for the type.
      */
-    public Set<EventHandler<?>> get(EventKey<?> key)
+    public <T> Set<EventHandler<?>> get(EventKey<T> key)
     {
         sane(key, "key");
         Set<EventHandler<?>> result = handlers.get(key.toString());
@@ -41,13 +41,13 @@ public class ConfiguredEventHandlers
         return result;
     }
 
-    public boolean contains(EventKey<?> key)
+    public <T> boolean contains(EventKey<T> key)
     {
         sane(key, "key");
         return handlers.containsKey(key.toString());
     }
 
-    public <T> Set<EventHandler<?>> put(EventKey<?> key, EventHandler<T> value)
+    public <T> Set<EventHandler<?>> put(EventKey<T> key, EventHandler<T> value)
     {
         sane(key, "key");
         sane(value, "value");

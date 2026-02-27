@@ -34,12 +34,29 @@ public class MultiKey<T>
         return new MultiKey<>(events);
     }
 
+    public static <T> MultiKey<T> valueOf(List<EventKey<T>> events)
+    {
+        return new MultiKey<>(events);
+    }
+
     @SafeVarargs
     public MultiKey(EventKey<? extends T>... events)
     {
         sane(events, "events");
         this.eventKeys = castEventKeys(events);
-        this.key = eventKeys.stream()
+        this.key = joinedKey(this.eventKeys);
+    }
+
+    public MultiKey(List<EventKey<T>> events)
+    {
+        sane(events, "events");
+        this.eventKeys = new ArrayList<>(events);
+        this.key = joinedKey(this.eventKeys);
+    }
+
+    protected static <T> String joinedKey(List<EventKey<T>> eventKeys)
+    {
+        return eventKeys.stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(","));
     }

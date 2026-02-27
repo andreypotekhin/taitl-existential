@@ -71,18 +71,30 @@ public class IndexConfig
             {
                 throw new RuntimeException("Unknown rule type: " + ev.getClass());
             }
-            EventKey<?> eventKey = eventKey(ev);
+            EventKey<T> eventKey = eventKey(ev);
             ci.addHandler(eventKey, ev);
         }
 
-        protected <T> EventKey<?> eventKey(Ev<T> ev)
+        protected <T> EventKey<T> eventKey(Ev<T> ev)
         {
             EventKey<T> typed = typedEventKey(ev);
             if (typed != null)
             {
                 return typed;
             }
-            return EventKey.valueOf(ev, ci.useFullClassNames());
+            TypeKey<T> typeKey = currentTypeKey(ev);
+            return ci.useFullClassNames() ? EventKey.valueOfFull(ev.getClass(), typeKey)
+                    : EventKey.valueOf(ev.getClass(), typeKey);
+        }
+
+        @SuppressWarnings("unchecked")
+        protected <T> TypeKey<T> currentTypeKey(Ev<T> ev)
+        {
+            if (currentTypeKey != null)
+            {
+                return (TypeKey<T>) currentTypeKey;
+            }
+            return (TypeKey<T>) TypeKey.valueOf(ev, ci.useFullClassNames());
         }
 
         @SuppressWarnings("unchecked")

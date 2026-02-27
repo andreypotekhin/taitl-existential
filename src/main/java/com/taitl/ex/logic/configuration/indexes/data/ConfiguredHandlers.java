@@ -38,7 +38,7 @@ public class ConfiguredHandlers
      *            TypeKey to search for.
      * @return Set<Ev<T>>, or null if no handlers defined for the type.
      */
-    public Set<OrderlyEv<?>> get(EventKey<?> key)
+    public <T> Set<OrderlyEv<?>> get(EventKey<T> key)
     {
         sane(key, "key");
         Set<OrderlyEv<?>> result = handlers.get(key.toString());
@@ -49,13 +49,13 @@ public class ConfiguredHandlers
         return result;
     }
 
-    public boolean contains(EventKey<?> key)
+    public <T> boolean contains(EventKey<T> key)
     {
         sane(key, "key");
         return handlers.containsKey(key.toString());
     }
 
-    public <T> Set<OrderlyEv<?>> put(EventKey<?> key, Ev<T> value)
+    public <T> Set<OrderlyEv<?>> put(EventKey<T> key, Ev<T> value)
     {
         sane(key, "key");
         sane(value, "value");

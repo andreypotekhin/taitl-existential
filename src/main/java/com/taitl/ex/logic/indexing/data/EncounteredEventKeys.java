@@ -20,21 +20,21 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class EncounteredEventKeys
 {
-    Set<EventKey<?>> eventKeys = new LinkedHashSet<>();
+    Set<String> eventKeys = new LinkedHashSet<>();
 
-    public void add(EventKey<?> eventKey)
+    public <T> void add(EventKey<T> eventKey)
     {
         sane(eventKey, "eventKey");
-        eventKeys.add(eventKey);
+        eventKeys.add(eventKey.toString());
     }
 
-    public boolean contains(EventKey<?> eventKey)
+    public <T> boolean contains(EventKey<T> eventKey)
     {
         sane(eventKey, "eventKey");
-        return eventKeys.contains(eventKey);
+        return eventKeys.contains(eventKey.toString());
     }
 
-    public Stream<EventKey<?>> stream()
+    public Stream<String> stream()
     {
         return eventKeys.stream();
     }

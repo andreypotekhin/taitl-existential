@@ -6,6 +6,7 @@ import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -23,26 +24,24 @@ public class SplitEvent
 {
     protected EventSplitter eventSplitter = Creator.singleton(EventSplitter.class);
 
-    public SplitResult call(RuntimeKey<?> runtimeKey, EventField eventField)
+    public <T> SplitResult call(RuntimeKey<T> runtimeKey, EventField eventField)
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField");
-        Set<RuntimeKey<?>> splitKeys = split(runtimeKey);
-        MultiKey<?> multiKey = multiKey(splitKeys);
+        Set<RuntimeKey<T>> splitKeys = split(runtimeKey);
+        MultiKey<T> multiKey = multiKey(splitKeys);
         List<Ev<?>> evs = eventField.get(multiKey);
         return new SplitResult(evs, runtimeKey.event());
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected Set<RuntimeKey<?>> split(RuntimeKey<?> runtimeKey)
+    protected <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
     {
-        return (Set) eventSplitter.split(runtimeKey);
+        return eventSplitter.split(runtimeKey);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected MultiKey<?> multiKey(Set<RuntimeKey<?>> splitKeys)
+    protected <T> MultiKey<T> multiKey(Set<RuntimeKey<T>> splitKeys)
     {
         sane(splitKeys, "splitKeys");
-        EventKey[] eventKeys = splitKeys.stream().map(RuntimeKey::key).toArray(EventKey[]::new);
+        List<EventKey<T>> eventKeys = splitKeys.stream().map(RuntimeKey::key).collect(Collectors.toList());
         return MultiKey.valueOf(eventKeys);
     }
 }
