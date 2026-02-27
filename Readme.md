@@ -114,7 +114,7 @@ Same when x0, x1 must also satisfy some condition:
 ## Documentation
 
 See /docs directory for further documentation.
-See /Troubleshooting.md for common setup and runtime failures.
+See /Troubleshooting.md for solutions to address common issues.
 
 ## Type Keys
 
@@ -130,11 +130,11 @@ Troubleshooting: `/Troubleshooting.md#type-key-format`
 
 ## License
 
-Licensed under the Apache License, Version 2.0. See /LICENSE for details.
+See /License.md document
 
 ## Community
 
-- Contributing: /CONTRIBUTING.md
-- Code of Conduct: /CODE_OF_CONDUCT.md
-- Support: /SUPPORT.md
-- Security: /SECURITY.md
+- Contributing: /Contributing.md
+- Code of Conduct: /Conduct.md
+- Support: /Support.md
+- Security: /Security.md

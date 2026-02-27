@@ -1,0 +1,37 @@
+# Software license
+
+This library is free software; you may redistribute it and/or
+modify it under the following combined terms and conditions.
+
+## 1. LGPL-2.1 (GNU Lesser General Public License)
+
+URL: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+
+## 2. Ethical Use Policy
+
+Prohibited use:
+- Development or usage of weapons of mass destruction.
+- Development or usage of mass surveillance technology.
+- Development or usage of fully autonomous weapons.
+- Development or usage of general artificial intelligence or super-intelligence.
+- Engagement, or prior engagement, in an activity that is incompatible with democratic values.
+- Engagement, or prior engagement, in a violation of international law.
+- Use by any government, military, law enforcement, or any contractor or subcontractor thereof.
+- Any use for the purposes of national security.
+
+These conditions should also apply to any derived work.
+You must include this Ethical Use Policy text in any source
+fork or any redistribution of this work.
+
+## Copyright
+
+Name: Existential (Library)
+Author: Andrey Potekhin
+Copyright: Taitl Design, LLC
+
+## No warranty
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+Lesser General Public License for more details.

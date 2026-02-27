@@ -22,8 +22,3 @@ Examples of unacceptable behavior include:
 - Publishing others' private information without permission.
 - Conduct considered inappropriate in a professional setting.
 
-## Reporting
-
-Abuse, harassing, or unacceptable behavior may be reported to the maintainers through a private channel
-listed in repository metadata or hosting platform settings. 
-
