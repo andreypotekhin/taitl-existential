@@ -2,7 +2,7 @@ package com.taitl.ex.logic.configuration.indexes.data;
 
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.logic.configuration.indexes.*;
-import com.taitl.ex.logic.evaluation.split_events.*;
+import com.taitl.ex.logic.evaluation.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
@@ -24,12 +24,14 @@ import static com.taitl.ex.common.helper.State.*;
  * Input: "Create<Doc<JSON>>,Create<Doc<?>>,Create<Doc>"
  * Output: List<EventHandler<T>>: OnCreate<Doc<JSON>>, OnCreate<Doc<?>>, OnCreate<Doc> etc.
  * - list of rules (expressions, event handlers) configured for these events.
- * - list order follows rules' declaration order.
- * - Returned values (lists) are cached to speed up repeat retrievals.
+ * - the order of rules in the list follows their declaration order.
+ * - the returned value is cached to speed up subsequent retrievals.
+ *
+ * Called by EvaluationLogic.
  *
  * @see MultiKey
  * @see EventKey
- * @see EventSplitter
+ * @see EvaluationLogic
  */
 public class EventField
 {
