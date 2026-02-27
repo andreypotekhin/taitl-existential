@@ -26,18 +26,6 @@ public class On<T> implements EventHandler<T>
     public String description = null;
 
     /**
-     * Creates a handler with an action that always executes.
-     *
-     * @param action
-     *            Action to invoke when the event is handled
-     */
-    public On(Consumer<? super T> action)
-    {
-        sane(action, "action");
-        this.action = action;
-    }
-
-    /**
      * Creates a handler with an action that always executes, annotated
      * with a human-readable description.
      *
@@ -48,13 +36,18 @@ public class On<T> implements EventHandler<T>
      */
     public On(Consumer<? super T> action, String description)
     {
-        sane(action, "action", description, "description");
-        this.action = action;
+        this(null, action);
+        sane(description, "description");
         this.description = description;
     }
 
     /**
-     * Creates a handler that executes only when the condition passes.
+     * Creates a handler declaration with optional condition and action.
+     *
+     * At least one of condition or action must be provided:
+     * - condition + no action: immutable invariant check
+     * - no condition + action: always-running side effect
+     * - condition + action: conditional side effect
      *
      * @param condition
      *            Predicate that determines whether the action should run
@@ -63,30 +56,26 @@ public class On<T> implements EventHandler<T>
      */
     public On(Predicate<? super T> condition, Consumer<? super T> action)
     {
-        sane(condition, "condition", action, "action");
+        check(condition != null || action != null,
+                "Either 'condition' or 'action' must not be null");
         this.condition = condition;
         this.action = action;
     }
 
     /**
-     * Creates a conditional handler with an explicit description.
+     * Creates a handler declaration with an explicit description.
      *
      * @param condition
-     *            Predicate that determines whether the action should run
+     *            Optional predicate that determines whether the action should run
      * @param action
-     *            Action to invoke when the event is handled
+     *            Optional action to invoke when the event is handled
      * @param description
      *            Human-friendly description of the handler
      */
     public On(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
-        sane(condition, "condition", description, "description");
-        if (action != null)
-        {
-            sane(action, "action");
-        }
-        this.condition = condition;
-        this.action = action;
+        this(condition, action);
+        sane(description, "description");
         this.description = description;
     }
 

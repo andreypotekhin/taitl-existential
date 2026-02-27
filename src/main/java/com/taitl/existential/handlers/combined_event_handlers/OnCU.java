@@ -20,17 +20,6 @@ public class OnCU<T> extends On<T> implements EventHandlerWithSideEffects<T>
      *
      * @param action
      *            Handler action
-     */
-    public OnCU(Consumer<? super T> action)
-    {
-        super(action);
-    }
-
-    /**
-     * Creates a handler that always runs for create and update events.
-     *
-     * @param action
-     *            Handler action
      * @param description
      *            Human-readable description
      */

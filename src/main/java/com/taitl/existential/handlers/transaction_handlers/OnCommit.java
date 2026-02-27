@@ -15,17 +15,6 @@ import com.taitl.existential.handlers.*;
 public class OnCommit<T extends Transaction> extends On<T>
 {
     /**
-     * Creates a commit handler that always executes.
-     *
-     * @param action
-     *            Action to invoke when the transaction commits
-     */
-    public OnCommit(Consumer<? super T> action)
-    {
-        super(action);
-    }
-
-    /**
      * Creates a commit handler with a description.
      *
      * @param action

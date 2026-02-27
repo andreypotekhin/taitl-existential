@@ -55,7 +55,7 @@ class EvaluationLogicTest
         TypeKey<String> typeKey = new TypeKey<>(String.class);
         ConfigurationIndexes indexes = new ConfigurationIndexes();
         indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
-                new OnCreate<String>(v -> effectCalls.incrementAndGet()));
+                new OnCreate<String>(null, v -> effectCalls.incrementAndGet()));
         indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
                 new OnCreate<String>(v -> false, null, "must pass"));
         indexes.doneIndexing();
@@ -80,7 +80,7 @@ class EvaluationLogicTest
         indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
                 new OnCreate<String>(v -> false, null, "broken invariant"));
         indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
-                new OnCreate<String>(v -> {
+                new OnCreate<String>(null, v -> {
                     throw new IllegalStateException("boom");
                 }));
         indexes.doneIndexing();

@@ -60,7 +60,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
     public Trancycle<T> begin(Consumer<? super T> action)
     {
         sane(action, "action");
-        return add(new OnBegin<T>(action));
+        return add(new OnBegin<T>(null, action));
     }
 
     /**
@@ -120,7 +120,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
     public Trancycle<T> commit(Consumer<? super T> action)
     {
         sane(action, "action");
-        return add(new OnCommit<T>(action));
+        return add(new OnCommit<T>(null, action));
     }
 
     /**
@@ -180,7 +180,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
     public Trancycle<T> checkpoint(Consumer<? super T> action)
     {
         sane(action, "action");
-        return add(new OnCheckpoint<T>(action));
+        return add(new OnCheckpoint<T>(null, action));
     }
 
     /**
@@ -240,7 +240,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
     public Trancycle<T> rollback(Consumer<? super T> action)
     {
         sane(action, "action");
-        return add(new OnRollback<T>(action));
+        return add(new OnRollback<T>(null, action));
     }
 
     /**

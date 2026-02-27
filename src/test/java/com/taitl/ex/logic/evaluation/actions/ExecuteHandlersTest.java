@@ -25,7 +25,7 @@ class ExecuteHandlersTest
         AtomicInteger biCalls = new AtomicInteger();
 
         List<Ev<?>> evs = List.of(
-                new OnUpdate<String>(value -> {
+                new OnUpdate<String>(null, value -> {
                     unaryCalls.incrementAndGet();
                     assertSame(newValue, value);
                 }),

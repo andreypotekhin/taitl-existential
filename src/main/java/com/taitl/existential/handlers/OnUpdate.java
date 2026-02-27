@@ -13,10 +13,6 @@ import com.taitl.existential.handlers.types.*;
  */
 public class OnUpdate<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
-    public OnUpdate(Consumer<? super T> action)
-    {
-        super(action);
-    }
 
     public OnUpdate(Consumer<? super T> action, String description)
     {

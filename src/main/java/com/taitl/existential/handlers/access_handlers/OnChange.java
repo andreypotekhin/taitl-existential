@@ -13,10 +13,6 @@ import com.taitl.existential.handlers.*;
  */
 public class OnChange<T> extends On<T>
 {
-    public OnChange(Consumer<? super T> action)
-    {
-        super(action);
-    }
 
     public OnChange(Consumer<? super T> action, String description)
     {

@@ -16,17 +16,6 @@ import com.taitl.existential.handlers.*;
 public class OnReadAndLock<T> extends On<T>
 {
     /**
-     * Creates a read-and-lock handler that always executes.
-     *
-     * @param action
-     *            Action to invoke when the read-and-lock occurs
-     */
-    public OnReadAndLock(Consumer<? super T> action)
-    {
-        super(action);
-    }
-
-    /**
      * Creates a read-and-lock handler with a description.
      *
      * @param action

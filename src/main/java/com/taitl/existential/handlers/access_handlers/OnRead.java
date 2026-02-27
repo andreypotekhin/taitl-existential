@@ -14,17 +14,6 @@ import com.taitl.existential.handlers.*;
 public class OnRead<T> extends On<T>
 {
     /**
-     * Creates a read handler that always executes.
-     *
-     * @param action
-     *            Action to invoke when the read occurs
-     */
-    public OnRead(Consumer<? super T> action)
-    {
-        super(action);
-    }
-
-    /**
      * Creates a read handler with a description.
      *
      * @param action

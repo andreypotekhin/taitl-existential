@@ -15,17 +15,6 @@ import com.taitl.existential.handlers.types.*;
 public class OnWrite<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
     /**
-     * Creates a write handler that always executes.
-     *
-     * @param action
-     *            Action to invoke when the write occurs
-     */
-    public OnWrite(Consumer<? super T> action)
-    {
-        super(action);
-    }
-
-    /**
      * Creates a write handler with a description.
      *
      * @param action

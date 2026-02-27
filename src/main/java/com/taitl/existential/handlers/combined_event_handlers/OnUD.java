@@ -19,17 +19,6 @@ public class OnUD<T> extends On<T> implements EventHandlerWithSideEffects<T>
      *
      * @param action
      *            Handler action
-     */
-    public OnUD(Consumer<? super T> action)
-    {
-        super(action);
-    }
-
-    /**
-     * Creates a handler that always runs for update and delete events.
-     *
-     * @param action
-     *            Handler action
      * @param description
      *            Human-readable description
      */

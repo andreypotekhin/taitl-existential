@@ -5,6 +5,7 @@ import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.data.CityTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.function.Consumer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -19,7 +20,7 @@ class OnTest
     @BeforeEach
     void setup()
     {
-        on = new On<>(c -> "Black".equals(c.color));
+        on = new On<>(c -> "Black".equals(c.color), (Consumer<Cat>) null);
         cat = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
     }
 
@@ -38,7 +39,7 @@ class OnTest
     void handleSideEffect() throws Exception
     {
         assertThat(cat.color, is("Black"));
-        on = new On<>(c -> c.color = "White");
+        on = new On<>(null, c -> c.color = "White");
         on.handle(cat);
         assertThat(cat.color, is("White"));
     }

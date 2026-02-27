@@ -15,17 +15,6 @@ import com.taitl.existential.handlers.*;
 public class OnRollback<T extends Transaction> extends On<T>
 {
     /**
-     * Creates a rollback handler that always executes.
-     *
-     * @param action
-     *            Action to invoke when the transaction rolls back
-     */
-    public OnRollback(Consumer<? super T> action)
-    {
-        super(action);
-    }
-
-    /**
      * Creates a rollback handler with a description.
      *
      * @param action

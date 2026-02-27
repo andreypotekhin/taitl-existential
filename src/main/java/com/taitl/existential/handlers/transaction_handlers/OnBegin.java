@@ -16,10 +16,6 @@ import com.taitl.existential.events.types.*;
  */
 public class OnBegin<T extends Transaction> extends On<T>
 {
-    public OnBegin(Consumer<? super T> action)
-    {
-        super(action);
-    }
 
     public OnBegin(Consumer<? super T> action, String description)
     {

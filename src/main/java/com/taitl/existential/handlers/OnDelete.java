@@ -13,10 +13,6 @@ import com.taitl.existential.handlers.types.*;
  */
 public class OnDelete<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
-    public OnDelete(Consumer<? super T> action)
-    {
-        super(action);
-    }
 
     public OnDelete(Consumer<? super T> action, String description)
     {

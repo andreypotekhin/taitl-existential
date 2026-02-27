@@ -15,10 +15,6 @@ import java.util.function.*;
  */
 public class OnAccess<T> extends On<T>
 {
-    public OnAccess(Consumer<? super T> action)
-    {
-        super(action);
-    }
 
     public OnAccess(Consumer<? super T> action, String description)
     {

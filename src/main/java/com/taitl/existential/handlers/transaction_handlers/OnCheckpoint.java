@@ -15,17 +15,6 @@ import com.taitl.existential.handlers.*;
 public class OnCheckpoint<T extends Transaction> extends On<T>
 {
     /**
-     * Creates a handler that always runs the provided action.
-     *
-     * @param action
-     *            Side effect to execute on checkpoint
-     */
-    public OnCheckpoint(Consumer<? super T> action)
-    {
-        super(action);
-    }
-
-    /**
      * Creates a handler with a description.
      *
      * @param action

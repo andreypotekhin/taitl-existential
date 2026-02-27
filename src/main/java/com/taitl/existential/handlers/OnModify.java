@@ -13,10 +13,6 @@ import com.taitl.existential.handlers.types.*;
  */
 public class OnModify<T> extends On<T> implements EventHandlerWithSideEffects<T>
 {
-    public OnModify(Consumer<? super T> action)
-    {
-        super(action);
-    }
 
     public OnModify(Consumer<? super T> action, String description)
     {
