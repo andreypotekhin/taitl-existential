@@ -1,7 +1,5 @@
 package com.taitl.existential.effects;
 
-import java.util.*;
-import java.util.function.*;
 import com.taitl.ex.common.helper.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
@@ -10,6 +8,9 @@ import com.taitl.existential.handlers.access_handlers.*;
 import com.taitl.existential.handlers.combined_event_handlers.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.keys.*;
+
+import java.util.*;
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.lang.Generics.*;
@@ -439,5 +440,4 @@ public class Effect<T> implements Evs<T>, Immediate<T>
         sane(typeKey, "typeKey");
         this.typeKey = typeKey;
     }
-
 }

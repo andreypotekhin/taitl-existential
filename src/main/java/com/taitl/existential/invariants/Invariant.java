@@ -1,7 +1,5 @@
 package com.taitl.existential.invariants;
 
-import java.util.*;
-import java.util.function.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.*;
@@ -11,9 +9,12 @@ import com.taitl.existential.interfaces.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.quantifiers.*;
 
+import java.util.*;
+import java.util.function.*;
+
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.lang.Generics.*;
 import static com.taitl.ex.common.helper.State.*;
+import static com.taitl.ex.common.helper.lang.Generics.*;
 
 /**
  * Declares invariants over entities within a transaction or a specific context.
@@ -156,25 +157,25 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public <T> Exists<T> exists(Collection<T> values, Predicate<T> predicate)
+    public Exists<T> exists(Collection<T> values, Predicate<T> predicate)
     {
         sane(values, "values", predicate, "predicate");
         return new Exists<T>(values, predicate);
     }
 
-    public <T> Exists<T> exists(Collection<T> values, BiPredicate<T, Transaction> bipredicate)
+    public Exists<T> exists(Collection<T> values, BiPredicate<T, Transaction> bipredicate)
     {
         sane(values, "values", bipredicate, "bipredicate");
         return new Exists<T>(values, bipredicate);
     }
 
-    public <T> Exists<T> exists(Collection<T> values, Predicate<Collection<T>> predicate, int placeholder)
+    public Exists<T> exists(Collection<T> values, Predicate<Collection<T>> predicate, int placeholder)
     {
         sane(values, "values", predicate, "predicate");
         return new Exists<T>(values, predicate, placeholder);
     }
 
-    public <T> Exists<T> exists(Collection<T> values, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public Exists<T> exists(Collection<T> values, BiPredicate<Collection<T>, Transaction> bipredicate,
             int placeholder)
     {
         sane(values, "values", bipredicate, "bipredicate");
@@ -219,5 +220,4 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         sane(typeKey, "typeKey");
         this.typeKey = typeKey;
     }
-
 }
