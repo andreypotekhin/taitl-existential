@@ -82,8 +82,8 @@ See 'End-user advocate role' section in 'Team roles' of AGENTS.md
 Automation instructions
 
 - Find 2-3 opportunities to improve the library for end user 
-(e.g. better documentation, error messages, exceptions, logging, public code structure for readability and
-maintainability), provide fixes.
+(e.g. better documentation, disambiguation, error messages, exceptions, logging,
+public code structure for readability and maintainability) and provide fixes.
 - Create suggestions for broader refactorings.
 
 Limits

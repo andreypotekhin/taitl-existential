@@ -124,9 +124,4 @@ public class ExecuteHandlers
     {
         onException.call(ex, report);
     }
-
-    protected boolean constraintViolation(ExistentialException ex)
-    {
-        return onException.constraintViolation(ex);
-    }
 }

@@ -43,15 +43,6 @@ import static com.taitl.ex.common.helper.Args.*;
  *      Execution order of above handlers will be same as their occurrence in the code (A, B, C).
  *      The event handlers defined in the parent context are always executed before the ones from the child context.
  * 
- * Customizing
- *   EventSplitter can be customized per context.
- *   <pre>{@code
- *   // Create custom EventSplitter class
- *   class CustomEventSplitter extends EventSplitter {...}
- *   // Install custom event splitter into a Context
- *   context.eventSplitterFactory(() -> new CustomEventSplitter());
- *   }</pre>
- *
  * @see Context
  * @see Transaction
  * @see Event
