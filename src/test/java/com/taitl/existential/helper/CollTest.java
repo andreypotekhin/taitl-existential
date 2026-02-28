@@ -18,4 +18,19 @@ class CollTest
         coll.add("c");
         assertEquals("a", Coll.getFirst(coll));
     }
+
+    @Test
+    void removeMatching()
+    {
+        Collection<String> values = new LinkedHashSet<>();
+        values.add("a");
+        values.add("b");
+        values.add("c");
+
+        Collection<String> removed =
+                Coll.removeMatching(values, value -> value.compareTo("b") >= 0, LinkedHashSet::new);
+
+        assertEquals(Set.of("b", "c"), removed);
+        assertEquals(Set.of("a"), values);
+    }
 }

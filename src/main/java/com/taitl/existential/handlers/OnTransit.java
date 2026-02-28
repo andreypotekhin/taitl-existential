@@ -138,7 +138,7 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
         return Descriptions.text(description);
     }
 
-    private String handlerMessage(String base)
+    protected String handlerMessage(String base)
     {
         return Descriptions.message(base, description);
     }

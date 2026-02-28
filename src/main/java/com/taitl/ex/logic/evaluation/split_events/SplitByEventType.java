@@ -54,6 +54,7 @@ public class SplitByEventType
         {
             events.add(new Create<>(transit.t1));
             events.add(new CU<>(transit.t1));
+            events.add(new CUD<>(transit.t1));
             events.add(new Write<>(transit.t1));
         }
         // Update
@@ -62,6 +63,8 @@ public class SplitByEventType
             events.add(new Change<>(transit.t1));
             events.add(new Update<>(transit.t1));
             events.add(new CU<>(transit.t1));
+            events.add(new UD<>(transit.t1));
+            events.add(new CUD<>(transit.t1));
             events.add(new Write<>(transit.t1));
         }
         // Delete
@@ -69,6 +72,8 @@ public class SplitByEventType
         {
             events.add(new Change<>(transit.t0));
             events.add(new Delete<>(transit.t0));
+            events.add(new UD<>(transit.t0));
+            events.add(new CUD<>(transit.t0));
             events.add(new Write<>(transit.t0));
         }
         return events;

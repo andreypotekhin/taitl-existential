@@ -92,12 +92,7 @@ public class ConcurrentSetMap<K, V> extends SetMap<K, V>
     {
         synchronized (this)
         {
-            if (size == 0)
-            {
-                throw new IllegalStateException("You can't call method getKeyClass() on an empty Multimap.");
-            }
-            K result = Coll.getFirst(storage.keySet());
-            return (Class<? extends K>) result.getClass();
+            return MapKeys.keyClass(storage, size);
         }
     }
 

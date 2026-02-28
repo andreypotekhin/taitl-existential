@@ -5,8 +5,8 @@ import com.taitl.existential.keys.TypeKey;
 import java.util.List;
 
 /**
- * Marker interface for a list of evaluated statements (Evs) on a single type.
- * Known implementors: Invariant<Entity>, Effect<Entity>, Trancycle<Transaction>.
+ * Collection of evaluable statements (Evs) bound to a single type.
+ * Known implementors include Invariant<Entity>, Effect<Entity>, Trancycle<Transaction>.
  *
  * @param <T> Entity type
  */
@@ -24,7 +24,7 @@ public interface Evs<T> extends Ev<T>
     }
 
     /**
-     * Is this a single statement?
+     * Indicates whether this is a single statement rather than a list.
      */
     default boolean single()
     {

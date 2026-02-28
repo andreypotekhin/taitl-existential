@@ -7,6 +7,7 @@ import com.taitl.ex.logic.evaluation.intents.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.validation.output.*;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.constants.Flags;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -35,9 +36,10 @@ public class EvaluationLogic implements Closeable
         sane(tr, "tr", report, "report");
         EventField eventField = eventField(tr);
         EvaluateEvent evaluateEvent = Creator.create(EvaluateEvent.class);
+        boolean useFullClassNames = useFullClassNames();
         for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
         {
-            evaluateEvent.call(runtimeKey, eventField, report);
+            evaluateEvent.call(runtimeKey, eventField, report, useFullClassNames);
         }
     }
 
@@ -63,5 +65,10 @@ public class EvaluationLogic implements Closeable
     {
         sane(tr, "tr");
         return config(tr).indexes().eventField();
+    }
+
+    public boolean useFullClassNames()
+    {
+        return tl.ex().get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
     }
 }

@@ -97,6 +97,17 @@ class TypeKeyTest
     }
 
     @Test
+    void valueOfRejectsNullInstance()
+    {
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            TypeKey.valueOf((TypeKeyTest) null, false);
+        }).getMessage(), containsString("'t' must not be null"));
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            TypeKey.valueOf((TypeKeyTest) null, "JSON", false);
+        }).getMessage(), containsString("'t' must not be null"));
+    }
+
+    @Test
     void testHashCode()
     {
         TypeKey<?> a = new TypeKey("Doc");

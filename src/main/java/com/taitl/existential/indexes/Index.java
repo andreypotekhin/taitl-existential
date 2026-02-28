@@ -1,10 +1,9 @@
 package com.taitl.existential.indexes;
 
-import com.taitl.ex.common.helper.collections.SetMap;
+import com.taitl.ex.common.helper.collections.*;
 
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.*;
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.sane;
 import static com.taitl.ex.common.helper.State.verify;
@@ -21,10 +20,10 @@ import static com.taitl.ex.common.helper.State.verify;
  */
 public class Index<K, V>
 {
-    private static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
-    private static final String ARG_KEY_CLASS = "Argument 'key' class '%s' does not match the key class '%s'"
+    protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
+    protected static final String ARG_KEY_CLASS = "Argument 'key' class '%s' does not match the key class '%s'"
             + " required by this index. See " + TROUBLESHOOTING_SECTION;
-    private static final String ARG_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
+    protected static final String ARG_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
             + " returned by 'getKey' function. See " + TROUBLESHOOTING_SECTION;
 
     protected SetMap<K, V> storage = new SetMap<>();

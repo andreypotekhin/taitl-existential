@@ -91,17 +91,7 @@ public class SetMap<K, V>
             {
                 return null;
             }
-            Set<V> removed = setFactory.get();
-            Iterator<V> iterator = values.iterator();
-            while (iterator.hasNext())
-            {
-                V value = iterator.next();
-                if (match.test(value))
-                {
-                    removed.add(value);
-                    iterator.remove();
-                }
-            }
+            Set<V> removed = Coll.removeMatching(values, match, setFactory);
             if (!removed.isEmpty() && values.isEmpty())
             {
                 size--;
@@ -151,12 +141,7 @@ public class SetMap<K, V>
     @SuppressWarnings("unchecked")
     public Class<? extends K> getKeyClass()
     {
-        if (size == 0)
-        {
-            throw new IllegalStateException("You can't call method getKeyClass() on an empty Multimap.");
-        }
-        K result = Coll.getFirst(storage.keySet());
-        return (Class<? extends K>) result.getClass();
+        return MapKeys.keyClass(storage, size);
     }
 
     protected void requireKey(Object key)

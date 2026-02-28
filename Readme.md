@@ -2,14 +2,14 @@
 
 Existential is a constraint library for expressing and enforcing invariants between program entities.
 
-It enables a small set of math-inspired notations for describing application logic. Existential
+It provides a small set of math-inspired notations for describing application logic. Existential
 implements two logic quantifiers, ∀ ("for any") and ∃ ("exists"), allowing you to create logical
 expressions about application entities (elements of the business domain) and to guarantee those
 expressions hold. For instance, the library lets you constrain a single field, multiple fields,
 or how an object may change over time.
-Performance is achieved by evaluating expressions only at specific
-points in time (transaction boundaries), treating repeated changes between those points as a single change.
-Memory efficiency comes from reusing singleton expression instances where possible.
+Performance comes from evaluating expressions only at transaction boundaries, treating repeated changes
+between those points as a single change. Memory efficiency comes from reusing singleton expression instances
+where possible.
 
 ## Limitations
 
@@ -19,7 +19,7 @@ a business operation.
 ## What it is not
 
 Existential does not attempt to derive new truths from what's already known,
-nor is it aimed at proving or equation solving. It allows the user to declare
+nor is it aimed at theorem proving or equation solving. It allows the user to declare
 certain truths about a program's entities, and guarantees a failure,
 such as an exception, if those truths are violated.
 
@@ -82,8 +82,8 @@ An object of type X exists for which a predicate holds:
     ∃ x ∈ X ⊤(x)      Exists<X>(coll, predicate(x))
     
     Here, coll is a collection where we should look for objects to establish existence.
-    The Exists expression guarantees that there is at least one object in the collection which satisfies the predicate.
-    This scans through the whole collection, so a more performant approach is shown next.
+    The Exists expression guarantees that at least one object in the collection satisfies the predicate.
+    This is a linear scan, so a more performant approach is shown next.
 
 For more efficiency, use an *index* to determine the existence:
 

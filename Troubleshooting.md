@@ -9,8 +9,8 @@ Common causes:
 - `EXISTENTIAL_CONFIG_FILE` points to a symlink or an oversized file.
 - `EXISTENTIAL_CONFIG_FILE` points to a file with insecure permissions or unexpected ownership.
 - `EXISTENTIAL_CONFIG_FILE` is stored under a group/world writable directory.
-- Properties file contains an unknown key.
-- Boolean value is not `true` or `false` (case-sensitive).
+- Properties file includes an unknown key.
+- Boolean value is not `true` or `false` (case sensitive).
 
 Fix:
 1. If `EXISTENTIAL_CONFIG_FILE` is set, verify the file exists and is readable.
@@ -34,7 +34,7 @@ Common causes:
 
 Fix:
 1. Verify the condition logic against the entity values passed to the handler.
-2. If the rule is informational only, provide an action handler instead of a constraint.
+2. If the rule is informational only, configure it as an action handler instead of a constraint.
 3. Add a description to the handler to make diagnostics clearer.
 
 ## Event Handler Execution Failure
@@ -59,8 +59,8 @@ Typical error messages:
 - `Intent condition is not met for event 'Write<...>'`
 
 Common causes:
-- You configured an intent for an event type (for example `read`) but did not configure the same event intent for
-  another entity class that emits that event.
+- You configured an intent for an event type (for example `read`) but did not configure the same intent for another
+  entity class that emits that event.
 - The configured intent predicate evaluated to `false` for the emitted event.
 
 Fix:

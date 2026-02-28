@@ -8,14 +8,14 @@ import static com.taitl.ex.common.helper.lang.Generics.*;
 import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
- * String representation of a type along with its generic qualifier, for example "Set<Car>".
+ * String representation of a type along with its generic qualifier, for example "Set&lt;Car&gt;".
  * This type key is used to work around Java type erasure when the generic qualifier is
  * needed at runtime.
  * For non-generic types, the key is the class short name, such as "String".
- * For generic types, the key is the class short name with the qualifier, such as
- * {@code Set<House>}.
+ * For generic types, the key is the class short name with the qualifier in angle brackets,
+ * such as Set&lt;House&gt;.
  * This allows event handlers to be registered for fully-qualified types, for example
- * OnChange<Document<HTML>> and OnChange<Document<JSON>>.
+ * OnChange&lt;Document&lt;HTML&gt;&gt; and OnChange&lt;Document&lt;JSON&gt;&gt;.
  */
 public class TypeKey<T>
 {
@@ -28,11 +28,9 @@ public class TypeKey<T>
      * Takes advantage of Java's anonymous class syntax to capture the generic type
      * information at runtime (not available otherwise).
      *
-     * Usage: create an anonymous subclass of TypeKey with the desired generic type:
-     * {@code new TypeKey<MyClass<GenericParams>>(){}}
-     *
-     * Example: {@code new TypeKey<Document<JSON>>(){}}
-     * Result: {@code "Document<JSON>"}
+     * Usage: create an anonymous subclass of TypeKey with the desired generic type.
+     * Example: an anonymous TypeKey for Document with JSON.
+     * Result: Document&lt;JSON&gt;.
      */
     protected TypeKey()
     {
@@ -76,10 +74,10 @@ public class TypeKey<T>
 
     /**
      * Constructs TypeKey for a class with generics.
-     * Example: TypeKey(Document.class, "JSON"): "Document<JSON>"
+     * Example: TypeKey(Document.class, "JSON") yields Document&lt;JSON&gt;.
      *
      * @param typeClass        Class to construct TypeKey from, like Document.class
-     * @param genericQualifier Generic qualifier, like {@code "JSON"}
+     * @param genericQualifier Generic qualifier, like "JSON"
      */
     public TypeKey(Class<?> typeClass, String genericQualifier)
     {
@@ -90,10 +88,11 @@ public class TypeKey<T>
 
     /**
      * Constructs TypeKey for a class with generics, optionally using fully-qualified class name.
-     * Example: TypeKey(Document.class, "JSON"): "Document<JSON>" or "com.example.Document<JSON>"
+     * Example: TypeKey(Document.class, "JSON") yields Document&lt;JSON&gt;
+     * or com.example.Document&lt;JSON&gt;.
      *
      * @param typeClass        Class to construct TypeKey from, like Document.class
-     * @param genericQualifier Generic qualifier, like {@code "JSON"}
+     * @param genericQualifier Generic qualifier, like "JSON"
      * @param useFullName      If true, uses fully-qualified class name instead of short name
      */
     public TypeKey(Class<?> typeClass, String genericQualifier, boolean useFullName)
@@ -105,9 +104,9 @@ public class TypeKey<T>
 
     /**
      * Constructs TypeKey for a class name string with possible generic qualifier.
-     * Example: TypeKey("Document<JSON>"): "Document<JSON>"
+     * Example: TypeKey("Document&lt;JSON&gt;") yields Document&lt;JSON&gt;.
      *
-     * @param classNameQualifiedWithGenerics Class name qualified with generics, like {@code "Document<JSON>"}
+     * @param classNameQualifiedWithGenerics Class name qualified with generics, like "Document&lt;JSON&gt;"
      */
     public TypeKey(String classNameQualifiedWithGenerics)
     {
@@ -140,11 +139,13 @@ public class TypeKey<T>
 
     public static <T> TypeKey<T> valueOf(T t, String genericQualifier, boolean useFullName)
     {
+        sane(t, "t", genericQualifier, "genericQualifier");
         return new TypeKey<>(t.getClass(), genericQualifier, useFullName);
     }
 
     public static <T> TypeKey<T> valueOf(T t, boolean useFullName)
     {
+        sane(t, "t");
         return new TypeKey<>(t.getClass(), useFullName);
     }
 

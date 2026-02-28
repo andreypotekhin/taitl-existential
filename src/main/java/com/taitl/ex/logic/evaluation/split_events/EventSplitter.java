@@ -25,9 +25,9 @@ import static com.taitl.ex.common.helper.Args.*;
  * }
  * </pre>
  * Further, depending on type of transition (Create, Update, Delete), emits the following events:
- *   Created: {@code Create<House>, Write<House>, Upsert<House> }
- *   Updated: {@code Update<House>, Write<House>, Upsert<House>, Change<House>, Mutate<House> }
- *   Deleted: {@code Delete<House>, Write<House>, Change<House>,  }
+ *   Created: {@code Create<House>, Write<House>, CU<House>, CUD<House> }
+ *   Updated: {@code Update<House>, Write<House>, CU<House>, UD<House>, CUD<House>, Change<House>, Mutate<House> }
+ *   Deleted: {@code Delete<House>, Write<House>, UD<House>, CUD<House>, Change<House> }
  * 
  * Execution order
  *   Q: In what order are these events created? This is important, since event handlers
@@ -38,7 +38,7 @@ import static com.taitl.ex.common.helper.Args.*;
  *      <pre>{@code
  *        new OnWrite<Cat>(c -> call1()); // A
  *        new OnUpdate<Cat>(c -> call2() ); // B
- *        new OnUpsert<Cat>(c -> call1() ); // C
+ *        new OnCU<Cat>(c -> call1() ); // C
  *      }</pre>
  *      Execution order of above handlers will be same as their occurrence in the code (A, B, C).
  *      The event handlers defined in the parent context are always executed before the ones from the child context.
@@ -67,6 +67,11 @@ public class EventSplitter
 
     public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
     {
+        return split(runtimeKey, false);
+    }
+
+    public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey, boolean useFullEventNames)
+    {
         sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();
         check(event != null, "RuntimeKey event should not be null");
@@ -77,7 +82,8 @@ public class EventSplitter
         {
             for (TypeKey<T> typeKey : typeKeys)
             {
-                runtimeKeys.add(new RuntimeKey<>(splitEvent, typeKey, runtimeEntity(splitEvent, runtimeKey), false));
+                runtimeKeys.add(new RuntimeKey<>(splitEvent, typeKey, runtimeEntity(splitEvent, runtimeKey),
+                        useFullEventNames));
             }
         }
         return runtimeKeys;

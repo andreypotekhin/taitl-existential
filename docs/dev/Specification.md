@@ -1,24 +1,24 @@
 ## Library Specification 
 
-Below is the list of claims made by the Existential library - things that are stated (claimed) in library documents.
-None of the claims are in any way legal. None of them constitute any contract.
+Below is the list of claims made by the Existential library - statements declared in library documents.
+None of these claims are legal statements or contracts.
 They only describe library features and behavior for implementation.
 
 As user stories, claim statements may be prefixed with 'The user can...' (or 'The user can't...').
-Claims are backed by test cases in src/test/java/com/taitl/existential/specs. 
-The (+) signs indicate items already completed and covered by tests.
+Claims are backed by test cases in src/test/java/com/taitl/existential/specs.
+A leading (+) indicates items already completed and covered by tests.
 
 ### Terminology
 See Terminology.md for terms and concepts.
 
 ### Library
 
-+User can access the library using static facade.
++User can access the library using the static facade.
 +User can access the library using a singleton.
 User can independently configure and use multiple instances of the library.
-Within an instance of Existential library, the user can configure multiple business operations.
+Within an Existential instance, the user can configure multiple business operations.
 Within a business operation configuration, the user can configure multiple operation contexts.
-Within an operation context, the user can configure multiple rules such as invariants, effects and intents.
+Within an operation context, the user can configure multiple rules such as invariants, effects, and intents.
 
 #### Library configuration.
 
@@ -28,7 +28,7 @@ Within an operation context, the user can configure multiple rules such as invar
 +User can configure library options using a config file.
 +User can configure library options using a classpath resource.
 +User can specify the config file with an environment variable.
-+Initial version of the config file is auto-created or otherwise available.
++An initial config file is auto-created or otherwise available.
 
 #### Library usage
 
@@ -46,7 +46,7 @@ User can't send events outside a transaction.
 
 #### Library lifecycle phases
 
-The library usage falls into configuration, execution and validation phases.
+Library usage falls into configuration, execution, and validation phases.
 In the configuration phase, the user defines rules - constraints and effects - using contexts and transactions.
 In the execution phase, the user begins and ends transactions and sends events to the library.
 In the execution phase, the library executes execution-time side effects.
@@ -254,6 +254,7 @@ For early and middle stage effects, event handlers gets executed upon receiving 
 Late stage handlers are executed at transaction commit or checkpoint, once per trigger event type.
   - For several trigger events of the same type, late stage event handler is executed only once.
 The order of effect invocation follows the order of their declaration.
++User can define effects for combined events (CU, UD, CUD) emitted on create/update/delete transitions.
 
 ### Intents
 

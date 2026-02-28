@@ -5,10 +5,11 @@ import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.combined_events.*;
 
 /**
- * Indicates an event on an entity, such as creating, accessing, modifying, or deleting it.
- * Serves as a base type for more specific events, such as {@code Create<T>} and {@code Update<T>}.
- * Example: {@code EntityEvent<Account>} is emitted when an {@code Account} entity is accessed
- * or modified during a business transaction.
+ * Indicates an event that targets a single entity instance, such as creating, accessing, modifying,
+ * or deleting it.
+ * Serves as a base type for more specific events, such as Create<T> and Update<T>.
+ * Example: EntityEvent<Account> is emitted when an Account entity is accessed or modified during a
+ * business transaction.
  * Database analogs include SELECT, INSERT, UPDATE, and DELETE.
  *
  * @param <T>

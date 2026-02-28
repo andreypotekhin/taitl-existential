@@ -5,7 +5,7 @@ import com.taitl.existential.exceptions.*;
 /**
  * Base interface for event handlers with side effects, such as OnChange[E]<T>.
  *
- * Here, E is one of Create, Update, Upsert, Delete, Read.
+ * Here, E is one of Create, Update, Delete, Read, Write, Change, CU, UD, CUD.
  *
  * @param <T>
  *            Type of entity

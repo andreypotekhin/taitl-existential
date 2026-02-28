@@ -15,7 +15,7 @@ import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
  * Builds a Config object for a single business operation as a set of Context
- * objects configured with constraints, invariants, intents, qualifiers and effects.
+ * objects configured with constraints, invariants, intents, qualifiers, and effects.
  */
 public class ConfigBuilder
 {
@@ -42,7 +42,7 @@ public class ConfigBuilder
     protected Supplier<? extends Transaction> transactionFactory = () -> Creator.create(Transaction.class);
 
     /**
-     * Constructs Config object with specified name.
+     * Constructs a Config object with a specified name.
      * Examples: "/app/docs/update", "/app/docs/*"
      *
      * @param name Name of context
@@ -55,9 +55,9 @@ public class ConfigBuilder
     }
 
     /**
-     * Create ConfigBuilder for a context.
+     * Creates a ContextBuilder for a context.
      *
-     * @return ConfigBuilder for Context class
+     * @return ContextBuilder for Context class
      */
     public ContextBuilder context(String name)
     {
@@ -65,9 +65,9 @@ public class ConfigBuilder
     }
 
     /**
-     * Create ConfigBuilder for the main context of this operation.
+     * Creates a ContextBuilder for the main context of this operation.
      *
-     * @return ConfigBuilder for Context class
+     * @return ContextBuilder for Context class
      */
     public ContextBuilder context()
     {
@@ -75,14 +75,14 @@ public class ConfigBuilder
     }
 
     /**
-     * Associate a custom Context with the Op.
+     * Associates a custom Context with the Op.
      *
-     * Allows to define rules, such as invariants and intents,
+     * Allows defining rules, such as invariants and intents,
      * for the context using an instance of a custom context class.
      *
      * Example:
-     *   Ex.configure("/app/docs/update")                <-- ConfigBuilder
-     *     .context(new Context(){{           <-- Custom context
+     *   Ex.configure("/app/docs/update")            <-- ConfigBuilder
+     *     .context(new Context(){{                  <-- Custom context
      *        invariant(new Invariant<Document<JSON>>() {{
      *             write(doc -> doc.verify());
      *             all(doc -> doc.verified());
@@ -99,11 +99,11 @@ public class ConfigBuilder
      *        }});
      *    }})
      *
-     *  This method is a multi-entry method which allows creating multiple
+     *  This method is a multi-entry method that allows creating multiple
      *  context factories when called sequentially. The reason to have
-     *  multiple context factories is to be able to create multiple
-     *  custom rules in different parts of application (e.g. in multiple
-     *  classes/components).
+     *  multiple context factories is to create multiple custom rules in
+     *  different parts of the application (for example, in multiple classes
+     *  or components).
      */
     public ConfigBuilder context(Context context)
     {
@@ -122,10 +122,10 @@ public class ConfigBuilder
     }
 
     /**
-     * Build configured Contexts.
-     * Create intermediates for consumption by subsequent stages.
+     * Builds configured Contexts.
+     * Creates intermediates for consumption by subsequent stages.
      *
-     * Do not call this method directly -tt is called by ConfigRegistry when
+     * Do not call this method directly - it is called by ConfigRegistry when
      * the first transaction begins.
      * This method is called from ExistentialConfigs.finalizeConfiguration().
      */
@@ -135,7 +135,7 @@ public class ConfigBuilder
         // Link each configured Context to direct or indirect parent Context
         // as well as to any matching wildcard Context(s) by comparing context names.
         // Do not create extra contexts
-        // Do not copy or duplicate rules between context -
+        // Do not copy or duplicate rules between contexts -
         // this may cause side effects to be called more than once
 
         Config config = Creator.create(Config.class);

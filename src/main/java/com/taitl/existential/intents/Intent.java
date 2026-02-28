@@ -25,7 +25,7 @@ import static com.taitl.ex.common.helper.lang.Generics.*;
  */
 public class Intent<T> implements Evs<T>, Immediate<T>
 {
-    Transaction tran;
+    Transaction transaction;
     TypeKey<T> typeKey;
     List<Ev<T>> evs = new ArrayList<>();
 
@@ -259,13 +259,13 @@ public class Intent<T> implements Evs<T>, Immediate<T>
 
     public Transaction transaction()
     {
-        return tran;
+        return transaction;
     }
 
     public void transaction(Transaction transaction)
     {
         sane(transaction, "transaction");
-        tran = transaction;
+        this.transaction = transaction;
     }
 
     public void typeKey(TypeKey<T> typeKey)
