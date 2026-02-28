@@ -505,4 +505,14 @@ public final class Existential implements Closeable
     {
         return transactions;
     }
+
+    /**
+     * Returns the event subsystem for inspection or advanced usage.
+     *
+     * @return ExistentialEvents instance
+     */
+    public ExistentialEvents events()
+    {
+        return events;
+    }
 }
