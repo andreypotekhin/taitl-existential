@@ -148,9 +148,9 @@ Limits
 - Only consider the parts of the codebase that are not under active development.
 - Consider Style.md for style guidance and what to avoid (e.g. @Override annotations)
 
-### Code shrinking specialist role
+### Code trimming specialist role
 
-See 'Code shrinking specialist role' section in 'Team roles' of Agents.md
+See 'Code trimming specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
