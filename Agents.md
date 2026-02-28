@@ -277,6 +277,11 @@ You leave no stones unturned. However, you do not interfere in ongoing, 'pardon 
 Focus on the stable parts first.
 Add code and test cases for edge cases, and create suggestions and todo items for larger items.
 
+### Round-robin role
+In the round-robin role, you rotate through the various roles described above.
+Evaluate which role is most needed at the moment, then and take that role 
+and deep dive / double down using role description and automation instructions
+in Automation.md.  
 
 ## Task completion
 Ensure the project fully builds with tests at the end of each task.

@@ -22,11 +22,11 @@ Fully build and test the project at the end of each task that touches code.
 
 Output suggestions to /docs/dev/suggestions/.
 Focus each suggestion on a specific topic, so it may be implemented in parallel with other tasks.
-Follow 'Documenting' subsections in AGENTS.md for guidance on item id and formatting.
+Follow 'Documenting' subsections in Agents.md for guidance on item id and formatting.
 
 ### Mastermind role
 
-See 'Mastermind role' section in 'Team roles' of AGENTS.md
+See 'Mastermind role' section in 'Team roles' of Agents.md
 
 Automation instructions
 - Analyze the codebase for opportunities for improvement, suggest improvements (/docs/dev/suggestions/).
@@ -35,7 +35,7 @@ to hand off to Planner role.
 
 ### Design scrutinizer role
 
-See 'Design scrutinizer role' section in 'Team roles' of AGENTS.md
+See 'Design scrutinizer role' section in 'Team roles' of Agents.md
 
 Automation instructions
 - Find a poorly designed or design opportunity area in the existing code, suggest improvements
@@ -43,7 +43,7 @@ Automation instructions
 
 ### Simplification specialist role
 
-See 'Simplification specialist role' section in 'Team roles' of AGENTS.md
+See 'Simplification specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -59,7 +59,7 @@ Limits
 
 ### Planner role
 
-See 'Planner role' section in 'Team roles' of AGENTS.md
+See 'Planner role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -77,7 +77,7 @@ Notes
 
 ### End-user advocate role
 
-See 'End-user advocate role' section in 'Team roles' of AGENTS.md
+See 'End-user advocate role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -94,7 +94,7 @@ Limits
 
 ### Open source specialist role
 
-See 'Open source specialist role' section in 'Team roles' of AGENTS.md
+See 'Open source specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -112,7 +112,7 @@ Limits
 
 ### Extensibility specialist role
 
-See 'Extensibility specialist role' section in 'Team roles' of AGENTS.md
+See 'Extensibility specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -122,7 +122,7 @@ Automation instructions
 
 ### Concurrency specialist role
 
-See 'Concurrency specialist role' section in 'Team roles' of AGENTS.md
+See 'Concurrency specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -135,7 +135,7 @@ Automation instructions
 
 ### Technical debt specialist role
 
-See 'Technical debt specialist roles' section in 'Team roles' of AGENTS.md
+See 'Technical debt specialist roles' section in 'Team roles' of Agents.md
 
 Suggest steps to cut on the technical debt in a specific module, package or class.
 
@@ -150,7 +150,7 @@ Limits
 
 ### Code shrinking specialist role
 
-See 'Code shrinking specialist role' section in 'Team roles' of AGENTS.md
+See 'Code shrinking specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -168,7 +168,7 @@ Limits
 
 ### Code scrutinizer role
 
-See 'Code scrutinizer role' section in 'Team roles' of AGENTS.md
+See 'Code scrutinizer role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -181,7 +181,7 @@ Limits
 
 ### Performance specialist role
 
-See 'Performance specialist role' section in 'Team roles' of AGENTS.md
+See 'Performance specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -198,7 +198,7 @@ Limits
 
 ### Security specialist role
 
-See 'Security specialist role' section in 'Team roles' of AGENTS.md
+See 'Security specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -208,7 +208,7 @@ Automation instructions
 
 ### Consistency scrutinizer role
 
-See 'Consistency scrutinizer role' section in 'Team roles' of AGENTS.md
+See 'Consistency scrutinizer role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -223,7 +223,7 @@ Limits
 
 ### Expressivenes specialist role
 
-See 'Expressivenes specialist role' section in 'Team roles' of AGENTS.md
+See 'Expressivenes specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -236,7 +236,7 @@ Limits
 
 ### Style scrutinizer role
 
-See 'Style scrutinizer role' section in 'Team roles' of AGENTS.md
+See 'Style scrutinizer role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -245,7 +245,7 @@ Automation instructions
 
 ### Testing specialist role
 
-See 'Testing specialist role' section in 'Team roles' of AGENTS.md
+See 'Testing specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -257,7 +257,7 @@ Limits
 
 ### QA specialist role
 
-See 'QA specialist role' section in 'Team roles' of AGENTS.md
+See 'QA specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -268,7 +268,7 @@ Automation instructions
 
 ### Documentation specialist role
 
-See 'Documentation specialist roles' section in 'Team roles' of AGENTS.md
+See 'Documentation specialist roles' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -284,7 +284,7 @@ Limits
 
 ### Proofreader specialist role
 
-See 'Proofreader specialist role' section in 'Team roles' of AGENTS.md
+See 'Proofreader specialist role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -297,7 +297,7 @@ Automation instructions
 
 ### Karma police role
 
-See 'Karma police role' section in 'Team roles' of AGENTS.md
+See 'Karma police role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -311,7 +311,7 @@ Limits
 
 ### Edge scrutinizer role
 
-See 'Edge scrutinizer role' section in 'Team roles' of AGENTS.md
+See 'Edge scrutinizer role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
@@ -322,3 +322,17 @@ Automation instructions
 Limits
 
 - Only consider stable parts of the codebase that are not under active development.
+
+### Round-robin role
+
+See 'Round-robin role' section in 'Team roles' of Agents.md
+
+Automation instructions
+
+- Evaluate which role is most needed at the moment
+- Take that role and deep dive / double down, following the instructions for that role
+- Use 3x extended quotes for the role: for instance, if instructions are 'Find 1-2 issues', 
+then for round-robin run, it would be 'Find 3-6 issues' 
+
+
+
