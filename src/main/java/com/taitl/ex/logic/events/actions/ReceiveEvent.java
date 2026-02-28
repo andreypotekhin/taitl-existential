@@ -41,7 +41,7 @@ public class ReceiveEvent
     protected <T> void evaluateIntent(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", tr, "tr");
-        evaluationLogic().evaluateIntent(tr, runtimeKey);
+        evaluationLogic().evaluateIntent(runtimeKey, tr);
     }
 
     protected EvaluationLogic evaluationLogic()

@@ -3,6 +3,7 @@ package com.taitl.ex.logic.evaluation.intents;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.evaluation.*;
+import com.taitl.ex.logic.evaluation.intents.actions.*;
 import com.taitl.ex.logic.evaluation.split_events.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
@@ -32,7 +33,7 @@ public class IntentsEvaluation
         this.evaluateIntentHandlers = new EvaluateIntentHandlers();
     }
 
-    public <T> void call(Tr tr, RuntimeKey<T> runtimeKey) throws ExistentialException
+    public <T> void call(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
     {
         sane(tr, "tr", runtimeKey, "runtimeKey");
         ConfigurationIndexes indexes = el.config(tr).indexes();

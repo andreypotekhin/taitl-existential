@@ -45,10 +45,10 @@ public class EvaluationLogic implements Closeable
     {
     }
 
-    public <T> void evaluateIntent(Tr tr, RuntimeKey<T> runtimeKey) throws ExistentialException
+    public <T> void evaluateIntent(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
     {
         sane(tr, "tr", runtimeKey, "runtimeKey");
-        intentsEvaluation.call(tr, runtimeKey);
+        intentsEvaluation.call(runtimeKey, tr);
     }
 
     public Config config(Tr tr)

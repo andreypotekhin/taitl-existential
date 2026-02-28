@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.evaluation.intents;
+package com.taitl.ex.logic.evaluation.intents.actions;
 
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;

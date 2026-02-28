@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.evaluation.intents;
+package com.taitl.ex.logic.evaluation.intents.actions;
 
 import com.taitl.ex.logic.evaluation.actions.*;
 import com.taitl.existential.events.types.*;
@@ -26,7 +26,7 @@ public class EvaluateIntentHandlers
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public boolean allows(EventHandler<?> intent, Event<?> event) throws ExistentialException
+    protected boolean allows(EventHandler<?> intent, Event<?> event) throws ExistentialException
     {
         sane(intent, "intent", event, "event");
         try
@@ -64,7 +64,7 @@ public class EvaluateIntentHandlers
         }
     }
 
-    public boolean intentConditionNotMet(ExistentialException ex)
+    protected boolean intentConditionNotMet(ExistentialException ex)
     {
         sane(ex, "ex");
         if (ex instanceof ConditionNotMetException)
@@ -88,7 +88,7 @@ public class EvaluateIntentHandlers
         return normalized.contains("condition is not met") || normalized.contains("condition not met");
     }
 
-    public Object entity(Event<?> event)
+    protected Object entity(Event<?> event)
     {
         sane(event, "event");
         if (event instanceof BiEvent<?>)
