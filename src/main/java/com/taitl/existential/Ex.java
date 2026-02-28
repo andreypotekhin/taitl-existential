@@ -1,14 +1,14 @@
 package com.taitl.existential;
 
-import com.taitl.ex.core.existential.ExistentialConfigs;
-import com.taitl.ex.core.existential.ExistentialTransactions;
-import com.taitl.existential.builders.ConfigBuilder;
-import com.taitl.existential.configs.Transaction;
-import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.keys.TypeKey;
-import com.taitl.existential.transactions.Tr;
+import com.taitl.ex.core.existential.*;
+import com.taitl.existential.builders.*;
+import com.taitl.existential.configs.*;
+import com.taitl.existential.events.types.*;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Static facade for the Existential library.
@@ -149,56 +149,115 @@ public final class Ex
         instance().rollback(tr);
     }
 
-    /**
-     * Emits an event based on a pair of entity versions and an explicit type key.
-     *
-     * @param t0 previous entity value
-     * @param t1 new entity value
-     * @param type type key to use for dispatch
-     * @param tranID transaction identifier
-     * @throws ExistentialException when event handling fails
-     */
-    public static <T> void event(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
-    {
-        instance().event(t0, t1, type, tranID);
-    }
+    /* Event methods */
 
     /**
      * Emits an event for a single entity value and an explicit type key.
      *
+     * @param event event value
      * @param t entity value
      * @param type type key to use for dispatch
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void event(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void event(Event<T> event, T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        instance().event(t, type, tranID);
+        instance().event(event, t, type, tranID);
     }
 
     /**
-     * Emits an event based on a pair of entity versions.
+     * Emits an event based on before- and after- entity states.
+     *
+     * @param event event value, holding before- and after- states
+     * @param type type key to use for dispatch
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public <T> void event(BiEvent<T> event, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        instance().event(event, type, tranID);
+    }
+
+    /* Event methods: convenience / shortcut methods */
+
+    /**
+     * Emits Change<T> event.
+     *
+     * @param t entity value
+     * @param type type key to use for dispatch
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void change(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        instance().change(t, type, tranID);
+    }
+
+    /**
+     * Variant of change() without type parameter. Only suitable for non-generic entity types.
+     *
+     * @param t entity value
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void change(T t, String tranID) throws ExistentialException
+    {
+        instance().change(t, tranID);
+    }
+
+    /**
+     * Emits Mutate<T> event based on before- and after- entity states.
+     *
+     * @param t0 previous entity value
+     * @param t1 new entity value
+     * @param type type key to use for dispatch
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void mutate(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        instance().mutate(t0, t1, type, tranID);
+    }
+
+    /**
+     * Variant of mutate() without type parameter. Only suitable for non-generic entity types.
      *
      * @param t0 previous entity value
      * @param t1 new entity value
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void event(T t0, T t1, String tranID) throws ExistentialException
+    public static <T> void mutate(T t0, T t1, String tranID) throws ExistentialException
     {
-        instance().event(t0, t1, tranID);
+        instance().mutate(t0, t1, tranID);
     }
 
     /**
-     * Emits an event for a single entity value.
+     * Emits Transit<T> event based on before- and after- entity states,
+     * where one of these states may be null.
      *
-     * @param t entity value
+     * @param t0 previous entity value
+     * @param t1 new entity value
+     * @param type type key to use for dispatch
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void event(T t, String tranID) throws ExistentialException
+    public static <T> void transit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        instance().event(t, tranID);
+        instance().transit(t0, t1, type, tranID);
+    }
+
+    /**
+     * Variant of transit() without type parameter. Only suitable for non-generic entity types.
+     *
+     * @param t0 previous entity value
+     * @param t1 new entity value
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void transit(T t0, T t1, String tranID) throws ExistentialException
+    {
+        instance().transit(t0, t1, tranID);
     }
 
     /**

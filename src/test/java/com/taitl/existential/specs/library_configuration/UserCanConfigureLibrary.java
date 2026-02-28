@@ -1,25 +1,19 @@
 package com.taitl.existential.specs.library_configuration;
 
-import com.taitl.ex.logic.library.ConfigureLibrary;
-import com.taitl.existential.constants.Flags;
-import com.taitl.existential.specs.SpecBase;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.taitl.ex.logic.library.*;
+import com.taitl.existential.constants.*;
+import com.taitl.existential.specs.*;
+import org.junit.jupiter.api.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
+import java.io.*;
+import java.nio.charset.*;
+import java.nio.file.*;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserCanConfigureLibrary extends SpecBase
 {
@@ -56,7 +50,7 @@ class UserCanConfigureLibrary extends SpecBase
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             String tran = ex.begin(op).id();
-            ex.event(cat, tran);
+            ex.change(cat, tran);
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 

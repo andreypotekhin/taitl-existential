@@ -1,18 +1,13 @@
 package com.taitl.existential.specs.configuration_workflow.configuring_contexts;
 
-import com.taitl.ex.examples.night_city.model.Cat;
-import com.taitl.existential.Ex;
-import com.taitl.existential.configs.Context;
-import com.taitl.existential.configs.Transaction;
-import com.taitl.existential.specs.SpecBase;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.taitl.ex.examples.night_city.model.*;
+import com.taitl.existential.*;
+import com.taitl.existential.configs.*;
+import com.taitl.existential.specs.*;
+import org.junit.jupiter.api.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.*;
+import java.util.concurrent.atomic.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -70,7 +65,7 @@ class UserCanConfigureContexts extends SpecBase
             // @formatter:on
 
             String tran = ex.begin("/api/cats/create").id();
-            ex.event("ok", tran);
+            ex.change("ok", tran);
             ex.commit(tran);
         });
     }
@@ -97,7 +92,7 @@ class UserCanConfigureContexts extends SpecBase
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create").id();
-            ex.event("ok", tran);
+            ex.change("ok", tran);
             ex.commit(tran);
         });
 
@@ -139,7 +134,7 @@ class UserCanConfigureContexts extends SpecBase
             // @formatter:on
 
             String tran = ex.begin("/api/cats/create").id();
-            ex.event("ok", tran);
+            ex.change("ok", tran);
             ex.commit(tran);
         });
 
@@ -169,7 +164,7 @@ class UserCanConfigureContexts extends SpecBase
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create").id();
-            ex.event("ok", tran);
+            ex.change("ok", tran);
             ex.commit(tran);
         });
 

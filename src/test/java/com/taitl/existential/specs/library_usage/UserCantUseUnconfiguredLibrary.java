@@ -1,14 +1,11 @@
 package com.taitl.existential.specs.library_usage;
 
-import com.taitl.existential.specs.SpecBase;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.taitl.existential.specs.*;
+import org.junit.jupiter.api.*;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserCantUseUnconfiguredLibrary extends SpecBase
 {
@@ -34,7 +31,7 @@ class UserCantUseUnconfiguredLibrary extends SpecBase
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             String tran = ex.begin(op).id();
-            ex.event(cat, tran);
+            ex.change(cat, tran);
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 

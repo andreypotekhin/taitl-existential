@@ -15,7 +15,8 @@ an email address listed in repository metadata) and wait for a response before p
 Security fixes are provided for the latest release line. If you are unsure whether your version is supported,
 report the issue anyway and include the version details.
 
-## No Promise
+## No Warranty
 
 No contract, warranty or promise of any kind are given or implied by the above.
 By use of this library, you accept any and all responsibility for any damage.
+See License.md document for more details.

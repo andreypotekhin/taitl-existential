@@ -1,15 +1,12 @@
 package com.taitl.existential.specs.library_usage;
 
-import com.taitl.existential.specs.SpecBase;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.taitl.existential.specs.*;
+import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 
 class UserCanInitiateTransactions extends SpecBase
 {
@@ -38,7 +35,7 @@ class UserCanInitiateTransactions extends SpecBase
     void commit() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.event(cat, tran);
+        ex.change(cat, tran);
         ex.commit(tran);
     }
 
@@ -47,7 +44,7 @@ class UserCanInitiateTransactions extends SpecBase
     void rollback() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.event(cat, tran);
+        ex.change(cat, tran);
         ex.rollback(tran);
     }
 
@@ -56,7 +53,7 @@ class UserCanInitiateTransactions extends SpecBase
     void checkpoint() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.event(cat, tran);
+        ex.change(cat, tran);
         ex.checkpoint(tran);
     }
 }

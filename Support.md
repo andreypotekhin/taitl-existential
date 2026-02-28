@@ -4,7 +4,7 @@
 
 - Start with /Readme.md for usage and examples.
 - Review /Troubleshooting.md for common setup and runtime issues.
-- Check /docs for deeper technical details.
+- Check /docs dir for deeper technical details.
 
 ## Bugs
 
@@ -12,7 +12,8 @@ If you believe you found a bug, open an issue using the bug report template and 
 
 - A minimal reproduction.
 - Expected vs actual behavior.
-- Library version and environment details.
+- Library release version and library config file.
+- PR, code snippet or pseudocode for fixing.
 
 ## Feature requests
 
