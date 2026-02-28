@@ -250,12 +250,13 @@ The order of effect invocation follows the order of their declaration.
 
 ### Intents
 
-User can define 'allow' intent on event type and entity class.
-User can define 'deny' intent on event type and entity class.
-User can declare a combination of event type and entity class as 'protected', thus requiring explicit intents.
-  - Marking as 'protected' results in requiring explicit intents.
-  - Any action on the entity not covered by explicit intents is denied.
-System validates the intents at validation phase along with other constraints.
+User can define intents on event type and entity class, similarly to invariants, such as 'read', 'write' intents.
+As soon as an intent defined for some event type, the system prevents the user from sending the events for any 
+entity class that is not covered by a similar intent for same event type.  
+  Example: As soon as an 'read' intent declared for entity class A, the system will:
+  - require explicit 'read' intent declared for each other class that receives a 'read' event
+  - if such sending occurs, throws an exception (IntentViolation)
+By default, the system validates intents immediately upon receiving an event.
 
 #### Custom Event Types
 
