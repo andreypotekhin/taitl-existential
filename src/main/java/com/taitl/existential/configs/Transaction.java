@@ -2,13 +2,10 @@ package com.taitl.existential.configs;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.indexes.*;
-import com.taitl.existential.effects.*;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.indexes.*;
 import com.taitl.existential.interfaces.*;
-import com.taitl.existential.invariants.*;
-import com.taitl.existential.intents.*;
-import com.taitl.existential.transactions.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -198,7 +195,7 @@ public class Transaction implements Configurable, Evaluable
      * @param cycle lifecycle rule set
      * @param <T> transaction subtype
      */
-    public <T extends Transaction> void cycle(Trancycle<T> cycle)
+    public <T extends Transaction> void cycle(Life<T> cycle)
     {
         sane(cycle, "cycle");
         Transaction tr = cycle.transaction();
@@ -237,7 +234,7 @@ public class Transaction implements Configurable, Evaluable
     public <T extends Transaction> void begin(Consumer<? super T> action)
     {
         sane(action, "action");
-        cycle(new Trancycle<T>(transactionTypeKey()) {
+        cycle(new Life<T>(transactionTypeKey()) {
             {
                 begin(action);
             }
@@ -253,7 +250,7 @@ public class Transaction implements Configurable, Evaluable
     public <T extends Transaction> void commit(Consumer<? super T> action)
     {
         sane(action, "action");
-        cycle(new Trancycle<T>(transactionTypeKey()) {
+        cycle(new Life<T>(transactionTypeKey()) {
             {
                 commit(action);
             }
@@ -269,7 +266,7 @@ public class Transaction implements Configurable, Evaluable
     public <T extends Transaction> void rollback(Consumer<? super T> action)
     {
         sane(action, "action");
-        cycle(new Trancycle<T>(transactionTypeKey()) {
+        cycle(new Life<T>(transactionTypeKey()) {
             {
                 rollback(action);
             }
@@ -285,7 +282,7 @@ public class Transaction implements Configurable, Evaluable
     public <T extends Transaction> void checkpoint(Consumer<? super T> action)
     {
         sane(action, "action");
-        cycle(new Trancycle<T>(transactionTypeKey()) {
+        cycle(new Life<T>(transactionTypeKey()) {
             {
                 checkpoint(action);
             }

@@ -1,6 +1,8 @@
 package com.taitl.ex.logic.evaluation.intents.actions;
 
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.ex.logic.evaluation.intents.maps.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
@@ -10,23 +12,25 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class EvaluateIntentGroup
+public class EvaluateSplitKeys
 {
-    protected final ResolveIntentHandlers resolveIntentHandlers;
-    protected final EvaluateIntentHandlers evaluateIntentHandlers;
+    protected final ToIntentHandlers toIntentHandlers;
+    protected final IterateIntents iterateIntents;
+    protected final CheckEventType checkEventType;
 
-    public EvaluateIntentGroup()
+    public EvaluateSplitKeys()
     {
-        this(new ResolveIntentHandlers(), new EvaluateIntentHandlers());
+        this(new ToIntentHandlers(), new IterateIntents());
     }
 
-    protected EvaluateIntentGroup(
-            ResolveIntentHandlers resolveIntentHandlers,
-            EvaluateIntentHandlers evaluateIntentHandlers)
+    protected EvaluateSplitKeys(
+            ToIntentHandlers toIntentHandlers,
+            IterateIntents iterateIntents)
     {
-        sane(resolveIntentHandlers, "resolveIntentHandlers", evaluateIntentHandlers, "evaluateIntentHandlers");
-        this.resolveIntentHandlers = resolveIntentHandlers;
-        this.evaluateIntentHandlers = evaluateIntentHandlers;
+        sane(toIntentHandlers, "resolveIntentHandlers", iterateIntents, "evaluateIntentHandlers");
+        this.toIntentHandlers = toIntentHandlers;
+        this.iterateIntents = iterateIntents;
+        this.checkEventType = Creator.create(CheckEventType.class);
     }
 
     public <T> void call(
@@ -36,20 +40,20 @@ public class EvaluateIntentGroup
             Tr tr) throws ExistentialException
     {
         sane(eventTypeName, "eventTypeName", runtimeKeys, "runtimeKeys", indexes, "indexes", tr, "tr");
-        if (!resolveIntentHandlers.eventTypeIsGuarded(eventTypeName, indexes, tr))
+        if (!checkEventType.eventTypeIsGuarded(eventTypeName, indexes, tr))
         {
             return;
         }
 
         RuntimeKey<T> primaryRuntimeKey = primaryRuntimeKey(runtimeKeys);
         List<EventHandler<?>> intents =
-                resolveIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventTypeName, indexes.intentField(),
+                toIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventTypeName, indexes.intentField(),
                         tr);
         if (intents.isEmpty())
         {
             throw missingIntent(primaryRuntimeKey);
         }
-        if (!evaluateIntentHandlers.allowed(intents, primaryRuntimeKey.event()))
+        if (!iterateIntents.allowed(intents, primaryRuntimeKey.event()))
         {
             throw notAllowed(primaryRuntimeKey);
         }

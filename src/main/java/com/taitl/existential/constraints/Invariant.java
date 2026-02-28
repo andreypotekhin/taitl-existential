@@ -1,4 +1,4 @@
-package com.taitl.existential.invariants;
+package com.taitl.existential.constraints;
 
 import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;

@@ -3,11 +3,11 @@ package com.taitl.ex.logic.evaluation;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.actions.*;
-import com.taitl.ex.logic.evaluation.intents.*;
+import com.taitl.ex.logic.evaluation.intents.actions.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.validation.output.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.constants.Flags;
+import com.taitl.existential.constants.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -19,12 +19,12 @@ import static com.taitl.ex.common.helper.Args.*;
 public class EvaluationLogic implements Closeable
 {
     protected TransactionLogic tl;
-    protected IntentsEvaluation intentsEvaluation;
+    protected EvaluateIntents evaluateIntents;
 
     public EvaluationLogic(TransactionLogic tl)
     {
         this.tl = tl;
-        this.intentsEvaluation = new IntentsEvaluation(this);
+        this.evaluateIntents = new EvaluateIntents(this);
     }
 
     /**
@@ -50,7 +50,7 @@ public class EvaluationLogic implements Closeable
     public <T> void evaluateIntent(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
     {
         sane(tr, "tr", runtimeKey, "runtimeKey");
-        intentsEvaluation.call(runtimeKey, tr);
+        evaluateIntents.call(runtimeKey, tr);
     }
 
     public Config config(Tr tr)

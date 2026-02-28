@@ -1,7 +1,8 @@
 package com.taitl.existential.builders;
 
 import java.util.function.*;
-import com.taitl.existential.effects.*;
+
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;

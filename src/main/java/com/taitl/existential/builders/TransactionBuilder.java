@@ -1,14 +1,12 @@
 package com.taitl.existential.builders;
 
+import com.taitl.existential.configs.*;
+import com.taitl.existential.constraints.*;
+import com.taitl.existential.evaluables.*;
+import com.taitl.existential.keys.*;
+
 import java.util.*;
 import java.util.function.*;
-import com.taitl.existential.configs.*;
-import com.taitl.existential.effects.*;
-import com.taitl.existential.evaluables.*;
-import com.taitl.existential.invariants.*;
-import com.taitl.existential.intents.*;
-import com.taitl.existential.keys.*;
-import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -86,9 +84,9 @@ public class TransactionBuilder
                 {
                     tr.intent((Intent<?>) evs);
                 }
-                else if (evs instanceof Trancycle<?>)
+                else if (evs instanceof Life<?>)
                 {
-                    tr.cycle((Trancycle<?>) evs);
+                    tr.cycle((Life<?>) evs);
                 }
                 else
                 {
@@ -205,7 +203,7 @@ public class TransactionBuilder
      *            Transaction type handled by the trancycle
      * @return This builder for chaining
      */
-    public <T extends Transaction> TransactionBuilder cycle(Trancycle<T> cycle)
+    public <T extends Transaction> TransactionBuilder cycle(Life<T> cycle)
     {
         sane(cycle, "cycle");
         evsSuppliers.add(() -> cycle);
@@ -453,16 +451,16 @@ public class TransactionBuilder
      * Centralizes lifecycle handler wiring to keep the fluent entry points uniform.
      */
     protected <T extends Transaction> TransactionBuilder addLifecycle(Consumer<? super T> action,
-            Consumer<Trancycle<T>> registrar)
+            Consumer<Life<T>> registrar)
     {
         return addLifecycle(transactionTypeKey(), action, registrar);
     }
 
     protected <T extends Transaction> TransactionBuilder addLifecycle(TypeKey<T> typeKey, Consumer<? super T> action,
-            Consumer<Trancycle<T>> registrar)
+            Consumer<Life<T>> registrar)
     {
         sane(typeKey, "typeKey", action, "action");
-        Trancycle<T> cycle = new Trancycle<>(typeKey);
+        Life<T> cycle = new Life<>(typeKey);
         registrar.accept(cycle);
         return cycle(cycle);
     }

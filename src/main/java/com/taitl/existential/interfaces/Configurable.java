@@ -1,9 +1,7 @@
 package com.taitl.existential.interfaces;
 
-import com.taitl.existential.effects.*;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
-import com.taitl.existential.invariants.*;
-import com.taitl.existential.intents.*;
 
 /**
  * Contract for configuration containers, such as Context and Transaction.

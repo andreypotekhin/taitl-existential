@@ -1,4 +1,4 @@
-package com.taitl.existential.effects;
+package com.taitl.existential.constraints;
 
 import com.taitl.ex.common.helper.*;
 import com.taitl.existential.configs.*;
@@ -25,7 +25,7 @@ import static com.taitl.ex.common.helper.lang.Generics.*;
  * @param <T>
  *            Entity type the effect applies to
  */
-public class Effect<T> implements Evs<T>, Immediate<T>
+public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
 {
     /**
      * Parent Transaction object, if any.

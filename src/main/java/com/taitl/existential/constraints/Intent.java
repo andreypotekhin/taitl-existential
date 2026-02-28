@@ -1,4 +1,4 @@
-package com.taitl.existential.intents;
+package com.taitl.existential.constraints;
 
 import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
@@ -23,7 +23,7 @@ import static com.taitl.ex.common.helper.lang.Generics.*;
  * @param <T>
  *            Entity type the intent applies to
  */
-public class Intent<T> implements Evs<T>, Immediate<T>
+public class Intent<T> implements Evs<T>, Constraints<T>
 {
     Transaction transaction;
     TypeKey<T> typeKey;

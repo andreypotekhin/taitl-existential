@@ -8,16 +8,16 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class EvaluateIntentHandlers
+public class IterateIntents
 {
     protected final EvaluateIntent evaluateIntent;
 
-    public EvaluateIntentHandlers()
+    public IterateIntents()
     {
         this(new EvaluateIntent());
     }
 
-    protected EvaluateIntentHandlers(EvaluateIntent evaluateIntent)
+    protected IterateIntents(EvaluateIntent evaluateIntent)
     {
         sane(evaluateIntent, "evaluateIntent");
         this.evaluateIntent = evaluateIntent;

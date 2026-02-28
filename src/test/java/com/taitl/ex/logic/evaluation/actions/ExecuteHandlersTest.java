@@ -1,11 +1,11 @@
 package com.taitl.ex.logic.evaluation.actions;
 
 import com.taitl.ex.logic.validation.output.*;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;
-import com.taitl.existential.invariants.*;
 import com.taitl.existential.quantifiers.*;
 import org.junit.jupiter.api.*;
 

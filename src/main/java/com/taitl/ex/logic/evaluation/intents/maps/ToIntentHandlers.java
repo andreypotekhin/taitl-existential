@@ -1,6 +1,5 @@
-package com.taitl.ex.logic.evaluation.intents.actions;
+package com.taitl.ex.logic.evaluation.intents.maps;
 
-import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.types.*;
@@ -11,14 +10,8 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class ResolveIntentHandlers
+public class ToIntentHandlers
 {
-    public boolean eventTypeIsGuarded(String eventTypeName, ConfigurationIndexes indexes, Tr tr)
-    {
-        sane(eventTypeName, "eventTypeName", indexes, "indexes", tr, "tr");
-        return indexes.hasIntentEventType(eventTypeName) || tr.hasIntentEventType(eventTypeName);
-    }
-
     public <T> List<EventHandler<?>> call(
             MultiKey<T> multiKey,
             List<RuntimeKey<T>> runtimeKeys,

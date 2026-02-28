@@ -2,7 +2,7 @@ package com.taitl.existential.specs.library_usage;
 
 import com.taitl.ex.examples.night_city.data.*;
 import com.taitl.ex.examples.night_city.model.*;
-import com.taitl.existential.effects.*;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.handlers.combined_event_handlers.*;
 import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
