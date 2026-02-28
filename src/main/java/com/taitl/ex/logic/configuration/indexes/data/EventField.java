@@ -37,10 +37,23 @@ public class EventField
 {
     protected ListMap<String, Ev<?>> map = new ListMap<>();
     protected ConfigurationIndexes ci;
+    protected ConfiguredHandlers configured;
 
     public EventField(ConfigurationIndexes ci)
     {
+        this(ci, ci != null ? ci.configuredHandlers : null);
+    }
+
+    public EventField(ConfigurationIndexes ci, ConfiguredHandlers configured)
+    {
         this.ci = ci;
+        sane(configured, "configured");
+        this.configured = configured;
+    }
+
+    protected ConfiguredHandlers source()
+    {
+        return configured;
     }
 
     /**
@@ -57,11 +70,12 @@ public class EventField
         {
             return cached;
         }
-        verify(ci.configuredHandlers.ready(), "Configured handlers index is not ready");
+        ConfiguredHandlers configured = source();
+        verify(configured.ready(), "Configured handlers index is not ready");
         List<OrderlyEv<?>> handlers = new ArrayList<>();
         for (EventKey<T> eventKey : multiKey.eventKeys())
         {
-            Set<OrderlyEv<?>> set = ci.configuredHandlers.get(eventKey);
+            Set<OrderlyEv<?>> set = configured.get(eventKey);
             if (set != null)
             {
                 handlers.addAll(set);

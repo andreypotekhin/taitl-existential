@@ -7,6 +7,7 @@ import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.intents.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 import org.junit.jupiter.api.Test;
@@ -72,21 +73,31 @@ class ContextBuilderTest
         }, "eff1");
         contextBuilder.effect(eff1);
 
+        Intent<String> intent1 = new Intent<>(String.class);
+        intent1.read();
+        contextBuilder.intent(intent1);
+
         // @formatter:off
         contextBuilder.effect(String.class)
             .create(s -> {
             }, "eff2")
+            .done();
+        contextBuilder.intent(String.class)
+            .write()
             .done();
         // @formatter:on
 
         contextBuilder.build();
 
         List<Evs<?>> evs = context.evs();
-        assertEquals(4, evs.size());
+        assertEquals(6, evs.size());
         assertSame(inv1, evs.get(0));
         assertTrue(((Invariant<?>) evs.get(1)).list().get(0) instanceof OnCreate);
         assertSame(eff1, evs.get(2));
-        assertTrue(((Effect<?>) evs.get(3)).list().get(0) instanceof OnCreate);
+        assertSame(intent1, evs.get(3));
+        assertTrue(((Effect<?>) evs.get(4)).list().get(0) instanceof OnCreate);
+        assertTrue(((Intent<?>) evs.get(5)).list()
+                .get(0) instanceof com.taitl.existential.handlers.access_handlers.OnWrite);
     }
 
     @Test
@@ -114,20 +125,30 @@ class ContextBuilderTest
         }, "eff1");
         transactionBuilder.effect(eff1);
 
+        Intent<String> intent1 = new Intent<>(String.class);
+        intent1.read();
+        transactionBuilder.intent(intent1);
+
         // @formatter:off
         transactionBuilder.effect(String.class)
             .create(s -> {
             }, "eff2")
             .doneTran();
+        transactionBuilder.intent(String.class)
+            .write()
+            .doneTran();
         // @formatter:on
 
         List<Supplier<? extends Evs<?>>> suppliers = transactionBuilder.evsSuppliers;
-        assertEquals(5, suppliers.size());
+        assertEquals(7, suppliers.size());
         assertSame(inv1, suppliers.get(0).get());
         assertTrue(suppliers.get(1).get() instanceof Trancycle);
         assertTrue(((Invariant<?>) suppliers.get(2).get()).list().get(0) instanceof OnCreate);
         assertSame(eff1, suppliers.get(3).get());
-        assertTrue(((Effect<?>) suppliers.get(4).get()).list().get(0) instanceof OnCreate);
+        assertSame(intent1, suppliers.get(4).get());
+        assertTrue(((Effect<?>) suppliers.get(5).get()).list().get(0) instanceof OnCreate);
+        assertTrue(((Intent<?>) suppliers.get(6).get()).list()
+                .get(0) instanceof com.taitl.existential.handlers.access_handlers.OnWrite);
     }
 
     @Test
@@ -145,6 +166,7 @@ class ContextBuilderTest
         contextBuilder.invariant(reflectionType).create(v -> true, "list inv").done();
         contextBuilder.effect(stringType).create(s -> {
         }, "eff").done();
+        contextBuilder.intent(String.class).read().done();
 
         contextBuilder.build();
 
@@ -152,6 +174,7 @@ class ContextBuilderTest
         assertEquals(TypeKey.valueOf(String.class, false), evs.get(0).typeKey());
         assertEquals(reflectionType, evs.get(1).typeKey());
         assertEquals(stringType, evs.get(2).typeKey());
+        assertEquals(TypeKey.valueOf(String.class, false), evs.get(3).typeKey());
     }
 
     @Test
@@ -181,16 +204,19 @@ class ContextBuilderTest
         Invariant<String> invariant = new Invariant<>(String.class);
         Effect<String> effect = new Effect<>(new TypeKey<String>() {
         });
+        Intent<String> intent = new Intent<>(String.class);
         Trancycle<Transaction> trancycle = new Trancycle<>(Transaction.class);
         Invariant<List<String>> reflected = new Invariant<List<String>>() {
         };
 
         assertNotNull(invariant.typeKey());
         assertNotNull(effect.typeKey());
+        assertNotNull(intent.typeKey());
         assertNotNull(trancycle.typeKey());
         assertEquals(new TypeKey<>(String.class), invariant.typeKey());
         assertEquals(new TypeKey<String>() {
         }, effect.typeKey());
+        assertEquals(new TypeKey<>(String.class), intent.typeKey());
         assertEquals(new TypeKey<Transaction>(Transaction.class), trancycle.typeKey());
         assertEquals(new TypeKey<List<String>>() {
         }, reflected.typeKey());

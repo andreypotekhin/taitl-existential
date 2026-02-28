@@ -50,6 +50,24 @@ Fix:
 2. Guard against nulls and invalid state in the handler action.
 3. Add a description to the handler and log key inputs for diagnostics.
 
+## Intent violation
+
+**Problem: Event emission fails with `IntentViolation`**
+
+Typical error messages:
+- `No intent is configured for event 'Read<...>'`
+- `Intent condition is not met for event 'Write<...>'`
+
+Common causes:
+- You configured an intent for an event type (for example `read`) but did not configure the same event intent for
+  another entity class that emits that event.
+- The configured intent predicate evaluated to `false` for the emitted event.
+
+Fix:
+1. If you use event-type intent gating, declare intents for every entity type that can emit that event type.
+2. Review intent predicates and make sure they match the entity state at event time.
+3. If no gating is needed for an event type, remove intents for that event type.
+
 ## Transaction not found
 
 **Problem: A call fails with `NotFoundException` stating `Transaction not found`**

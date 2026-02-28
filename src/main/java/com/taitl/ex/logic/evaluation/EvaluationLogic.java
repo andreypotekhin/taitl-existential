@@ -3,6 +3,7 @@ package com.taitl.ex.logic.evaluation;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.actions.*;
+import com.taitl.ex.logic.evaluation.intents.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.validation.output.*;
 import com.taitl.existential.configs.*;
@@ -17,10 +18,12 @@ import static com.taitl.ex.common.helper.Args.*;
 public class EvaluationLogic implements Closeable
 {
     protected TransactionLogic tl;
+    protected IntentsEvaluation intentsEvaluation;
 
     public EvaluationLogic(TransactionLogic tl)
     {
         this.tl = tl;
+        this.intentsEvaluation = new IntentsEvaluation(this);
     }
 
     /**
@@ -42,11 +45,23 @@ public class EvaluationLogic implements Closeable
     {
     }
 
-    protected EventField eventField(Tr tr)
+    public <T> void evaluateIntent(Tr tr, RuntimeKey<T> runtimeKey) throws ExistentialException
+    {
+        sane(tr, "tr", runtimeKey, "runtimeKey");
+        intentsEvaluation.call(tr, runtimeKey);
+    }
+
+    public Config config(Tr tr)
     {
         sane(tr, "tr");
         Config config = tl.ex().configs().config(tr.op);
         sane(config, "config");
-        return config.indexes().eventField();
+        return config;
+    }
+
+    protected EventField eventField(Tr tr)
+    {
+        sane(tr, "tr");
+        return config(tr).indexes().eventField();
     }
 }

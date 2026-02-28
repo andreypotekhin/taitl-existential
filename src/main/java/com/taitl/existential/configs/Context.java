@@ -5,6 +5,7 @@ import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.intents.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -125,6 +126,20 @@ public class Context implements Configurable, Evaluable
     }
 
     /**
+     * Sets intents (access rules) for the business operation defined by this context.
+     *
+     * @param <T>
+     *            Type parameter
+     * @param intent
+     *            Intent to register
+     */
+    public <T> void intent(Intent<T> intent)
+    {
+        sane(intent, "intent");
+        add(intent);
+    }
+
+    /**
      * Associates a custom Transaction with this Context.
      * The rules defined for a Transaction do not change the Context,
      * but they are evaluated alongside it.
@@ -144,11 +159,11 @@ public class Context implements Configurable, Evaluable
      *          invariant(new Invariant<Teacher>() {{
      *              all(teacher -> teacher.notOnLeave());
      *          }});
-     *          allow(new Intent<Student>() {{
+     *          intent(new Intent<Student>() {{
      *              read();
      *              write();
      *          }});
-     *          allow(new Intent<Teacher>() {{
+     *          intent(new Intent<Teacher>() {{
      *              read();
      *          }});
      *      }});

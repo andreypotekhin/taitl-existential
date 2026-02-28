@@ -5,6 +5,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.intents.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -40,12 +41,15 @@ public class IndexConfig
     class TraverseContext implements Evaluator
     {
         protected TypeKey<?> currentTypeKey;
+        protected boolean currentIntent;
 
         @Override
         public <T> void visit(Evs<T> evs)
         {
             TypeKey<?> previous = currentTypeKey;
+            boolean previousIntent = currentIntent;
             currentTypeKey = evs.typeKey();
+            currentIntent = evs instanceof Intent<?>;
             try
             {
                 Evaluator.super.visit(evs);
@@ -53,6 +57,7 @@ public class IndexConfig
             finally
             {
                 currentTypeKey = previous;
+                currentIntent = previousIntent;
             }
         }
 
@@ -72,6 +77,12 @@ public class IndexConfig
                 throw new RuntimeException("Unknown rule type: " + ev.getClass());
             }
             EventKey<T> eventKey = eventKey(ev);
+            if (currentIntent)
+            {
+                ci.addIntent(eventKey, ev);
+                ci.addIntentEventType(eventClass(ev));
+                return;
+            }
             ci.addHandler(eventKey, ev);
         }
 
@@ -109,6 +120,16 @@ public class IndexConfig
             Class<?> eventClass = handler.eventType().eventClass();
             return ci.useFullClassNames() ? EventKey.valueOfFull(eventClass, typeKey)
                     : EventKey.valueOf(eventClass, typeKey);
+        }
+
+        @SuppressWarnings("unchecked")
+        protected <T> Class<?> eventClass(Ev<T> ev)
+        {
+            if (!(ev instanceof EventHandler<?>))
+            {
+                throw new IllegalStateException("Intent contains a non-handler rule: " + ev.getClass());
+            }
+            return ((EventHandler<T>) ev).eventType().eventClass();
         }
     }
 }

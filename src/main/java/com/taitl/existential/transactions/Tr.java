@@ -1,11 +1,15 @@
 package com.taitl.existential.transactions;
 
+import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.common.helper.State;
 import com.taitl.ex.logic.indexing.data.IndexData;
 import com.taitl.ex.logic.transactions.TransactionLogic;
 import com.taitl.ex.logic.validation.data.ValidationData;
+import com.taitl.existential.evaluables.*;
 import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.intents.*;
 import com.taitl.existential.keys.OpKey;
 
 import java.util.*;
@@ -30,6 +34,8 @@ public class Tr
     protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
     protected IndexData runtimeIndexes;
     protected ValidationData validationData;
+    protected Set<String> intentEventTypes = new LinkedHashSet<>();
+    protected ListMap<String, EventHandler<?>> intentHandlers = new ListMap<>();
 
     /**
      * Creates a transaction instance for the given operation and id.
@@ -62,6 +68,7 @@ public class Tr
         State.verify(already.add(tr), "This transaction is already added");
         tr.op = op;
         transactions.add(tr);
+        indexIntents(tr);
     }
 
     /**
@@ -167,6 +174,62 @@ public class Tr
         return runtimeIndexes;
     }
 
+    public boolean hasIntentEventTypes()
+    {
+        return !intentEventTypes.isEmpty();
+    }
+
+    public boolean hasIntentEventType(String eventTypeName)
+    {
+        sane(eventTypeName, "eventTypeName");
+        return intentEventTypes.contains(eventTypeName);
+    }
+
+    public List<EventHandler<?>> intentHandlers(String eventTypeName, String typeKey)
+    {
+        sane(eventTypeName, "eventTypeName", typeKey, "typeKey");
+        return intentHandlers.get(intentKey(eventTypeName, typeKey));
+    }
+
+    protected void indexIntents(Transaction tr)
+    {
+        sane(tr, "tr");
+        for (Evs<?> evs : tr.evs())
+        {
+            if (!(evs instanceof Intent<?>))
+            {
+                continue;
+            }
+            indexIntent((Intent<?>) evs);
+        }
+    }
+
+    protected void indexIntent(Intent<?> intent)
+    {
+        sane(intent, "intent");
+        String typeKey = intent.typeKey().toString();
+        for (Ev<?> ev : intent.list())
+        {
+            if (!(ev instanceof EventHandler<?>))
+            {
+                continue;
+            }
+            EventHandler<?> handler = (EventHandler<?>) ev;
+            Class<?> eventClass = handler.eventType().eventClass();
+            String simple = eventClass.getSimpleName();
+            String full = eventClass.getName();
+            intentEventTypes.add(simple);
+            intentEventTypes.add(full);
+            intentHandlers.put(intentKey(simple, typeKey), handler);
+            intentHandlers.put(intentKey(full, typeKey), handler);
+        }
+    }
+
+    protected static String intentKey(String eventTypeName, String typeKey)
+    {
+        return eventTypeName + "<" + typeKey + ">";
+    }
+
     /**
      * Releases transaction resources and clears internal collections.
      */
@@ -177,5 +240,7 @@ public class Tr
         transactions = null;
         tl = null;
         already = null;
+        intentEventTypes = null;
+        intentHandlers = null;
     }
 }

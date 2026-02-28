@@ -3,6 +3,7 @@ package com.taitl.existential.interfaces;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.intents.*;
 
 /**
  * Contract for configuration containers, such as Context and Transaction.
@@ -39,7 +40,16 @@ public interface Configurable
      */
     <T> void effect(Effect<T> effect);
 
-    // TODO: allow/deny(Intent<T> intent);
+    /**
+     * Registers an intent that authorizes event emission for a type.
+     *
+     * @param intent
+     *            Intent to register
+     * @param <T>
+     *            Type of entity governed by the intent
+     */
+    <T> void intent(Intent<T> intent);
+
     // TODO: on/off(int flag);
 
     /**

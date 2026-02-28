@@ -6,6 +6,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.intents.*;
 import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -13,7 +14,7 @@ import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Configures a single Context inside a {@link com.taitl.existential.configs.Config}.
- * Collects invariants, effects, and optional transaction settings for the context.
+ * Collects invariants, effects, intents, and optional transaction settings for the context.
  */
 // TODO: add context() method to build child contexts
 public class ContextBuilder
@@ -140,7 +141,26 @@ public class ContextBuilder
         return parent.context();
     }
 
-    // TODO: intent()
+    public <T> IntentBuilder<T> intent(Class<T> cls)
+    {
+        sane(cls, "cls");
+        return intent(new TypeKey<>(cls));
+    }
+
+    public <T> IntentBuilder<T> intent(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        IntentBuilder<T> ib = new IntentBuilder<>(this, typeKey);
+        evsSuppliers.add(() -> ib.build());
+        return ib;
+    }
+
+    public <T> ContextBuilder intent(Intent<T> intent)
+    {
+        sane(intent, "intent");
+        evsSuppliers.add(() -> intent);
+        return this;
+    }
 
     /**
      * Builds the configured context and returns the parent {@link ConfigBuilder}.
@@ -165,6 +185,10 @@ public class ContextBuilder
             else if (evs instanceof Effect<?>)
             {
                 context.effect((Effect<?>) evs);
+            }
+            else if (evs instanceof Intent<?>)
+            {
+                context.intent((Intent<?>) evs);
             }
             else
             {

@@ -6,6 +6,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.intents.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
@@ -13,7 +14,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Configures a {@link Transaction} within a specific context.
- * Collects invariants, effects, and transaction lifecycle handlers.
+ * Collects invariants, effects, intents, and transaction lifecycle handlers.
  */
 public class TransactionBuilder
 {
@@ -80,6 +81,10 @@ public class TransactionBuilder
                 else if (evs instanceof Effect<?>)
                 {
                     tr.effect((Effect<?>) evs);
+                }
+                else if (evs instanceof Intent<?>)
+                {
+                    tr.intent((Intent<?>) evs);
                 }
                 else if (evs instanceof Trancycle<?>)
                 {
@@ -189,7 +194,26 @@ public class TransactionBuilder
         return this;
     }
 
-    // TODO: intent()
+    public <T> IntentBuilder<T> intent(Class<T> cls)
+    {
+        sane(cls, "cls");
+        return intent(new TypeKey<>(cls));
+    }
+
+    public <T> IntentBuilder<T> intent(TypeKey<T> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        IntentBuilder<T> ib = new IntentBuilder<>(this, typeKey);
+        evsSuppliers.add(() -> ib.build());
+        return ib;
+    }
+
+    public <T> TransactionBuilder intent(Intent<T> intent)
+    {
+        sane(intent, "intent");
+        evsSuppliers.add(() -> intent);
+        return this;
+    }
 
     /**
      * Adds a begin handler to the transaction lifecycle.

@@ -90,11 +90,11 @@ public class ConfigBuilder
      *        invariant(new Invariant<Document<HTML>>() {{
      *             all(doc -> doc.fullyLoaded());
      *        }});
-     *        allow(new Intent<Document<JSON>>() {{
+     *        intent(new Intent<Document<JSON>>() {{
      *             read();
      *             write();
      *        }});
-     *        allow(new Intent<Document<HTML>>() {{
+     *        intent(new Intent<Document<HTML>>() {{
      *             read();
      *        }});
      *    }})

@@ -33,7 +33,7 @@ Within an operation context, the user can configure multiple rules such as invar
 #### Library usage
 
 +User can configure class rules.
-User can configure access rules for a class.
++User can configure access rules for a class.
 User can configure transaction lifecycle rules for a class.
 +User can start a transaction.
 +User can commit a transaction.
@@ -103,6 +103,10 @@ User can specify side effect for transaction lifecycle event (begin, commit, rol
 +User can specify transaction lifecycle side effect for custom transaction type using a TypeKey.
 
 ##### Configuring Intents
+
++User can configure intents for event types and entity classes.
++User can configure intents using builders and rule instances in Context and Transaction.
++Intent supports handlers for access and entity events, such as read, write, change and update.
 
 ##### Configuration stages
 
@@ -253,13 +257,13 @@ The order of effect invocation follows the order of their declaration.
 
 ### Intents
 
-User can define intents on event type and entity class, similarly to invariants, such as 'read', 'write' intents.
-As soon as an intent defined for some event type, the system prevents the user from sending the events for any 
++User can define intents on event type and entity class, similarly to invariants, such as 'read', 'write' intents.
++As soon as an intent defined for some event type, the system prevents the user from sending the events for any 
 entity class that is not covered by a similar intent for same event type.  
   Example: As soon as an 'read' intent declared for entity class A, the system will:
   - require explicit 'read' intent declared for each other class that receives a 'read' event
   - if such sending occurs, throws an exception (IntentViolation)
-By default, the system validates intents immediately upon receiving an event.
++By default, the system validates intents immediately upon receiving an event.
 
 #### Custom Event Types
 

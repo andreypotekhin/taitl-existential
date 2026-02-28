@@ -7,6 +7,7 @@ import com.taitl.existential.evaluables.*;
 import com.taitl.existential.indexes.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.invariants.*;
+import com.taitl.existential.intents.*;
 import com.taitl.existential.transactions.*;
 
 import java.util.*;
@@ -166,6 +167,29 @@ public class Transaction implements Configurable, Evaluable
     }
 
     /**
+     * Registers an intent collection for this transaction.
+     *
+     * @param intent
+     *            Intent definition to add
+     * @param <T>
+     *            Entity type
+     */
+    public <T> void intent(Intent<T> intent)
+    {
+        sane(intent, "intent");
+        Transaction tr = intent.transaction();
+        if (tr == null)
+        {
+            intent.transaction(this);
+        }
+        else
+        {
+            check(tr == this, "Argument 'intent' must belong to same transaction");
+        }
+        add(intent);
+    }
+
+    /**
      * Registers a lifecycle rule collection for this transaction.
      *
      * @param cycle lifecycle rule set
@@ -298,11 +322,6 @@ public class Transaction implements Configurable, Evaluable
     {
         return evs;
     }
-
-    /**
-     * TODO: allow(Intent<T> intent) { ...
-     * intent.tran = this; ... }
-     */
 
     /*
      * Attributes
