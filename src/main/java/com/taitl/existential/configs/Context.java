@@ -28,18 +28,17 @@ public class Context implements Configurable, Evaluable
     public static Supplier<? extends Context> FACTORY = () -> Creator.create(Context.class);
 
     /**
-     * Context name, e.g. "/app/flights", "/app/flights/update", "*update"
+     * Operation key or context path, for example "/app/flights", "/app/flights/update", "*update".
      */
     protected String name;
 
     /**
-     * Parent context. Rules defined in parent context run prior to
-     * rules in child.
+     * Parent context. Rules defined in the parent run before child rules.
      */
     protected Context parent;
 
     /**
-     * Configured rules: invariants, effects, access rules
+     * Configured rule sets: invariants, effects, intents.
      */
     // TODO: split by stage (execution, validation)
     List<Evs<?>> evs = new ArrayList<>();
@@ -188,7 +187,7 @@ public class Context implements Configurable, Evaluable
      */
     public <T> void add(Evs<T> evs)
     {
-        sane(evs, "ev");
+        sane(evs, "evs");
         this.evs.add(evs);
         // instructions.addAll(evs);
     }

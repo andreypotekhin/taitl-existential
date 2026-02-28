@@ -55,6 +55,15 @@ public class ContextBuilder
         return invariant(new TypeKey<>(cls));
     }
 
+    /**
+     * Starts building an {@link Invariant} for the given type key.
+     *
+     * @param typeKey
+     *            Type key for the invariant subject
+     * @param <T>
+     *            Subject type for the invariant
+     * @return Invariant builder
+     */
     public <T> InvariantBuilder<T> invariant(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
@@ -94,6 +103,15 @@ public class ContextBuilder
         return effect(new TypeKey<>(cls));
     }
 
+    /**
+     * Starts building an {@link Effect} for the given type key.
+     *
+     * @param typeKey
+     *            Type key for the effect subject
+     * @param <T>
+     *            Subject type for the effect
+     * @return Effect builder
+     */
     public <T> EffectBuilder<T> effect(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
@@ -147,6 +165,15 @@ public class ContextBuilder
         return intent(new TypeKey<>(cls));
     }
 
+    /**
+     * Starts building an {@link Intent} for the given type key.
+     *
+     * @param typeKey
+     *            Type key for the intent subject
+     * @param <T>
+     *            Subject type for the intent
+     * @return Intent builder
+     */
     public <T> IntentBuilder<T> intent(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
@@ -155,6 +182,15 @@ public class ContextBuilder
         return ib;
     }
 
+    /**
+     * Registers an already-built intent with this context.
+     *
+     * @param intent
+     *            Intent to register
+     * @param <T>
+     *            Subject type for the intent
+     * @return This builder for chaining
+     */
     public <T> ContextBuilder intent(Intent<T> intent)
     {
         sane(intent, "intent");

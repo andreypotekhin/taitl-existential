@@ -140,7 +140,8 @@ public class Transaction implements Configurable, Evaluable
         }
         else
         {
-            check(tr == this, "Argument 'invariant' must belong to same transaction");
+            check(tr == this, "Argument 'invariant' must belong to this transaction. " +
+                    "Create it here or call invariant.transaction(this).");
         }
         add(invariant);
     }
@@ -161,7 +162,8 @@ public class Transaction implements Configurable, Evaluable
         }
         else
         {
-            check(tr == this, "Argument 'effect' must belong to same transaction");
+            check(tr == this, "Argument 'effect' must belong to this transaction. " +
+                    "Create it here or call effect.setTransaction(this).");
         }
         add(effect);
     }
@@ -184,7 +186,8 @@ public class Transaction implements Configurable, Evaluable
         }
         else
         {
-            check(tr == this, "Argument 'intent' must belong to same transaction");
+            check(tr == this, "Argument 'intent' must belong to this transaction. " +
+                    "Create it here or call intent.transaction(this).");
         }
         add(intent);
     }

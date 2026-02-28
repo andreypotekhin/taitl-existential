@@ -16,8 +16,15 @@ public class EvaluateEvent
     public void call(RuntimeKey<?> runtimeKey, EventField eventField, ValidationReport report)
             throws ExistentialException
     {
+        call(runtimeKey, eventField, report, false);
+    }
+
+    public void call(RuntimeKey<?> runtimeKey, EventField eventField, ValidationReport report,
+            boolean useFullEventNames)
+            throws ExistentialException
+    {
         sane(runtimeKey, "runtimeKey", eventField, "eventField", report, "report");
-        SplitResult splitResult = splitEvent.call(runtimeKey, eventField);
+        SplitResult splitResult = splitEvent.call(runtimeKey, eventField, useFullEventNames);
         executeHandlers.call(splitResult.evs(), splitResult.event(), report);
     }
 }

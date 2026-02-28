@@ -2,6 +2,7 @@ package com.taitl.ex.logic.evaluation.split_events;
 
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
+import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
@@ -18,6 +19,11 @@ class EventSplitterTest
         {
             return splitTransit(transit, set);
         }
+    }
+
+    private static <T> boolean hasEvent(Set<Event<T>> events, Class<?> eventClass)
+    {
+        return events.stream().anyMatch(eventClass::isInstance);
     }
 
     @Test
@@ -79,6 +85,22 @@ class EventSplitterTest
     }
 
     @Test
+    void splitRuntimeKeyPreservesFullEventNames()
+    {
+        EventSplitter splitter = new EventSplitter();
+        String oldValue = new String("old");
+        String newValue = new String("new");
+        Transit<String> transit = new Transit<>(oldValue, newValue);
+        TypeKey<String> typeKey = TypeKey.valueOf(String.class, true);
+        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(transit, typeKey, newValue, true);
+
+        Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, true);
+
+        assertTrue(splitKeys.stream()
+                .allMatch(key -> key.toString().startsWith("com.taitl.existential.events")));
+    }
+
+    @Test
     void splitTransitRejectsNullTransitWithEventMessage()
     {
         TestEventSplitter splitter = new TestEventSplitter();
@@ -87,5 +109,25 @@ class EventSplitterTest
                 () -> splitter.splitTransitPublic(null, new LinkedHashSet<>()));
 
         assertEquals("Argument 'event' should not be null", error.getMessage());
+    }
+
+    @Test
+    void splitTransitEmitsCombinedEventsForCreateUpdateDelete()
+    {
+        EventSplitter splitter = new EventSplitter();
+
+        Set<Event<String>> createdEvents = splitter.splitEvent(new Transit<>(null, "new"));
+        assertTrue(hasEvent(createdEvents, CU.class));
+        assertTrue(hasEvent(createdEvents, CUD.class));
+        assertFalse(hasEvent(createdEvents, UD.class));
+
+        Set<Event<String>> updatedEvents = splitter.splitEvent(new Transit<>("old", "new"));
+        assertTrue(hasEvent(updatedEvents, CU.class));
+        assertTrue(hasEvent(updatedEvents, UD.class));
+        assertTrue(hasEvent(updatedEvents, CUD.class));
+
+        Set<Event<String>> deletedEvents = splitter.splitEvent(new Transit<>("old", null));
+        assertTrue(hasEvent(deletedEvents, UD.class));
+        assertTrue(hasEvent(deletedEvents, CUD.class));
     }
 }

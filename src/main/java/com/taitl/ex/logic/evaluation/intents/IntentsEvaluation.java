@@ -41,7 +41,8 @@ public class IntentsEvaluation
             return;
         }
 
-        Map<String, List<RuntimeKey<T>>> grouped = groupByEventType.call(eventSplitter.split(runtimeKey));
+        Map<String, List<RuntimeKey<T>>> grouped =
+                groupByEventType.call(eventSplitter.split(runtimeKey, el.useFullClassNames()));
 
         for (Map.Entry<String, List<RuntimeKey<T>>> entry : grouped.entrySet())
         {

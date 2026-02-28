@@ -26,8 +26,13 @@ public class SplitEvent
 
     public <T> SplitResult call(RuntimeKey<T> runtimeKey, EventField eventField)
     {
+        return call(runtimeKey, eventField, false);
+    }
+
+    public <T> SplitResult call(RuntimeKey<T> runtimeKey, EventField eventField, boolean useFullEventNames)
+    {
         sane(runtimeKey, "runtimeKey", eventField, "eventField");
-        Set<RuntimeKey<T>> splitKeys = split(runtimeKey);
+        Set<RuntimeKey<T>> splitKeys = split(runtimeKey, useFullEventNames);
         MultiKey<T> multiKey = multiKey(splitKeys);
         List<Ev<?>> evs = eventField.get(multiKey);
         return new SplitResult(evs, runtimeKey.event());
@@ -35,7 +40,12 @@ public class SplitEvent
 
     protected <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
     {
-        return eventSplitter.split(runtimeKey);
+        return split(runtimeKey, false);
+    }
+
+    protected <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey, boolean useFullEventNames)
+    {
+        return eventSplitter.split(runtimeKey, useFullEventNames);
     }
 
     protected <T> MultiKey<T> multiKey(Set<RuntimeKey<T>> splitKeys)

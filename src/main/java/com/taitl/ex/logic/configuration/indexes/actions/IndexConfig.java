@@ -43,7 +43,6 @@ public class IndexConfig
         protected TypeKey<?> currentTypeKey;
         protected boolean currentIntent;
 
-        @Override
         public <T> void visit(Evs<T> evs)
         {
             TypeKey<?> previous = currentTypeKey;
@@ -61,7 +60,6 @@ public class IndexConfig
             }
         }
 
-        @Override
         public <T> void visit(Ev<T> ev)
         {
             if (ev instanceof EventHandler<?>)

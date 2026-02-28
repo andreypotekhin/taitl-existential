@@ -115,6 +115,15 @@ public class TransactionBuilder
         return invariant(new TypeKey<>(cls));
     }
 
+    /**
+     * Starts building an {@link Invariant} for the given type key.
+     *
+     * @param typeKey
+     *            Type key for the invariant subject
+     * @param <T>
+     *            Subject type for the invariant
+     * @return Invariant builder
+     */
     public <T> InvariantBuilder<T> invariant(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
@@ -154,6 +163,15 @@ public class TransactionBuilder
         return effect(new TypeKey<>(cls));
     }
 
+    /**
+     * Starts building an {@link Effect} for the given type key.
+     *
+     * @param typeKey
+     *            Type key for the effect subject
+     * @param <T>
+     *            Subject type for the effect
+     * @return Effect builder
+     */
     public <T> EffectBuilder<T> effect(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
@@ -200,6 +218,15 @@ public class TransactionBuilder
         return intent(new TypeKey<>(cls));
     }
 
+    /**
+     * Starts building an {@link Intent} for the given type key.
+     *
+     * @param typeKey
+     *            Type key for the intent subject
+     * @param <T>
+     *            Subject type for the intent
+     * @return Intent builder
+     */
     public <T> IntentBuilder<T> intent(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
@@ -208,6 +235,15 @@ public class TransactionBuilder
         return ib;
     }
 
+    /**
+     * Registers an already-built intent with this transaction.
+     *
+     * @param intent
+     *            Intent to register
+     * @param <T>
+     *            Subject type for the intent
+     * @return This builder for chaining
+     */
     public <T> TransactionBuilder intent(Intent<T> intent)
     {
         sane(intent, "intent");
@@ -229,11 +265,33 @@ public class TransactionBuilder
         return addLifecycle(action, cycle -> cycle.begin(action));
     }
 
+    /**
+     * Adds a begin handler for the provided transaction type key.
+     *
+     * @param typeKey
+     *            Transaction type key
+     * @param action
+     *            Action to invoke on transaction begin
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder begin(TypeKey<T> typeKey, Consumer<? super T> action)
     {
         return addLifecycle(typeKey, action, cycle -> cycle.begin(action));
     }
 
+    /**
+     * Adds a begin handler for the provided transaction class.
+     *
+     * @param typeClass
+     *            Transaction class
+     * @param action
+     *            Action to invoke on transaction begin
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder begin(Class<T> typeClass, Consumer<? super T> action)
     {
         sane(typeClass, "typeClass");
@@ -254,11 +312,33 @@ public class TransactionBuilder
         return addLifecycle(action, cycle -> cycle.commit(action));
     }
 
+    /**
+     * Adds a commit handler for the provided transaction type key.
+     *
+     * @param typeKey
+     *            Transaction type key
+     * @param action
+     *            Action to invoke on transaction commit
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder commit(TypeKey<T> typeKey, Consumer<? super T> action)
     {
         return addLifecycle(typeKey, action, cycle -> cycle.commit(action));
     }
 
+    /**
+     * Adds a commit handler for the provided transaction class.
+     *
+     * @param typeClass
+     *            Transaction class
+     * @param action
+     *            Action to invoke on transaction commit
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder commit(Class<T> typeClass, Consumer<? super T> action)
     {
         sane(typeClass, "typeClass");
@@ -279,11 +359,33 @@ public class TransactionBuilder
         return addLifecycle(action, cycle -> cycle.rollback(action));
     }
 
+    /**
+     * Adds a rollback handler for the provided transaction type key.
+     *
+     * @param typeKey
+     *            Transaction type key
+     * @param action
+     *            Action to invoke on transaction rollback
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder rollback(TypeKey<T> typeKey, Consumer<? super T> action)
     {
         return addLifecycle(typeKey, action, cycle -> cycle.rollback(action));
     }
 
+    /**
+     * Adds a rollback handler for the provided transaction class.
+     *
+     * @param typeClass
+     *            Transaction class
+     * @param action
+     *            Action to invoke on transaction rollback
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder rollback(Class<T> typeClass, Consumer<? super T> action)
     {
         sane(typeClass, "typeClass");
@@ -304,11 +406,33 @@ public class TransactionBuilder
         return addLifecycle(action, cycle -> cycle.checkpoint(action));
     }
 
+    /**
+     * Adds a checkpoint handler for the provided transaction type key.
+     *
+     * @param typeKey
+     *            Transaction type key
+     * @param action
+     *            Action to invoke on transaction checkpoint
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder checkpoint(TypeKey<T> typeKey, Consumer<? super T> action)
     {
         return addLifecycle(typeKey, action, cycle -> cycle.checkpoint(action));
     }
 
+    /**
+     * Adds a checkpoint handler for the provided transaction class.
+     *
+     * @param typeClass
+     *            Transaction class
+     * @param action
+     *            Action to invoke on transaction checkpoint
+     * @param <T>
+     *            Transaction type handled by the action
+     * @return This builder for chaining
+     */
     public <T extends Transaction> TransactionBuilder checkpoint(Class<T> typeClass, Consumer<? super T> action)
     {
         sane(typeClass, "typeClass");

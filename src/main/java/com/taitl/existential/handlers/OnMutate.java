@@ -79,12 +79,6 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
         this.description = description;
     }
 
-    // public OnMutate(Predicate<? super T> condition)
-    // {
-    // Args.cool(condition, "condition");
-    // this.condition = condition;
-    // }
-
     /**
      * Handles a mutation between two values.
      *
@@ -112,8 +106,6 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
 
             State.cool(condition, "condition");
 
-            // This is an event handler without side effects.
-            // Check the condition and throw an exception if it is not met.
             if (!condition.test(t1))
             {
                 throw new EventHandlerException(handlerMessage("The specified condition is not met"));
@@ -145,7 +137,7 @@ public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
         return Descriptions.text(description);
     }
 
-    private String handlerMessage(String base)
+    protected String handlerMessage(String base)
     {
         return Descriptions.message(base, description);
     }

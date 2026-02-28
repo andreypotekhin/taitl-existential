@@ -13,14 +13,13 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * Static facade for the Existential library.
  * Holds a single {@link Existential} instance and delegates all calls to it.
- * This convenience implies a single {@link Existential} instance per JVM. This is fine for
- * most applications, but it can be limiting in library code.
+ * This convenience implies a single {@link Existential} instance per JVM. This is
+ * fine for most applications, but it can be limiting in library code.
  *
- * Usage: {@code Ex.configure("/api/resource/create").context()...}
+ * Usage: Ex.configure("/api/resource/create").context()...
  * Documentation: https://github.com/andreypotekhin/taitl-existential
  *
  * @author Andrey Potekhin
- *
  * @see Existential
  */
 public final class Ex
@@ -43,7 +42,7 @@ public final class Ex
      * Note: this method is not intended for production use.
      *
      * @param instance instance to install for testing
-     * @return Previous instance
+     * @return previous instance
      */
     public static Existential instance(Existential instance)
     {
@@ -126,6 +125,12 @@ public final class Ex
         instance().checkpoint(tranID);
     }
 
+    /**
+     * Creates a checkpoint in the transaction lifecycle.
+     *
+     * @param tr transaction object
+     * @throws ExistentialException when checkpoint fails
+     */
     public static void checkpoint(Tr tr) throws ExistentialException
     {
         instance().checkpoint(tr);
@@ -144,6 +149,14 @@ public final class Ex
         instance().rollback(tranID);
     }
 
+    /**
+     * Rolls back an existential transaction.
+     * Rule validation is not performed.
+     * After rollback, tranID becomes invalid.
+     *
+     * @param tr transaction object
+     * @throws ExistentialException when rollback fails
+     */
     public static void rollback(Tr tr) throws ExistentialException
     {
         instance().rollback(tr);

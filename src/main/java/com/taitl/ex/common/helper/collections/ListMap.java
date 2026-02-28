@@ -107,17 +107,7 @@ public class ListMap<K, V>
             {
                 return null;
             }
-            List<V> removed = listFactory.get();
-            Iterator<V> iterator = values.iterator();
-            while (iterator.hasNext())
-            {
-                V value = iterator.next();
-                if (match.test(value))
-                {
-                    removed.add(value);
-                    iterator.remove();
-                }
-            }
+            List<V> removed = Coll.removeMatching(values, match, listFactory);
             if (!removed.isEmpty() && values.isEmpty())
             {
                 size--;

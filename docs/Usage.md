@@ -4,10 +4,24 @@
 See /Readme.md for library overview.
 
 ## Getting started
-(TODO) Main document: GettingStarted.md
+This page is the quick-start. The formal overview is in /Readme.md.
 
 ### Adding the library to your project
-TODO
+If you build and install the library locally, use the Maven coordinates below.
+
+Maven:
+
+    <dependency>
+        <groupId>com.taitl</groupId>
+        <artifactId>existential</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+Gradle:
+
+    dependencies {
+        implementation "com.taitl:existential:0.0.1-SNAPSHOT"
+    }
 
 ### Creating a constraint on an entity
 Constraints are created in the context of a business operation, 
@@ -31,13 +45,23 @@ In order for the library to be able to evaluate constraints on an entity,
 it needs to be aware of the entity changes. This is done by sending an 
 event to the library, such as Update or Read.
 
-    // in implementation, for instance, in the handler for '/api/accounts/update':
-    Ex.send(new Update<Account>(user));
+    Tr tr = Ex.begin("/api/accounts/update");
+    try
+    {
+        // in implementation, for instance, in the handler for '/api/accounts/update':
+        Ex.update(account, tr.id());
+        Ex.commit(tr);
+    }
+    catch (ExistentialException e)
+    {
+        Ex.rollback(tr);
+        throw e;
+    }
 
 ### Constraint validation
 Constraint validation is triggered automatically upon committing a transaction.
 
-    Ex.commit(); // Detect and report constraint violations. 
+    Ex.commit(tr); // Detect and report constraint violations.
 
 Constraint violations will be reported in the exception thrown by commit (ExistentialException).
 
@@ -157,3 +181,4 @@ features or features that are not guaranteed to survive multiple versions.
 ## Troubleshooting
 Troubleshooting:
 - See `/Troubleshooting.md#type-key-format`
+- See `/Troubleshooting.md#invalid-operation-key`

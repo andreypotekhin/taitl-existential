@@ -1,7 +1,7 @@
 # Troubleshooting
 
 ### Problem (Initialization order): `NullPointerException` during startup
-When: Running tests or app startup after adding/changing constructor collaborators.
+When: Running tests or app startup after adding or changing constructor collaborators.
 Error example:
 ```
 Could not create an instance of class com.taitl.ex.core.existential.ExistentialConfigs
@@ -16,9 +16,10 @@ Example fixes in this project:
 
 ### Problem (PMD): 'Double-brace initialization should be avoided' error
 When: Running PMD checks as part of the build process.
-Error: "[INFO] PMD Failure: [class] :22 Rule:DoubleBraceInitialization Priority:3 Double-brace initialization should be avoided."
+Error: "[INFO] PMD Failure: [class] :22 Rule:DoubleBraceInitialization Priority:3 Double-brace initialization should be
+avoided."
 Cause: Default PMD rules flag double-brace initialization.
-Ref: https://pmd.github.io/pmd/pmd_rules_java_bestpractices.html#doublebraceinitialization
+Reference: https://pmd.github.io/pmd/pmd_rules_java_bestpractices.html#doublebraceinitialization
 Causing code:
 ```
 public void configure()
@@ -34,8 +35,8 @@ public void configure()
 Workaround 1: Adjust PMD rules.
 ```
   pmd-ruleset.xml:
-	<rule ref="category/java/bestpractices.xml">
-		<exclude name="DoubleBraceInitialization" />
+    <rule ref="category/java/bestpractices.xml">
+        <exclude name="DoubleBraceInitialization" />
 ```
 
 Workaround 2: Use configure-with-builders style.
@@ -46,5 +47,5 @@ Workaround 2: Use configure-with-builders style.
          .create(c -> "Black".equals(c.color), "Cats are born black")
        .done()
 ```
-Details: Double-brace initialization creates an anonymous subclass, which is in line with the
-code above. It is often overkill for collections, so PMD flags it by default.
+Details: Double-brace initialization creates an anonymous subclass, which is in line with the code above. It is often
+overkill for collections, so PMD flags it by default.

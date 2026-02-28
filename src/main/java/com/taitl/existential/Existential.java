@@ -116,6 +116,12 @@ public final class Existential implements Closeable
         transactions.checkpoint(tranID);
     }
 
+    /**
+     * Creates a checkpoint in the transaction lifecycle.
+     *
+     * @param tr transaction object
+     * @throws ExistentialException when checkpoint fails
+     */
     public void checkpoint(Tr tr) throws ExistentialException
     {
         transactions.checkpoint(tr);
@@ -134,6 +140,14 @@ public final class Existential implements Closeable
         transactions.rollback(tranID);
     }
 
+    /**
+     * Rolls back an existential transaction.
+     * Rule validation is not performed.
+     * After rollback, tranID becomes invalid.
+     *
+     * @param tr transaction object
+     * @throws ExistentialException when rollback fails
+     */
     public void rollback(Tr tr) throws ExistentialException
     {
         transactions.rollback(tr);
