@@ -20,7 +20,7 @@ public class OnException
         throw ex;
     }
 
-    protected boolean constraintViolation(ExistentialException ex)
+    public static boolean constraintViolation(ExistentialException ex)
     {
         sane(ex, "ex");
         if (ex instanceof ConditionNotMetException

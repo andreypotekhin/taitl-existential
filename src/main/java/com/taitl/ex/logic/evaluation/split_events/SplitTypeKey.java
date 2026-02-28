@@ -20,13 +20,20 @@ public class SplitTypeKey
 {
     protected final GenericsVariants genericsVariants = new GenericsVariants();
 
+    public String root(String key)
+    {
+        sane(key, "key");
+        int left = key.indexOf('<');
+        return (left > -1 ? key.substring(0, left) : key).trim();
+    }
+
     public <T> Set<TypeKey<T>> split(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
         String key = typeKey.toString();
         int left = key.indexOf('<');
         boolean hasGenerics = left > -1;
-        String root = hasGenerics ? key.substring(0, left).trim() : key.trim();
+        String root = root(key);
         Set<TypeKey<T>> result = new LinkedHashSet<>();
         for (String variant : genericsVariants.call(key))
         {

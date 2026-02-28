@@ -12,6 +12,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class SplitTypeKeyTest
 {
     @Test
+    void rootRemovesGenericPartAndKeepsOnlyTypeName()
+    {
+        SplitTypeKey splitter = new SplitTypeKey();
+        assertEquals("Read", splitter.root("Read<Cat<JSON>>"));
+    }
+
+    @Test
+    void rootSupportsPlainNamesAndWhitespace()
+    {
+        SplitTypeKey splitter = new SplitTypeKey();
+        assertEquals("Write", splitter.root("  Write  "));
+    }
+
+    @Test
     void splitSingleDimension()
     {
         SplitTypeKey splitter = new SplitTypeKey();
