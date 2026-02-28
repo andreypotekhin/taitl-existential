@@ -62,6 +62,74 @@ public class ExistentialEvents implements Closeable
 
     /* Convenience methods */
 
+    public <T> void create(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        sane(t, "t", type, "type", tranID, "tranID");
+        event(new Create<>(t), t, type, tr(tranID));
+    }
+
+    /**
+     * Variant of create(t) without type parameter, when entity type may be
+     * deducted at run time - that is, if entity class is not generic.
+     * Only suitable for non-generic types.
+     */
+    public <T> void create(T t, String tranID) throws ExistentialException
+    {
+        sane(t, "t", tranID, "tranID");
+        event(new Create<>(t), t, typeKey(t), tranID);
+    }
+
+    public <T> void delete(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        sane(t, "t", type, "type", tranID, "tranID");
+        event(new Delete<>(t), t, type, tr(tranID));
+    }
+
+    /**
+     * Variant of delete(t) without type parameter, when entity type may be
+     * deducted at run time - that is, if entity class is not generic.
+     * Only suitable for non-generic types.
+     */
+    public <T> void delete(T t, String tranID) throws ExistentialException
+    {
+        sane(t, "t", tranID, "tranID");
+        event(new Delete<>(t), t, typeKey(t), tranID);
+    }
+
+    public <T> void modify(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        sane(t, "t", type, "type", tranID, "tranID");
+        event(new Modify<>(t), t, type, tr(tranID));
+    }
+
+    /**
+     * Variant of modify(t) without type parameter, when entity type may be
+     * deducted at run time - that is, if entity class is not generic.
+     * Only suitable for non-generic types.
+     */
+    public <T> void modify(T t, String tranID) throws ExistentialException
+    {
+        sane(t, "t", tranID, "tranID");
+        event(new Modify<>(t), t, typeKey(t), tranID);
+    }
+
+    public <T> void update(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        sane(t, "t", type, "type", tranID, "tranID");
+        event(new Update<>(t), t, type, tr(tranID));
+    }
+
+    /**
+     * Variant of update(t) without type parameter, when entity type may be
+     * deducted at run time - that is, if entity class is not generic.
+     * Only suitable for non-generic types.
+     */
+    public <T> void update(T t, String tranID) throws ExistentialException
+    {
+        sane(t, "t", tranID, "tranID");
+        event(new Update<>(t), t, typeKey(t), tranID);
+    }
+
     public <T> void change(T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
         sane(t, "t", type, "type", tranID, "tranID");
@@ -91,6 +159,8 @@ public class ExistentialEvents implements Closeable
      */
     public <T> void mutate(T t0, T t1, String tranID) throws ExistentialException
     {
+        sane(tranID, "tranID");
+        check(t0 != null && t1 != null, "Both t0 and t1 should not be null.");
         mutate(t0, t1, typeKey(t1), tranID);
     }
 
@@ -109,7 +179,10 @@ public class ExistentialEvents implements Closeable
      */
     public <T> void transit(T t0, T t1, String tranID) throws ExistentialException
     {
-        transit(t0, t1, typeKey(t1), tranID);
+        sane(tranID, "tranID");
+        check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
+        T entity = (t1 != null) ? t1 : t0;
+        transit(t0, t1, typeKey(entity), tranID);
     }
 
     public void close()

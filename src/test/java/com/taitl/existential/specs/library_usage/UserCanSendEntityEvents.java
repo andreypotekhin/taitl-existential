@@ -1,6 +1,7 @@
 package com.taitl.existential.specs.library_usage;
 
 import com.taitl.ex.examples.night_city.model.*;
+import com.taitl.existential.Ex;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
@@ -35,6 +36,51 @@ class UserCanSendEntityEvents extends SpecBase
         String tran = ex.begin(op).id();
         ex.transit(null, cat, new TypeKey<Cat>(Cat.class), tran);
         ex.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can send a delete transition without a type key")
+    void sendDeleteTransitionWithoutTypeKey() throws Exception
+    {
+        String tran = ex.begin(op).id();
+        ex.transit(cat, null, tran);
+        ex.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can send a create event to library")
+    void sendCreateEvent() throws Exception
+    {
+        String tran = ex.begin(op).id();
+        ex.create(cat, tran);
+        ex.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can send a delete event to library using a type key")
+    void sendDeleteEventWithTypeKey() throws Exception
+    {
+        String tran = ex.begin(op).id();
+        ex.delete(cat, new TypeKey<Cat>(Cat.class), tran);
+        ex.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can send a modify event to library")
+    void sendModifyEvent() throws Exception
+    {
+        String tran = ex.begin(op).id();
+        ex.modify(cat, tran);
+        ex.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can send an update event to library using static facade")
+    void sendUpdateEventUsingStaticFacade() throws Exception
+    {
+        String tran = Ex.begin(op).id();
+        Ex.update(cat, new TypeKey<Cat>(Cat.class), tran);
+        Ex.commit(tran);
     }
 
     // TODO

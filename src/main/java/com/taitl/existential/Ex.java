@@ -181,6 +181,106 @@ public final class Ex
     /* Event methods: convenience / shortcut methods */
 
     /**
+     * Emits Create<T> event.
+     *
+     * @param t entity value
+     * @param type type key to use for dispatch
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void create(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        instance().create(t, type, tranID);
+    }
+
+    /**
+     * Variant of create() without type parameter. Only suitable for non-generic entity types.
+     *
+     * @param t entity value
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void create(T t, String tranID) throws ExistentialException
+    {
+        instance().create(t, tranID);
+    }
+
+    /**
+     * Emits Delete<T> event.
+     *
+     * @param t entity value
+     * @param type type key to use for dispatch
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void delete(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        instance().delete(t, type, tranID);
+    }
+
+    /**
+     * Variant of delete() without type parameter. Only suitable for non-generic entity types.
+     *
+     * @param t entity value
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void delete(T t, String tranID) throws ExistentialException
+    {
+        instance().delete(t, tranID);
+    }
+
+    /**
+     * Emits Modify<T> event.
+     *
+     * @param t entity value
+     * @param type type key to use for dispatch
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void modify(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        instance().modify(t, type, tranID);
+    }
+
+    /**
+     * Variant of modify() without type parameter. Only suitable for non-generic entity types.
+     *
+     * @param t entity value
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void modify(T t, String tranID) throws ExistentialException
+    {
+        instance().modify(t, tranID);
+    }
+
+    /**
+     * Emits Update<T> event.
+     *
+     * @param t entity value
+     * @param type type key to use for dispatch
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void update(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        instance().update(t, type, tranID);
+    }
+
+    /**
+     * Variant of update() without type parameter. Only suitable for non-generic entity types.
+     *
+     * @param t entity value
+     * @param tranID transaction identifier
+     * @throws ExistentialException when event handling fails
+     */
+    public static <T> void update(T t, String tranID) throws ExistentialException
+    {
+        instance().update(t, tranID);
+    }
+
+    /**
      * Emits Change<T> event.
      *
      * @param t entity value
