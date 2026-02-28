@@ -169,9 +169,12 @@ User can't send any events before the transaction has started.
 User can't send any events after transaction has been committed/rolled back.
 User can't modify configurations (e.g. create invariants) after sending first event.
 - Except for specifying custom Transaction object for transaction run
+When emitting a transit event without an explicit type key, library infers the type from the non-null entity
+value (preferring t1 when present, otherwise t0). Both t0 and t1 can't be null.
+When emitting a mutate event without an explicit type key, both t0 and t1 must be non-null.
 
 ### Constraints.
-(Below, the terms 'contstraints' and 'invariants' are used interchangeably)
+(Below, the terms 'constraints' and 'invariants' are used interchangeably)
 
 ##### Constraint on a single entity
 
@@ -209,13 +212,13 @@ User should receive an exception in case of constraint violation, along with the
 User can pass a human-readable description when creating a constraint, to help with reporting.
 User can specify an error number when creating a constraint, to help with reporting.
 Constraint violation exception contains details about the violation, such as human description of violated rule.
-Optionally, user can confgure the library to require a description for each constraint.
+Optionally, user can configure the library to require a description for each constraint.
 
 ### Quantifiers
 
 #### Universal Quantifier
 
-User can create an invariant for an entity class using the 'All' quantifier .
+User can create an invariant for an entity class using the 'All' quantifier.
 User can restrict the 'All' quantifier to only apply to certain entities, by specifying a condition.
 User can define the 'All' quantifier on an entity class.
 User can define the 'All' quantifier on an entity mutation class (Mutation<T>).

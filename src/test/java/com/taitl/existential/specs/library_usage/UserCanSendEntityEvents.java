@@ -39,6 +39,15 @@ class UserCanSendEntityEvents extends SpecBase
     }
 
     @Test
+    @DisplayName("User can send a delete transition without a type key")
+    void sendDeleteTransitionWithoutTypeKey() throws Exception
+    {
+        String tran = ex.begin(op).id();
+        ex.transit(cat, null, tran);
+        ex.commit(tran);
+    }
+
+    @Test
     @DisplayName("User can send a create event to library")
     void sendCreateEvent() throws Exception
     {

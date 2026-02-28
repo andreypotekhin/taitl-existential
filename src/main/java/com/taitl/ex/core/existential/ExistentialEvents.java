@@ -159,6 +159,8 @@ public class ExistentialEvents implements Closeable
      */
     public <T> void mutate(T t0, T t1, String tranID) throws ExistentialException
     {
+        sane(tranID, "tranID");
+        check(t0 != null && t1 != null, "Both t0 and t1 should not be null.");
         mutate(t0, t1, typeKey(t1), tranID);
     }
 
@@ -177,7 +179,10 @@ public class ExistentialEvents implements Closeable
      */
     public <T> void transit(T t0, T t1, String tranID) throws ExistentialException
     {
-        transit(t0, t1, typeKey(t1), tranID);
+        sane(tranID, "tranID");
+        check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
+        T entity = (t1 != null) ? t1 : t0;
+        transit(t0, t1, typeKey(entity), tranID);
     }
 
     public void close()

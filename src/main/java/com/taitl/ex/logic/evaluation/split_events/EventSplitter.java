@@ -96,7 +96,8 @@ public class EventSplitter
     {
         if (event instanceof BiEvent<?>)
         {
-            return ((BiEvent<T>) event).t1;
+            BiEvent<T> biEvent = (BiEvent<T>) event;
+            return biEvent.t1 != null ? biEvent.t1 : biEvent.t0;
         }
         if (event instanceof EntityEvent<?>)
         {
