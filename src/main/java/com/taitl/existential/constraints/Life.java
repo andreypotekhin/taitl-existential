@@ -35,17 +35,30 @@ public class Life<T extends Transaction> implements Evs<T>, Immediate<T>, SideEf
      */
     List<Ev<T>> evs = new ArrayList<>();
 
+    /**
+     * Creates transaction lifecycle handlers for the type inferred from an anonymous subclass.
+     */
     public Life()
     {
         this.typeKey = inferTypeKeyFromAnonymousSubclass(getClass(), Life.class, "Life");
     }
 
+    /**
+     * Creates transaction lifecycle handlers for the provided transaction type key.
+     *
+     * @param typeKey Transaction type key
+     */
     public Life(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
         this.typeKey = typeKey;
     }
 
+    /**
+     * Creates transaction lifecycle handlers for the provided transaction class.
+     *
+     * @param typeClass Transaction class
+     */
     public Life(Class<T> typeClass)
     {
         sane(typeClass, "typeClass");
@@ -106,72 +119,156 @@ public class Life<T extends Transaction> implements Evs<T>, Immediate<T>, SideEf
         return add(new OnBegin<T>(condition, action, description));
     }
 
+    /**
+     * Creates a handler for OnCommit transaction event.
+     *
+     * @param action Action to invoke on transaction commit
+     * @return This life for chaining
+     */
     public Life<T> commit(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnCommit<T>(null, action));
     }
 
+    /**
+     * Creates a handler for OnCommit transaction event.
+     *
+     * @param action Action to invoke on transaction commit
+     * @param description Description of the handler
+     * @return This life for chaining
+     */
     public Life<T> commit(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnCommit<T>(action, description));
     }
 
+    /**
+     * Creates a handler for OnCommit transaction event.
+     *
+     * @param condition Predicate deciding whether the handler runs
+     * @param action Action to invoke on transaction commit
+     * @return This life for chaining
+     */
     public Life<T> commit(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnCommit<T>(condition, action));
     }
 
+    /**
+     * Creates a handler for OnCommit transaction event.
+     *
+     * @param condition Predicate deciding whether the handler runs
+     * @param action Action to invoke on transaction commit
+     * @param description Description of the handler
+     * @return This life for chaining
+     */
     public Life<T> commit(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnCommit<T>(condition, action, description));
     }
 
+    /**
+     * Creates a handler for OnCheckpoint transaction event.
+     *
+     * @param action Action to invoke on transaction checkpoint
+     * @return This life for chaining
+     */
     public Life<T> checkpoint(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnCheckpoint<T>(null, action));
     }
 
+    /**
+     * Creates a handler for OnCheckpoint transaction event.
+     *
+     * @param action Action to invoke on transaction checkpoint
+     * @param description Description of the handler
+     * @return This life for chaining
+     */
     public Life<T> checkpoint(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnCheckpoint<T>(action, description));
     }
 
+    /**
+     * Creates a handler for OnCheckpoint transaction event.
+     *
+     * @param condition Predicate deciding whether the handler runs
+     * @param action Action to invoke on transaction checkpoint
+     * @return This life for chaining
+     */
     public Life<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnCheckpoint<T>(condition, action));
     }
 
+    /**
+     * Creates a handler for OnCheckpoint transaction event.
+     *
+     * @param condition Predicate deciding whether the handler runs
+     * @param action Action to invoke on transaction checkpoint
+     * @param description Description of the handler
+     * @return This life for chaining
+     */
     public Life<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnCheckpoint<T>(condition, action, description));
     }
 
+    /**
+     * Creates a handler for OnRollback transaction event.
+     *
+     * @param action Action to invoke on transaction rollback
+     * @return This life for chaining
+     */
     public Life<T> rollback(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnRollback<T>(null, action));
     }
 
+    /**
+     * Creates a handler for OnRollback transaction event.
+     *
+     * @param action Action to invoke on transaction rollback
+     * @param description Description of the handler
+     * @return This life for chaining
+     */
     public Life<T> rollback(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnRollback<T>(action, description));
     }
 
+    /**
+     * Creates a handler for OnRollback transaction event.
+     *
+     * @param condition Predicate deciding whether the handler runs
+     * @param action Action to invoke on transaction rollback
+     * @return This life for chaining
+     */
     public Life<T> rollback(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnRollback<T>(condition, action));
     }
 
+    /**
+     * Creates a handler for OnRollback transaction event.
+     *
+     * @param condition Predicate deciding whether the handler runs
+     * @param action Action to invoke on transaction rollback
+     * @param description Description of the handler
+     * @return This life for chaining
+     */
     public Life<T> rollback(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
@@ -229,11 +326,21 @@ public class Life<T extends Transaction> implements Evs<T>, Immediate<T>, SideEf
         tran = tr;
     }
 
+    /**
+     * Returns the transaction type key this life applies to.
+     *
+     * @return Transaction type key
+     */
     public TypeKey<T> typeKey()
     {
         return typeKey;
     }
 
+    /**
+     * Sets the transaction type key this life applies to.
+     *
+     * @param typeKey Transaction type key
+     */
     public void typeKey(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");

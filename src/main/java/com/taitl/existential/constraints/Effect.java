@@ -44,17 +44,30 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
      */
     List<Ev<T>> evs = new ArrayList<>();
 
+    /**
+     * Creates effects for the entity type inferred from an anonymous subclass.
+     */
     public Effect()
     {
         this.typeKey = inferTypeKeyFromAnonymousSubclass(getClass(), Effect.class, "Effect");
     }
 
+    /**
+     * Creates effects for the provided entity type key.
+     *
+     * @param typeKey Entity type key
+     */
     public Effect(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
         this.typeKey = typeKey;
     }
 
+    /**
+     * Creates effects for the provided entity class.
+     *
+     * @param typeClass Entity class
+     */
     public Effect(Class<T> typeClass)
     {
         sane(typeClass, "typeClass");
@@ -184,102 +197,223 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
         return add(new OnChange<T>(null, action));
     }
 
+    /**
+     * Creates an effect for Change event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> change(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnChange<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Change event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> change(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnChange<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Change event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> change(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnChange<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Delete event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> delete(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnDelete<T>(null, action));
     }
 
+    /**
+     * Creates an effect for Delete event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> delete(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnDelete<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Delete event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> delete(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnDelete<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Delete event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> delete(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnDelete<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Modify event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> modify(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnModify<T>(null, action));
     }
 
+    /**
+     * Creates an effect for Modify event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> modify(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnModify<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Modify event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> modify(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnModify<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Modify event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> modify(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnModify<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Mutate event.
+     *
+     * @param action Action to perform for old/new entity values
+     * @return This effect for chaining
+     */
     public Effect<T> mutate(BiConsumer<? super T, ? super T> action)
     {
         sane(action, "action");
         return add(new OnMutate<T>(action));
     }
 
+    /**
+     * Creates an effect for Mutate event.
+     *
+     * @param action Action to perform for old/new entity values
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> mutate(BiConsumer<? super T, ? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnMutate<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Mutate event.
+     *
+     * @param condition Condition on current entities to which apply action
+     * @param action Action to perform for old/new entity values
+     * @return This effect for chaining
+     */
     public Effect<T> mutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnMutate<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Mutate event.
+     *
+     * @param condition Condition on current entities to which apply action
+     * @param action Action to perform for old/new entity values
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> mutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnMutate<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Mutate event.
+     *
+     * @param condition Condition on old/new entity values
+     * @param action Action to perform for old/new entity values
+     * @return This effect for chaining
+     */
     public Effect<T> mutate(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnMutate<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Mutate event.
+     *
+     * @param condition Condition on old/new entity values
+     * @param action Action to perform for old/new entity values
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> mutate(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action,
             String description)
     {
@@ -287,96 +421,208 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
         return add(new OnMutate<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Read event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> read(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnRead<T>(null, action));
     }
 
+    /**
+     * Creates an effect for Read event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> read(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnRead<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Read event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> read(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnRead<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Read event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> read(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnRead<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for ReadAndLock event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> readAndLock(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnReadAndLock<T>(null, action));
     }
 
+    /**
+     * Creates an effect for ReadAndLock event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> readAndLock(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnReadAndLock<T>(action, description));
     }
 
+    /**
+     * Creates an effect for ReadAndLock event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> readAndLock(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnReadAndLock<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for ReadAndLock event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> readAndLock(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnReadAndLock<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Write event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> write(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnWrite<T>(null, action));
     }
 
+    /**
+     * Creates an effect for Write event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> write(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnWrite<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Write event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> write(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnWrite<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Write event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> write(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnWrite<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Transit event.
+     *
+     * @param action Action to perform for old/new entity values
+     * @return This effect for chaining
+     */
     public Effect<T> transit(BiConsumer<? super T, ? super T> action)
     {
         sane(action, "action");
         return add(new OnTransit<T>(action));
     }
 
+    /**
+     * Creates an effect for Transit event.
+     *
+     * @param action Action to perform for old/new entity values
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> transit(BiConsumer<? super T, ? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnTransit<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Transit event.
+     *
+     * @param condition Condition on current entities to which apply action
+     * @param action Action to perform for old/new entity values
+     * @return This effect for chaining
+     */
     public Effect<T> transit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnTransit<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Transit event.
+     *
+     * @param condition Condition on current entities to which apply action
+     * @param action Action to perform for old/new entity values
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> transit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action,
             String description)
     {
@@ -384,12 +630,27 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
         return add(new OnTransit<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Transit event.
+     *
+     * @param condition Condition on old/new entity values
+     * @param action Action to perform for old/new entity values
+     * @return This effect for chaining
+     */
     public Effect<T> transit(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnTransit<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Transit event.
+     *
+     * @param condition Condition on old/new entity values
+     * @param action Action to perform for old/new entity values
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> transit(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action,
             String description)
     {
@@ -397,48 +658,104 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
         return add(new OnTransit<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Update event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> update(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnUpdate<T>(null, action));
     }
 
+    /**
+     * Creates an effect for Update event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> update(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnUpdate<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Update event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> update(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnUpdate<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Update event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> update(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnUpdate<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Create-or-Update event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> upsert(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnCU<T>(null, action));
     }
 
+    /**
+     * Creates an effect for Create-or-Update event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> upsert(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnCU<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Create-or-Update event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> upsert(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnCU<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Create-or-Update event.
+     *
+     * @param condition Condition on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> upsert(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
@@ -471,6 +788,11 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
         return evs;
     }
 
+    /**
+     * Returns the entity type key this effect applies to.
+     *
+     * @return Entity type key
+     */
     public TypeKey<T> typeKey()
     {
         return typeKey;
@@ -501,6 +823,11 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
         tran = tr;
     }
 
+    /**
+     * Sets the entity type key this effect applies to.
+     *
+     * @param typeKey Entity type key
+     */
     public void typeKey(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");

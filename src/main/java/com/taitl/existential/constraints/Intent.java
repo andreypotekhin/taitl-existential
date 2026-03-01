@@ -37,17 +37,30 @@ public class Intent<T> implements Evs<T>, Constraints<T>
     TypeKey<T> typeKey;
     List<Ev<T>> evs = new ArrayList<>();
 
+    /**
+     * Creates an intent for the entity type inferred from an anonymous subclass.
+     */
     public Intent()
     {
         this.typeKey = inferTypeKeyFromAnonymousSubclass(getClass(), Intent.class, "Intent");
     }
 
+    /**
+     * Creates an intent for the provided entity type key.
+     *
+     * @param typeKey Entity type key
+     */
     public Intent(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
         this.typeKey = typeKey;
     }
 
+    /**
+     * Creates an intent for the provided entity class.
+     *
+     * @param typeClass Entity class
+     */
     public Intent(Class<T> typeClass)
     {
         sane(typeClass, "typeClass");
@@ -168,149 +181,334 @@ public class Intent<T> implements Evs<T>, Constraints<T>
         return add(new OnChange<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to delete entities of this type.
+     * (indicates that Delete event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> delete()
     {
         return delete(value -> true);
     }
 
+    /**
+     * Declares intent to delete entities of this type.
+     * (indicates that Delete event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> delete(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnDelete<T>(condition, null));
     }
 
+    /**
+     * Declares intent to delete entities of this type.
+     * (indicates that Delete event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> delete(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnDelete<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to modify entities of this type.
+     * (indicates that Modify event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> modify()
     {
         return modify(value -> true);
     }
 
+    /**
+     * Declares intent to modify entities of this type.
+     * (indicates that Modify event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> modify(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnModify<T>(condition, null));
     }
 
+    /**
+     * Declares intent to modify entities of this type.
+     * (indicates that Modify event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> modify(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnModify<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to mutate entities of this type.
+     * (indicates that Mutate event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> mutate(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnMutate<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to mutate entities of this type.
+     * (indicates that Mutate event may be sent during transaction).
+     *
+     * @param condition Condition which old/new entity values must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> mutate(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnMutate<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to read entities of this type.
+     * (indicates that Read event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> read()
     {
         return read(value -> true);
     }
 
+    /**
+     * Declares intent to read entities of this type.
+     * (indicates that Read event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> read(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnRead<T>(condition, null));
     }
 
+    /**
+     * Declares intent to read entities of this type.
+     * (indicates that Read event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> read(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnRead<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to read-and-lock entities of this type.
+     * (indicates that ReadAndLock event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> readAndLock()
     {
         return readAndLock(value -> true);
     }
 
+    /**
+     * Declares intent to read-and-lock entities of this type.
+     * (indicates that ReadAndLock event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> readAndLock(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnReadAndLock<T>(condition, null));
     }
 
+    /**
+     * Declares intent to read-and-lock entities of this type.
+     * (indicates that ReadAndLock event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> readAndLock(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnReadAndLock<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to write entities of this type.
+     * (indicates that Write event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> write()
     {
         return write(value -> true);
     }
 
+    /**
+     * Declares intent to write entities of this type.
+     * (indicates that Write event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> write(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnWrite<T>(condition, null));
     }
 
+    /**
+     * Declares intent to write entities of this type.
+     * (indicates that Write event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> write(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnWrite<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to transit entities of this type.
+     * (indicates that Transit event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> transit(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnTransit<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to transit entities of this type.
+     * (indicates that Transit event may be sent during transaction).
+     *
+     * @param condition Condition which old/new entity values must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnTransit<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to update entities of this type.
+     * (indicates that Update event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> update()
     {
         return update(value -> true);
     }
 
+    /**
+     * Declares intent to update entities of this type.
+     * (indicates that Update event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> update(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnUpdate<T>(condition, null));
     }
 
+    /**
+     * Declares intent to update entities of this type.
+     * (indicates that Update event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> update(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnUpdate<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to upsert entities of this type.
+     * (indicates that Create-or-Update event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> upsert()
     {
         return upsert(value -> true);
     }
 
+    /**
+     * Declares intent to upsert entities of this type.
+     * (indicates that Create-or-Update event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> upsert(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnCU<T>(condition, null));
     }
 
+    /**
+     * Declares intent to upsert entities of this type.
+     * (indicates that Create-or-Update event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> upsert(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnCU<T>(condition, null, description));
     }
 
+    /**
+     * Adds an event intent to this constraint.
+     *
+     * @param ev Event intent to register
+     * @return This intent for chaining
+     */
     public Intent<T> add(Ev<T> ev)
     {
         sane(ev, "ev");
@@ -318,27 +516,52 @@ public class Intent<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
+    /**
+     * Returns the event intents registered on this constraint.
+     *
+     * @return Ordered list of event intents
+     */
     public List<Ev<T>> list()
     {
         return evs;
     }
 
+    /**
+     * Returns the entity type key this intent applies to.
+     *
+     * @return Entity type key
+     */
     public TypeKey<T> typeKey()
     {
         return typeKey;
     }
 
+    /**
+     * Returns the parent transaction, if this intent is transaction-scoped.
+     *
+     * @return Parent transaction, if any
+     */
     public Transaction transaction()
     {
         return transaction;
     }
 
+    /**
+     * Sets the parent transaction for this intent.
+     *
+     * @param transaction Parent transaction
+     */
     public void transaction(Transaction transaction)
     {
         sane(transaction, "transaction");
         this.transaction = transaction;
     }
 
+    /**
+     * Sets the entity type key this intent applies to.
+     *
+     * @param typeKey Entity type key
+     */
     public void typeKey(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
