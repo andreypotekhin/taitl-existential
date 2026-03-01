@@ -12,7 +12,10 @@ Expression: an Evaluable that returns a value
 Predicate: an Expression that returns a boolean value
 Invariant: a list of Predicate expressions evaluated as constraints
 Effect: a list of Statements executed for side effects
-Intent: a list of Statements used to authorize or gate access to entities (e.g., loading from persistence)  
+Intent: a list of Statements that authorize or gate access to actions on entities 
+  - Example: a 'read' intent configured on entity type to allow reading/loading from persistence
+  - all other entity types become not readable, unless they also have 'read' intent configured for them
+  - if no 'read' intent is configured on any entity type, then all entity types are readable by default
 Rule: an umbrella term for invariants, effects and intents 
 Event: an application or library event, such as: 
   - modifying an entity (e.g. Update<User>) 

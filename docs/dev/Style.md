@@ -73,16 +73,17 @@ Example: ConfigureClassRules.configure()
 - Objects are normally instantiated with Creator.create() - prefer that over the 'new' for extensibility
 - Singletons are maintained with Creator.singleton()
 - For dependency injections, one can use Creator.inject()
-- Some classes (All, Exists) are instantiated with 'new' by end-user. This is part of library contract.
-Since this precludes from using Creator.create(), we have a workaround: these classes delegate to
-a corresponding concrete implementation (e.g. ConcreteExists); and Creator is used to instantiate/inject 
-these concrete implementations.
+- Some classes (All, Exists) are instantiated with 'new' by end-user, as is part of library contract.
+Since this precludes from using Creator.create(), we use a workaround: these classes delegate to
+a corresponding concrete implementation (e.g. ConcreteExists), and Creator is used to instantiate/inject 
+that implementation.
 
 ##### Inheritance
 - Avoid deep inheritance chains
 - We do not use 'final' or 'locked'  
 
 ##### Object decomposition
+The goal of our way of object decomposition is to maximize 'graspability' - the ability for a reader to quickly understand code logic.
 - We divide the classes into 'public', 'orchestration' and 'logic' classes
 - The 'public' classes are the end-user facing classes from our 'public' packages (com.taitl.existential)
 - The 'orchestration' classes are top-level classes to which the public classes delegate. Example: ConfigBuilder 
@@ -99,7 +100,6 @@ these concrete implementations.
   - Implement business logic as near-stateless 'actions' (.actions subpackage), mappings (.maps subpackage),
     data model (.data subpackage), business rules (.rules subpackage), outputs (.output subpackage)
   - Integrate with other 'apps' using their corresponding data model structures 
-
 
 #### Testing
 Test cases for code units live in src/test/java.
@@ -204,8 +204,8 @@ Being a principled team, we fight a few dogmas.
 We generally avoid, unless there is a valid reason:
 - non-wildcard imports 
 - 'final' keyword
-- reference syntax in lambdas 
 - 'private' access modifier (prefer default or protected)
+- reference syntax in lambdas 
 - Optionals
 - @Override annotation 
 - reflection
