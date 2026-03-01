@@ -8,6 +8,7 @@ import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.transactions.Tr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -28,96 +29,117 @@ class CreateTranTest
         createTran = new CreateTran(tl);
     }
 
-    @Test
-    @DisplayName("For config builds context transactions and custom")
-    void forConfigBuildsContextTransactionsAndCustom()
+    @Nested
+    class ForConfig
     {
-        Context c1 = context("/ctx1");
-        Context c2 = context("/ctx2");
-        Config config = new Config();
-        config.addContext(c1);
-        config.addContext(c2);
-        Transaction custom = new Transaction("custom", "custom");
+        @Test
+        @DisplayName("For config builds context transactions and custom")
+        void contextsAndCustom()
+        {
+            Context c1 = context("/ctx1");
+            Context c2 = context("/ctx2");
+            Config config = new Config();
+            config.addContext(c1);
+            config.addContext(c2);
+            Transaction custom = new Transaction("custom", "custom");
 
-        Tr tr = createTran.forConfig("/op", config, custom, CreateTran::forContext);
-        List<Transaction> transactions = tr.transactions();
+            Tr tr = createTran.forConfig("/op", config, custom, CreateTran::forContext);
+            List<Transaction> transactions = tr.transactions();
 
-        assertThat(tr.op, is("/op"));
-        assertThat(transactions, hasSize(3));
-        assertThat(transactions.get(0).context, is(c1));
-        assertThat(transactions.get(0).name, is(c1.name()));
-        assertThat(transactions.get(0).op, is("/op"));
-        assertThat(transactions.get(1).context, is(c2));
-        assertThat(transactions.get(1).name, is(c2.name()));
-        assertThat(transactions.get(1).op, is("/op"));
-        assertThat(transactions.get(2), sameInstance(custom));
-        assertThat(custom.op, is("/op"));
+            assertThat(tr.op, is("/op"));
+            assertThat(transactions, hasSize(3));
+            assertThat(transactions.get(0).context, is(c1));
+            assertThat(transactions.get(0).name, is(c1.name()));
+            assertThat(transactions.get(0).op, is("/op"));
+            assertThat(transactions.get(1).context, is(c2));
+            assertThat(transactions.get(1).name, is(c2.name()));
+            assertThat(transactions.get(1).op, is("/op"));
+            assertThat(transactions.get(2), sameInstance(custom));
+            assertThat(custom.op, is("/op"));
+        }
     }
 
-    @Test
-    @DisplayName("For contexts builds from create transaction")
-    void forContextsBuildsFromCreateTransaction()
+    @Nested
+    class ForContexts
     {
-        Context c1 = context("/ctx1");
-        Context c2 = context("/ctx2");
+        @Test
+        @DisplayName("For contexts builds from create transaction")
+        void fromCreateTransaction()
+        {
+            Context c1 = context("/ctx1");
+            Context c2 = context("/ctx2");
 
-        Tr tr = createTran.forContexts("/op2", List.of(c1, c2), null, CreateTran::forContext);
-        List<Transaction> transactions = tr.transactions();
+            Tr tr = createTran.forContexts("/op2", List.of(c1, c2), null, CreateTran::forContext);
+            List<Transaction> transactions = tr.transactions();
 
-        assertThat(tr.op, is("/op2"));
-        assertThat(transactions, hasSize(2));
-        assertThat(transactions.get(0).context, is(c1));
-        assertThat(transactions.get(0).name, is(c1.name()));
-        assertThat(transactions.get(0).op, is("/op2"));
-        assertThat(transactions.get(1).context, is(c2));
-        assertThat(transactions.get(1).name, is(c2.name()));
-        assertThat(transactions.get(1).op, is("/op2"));
+            assertThat(tr.op, is("/op2"));
+            assertThat(transactions, hasSize(2));
+            assertThat(transactions.get(0).context, is(c1));
+            assertThat(transactions.get(0).name, is(c1.name()));
+            assertThat(transactions.get(0).op, is("/op2"));
+            assertThat(transactions.get(1).context, is(c2));
+            assertThat(transactions.get(1).name, is(c2.name()));
+            assertThat(transactions.get(1).op, is("/op2"));
+        }
     }
 
-    @Test
-    @DisplayName("For context rejects mismatched transaction op")
-    void forContextRejectsMismatchedTransactionOp()
+    @Nested
+    class ForContext
     {
-        Context context = new Context("/ctx").transaction(() -> new Transaction("/other", "custom"));
+        @Nested
+        class Rejects
+        {
+            @Test
+            @DisplayName("For context rejects mismatched transaction op")
+            void mismatchedOp()
+            {
+                Context context = new Context("/ctx").transaction(() -> new Transaction("/other", "custom"));
 
-        IllegalArgumentException e =
-                assertThrows(IllegalArgumentException.class, () -> CreateTran.forContext(context));
+                IllegalArgumentException e =
+                        assertThrows(IllegalArgumentException.class, () -> CreateTran.forContext(context));
 
-        assertThat(e.getMessage(), containsString("must match parent context '/ctx'"));
-    }
+                assertThat(e.getMessage(), containsString("must match parent context '/ctx'"));
+            }
 
-    @Test
-    @DisplayName("For context allows child transaction op")
-    void forContextAllowsChildTransactionOp()
-    {
-        Context context = new Context("/ctx").transaction(() -> new Transaction("/ctx/child", "custom"));
+            @Test
+            @DisplayName("For context rejects shorter transaction op")
+            void shorterOp()
+            {
+                Context context = new Context("/ctx/child").transaction(() -> new Transaction("/ctx", "custom"));
 
-        Transaction tr = CreateTran.forContext(context);
+                IllegalArgumentException e =
+                        assertThrows(IllegalArgumentException.class, () -> CreateTran.forContext(context));
 
-        assertThat(tr.op, is("/ctx"));
-    }
+                assertThat(e.getMessage(), containsString("must match parent context '/ctx/child'"));
+            }
+        }
 
-    @Test
-    @DisplayName("For context allows wildcard transaction op")
-    void forContextAllowsWildcardTransactionOp()
-    {
-        Context context = new Context("/api/cats/create").transaction(() -> new Transaction("/api/*", "custom"));
+        @Nested
+        class Allows
+        {
+            @Test
+            @DisplayName("For context allows child transaction op")
+            void childOp()
+            {
+                Context context = new Context("/ctx").transaction(() -> new Transaction("/ctx/child", "custom"));
 
-        Transaction tr = CreateTran.forContext(context);
+                Transaction tr = CreateTran.forContext(context);
 
-        assertThat(tr.op, is("/api/cats/create"));
-    }
+                assertThat(tr.op, is("/ctx"));
+            }
 
-    @Test
-    @DisplayName("For context rejects shorter transaction op")
-    void forContextRejectsShorterTransactionOp()
-    {
-        Context context = new Context("/ctx/child").transaction(() -> new Transaction("/ctx", "custom"));
+            @Test
+            @DisplayName("For context allows wildcard transaction op")
+            void wildcardOp()
+            {
+                Context context =
+                        new Context("/api/cats/create").transaction(() -> new Transaction("/api/*", "custom"));
 
-        IllegalArgumentException e =
-                assertThrows(IllegalArgumentException.class, () -> CreateTran.forContext(context));
+                Transaction tr = CreateTran.forContext(context);
 
-        assertThat(e.getMessage(), containsString("must match parent context '/ctx/child'"));
+                assertThat(tr.op, is("/api/cats/create"));
+            }
+        }
     }
 
     private static Context context(String name)

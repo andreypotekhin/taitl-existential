@@ -33,213 +33,234 @@ class ConfigureLibraryTest extends SpecBase
         super.cleanup();
     }
 
-    @Test
-    @DisplayName("Reject unknown key")
-    void rejectUnknownKey()
+    @Nested
+    class Configure
     {
-        ConfigureLibrary loader = new ConfigureLibrary(ex,
-                name -> null,
-                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE, "unknown=true")));
-
-        String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
-        assertThat(message, containsString("Invalid configuration key"));
-        assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
-    }
-
-    @Test
-    @DisplayName("Reject invalid boolean")
-    void rejectInvalidBoolean()
-    {
-        ConfigureLibrary loader = new ConfigureLibrary(ex,
-                name -> null,
-                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
-                        "behavior.rules.requireDescriptions=YES")));
-
-        String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
-        assertThat(message, containsString("Invalid boolean value"));
-        assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
-    }
-
-    @Test
-    @DisplayName("Reject missing env file")
-    void rejectMissingEnvFile()
-    {
-        ConfigureLibrary loader = new ConfigureLibrary(ex,
-                name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? "/tmp/no-such-file.properties" : null,
-                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
-                        "behavior.rules.requireDescriptions=false")));
-
-        String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
-        assertThat(message, containsString("does not exist"));
-        assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
-    }
-
-    @Test
-    @DisplayName("Reject oversized classpath config")
-    void rejectOversizedClasspathConfig()
-    {
-        ConfigureLibrary loader = new ConfigureLibrary(ex,
-                name -> null,
-                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE, oversizedConfig())));
-
-        String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
-        assertThat(message, containsString("exceeds max size"));
-        assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
-    }
-
-    @Test
-    @DisplayName("Reject oversized env file")
-    void rejectOversizedEnvFile()
-    {
-        try
+        @Nested
+        class Classpath
         {
-            Path temp = Files.createTempFile("ex-config", ".properties");
-            try
+            @Test
+            @DisplayName("Reject unknown key")
+            void unknownKey()
             {
-                Files.write(temp, oversizedConfig().getBytes(StandardCharsets.UTF_8));
-
                 ConfigureLibrary loader = new ConfigureLibrary(ex,
-                        name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? temp.toString() : null,
+                        name -> null,
+                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE, "unknown=true")));
+
+                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                assertThat(message, containsString("Invalid configuration key"));
+                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+            }
+
+            @Test
+            @DisplayName("Reject invalid boolean")
+            void invalidBoolean()
+            {
+                ConfigureLibrary loader = new ConfigureLibrary(ex,
+                        name -> null,
+                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                "behavior.rules.requireDescriptions=YES")));
+
+                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                assertThat(message, containsString("Invalid boolean value"));
+                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+            }
+
+            @Test
+            @DisplayName("Reject oversized classpath config")
+            void oversizedClasspath()
+            {
+                ConfigureLibrary loader = new ConfigureLibrary(ex,
+                        name -> null,
+                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE, oversizedConfig())));
+
+                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                assertThat(message, containsString("exceeds max size"));
+                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+            }
+        }
+
+        @Nested
+        class EnvFile
+        {
+            @Test
+            @DisplayName("Reject missing env file")
+            void missing()
+            {
+                ConfigureLibrary loader = new ConfigureLibrary(ex,
+                        name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? "/tmp/no-such-file.properties" : null,
                         new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
                                 "behavior.rules.requireDescriptions=false")));
 
                 String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
-                assertThat(message, containsString("too large"));
+                assertThat(message, containsString("does not exist"));
                 assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
             }
-            finally
-            {
-                deleteTempFile(temp);
-            }
-        }
-        catch (IOException e)
-        {
-            throw new UncheckedIOException(e);
-        }
-    }
 
-    @Test
-    @DisplayName("Reject symlink env file")
-    void rejectSymlinkEnvFile()
-    {
-        try
-        {
-            Path tempDir = Files.createTempDirectory("ex-config");
-            Path target = Files.createTempFile(tempDir, "ex-target", ".properties");
-            Path link = tempDir.resolve("config-link.properties");
-            try
+            @Test
+            @DisplayName("Reject oversized env file")
+            void oversized()
             {
-                Files.write(target, "behavior.rules.requireDescriptions=false".getBytes(StandardCharsets.UTF_8));
                 try
                 {
-                    Files.createSymbolicLink(link, target);
+                    Path temp = Files.createTempFile("ex-config", ".properties");
+                    try
+                    {
+                        Files.write(temp, oversizedConfig().getBytes(StandardCharsets.UTF_8));
+
+                        ConfigureLibrary loader = new ConfigureLibrary(ex,
+                                name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? temp.toString() : null,
+                                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                        "behavior.rules.requireDescriptions=false")));
+
+                        String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                        assertThat(message, containsString("too large"));
+                        assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+                    }
+                    finally
+                    {
+                        deleteTempFile(temp);
+                    }
                 }
-                catch (UnsupportedOperationException | IOException e)
+                catch (IOException e)
                 {
-                    Assumptions.assumeTrue(false, "Symlinks not supported");
+                    throw new UncheckedIOException(e);
                 }
-
-                ConfigureLibrary loader = new ConfigureLibrary(ex,
-                        name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? link.toString() : null,
-                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
-                                "behavior.rules.requireDescriptions=false")));
-
-                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
-                assertThat(message, containsString("must not be a symlink"));
-                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
-            }
-            finally
-            {
-                deleteTempFile(link);
-                deleteTempFile(target);
-                deleteTempDirectory(tempDir);
             }
         }
-        catch (IOException e)
+
+        @Nested
+        class EnvSecurity
         {
-            throw new UncheckedIOException(e);
+            @Test
+            @DisplayName("Reject symlink env file")
+            void symlink()
+            {
+                try
+                {
+                    Path tempDir = Files.createTempDirectory("ex-config");
+                    Path target = Files.createTempFile(tempDir, "ex-target", ".properties");
+                    Path link = tempDir.resolve("config-link.properties");
+                    try
+                    {
+                        Files.write(target,
+                                "behavior.rules.requireDescriptions=false".getBytes(StandardCharsets.UTF_8));
+                        try
+                        {
+                            Files.createSymbolicLink(link, target);
+                        }
+                        catch (UnsupportedOperationException | IOException e)
+                        {
+                            Assumptions.assumeTrue(false, "Symlinks not supported");
+                        }
+
+                        ConfigureLibrary loader = new ConfigureLibrary(ex,
+                                name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? link.toString() : null,
+                                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                        "behavior.rules.requireDescriptions=false")));
+
+                        String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                        assertThat(message, containsString("must not be a symlink"));
+                        assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+                    }
+                    finally
+                    {
+                        deleteTempFile(link);
+                        deleteTempFile(target);
+                        deleteTempDirectory(tempDir);
+                    }
+                }
+                catch (IOException e)
+                {
+                    throw new UncheckedIOException(e);
+                }
+            }
+
+            @Test
+            @DisplayName("Reject group writable env file")
+            void groupWritableFile()
+            {
+                try
+                {
+                    Path temp = Files.createTempFile("ex-config", ".properties");
+                    PosixFileAttributeView view = Files.getFileAttributeView(temp, PosixFileAttributeView.class);
+                    Assumptions.assumeTrue(view != null, "POSIX permissions not supported");
+                    try
+                    {
+                        Files.write(temp, "behavior.rules.requireDescriptions=false".getBytes(StandardCharsets.UTF_8));
+                        Files.setPosixFilePermissions(temp, PosixFilePermissions.fromString("rw-rw-r--"));
+
+                        ConfigureLibrary loader = new ConfigureLibrary(ex,
+                                name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? temp.toString() : null,
+                                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                        "behavior.rules.requireDescriptions=false")));
+
+                        String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                        assertThat(message, containsString("group/world writable"));
+                        assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+                    }
+                    finally
+                    {
+                        deleteTempFile(temp);
+                    }
+                }
+                catch (IOException e)
+                {
+                    throw new UncheckedIOException(e);
+                }
+            }
+
+            @Test
+            @DisplayName("Reject group writable env directory")
+            void groupWritableDirectory()
+            {
+                try
+                {
+                    Path tempDir = Files.createTempDirectory("ex-config-dir");
+                    PosixFileAttributeView view = Files.getFileAttributeView(tempDir, PosixFileAttributeView.class);
+                    Assumptions.assumeTrue(view != null, "POSIX permissions not supported");
+                    Path temp = tempDir.resolve("config.properties");
+                    try
+                    {
+                        Files.write(temp, "behavior.rules.requireDescriptions=false".getBytes(StandardCharsets.UTF_8));
+                        Files.setPosixFilePermissions(tempDir, PosixFilePermissions.fromString("rwxrwxr-x"));
+                        Files.setPosixFilePermissions(temp, PosixFilePermissions.fromString("rw-------"));
+
+                        ConfigureLibrary loader = new ConfigureLibrary(ex,
+                                name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? temp.toString() : null,
+                                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                        "behavior.rules.requireDescriptions=false")));
+
+                        String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
+                        assertThat(message, containsString("Configuration directory is group/world writable"));
+                        assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
+                    }
+                    finally
+                    {
+                        deleteTempFile(temp);
+                        deleteTempDirectory(tempDir);
+                    }
+                }
+                catch (IOException e)
+                {
+                    throw new UncheckedIOException(e);
+                }
+            }
         }
     }
 
-    @Test
-    @DisplayName("Reject group writable env file")
-    void rejectGroupWritableEnvFile()
+    @Nested
+    class Startup
     {
-        try
+        @Test
+        @DisplayName("Startup delegates to configure library")
+        void delegatesToConfigureLibrary()
         {
-            Path temp = Files.createTempFile("ex-config", ".properties");
-            PosixFileAttributeView view = Files.getFileAttributeView(temp, PosixFileAttributeView.class);
-            Assumptions.assumeTrue(view != null, "POSIX permissions not supported");
-            try
-            {
-                Files.write(temp, "behavior.rules.requireDescriptions=false".getBytes(StandardCharsets.UTF_8));
-                Files.setPosixFilePermissions(temp, PosixFilePermissions.fromString("rw-rw-r--"));
-
-                ConfigureLibrary loader = new ConfigureLibrary(ex,
-                        name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? temp.toString() : null,
-                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
-                                "behavior.rules.requireDescriptions=false")));
-
-                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
-                assertThat(message, containsString("group/world writable"));
-                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
-            }
-            finally
-            {
-                deleteTempFile(temp);
-            }
+            StubConfigureLibrary loader = new StubConfigureLibrary(ex);
+            ExistentialInit ei = new ExistentialInit(ex, loader);
+            ei.startup();
+            assertThat(loader.called, is(true));
         }
-        catch (IOException e)
-        {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    @Test
-    @DisplayName("Reject group writable env directory")
-    void rejectGroupWritableEnvDirectory()
-    {
-        try
-        {
-            Path tempDir = Files.createTempDirectory("ex-config-dir");
-            PosixFileAttributeView view = Files.getFileAttributeView(tempDir, PosixFileAttributeView.class);
-            Assumptions.assumeTrue(view != null, "POSIX permissions not supported");
-            Path temp = tempDir.resolve("config.properties");
-            try
-            {
-                Files.write(temp, "behavior.rules.requireDescriptions=false".getBytes(StandardCharsets.UTF_8));
-                Files.setPosixFilePermissions(tempDir, PosixFilePermissions.fromString("rwxrwxr-x"));
-                Files.setPosixFilePermissions(temp, PosixFilePermissions.fromString("rw-------"));
-
-                ConfigureLibrary loader = new ConfigureLibrary(ex,
-                        name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? temp.toString() : null,
-                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
-                                "behavior.rules.requireDescriptions=false")));
-
-                String message = assertThrows(IllegalStateException.class, loader::configure).getMessage();
-                assertThat(message, containsString("Configuration directory is group/world writable"));
-                assertThat(message, containsString(ConfigureLibrary.TROUBLESHOOTING_SECTION));
-            }
-            finally
-            {
-                deleteTempFile(temp);
-                deleteTempDirectory(tempDir);
-            }
-        }
-        catch (IOException e)
-        {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    @Test
-    @DisplayName("Startup delegates to configure library")
-    void startupDelegatesToConfigureLibrary()
-    {
-        StubConfigureLibrary loader = new StubConfigureLibrary(ex);
-        ExistentialInit ei = new ExistentialInit(ex, loader);
-        ei.startup();
-        assertThat(loader.called, is(true));
     }
 
     private static class StubConfigureLibrary extends ConfigureLibrary

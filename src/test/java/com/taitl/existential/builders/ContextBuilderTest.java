@@ -22,208 +22,257 @@ class ContextBuilderTest
         }
     }
 
-    @Test
-    @DisplayName("Build attaches context to parent")
-    void buildAttachesContextToParent()
+    @Nested
+    class Build
     {
-        ConfigBuilder configBuilder = new ConfigBuilder("/app");
-        ContextBuilder contextBuilder = configBuilder.context();
-        Context context = new Context("/app");
-        contextBuilder.contextFactory(() -> context);
-        contextBuilder.invariant(new Invariant<>(String.class));
+        @Nested
+        class ContextCases
+        {
+            @Test
+            @DisplayName("Build attaches context to parent")
+            void attachesToParent()
+            {
+                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ContextBuilder contextBuilder = configBuilder.context();
+                com.taitl.existential.configs.Context context = new com.taitl.existential.configs.Context("/app");
+                contextBuilder.contextFactory(() -> context);
+                contextBuilder.invariant(new Invariant<>(String.class));
 
-        contextBuilder.build();
+                contextBuilder.build();
 
-        assertEquals(1, configBuilder.contexts.size());
-        assertSame(context, configBuilder.contexts.get(0));
+                assertEquals(1, configBuilder.contexts.size());
+                assertSame(context, configBuilder.contexts.get(0));
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Parameterless sibling context delegates to parent config op")
-    void parameterlessSiblingContextDelegatesToParentConfigOp()
+    @Nested
+    class Contexts
     {
-        ConfigBuilder configBuilder = new ConfigBuilder("/app");
-        ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+        @Nested
+        class Siblings
+        {
+            @Test
+            @DisplayName("Parameterless sibling context delegates to parent config op")
+            void parameterlessDelegatesToParentConfigOp()
+            {
+                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
 
-        ContextBuilder sibling = contextBuilder.context();
+                ContextBuilder sibling = contextBuilder.context();
 
-        assertEquals("/app", sibling.op);
+                assertEquals("/app", sibling.op);
+            }
+        }
+
+        @Nested
+        class RuleOrder
+        {
+            @Test
+            @DisplayName("Preserves context rule order")
+            void preserves()
+            {
+                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+                Context context = new Context("/app");
+                contextBuilder.contextFactory(() -> context);
+
+                Invariant<String> inv1 = new Invariant<>(String.class);
+                inv1.on(s -> true, "inv1");
+                contextBuilder.invariant(inv1);
+
+                // @formatter:off
+                contextBuilder.invariant(String.class)
+                    .create(s -> true, "inv2")
+                    .done();
+                // @formatter:on
+
+                Effect<String> eff1 = new Effect<>(String.class);
+                eff1.on(s -> {
+                }, "eff1");
+                contextBuilder.effect(eff1);
+
+                Intent<String> intent1 = new Intent<>(String.class);
+                intent1.read();
+                contextBuilder.intent(intent1);
+
+                // @formatter:off
+                contextBuilder.effect(String.class)
+                    .create(s -> {
+                    }, "eff2")
+                    .done();
+                contextBuilder.intent(String.class)
+                    .write()
+                    .done();
+                // @formatter:on
+
+                contextBuilder.build();
+
+                List<Evs<?>> evs = context.evs();
+                assertEquals(6, evs.size());
+                assertSame(inv1, evs.get(0));
+                assertTrue(((Invariant<?>) evs.get(1)).list().get(0) instanceof OnCreate);
+                assertSame(eff1, evs.get(2));
+                assertSame(intent1, evs.get(3));
+                assertTrue(((Effect<?>) evs.get(4)).list().get(0) instanceof OnCreate);
+                assertTrue(((Intent<?>) evs.get(5)).list()
+                        .get(0) instanceof com.taitl.existential.handlers.access_handlers.OnWrite);
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Preserves context rule order")
-    void preservesContextRuleOrder()
+    @Nested
+    class Transactions
     {
-        ConfigBuilder configBuilder = new ConfigBuilder("/app");
-        ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
-        Context context = new Context("/app");
-        contextBuilder.contextFactory(() -> context);
+        @Nested
+        class RuleOrder
+        {
+            @Test
+            @DisplayName("Preserves transaction rule order")
+            void preserves()
+            {
+                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+                TransactionBuilder transactionBuilder =
+                        contextBuilder.transaction(() -> new Transaction("/app", "test"));
 
-        Invariant<String> inv1 = new Invariant<>(String.class);
-        inv1.on(s -> true, "inv1");
-        contextBuilder.invariant(inv1);
+                Invariant<String> inv1 = new Invariant<>(String.class);
+                inv1.on(s -> true, "inv1");
+                transactionBuilder.invariant(inv1);
 
-        // @formatter:off
-        contextBuilder.invariant(String.class)
-            .create(s -> true, "inv2")
-            .done();
-        // @formatter:on
+                transactionBuilder.begin((Transaction tr) -> {
+                });
 
-        Effect<String> eff1 = new Effect<>(String.class);
-        eff1.on(s -> {
-        }, "eff1");
-        contextBuilder.effect(eff1);
+                // @formatter:off
+                transactionBuilder.invariant(String.class)
+                    .create(s -> true, "inv2")
+                    .doneTran();
+                // @formatter:on
 
-        Intent<String> intent1 = new Intent<>(String.class);
-        intent1.read();
-        contextBuilder.intent(intent1);
+                Effect<String> eff1 = new Effect<>(String.class);
+                eff1.on(s -> {
+                }, "eff1");
+                transactionBuilder.effect(eff1);
 
-        // @formatter:off
-        contextBuilder.effect(String.class)
-            .create(s -> {
-            }, "eff2")
-            .done();
-        contextBuilder.intent(String.class)
-            .write()
-            .done();
-        // @formatter:on
+                Intent<String> intent1 = new Intent<>(String.class);
+                intent1.read();
+                transactionBuilder.intent(intent1);
 
-        contextBuilder.build();
+                // @formatter:off
+                transactionBuilder.effect(String.class)
+                    .create(s -> {
+                    }, "eff2")
+                    .doneTran();
+                transactionBuilder.intent(String.class)
+                    .write()
+                    .doneTran();
+                // @formatter:on
 
-        List<Evs<?>> evs = context.evs();
-        assertEquals(6, evs.size());
-        assertSame(inv1, evs.get(0));
-        assertTrue(((Invariant<?>) evs.get(1)).list().get(0) instanceof OnCreate);
-        assertSame(eff1, evs.get(2));
-        assertSame(intent1, evs.get(3));
-        assertTrue(((Effect<?>) evs.get(4)).list().get(0) instanceof OnCreate);
-        assertTrue(((Intent<?>) evs.get(5)).list()
-                .get(0) instanceof com.taitl.existential.handlers.access_handlers.OnWrite);
+                List<Supplier<? extends Evs<?>>> suppliers = transactionBuilder.evsSuppliers;
+                assertEquals(7, suppliers.size());
+                assertSame(inv1, suppliers.get(0).get());
+                assertTrue(suppliers.get(1).get() instanceof Life);
+                assertTrue(((Invariant<?>) suppliers.get(2).get()).list().get(0) instanceof OnCreate);
+                assertSame(eff1, suppliers.get(3).get());
+                assertSame(intent1, suppliers.get(4).get());
+                assertTrue(((Effect<?>) suppliers.get(5).get()).list().get(0) instanceof OnCreate);
+                assertTrue(((Intent<?>) suppliers.get(6).get()).list()
+                        .get(0) instanceof com.taitl.existential.handlers.access_handlers.OnWrite);
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Preserves transaction rule order")
-    void preservesTransactionRuleOrder()
+    @Nested
+    class TypeKeys
     {
-        ConfigBuilder configBuilder = new ConfigBuilder("/app");
-        ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
-        TransactionBuilder transactionBuilder = contextBuilder.transaction(() -> new Transaction("/app", "test"));
+        @Nested
+        class ContextBuilderOverloads
+        {
+            @Test
+            @DisplayName("Context builder attaches type keys from class and type key overloads")
+            void attachesFromClassAndTypeKeyOverloads()
+            {
+                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+                Context context = new Context("/app");
+                contextBuilder.contextFactory(() -> context);
+                TypeKey<List<String>> reflectionType = new TypeKey<List<String>>() {
+                };
+                TypeKey<String> stringType = new TypeKey<>("String");
 
-        Invariant<String> inv1 = new Invariant<>(String.class);
-        inv1.on(s -> true, "inv1");
-        transactionBuilder.invariant(inv1);
+                contextBuilder.invariant(String.class).create(s -> true, "inv").done();
+                contextBuilder.invariant(reflectionType).create(v -> true, "list inv").done();
+                contextBuilder.effect(stringType).create(s -> {
+                }, "eff").done();
+                contextBuilder.intent(String.class).read().done();
 
-        transactionBuilder.begin((Transaction tr) -> {
-        });
+                contextBuilder.build();
 
-        // @formatter:off
-        transactionBuilder.invariant(String.class)
-            .create(s -> true, "inv2")
-            .doneTran();
-        // @formatter:on
+                List<Evs<?>> evs = context.evs();
+                assertEquals(TypeKey.valueOf(String.class, false), evs.get(0).typeKey());
+                assertEquals(reflectionType, evs.get(1).typeKey());
+                assertEquals(stringType, evs.get(2).typeKey());
+                assertEquals(TypeKey.valueOf(String.class, false), evs.get(3).typeKey());
+            }
+        }
 
-        Effect<String> eff1 = new Effect<>(String.class);
-        eff1.on(s -> {
-        }, "eff1");
-        transactionBuilder.effect(eff1);
+        @Nested
+        class TransactionLifecycle
+        {
+            @Test
+            @DisplayName("Transaction lifecycle overloads assign type key to life")
+            void assignsTypeKeyToLife()
+            {
+                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+                TransactionBuilder transactionBuilder = contextBuilder.transaction(CustomTransaction::new);
+                TypeKey<CustomTransaction> reflectionFullNameType = new TypeKey<CustomTransaction>(true) {
+                };
 
-        Intent<String> intent1 = new Intent<>(String.class);
-        intent1.read();
-        transactionBuilder.intent(intent1);
+                transactionBuilder.begin(CustomTransaction.class, tr -> {
+                });
+                transactionBuilder.commit(reflectionFullNameType, tr -> {
+                });
 
-        // @formatter:off
-        transactionBuilder.effect(String.class)
-            .create(s -> {
-            }, "eff2")
-            .doneTran();
-        transactionBuilder.intent(String.class)
-            .write()
-            .doneTran();
-        // @formatter:on
+                Life<?> beginCycle = (Life<?>) transactionBuilder.evsSuppliers.get(0).get();
+                Life<?> commitCycle = (Life<?>) transactionBuilder.evsSuppliers.get(1).get();
 
-        List<Supplier<? extends Evs<?>>> suppliers = transactionBuilder.evsSuppliers;
-        assertEquals(7, suppliers.size());
-        assertSame(inv1, suppliers.get(0).get());
-        assertTrue(suppliers.get(1).get() instanceof Life);
-        assertTrue(((Invariant<?>) suppliers.get(2).get()).list().get(0) instanceof OnCreate);
-        assertSame(eff1, suppliers.get(3).get());
-        assertSame(intent1, suppliers.get(4).get());
-        assertTrue(((Effect<?>) suppliers.get(5).get()).list().get(0) instanceof OnCreate);
-        assertTrue(((Intent<?>) suppliers.get(6).get()).list()
-                .get(0) instanceof com.taitl.existential.handlers.access_handlers.OnWrite);
+                assertEquals(TypeKey.valueOf(CustomTransaction.class, false), beginCycle.typeKey());
+                assertEquals(reflectionFullNameType, commitCycle.typeKey());
+            }
+        }
     }
 
-    @Test
-    @DisplayName("Context builder attaches type keys from class and type key overloads")
-    void contextBuilderAttachesTypeKeysFromClassAndTypeKeyOverloads()
+    @Nested
+    class Contracts
     {
-        ConfigBuilder configBuilder = new ConfigBuilder("/app");
-        ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
-        Context context = new Context("/app");
-        contextBuilder.contextFactory(() -> context);
-        TypeKey<List<String>> reflectionType = new TypeKey<List<String>>() {
-        };
-        TypeKey<String> stringType = new TypeKey<>("String");
+        @Nested
+        class EvsTypeKey
+        {
+            @Test
+            @DisplayName("Evs type key contract is never null")
+            void neverNull()
+            {
+                Invariant<String> invariant = new Invariant<>(String.class);
+                Effect<String> effect = new Effect<>(new TypeKey<String>() {
+                });
+                Intent<String> intent = new Intent<>(String.class);
+                Life<Transaction> life = new Life<>(Transaction.class);
+                Invariant<List<String>> reflected = new Invariant<List<String>>() {
+                };
 
-        contextBuilder.invariant(String.class).create(s -> true, "inv").done();
-        contextBuilder.invariant(reflectionType).create(v -> true, "list inv").done();
-        contextBuilder.effect(stringType).create(s -> {
-        }, "eff").done();
-        contextBuilder.intent(String.class).read().done();
-
-        contextBuilder.build();
-
-        List<Evs<?>> evs = context.evs();
-        assertEquals(TypeKey.valueOf(String.class, false), evs.get(0).typeKey());
-        assertEquals(reflectionType, evs.get(1).typeKey());
-        assertEquals(stringType, evs.get(2).typeKey());
-        assertEquals(TypeKey.valueOf(String.class, false), evs.get(3).typeKey());
-    }
-
-    @Test
-    @DisplayName("Transaction lifecycle overloads assign type key to life")
-    void transactionLifecycleOverloadsAssignTypeKeyToLife()
-    {
-        ConfigBuilder configBuilder = new ConfigBuilder("/app");
-        ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
-        TransactionBuilder transactionBuilder = contextBuilder.transaction(CustomTransaction::new);
-        TypeKey<CustomTransaction> reflectionFullNameType = new TypeKey<CustomTransaction>(true) {
-        };
-
-        transactionBuilder.begin(CustomTransaction.class, tr -> {
-        });
-        transactionBuilder.commit(reflectionFullNameType, tr -> {
-        });
-
-        Life<?> beginCycle = (Life<?>) transactionBuilder.evsSuppliers.get(0).get();
-        Life<?> commitCycle = (Life<?>) transactionBuilder.evsSuppliers.get(1).get();
-
-        assertEquals(TypeKey.valueOf(CustomTransaction.class, false), beginCycle.typeKey());
-        assertEquals(reflectionFullNameType, commitCycle.typeKey());
-    }
-
-    @Test
-    @DisplayName("Evs type key contract is never null")
-    void evsTypeKeyContractIsNeverNull()
-    {
-        Invariant<String> invariant = new Invariant<>(String.class);
-        Effect<String> effect = new Effect<>(new TypeKey<String>() {
-        });
-        Intent<String> intent = new Intent<>(String.class);
-        Life<Transaction> life = new Life<>(Transaction.class);
-        Invariant<List<String>> reflected = new Invariant<List<String>>() {
-        };
-
-        assertNotNull(invariant.typeKey());
-        assertNotNull(effect.typeKey());
-        assertNotNull(intent.typeKey());
-        assertNotNull(life.typeKey());
-        assertEquals(new TypeKey<>(String.class), invariant.typeKey());
-        assertEquals(new TypeKey<String>() {
-        }, effect.typeKey());
-        assertEquals(new TypeKey<>(String.class), intent.typeKey());
-        assertEquals(new TypeKey<Transaction>(Transaction.class), life.typeKey());
-        assertEquals(new TypeKey<List<String>>() {
-        }, reflected.typeKey());
+                assertNotNull(invariant.typeKey());
+                assertNotNull(effect.typeKey());
+                assertNotNull(intent.typeKey());
+                assertNotNull(life.typeKey());
+                assertEquals(new TypeKey<>(String.class), invariant.typeKey());
+                assertEquals(new TypeKey<String>() {
+                }, effect.typeKey());
+                assertEquals(new TypeKey<>(String.class), intent.typeKey());
+                assertEquals(new TypeKey<Transaction>(Transaction.class), life.typeKey());
+                assertEquals(new TypeKey<List<String>>() {
+                }, reflected.typeKey());
+            }
+        }
     }
 }
