@@ -3,6 +3,7 @@ package com.taitl.ex.logic.evaluation.intents.actions;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.existential.evaluables.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -13,20 +14,20 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ResolveIntentHandlers
 {
-    public boolean eventTypeIsGuarded(String eventTypeName, ConfigurationIndexes indexes, Tr tr)
+    public boolean eventTypeIsGuarded(EventType eventType, ConfigurationIndexes indexes, Tr tr)
     {
-        sane(eventTypeName, "eventTypeName", indexes, "indexes", tr, "tr");
-        return indexes.hasIntentEventType(eventTypeName) || tr.hasIntentEventType(eventTypeName);
+        sane(eventType, "eventType", indexes, "indexes", tr, "tr");
+        return indexes.hasIntentEventType(eventType) || tr.hasIntentEventType(eventType);
     }
 
     public <T> List<EventHandler<?>> call(
             MultiKey<T> multiKey,
             List<RuntimeKey<T>> runtimeKeys,
-            String eventTypeName,
+            EventType eventType,
             EventField field,
             Tr tr)
     {
-        sane(multiKey, "multiKey", runtimeKeys, "runtimeKeys", eventTypeName, "eventTypeName", field, "field", tr,
+        sane(multiKey, "multiKey", runtimeKeys, "runtimeKeys", eventType, "eventType", field, "field", tr,
                 "tr");
 
         List<EventHandler<?>> result = new ArrayList<>();
@@ -41,7 +42,7 @@ public class ResolveIntentHandlers
         for (RuntimeKey<T> runtimeKey : runtimeKeys)
         {
             List<EventHandler<?>> transactionHandlers =
-                    tr.intentHandlers(eventTypeName, runtimeKey.typeKey().toString());
+                    tr.intentHandlers(eventType, runtimeKey.typeKey().toString());
             if (transactionHandlers != null)
             {
                 result.addAll(transactionHandlers);

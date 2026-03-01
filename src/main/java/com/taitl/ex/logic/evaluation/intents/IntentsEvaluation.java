@@ -5,6 +5,7 @@ import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.evaluation.intents.actions.*;
 import com.taitl.ex.logic.evaluation.split_events.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -41,10 +42,10 @@ public class IntentsEvaluation
             return;
         }
 
-        Map<String, List<RuntimeKey<T>>> grouped =
-                groupByEventType.call(eventSplitter.split(runtimeKey, el.useFullClassNames()));
+        Map<EventType, List<RuntimeKey<T>>> grouped =
+                groupByEventType.call(eventSplitter.split(runtimeKey, false));
 
-        for (Map.Entry<String, List<RuntimeKey<T>>> entry : grouped.entrySet())
+        for (Map.Entry<EventType, List<RuntimeKey<T>>> entry : grouped.entrySet())
         {
             evaluateIntentGroup.call(entry.getKey(), entry.getValue(), indexes, tr);
         }

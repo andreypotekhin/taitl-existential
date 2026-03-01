@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.evaluation.intents.actions;
 
 import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
@@ -30,20 +31,20 @@ public class EvaluateIntentGroup
     }
 
     public <T> void call(
-            String eventTypeName,
+            EventType eventType,
             List<RuntimeKey<T>> runtimeKeys,
             ConfigurationIndexes indexes,
             Tr tr) throws ExistentialException
     {
-        sane(eventTypeName, "eventTypeName", runtimeKeys, "runtimeKeys", indexes, "indexes", tr, "tr");
-        if (!resolveIntentHandlers.eventTypeIsGuarded(eventTypeName, indexes, tr))
+        sane(eventType, "eventType", runtimeKeys, "runtimeKeys", indexes, "indexes", tr, "tr");
+        if (!resolveIntentHandlers.eventTypeIsGuarded(eventType, indexes, tr))
         {
             return;
         }
 
         RuntimeKey<T> primaryRuntimeKey = primaryRuntimeKey(runtimeKeys);
         List<EventHandler<?>> intents =
-                resolveIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventTypeName, indexes.intentField(),
+                resolveIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventType, indexes.intentField(),
                         tr);
         if (intents.isEmpty())
         {

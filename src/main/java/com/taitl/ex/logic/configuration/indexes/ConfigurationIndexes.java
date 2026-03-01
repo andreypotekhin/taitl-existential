@@ -5,6 +5,7 @@ import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.configuration.rules.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
@@ -20,7 +21,7 @@ public class ConfigurationIndexes
     protected IndexConfig indexConfig;
     protected boolean useFullClassNames;
     public MaintainGlobalOrder maintainGlobalOrder;
-    protected Set<String> intentEventTypes = new LinkedHashSet<>();
+    protected Set<EventType> intentEventTypes = new LinkedHashSet<>();
 
     public ConfigurationIndexes()
     {
@@ -55,17 +56,16 @@ public class ConfigurationIndexes
         configuredIntents.put(eventKey, ev);
     }
 
-    public void addIntentEventType(Class<?> eventClass)
+    public void addIntentEventType(EventType eventType)
     {
-        sane(eventClass, "eventClass");
-        intentEventTypes.add(eventClass.getSimpleName());
-        intentEventTypes.add(eventClass.getName());
+        sane(eventType, "eventType");
+        intentEventTypes.add(eventType);
     }
 
-    public boolean hasIntentEventType(String eventTypeName)
+    public boolean hasIntentEventType(EventType eventType)
     {
-        sane(eventTypeName, "eventTypeName");
-        return intentEventTypes.contains(eventTypeName);
+        sane(eventType, "eventType");
+        return intentEventTypes.contains(eventType);
     }
 
     public boolean hasIntentEventTypes()

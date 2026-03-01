@@ -90,7 +90,7 @@ class UserCanConfigureAccessRules extends SpecBase
     }
 
     @Test
-    @DisplayName("Intent evaluation supports full class names for event and type keys")
+    @DisplayName("Intent evaluation supports full class names for business type keys")
     void intentEvaluationSupportsFullClassNames() throws Exception
     {
         ex.on(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
