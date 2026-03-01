@@ -13,12 +13,6 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ToIntentHandlers
 {
-    public boolean eventTypeIsGuarded(EventType eventType, ConfigurationIndexes indexes, Tr tr)
-    {
-        sane(eventType, "eventType", indexes, "indexes", tr, "tr");
-        return indexes.hasIntentEventType(eventType) || tr.hasIntentEventType(eventType);
-    }
-
     public <T> List<EventHandler<?>> call(
             MultiKey<T> multiKey,
             List<RuntimeKey<T>> runtimeKeys,

@@ -41,14 +41,14 @@ public class EvaluateSplitKeys
             Tr tr) throws ExistentialException
     {
         sane(eventType, "eventType", runtimeKeys, "runtimeKeys", indexes, "indexes", tr, "tr");
-        if (!checkEventType.eventTypeIsGuarded(eventTypeName, indexes, tr))
+        if (!checkEventType.eventTypeIsGuarded(eventType, indexes, tr))
         {
             return;
         }
 
         RuntimeKey<T> primaryRuntimeKey = primaryRuntimeKey(runtimeKeys);
         List<EventHandler<?>> intents =
-                toIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventTypeName, indexes.intentField(),
+                toIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventType, indexes.intentField(),
                         tr);
         if (intents.isEmpty())
         {

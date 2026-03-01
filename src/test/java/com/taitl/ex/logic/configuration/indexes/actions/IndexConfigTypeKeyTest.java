@@ -2,10 +2,7 @@ package com.taitl.ex.logic.configuration.indexes.actions;
 
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
-import com.taitl.existential.events.access_events.Read;
-import com.taitl.existential.effects.*;
-import com.taitl.existential.invariants.*;
-import com.taitl.existential.intents.Intent;
+import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
 

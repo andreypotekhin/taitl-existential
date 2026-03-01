@@ -5,6 +5,7 @@ import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.evaluation.intents.maps.*;
 import com.taitl.ex.logic.evaluation.split_events.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -41,19 +42,19 @@ public class EvaluateIntents
             return;
         }
 
-        Map<String, List<RuntimeKey<T>>> grouped = splitAndGroupByEventType(runtimeKey);
+        Map<EventType, List<RuntimeKey<T>>> grouped = splitAndGroupByEventType(runtimeKey);
         iterateSplitKeys(grouped, indexes, tr);
     }
 
-    public <T> Map<String, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey)
+    public <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey)
     {
         return toSplitKeys.call(eventSplitter.split(runtimeKey, el.useFullClassNames()));
     }
 
-    public <T> void iterateSplitKeys(Map<String, List<RuntimeKey<T>>> grouped, ConfigurationIndexes indexes, Tr tr)
+    public <T> void iterateSplitKeys(Map<EventType, List<RuntimeKey<T>>> grouped, ConfigurationIndexes indexes, Tr tr)
             throws ExistentialException
     {
-        for (Map.Entry<String, List<RuntimeKey<T>>> entry : grouped.entrySet())
+        for (Map.Entry<EventType, List<RuntimeKey<T>>> entry : grouped.entrySet())
         {
             evaluateSplitKeys.call(entry.getKey(), entry.getValue(), indexes, tr);
         }

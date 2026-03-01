@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.intents.maps;
 
+import com.taitl.ex.logic.evaluation.split_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 
@@ -22,13 +23,12 @@ public class ToSplitKeys
         this.splitTypeKey = splitTypeKey;
     }
 
-    public <T> Map<String, List<RuntimeKey<T>>> call(Set<RuntimeKey<T>> runtimeKeys)
     public <T> Map<EventType, List<RuntimeKey<T>>> call(Set<RuntimeKey<T>> runtimeKeys)
     {
         return groupByEventType(runtimeKeys);
     }
 
-    public <T> Map<String, List<RuntimeKey<T>>> groupByEventType(Set<RuntimeKey<T>> runtimeKeys)
+    public <T> Map<EventType, List<RuntimeKey<T>>> groupByEventType(Set<RuntimeKey<T>> runtimeKeys)
     {
         sane(runtimeKeys, "runtimeKeys");
         Map<EventType, List<RuntimeKey<T>>> grouped = new LinkedHashMap<>();
