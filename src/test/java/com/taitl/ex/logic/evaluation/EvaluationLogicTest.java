@@ -2,21 +2,18 @@ package com.taitl.ex.logic.evaluation;
 
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
-import com.taitl.ex.logic.validation.output.ValidationReport;
-import com.taitl.existential.Existential;
+import com.taitl.ex.logic.validation.output.*;
+import com.taitl.existential.*;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.events.*;
-import com.taitl.existential.exceptions.ConditionNotMetException;
-import com.taitl.existential.exceptions.EventHandlerException;
-import com.taitl.existential.exceptions.PredicateFailure;
+import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;
-import com.taitl.existential.invariants.*;
 import com.taitl.existential.keys.*;
-import com.taitl.existential.transactions.Tr;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import com.taitl.existential.transactions.*;
+import org.junit.jupiter.api.*;
 
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
+import java.util.concurrent.atomic.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,7 @@
 package com.taitl.existential.intents;
 
 import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.Ev;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.access_handlers.*;

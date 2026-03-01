@@ -1,13 +1,12 @@
 package com.taitl.existential.builders;
 
+import com.taitl.existential.configs.*;
+import com.taitl.existential.constraints.*;
+import com.taitl.existential.evaluables.*;
+import com.taitl.existential.keys.*;
+
 import java.util.*;
 import java.util.function.*;
-import com.taitl.existential.configs.*;
-import com.taitl.existential.effects.*;
-import com.taitl.existential.evaluables.*;
-import com.taitl.existential.invariants.*;
-import com.taitl.existential.intents.*;
-import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;

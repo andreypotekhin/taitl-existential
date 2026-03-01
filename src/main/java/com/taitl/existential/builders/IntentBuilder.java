@@ -1,6 +1,6 @@
 package com.taitl.existential.builders;
 
-import com.taitl.existential.intents.*;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
 
 import java.util.function.*;

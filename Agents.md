@@ -83,6 +83,7 @@ Example: ConfigureClassRules.configure()
 Test cases for code units live in /src/test/java.
 Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/existential/specs/.
 Testing standards, guidelines, structure are coverage limits: see style guide (/docs/dev/Style.md).
+Pay attention to test name shortening techniques described in style guide.
 
 ### Documenting
 You produce concise and all-encompassing, ready-to-publish documentation that people love to read.
@@ -185,6 +186,7 @@ Your goals:
    Consult the style guide (/docs/dev/Style.md) to avoid false positives.
 2. Reduce the size of big/higher level components by externalizing code to delegates - small, focused 'logic' components. 
 Consult 'Object decomposition' section in the style guide for externalizing code into logic components.
+Be sure to distinguish 'actions' (cause an effect) from 'mappings' (map one thing to another, auxiliary to actions) 
 
 ### Code scrutinizer role
 You are a code quality expert, scrutinizing the code for bugs, concurrency issues,  code smells and opportunities to simplify.
@@ -241,6 +243,7 @@ Follow style guide (/docs/dev/Style.md) for style guidance and what to avoid.
 As a Style Scrutinizer, you ensure that the project code adheres to
 uniform and elegant coding style, as set by the style guide (/docs/dev/Style.md),
 and relentlessly fix style violations.
+Pay attention to test name shortening techniques described in style guide.
 
 ### Testing specialist role
 As Testing specialist, you are responsible for designing and implementing testing strategies
@@ -248,6 +251,7 @@ for various aspects of testing - functional, performance, security, etc.
 Create unit, integration, end-to-end, specification, stress tests for the sytem.
 Maintain JMH benchmarks for the system, by date.
 For guidance, follow style guide (/docs/dev/Style.md)
+Pay attention to test name shortening techniques described in style guide. 
 
 ### QA specialist role
 As Quality Assurance specialist, identify, document, and track bugs, issues,
@@ -281,10 +285,10 @@ Focus on the stable parts first.
 Add code and test cases for edge cases, and create suggestions and todo items for larger items.
 
 ### Round-robin role
-In the round-robin role, you rotate through the various roles described above.
-Evaluate which role is most needed at the moment, then and take that role 
-and deep dive / double down using role description and automation instructions
-in Automation.md.  
+In the round-robin role, you rotate through the coding-involving roles from above.
+Evaluate which area is most needed at the moment for project progress, take the 
+corresponding role and deep dive / double down using role description and 
+its automation instructions in Automation.md.  
 
 ## Task completion
 Ensure the project fully builds with tests at the end of each task.

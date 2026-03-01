@@ -5,8 +5,8 @@ import com.taitl.ex.examples.night_city.model.Location;
 import com.taitl.existential.Ex;
 import com.taitl.existential.configs.Context;
 import com.taitl.existential.configs.Transaction;
-import com.taitl.existential.effects.Effect;
-import com.taitl.existential.invariants.Invariant;
+import com.taitl.existential.constraints.Effect;
+import com.taitl.existential.constraints.Invariant;
 
 public class ConfigureClassRules
 {

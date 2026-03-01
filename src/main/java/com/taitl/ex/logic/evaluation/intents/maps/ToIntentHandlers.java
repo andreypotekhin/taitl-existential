@@ -1,6 +1,5 @@
-package com.taitl.ex.logic.evaluation.intents.actions;
+package com.taitl.ex.logic.evaluation.intents.maps;
 
-import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;
@@ -12,7 +11,7 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class ResolveIntentHandlers
+public class ToIntentHandlers
 {
     public boolean eventTypeIsGuarded(EventType eventType, ConfigurationIndexes indexes, Tr tr)
     {

@@ -5,12 +5,12 @@ import com.taitl.ex.common.helper.State;
 import com.taitl.ex.logic.indexing.data.IndexData;
 import com.taitl.ex.logic.transactions.TransactionLogic;
 import com.taitl.ex.logic.validation.data.ValidationData;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.events.types.EventType;
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.handlers.types.*;
-import com.taitl.existential.intents.*;
 import com.taitl.existential.keys.OpKey;
 
 import java.util.*;

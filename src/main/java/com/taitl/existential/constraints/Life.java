@@ -1,7 +1,5 @@
-package com.taitl.existential.transactions;
+package com.taitl.existential.constraints;
 
-import java.util.*;
-import java.util.function.*;
 import com.taitl.ex.common.helper.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
@@ -9,14 +7,16 @@ import com.taitl.existential.handlers.transaction_handlers.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.keys.*;
 
+import java.util.*;
+import java.util.function.*;
+
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.lang.Generics.*;
 
 /**
  * Holds handlers for transaction lifecycle events, such as Begin, Commit, Rollback.
  */
-// TODO: Delegate to ConcreteTrancycle
-public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
+public class Life<T extends Transaction> implements Evs<T>, Immediate<T>, SideEffects<T>
 {
     /**
      * Parent Transaction object, if any.
@@ -31,18 +31,18 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      */
     List<Ev<T>> evs = new ArrayList<>();
 
-    public Trancycle()
+    public Life()
     {
-        this.typeKey = inferTypeKeyFromAnonymousSubclass(getClass(), Trancycle.class, "Trancycle");
+        this.typeKey = inferTypeKeyFromAnonymousSubclass(getClass(), Life.class, "Trancycle");
     }
 
-    public Trancycle(TypeKey<T> typeKey)
+    public Life(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
         this.typeKey = typeKey;
     }
 
-    public Trancycle(Class<T> typeClass)
+    public Life(Class<T> typeClass)
     {
         sane(typeClass, "typeClass");
         this.typeKey = new TypeKey<>(typeClass);
@@ -57,7 +57,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Action to invoke on transaction begin
      * @return This trancycle for chaining
      */
-    public Trancycle<T> begin(Consumer<? super T> action)
+    public Life<T> begin(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnBegin<T>(null, action));
@@ -72,7 +72,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Description of the handler
      * @return This trancycle for chaining
      */
-    public Trancycle<T> begin(Consumer<? super T> action, String description)
+    public Life<T> begin(Consumer<? super T> action, String description)
     {
         sane(action, "action");
         return add(new OnBegin<T>(action, description));
@@ -87,7 +87,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Action to invoke on transaction begin
      * @return This trancycle for chaining
      */
-    public Trancycle<T> begin(Predicate<? super T> condition, Consumer<? super T> action)
+    public Life<T> begin(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnBegin<T>(condition, action));
@@ -104,7 +104,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Description of the handler
      * @return This trancycle for chaining
      */
-    public Trancycle<T> begin(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    public Life<T> begin(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnBegin<T>(condition, action, description));
@@ -117,7 +117,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Action to invoke on transaction commit
      * @return This trancycle for chaining
      */
-    public Trancycle<T> commit(Consumer<? super T> action)
+    public Life<T> commit(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnCommit<T>(null, action));
@@ -132,7 +132,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Description of the handler
      * @return This trancycle for chaining
      */
-    public Trancycle<T> commit(Consumer<? super T> action, String description)
+    public Life<T> commit(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnCommit<T>(action, description));
@@ -147,7 +147,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Action to invoke on transaction commit
      * @return This trancycle for chaining
      */
-    public Trancycle<T> commit(Predicate<? super T> condition, Consumer<? super T> action)
+    public Life<T> commit(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnCommit<T>(condition, action));
@@ -164,7 +164,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Description of the handler
      * @return This trancycle for chaining
      */
-    public Trancycle<T> commit(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    public Life<T> commit(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnCommit<T>(condition, action, description));
@@ -177,7 +177,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Action to invoke on transaction checkpoint
      * @return This trancycle for chaining
      */
-    public Trancycle<T> checkpoint(Consumer<? super T> action)
+    public Life<T> checkpoint(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnCheckpoint<T>(null, action));
@@ -192,7 +192,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Description of the handler
      * @return This trancycle for chaining
      */
-    public Trancycle<T> checkpoint(Consumer<? super T> action, String description)
+    public Life<T> checkpoint(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnCheckpoint<T>(action, description));
@@ -207,7 +207,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Action to invoke on transaction checkpoint
      * @return This trancycle for chaining
      */
-    public Trancycle<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action)
+    public Life<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnCheckpoint<T>(condition, action));
@@ -224,7 +224,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Description of the handler
      * @return This trancycle for chaining
      */
-    public Trancycle<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    public Life<T> checkpoint(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnCheckpoint<T>(condition, action, description));
@@ -237,7 +237,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Action to invoke on transaction rollback
      * @return This trancycle for chaining
      */
-    public Trancycle<T> rollback(Consumer<? super T> action)
+    public Life<T> rollback(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnRollback<T>(null, action));
@@ -252,7 +252,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Description of the handler
      * @return This trancycle for chaining
      */
-    public Trancycle<T> rollback(Consumer<? super T> action, String description)
+    public Life<T> rollback(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnRollback<T>(action, description));
@@ -267,7 +267,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Action to invoke on transaction rollback
      * @return This trancycle for chaining
      */
-    public Trancycle<T> rollback(Predicate<? super T> condition, Consumer<? super T> action)
+    public Life<T> rollback(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnRollback<T>(condition, action));
@@ -284,7 +284,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Description of the handler
      * @return This trancycle for chaining
      */
-    public Trancycle<T> rollback(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    public Life<T> rollback(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnRollback<T>(condition, action, description));
@@ -299,7 +299,7 @@ public class Trancycle<T extends Transaction> implements Evs<T>, Immediate<T>
      *            Event handler to register
      * @return This trancycle for chaining
      */
-    public Trancycle<T> add(Ev<T> ev)
+    public Life<T> add(Ev<T> ev)
     {
         sane(ev, "eh");
         evs.add(ev);

@@ -1,11 +1,9 @@
 package com.taitl.existential.configs;
 
 import com.taitl.ex.common.creator.*;
-import com.taitl.existential.effects.*;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.*;
-import com.taitl.existential.invariants.*;
-import com.taitl.existential.intents.*;
 
 import java.util.*;
 import java.util.function.*;

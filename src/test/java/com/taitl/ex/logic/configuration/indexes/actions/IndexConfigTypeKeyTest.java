@@ -1,13 +1,15 @@
 package com.taitl.ex.logic.configuration.indexes.actions;
 
-import java.util.*;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.events.access_events.Read;
 import com.taitl.existential.effects.*;
 import com.taitl.existential.invariants.*;
 import com.taitl.existential.intents.Intent;
 import com.taitl.existential.keys.*;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 

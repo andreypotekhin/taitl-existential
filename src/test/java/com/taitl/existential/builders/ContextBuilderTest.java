@@ -1,16 +1,14 @@
 package com.taitl.existential.builders;
 
-import java.util.*;
-import java.util.function.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.effects.*;
+import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.*;
-import com.taitl.existential.invariants.*;
-import com.taitl.existential.intents.*;
 import com.taitl.existential.keys.*;
-import com.taitl.existential.transactions.*;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
+import java.util.*;
+import java.util.function.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -142,7 +140,7 @@ class ContextBuilderTest
         List<Supplier<? extends Evs<?>>> suppliers = transactionBuilder.evsSuppliers;
         assertEquals(7, suppliers.size());
         assertSame(inv1, suppliers.get(0).get());
-        assertTrue(suppliers.get(1).get() instanceof Trancycle);
+        assertTrue(suppliers.get(1).get() instanceof Life);
         assertTrue(((Invariant<?>) suppliers.get(2).get()).list().get(0) instanceof OnCreate);
         assertSame(eff1, suppliers.get(3).get());
         assertSame(intent1, suppliers.get(4).get());
@@ -191,8 +189,8 @@ class ContextBuilderTest
         transactionBuilder.commit(reflectionFullNameType, tr -> {
         });
 
-        Trancycle<?> beginCycle = (Trancycle<?>) transactionBuilder.evsSuppliers.get(0).get();
-        Trancycle<?> commitCycle = (Trancycle<?>) transactionBuilder.evsSuppliers.get(1).get();
+        Life<?> beginCycle = (Life<?>) transactionBuilder.evsSuppliers.get(0).get();
+        Life<?> commitCycle = (Life<?>) transactionBuilder.evsSuppliers.get(1).get();
 
         assertEquals(TypeKey.valueOf(CustomTransaction.class, false), beginCycle.typeKey());
         assertEquals(reflectionFullNameType, commitCycle.typeKey());
@@ -205,19 +203,19 @@ class ContextBuilderTest
         Effect<String> effect = new Effect<>(new TypeKey<String>() {
         });
         Intent<String> intent = new Intent<>(String.class);
-        Trancycle<Transaction> trancycle = new Trancycle<>(Transaction.class);
+        Life<Transaction> life = new Life<>(Transaction.class);
         Invariant<List<String>> reflected = new Invariant<List<String>>() {
         };
 
         assertNotNull(invariant.typeKey());
         assertNotNull(effect.typeKey());
         assertNotNull(intent.typeKey());
-        assertNotNull(trancycle.typeKey());
+        assertNotNull(life.typeKey());
         assertEquals(new TypeKey<>(String.class), invariant.typeKey());
         assertEquals(new TypeKey<String>() {
         }, effect.typeKey());
         assertEquals(new TypeKey<>(String.class), intent.typeKey());
-        assertEquals(new TypeKey<Transaction>(Transaction.class), trancycle.typeKey());
+        assertEquals(new TypeKey<Transaction>(Transaction.class), life.typeKey());
         assertEquals(new TypeKey<List<String>>() {
         }, reflected.typeKey());
     }

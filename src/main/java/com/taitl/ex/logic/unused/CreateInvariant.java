@@ -1,7 +1,8 @@
 package com.taitl.ex.logic.unused;
 
+import com.taitl.existential.constraints.*;
+
 import java.util.function.*;
-import com.taitl.existential.invariants.*;
 
 @Deprecated
 public interface CreateInvariant<T>

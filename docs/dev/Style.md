@@ -120,10 +120,11 @@ Use modern test frameworks capabilities to the maximum for structuring the tests
 - Use nesting of test cases liberally
 - Take advantage of the shared initialization of nested tests
 - When nesting, make enclosing test class names descriptive so that child test class/method names could be shortened
-- Use user story/specification item text as name for nesting test case
+- Shorten test method names by creating context with nesting, and using @DisplayName with human description.
+- Use user story/specification item text as @DisplayName for nesting test case
+- Use @DisplayName if test method name is a multi-word identifier
 - Use test parameterization and other advanced techniques to cut down on test code size
 - Prefer no empty lines/rare empty lines in test method code
-- Prefer @DisplayName if test method name is a sentence-like multi-word identifier  
 
 ##### Test coverage and isolation
 - Try to achieve significant (89%) coverage, but do not insist on coverage of units which are in active development
