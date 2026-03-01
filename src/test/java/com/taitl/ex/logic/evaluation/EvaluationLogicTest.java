@@ -47,6 +47,7 @@ class EvaluationLogicTest
     }
 
     @Test
+    @DisplayName("Evaluate executes effects and collects constraint violations")
     void evaluateExecutesEffectsAndCollectsConstraintViolations() throws Exception
     {
         ex = new Existential();
@@ -71,6 +72,7 @@ class EvaluationLogicTest
     }
 
     @Test
+    @DisplayName("Evaluate rethrows non violation handler exception and keeps partial report")
     void evaluateRethrowsNonViolationHandlerExceptionAndKeepsPartialReport() throws Exception
     {
         ex = new Existential();
@@ -99,6 +101,7 @@ class EvaluationLogicTest
     }
 
     @Test
+    @DisplayName("Evaluate collects predicate failure from invariant all")
     void evaluateCollectsPredicateFailureFromInvariantAll() throws Exception
     {
         ex = new Existential();

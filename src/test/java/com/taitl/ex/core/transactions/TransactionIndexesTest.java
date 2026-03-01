@@ -3,6 +3,7 @@ package com.taitl.ex.core.transactions;
 import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.indexes.Index;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -12,6 +13,7 @@ import static org.hamcrest.Matchers.sameInstance;
 class TransactionIndexesTest
 {
     @Test
+    @DisplayName("Index creates on first access")
     void indexCreatesOnFirstAccess()
     {
         Transaction tr = new Transaction("/op", "name");
@@ -22,6 +24,7 @@ class TransactionIndexesTest
     }
 
     @Test
+    @DisplayName("Index returns same instance")
     void indexReturnsSameInstance()
     {
         Transaction tr = new Transaction("/op", "name");

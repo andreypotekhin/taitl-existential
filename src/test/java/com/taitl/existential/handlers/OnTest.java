@@ -4,6 +4,7 @@ import com.taitl.existential.exceptions.*;
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.data.CityTestData;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.function.Consumer;
 
@@ -36,6 +37,7 @@ class OnTest
     }
 
     @Test
+    @DisplayName("Handle side effect")
     void handleSideEffect() throws Exception
     {
         assertThat(cat.color, is("Black"));

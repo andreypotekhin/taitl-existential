@@ -1,6 +1,7 @@
 package com.taitl.existential.keys;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ class ConfigBuilderKeyTest
     }
 
     @Test
+    @DisplayName("Test op key constructor")
     void testOpKeyConstructor()
     {
         new OpKey("/a/b/c");
@@ -35,12 +37,14 @@ class ConfigBuilderKeyTest
     }
 
     @Test
+    @DisplayName("Test to string")
     void testToString()
     {
         Assertions.assertEquals("/a/b/c", new OpKey("/a/b/c").toString());
     }
 
     @Test
+    @DisplayName("Test has parent")
     void testHasParent()
     {
         Assertions.assertTrue(new OpKey("/a/b/c").hasParent());
@@ -49,6 +53,7 @@ class ConfigBuilderKeyTest
     }
 
     @Test
+    @DisplayName("Test get parent")
     void testGetParent()
     {
         Assertions.assertEquals(OpKey.valueOf("/a/b"), new OpKey("/a/b/c").getParent());

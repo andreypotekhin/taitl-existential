@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,7 @@ class AllTest
     }
 
     @Test
+    @DisplayName("Construct with predicate")
     void constructWithPredicate()
     {
         o = new All<>(h -> h.hasRoof());
@@ -45,6 +47,7 @@ class AllTest
     }
 
     @Test
+    @DisplayName("Construct with condition and predicate")
     void constructWithConditionAndPredicate()
     {
         o = new All<>(h -> true, h -> h.hasRoof());
@@ -58,6 +61,7 @@ class AllTest
     }
 
     @Test
+    @DisplayName("Construct with description")
     void constructWithDescription()
     {
         o = new All<>(h -> true, h -> h.hasRoof(), "description");

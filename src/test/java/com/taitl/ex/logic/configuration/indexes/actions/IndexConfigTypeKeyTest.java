@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class IndexConfigTypeKeyTest
 {
     @Test
+    @DisplayName("Indexes handlers using typed event keys for class string and reflection type keys")
     void indexesHandlersUsingTypedEventKeysForClassStringAndReflectionTypeKeys()
     {
         Config config = new Config();
@@ -50,6 +51,7 @@ class IndexConfigTypeKeyTest
     }
 
     @Test
+    @DisplayName("Indexes full names using reflection type key full name constructor")
     void indexesFullNamesUsingReflectionTypeKeyFullNameConstructor()
     {
         Config config = new Config();
@@ -70,6 +72,7 @@ class IndexConfigTypeKeyTest
     }
 
     @Test
+    @DisplayName("Indexes intent event keys with simple event names when type keys use full names")
     void indexesIntentEventKeysWithSimpleEventNamesWhenTypeKeysUseFullNames()
     {
         Config config = new Config();

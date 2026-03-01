@@ -7,6 +7,7 @@ import com.taitl.existential.configs.Context;
 import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.transactions.Tr;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -28,6 +29,7 @@ class CreateTranTest
     }
 
     @Test
+    @DisplayName("For config builds context transactions and custom")
     void forConfigBuildsContextTransactionsAndCustom()
     {
         Context c1 = context("/ctx1");
@@ -53,6 +55,7 @@ class CreateTranTest
     }
 
     @Test
+    @DisplayName("For contexts builds from create transaction")
     void forContextsBuildsFromCreateTransaction()
     {
         Context c1 = context("/ctx1");
@@ -72,6 +75,7 @@ class CreateTranTest
     }
 
     @Test
+    @DisplayName("For context rejects mismatched transaction op")
     void forContextRejectsMismatchedTransactionOp()
     {
         Context context = new Context("/ctx").transaction(() -> new Transaction("/other", "custom"));
@@ -83,6 +87,7 @@ class CreateTranTest
     }
 
     @Test
+    @DisplayName("For context allows child transaction op")
     void forContextAllowsChildTransactionOp()
     {
         Context context = new Context("/ctx").transaction(() -> new Transaction("/ctx/child", "custom"));
@@ -93,6 +98,7 @@ class CreateTranTest
     }
 
     @Test
+    @DisplayName("For context allows wildcard transaction op")
     void forContextAllowsWildcardTransactionOp()
     {
         Context context = new Context("/api/cats/create").transaction(() -> new Transaction("/api/*", "custom"));
@@ -103,6 +109,7 @@ class CreateTranTest
     }
 
     @Test
+    @DisplayName("For context rejects shorter transaction op")
     void forContextRejectsShorterTransactionOp()
     {
         Context context = new Context("/ctx/child").transaction(() -> new Transaction("/ctx", "custom"));

@@ -14,6 +14,7 @@ class EvaluateIntentTest
     EvaluateIntent evaluateIntent = new EvaluateIntent();
 
     @Test
+    @DisplayName("Returns true when on handler condition is met")
     void returnsTrueWhenOnHandlerConditionIsMet() throws Exception
     {
         EventHandler<?> intent = new OnRead<String>(value -> true, null);
@@ -21,6 +22,7 @@ class EvaluateIntentTest
     }
 
     @Test
+    @DisplayName("Returns false when on handler condition is not met")
     void returnsFalseWhenOnHandlerConditionIsNotMet() throws Exception
     {
         EventHandler<?> intent = new OnRead<String>(value -> false, null);
@@ -28,6 +30,7 @@ class EvaluateIntentTest
     }
 
     @Test
+    @DisplayName("Returns false when bi intent does not match non bi event")
     void returnsFalseWhenBiIntentDoesNotMatchNonBiEvent() throws Exception
     {
         EventHandler<?> intent = new OnMutate<String>((left, right) -> true, null, "must match");
@@ -35,6 +38,7 @@ class EvaluateIntentTest
     }
 
     @Test
+    @DisplayName("Wraps unsupported handler types as intent violation")
     void wrapsUnsupportedHandlerTypesAsIntentViolation()
     {
         EventHandler<Object> unsupported = new EventHandler<>() {

@@ -4,6 +4,7 @@ import com.taitl.ex.core.existential.ExistentialTransactions;
 import com.taitl.ex.logic.transactions.TransactionLogic;
 import com.taitl.existential.Existential;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -12,6 +13,7 @@ import static org.hamcrest.Matchers.notNullValue;
 class TrRegistryTest
 {
     @Test
+    @DisplayName("Registry initializes create tran")
     void registryInitializesCreateTran()
     {
         Existential ex = new Existential();

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AbstractPathTest
 {
     @Test
+    @DisplayName("Accepts root and detects no parent")
     void acceptsRootAndDetectsNoParent()
     {
         AbstractPath path = new AbstractPath("/");
@@ -27,6 +28,7 @@ class AbstractPathTest
     }
 
     @Test
+    @DisplayName("Allows wildcard paths")
     void allowsWildcardPaths()
     {
         AbstractPath path = new AbstractPath("/app/*/update");
@@ -35,6 +37,7 @@ class AbstractPathTest
     }
 
     @Test
+    @DisplayName("Get parent returns parent path")
     void getParentReturnsParentPath()
     {
         AbstractPath path = new AbstractPath("/app/orders/update");
@@ -43,6 +46,7 @@ class AbstractPathTest
     }
 
     @Test
+    @DisplayName("Get parent throws for top level")
     void getParentThrowsForTopLevel()
     {
         AbstractPath path = new AbstractPath("/app");
@@ -52,6 +56,7 @@ class AbstractPathTest
     }
 
     @Test
+    @DisplayName("Validate rejects missing leading slash")
     void validateRejectsMissingLeadingSlash()
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
@@ -60,6 +65,7 @@ class AbstractPathTest
     }
 
     @Test
+    @DisplayName("Validate rejects ending slash")
     void validateRejectsEndingSlash()
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {

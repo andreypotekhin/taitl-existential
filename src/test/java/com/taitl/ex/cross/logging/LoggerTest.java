@@ -23,6 +23,7 @@ class LoggerTest
     }
 
     @Test
+    @DisplayName("Sanitize escapes control characters")
     void sanitizeEscapesControlCharacters()
     {
         String input = "start\nmid\rend\t\u001b[31mX\u007f";

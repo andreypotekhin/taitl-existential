@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SplitEventTest
 {
     @Test
+    @DisplayName("Call stores original event")
     void callStoresOriginalEvent()
     {
         ConfigurationIndexes indexes = new ConfigurationIndexes();

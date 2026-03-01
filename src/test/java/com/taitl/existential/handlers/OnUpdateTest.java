@@ -3,12 +3,14 @@ package com.taitl.existential.handlers;
 import java.util.concurrent.atomic.AtomicInteger;
 import com.taitl.ex.examples.night_city.model.Cat;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OnUpdateTest
 {
     @Test
+    @DisplayName("Condition prevents action when false")
     void conditionPreventsActionWhenFalse() throws Exception
     {
         AtomicInteger calls = new AtomicInteger();

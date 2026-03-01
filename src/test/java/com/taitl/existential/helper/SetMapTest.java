@@ -4,6 +4,7 @@ import com.taitl.ex.common.helper.collections.SetMap;
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.model.Location;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -85,6 +86,7 @@ class SetMapTest
     }
 
     @Test
+    @DisplayName("Test remove predicate evaluated once")
     void testRemovePredicateEvaluatedOnce()
     {
         AtomicInteger calls = new AtomicInteger();
@@ -98,6 +100,7 @@ class SetMapTest
     }
 
     @Test
+    @DisplayName("Test contains key")
     void testContainsKey()
     {
         assertThrows(IllegalArgumentException.class, () -> o.containsKey(null));

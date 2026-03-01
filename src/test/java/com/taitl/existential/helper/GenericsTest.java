@@ -29,6 +29,7 @@ class GenericsTest
     }
 
     @Test
+    @DisplayName("Anonymous superclass type argument extracts type")
     void anonymousSuperclassTypeArgumentExtractsType()
     {
         Type type = Generics.anonymousSuperclassTypeArgument(StringBox.class, Box.class);
@@ -37,6 +38,7 @@ class GenericsTest
     }
 
     @Test
+    @DisplayName("Anonymous superclass type argument rejects raw subclass")
     void anonymousSuperclassTypeArgumentRejectsRawSubclass()
     {
         assertThrows(IllegalArgumentException.class,
@@ -44,6 +46,7 @@ class GenericsTest
     }
 
     @Test
+    @DisplayName("Type name renders parameterized types")
     void typeNameRendersParameterizedTypes()
     {
         Type type = StringList.class.getGenericSuperclass();

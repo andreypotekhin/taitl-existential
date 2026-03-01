@@ -34,6 +34,7 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    @DisplayName("Reject unknown key")
     void rejectUnknownKey()
     {
         ConfigureLibrary loader = new ConfigureLibrary(ex,
@@ -46,6 +47,7 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    @DisplayName("Reject invalid boolean")
     void rejectInvalidBoolean()
     {
         ConfigureLibrary loader = new ConfigureLibrary(ex,
@@ -59,6 +61,7 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    @DisplayName("Reject missing env file")
     void rejectMissingEnvFile()
     {
         ConfigureLibrary loader = new ConfigureLibrary(ex,
@@ -72,6 +75,7 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    @DisplayName("Reject oversized classpath config")
     void rejectOversizedClasspathConfig()
     {
         ConfigureLibrary loader = new ConfigureLibrary(ex,
@@ -84,6 +88,7 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    @DisplayName("Reject oversized env file")
     void rejectOversizedEnvFile()
     {
         try
@@ -114,6 +119,7 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    @DisplayName("Reject symlink env file")
     void rejectSymlinkEnvFile()
     {
         try
@@ -156,6 +162,7 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    @DisplayName("Reject group writable env file")
     void rejectGroupWritableEnvFile()
     {
         try
@@ -189,6 +196,7 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    @DisplayName("Reject group writable env directory")
     void rejectGroupWritableEnvDirectory()
     {
         try
@@ -225,6 +233,7 @@ class ConfigureLibraryTest extends SpecBase
     }
 
     @Test
+    @DisplayName("Startup delegates to configure library")
     void startupDelegatesToConfigureLibrary()
     {
         StubConfigureLibrary loader = new StubConfigureLibrary(ex);

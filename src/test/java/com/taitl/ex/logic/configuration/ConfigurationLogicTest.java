@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfigurationLogicTest
 {
     @Test
+    @DisplayName("Config rejects missing config with op key message")
     void configRejectsMissingConfigWithOpKeyMessage()
     {
         try (Existential ex = new Existential())

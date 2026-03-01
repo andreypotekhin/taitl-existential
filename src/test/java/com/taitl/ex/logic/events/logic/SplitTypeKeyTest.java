@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SplitTypeKeyTest
 {
     @Test
+    @DisplayName("Root removes generic part and keeps only type name")
     void rootRemovesGenericPartAndKeepsOnlyTypeName()
     {
         SplitTypeKey splitter = new SplitTypeKey();
@@ -19,6 +20,7 @@ class SplitTypeKeyTest
     }
 
     @Test
+    @DisplayName("Root supports plain names and whitespace")
     void rootSupportsPlainNamesAndWhitespace()
     {
         SplitTypeKey splitter = new SplitTypeKey();
@@ -26,6 +28,7 @@ class SplitTypeKeyTest
     }
 
     @Test
+    @DisplayName("Split single dimension")
     void splitSingleDimension()
     {
         SplitTypeKey splitter = new SplitTypeKey();
@@ -39,6 +42,7 @@ class SplitTypeKeyTest
     }
 
     @Test
+    @DisplayName("Split multiple dimensions")
     void splitMultipleDimensions()
     {
         SplitTypeKey splitter = new SplitTypeKey();

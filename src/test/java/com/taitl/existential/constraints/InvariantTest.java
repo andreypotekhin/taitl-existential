@@ -5,6 +5,7 @@ import com.taitl.existential.handlers.OnCreate;
 import com.taitl.existential.handlers.OnMutate;
 import com.taitl.existential.keys.TypeKey;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -22,12 +23,14 @@ class InvariantTest
     }
 
     @Test
+    @DisplayName("Default constructor requires anonymous subclass")
     void defaultConstructorRequiresAnonymousSubclass()
     {
         assertThrows(IllegalStateException.class, () -> new Invariant<Widget>());
     }
 
     @Test
+    @DisplayName("Anonymous subclass infers type key")
     void anonymousSubclassInfersTypeKey()
     {
         Invariant<Widget> invariant = new Invariant<Widget>() {
@@ -37,6 +40,7 @@ class InvariantTest
     }
 
     @Test
+    @DisplayName("Handlers preserve descriptions")
     void handlersPreserveDescriptions()
     {
         Invariant<String> invariant = new Invariant<>(String.class);
@@ -56,6 +60,7 @@ class InvariantTest
     }
 
     @Test
+    @DisplayName("Transaction getter requires assignment")
     void transactionGetterRequiresAssignment()
     {
         Invariant<String> invariant = new Invariant<>(String.class);

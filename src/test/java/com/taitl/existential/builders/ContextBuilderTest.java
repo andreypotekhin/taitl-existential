@@ -23,6 +23,7 @@ class ContextBuilderTest
     }
 
     @Test
+    @DisplayName("Build attaches context to parent")
     void buildAttachesContextToParent()
     {
         ConfigBuilder configBuilder = new ConfigBuilder("/app");
@@ -38,6 +39,7 @@ class ContextBuilderTest
     }
 
     @Test
+    @DisplayName("Parameterless sibling context delegates to parent config op")
     void parameterlessSiblingContextDelegatesToParentConfigOp()
     {
         ConfigBuilder configBuilder = new ConfigBuilder("/app");
@@ -49,6 +51,7 @@ class ContextBuilderTest
     }
 
     @Test
+    @DisplayName("Preserves context rule order")
     void preservesContextRuleOrder()
     {
         ConfigBuilder configBuilder = new ConfigBuilder("/app");
@@ -99,6 +102,7 @@ class ContextBuilderTest
     }
 
     @Test
+    @DisplayName("Preserves transaction rule order")
     void preservesTransactionRuleOrder()
     {
         ConfigBuilder configBuilder = new ConfigBuilder("/app");
@@ -150,6 +154,7 @@ class ContextBuilderTest
     }
 
     @Test
+    @DisplayName("Context builder attaches type keys from class and type key overloads")
     void contextBuilderAttachesTypeKeysFromClassAndTypeKeyOverloads()
     {
         ConfigBuilder configBuilder = new ConfigBuilder("/app");
@@ -176,6 +181,7 @@ class ContextBuilderTest
     }
 
     @Test
+    @DisplayName("Transaction lifecycle overloads assign type key to life")
     void transactionLifecycleOverloadsAssignTypeKeyToLife()
     {
         ConfigBuilder configBuilder = new ConfigBuilder("/app");
@@ -197,6 +203,7 @@ class ContextBuilderTest
     }
 
     @Test
+    @DisplayName("Evs type key contract is never null")
     void evsTypeKeyContractIsNeverNull()
     {
         Invariant<String> invariant = new Invariant<>(String.class);

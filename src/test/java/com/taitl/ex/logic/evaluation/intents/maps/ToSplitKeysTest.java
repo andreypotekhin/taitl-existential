@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ToSplitKeysTest
 {
     @Test
+    @DisplayName("Group by event type rejects runtime key without event")
     void groupByEventTypeRejectsRuntimeKeyWithoutEvent()
     {
         ToSplitKeys toSplitKeys = new ToSplitKeys();

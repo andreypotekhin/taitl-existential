@@ -4,6 +4,7 @@ import com.taitl.ex.common.helper.collections.ConcurrentSetMap;
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.model.Location;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -25,6 +26,7 @@ class ConcurrentSetMapTest
     }
 
     @Test
+    @DisplayName("Test get returns snapshot")
     void testGetReturnsSnapshot()
     {
         Set<Cat> snapshot = o.get(LOCATION_PARK);
@@ -38,6 +40,7 @@ class ConcurrentSetMapTest
     }
 
     @Test
+    @DisplayName("Test remove predicate returns snapshot")
     void testRemovePredicateReturnsSnapshot()
     {
         Set<Cat> removed = o.remove(LOCATION_PARK, cat -> true);

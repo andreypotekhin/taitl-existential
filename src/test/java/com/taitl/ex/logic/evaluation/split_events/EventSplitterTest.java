@@ -27,6 +27,7 @@ class EventSplitterTest
     }
 
     @Test
+    @DisplayName("Split transit uses updated entity for change")
     void splitTransitUsesUpdatedEntityForChange()
     {
         EventSplitter splitter = new EventSplitter();
@@ -45,6 +46,7 @@ class EventSplitterTest
     }
 
     @Test
+    @DisplayName("Split runtime key splits by underlying event and keeps type key")
     void splitRuntimeKeySplitsByUnderlyingEventAndKeepsTypeKey()
     {
         EventSplitter splitter = new EventSplitter();
@@ -60,6 +62,7 @@ class EventSplitterTest
     }
 
     @Test
+    @DisplayName("Split runtime key also splits type key by generics dimension")
     void splitRuntimeKeyAlsoSplitsTypeKeyByGenericsDimension()
     {
         EventSplitter splitter = new EventSplitter();
@@ -85,6 +88,7 @@ class EventSplitterTest
     }
 
     @Test
+    @DisplayName("Split runtime key preserves full event names")
     void splitRuntimeKeyPreservesFullEventNames()
     {
         EventSplitter splitter = new EventSplitter();
@@ -101,6 +105,7 @@ class EventSplitterTest
     }
 
     @Test
+    @DisplayName("Split rejects runtime key without event")
     void splitRejectsRuntimeKeyWithoutEvent()
     {
         EventSplitter splitter = new EventSplitter();
@@ -112,6 +117,7 @@ class EventSplitterTest
     }
 
     @Test
+    @DisplayName("Split transit rejects null transit with event message")
     void splitTransitRejectsNullTransitWithEventMessage()
     {
         TestEventSplitter splitter = new TestEventSplitter();
@@ -123,6 +129,7 @@ class EventSplitterTest
     }
 
     @Test
+    @DisplayName("Split transit emits combined events for create update delete")
     void splitTransitEmitsCombinedEventsForCreateUpdateDelete()
     {
         EventSplitter splitter = new EventSplitter();
