@@ -15,10 +15,18 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.lang.Generics.*;
 
 /**
- * Declares access intents for entities in a context or transaction.
+ * Declares an intent to carry out an action on entities of type T.
  *
- * Intents are used to authorize event emission for specific event types and
- * type keys. If an intent condition fails, event emission is denied.
+ * Intents are used to control what actions can be performed on entities of a given type.
+ * If an intent is declared on a type, it is expected to be declared on all other types
+ * for which same action may be performed in the course of business transaction.
+ * Example: if 'read' intent is declared for type A, any attempt to read an entity of type B
+ * will be denied, unless you also declare 'read' intent for type B.
+ *
+ * Thus, the intents work similarly to firewall rules, creating a 'deny-by-default' policy
+ * around application entities.
+ *
+ * Intents are evaluated immediately on trigger event.
  *
  * @param <T>
  *            Entity type the intent applies to
@@ -46,51 +54,114 @@ public class Intent<T> implements Evs<T>, Constraints<T>
         this.typeKey = new TypeKey<>(typeClass);
     }
 
+    /**
+     * Declares intent to act on entities of this type.
+     * (indicates that On event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> on()
     {
         return on(value -> true);
     }
 
+    /**
+     * Declares intent to act on entities of this type.
+     * (indicates that On event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> on(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new On<T>(condition, null));
     }
 
+    /**
+     * Declares intent to act on entities of this type.
+     * (indicates that On event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> on(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new On<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to create entities of this type.
+     * (indicates that Create event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> create()
     {
         return create(value -> true);
     }
 
+    /**
+     * Declares intent to create entities of this type.
+     * (indicates that Create event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> create(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnCreate<T>(condition, null));
     }
 
+    /**
+     * Declares intent to create entities of this type.
+     * (indicates that Create event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> create(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnCreate<T>(condition, null, description));
     }
 
+    /**
+     * Declares intent to change entities of this type.
+     * (indicates that Change event may be sent during transaction).
+     *
+     * @return This intent for chaining
+     */
     public Intent<T> change()
     {
         return change(value -> true);
     }
 
+    /**
+     * Declares intent to change entities of this type.
+     * (indicates that Change event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
     public Intent<T> change(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnChange<T>(condition, null));
     }
 
+    /**
+     * Declares intent to change entities of this type.
+     * (indicates that Change event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @param description Description of intent
+     * @return This intent for chaining
+     */
     public Intent<T> change(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");

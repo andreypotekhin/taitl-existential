@@ -176,7 +176,7 @@ class ContextBuilderTest
     }
 
     @Test
-    void transactionLifecycleOverloadsAssignTypeKeyToTrancycle()
+    void transactionLifecycleOverloadsAssignTypeKeyToLife()
     {
         ConfigBuilder configBuilder = new ConfigBuilder("/app");
         ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");

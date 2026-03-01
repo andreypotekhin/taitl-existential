@@ -1,13 +1,14 @@
 package com.taitl.existential.builders;
 
-import java.util.*;
-import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.rules.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.keys.*;
+
+import java.util.*;
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -83,19 +84,18 @@ public class ConfigBuilder
      * Example:
      *   Ex.configure("/app/docs/update")            <-- ConfigBuilder
      *     .context(new Context(){{                  <-- Custom context
-     *        invariant(new Invariant<Document<JSON>>() {{
-     *             write(doc -> doc.verify());
-     *             all(doc -> doc.verified());
-     *        }});
-     *        invariant(new Invariant<Document<HTML>>() {{
-     *             all(doc -> doc.fullyLoaded());
-     *        }});
-     *        intent(new Intent<Document<JSON>>() {{
+     *        intent(new Intent<Document<?>>() {{
      *             read();
      *             write();
      *        }});
-     *        intent(new Intent<Document<HTML>>() {{
-     *             read();
+     *        effect(new Effect<Document<HTML>>() {{
+     *             write(doc -> doc.spellCheck());
+     *        }});
+     *        effect(new Effect<Document<JSON>>() {{
+     *             write(doc -> doc.validate());
+     *        }});
+     *        invariant(new Invariant<Document>() {{
+     *             all(doc -> doc.valid());
      *        }});
      *    }})
      *

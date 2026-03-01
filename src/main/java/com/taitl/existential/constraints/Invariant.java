@@ -17,9 +17,9 @@ import static com.taitl.ex.common.helper.State.*;
 import static com.taitl.ex.common.helper.lang.Generics.*;
 
 /**
- * Declares invariants over entities within a transaction or a specific context.
- * Invariants are assembled from event handlers and quantifiers such as {@link All}
- * and {@link Exists}, and are evaluated when a transaction is validated.
+ * Declares invariants over entity of type T.
+ * Invariants are evaluated when business transaction is validated
+ * (upon commit() or checkpoint() methods).
  *
  * @param <T> entity type the invariant applies to
  */
@@ -31,6 +31,10 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * transaction level, e.g. invariants declared in a Context.
      */
     Transaction tran;
+
+    /**
+     * Entity type key.
+     */
     TypeKey<T> typeKey;
 
     /**
@@ -57,18 +61,39 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
 
     /* Event handler methods */
 
+    /**
+     * Declares an invariant for On event (that is, any event).
+     *
+     * @param condition Predicate to enforce for the entities that received the event
+     * @param description Description of invariant
+     * @return This invariant for chaining
+     */
     public Invariant<T> on(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
         return add(new On<T>(condition, null, description));
     }
 
+    /**
+     * Declares an invariant for Create event.
+     *
+     * @param condition Predicate to enforce for the entities that received the event
+     * @param description Description of invariant
+     * @return This invariant for chaining
+     */
     public Invariant<T> create(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnCreate<T>(condition, null, description));
     }
 
+    /**
+     * Declares an invariant for Change event.
+     *
+     * @param condition Predicate to enforce for the entities that received the event
+     * @param description Description of invariant
+     * @return This invariant for chaining
+     */
     public Invariant<T> change(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");

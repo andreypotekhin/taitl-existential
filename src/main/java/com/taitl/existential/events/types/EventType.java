@@ -3,11 +3,8 @@ package com.taitl.existential.events.types;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
-<<<<<<< ours
- * Declares the event class a handler responds to (for example Create.class).
-=======
- * Declares the event class a handler responds to, for example Create.class.
->>>>>>> theirs
+ * Declares the event class a handler responds to,
+ * Examples: Create.class, Update.class, Delete.class
  * This small wrapper avoids scattering raw event-class handling across indexing code.
  */
 public class EventType

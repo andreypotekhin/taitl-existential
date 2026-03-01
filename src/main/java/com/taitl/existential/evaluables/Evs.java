@@ -1,12 +1,12 @@
 package com.taitl.existential.evaluables;
 
-import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.keys.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Collection of evaluable statements (Evs) bound to a single type.
- * Known implementors include Invariant<Entity>, Effect<Entity>, Trancycle<Transaction>.
+ * Known implementors include Invariant<Entity>, Effect<Entity>, Life<Transaction>.
  *
  * @param <T> Entity type
  */

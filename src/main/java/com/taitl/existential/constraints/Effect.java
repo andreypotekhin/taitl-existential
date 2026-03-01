@@ -16,12 +16,16 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.lang.Generics.*;
 
 /**
- * Declares side effects for a business operation by registering handlers for
- * entity lifecycle and access events.
- *
- * Effects are evaluated as part of a context or a transaction, and may be
- * attached to a custom transaction instance when the operation begins.
- *
+ * Declares side effects for entities of type T.
+ * By default, effects are evaluated (carried out) in validation stage,
+ * when a transaction is validated.
+ * But they also can be attached at earlier stages (e.g. runtime stage),
+ * for immediate execution upon receiving the trigger event.
+ * Be aware that doing so may affect performance, since during runtime
+ * stage, every trigger event causes execution of the effect, 
+ * whereas during validation stage, equal events are 'folded' into a
+ * single event, evaluated once.
+ * 
  * @param <T>
  *            Entity type the effect applies to
  */
@@ -64,54 +68,116 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
 
     /* Event handler methods */
 
+    /**
+     * Creates an effect for On event (that is, any event).
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> on(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new On<T>(null, action));
     }
 
+    /**
+     * Creates an effect for On event (that is, any event).
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> on(Consumer<? super T> action, String description)
     {
         sane(action, "action");
         return add(new On<T>(action, description));
     }
 
+    /**
+     * Creates an effect for On event (that is, any event).
+     *
+     * @param condition Condition (filter) on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> on(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new On<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for On event (that is, any event).
+     *
+     * @param condition Condition (filter) on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> on(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new On<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Create event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> create(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnCreate<T>(null, action));
     }
 
+    /**
+     * Creates an effect for Create event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> create(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnCreate<T>(action, description));
     }
 
+    /**
+     * Creates an effect for Create event.
+     *
+     * @param condition Condition (filter) on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> create(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnCreate<T>(condition, action));
     }
 
+    /**
+     * Creates an effect for Create event.
+     *
+     * @param condition Condition (filter) on the entities to which apply action
+     * @param action Action to perform for the entities that received this event
+     * @param description Description of effect
+     * @return This effect for chaining
+     */
     public Effect<T> create(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnCreate<T>(condition, action, description));
     }
 
+    /**
+     * Creates an effect for Change event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
     public Effect<T> change(Consumer<? super T> action)
     {
         sane(action, "action");

@@ -198,9 +198,9 @@ public class TransactionBuilder
      * Registers a transaction lifecycle rule set.
      *
      * @param cycle
-     *            Trancycle to register
+     *            Life to register
      * @param <T>
-     *            Transaction type handled by the trancycle
+     *            Transaction type handled by the life
      * @return This builder for chaining
      */
     public <T extends Transaction> TransactionBuilder cycle(Life<T> cycle)
