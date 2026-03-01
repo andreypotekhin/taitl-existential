@@ -9,8 +9,8 @@ import com.taitl.existential.events.types.*;
  * Unlike {@link Event} classes, provides both the initial and final entity states.
  * Unlike {@link Mutate}, either state may be null.
  *
- * Initial state (t0): entity state at the beginning of the transaction. Null means the entity was created.
- * Final state (t1): entity state at the end of the transaction. Null means the entity was deleted.
+ * Initial state (before): entity state at the beginning of the transaction. Null means the entity was created.
+ * Final state (after): entity state at the end of the transaction. Null means the entity was deleted.
  *
  * Example: Transit<Account> is raised when an Account entity is created, updated, or deleted during the
  * current transaction.
@@ -24,9 +24,9 @@ import com.taitl.existential.events.types.*;
  */
 public class Transit<T> extends BiEvent<T>
 {
-    public Transit(T t0, T t1)
+    public Transit(T before, T after)
     {
-        super(t0, t1);
-        PairArgs.requireNotBothNull(t0, t1, "Arguments 't0' and 't1' should not be both null");
+        super(before, after);
+        PairArgs.requireNotBothNull(before, after, "Arguments 'before' and 'after' should not be both null");
     }
 }

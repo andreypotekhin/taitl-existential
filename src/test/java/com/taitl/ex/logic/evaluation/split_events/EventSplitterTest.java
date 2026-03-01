@@ -101,6 +101,17 @@ class EventSplitterTest
     }
 
     @Test
+    void splitRejectsRuntimeKeyWithoutEvent()
+    {
+        EventSplitter splitter = new EventSplitter();
+        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(String.class, "String", "value", false);
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> splitter.split(runtimeKey));
+
+        assertEquals("Argument 'event' must not be null", error.getMessage());
+    }
+
+    @Test
     void splitTransitRejectsNullTransitWithEventMessage()
     {
         TestEventSplitter splitter = new TestEventSplitter();
@@ -108,7 +119,7 @@ class EventSplitterTest
         IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
                 () -> splitter.splitTransitPublic(null, new LinkedHashSet<>()));
 
-        assertEquals("Argument 'event' should not be null", error.getMessage());
+        assertEquals("Argument 'event' must not be null", error.getMessage());
     }
 
     @Test

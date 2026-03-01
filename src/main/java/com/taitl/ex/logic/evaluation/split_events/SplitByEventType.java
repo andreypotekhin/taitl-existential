@@ -32,14 +32,7 @@ public class SplitByEventType
 
     protected <T> Set<Event<T>> splitTransit(Transit<T> transit, Set<Event<T>> events)
     {
-        if (transit == null)
-        {
-            throw new IllegalArgumentException("Argument 'event' should not be null");
-        }
-        if (events == null)
-        {
-            throw new IllegalArgumentException("Argument 'set' should not be null");
-        }
+        sane(transit, "event", events, "events");
         // Transit -> EntityEvent, Mutate, Transit
         if (transit.t0 != null && transit.t1 != null)
         {
@@ -81,14 +74,7 @@ public class SplitByEventType
 
     protected <T> Set<Event<T>> splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> events)
     {
-        if (event == null)
-        {
-            throw new IllegalArgumentException("Argument 'event' should not be null");
-        }
-        if (events == null)
-        {
-            throw new IllegalArgumentException("Argument 'set' should not be null");
-        }
+        sane(event, "event", events, "events");
         events.add(new Read<>(event.t));
         return events;
     }

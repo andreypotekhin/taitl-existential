@@ -51,8 +51,16 @@ class RuntimeKeyTest
     {
         RuntimeKeyProbe<String> probe = new RuntimeKeyProbe<>("alpha");
         assertDoesNotThrow(probe::validate);
-        assertThrows(IllegalStateException.class, () -> RuntimeKeyProbe.nullKeyProbe("alpha"));
-        assertThrows(IllegalStateException.class, () -> RuntimeKeyProbe.nullEntityProbe());
+        IllegalStateException keyError = assertThrows(IllegalStateException.class,
+                () -> RuntimeKeyProbe.nullKeyProbe("alpha"));
+        assertEquals("RuntimeKey key should not be null", keyError.getMessage());
+
+        IllegalStateException typeKeyError = assertThrows(IllegalStateException.class,
+                () -> RuntimeKeyProbe.nullTypeKeyProbe("alpha"));
+        assertEquals("RuntimeKey typeKey should not be null", typeKeyError.getMessage());
+
+        IllegalStateException entityError = assertThrows(IllegalStateException.class, RuntimeKeyProbe::nullEntityProbe);
+        assertEquals("RuntimeKey entity should not be null", entityError.getMessage());
     }
 
     static class RuntimeKeyProbe<T> extends RuntimeKey<T>
@@ -67,6 +75,11 @@ class RuntimeKeyTest
             new RuntimeKeyProbe<>(null, entity).validate();
         }
 
+        static <T> void nullTypeKeyProbe(T entity)
+        {
+            new RuntimeKeyProbe<>(EventKey.valueOf("Create<String>"), null, entity).validate();
+        }
+
         static void nullEntityProbe()
         {
             new RuntimeKeyProbe<>(EventKey.valueOf("Create<String>"), null).validate();
@@ -75,6 +88,11 @@ class RuntimeKeyTest
         RuntimeKeyProbe(EventKey<T> key, T entity)
         {
             super(key, entity);
+        }
+
+        RuntimeKeyProbe(EventKey<T> key, TypeKey<T> typeKey, T entity)
+        {
+            super(key, typeKey, null, entity);
         }
     }
 }

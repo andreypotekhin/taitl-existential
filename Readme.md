@@ -7,9 +7,9 @@ implements two logic quantifiers, ∀ ("for any") and ∃ ("exists"), allowing y
 expressions about application entities (elements of the business domain) and to guarantee those
 expressions hold. For instance, the library lets you constrain a single field, multiple fields,
 or how an object may change over time.
-Performance comes from evaluating expressions only at transaction boundaries, treating repeated changes
-between those points as a single change. Memory efficiency comes from reusing singleton expression instances
-where possible.
+Performance comes from evaluating expressions only at transaction boundaries, collapsing repeated changes
+between those points into a single change. Memory efficiency comes from reusing singleton expression instances
+when possible.
 
 ## Limitations
 
@@ -26,6 +26,35 @@ such as an exception, if those truths are violated.
 The library does not aim to implement any complete set of mathematical logic notations.
 It provides a limited set of notations to allow for declarative reasoning about program
 entities, and focuses on performance and memory efficiency.
+
+## Transaction quickstart
+
+Below is a compact end-to-end example showing a single rule, an event, and a transaction lifecycle.
+
+    Ex.configure("/app/orders")
+      .context("/app/orders/submit")
+          .invariant(Order.class)
+              .create(o -> o.totalCents() > 0, "Total must be positive")
+              .done()
+          .build();
+
+    Tr tr = Ex.begin("/app/orders/submit");
+    try
+    {
+        Ex.create(order, tr.id());
+        Ex.commit(tr);
+    }
+    catch (ExistentialException e)
+    {
+        Ex.rollback(tr);
+        throw e;
+    }
+
+Notes:
+- Operation keys are path-like strings (`/app/orders/submit`). They must start with `/`, must not end with `/`,
+  and must not include `*`. Troubleshooting: `/Troubleshooting.md#invalid-operation-key`.
+- After `commit()` or `rollback()`, the transaction id is invalid and reuse throws `NotFoundException`.
+  Troubleshooting: `/Troubleshooting.md#transaction-not-found`.
 
 ## Formalisms
 
@@ -114,6 +143,7 @@ Same when x0, x1 must also satisfy some condition:
 ## Documentation
 
 See /docs directory for further documentation.
+See /docs/Usage.md for quick-start and usage patterns.
 See /Troubleshooting.md for solutions to address common issues.
 
 ## Type Keys

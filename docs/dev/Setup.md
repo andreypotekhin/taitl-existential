@@ -6,12 +6,12 @@
 
 ### Obtaining and building
 - Clone the repository from GitHub.
-- Build with Maven using `mvn test`.
+- Build with Maven: `mvn test`.
 
 ### IDE
 #### IntelliJ IDEA
 
-##### Adjust formatter to ignore chained method indentation
+##### Adjust formatter to preserve chained-call indentation
 By default, the Java formatter removes custom indentation on chained calls.
 This can reduce readability when configuring with builders.
 Example of custom indentation:
@@ -22,6 +22,6 @@ Example of custom indentation:
          .create(c -> "Black".equals(c.color), "Cats are born black")
        .done()
 ```
-To avoid automatic removal of indents, use formatter switch comments around the code:
+To preserve indentation, wrap the section with formatter switch comments:
 - Before the code section: `// @formatter:off`
 - After the code section: `// @formatter:on`

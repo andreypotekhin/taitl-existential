@@ -1,7 +1,11 @@
 package com.taitl.existential.interfaces;
 
 /**
- * Marker interface for constraints, such as {@code Invariant<Entity>}.
+<<<<<<< ours
+ * Marker interface for constraints, such as an Invariant for an entity.
+=======
+ * Marker interface for constraints, such as Invariant<Entity>.
+>>>>>>> theirs
  *
  * @param <T>
  *            Type of entity

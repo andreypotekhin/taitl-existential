@@ -8,23 +8,13 @@ The Existential library aims to:
 To apply the rules, the library:
 - Allows the user to send events about an entity, for example Change<MyEntity> when the entity changes.
 - Automatically validates rules that are applicable based on the encountered events.
-<<<<<<< ours
-- An event may concern the entity's lifecycle (Create, Update, Delete), access to the entity (Read, Write), or the
-  transaction lifecycle (Begin, Commit, Rollback). This allows rules to be attached to specific points or
-  circumstances.
-
-For performance, the library:
-- Avoids immediate rule evaluation and instead evaluates rules at the end of a business transaction,
-  such as before committing the changed data to persistent storage.
-=======
 - An event may concern the entity lifecycle (Create, Update, Delete), access to the entity (Read, Write), or the
-  transaction lifecycle (Begin, Commit, Rollback), allowing rules to be attached to specific points or
+  transaction lifecycle (Begin, Commit, Rollback). This allows rules to be attached to specific points or
   circumstances.
 
 For performance, the library:
 - Avoids immediate rule evaluation and instead evaluates rules at the end of a business transaction, such as
   before committing the changed data to persistent storage.
->>>>>>> theirs
 - Multiple events of the same type are folded into a single event, reducing the number of validations performed.
 
 To do so, the library allows end users to:

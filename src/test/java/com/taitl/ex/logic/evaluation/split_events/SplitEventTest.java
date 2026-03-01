@@ -23,6 +23,6 @@ class SplitEventTest
         SplitResult result = splitEvent.call(runtimeKey, indexes.eventField());
 
         assertSame(transit, result.event());
-        assertTrue(result.evs().isEmpty());
+        assertTrue(result.evaluables().isEmpty());
     }
 }

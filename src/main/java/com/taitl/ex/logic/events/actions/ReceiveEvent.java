@@ -24,7 +24,7 @@ public class ReceiveEvent
 
     public <T> void event(Event<T> event, T t, TypeKey<T> type, Tr tr) throws ExistentialException
     {
-        sane(event, "type", t, "t", type, "type", tr, "tr");
+        sane(event, "event", t, "t", type, "type", tr, "tr");
         evaluateIntent(RuntimeKey.valueOf(event, type, t, useFullClassNames()), tr);
         // Add event to indexes for late-stage processing
         indexingLogic.indexEvent(event, t, type, tr);
@@ -32,7 +32,7 @@ public class ReceiveEvent
 
     public <T> void event(BiEvent<T> event, TypeKey<T> type, Tr tr) throws ExistentialException
     {
-        sane(event, "type", type, "type", tr, "tr");
+        sane(event, "event", type, "type", tr, "tr");
         T entity = event.t1 != null ? event.t1 : event.t0;
         evaluateIntent(RuntimeKey.valueOf(event, type, entity, useFullClassNames()), tr);
         indexingLogic.indexEvent(event, type, tr);

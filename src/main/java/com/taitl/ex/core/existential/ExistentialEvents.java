@@ -38,25 +38,25 @@ public class ExistentialEvents implements Closeable
 
     public <T> void event(Event<T> event, T t, TypeKey<T> type, Tr tr) throws ExistentialException
     {
-        sane(event, "type", t, "t", type, "type", tr, "tr");
+        sane(event, "event", t, "t", type, "type", tr, "tr");
         eventLogic.event(event, t, type, tr);
     }
 
     public <T> void event(BiEvent<T> event, TypeKey<T> type, Tr tr) throws ExistentialException
     {
-        sane(event, "type", type, "type", tr, "tr");
+        sane(event, "event", type, "type", tr, "tr");
         eventLogic.event(event, type, tr);
     }
 
     public <T> void event(Event<T> event, T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        sane(event, "type", t, "t", type, "type", tranID, "tranID");
+        sane(event, "event", t, "t", type, "type", tranID, "tranID");
         event(event, t, type, tr(tranID));
     }
 
     public <T> void event(BiEvent<T> event, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        sane(event, "type", type, "type", tranID, "tranID");
+        sane(event, "event", type, "type", tranID, "tranID");
         event(event, type, tr(tranID));
     }
 

@@ -130,7 +130,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     public Effect<T> on(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        return add(new On<T>(condition, action));
+        return add(new On<T>(condition, action, description));
     }
 
     /**

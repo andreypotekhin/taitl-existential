@@ -7,22 +7,21 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 
+import static com.taitl.ex.common.helper.Args.sane;
+
 public class TransactionIndexes
 {
-    Transaction tr;
-    Map<String, Index<?, ?>> indexes = new ConcurrentHashMap<>();
+    protected Transaction transaction;
+    protected Map<String, Index<?, ?>> indexes = new ConcurrentHashMap<>();
 
     public TransactionIndexes(Transaction tr)
     {
-        this.tr = tr;
+        this.transaction = tr;
     }
 
     public <K, V> Index<K, V> create(String name, Supplier<Index<K, V>> createIndex, Function<V, K> getKey)
     {
-        if (name == null)
-        {
-            throw new IllegalArgumentException("Argument 'name' should not be null");
-        }
+        sane(name, "name");
         Index<K, V> index = (createIndex != null) ? createIndex.get() : new Index<>();
         if (getKey != null)
         {
@@ -54,10 +53,7 @@ public class TransactionIndexes
     @SuppressWarnings("unchecked")
     public <K, V> Index<K, V> getOrCreate(String name)
     {
-        if (name == null)
-        {
-            throw new IllegalArgumentException("Argument 'name' should not be null");
-        }
+        sane(name, "name");
         return (Index<K, V>) indexes.computeIfAbsent(name, ignored -> new Index<>());
     }
 }

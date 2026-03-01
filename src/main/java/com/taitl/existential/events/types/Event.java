@@ -6,11 +6,7 @@ import com.taitl.existential.events.combined_events.*;
 
 /**
  * Marker interface for events about an entity.
-<<<<<<< ours
- * Serves as a base type for more specific events, such as Create, Update, and Delete.
-=======
  * Serves as a base type for more specific events, such as Create<T>, Update<T>, and Delete<T>.
->>>>>>> theirs
  *
  * @param <T>
  *            Class of application entity

@@ -49,6 +49,18 @@ class OnTransitTest
     }
 
     @Test
+    void handleRejectsBothNulls()
+    {
+        OnTransit<Cat> handler = new OnTransit<>((t0, t1) -> {
+        });
+
+        var ex = assertThrows(IllegalArgumentException.class,
+                () -> handler.handle(null, null));
+
+        assertThat(ex.getMessage(), containsString("Arguments 't0' and 't1' should not be both null"));
+    }
+
+    @Test
     void handleRunsActionWhenNoConditionProvided() throws Exception
     {
         AtomicInteger counter = new AtomicInteger();

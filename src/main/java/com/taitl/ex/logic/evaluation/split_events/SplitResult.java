@@ -25,19 +25,19 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class SplitResult
 {
-    protected final List<Ev<?>> evs;
+    protected final List<Ev<?>> evaluables;
     protected final Event<?> event;
 
-    public SplitResult(List<Ev<?>> evs, Event<?> event)
+    public SplitResult(List<Ev<?>> evaluables, Event<?> event)
     {
-        sane(evs, "evs", event, "event");
-        this.evs = evs;
+        sane(evaluables, "evaluables", event, "event");
+        this.evaluables = evaluables;
         this.event = event;
     }
 
-    public List<Ev<?>> evs()
+    public List<Ev<?>> evaluables()
     {
-        return evs;
+        return evaluables;
     }
 
     public Event<?> event()

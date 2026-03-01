@@ -8,7 +8,7 @@ import com.taitl.existential.paths.*;
  * all matching Contexts (op Context, its parent Contexts and matching wildcard Contexts).
  *
  * Op key cannot be a single slash (/), cannot end with a slash.
- * Wildcard character (*) is not allowed in operation key.
+ * Wildcard character (*) is not allowed in op key.
  *
  * Example: "/app/orders/update"
  *

@@ -34,8 +34,8 @@ public class SplitEvent
         sane(runtimeKey, "runtimeKey", eventField, "eventField");
         Set<RuntimeKey<T>> splitKeys = split(runtimeKey, useFullEventNames);
         MultiKey<T> multiKey = multiKey(splitKeys);
-        List<Ev<?>> evs = eventField.get(multiKey);
-        return new SplitResult(evs, runtimeKey.event());
+        List<Ev<?>> evaluables = eventField.get(multiKey);
+        return new SplitResult(evaluables, runtimeKey.event());
     }
 
     protected <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)

@@ -1,5 +1,6 @@
 package com.taitl.existential.handlers;
 
+import com.taitl.ex.common.helper.*;
 import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.types.*;
@@ -90,10 +91,7 @@ public class OnTransit<T> implements BiEventHandlerWithSideEffects<T>
      */
     public void handle(T t0, T t1) throws ExistentialException
     {
-        if (t0 == null && t1 == null)
-        {
-            throw new IllegalArgumentException("Arguments 't0' and 't1' should not be both null");
-        }
+        PairArgs.requireNotBothNull(t0, t1, "Arguments 't0' and 't1' should not be both null");
 
         boolean conditionMet = true;
 

@@ -214,7 +214,7 @@ public class ConfigBuilder
 
     protected String requireContextNameMatchesConfigOp(String contextName)
     {
-        return MatchParentName.require(contextName, name, "config op key");
+        return MatchParentName.require(contextName, name, "config operation key");
     }
 
     protected String requireContextNameMatchesParentContext(String contextName, String parentContextName)

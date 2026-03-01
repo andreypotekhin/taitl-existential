@@ -3,9 +3,9 @@ package com.taitl.existential.events;
 import com.taitl.existential.events.types.EntityEvent;
 
 /**
- * Indicates that entity was deleted in the course of of current transaction.
+ * Signals that an entity was deleted during the current transaction.
  * 
- * Example: Delete<Account> is raised when Account entity was deleted in the course of current transaction.
+ * Example: Delete<Account> is raised when an Account entity was deleted during the current transaction.
  * 
  * Database analog: DELETE
  * 
@@ -14,8 +14,8 @@ import com.taitl.existential.events.types.EntityEvent;
  */
 public class Delete<T> extends EntityEvent<T>
 {
-    public Delete(T t)
+    public Delete(T entity)
     {
-        super(t);
+        super(entity);
     }
 }

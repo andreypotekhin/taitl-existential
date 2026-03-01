@@ -96,14 +96,15 @@ public class Exists<V> implements Predicate<Transaction>
     /* Implement Predicate */
 
     /**
-     * Tests if the predicate holds for given transaction.
+     * Tests if the predicate holds for the given transaction.
      *
-     * @param tran Transaction object
+     * @param transaction
+     *            Transaction object
      * @return True if predicate holds
      */
-    public boolean test(Transaction tran)
+    public boolean test(Transaction transaction)
     {
-        return concrete.test(tran);
+        return concrete.test(transaction);
     }
 
     @SuppressWarnings("unchecked")

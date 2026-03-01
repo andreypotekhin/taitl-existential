@@ -43,7 +43,7 @@ public class ToSplitKeys
     {
         sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();
-        check(event != null, "Runtime key event should not be null");
+        sane(event, "event");
         return EventType.valueOf(event.getClass());
     }
 }

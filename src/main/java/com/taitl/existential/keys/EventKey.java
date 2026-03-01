@@ -5,9 +5,9 @@ import com.taitl.existential.events.types.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Combines an event type with a {@link TypeKey} to address configured handlers.
+ * Combines an event type with a {@link TypeKey} so configured handlers can be addressed.
  *
- * Examples: {@code Create<Doc<Json>>}, {@code Update<Measurement<Float>>}.
+ * Examples: Create<Doc<Json>>, Update<Measurement<Float>>.
  *
  * @see TypeKey
  * @see Event

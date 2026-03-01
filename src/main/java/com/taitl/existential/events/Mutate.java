@@ -9,8 +9,8 @@ import com.taitl.existential.events.types.*;
  * Unlike {@link Event} classes, provides both the initial and final entity states.
  * Unlike {@link Transit}, both states are required and non-null.
  *
- * Initial state (t0): entity state at the beginning of the transaction.
- * Final state (t1): entity state at the end of the transaction.
+ * Initial state (before): entity state at the beginning of the transaction.
+ * Final state (after): entity state at the end of the transaction.
  *
  * Example: Mutate<Account> is raised when an Account entity is updated during the current transaction.
  *
@@ -23,9 +23,10 @@ import com.taitl.existential.events.types.*;
  */
 public class Mutate<T> extends BiEvent<T>
 {
-    public Mutate(T t0, T t1)
+    public Mutate(T before, T after)
     {
-        super(t0, t1);
-        PairArgs.requireBothNonNull(t0, t1, "Argument 't0' should not be null", "Argument 't1' should not be null");
+        super(before, after);
+        PairArgs.requireBothNonNull(before, after, "Argument 'before' should not be null",
+                "Argument 'after' should not be null");
     }
 }

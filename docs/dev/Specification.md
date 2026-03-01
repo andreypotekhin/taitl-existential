@@ -1,12 +1,12 @@
 ## Library Specification 
 
-Below is the list of claims made by the Existential library - statements declared in library documents.
+Below is a list of claims made by the Existential library - statements declared in library documents.
 None of these claims are legal statements or contracts.
 They only describe library features and behavior for implementation.
 
-As user stories, claim statements may be prefixed with 'The user can...' (or 'The user can't...').
+As user stories, claims may be prefixed with 'The user can...' (or 'The user can't...').
 Claims are backed by test cases in src/test/java/com/taitl/existential/specs.
-A leading (+) indicates items already completed and covered by tests.
+A leading (+) marks items already completed and covered by tests.
 
 ### Terminology
 See Terminology.md for terms and concepts.

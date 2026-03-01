@@ -4,13 +4,13 @@
 
 **Problem: Startup fails with an IllegalStateException while loading library configuration**
 
-Common causes:
+Common causes include:
 - `EXISTENTIAL_CONFIG_FILE` points to a missing or unreadable file.
 - `EXISTENTIAL_CONFIG_FILE` points to a symlink or an oversized file.
 - `EXISTENTIAL_CONFIG_FILE` points to a file with insecure permissions or unexpected ownership.
 - `EXISTENTIAL_CONFIG_FILE` is stored under a group/world writable directory.
-- Properties file includes an unknown key.
-- Boolean value is not `true` or `false` (case sensitive).
+- The properties file includes an unknown key.
+- A boolean value is not `true` or `false` (case sensitive).
 
 Fix:
 1. If `EXISTENTIAL_CONFIG_FILE` is set, verify the file exists and is readable.
@@ -26,9 +26,13 @@ Fix:
 
 ## Condition Not Met
 
-**Problem: Rule or handler fails with `ConditionNotMetException` or `EventHandlerExecutionException`**
+<<<<<<< ours
+**Problem: A rule or handler fails with `ConditionNotMetException` or `EventHandlerExecutionException`**
+=======
+**Problem: Rule or handler fails with `ConditionNotMetException` or `EventHandlerException`**
+>>>>>>> theirs
 
-Common causes:
+Common causes include:
 - The condition predicate evaluates to `false` for the current entity state.
 - A handler was configured as a constraint (no action), so unmet condition raises an exception.
 
@@ -39,9 +43,9 @@ Fix:
 
 ## Event Handler Execution Failure
 
-**Problem: A handler throws `EventHandlerExecutionException` during validation or execution**
+**Problem: A handler throws `EventHandlerException` during validation or execution**
 
-Common causes:
+Common causes include:
 - The handler action threw an exception (NPE, validation failure, illegal state).
 - A handler depends on external state that is not initialized or is stale.
 
@@ -58,7 +62,7 @@ Typical error messages:
 - `No intent is configured for event 'Read<...>'`
 - `Intent condition is not met for event 'Write<...>'`
 
-Common causes:
+Common causes include:
 - You configured an intent for an event type (for example `read`) but did not configure the same intent for another
   entity class that emits that event.
 - The configured intent predicate evaluated to `false` for the emitted event.

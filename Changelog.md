@@ -10,3 +10,4 @@ This project follows Semantic Versioning. See Readme.md for the release policy s
 - Added GitHub issue templates and a pull request template.
 - Expanded Readme.md community links.
 - Standardized operation key terminology across docs and error messages.
+- Added transaction quickstart examples to Readme.md and docs/Usage.md.

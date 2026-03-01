@@ -74,7 +74,7 @@ public class EventSplitter
     {
         sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();
-        check(event != null, "RuntimeKey event should not be null");
+        sane(event, "event");
         Set<Event<T>> events = splitEvent(event);
         Set<TypeKey<T>> typeKeys = splitTypeKey.split(runtimeKey.typeKey());
         Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();

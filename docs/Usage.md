@@ -23,6 +23,34 @@ Gradle:
         implementation "com.taitl:existential:0.0.1-SNAPSHOT"
     }
 
+### Transaction quickstart
+This is the minimal lifecycle: begin, emit events, commit or rollback.
+
+    Ex.configure("/app/orders")
+      .context("/app/orders/submit")
+          .invariant(Order.class)
+              .create(o -> o.totalCents() > 0, "Total must be positive")
+              .done()
+          .build();
+
+    Tr tr = Ex.begin("/app/orders/submit");
+    try
+    {
+        Ex.create(order, tr.id());
+        Ex.commit(tr);
+    }
+    catch (ExistentialException e)
+    {
+        Ex.rollback(tr);
+        throw e;
+    }
+
+Notes:
+- Operation keys are path-like strings (`/app/orders/submit`). They must start with `/`, must not end with `/`,
+  and must not include `*`. Troubleshooting: `/Troubleshooting.md#invalid-operation-key`.
+- After `commit()` or `rollback()`, the transaction id is invalid and reuse throws `NotFoundException`.
+  Troubleshooting: `/Troubleshooting.md#transaction-not-found`.
+
 ### Creating a constraint on an entity
 Constraints are created in the context of a business operation, 
 such as "creating an order" or "updating an account".
@@ -36,11 +64,11 @@ such as "creating an order" or "updating an account".
               .done()
           .build();
 
-Constraints can be created for entity creation, deletion or modification, 
+Constraints can be created for entity creation, deletion or modification,
 entity access (such as loading from the database), entity changes (diff) during business transaction.
-The can also involve multiple entities, such as all entities in a collection (All<> quantifier).
+They can also involve multiple entities, such as all entities in a collection (All<> quantifier).
 
-### Sending an event to library
+### Sending an event to the library
 In order for the library to be able to evaluate constraints on an entity, 
 it needs to be aware of the entity changes. This is done by sending an 
 event to the library, such as Update or Read.

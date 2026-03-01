@@ -166,7 +166,7 @@ public final class Existential implements Closeable
      */
     public <T> void event(Event<T> event, T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        sane(event, "type", t, "t", type, "type", tranID, "tranID");
+        sane(event, "event", t, "t", type, "type", tranID, "tranID");
         events.event(event, t, type, tranID);
     }
 
@@ -180,7 +180,7 @@ public final class Existential implements Closeable
      */
     public <T> void event(BiEvent<T> event, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        sane(event, "type", type, "type", tranID, "tranID");
+        sane(event, "event", type, "type", tranID, "tranID");
         events.event(event, type, tranID);
     }
 

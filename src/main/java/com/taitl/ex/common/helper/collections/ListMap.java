@@ -67,11 +67,18 @@ public class ListMap<K, V>
         synchronized (this)
         {
             List<V> values = storage.computeIfAbsent(key, k -> listFactory.get());
-            if (values.isEmpty())
+            boolean wasEmpty = values.isEmpty();
+            values.clear();
+            values.addAll(list);
+            boolean isEmpty = values.isEmpty();
+            if (wasEmpty && !isEmpty)
             {
                 size++;
             }
-            values.addAll(list);
+            else if (!wasEmpty && isEmpty)
+            {
+                size--;
+            }
             return Collections.unmodifiableList(values);
         }
     }

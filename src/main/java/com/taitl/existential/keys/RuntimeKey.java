@@ -5,9 +5,13 @@ import com.taitl.existential.events.types.Event;
 import static com.taitl.ex.common.helper.State.verify;
 
 /**
- * Combines an event key (event type + type key) with Object identity for execution of configured rules.
+ * Combines an event key (event type + type key) with object identity for executing configured rules.
  *
- * Examples: {@code Create<Doc<Json>>+object ref}, {@code Update<Measurement<Float>>+object ref}.
+<<<<<<< ours
+ * Examples: Create<Doc<Json>> + object reference, Update<Measurement<Float>> + object reference.
+=======
+ * Examples: Create<Doc<Json>> + object ref, Update<Measurement<Float>> + object ref.
+>>>>>>> theirs
  *
  * @see TypeKey
  * @see Event
@@ -150,8 +154,8 @@ public class RuntimeKey<T>
 
     public void validate()
     {
-        verify(key != null, "RuntimeKey cannot should not be null");
-        verify(typeKey != null, "RuntimeKey typeKey should not be empty");
-        verify(entity != null, "RuntimeKey entity should not be empty");
+        verify(key != null, "RuntimeKey key should not be null");
+        verify(typeKey != null, "RuntimeKey typeKey should not be null");
+        verify(entity != null, "RuntimeKey entity should not be null");
     }
 }

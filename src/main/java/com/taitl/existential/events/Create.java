@@ -14,8 +14,8 @@ import com.taitl.existential.events.types.EntityEvent;
  */
 public class Create<T> extends EntityEvent<T>
 {
-    public Create(T t)
+    public Create(T entity)
     {
-        super(t);
+        super(entity);
     }
 }
