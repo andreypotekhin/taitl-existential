@@ -85,23 +85,31 @@ class UserCanConfigureClassRules extends SpecBase
     @DisplayName("User can configure class rules with a TypeKey for generic type")
     void configureRulesWithTypeKeyForGenericType()
     {
-        AtomicInteger calls = new AtomicInteger();
+        AtomicInteger effectCalls = new AtomicInteger();
+        AtomicInteger invariantChecks = new AtomicInteger();
         TypeKey<List<String>> typeKey = new TypeKey<List<String>>() {
         };
 
         assertDoesNotThrow(() -> {
             ex.configure(op)
                     .context()
+                    .invariant(typeKey)
+                    .create(v -> {
+                        invariantChecks.incrementAndGet();
+                        return !v.isEmpty();
+                    }, "require at least one value")
+                    .done()
                     .effect(typeKey)
-                    .create(v -> calls.incrementAndGet(), "track list creates")
+                    .create(v -> effectCalls.incrementAndGet(), "track list creates")
                     .done()
                     .build();
             String tran = ex.begin(op).id();
-            List<String> values = new ArrayList<>();
+            List<String> values = new ArrayList<>(List.of("ok"));
             ex.transit(null, values, typeKey, tran);
             ex.commit(tran);
         });
 
-        assertEquals(1, calls.get());
+        assertEquals(1, effectCalls.get());
+        assertEquals(1, invariantChecks.get());
     }
 }

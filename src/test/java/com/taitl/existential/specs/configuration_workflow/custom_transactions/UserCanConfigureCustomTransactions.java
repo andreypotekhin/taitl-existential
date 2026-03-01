@@ -2,6 +2,7 @@ package com.taitl.existential.specs.configuration_workflow.custom_transactions;
 
 import com.taitl.existential.*;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.keys.*;
 import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
 
@@ -127,5 +128,31 @@ class UserCanConfigureCustomTransactions extends SpecBase
         assertEquals(
                 List.of(RootTransaction.class.getSimpleName(), ChildTransaction.class.getSimpleName()),
                 transactionTypes);
+    }
+
+    @Test
+    @DisplayName("User can configure transaction lifecycle side effects with TypeKey for custom transaction type")
+    void lifecycleRulesWithTypeKeyForCustomTransaction()
+    {
+        AtomicInteger childBeginCalls = new AtomicInteger();
+        TypeKey<ChildTransaction> childTypeKey = new TypeKey<ChildTransaction>() {
+        };
+
+        // @formatter:off
+        Ex.configure("/api/cats/create")
+            .context()
+                .transaction(() -> new ChildTransaction("/api/cats/create"))
+                .begin(childTypeKey, tr -> childBeginCalls.incrementAndGet())
+                .build()
+            .build();
+        // @formatter:on
+
+        assertDoesNotThrow(() -> {
+            String tran = ex.begin("/api/cats/create").id();
+            ex.change(cat, tran);
+            ex.commit(tran);
+        });
+
+        assertEquals(1, childBeginCalls.get());
     }
 }
