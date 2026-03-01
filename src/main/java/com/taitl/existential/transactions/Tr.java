@@ -8,6 +8,7 @@ import com.taitl.ex.logic.validation.data.ValidationData;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.events.types.EventType;
 import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.OpKey;
@@ -34,8 +35,8 @@ public class Tr
     protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
     protected IndexData runtimeIndexes;
     protected ValidationData validationData;
-    protected Set<String> intentEventTypes = new LinkedHashSet<>();
-    protected ListMap<String, EventHandler<?>> intentHandlers = new ListMap<>();
+    protected Set<EventType> intentEventTypes = new LinkedHashSet<>();
+    protected ListMap<IntentHandlerKey, EventHandler<?>> intentHandlers = new ListMap<>();
 
     /**
      * Creates a transaction instance for the given operation and id.
@@ -179,16 +180,16 @@ public class Tr
         return !intentEventTypes.isEmpty();
     }
 
-    public boolean hasIntentEventType(String eventTypeName)
+    public boolean hasIntentEventType(EventType eventType)
     {
-        sane(eventTypeName, "eventTypeName");
-        return intentEventTypes.contains(eventTypeName);
+        sane(eventType, "eventType");
+        return intentEventTypes.contains(eventType);
     }
 
-    public List<EventHandler<?>> intentHandlers(String eventTypeName, String typeKey)
+    public List<EventHandler<?>> intentHandlers(EventType eventType, String typeKey)
     {
-        sane(eventTypeName, "eventTypeName", typeKey, "typeKey");
-        return intentHandlers.get(intentKey(eventTypeName, typeKey));
+        sane(eventType, "eventType", typeKey, "typeKey");
+        return intentHandlers.get(intentKey(eventType, typeKey));
     }
 
     protected void indexIntents(Transaction tr)
@@ -215,19 +216,48 @@ public class Tr
                 continue;
             }
             EventHandler<?> handler = (EventHandler<?>) ev;
-            Class<?> eventClass = handler.eventType().eventClass();
-            String simple = eventClass.getSimpleName();
-            String full = eventClass.getName();
-            intentEventTypes.add(simple);
-            intentEventTypes.add(full);
-            intentHandlers.put(intentKey(simple, typeKey), handler);
-            intentHandlers.put(intentKey(full, typeKey), handler);
+            EventType eventType = handler.eventType();
+            intentEventTypes.add(eventType);
+            intentHandlers.put(intentKey(eventType, typeKey), handler);
         }
     }
 
-    protected static String intentKey(String eventTypeName, String typeKey)
+    protected static IntentHandlerKey intentKey(EventType eventType, String typeKey)
     {
-        return eventTypeName + "<" + typeKey + ">";
+        sane(eventType, "eventType", typeKey, "typeKey");
+        return new IntentHandlerKey(eventType, typeKey);
+    }
+
+    protected static class IntentHandlerKey
+    {
+        protected final EventType eventType;
+        protected final String typeKey;
+
+        protected IntentHandlerKey(EventType eventType, String typeKey)
+        {
+            sane(eventType, "eventType", typeKey, "typeKey");
+            this.eventType = eventType;
+            this.typeKey = typeKey;
+        }
+
+        public int hashCode()
+        {
+            return Objects.hash(eventType, typeKey);
+        }
+
+        public boolean equals(Object other)
+        {
+            if (other == this)
+            {
+                return true;
+            }
+            if (!(other instanceof IntentHandlerKey))
+            {
+                return false;
+            }
+            IntentHandlerKey key = (IntentHandlerKey) other;
+            return eventType.equals(key.eventType) && typeKey.equals(key.typeKey);
+        }
     }
 
     /**

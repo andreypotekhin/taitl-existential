@@ -2,6 +2,7 @@ package com.taitl.ex.logic.configuration.indexes.actions;
 
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
+import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
 
@@ -66,5 +67,23 @@ class IndexConfigTypeKeyTest
 
         assertTrue(config.indexes().configuredHandlers.contains(
                 EventKey.valueOfFull(com.taitl.existential.events.Create.class, fullTypeKey)));
+    }
+
+    @Test
+    void indexesIntentEventKeysWithSimpleEventNamesWhenTypeKeysUseFullNames()
+    {
+        Config config = new Config();
+        config.indexes().useFullClassNames(true);
+        Context context = new Context("/app");
+        TypeKey<String> fullTypeKey = TypeKey.valueOf(String.class, true);
+        Intent<String> intent = new Intent<>(fullTypeKey);
+        intent.read();
+        context.intent(intent);
+        config.addContext(context);
+
+        config.indexes().indexConfig("/app", config);
+
+        assertTrue(config.indexes().configuredIntents.contains(EventKey.valueOf(Read.class, fullTypeKey)));
+        assertFalse(config.indexes().configuredIntents.contains(EventKey.valueOfFull(Read.class, fullTypeKey)));
     }
 }

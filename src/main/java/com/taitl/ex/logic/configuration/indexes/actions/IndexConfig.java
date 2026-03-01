@@ -7,6 +7,7 @@ import com.taitl.existential.evaluables.*;
 import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.events.types.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -78,7 +79,7 @@ public class IndexConfig
             if (currentIntent)
             {
                 ci.addIntent(eventKey, ev);
-                ci.addIntentEventType(eventClass(ev));
+                ci.addIntentEventType(eventType(ev));
                 return;
             }
             ci.addHandler(eventKey, ev);
@@ -92,7 +93,7 @@ public class IndexConfig
                 return typed;
             }
             TypeKey<T> typeKey = currentTypeKey(ev);
-            return ci.useFullClassNames() ? EventKey.valueOfFull(ev.getClass(), typeKey)
+            return useFullEventNames() ? EventKey.valueOfFull(ev.getClass(), typeKey)
                     : EventKey.valueOf(ev.getClass(), typeKey);
         }
 
@@ -116,18 +117,23 @@ public class IndexConfig
             EventHandler<T> handler = (EventHandler<T>) ev;
             TypeKey<T> typeKey = (TypeKey<T>) currentTypeKey;
             Class<?> eventClass = handler.eventType().eventClass();
-            return ci.useFullClassNames() ? EventKey.valueOfFull(eventClass, typeKey)
+            return useFullEventNames() ? EventKey.valueOfFull(eventClass, typeKey)
                     : EventKey.valueOf(eventClass, typeKey);
         }
 
         @SuppressWarnings("unchecked")
-        protected <T> Class<?> eventClass(Ev<T> ev)
+        protected <T> EventType eventType(Ev<T> ev)
         {
             if (!(ev instanceof EventHandler<?>))
             {
                 throw new IllegalStateException("Intent contains a non-handler rule: " + ev.getClass());
             }
-            return ((EventHandler<T>) ev).eventType().eventClass();
+            return ((EventHandler<T>) ev).eventType();
+        }
+
+        protected boolean useFullEventNames()
+        {
+            return !currentIntent && ci.useFullClassNames();
         }
     }
 }

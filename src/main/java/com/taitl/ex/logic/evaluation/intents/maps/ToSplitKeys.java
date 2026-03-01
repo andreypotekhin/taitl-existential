@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.evaluation.intents.maps;
 
 import com.taitl.ex.logic.evaluation.split_events.*;
+import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
@@ -22,25 +23,27 @@ public class ToSplitKeys
         this.splitTypeKey = splitTypeKey;
     }
 
-    public <T> Map<String, List<RuntimeKey<T>>> call(Set<RuntimeKey<T>> runtimeKeys)
+    public <T> Map<EventType, List<RuntimeKey<T>>> call(Set<RuntimeKey<T>> runtimeKeys)
     {
         return groupByEventType(runtimeKeys);
     }
 
-    public <T> Map<String, List<RuntimeKey<T>>> groupByEventType(Set<RuntimeKey<T>> runtimeKeys)
+    public <T> Map<EventType, List<RuntimeKey<T>>> groupByEventType(Set<RuntimeKey<T>> runtimeKeys)
     {
         sane(runtimeKeys, "runtimeKeys");
-        Map<String, List<RuntimeKey<T>>> grouped = new LinkedHashMap<>();
+        Map<EventType, List<RuntimeKey<T>>> grouped = new LinkedHashMap<>();
         for (RuntimeKey<T> runtimeKey : runtimeKeys)
         {
-            grouped.computeIfAbsent(eventTypeName(runtimeKey), ignored -> new ArrayList<>()).add(runtimeKey);
+            grouped.computeIfAbsent(eventType(runtimeKey), ignored -> new ArrayList<>()).add(runtimeKey);
         }
         return grouped;
     }
 
-    protected <T> String eventTypeName(RuntimeKey<T> runtimeKey)
+    protected <T> EventType eventType(RuntimeKey<T> runtimeKey)
     {
         sane(runtimeKey, "runtimeKey");
-        return splitTypeKey.root(runtimeKey.key().toString());
+        Event<T> event = runtimeKey.event();
+        check(event != null, "Runtime key event should not be null");
+        return EventType.valueOf(event.getClass());
     }
 }
