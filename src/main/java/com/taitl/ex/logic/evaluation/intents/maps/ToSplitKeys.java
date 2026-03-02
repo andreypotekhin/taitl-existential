@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.evaluation.intents.maps;
 
-import com.taitl.ex.logic.evaluation.split_events.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 
@@ -10,17 +11,11 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ToSplitKeys
 {
-    protected final SplitTypeKey splitTypeKey;
+    protected SplitTypeKey splitTypeKey;
 
     public ToSplitKeys()
     {
-        this(new SplitTypeKey());
-    }
-
-    protected ToSplitKeys(SplitTypeKey splitTypeKey)
-    {
-        sane(splitTypeKey, "splitTypeKey");
-        this.splitTypeKey = splitTypeKey;
+        this.splitTypeKey = Creator.create(SplitTypeKey.class);
     }
 
     public <T> Map<EventType, List<RuntimeKey<T>>> call(Set<RuntimeKey<T>> runtimeKeys)

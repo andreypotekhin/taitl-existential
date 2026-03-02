@@ -26,8 +26,8 @@ public class PreconditionLogic
         {
             return;
         }
-        evaluationLogic().evaluateIntent(runtimeKey, tr, StageName.PRECONDITION);
-        evaluationLogic().evaluatePrecondition(runtimeKey, tr);
+        evaluationLogic().evaluateIntents(runtimeKey, tr, StageName.PRECONDITION);
+        evaluationLogic().evaluatePreconditions(runtimeKey, tr);
     }
 
     protected EvaluationLogic evaluationLogic()

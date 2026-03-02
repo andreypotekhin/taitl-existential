@@ -12,7 +12,7 @@ import com.taitl.existential.handlers.types.*;
  * @param <T>
  *            Entity type
  */
-public class OnUD<T> extends On<T> implements EventHandlerWithSideEffects<T>
+public class OnUD<T> extends On<T> implements UniEventHandler<T>
 {
     /**
      * Creates a handler that always runs for update and delete events.

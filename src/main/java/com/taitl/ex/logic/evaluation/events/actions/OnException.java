@@ -1,6 +1,6 @@
-package com.taitl.ex.logic.evaluation.actions;
+package com.taitl.ex.logic.evaluation.events.actions;
 
-import com.taitl.ex.logic.validation.output.*;
+import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.existential.exceptions.*;
 
 import java.util.*;

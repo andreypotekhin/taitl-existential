@@ -1,7 +1,8 @@
-package com.taitl.ex.logic.evaluation.split_events;
+package com.taitl.ex.logic.evaluation.events.split_events;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
+import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
@@ -15,19 +16,15 @@ import static com.taitl.ex.common.helper.Args.*;
  * for which constraints may have been configured.
  *
  * Example:
- * Incoming event: ex.event(null, cat, tr);
+ * Incoming event: ex.transit(null, cat, tr);
  * Resulting events: Transit<Cat>, Create<Cat>
- * Incoming event: ex.event(doc, null, tr); // (doc type: Doc<JSON>)
+ * Incoming event: ex.transit(doc, null, tr); // (doc type: Doc<JSON>)
  * Resulting events: Delete<Doc<JSON>>, Delete<Doc<?>, Delete<Doc>
  */
 public class SplitEvent
 {
+    // TODO: source from ExistentialEvents instead of singleton
     protected EventSplitter eventSplitter = Creator.singleton(EventSplitter.class);
-
-    public <T> SplitResult call(RuntimeKey<T> runtimeKey, EventField eventField)
-    {
-        return call(runtimeKey, eventField, false);
-    }
 
     public <T> SplitResult call(RuntimeKey<T> runtimeKey, EventField eventField, boolean useFullEventNames)
     {

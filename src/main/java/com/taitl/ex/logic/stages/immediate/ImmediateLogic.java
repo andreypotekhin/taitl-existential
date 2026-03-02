@@ -26,7 +26,7 @@ public class ImmediateLogic
         {
             return;
         }
-        evaluationLogic().evaluateIntent(runtimeKey, tr, StageName.IMMEDIATE);
+        evaluationLogic().evaluateIntents(runtimeKey, tr, StageName.IMMEDIATE);
         evaluationLogic().evaluateImmediate(runtimeKey, tr);
     }
 

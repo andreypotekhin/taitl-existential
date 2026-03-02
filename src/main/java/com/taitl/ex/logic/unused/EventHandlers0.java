@@ -3,7 +3,7 @@ package com.taitl.ex.logic.unused;
 import com.taitl.ex.common.helper.collections.SetMap;
 import com.taitl.existential.events.types.BiEvent;
 import com.taitl.existential.events.types.Event;
-import com.taitl.existential.handlers.types.EventHandlerWithSideEffects;
+import com.taitl.existential.handlers.types.UniEventHandler;
 
 import java.util.Set;
 
@@ -23,7 +23,7 @@ import java.util.Set;
 @Deprecated
 public class EventHandlers0<T>
 {
-    SetMap<EventAndTypeKey<T>, EventHandlerWithSideEffects<T>> storage = new SetMap<>();
+    SetMap<EventAndTypeKey<T>, UniEventHandler<T>> storage = new SetMap<>();
 
     /**
      * Gets event handlers for an event key (combination of Event E<T> + Type ).
@@ -32,13 +32,13 @@ public class EventHandlers0<T>
      *            EventKey to search for.
      * @return Set<EventHandler<>>, or null if no handlers defined for the key.
      */
-    public Set<EventHandlerWithSideEffects<T>> getEventHandlers(EventAndTypeKey<T> key)
+    public Set<UniEventHandler<T>> getEventHandlers(EventAndTypeKey<T> key)
     {
         if (key == null)
         {
             throw new IllegalArgumentException("Argument 'key' must not be null");
         }
-        Set<EventHandlerWithSideEffects<T>> result = storage.get(key);
+        Set<UniEventHandler<T>> result = storage.get(key);
         if (result != null && result.isEmpty())
         {
             result = null;

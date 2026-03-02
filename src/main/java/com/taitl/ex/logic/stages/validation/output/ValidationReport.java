@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.validation.output;
+package com.taitl.ex.logic.stages.validation.output;
 
 import com.taitl.existential.exceptions.*;
 

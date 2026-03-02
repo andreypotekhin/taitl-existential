@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.evaluation.split_events;
+package com.taitl.ex.logic.evaluation.events.split_events.event_splitter;
 
 import com.taitl.ex.common.helper.lang.*;
 import com.taitl.existential.keys.*;
@@ -18,7 +18,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class SplitTypeKey
 {
-    protected final GenericsVariants genericsVariants = new GenericsVariants();
+    protected static GenericsVariants genericsVariants = new GenericsVariants();
 
     public String root(String key)
     {

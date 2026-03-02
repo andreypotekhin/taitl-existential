@@ -1,6 +1,6 @@
-package com.taitl.ex.logic.evaluation.actions;
+package com.taitl.ex.logic.evaluation.events.actions;
 
-import com.taitl.ex.logic.validation.output.*;
+import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
@@ -77,20 +77,20 @@ public class ExecuteHandlers
             return;
         }
 
-        if (handler instanceof BiEventHandlerWithSideEffects<?>)
+        if (handler instanceof BiEventHandler<?>)
         {
             if (!(event instanceof BiEvent<?>))
             {
                 throw new IllegalStateException("Bi-event handler requires BiEvent runtime event");
             }
             BiEvent<?> biEvent = (BiEvent<?>) event;
-            ((BiEventHandlerWithSideEffects) handler).handle(biEvent.t0, biEvent.t1);
+            ((BiEventHandler) handler).handle(biEvent.t0, biEvent.t1);
             return;
         }
 
-        if (handler instanceof EventHandlerWithSideEffects<?>)
+        if (handler instanceof UniEventHandler<?>)
         {
-            ((EventHandlerWithSideEffects) handler).handle(entity(event));
+            ((UniEventHandler) handler).handle(entity(event));
             return;
         }
 

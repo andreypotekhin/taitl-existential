@@ -1,7 +1,7 @@
 package com.taitl.ex.logic.indexing.data;
 
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.logic.validation.data.*;
+import com.taitl.ex.logic.stages.validation.data.*;
 import com.taitl.existential.transactions.*;
 
 /**

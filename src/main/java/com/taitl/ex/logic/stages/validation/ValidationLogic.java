@@ -1,10 +1,10 @@
-package com.taitl.ex.logic.validation;
+package com.taitl.ex.logic.stages.validation;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.evaluation.*;
+import com.taitl.ex.logic.stages.validation.actions.*;
+import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.ex.logic.transactions.*;
-import com.taitl.ex.logic.validation.actions.*;
-import com.taitl.ex.logic.validation.output.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.transactions.*;
 

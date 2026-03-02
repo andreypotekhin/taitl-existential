@@ -2,10 +2,10 @@ package com.taitl.existential.transactions;
 
 import com.taitl.ex.common.helper.*;
 import com.taitl.ex.common.helper.collections.*;
-import com.taitl.ex.logic.evaluation.actions.*;
+import com.taitl.ex.logic.evaluation.events.actions.*;
 import com.taitl.ex.logic.indexing.data.*;
+import com.taitl.ex.logic.stages.validation.data.*;
 import com.taitl.ex.logic.transactions.*;
-import com.taitl.ex.logic.validation.data.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -200,11 +200,11 @@ public class Tr
         return runtimeIndexes;
     }
 
-    public boolean hasIntentEventTypes()
+    public boolean hasIntents()
     {
         for (StageName stageName : StageName.values())
         {
-            if (hasIntentEventTypes(stageName))
+            if (hasIntents(stageName))
             {
                 return true;
             }
@@ -224,7 +224,7 @@ public class Tr
         return false;
     }
 
-    public boolean hasIntentEventTypes(StageName stageName)
+    public boolean hasIntents(StageName stageName)
     {
         sane(stageName, "stageName");
         StageData data = stageData.get(stageName);

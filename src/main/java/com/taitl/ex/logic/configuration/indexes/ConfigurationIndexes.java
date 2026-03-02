@@ -75,7 +75,7 @@ public class ConfigurationIndexes
         return intentEventTypes.contains(eventType);
     }
 
-    public boolean hasIntentEventTypes()
+    public boolean hasIntents()
     {
         return !intentEventTypes.isEmpty();
     }

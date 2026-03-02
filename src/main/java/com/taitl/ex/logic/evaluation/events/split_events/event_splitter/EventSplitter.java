@@ -1,10 +1,8 @@
-package com.taitl.ex.logic.evaluation.split_events;
+package com.taitl.ex.logic.evaluation.events.split_events.event_splitter;
 
 import com.taitl.ex.common.creator.*;
-import com.taitl.existential.configs.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
-import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
 
@@ -14,20 +12,19 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Splits events, such as object mutations/transitions, into event sets so that various aspects
- * of an event may be processed/handled separately.
+ * Splits compound events, such as Mutation, CUD, into set of elementary events for individual handling.
  * 
- * For example, splits single transition {@code Transit<House>} into the following event set:
+ * For example, splits a single transition {@code Transit<House>} into the following event set:
  * <pre>{@code
- *   On<House>
  *   Mutate<House>
  *   Transit<House>
+ *   On<House>
  * }
  * </pre>
  * Further, depending on type of transition (Create, Update, Delete), emits the following events:
- *   Created: {@code Create<House>, Write<House>, CU<House>, CUD<House> }
- *   Updated: {@code Update<House>, Write<House>, CU<House>, UD<House>, CUD<House>, Change<House>, Mutate<House> }
- *   Deleted: {@code Delete<House>, Write<House>, UD<House>, CUD<House>, Change<House> }
+ *   Created: {@code Create<House>, CU<House>, CUD<House> }
+ *   Updated: {@code Update<House>, CU<House>, UD<House>, CUD<House>, Change<House>, Mutate<House> }
+ *   Deleted: {@code Delete<House>, UD<House>, CUD<House> }
  * 
  * Execution order
  *   Q: In what order are these events created? This is important, since event handlers
@@ -42,28 +39,12 @@ import static com.taitl.ex.common.helper.Args.*;
  *      }</pre>
  *      Execution order of above handlers will be same as their occurrence in the code (A, B, C).
  *      The event handlers defined in the parent context are always executed before the ones from the child context.
- * 
- * @see Context
- * @see Transaction
- * @see Event
- * @see EntityEvent
- * @see BiEvent
- * @see Change
- * @see Update
- * @see CU
- * @see Delete
- * @see Read
- * @see ReadAndLock
- * @see Write
- * @see Mutate
- * @see Transit
  */
 public class EventSplitter
 {
-    public static Supplier<? extends EventSplitter> FACTORY =
-            () -> Creator.create(EventSplitter.class);
-    protected final SplitTypeKey splitTypeKey = new SplitTypeKey();
-    protected SplitByEventType splitByEventType = new SplitByEventType();
+    public static Supplier<? extends EventSplitter> FACTORY = () -> Creator.create(EventSplitter.class);
+    protected SplitTypeKey splitTypeKey = Creator.create(SplitTypeKey.class);
+    protected SplitByEventType splitByEventType = Creator.create(SplitByEventType.class);
 
     public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
     {
@@ -89,7 +70,7 @@ public class EventSplitter
         return runtimeKeys;
     }
 
-    protected <T> Set<Event<T>> splitEvent(Event<T> event)
+    public <T> Set<Event<T>> splitEvent(Event<T> event)
     {
         sane(event, "event");
         Set<Event<T>> events = new LinkedHashSet<>();

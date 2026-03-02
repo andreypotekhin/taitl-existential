@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.evaluation.split_events;
+package com.taitl.ex.logic.evaluation.events.split_events;
 
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;
@@ -8,7 +8,7 @@ import java.util.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Result of SplitEvent.call(): resolved event handlers plus the original event
+ * Results of SplitEvent.call(): resolved event handlers plus the original event
  * used to derive runtime payload for handler execution.
  * The event handlers are ordered in the order of rules declaration.
  *

@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.evaluation.actions;
+package com.taitl.ex.logic.evaluation.events.actions;
 
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;

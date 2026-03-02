@@ -11,7 +11,7 @@ import com.taitl.existential.handlers.types.*;
  * @param <T>
  *            Entity type handled by the modify event
  */
-public class OnModify<T> extends On<T> implements EventHandlerWithSideEffects<T>
+public class OnModify<T> extends On<T> implements UniEventHandler<T>
 {
 
     public OnModify(Consumer<? super T> action, String description)

@@ -1,6 +1,6 @@
-package com.taitl.ex.logic.validation.actions;
+package com.taitl.ex.logic.stages.validation.actions;
 
-import com.taitl.ex.logic.validation.*;
+import com.taitl.ex.logic.stages.validation.*;
 import com.taitl.existential.transactions.*;
 
 /**

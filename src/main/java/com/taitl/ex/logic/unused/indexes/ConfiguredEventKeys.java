@@ -1,6 +1,6 @@
 package com.taitl.ex.logic.unused.indexes;
 
-import com.taitl.ex.logic.evaluation.split_events.*;
+import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 

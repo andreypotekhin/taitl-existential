@@ -23,33 +23,41 @@ Gradle:
         implementation "com.taitl:existential:0.0.1-SNAPSHOT"
     }
 
-### Transaction quickstart
-This is the minimal lifecycle: begin, emit events, commit or rollback.
+### Minimal workflow
+Minimal workflow: configure rules, initiate transaction, send events. 
+
+Configure rules:
 
     Ex.configure("/app/orders")
       .context("/app/orders/submit")
           .invariant(Order.class)
-              .create(o -> o.totalCents() > 0, "Total must be positive")
+              .create(o -> o.total() > 0, "Total must be positive")
               .done()
           .build();
+
+Create transaction, send events:
 
     Tr tr = Ex.begin("/app/orders/submit");
     try
     {
-        Ex.create(order, tr.id());
-        Ex.commit(tr);
+        // ...create Order...
+        Ex.create(order, tr.id()); // <-- (1)  
+        // ...
+        Ex.commit(tr); // <-- (2)
     }
     catch (ExistentialException e)
     {
-        Ex.rollback(tr);
+        Ex.rollback(tr); // <-- (3)
         throw e;
     }
 
+    (1) Send 'Create' event, to invoke corresponding rules on commit  
+    (2) Evaluates the rules that match received events, throws on violation
+    (3) No evaluation in case of rollback
+
 Notes:
-- Operation keys are path-like strings (`/app/orders/submit`). They must start with `/`, must not end with `/`,
-  and must not include `*`. Troubleshooting: `/Troubleshooting.md#invalid-operation-key`.
-- After `commit()` or `rollback()`, the transaction id is invalid and reuse throws `NotFoundException`.
-  Troubleshooting: `/Troubleshooting.md#transaction-not-found`.
+- Configuration code may be live in a separate place from transaction code, e.g. in application startup.
+- After `commit()` or `rollback()`, the transaction object becomes invalid (not usable).
 
 ### Creating a constraint on an entity
 Constraints are created in the context of a business operation, 
@@ -64,19 +72,17 @@ such as "creating an order" or "updating an account".
               .done()
           .build();
 
-Constraints can be created for entity creation, deletion or modification,
-entity access (such as loading from the database), entity changes (diff) during business transaction.
+Constraints can apply to entity creation, deletion, modification, entity access (such as loading the entity from storage).
 They can also involve multiple entities, such as all entities in a collection (All<> quantifier).
 
 ### Sending an event to the library
-In order for the library to be able to evaluate constraints on an entity, 
-it needs to be aware of the entity changes. This is done by sending an 
-event to the library, such as Update or Read.
+In order for the library to be able to evaluate constraints, it needs to be aware of the entity changes. 
+This is done by sending an event to the library.
 
     Tr tr = Ex.begin("/api/accounts/update");
     try
     {
-        // in implementation, for instance, in the handler for '/api/accounts/update':
+        // ...update Account...
         Ex.update(account, tr.id());
         Ex.commit(tr);
     }
@@ -91,7 +97,7 @@ Constraint validation is triggered automatically upon committing a transaction.
 
     Ex.commit(tr); // Detect and report constraint violations.
 
-Constraint violations will be reported in the exception thrown by commit (ExistentialException).
+Constraint violations will be reported as part of thrown exception (ExistentialException).
 
 
 ## Configuration
@@ -121,7 +127,7 @@ See /docs/dev/Specification.md for complete description of library behavior, in 
 
 ### Concepts
 #### Operation keys
-Operations are identified by operation keys. These are path-like strings used to find matching contexts.
+Operation keys are path-like strings used to identify business operation and find all matching contexts.
 Examples:
 - `/app/orders/create`
 - `/admin/users/reset-password`
@@ -132,19 +138,14 @@ Rules:
 - Must not end with a slash.
 - Must not include wildcard characters (`*`).
 
-#### Transaction lifecycle
-Transactions start with `begin()` and are valid until `commit()` or `rollback()`.
-After `commit()` or `rollback()`, the transaction id becomes invalid and cannot be reused.
-Attempting to use an invalid or unknown id will fail with a `NotFoundException`.
-
 #### Type keys
-Use fully-qualified type keys when different packages share a short class name:
-`TypeKey.valueOfFull(MyEntity.class)` or `TypeKey.valueOfFull(MyEntity.class, "Qualifier")`.
+In above examples, we use entity .class to specify the type of entity for the constraint. 
+Sometimes, however, our entities can be of a generic type, for instance, Document<HTML>, Document<JSON>.
+To be able to distinguish between such different generic types, we have TypeKey class to use instead of Class.
 
-For generic keys based on runtime type capture, prefer the anonymous subclass pattern:
+Use the code similar to this to create a TypeKey that captures exact generic keys.
+(uses anonymous subclass to allow capturing the generic type information at runtime:
 `new TypeKey<List<Order>>() {}`.
-
-For string-based keys, use `Class<Qualifier>` formatting with matching angle brackets.
 
 ### Building the library
 1. Clone source code repository

@@ -1,6 +1,6 @@
 package com.taitl.ex.logic.evaluation.intents.actions;
 
-import com.taitl.ex.logic.evaluation.actions.*;
+import com.taitl.ex.logic.evaluation.events.actions.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;
@@ -22,14 +22,14 @@ public class EvaluateIntent
                 return true;
             }
 
-            if (intent instanceof BiEventHandlerWithSideEffects<?>)
+            if (intent instanceof BiEventHandler<?>)
             {
                 if (!(event instanceof BiEvent<?>))
                 {
                     return false;
                 }
                 BiEvent<?> biEvent = (BiEvent<?>) event;
-                ((BiEventHandlerWithSideEffects) intent).handle(biEvent.t0, biEvent.t1);
+                ((BiEventHandler) intent).handle(biEvent.t0, biEvent.t1);
                 return true;
             }
 

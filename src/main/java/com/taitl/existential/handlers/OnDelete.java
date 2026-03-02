@@ -11,7 +11,7 @@ import com.taitl.existential.handlers.types.*;
  * @param <T>
  *            Entity type handled by the delete event
  */
-public class OnDelete<T> extends On<T> implements EventHandlerWithSideEffects<T>
+public class OnDelete<T> extends On<T> implements UniEventHandler<T>
 {
 
     public OnDelete(Consumer<? super T> action, String description)

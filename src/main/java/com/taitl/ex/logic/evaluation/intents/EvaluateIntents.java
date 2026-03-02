@@ -1,10 +1,11 @@
-package com.taitl.ex.logic.evaluation.intents.actions;
+package com.taitl.ex.logic.evaluation.intents;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.evaluation.*;
+import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
+import com.taitl.ex.logic.evaluation.intents.actions.*;
 import com.taitl.ex.logic.evaluation.intents.maps.*;
-import com.taitl.ex.logic.evaluation.split_events.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
@@ -38,7 +39,7 @@ public class EvaluateIntents
     {
         sane(tr, "tr", runtimeKey, "runtimeKey", stageName, "stageName");
         ConfigurationIndexes indexes = el.config(tr).indexes(stageName);
-        if (!indexes.hasIntentEventTypes() && !tr.hasIntentEventTypes(stageName))
+        if (!indexes.hasIntents() && !tr.hasIntents(stageName))
         {
             return;
         }

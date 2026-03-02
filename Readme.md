@@ -27,35 +27,6 @@ The library does not aim to implement any complete set of mathematical logic not
 It provides a limited set of notations to allow for declarative reasoning about program
 entities, and focuses on performance and memory efficiency.
 
-## Transaction quickstart
-
-Below is a compact end-to-end example showing a single rule, an event, and a transaction lifecycle.
-
-    Ex.configure("/app/orders")
-      .context("/app/orders/submit")
-          .invariant(Order.class)
-              .create(o -> o.totalCents() > 0, "Total must be positive")
-              .done()
-          .build();
-
-    Tr tr = Ex.begin("/app/orders/submit");
-    try
-    {
-        Ex.create(order, tr.id());
-        Ex.commit(tr);
-    }
-    catch (ExistentialException e)
-    {
-        Ex.rollback(tr);
-        throw e;
-    }
-
-Notes:
-- Operation keys are path-like strings (`/app/orders/submit`). They must start with `/`, must not end with `/`,
-  and must not include `*`. Troubleshooting: `/Troubleshooting.md#invalid-operation-key`.
-- After `commit()` or `rollback()`, the transaction id is invalid and reuse throws `NotFoundException`.
-  Troubleshooting: `/Troubleshooting.md#transaction-not-found`.
-
 ## Formalisms
 
 ∀ == "For Any" (a universal quantification)  

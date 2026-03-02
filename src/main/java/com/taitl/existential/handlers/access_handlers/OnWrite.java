@@ -12,7 +12,7 @@ import com.taitl.existential.handlers.types.*;
  * @param <T>
  *            Type of entity being written
  */
-public class OnWrite<T> extends On<T> implements EventHandlerWithSideEffects<T>
+public class OnWrite<T> extends On<T> implements UniEventHandler<T>
 {
     /**
      * Creates a write handler with a description.

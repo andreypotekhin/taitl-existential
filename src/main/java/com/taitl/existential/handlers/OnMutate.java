@@ -20,7 +20,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * @param <T>
  *            Type of entity being mutated
  */
-public class OnMutate<T> implements BiEventHandlerWithSideEffects<T>
+public class OnMutate<T> implements BiEventHandler<T>
 {
     Predicate<? super T> condition;
     BiPredicate<? super T, ? super T> bicondition;

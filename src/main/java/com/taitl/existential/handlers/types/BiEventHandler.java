@@ -9,9 +9,9 @@ import com.taitl.existential.exceptions.ExistentialException;
  *
  * @param <T>
  *            Type of entity
- * @see EventHandlerWithSideEffects
+ * @see UniEventHandler
  */
-public interface BiEventHandlerWithSideEffects<T> extends EventHandler<T>
+public interface BiEventHandler<T> extends EventHandler<T>
 {
     void handle(T t0, T t1) throws ExistentialException;
 }

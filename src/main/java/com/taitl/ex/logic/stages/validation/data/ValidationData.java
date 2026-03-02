@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.validation.data;
+package com.taitl.ex.logic.stages.validation.data;
 
 import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.existential.transactions.*;

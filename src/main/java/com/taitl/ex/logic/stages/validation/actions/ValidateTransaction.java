@@ -1,7 +1,7 @@
-package com.taitl.ex.logic.validation.actions;
+package com.taitl.ex.logic.stages.validation.actions;
 
 import com.taitl.ex.logic.evaluation.*;
-import com.taitl.ex.logic.validation.output.*;
+import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.transactions.*;
 
@@ -13,7 +13,7 @@ public class ValidateTransaction
     public void call(Tr tr, EvaluationLogic el, ValidationReport report)
             throws ExistentialException
     {
-        el.evaluate(tr, report);
+        el.evaluateValidation(tr, report);
         if (!report.isEmpty())
         {
             throw new ValidationStageExceptions(
