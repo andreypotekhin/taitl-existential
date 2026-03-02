@@ -40,7 +40,15 @@ public class Config
     /**
      * Configuration indexes for performance.
      */
-    protected ConfigurationIndexes configurationIndexes = Creator.create(ConfigurationIndexes.class);
+    protected Map<StageName, ConfigurationIndexes> stageIndexes = new EnumMap<>(StageName.class);
+
+    public Config()
+    {
+        for (StageName stageName : StageName.values())
+        {
+            stageIndexes.put(stageName, Creator.create(ConfigurationIndexes.class));
+        }
+    }
 
     /**
      * Adds a {@link Context} instance to the operation.
@@ -94,7 +102,15 @@ public class Config
      */
     public ConfigurationIndexes indexes()
     {
-        return configurationIndexes;
+        return indexes(StageName.VALIDATION);
+    }
+
+    public ConfigurationIndexes indexes(StageName stageName)
+    {
+        sane(stageName, "stageName");
+        ConfigurationIndexes indexes = stageIndexes.get(stageName);
+        verify(indexes != null, "ConfigurationIndexes are missing for stage " + stageName);
+        return indexes;
     }
 
 }

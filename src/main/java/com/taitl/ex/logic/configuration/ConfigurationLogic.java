@@ -103,7 +103,10 @@ public class ConfigurationLogic implements Closeable
     {
         sane(op, "op");
         Config config = registry.get(op);
-        config.indexes().indexConfig(op, config);
+        for (StageName stageName : StageName.values())
+        {
+            config.indexes(stageName).indexConfig(op, config, stageName);
+        }
     }
 
     /* Attributes */
@@ -137,7 +140,44 @@ public class ConfigurationLogic implements Closeable
     {
         sane(op, "op");
         Config config = registry.configs().get(op);
+        if (config == null)
+        {
+            config = nearestParentConfig(op);
+        }
         verify(config != null, String.format("Config not found for op '%s'", op));
         return config;
+    }
+
+    protected Config nearestParentConfig(String op)
+    {
+        sane(op, "op");
+        Config closest = null;
+        for (Map.Entry<String, Config> entry : registry.configs().entrySet())
+        {
+            String candidate = entry.getKey();
+            if (!matchesOrParent(op, candidate))
+            {
+                continue;
+            }
+            if (closest == null || candidate.length() > closest.name().length())
+            {
+                closest = entry.getValue();
+            }
+        }
+        return closest;
+    }
+
+    protected boolean matchesOrParent(String op, String candidate)
+    {
+        sane(op, "op", candidate, "candidate");
+        if (op.equals(candidate))
+        {
+            return true;
+        }
+        if ("/".equals(candidate))
+        {
+            return true;
+        }
+        return op.startsWith(candidate + "/");
     }
 }

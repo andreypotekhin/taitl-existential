@@ -24,6 +24,7 @@ public class BuildConfigs
             ConfigBuilder cb = configBuilders.get(op);
             Config config = cb.build(cl.ec());
             cl.registry().addConfig(config);
+            cl.onFinishConfiguration(op);
         }
     }
 }

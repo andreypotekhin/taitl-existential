@@ -546,6 +546,11 @@ public class Intent<T> implements Evs<T>, Constraints<T>
         return transaction;
     }
 
+    public Transaction transactionOrNull()
+    {
+        return transaction;
+    }
+
     /**
      * Sets the parent transaction for this intent.
      *

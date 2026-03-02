@@ -314,6 +314,11 @@ public class Life<T extends Transaction> implements Evs<T>, Immediate<T>, SideEf
         return tran;
     }
 
+    public Transaction transactionOrNull()
+    {
+        return tran;
+    }
+
     /**
      * Associates this life with a transaction.
      *

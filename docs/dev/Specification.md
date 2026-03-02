@@ -110,9 +110,9 @@ User can specify side effect for transaction lifecycle event (begin, commit, rol
 
 ##### Execution stages
 
-User can assign rules to different stages of transaction execution.
-The execution stages include: Precondition (Early), Immediate (Middle) and Validation (Late).
-By default, the rules are assigned to Validation stage.
++User can assign rules to different stages of transaction execution.
++The execution stages include: Precondition (Early), Immediate (Middle) and Validation (Late).
++By default, the rules are assigned to Validation stage.
 - Precondition stage rules execute once per trigger event.
   They may be used to initialize itermediate data structures, such as indexes, and the like.
   Subsequent trigger events of same type are ignored for precondition rules.
@@ -132,32 +132,32 @@ The rules defined in parent contexts/transactions are considered to be defined '
 The order of execution of rules follows the order of their definition.
 For each event, the order of invocations of its event handlers, if multiple handlers are defined, follows the order of their definition
 
-There is a separate evaluation per execution stage: Precondition, Immediate and Validation.
-Evaluation of Precondition stage rules is called Preconditions evaluation. 
-Evaluation of Immediate stage rules is called Immediate evaluation.
-Evaluation of Validation stage rules is called Validation evaluation.
++There is a separate evaluation per execution stage: Precondition, Immediate and Validation.
++Evaluation of Precondition stage rules is called Preconditions evaluation. 
++Evaluation of Immediate stage rules is called Immediate evaluation.
++Evaluation of Validation stage rules is called Validation evaluation.
 
 Evaluations of separate transactions are independent, even if these transactions are nested.
 Only the events reported during a transaction participate in its evaluations.
 
 ##### Preconditions evaluation
 
-User can assign any rule to Precondition stage.
-Preconditions evaluation becomes active (ready to accept trigger events) on transaction start, and lasts until commit/checkpoint/rollback.
-Precondition stage rules are evaluated once per trigger event, as soon as event has been received, at any time during transaction.
++User can assign any rule to Precondition stage.
++Preconditions evaluation becomes active (ready to accept trigger events) on transaction start, and lasts until commit/checkpoint/rollback.
++Precondition stage rules are evaluated once per trigger event, as soon as event has been received, at any time during transaction.
 
 ##### Immediate evaluation
 
-Immediate evaluation becomes active (ready to accept trigger events) on transaction start, and lasts until commit/checkpoint/rollback.
-Immediate stage rules are evaluated each time per trigger event, as soon as event has been received, at any time during transaction.
++Immediate evaluation becomes active (ready to accept trigger events) on transaction start, and lasts until commit/checkpoint/rollback.
++Immediate stage rules are evaluated each time per trigger event, as soon as event has been received, at any time during transaction.
 Since this may affect performance, using Immediate stage is considered an advanced technique. Normally, if you don't use
 side effects, you should be fine with precondition and validation (default) stages.
 
 ##### Validation evaluation
 
-Validation evaluation is triggered on a commit or checkpoint of an existential transaction, ignored on rollback.
-The Effects are evaluated by applying event handlers for each event reported during a transaction to the corresponding entity.
-Validation stage rules are evaluated once per trigger event, from an in-memory index of such events (a runtime index),
++Validation evaluation is triggered on a commit or checkpoint of an existential transaction, ignored on rollback.
++The Effects are evaluated by applying event handlers for each event reported during a transaction to the corresponding entity.
++Validation stage rules are evaluated once per trigger event, from an in-memory index of such events (a runtime index),
 that folds duplicate events of same type into single event.
 
 
@@ -268,6 +268,7 @@ entity class that is not covered by a similar intent for same event type.
   - require explicit 'read' intent declared for each other class that receives a 'read' event
   - if such sending occurs, throws an exception (IntentViolation)
 +By default, the system validates intents immediately upon receiving an event.
++User can assign intents to execution stages (Precondition, Immediate, Validation), with Immediate as default stage.
 
 #### Custom Event Types
 

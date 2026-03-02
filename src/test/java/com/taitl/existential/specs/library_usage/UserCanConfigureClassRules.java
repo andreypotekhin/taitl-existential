@@ -112,4 +112,40 @@ class UserCanConfigureClassRules extends SpecBase
         assertEquals(1, effectCalls.get());
         assertEquals(1, invariantChecks.get());
     }
+
+    @Test
+    @DisplayName("Execution stages evaluate precondition once and immediate on each event")
+    void executionStagesEvaluatePreconditionOnceAndImmediateOnEachEvent() throws Exception
+    {
+        AtomicInteger preconditionCalls = new AtomicInteger();
+        AtomicInteger immediateCalls = new AtomicInteger();
+        AtomicInteger validationCalls = new AtomicInteger();
+
+        // @formatter:off
+        ex.configure(op)
+            .context()
+                .precondition()
+                    .effect(cat.getClass())
+                        .create(c -> preconditionCalls.incrementAndGet(), "precondition create")
+                        .done()
+                .immediate()
+                    .effect(cat.getClass())
+                        .create(c -> immediateCalls.incrementAndGet(), "immediate create")
+                        .done()
+                .validation()
+                    .effect(cat.getClass())
+                        .create(c -> validationCalls.incrementAndGet(), "validation create")
+                        .done()
+                .build();
+        // @formatter:on
+
+        String tran = ex.begin(op).id();
+        ex.create(cat, tran);
+        ex.create(cat, tran);
+        ex.commit(tran);
+
+        assertEquals(1, preconditionCalls.get());
+        assertEquals(2, immediateCalls.get());
+        assertEquals(1, validationCalls.get());
+    }
 }

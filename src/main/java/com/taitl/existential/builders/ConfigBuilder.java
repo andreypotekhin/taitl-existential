@@ -145,10 +145,13 @@ public class ConfigBuilder
             config.addContext(context);
         }
 
-        config.indexes().useFullClassNames(ec.ex().get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES));
+        boolean useFullClassNames = ec.ex().get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
+        for (StageName stageName : StageName.values())
+        {
+            config.indexes(stageName).useFullClassNames(useFullClassNames);
+        }
 
-        // Create intermediates for consumption by subsequent stages
-        ec.onFinishConfiguration(name);
+        // Intermediates are built after config is registered.
         return config;
     }
 

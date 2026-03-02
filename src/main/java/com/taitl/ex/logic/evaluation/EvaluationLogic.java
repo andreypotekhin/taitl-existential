@@ -34,12 +34,13 @@ public class EvaluationLogic implements Closeable
     public void evaluate(Tr tr, ValidationReport report) throws ExistentialException
     {
         sane(tr, "tr", report, "report");
-        EventField eventField = eventField(tr);
-        EvaluateEvent evaluateEvent = Creator.create(EvaluateEvent.class);
-        boolean useFullClassNames = useFullClassNames();
         for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
         {
-            evaluateEvent.call(runtimeKey, eventField, report, useFullClassNames);
+            if (hasIntents(tr, StageName.VALIDATION))
+            {
+                evaluateIntent(runtimeKey, tr, StageName.VALIDATION);
+            }
+            evaluateStage(runtimeKey, tr, StageName.VALIDATION, report);
         }
     }
 
@@ -49,8 +50,30 @@ public class EvaluationLogic implements Closeable
 
     public <T> void evaluateIntent(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
     {
+        evaluateIntent(runtimeKey, tr, StageName.IMMEDIATE);
+    }
+
+    public <T> void evaluateIntent(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException
+    {
+        sane(stageName, "stageName");
         sane(tr, "tr", runtimeKey, "runtimeKey");
-        evaluateIntents.call(runtimeKey, tr);
+        evaluateIntents.call(runtimeKey, tr, stageName);
+    }
+
+    public <T> void evaluatePrecondition(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    {
+        sane(runtimeKey, "runtimeKey", tr, "tr");
+        ValidationReport report = Creator.create(ValidationReport.class);
+        evaluateStage(runtimeKey, tr, StageName.PRECONDITION, report);
+        throwIfStageFailed(StageName.PRECONDITION, report);
+    }
+
+    public <T> void evaluateImmediate(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    {
+        sane(runtimeKey, "runtimeKey", tr, "tr");
+        ValidationReport report = Creator.create(ValidationReport.class);
+        evaluateStage(runtimeKey, tr, StageName.IMMEDIATE, report);
+        throwIfStageFailed(StageName.IMMEDIATE, report);
     }
 
     public Config config(Tr tr)
@@ -61,14 +84,71 @@ public class EvaluationLogic implements Closeable
         return config;
     }
 
+    protected Config configOrNull(Tr tr)
+    {
+        sane(tr, "tr");
+        try
+        {
+            return tl.ex().configs().config(tr.op);
+        }
+        catch (RuntimeException ex)
+        {
+            return null;
+        }
+    }
+
     protected EventField eventField(Tr tr)
     {
         sane(tr, "tr");
-        return config(tr).indexes().eventField();
+        return config(tr).indexes(StageName.VALIDATION).eventField();
+    }
+
+    protected EventField eventField(Tr tr, StageName stageName)
+    {
+        sane(stageName, "stageName");
+        if (stageName == StageName.VALIDATION)
+        {
+            return eventField(tr);
+        }
+        return config(tr).indexes(stageName).eventField();
     }
 
     public boolean useFullClassNames()
     {
         return tl.ex().get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
+    }
+
+    protected <T> void evaluateStage(
+            RuntimeKey<T> runtimeKey,
+            Tr tr,
+            StageName stageName,
+            ValidationReport report) throws ExistentialException
+    {
+        sane(runtimeKey, "runtimeKey", tr, "tr", stageName, "stageName", report, "report");
+        EventField eventField = eventField(tr, stageName);
+        EvaluateEvent evaluateEvent = Creator.create(EvaluateEvent.class);
+        evaluateEvent.call(runtimeKey, eventField, report, useFullClassNames());
+    }
+
+    protected void throwIfStageFailed(StageName stageName, ValidationReport report) throws ExistentialException
+    {
+        sane(stageName, "stageName", report, "report");
+        if (report.isEmpty())
+        {
+            return;
+        }
+        throw new ExistentialExceptions(stageName.label(),
+                report.exceptions().toArray(new ExistentialException[] {}));
+    }
+
+    protected boolean hasIntents(Tr tr, StageName stageName)
+    {
+        sane(tr, "tr", stageName, "stageName");
+        if (tr.hasIntentEventTypes(stageName))
+        {
+            return true;
+        }
+        Config config = configOrNull(tr);
+        return config != null && config.indexes(stageName).hasIntentEventTypes();
     }
 }

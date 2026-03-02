@@ -14,7 +14,7 @@ public class BeginTran extends TranAction
         super(tl);
     }
 
-    public void call(Tr tr) throws NotFoundException
+    public void call(Tr tr) throws ExistentialException
     {
         tr.onBegin();
         tl.validationLogic.prepareForValidation(tr);

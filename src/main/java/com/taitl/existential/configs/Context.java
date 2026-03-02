@@ -36,10 +36,10 @@ public class Context implements Configurable, Evaluable
     protected Context parent;
 
     /**
-     * Configured rules: invariants, effects, intents.
+     * Configured rules partitioned by execution stage.
      */
-    // TODO: split by stage (execution, validation)
-    List<Evs<?>> evs = new ArrayList<>();
+    protected Stage stage = new Stage();
+    protected StageName stageCursor;
 
     /** Transaction factory */
     protected Supplier<? extends Transaction> transactionFactory = Transaction.FACTORY;
@@ -130,6 +130,24 @@ public class Context implements Configurable, Evaluable
         add(intent);
     }
 
+    public Context precondition()
+    {
+        stageCursor = StageName.PRECONDITION;
+        return this;
+    }
+
+    public Context immediate()
+    {
+        stageCursor = StageName.IMMEDIATE;
+        return this;
+    }
+
+    public Context validation()
+    {
+        stageCursor = StageName.VALIDATION;
+        return this;
+    }
+
     /**
      * Associates a custom Transaction with this Context.
      * The rules defined for a Transaction do not change the Context,
@@ -179,9 +197,13 @@ public class Context implements Configurable, Evaluable
      */
     public <T> void add(Evs<T> evs)
     {
-        sane(evs, "evs");
-        this.evs.add(evs);
-        // instructions.addAll(evs);
+        add(evs, resolvedStage(evs));
+    }
+
+    public <T> void add(Evs<T> evs, StageName stageName)
+    {
+        sane(evs, "evs", stageName, "stageName");
+        stage.add(stageName, evs);
     }
 
     /**
@@ -193,14 +215,18 @@ public class Context implements Configurable, Evaluable
     public Context addAll(Context other)
     {
         sane(other, "other");
-        evs.addAll(other.evs);
-        // instructions.addAll(other.instructions);
+        stage.addAll(other.stage);
         return this;
     }
 
     public List<Evs<?>> evs()
     {
-        return evs;
+        return stage.all();
+    }
+
+    public Stage stage()
+    {
+        return stage;
     }
 
     /*
@@ -270,5 +296,25 @@ public class Context implements Configurable, Evaluable
             return transactionFactory;
         }
         return parent != null ? parent.transactionFactory() : Transaction.FACTORY;
+    }
+
+    protected <T> StageName resolvedStage(Evs<T> evs)
+    {
+        sane(evs, "evs");
+        if (stageCursor != null)
+        {
+            return stageCursor;
+        }
+        return defaultStage(evs);
+    }
+
+    protected <T> StageName defaultStage(Evs<T> evs)
+    {
+        sane(evs, "evs");
+        if (evs instanceof Intent<?>)
+        {
+            return StageName.IMMEDIATE;
+        }
+        return StageName.VALIDATION;
     }
 }

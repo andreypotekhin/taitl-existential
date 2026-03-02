@@ -34,7 +34,7 @@ public class FinalizeConfiguration
     {
         if (!ex.configured())
         {
-            if (cl.isEmpty())
+            if (cl.isEmpty() && cl.configBuilders().isEmpty())
             {
                 throw new IllegalStateException("You need to configure at least one context");
             }

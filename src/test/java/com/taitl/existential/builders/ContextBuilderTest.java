@@ -108,14 +108,19 @@ class ContextBuilderTest
 
                 contextBuilder.build();
 
-                List<Evs<?>> evs = context.evs();
-                assertEquals(6, evs.size());
-                assertSame(inv1, evs.get(0));
-                assertTrue(((Invariant<?>) evs.get(1)).list().get(0) instanceof OnCreate);
-                assertSame(eff1, evs.get(2));
-                assertSame(intent1, evs.get(3));
-                assertTrue(((Effect<?>) evs.get(4)).list().get(0) instanceof OnCreate);
-                assertTrue(((Intent<?>) evs.get(5)).list()
+                List<Evs<?>> precondition = context.stage().at(StageName.PRECONDITION);
+                List<Evs<?>> immediate = context.stage().at(StageName.IMMEDIATE);
+                List<Evs<?>> validation = context.stage().at(StageName.VALIDATION);
+
+                assertEquals(0, precondition.size());
+                assertEquals(2, immediate.size());
+                assertEquals(4, validation.size());
+                assertSame(inv1, validation.get(0));
+                assertTrue(((Invariant<?>) validation.get(1)).list().get(0) instanceof OnCreate);
+                assertSame(eff1, validation.get(2));
+                assertTrue(((Effect<?>) validation.get(3)).list().get(0) instanceof OnCreate);
+                assertSame(intent1, immediate.get(0));
+                assertTrue(((Intent<?>) immediate.get(1)).list()
                         .get(0) instanceof com.taitl.existential.handlers.access_handlers.OnWrite);
             }
         }
@@ -208,11 +213,13 @@ class ContextBuilderTest
 
                 contextBuilder.build();
 
-                List<Evs<?>> evs = context.evs();
-                assertEquals(TypeKey.valueOf(String.class, false), evs.get(0).typeKey());
-                assertEquals(reflectionType, evs.get(1).typeKey());
-                assertEquals(stringType, evs.get(2).typeKey());
-                assertEquals(TypeKey.valueOf(String.class, false), evs.get(3).typeKey());
+                List<Evs<?>> immediate = context.stage().at(StageName.IMMEDIATE);
+                List<Evs<?>> validation = context.stage().at(StageName.VALIDATION);
+
+                assertEquals(TypeKey.valueOf(String.class, false), validation.get(0).typeKey());
+                assertEquals(reflectionType, validation.get(1).typeKey());
+                assertEquals(stringType, validation.get(2).typeKey());
+                assertEquals(TypeKey.valueOf(String.class, false), immediate.get(0).typeKey());
             }
         }
 
@@ -273,6 +280,68 @@ class ContextBuilderTest
                 assertEquals(new TypeKey<List<String>>() {
                 }, reflected.typeKey());
             }
+        }
+    }
+
+    @Nested
+    class Stages
+    {
+        @Test
+        @DisplayName("Context defaults route rules to validation and immediate stages")
+        void contextDefaults()
+        {
+            Context context = new Context("/app");
+            context.invariant(new Invariant<>(String.class));
+            context.effect(new Effect<>(String.class));
+            context.intent(new Intent<>(String.class));
+
+            assertEquals(0, context.stage().at(StageName.PRECONDITION).size());
+            assertEquals(1, context.stage().at(StageName.IMMEDIATE).size());
+            assertEquals(2, context.stage().at(StageName.VALIDATION).size());
+        }
+
+        @Test
+        @DisplayName("Transaction defaults route lifecycle rules to precondition stage")
+        void transactionDefaults()
+        {
+            Transaction transaction = new Transaction("/app", "tx");
+            transaction.invariant(new Invariant<>(String.class));
+            transaction.effect(new Effect<>(String.class));
+            transaction.intent(new Intent<>(String.class));
+            transaction.cycle(new Life<>(Transaction.class));
+
+            assertEquals(1, transaction.stage().at(StageName.PRECONDITION).size());
+            assertEquals(1, transaction.stage().at(StageName.IMMEDIATE).size());
+            assertEquals(2, transaction.stage().at(StageName.VALIDATION).size());
+        }
+
+        @Test
+        @DisplayName("Builder stage selectors override default routing")
+        void builderSelectorsOverrideDefaults()
+        {
+            ConfigBuilder configBuilder = new ConfigBuilder("/app");
+            ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+            Context context = new Context("/app");
+            contextBuilder.contextFactory(() -> context);
+
+            contextBuilder.precondition()
+                    .effect(String.class)
+                    .create(v -> {
+                    }, "precondition effect")
+                    .done();
+            contextBuilder.immediate()
+                    .invariant(String.class)
+                    .create(v -> true, "immediate invariant")
+                    .done();
+            contextBuilder.validation()
+                    .intent(String.class)
+                    .read()
+                    .done();
+            contextBuilder.build();
+
+            assertEquals(1, context.stage().at(StageName.PRECONDITION).size());
+            assertEquals(1, context.stage().at(StageName.IMMEDIATE).size());
+            assertEquals(1, context.stage().at(StageName.VALIDATION).size());
         }
     }
 }

@@ -3,6 +3,8 @@ package com.taitl.ex.logic.transactions;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.evaluation.*;
+import com.taitl.ex.logic.stages.immediate.*;
+import com.taitl.ex.logic.stages.preconditions.*;
 import com.taitl.ex.logic.transactions.actions.*;
 import com.taitl.ex.logic.transactions.data.*;
 import com.taitl.ex.logic.validation.*;
@@ -27,6 +29,8 @@ public class TransactionLogic implements Closeable
     protected RollbackTran rollbackTran;
     protected DisposeTran disposeTran;
     public EvaluationLogic evaluationLogic;
+    public PreconditionLogic preconditionLogic;
+    public ImmediateLogic immediateLogic;
     public ValidationLogic validationLogic;
 
     public TransactionLogic(ExistentialTransactions ee)
@@ -39,8 +43,10 @@ public class TransactionLogic implements Closeable
         this.checkpointTran = new CheckpointTran(this);
         this.rollbackTran = new RollbackTran(this);
         this.disposeTran = new DisposeTran(this);
-        this.validationLogic = Creator.create(ValidationLogic.class, new Class[] { TransactionLogic.class }, this);
         this.evaluationLogic = Creator.create(EvaluationLogic.class, new Class[] { TransactionLogic.class }, this);
+        this.preconditionLogic = Creator.create(PreconditionLogic.class, new Class[] { TransactionLogic.class }, this);
+        this.immediateLogic = Creator.create(ImmediateLogic.class, new Class[] { TransactionLogic.class }, this);
+        this.validationLogic = Creator.create(ValidationLogic.class, new Class[] { TransactionLogic.class }, this);
     }
 
     public Tr begin(String op) throws ExistentialException

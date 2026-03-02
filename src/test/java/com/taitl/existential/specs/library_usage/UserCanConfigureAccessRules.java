@@ -110,4 +110,68 @@ class UserCanConfigureAccessRules extends SpecBase
         assertTrue(ex.getMessage().contains("No intent is configured"));
         this.ex.rollback(tran);
     }
+
+    @Test
+    @DisplayName("Intent can be assigned to validation stage")
+    void intentCanBeAssignedToValidationStage() throws Exception
+    {
+        // @formatter:off
+        ex.configure(op)
+            .context()
+                .validation()
+                    .intent(cat.getClass())
+                        .write()
+                        .done()
+                .build();
+        // @formatter:on
+
+        String tran = ex.begin(op).id();
+        ex.write(cat, tran);
+        assertDoesNotThrow(() -> ex.commit(tran));
+    }
+
+    @Test
+    @DisplayName("Validation stage intent rejects unauthorized type at commit")
+    void validationStageIntentRejectsUnauthorizedTypeAtCommit() throws Exception
+    {
+        // @formatter:off
+        ex.configure(op)
+            .context()
+                .validation()
+                    .intent(cat.getClass())
+                        .write()
+                        .done()
+                .build();
+        // @formatter:on
+
+        String tran = ex.begin(op).id();
+        ex.write("guest", tran);
+        IntentViolation ex = assertThrows(IntentViolation.class, () -> this.ex.commit(tran));
+        assertTrue(ex.getMessage().contains("No intent is configured"));
+        this.ex.rollback(tran);
+    }
+
+    @Test
+    @DisplayName("Precondition stage intent is evaluated once per event key")
+    void preconditionIntentEvaluatedOncePerEventKey() throws Exception
+    {
+        AtomicInteger checks = new AtomicInteger();
+
+        // @formatter:off
+        ex.configure(op)
+            .context()
+                .precondition()
+                    .intent(cat.getClass())
+                        .write(c -> checks.incrementAndGet() == 1)
+                        .done()
+                .build();
+        // @formatter:on
+
+        String tran = ex.begin(op).id();
+        ex.write(cat, tran);
+        ex.write(cat, tran);
+        ex.commit(tran);
+
+        assertEquals(1, checks.get());
+    }
 }

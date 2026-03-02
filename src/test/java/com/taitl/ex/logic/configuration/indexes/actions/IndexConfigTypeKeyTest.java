@@ -84,9 +84,12 @@ class IndexConfigTypeKeyTest
         context.intent(intent);
         config.addContext(context);
 
-        config.indexes().indexConfig("/app", config);
+        config.indexes(StageName.IMMEDIATE).indexConfig("/app", config, StageName.IMMEDIATE);
 
-        assertTrue(config.indexes().configuredIntents.contains(EventKey.valueOf(Read.class, fullTypeKey)));
-        assertFalse(config.indexes().configuredIntents.contains(EventKey.valueOfFull(Read.class, fullTypeKey)));
+        assertTrue(config.indexes(StageName.IMMEDIATE).configuredIntents
+                .contains(EventKey.valueOf(Read.class, fullTypeKey)));
+        assertFalse(
+                config.indexes(StageName.IMMEDIATE).configuredIntents
+                        .contains(EventKey.valueOfFull(Read.class, fullTypeKey)));
     }
 }

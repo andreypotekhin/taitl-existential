@@ -39,7 +39,13 @@ public class ConfigurationIndexes
     public void indexConfig(String op, Config config)
     {
         sane(op, "op", config, "config");
-        indexConfig.call(op, config);
+        indexConfig.call(op, config, StageName.VALIDATION);
+    }
+
+    public void indexConfig(String op, Config config, StageName stageName)
+    {
+        sane(op, "op", config, "config", stageName, "stageName");
+        indexConfig.call(op, config, stageName);
     }
 
     /**

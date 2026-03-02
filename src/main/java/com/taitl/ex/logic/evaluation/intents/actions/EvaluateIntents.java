@@ -5,6 +5,7 @@ import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.evaluation.intents.maps.*;
 import com.taitl.ex.logic.evaluation.split_events.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
@@ -33,17 +34,17 @@ public class EvaluateIntents
         this.evaluateSplitKeys = new EvaluateSplitKeys();
     }
 
-    public <T> void call(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException
     {
-        sane(tr, "tr", runtimeKey, "runtimeKey");
-        ConfigurationIndexes indexes = el.config(tr).indexes();
-        if (!indexes.hasIntentEventTypes() && !tr.hasIntentEventTypes())
+        sane(tr, "tr", runtimeKey, "runtimeKey", stageName, "stageName");
+        ConfigurationIndexes indexes = el.config(tr).indexes(stageName);
+        if (!indexes.hasIntentEventTypes() && !tr.hasIntentEventTypes(stageName))
         {
             return;
         }
 
         Map<EventType, List<RuntimeKey<T>>> grouped = splitAndGroupByEventType(runtimeKey);
-        iterateSplitKeys(grouped, indexes, tr);
+        iterateSplitKeys(grouped, indexes, tr, stageName);
     }
 
     public <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey)
@@ -51,12 +52,16 @@ public class EvaluateIntents
         return toSplitKeys.call(eventSplitter.split(runtimeKey, el.useFullClassNames()));
     }
 
-    public <T> void iterateSplitKeys(Map<EventType, List<RuntimeKey<T>>> grouped, ConfigurationIndexes indexes, Tr tr)
-            throws ExistentialException
+    public <T> void iterateSplitKeys(
+            Map<EventType, List<RuntimeKey<T>>> grouped,
+            ConfigurationIndexes indexes,
+            Tr tr,
+            StageName stageName) throws ExistentialException
     {
+        sane(grouped, "grouped", indexes, "indexes", tr, "tr", stageName, "stageName");
         for (Map.Entry<EventType, List<RuntimeKey<T>>> entry : grouped.entrySet())
         {
-            evaluateSplitKeys.call(entry.getKey(), entry.getValue(), indexes, tr);
+            evaluateSplitKeys.call(entry.getKey(), entry.getValue(), indexes, tr, stageName);
         }
     }
 }

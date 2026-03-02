@@ -390,6 +390,11 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return tran;
     }
 
+    public Transaction transactionOrNull()
+    {
+        return tran;
+    }
+
     /**
      * Sets the parent transaction for this invariant.
      *

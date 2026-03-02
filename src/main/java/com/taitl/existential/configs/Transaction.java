@@ -71,10 +71,10 @@ public class Transaction implements Configurable, Evaluable
     public Context context;
 
     /**
-     * Configured rules: invariants, effects, intents.
+     * Configured rules partitioned by execution stage.
      */
-    // TODO: split by stage (execution, validation)
-    List<Evs<?>> evs = new ArrayList<>();
+    protected Stage stage = new Stage();
+    protected StageName stageCursor;
 
     TransactionIndexes indexes = new TransactionIndexes(this);
 
@@ -126,8 +126,13 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T> void invariant(Invariant<T> invariant)
     {
+        invariant(invariant, resolvedStage(invariant));
+    }
+
+    public <T> void invariant(Invariant<T> invariant, StageName stageName)
+    {
         sane(invariant, "invariant");
-        Transaction tr = invariant.transaction();
+        Transaction tr = invariant.transactionOrNull();
         if (tr == null)
         {
             invariant.transaction(this);
@@ -137,7 +142,7 @@ public class Transaction implements Configurable, Evaluable
             check(tr == this, "Argument 'invariant' must belong to this transaction. " +
                     "Create it here or call invariant.transaction(this).");
         }
-        add(invariant);
+        add(invariant, stageName);
     }
 
     /**
@@ -148,8 +153,13 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T> void effect(Effect<T> effect)
     {
+        effect(effect, resolvedStage(effect));
+    }
+
+    public <T> void effect(Effect<T> effect, StageName stageName)
+    {
         sane(effect, "effect");
-        Transaction tr = effect.getTransaction();
+        Transaction tr = effect.transactionOrNull();
         if (tr == null)
         {
             effect.setTransaction(this);
@@ -159,7 +169,7 @@ public class Transaction implements Configurable, Evaluable
             check(tr == this, "Argument 'effect' must belong to this transaction. " +
                     "Create it here or call effect.setTransaction(this).");
         }
-        add(effect);
+        add(effect, stageName);
     }
 
     /**
@@ -172,8 +182,13 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T> void intent(Intent<T> intent)
     {
+        intent(intent, resolvedStage(intent));
+    }
+
+    public <T> void intent(Intent<T> intent, StageName stageName)
+    {
         sane(intent, "intent");
-        Transaction tr = intent.transaction();
+        Transaction tr = intent.transactionOrNull();
         if (tr == null)
         {
             intent.transaction(this);
@@ -183,7 +198,7 @@ public class Transaction implements Configurable, Evaluable
             check(tr == this, "Argument 'intent' must belong to this transaction. " +
                     "Create it here or call intent.transaction(this).");
         }
-        add(intent);
+        add(intent, stageName);
     }
 
     /**
@@ -194,8 +209,13 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void cycle(Life<T> cycle)
     {
+        cycle(cycle, resolvedStage(cycle));
+    }
+
+    public <T extends Transaction> void cycle(Life<T> cycle, StageName stageName)
+    {
         sane(cycle, "cycle");
-        Transaction tr = cycle.transaction();
+        Transaction tr = cycle.transactionOrNull();
         if (tr == null)
         {
             cycle.transaction(this);
@@ -204,7 +224,7 @@ public class Transaction implements Configurable, Evaluable
         {
             check(tr == this, "Argument 'cycle' must belong to same transaction");
         }
-        add(cycle);
+        add(cycle, stageName);
     }
 
     /*
@@ -298,9 +318,31 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T> void add(Evs<T> evs)
     {
-        sane(evs, "evs");
-        this.evs.add(evs);
-        // instructions.addAll(evs);
+        add(evs, resolvedStage(evs));
+    }
+
+    public <T> void add(Evs<T> evs, StageName stageName)
+    {
+        sane(evs, "evs", stageName, "stageName");
+        stage.add(stageName, evs);
+    }
+
+    public Transaction precondition()
+    {
+        stageCursor = StageName.PRECONDITION;
+        return this;
+    }
+
+    public Transaction immediate()
+    {
+        stageCursor = StageName.IMMEDIATE;
+        return this;
+    }
+
+    public Transaction validation()
+    {
+        stageCursor = StageName.VALIDATION;
+        return this;
     }
 
     @SuppressWarnings("unchecked")
@@ -317,7 +359,12 @@ public class Transaction implements Configurable, Evaluable
      */
     public List<Evs<?>> evs()
     {
-        return evs;
+        return stage.all();
+    }
+
+    public Stage stage()
+    {
+        return stage;
     }
 
     /*
@@ -372,5 +419,29 @@ public class Transaction implements Configurable, Evaluable
     public void validate()
     {
         verify(context != null, "Transaction context is not set, call context(str) first");
+    }
+
+    protected <T> StageName resolvedStage(Evs<T> evs)
+    {
+        sane(evs, "evs");
+        if (stageCursor != null)
+        {
+            return stageCursor;
+        }
+        return defaultStage(evs);
+    }
+
+    protected <T> StageName defaultStage(Evs<T> evs)
+    {
+        sane(evs, "evs");
+        if (evs instanceof Intent<?>)
+        {
+            return StageName.IMMEDIATE;
+        }
+        if (evs instanceof Life<?>)
+        {
+            return StageName.PRECONDITION;
+        }
+        return StageName.VALIDATION;
     }
 }

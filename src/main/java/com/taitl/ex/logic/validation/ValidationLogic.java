@@ -42,6 +42,10 @@ public class ValidationLogic
      */
     public void run(Tr tr) throws ExistentialException
     {
+        if (el == null)
+        {
+            el = tl.evaluationLogic;
+        }
         validateTransaction.call(tr, el, report);
     }
 }

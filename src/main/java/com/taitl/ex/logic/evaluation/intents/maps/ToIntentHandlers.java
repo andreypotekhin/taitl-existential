@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.evaluation.intents.maps;
 
 import com.taitl.ex.logic.configuration.indexes.data.*;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.types.*;
@@ -18,10 +19,11 @@ public class ToIntentHandlers
             List<RuntimeKey<T>> runtimeKeys,
             EventType eventType,
             EventField field,
-            Tr tr)
+            Tr tr,
+            StageName stageName)
     {
         sane(multiKey, "multiKey", runtimeKeys, "runtimeKeys", eventType, "eventType", field, "field", tr,
-                "tr");
+                "tr", stageName, "stageName");
 
         List<EventHandler<?>> result = new ArrayList<>();
         for (Ev<?> ev : field.get(multiKey))
@@ -34,12 +36,28 @@ public class ToIntentHandlers
 
         for (RuntimeKey<T> runtimeKey : runtimeKeys)
         {
-            List<EventHandler<?>> transactionHandlers =
-                    tr.intentHandlers(eventType, runtimeKey.typeKey().toString());
-            if (transactionHandlers != null)
+            for (String candidate : intentTypeCandidates(runtimeKey))
             {
-                result.addAll(transactionHandlers);
+                List<EventHandler<?>> transactionHandlers = tr.intentHandlers(stageName, eventType, candidate);
+                if (transactionHandlers != null)
+                {
+                    result.addAll(transactionHandlers);
+                }
             }
+        }
+        return result;
+    }
+
+    protected <T> List<String> intentTypeCandidates(RuntimeKey<T> runtimeKey)
+    {
+        sane(runtimeKey, "runtimeKey");
+        List<String> result = new ArrayList<>();
+        result.add(runtimeKey.typeKey().toString());
+        T entity = runtimeKey.entity();
+        if (entity != null)
+        {
+            result.add(entity.getClass().getSimpleName());
+            result.add(entity.getClass().getName());
         }
         return result;
     }

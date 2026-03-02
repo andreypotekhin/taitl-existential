@@ -21,8 +21,11 @@ public class ContextBuilder
     ConfigBuilder parent;
     String op;
     List<Supplier<? extends Evs<?>>> evsSuppliers;
+    List<StageName> evsStages;
     Supplier<? extends Context> contextFactory;
     Supplier<? extends Transaction> transactionFactory;
+    StageName stageCursor;
+    boolean built;
 
     /**
      * Creates a context builder for a specific operation name.
@@ -37,6 +40,7 @@ public class ContextBuilder
         this.parent = parentConfig;
         this.op = op;
         this.evsSuppliers = new ArrayList<>();
+        this.evsStages = new ArrayList<>();
     }
 
     /**
@@ -67,7 +71,7 @@ public class ContextBuilder
     {
         sane(typeKey, "typeKey");
         InvariantBuilder<T> ib = new InvariantBuilder<>(this, typeKey);
-        evsSuppliers.add(() -> ib.build());
+        register(() -> ib.build(), StageName.VALIDATION);
         return ib;
     }
 
@@ -83,7 +87,7 @@ public class ContextBuilder
     public <T> ContextBuilder invariant(Invariant<T> invariant)
     {
         sane(invariant, "invariant");
-        evsSuppliers.add(() -> invariant);
+        register(() -> invariant, StageName.VALIDATION);
         return this;
     }
 
@@ -115,7 +119,7 @@ public class ContextBuilder
     {
         sane(typeKey, "typeKey");
         EffectBuilder<T> eb = new EffectBuilder<>(this, typeKey);
-        evsSuppliers.add(() -> eb.build());
+        register(() -> eb.build(), StageName.VALIDATION);
         return eb;
     }
 
@@ -131,7 +135,7 @@ public class ContextBuilder
     public <T> ContextBuilder effect(Effect<T> effect)
     {
         sane(effect, "effect");
-        evsSuppliers.add(() -> effect);
+        register(() -> effect, StageName.VALIDATION);
         return this;
     }
 
@@ -145,6 +149,10 @@ public class ContextBuilder
     public ContextBuilder context(String name)
     {
         sane(name, "name");
+        if (hasPendingConfiguration())
+        {
+            build();
+        }
         return parent.context(parent.requireContextNameMatchesParentContext(name, op));
     }
 
@@ -155,6 +163,10 @@ public class ContextBuilder
      */
     public ContextBuilder context()
     {
+        if (hasPendingConfiguration())
+        {
+            build();
+        }
         return parent.context();
     }
 
@@ -177,7 +189,7 @@ public class ContextBuilder
     {
         sane(typeKey, "typeKey");
         IntentBuilder<T> ib = new IntentBuilder<>(this, typeKey);
-        evsSuppliers.add(() -> ib.build());
+        register(() -> ib.build(), StageName.IMMEDIATE);
         return ib;
     }
 
@@ -193,7 +205,25 @@ public class ContextBuilder
     public <T> ContextBuilder intent(Intent<T> intent)
     {
         sane(intent, "intent");
-        evsSuppliers.add(() -> intent);
+        register(() -> intent, StageName.IMMEDIATE);
+        return this;
+    }
+
+    public ContextBuilder precondition()
+    {
+        stageCursor = StageName.PRECONDITION;
+        return this;
+    }
+
+    public ContextBuilder immediate()
+    {
+        stageCursor = StageName.IMMEDIATE;
+        return this;
+    }
+
+    public ContextBuilder validation()
+    {
+        stageCursor = StageName.VALIDATION;
         return this;
     }
 
@@ -204,26 +234,23 @@ public class ContextBuilder
      */
     public ConfigBuilder build()
     {
+        if (built)
+        {
+            return parent;
+        }
         verify(!evsSuppliers.isEmpty() || transactionFactory != null,
                 "Cannot configure context without defining rules");
 
         Context context = createInstance();
         context.op(op);
 
-        for (Supplier<? extends Evs<?>> supplier : evsSuppliers)
+        for (int i = 0; i < evsSuppliers.size(); i++)
         {
-            Evs<?> evs = supplier.get();
-            if (evs instanceof Invariant<?>)
+            Evs<?> evs = evsSuppliers.get(i).get();
+            StageName stageName = evsStages.get(i);
+            if (evs instanceof Invariant<?> || evs instanceof Effect<?> || evs instanceof Intent<?>)
             {
-                context.invariant((Invariant<?>) evs);
-            }
-            else if (evs instanceof Effect<?>)
-            {
-                context.effect((Effect<?>) evs);
-            }
-            else if (evs instanceof Intent<?>)
-            {
-                context.intent((Intent<?>) evs);
+                context.add(evs, stageName);
             }
             else
             {
@@ -236,6 +263,7 @@ public class ContextBuilder
             context.transaction(transactionFactory);
         }
         parent.context(context);
+        built = true;
         return parent;
     }
 
@@ -300,5 +328,17 @@ public class ContextBuilder
     Transaction createTransactionInstance()
     {
         return parent.createTransactionInstance();
+    }
+
+    protected void register(Supplier<? extends Evs<?>> supplier, StageName defaultStage)
+    {
+        sane(supplier, "supplier", defaultStage, "defaultStage");
+        evsSuppliers.add(supplier);
+        evsStages.add(stageCursor != null ? stageCursor : defaultStage);
+    }
+
+    protected boolean hasPendingConfiguration()
+    {
+        return !built && (!evsSuppliers.isEmpty() || transactionFactory != null);
     }
 }

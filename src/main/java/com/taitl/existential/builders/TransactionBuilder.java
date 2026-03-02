@@ -19,7 +19,9 @@ public class TransactionBuilder
     ContextBuilder parent;
     String op;
     List<Supplier<? extends Evs<?>>> evsSuppliers;
+    List<StageName> evsStages;
     Supplier<? extends Transaction> transactionFactory;
+    StageName stageCursor;
 
     /**
      * Creates a transaction builder for a concrete operation name.
@@ -34,6 +36,7 @@ public class TransactionBuilder
         this.parent = parentContext;
         this.op = op;
         this.evsSuppliers = new ArrayList<>();
+        this.evsStages = new ArrayList<>();
         this.transactionFactory = parent::createTransactionInstance;
     }
 
@@ -51,6 +54,7 @@ public class TransactionBuilder
         this.parent = parentContext;
         this.op = null;
         this.evsSuppliers = new ArrayList<>();
+        this.evsStages = new ArrayList<>();
         this.transactionFactory = transactionFactory;
     }
 
@@ -69,24 +73,25 @@ public class TransactionBuilder
                 tr.op(op);
             }
 
-            for (Supplier<? extends Evs<?>> supplier : this.evsSuppliers)
+            for (int i = 0; i < this.evsSuppliers.size(); i++)
             {
-                Evs<?> evs = supplier.get();
+                Evs<?> evs = evsSuppliers.get(i).get();
+                StageName stageName = evsStages.get(i);
                 if (evs instanceof Invariant<?>)
                 {
-                    tr.invariant((Invariant<?>) evs);
+                    tr.invariant((Invariant<?>) evs, stageName);
                 }
                 else if (evs instanceof Effect<?>)
                 {
-                    tr.effect((Effect<?>) evs);
+                    tr.effect((Effect<?>) evs, stageName);
                 }
                 else if (evs instanceof Intent<?>)
                 {
-                    tr.intent((Intent<?>) evs);
+                    tr.intent((Intent<?>) evs, stageName);
                 }
                 else if (evs instanceof Life<?>)
                 {
-                    tr.cycle((Life<?>) evs);
+                    tr.cycle((Life<?>) evs, stageName);
                 }
                 else
                 {
@@ -126,7 +131,7 @@ public class TransactionBuilder
     {
         sane(typeKey, "typeKey");
         InvariantBuilder<T> ib = new InvariantBuilder<>(this, typeKey);
-        evsSuppliers.add(() -> ib.build());
+        register(() -> ib.build(), StageName.VALIDATION);
         return ib;
     }
 
@@ -142,7 +147,7 @@ public class TransactionBuilder
     public <T> TransactionBuilder invariant(Invariant<T> invariant)
     {
         sane(invariant, "invariant");
-        evsSuppliers.add(() -> invariant);
+        register(() -> invariant, StageName.VALIDATION);
         return this;
     }
 
@@ -174,7 +179,7 @@ public class TransactionBuilder
     {
         sane(typeKey, "typeKey");
         EffectBuilder<T> eb = new EffectBuilder<>(this, typeKey);
-        evsSuppliers.add(() -> eb.build());
+        register(() -> eb.build(), StageName.VALIDATION);
         return eb;
     }
 
@@ -190,7 +195,7 @@ public class TransactionBuilder
     public <T> TransactionBuilder effect(Effect<T> effect)
     {
         sane(effect, "effect");
-        evsSuppliers.add(() -> effect);
+        register(() -> effect, StageName.VALIDATION);
         return this;
     }
 
@@ -206,7 +211,7 @@ public class TransactionBuilder
     public <T extends Transaction> TransactionBuilder cycle(Life<T> cycle)
     {
         sane(cycle, "cycle");
-        evsSuppliers.add(() -> cycle);
+        register(() -> cycle, StageName.PRECONDITION);
         return this;
     }
 
@@ -229,7 +234,7 @@ public class TransactionBuilder
     {
         sane(typeKey, "typeKey");
         IntentBuilder<T> ib = new IntentBuilder<>(this, typeKey);
-        evsSuppliers.add(() -> ib.build());
+        register(() -> ib.build(), StageName.IMMEDIATE);
         return ib;
     }
 
@@ -245,7 +250,25 @@ public class TransactionBuilder
     public <T> TransactionBuilder intent(Intent<T> intent)
     {
         sane(intent, "intent");
-        evsSuppliers.add(() -> intent);
+        register(() -> intent, StageName.IMMEDIATE);
+        return this;
+    }
+
+    public TransactionBuilder precondition()
+    {
+        stageCursor = StageName.PRECONDITION;
+        return this;
+    }
+
+    public TransactionBuilder immediate()
+    {
+        stageCursor = StageName.IMMEDIATE;
+        return this;
+    }
+
+    public TransactionBuilder validation()
+    {
+        stageCursor = StageName.VALIDATION;
         return this;
     }
 
@@ -474,5 +497,12 @@ public class TransactionBuilder
     protected Transaction createInstance()
     {
         return transactionFactory.get();
+    }
+
+    protected void register(Supplier<? extends Evs<?>> supplier, StageName defaultStage)
+    {
+        sane(supplier, "supplier", defaultStage, "defaultStage");
+        evsSuppliers.add(supplier);
+        evsStages.add(stageCursor != null ? stageCursor : defaultStage);
     }
 }

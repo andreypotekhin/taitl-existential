@@ -9,6 +9,8 @@ import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.events.types.*;
 
+import java.util.*;
+
 import static com.taitl.ex.common.helper.Args.*;
 
 public class IndexConfig
@@ -23,18 +25,28 @@ public class IndexConfig
     public void call(String op, Config config)
     {
         sane(op, "op", config, "config");
-        indexConfig(config);
+        indexConfig(config, StageName.VALIDATION);
+    }
+
+    public void call(String op, Config config, StageName stageName)
+    {
+        sane(op, "op", config, "config", stageName, "stageName");
+        indexConfig(config, stageName);
     }
 
     /**
      * Add all configured rules to indexes, in the order of declaration.
      */
-    public void indexConfig(Config config)
+    public void indexConfig(Config config, StageName stageName)
     {
+        sane(config, "config", stageName, "stageName");
         for (Context context : config.contexts())
         {
             TraverseContext tc = new TraverseContext();
-            tc.visit(context);
+            for (Evs<?> evs : context.stage().at(stageName))
+            {
+                evs.accept(tc);
+            }
         }
         ci.doneIndexing();
     }

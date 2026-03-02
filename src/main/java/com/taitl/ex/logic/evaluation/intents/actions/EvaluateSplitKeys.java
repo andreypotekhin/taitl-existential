@@ -3,6 +3,7 @@ package com.taitl.ex.logic.evaluation.intents.actions;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.events.types.*;
+import com.taitl.existential.configs.*;
 import com.taitl.ex.logic.evaluation.intents.maps.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
@@ -38,10 +39,12 @@ public class EvaluateSplitKeys
             EventType eventType,
             List<RuntimeKey<T>> runtimeKeys,
             ConfigurationIndexes indexes,
-            Tr tr) throws ExistentialException
+            Tr tr,
+            StageName stageName) throws ExistentialException
     {
-        sane(eventType, "eventType", runtimeKeys, "runtimeKeys", indexes, "indexes", tr, "tr");
-        if (!checkEventType.eventTypeIsGuarded(eventType, indexes, tr))
+        sane(eventType, "eventType", runtimeKeys, "runtimeKeys", indexes, "indexes", tr, "tr", stageName,
+                "stageName");
+        if (!checkEventType.eventTypeIsGuarded(eventType, indexes, tr, stageName))
         {
             return;
         }
@@ -49,7 +52,7 @@ public class EvaluateSplitKeys
         RuntimeKey<T> primaryRuntimeKey = primaryRuntimeKey(runtimeKeys);
         List<EventHandler<?>> intents =
                 toIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventType, indexes.intentField(),
-                        tr);
+                        tr, stageName);
         if (intents.isEmpty())
         {
             throw missingIntent(primaryRuntimeKey);

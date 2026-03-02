@@ -2,16 +2,27 @@ package com.taitl.existential.transactions;
 
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.common.helper.State;
+import com.taitl.ex.logic.evaluation.actions.ExecuteHandler;
 import com.taitl.ex.logic.indexing.data.IndexData;
 import com.taitl.ex.logic.transactions.TransactionLogic;
 import com.taitl.ex.logic.validation.data.ValidationData;
+import com.taitl.existential.configs.Context;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
+import com.taitl.existential.configs.StageName;
 import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.events.transaction_events.Begin;
+import com.taitl.existential.events.transaction_events.Checkpoint;
+import com.taitl.existential.events.transaction_events.Commit;
+import com.taitl.existential.events.transaction_events.Rollback;
 import com.taitl.existential.events.types.EventType;
 import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.handlers.On;
 import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.keys.EventKey;
 import com.taitl.existential.keys.OpKey;
+import com.taitl.existential.keys.RuntimeKey;
+import com.taitl.existential.keys.TypeKey;
 
 import java.util.*;
 
@@ -35,8 +46,10 @@ public class Tr
     protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
     protected IndexData runtimeIndexes;
     protected ValidationData validationData;
-    protected Set<EventType> intentEventTypes = new LinkedHashSet<>();
-    protected ListMap<IntentHandlerKey, EventHandler<?>> intentHandlers = new ListMap<>();
+    protected Map<StageName, StageData> stageData = new EnumMap<>(StageName.class);
+    protected Set<String> preconditionEncounteredEventKeys = new LinkedHashSet<>();
+    protected boolean preconditionActive;
+    protected boolean immediateActive;
 
     /**
      * Creates a transaction instance for the given operation and id.
@@ -55,6 +68,10 @@ public class Tr
         this.tl = tl;
         runtimeIndexes = new IndexData();
         validationData = new ValidationData(this);
+        for (StageName stageName : StageName.values())
+        {
+            stageData.put(stageName, new StageData());
+        }
     }
 
     /**
@@ -70,6 +87,10 @@ public class Tr
         tr.op = op;
         transactions.add(tr);
         indexIntents(tr);
+        if (tr.context != null)
+        {
+            indexContextIntents(tr.context);
+        }
     }
 
     /**
@@ -114,33 +135,44 @@ public class Tr
      * Called when a transaction begins.
      * Invoked by BeginTr.
      */
-    public void onBegin()
+    public void onBegin() throws ExistentialException
     {
-        // Init ValidationData
+        preconditionActive = true;
+        immediateActive = true;
+        executeLifecycle(Begin.class);
     }
 
     /**
      * Called when a transaction checkpoint is reached.
      * Invoked by CheckpointTr.
      */
-    public void onCheckpoint()
+    public void onCheckpoint() throws ExistentialException
     {
+        preconditionActive = false;
+        immediateActive = false;
+        executeLifecycle(Checkpoint.class);
     }
 
     /**
      * Called when a transaction is committed.
      * Invoked by CommitTr.
      */
-    public void onCommit()
+    public void onCommit() throws ExistentialException
     {
+        preconditionActive = false;
+        immediateActive = false;
+        executeLifecycle(Commit.class);
     }
 
     /**
      * Called when a transaction is rolled back.
      * Invoked by RollbackTr.
      */
-    public void onRollback()
+    public void onRollback() throws ExistentialException
     {
+        preconditionActive = false;
+        immediateActive = false;
+        executeLifecycle(Rollback.class);
     }
 
     /* Attributes */
@@ -177,37 +209,77 @@ public class Tr
 
     public boolean hasIntentEventTypes()
     {
-        return !intentEventTypes.isEmpty();
+        for (StageName stageName : StageName.values())
+        {
+            if (hasIntentEventTypes(stageName))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean hasIntentEventType(EventType eventType)
     {
+        for (StageName stageName : StageName.values())
+        {
+            if (hasIntentEventType(stageName, eventType))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasIntentEventTypes(StageName stageName)
+    {
+        sane(stageName, "stageName");
+        StageData data = stageData.get(stageName);
+        return data != null && !data.intentEventTypes.isEmpty();
+    }
+
+    public boolean hasIntentEventType(StageName stageName, EventType eventType)
+    {
+        sane(stageName, "stageName");
         sane(eventType, "eventType");
-        return intentEventTypes.contains(eventType);
+        StageData data = stageData.get(stageName);
+        return data != null && data.intentEventTypes.contains(eventType);
     }
 
     public List<EventHandler<?>> intentHandlers(EventType eventType, String typeKey)
     {
+        return intentHandlers(StageName.IMMEDIATE, eventType, typeKey);
+    }
+
+    public List<EventHandler<?>> intentHandlers(StageName stageName, EventType eventType, String typeKey)
+    {
+        sane(stageName, "stageName");
         sane(eventType, "eventType", typeKey, "typeKey");
-        return intentHandlers.get(intentKey(eventType, typeKey));
+        StageData data = stageData.get(stageName);
+        return data != null ? data.intentHandlers.get(intentKey(eventType, typeKey)) : null;
     }
 
     protected void indexIntents(Transaction tr)
     {
         sane(tr, "tr");
-        for (Evs<?> evs : tr.evs())
+        for (StageName stageName : StageName.values())
         {
-            if (!(evs instanceof Intent<?>))
+            for (Evs<?> evs : tr.stage().at(stageName))
             {
-                continue;
+                if (!(evs instanceof Intent<?>))
+                {
+                    continue;
+                }
+                indexIntent(stageName, (Intent<?>) evs);
             }
-            indexIntent((Intent<?>) evs);
         }
     }
 
-    protected void indexIntent(Intent<?> intent)
+    protected void indexIntent(StageName stageName, Intent<?> intent)
     {
-        sane(intent, "intent");
+        sane(stageName, "stageName", intent, "intent");
+        StageData data = stageData.get(stageName);
+        sane(data, "data");
         String typeKey = intent.typeKey().toString();
         for (Ev<?> ev : intent.list())
         {
@@ -217,8 +289,8 @@ public class Tr
             }
             EventHandler<?> handler = (EventHandler<?>) ev;
             EventType eventType = handler.eventType();
-            intentEventTypes.add(eventType);
-            intentHandlers.put(intentKey(eventType, typeKey), handler);
+            data.intentEventTypes.add(eventType);
+            data.intentHandlers.put(intentKey(eventType, typeKey), handler);
         }
     }
 
@@ -226,6 +298,104 @@ public class Tr
     {
         sane(eventType, "eventType", typeKey, "typeKey");
         return new IntentHandlerKey(eventType, typeKey);
+    }
+
+    protected void indexContextIntents(Context context)
+    {
+        sane(context, "context");
+        for (StageName stageName : StageName.values())
+        {
+            for (Evs<?> evs : context.stage().at(stageName))
+            {
+                if (!(evs instanceof Intent<?>))
+                {
+                    continue;
+                }
+                indexIntent(stageName, (Intent<?>) evs);
+            }
+        }
+    }
+
+    public boolean preconditionActive()
+    {
+        return preconditionActive;
+    }
+
+    public boolean immediateActive()
+    {
+        return immediateActive;
+    }
+
+    public <T> boolean shouldEvaluatePrecondition(RuntimeKey<T> runtimeKey)
+    {
+        sane(runtimeKey, "runtimeKey");
+        String key = runtimeKey.key().toString();
+        return preconditionEncounteredEventKeys.add(key);
+    }
+
+    protected void executeLifecycle(Class<?> eventClass) throws ExistentialException
+    {
+        sane(eventClass, "eventClass");
+        for (Transaction transaction : transactions)
+        {
+            executeLifecycle(eventClass, transaction);
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected void executeLifecycle(Class<?> eventClass, Transaction transaction) throws ExistentialException
+    {
+        sane(eventClass, "eventClass", transaction, "transaction");
+        for (StageName stageName : StageName.values())
+        {
+            for (Evs<?> evs : transaction.stage().at(stageName))
+            {
+                if (!(evs instanceof Life<?>))
+                {
+                    continue;
+                }
+                Life<?> life = (Life<?>) evs;
+                if (!matchesType(life.typeKey(), transaction))
+                {
+                    continue;
+                }
+                for (Ev<?> ev : life.list())
+                {
+                    if (!(ev instanceof EventHandler<?>))
+                    {
+                        continue;
+                    }
+                    EventHandler<?> eventHandler = (EventHandler<?>) ev;
+                    if (!eventClass.equals(eventHandler.eventType().eventClass()))
+                    {
+                        continue;
+                    }
+                    if (!(eventHandler instanceof On<?>))
+                    {
+                        throw new IllegalStateException("Lifecycle handler must extend On, got "
+                                + eventHandler.getClass().getName());
+                    }
+                    ExecuteHandler.handle((On) eventHandler, transaction);
+                }
+            }
+        }
+    }
+
+    protected boolean matchesType(TypeKey<?> configuredType, Transaction transaction)
+    {
+        sane(configuredType, "configuredType", transaction, "transaction");
+        Class<?> type = transaction.getClass();
+        while (type != null && Transaction.class.isAssignableFrom(type))
+        {
+            TypeKey<?> shortName = TypeKey.valueOf(type, false);
+            TypeKey<?> fullName = TypeKey.valueOf(type, true);
+            if (configuredType.equals(shortName) || configuredType.equals(fullName))
+            {
+                return true;
+            }
+            type = type.getSuperclass();
+        }
+        return false;
     }
 
     protected static class IntentHandlerKey
@@ -260,6 +430,12 @@ public class Tr
         }
     }
 
+    protected static class StageData
+    {
+        protected final Set<EventType> intentEventTypes = new LinkedHashSet<>();
+        protected final ListMap<IntentHandlerKey, EventHandler<?>> intentHandlers = new ListMap<>();
+    }
+
     /**
      * Releases transaction resources and clears internal collections.
      */
@@ -270,7 +446,9 @@ public class Tr
         transactions = null;
         tl = null;
         already = null;
-        intentEventTypes = null;
-        intentHandlers = null;
+        stageData = null;
+        preconditionEncounteredEventKeys = null;
+        preconditionActive = false;
+        immediateActive = false;
     }
 }
