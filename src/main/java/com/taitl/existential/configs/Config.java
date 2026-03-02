@@ -100,11 +100,6 @@ public class Config
      *
      * @return Configuration indexes
      */
-    public ConfigurationIndexes indexes()
-    {
-        return indexes(StageName.VALIDATION);
-    }
-
     public ConfigurationIndexes indexes(StageName stageName)
     {
         sane(stageName, "stageName");

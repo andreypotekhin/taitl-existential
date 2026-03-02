@@ -37,17 +37,20 @@ class IndexConfigTypeKeyTest
         context.effect(reflectionKeyEffect);
 
         config.addContext(context);
-        config.indexes().indexConfig("/app", config);
+        config.indexes(StageName.VALIDATION).indexConfig("/app", config);
 
         assertTrue(
-                config.indexes().configuredHandlers.contains(EventKey.valueOf(com.taitl.existential.events.Create.class,
-                        TypeKey.valueOf(String.class, false))));
+                config.indexes(StageName.VALIDATION).configuredHandlers
+                        .contains(EventKey.valueOf(com.taitl.existential.events.Create.class,
+                                TypeKey.valueOf(String.class, false))));
         assertTrue(
-                config.indexes().configuredHandlers.contains(EventKey.valueOf(com.taitl.existential.events.Create.class,
-                        stringTypeKey)));
+                config.indexes(StageName.VALIDATION).configuredHandlers
+                        .contains(EventKey.valueOf(com.taitl.existential.events.Create.class,
+                                stringTypeKey)));
         assertTrue(
-                config.indexes().configuredHandlers.contains(EventKey.valueOf(com.taitl.existential.events.Create.class,
-                        reflectionTypeKey)));
+                config.indexes(StageName.VALIDATION).configuredHandlers
+                        .contains(EventKey.valueOf(com.taitl.existential.events.Create.class,
+                                reflectionTypeKey)));
     }
 
     @Test
@@ -55,7 +58,7 @@ class IndexConfigTypeKeyTest
     void indexesFullNamesUsingReflectionTypeKeyFullNameConstructor()
     {
         Config config = new Config();
-        config.indexes().useFullClassNames(true);
+        config.indexes(StageName.VALIDATION).useFullClassNames(true);
         Context context = new Context("/app");
         TypeKey<List<String>> fullTypeKey = new TypeKey<List<String>>(true) {
         };
@@ -65,9 +68,9 @@ class IndexConfigTypeKeyTest
         context.effect(effect);
         config.addContext(context);
 
-        config.indexes().indexConfig("/app", config);
+        config.indexes(StageName.VALIDATION).indexConfig("/app", config);
 
-        assertTrue(config.indexes().configuredHandlers.contains(
+        assertTrue(config.indexes(StageName.VALIDATION).configuredHandlers.contains(
                 EventKey.valueOfFull(com.taitl.existential.events.Create.class, fullTypeKey)));
     }
 
@@ -76,7 +79,7 @@ class IndexConfigTypeKeyTest
     void indexesIntentEventKeysWithSimpleEventNamesWhenTypeKeysUseFullNames()
     {
         Config config = new Config();
-        config.indexes().useFullClassNames(true);
+        config.indexes(StageName.VALIDATION).useFullClassNames(true);
         Context context = new Context("/app");
         TypeKey<String> fullTypeKey = TypeKey.valueOf(String.class, true);
         Intent<String> intent = new Intent<>(fullTypeKey);
