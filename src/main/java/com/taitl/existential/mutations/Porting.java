@@ -16,12 +16,12 @@ import com.taitl.ex.common.helper.*;
  *
  * @see Mutation
  */
-public final class Transition<T>
+public final class Porting<T>
 {
     public T t0;
     public T t1;
 
-    public Transition(T t0, T t1)
+    public Porting(T t0, T t1)
     {
         PairArgs.requireNotBothNull(t0, t1, "Arguments 't0' and 't1' should not be both null");
         this.t0 = t0;

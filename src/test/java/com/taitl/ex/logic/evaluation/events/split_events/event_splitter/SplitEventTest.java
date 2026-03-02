@@ -19,12 +19,12 @@ class SplitEventTest
 
         SplitEvent splitEvent = new SplitEvent();
         String oldValue = new String("old");
-        Transit<String> transit = new Transit<>(oldValue, null);
-        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(transit, new TypeKey<>(String.class), null, false);
+        Port<String> port = new Port<>(oldValue, null);
+        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(port, new TypeKey<>(String.class), null, false);
 
         SplitResult result = splitEvent.call(runtimeKey, indexes.eventField(), false);
 
-        assertSame(transit, result.event());
+        assertSame(port, result.event());
         assertTrue(result.evaluables().isEmpty());
     }
 }

@@ -29,9 +29,9 @@ public class SplitByEventType
     public <T> Set<Event<T>> call(Event<T> event, Set<Event<T>> events)
     {
         sane(event, "event", events, "events");
-        if (event instanceof Transit<?>)
+        if (event instanceof Port<?>)
         {
-            return splitTransit((Transit<T>) event, events);
+            return splitTransit((Port<T>) event, events);
         }
         check(!(event instanceof Mutate<?>), "Please specify event of type Transit<>");
         // TODO: Mutate
@@ -44,43 +44,43 @@ public class SplitByEventType
         return events;
     }
 
-    protected <T> Set<Event<T>> splitTransit(Transit<T> transit, Set<Event<T>> events)
+    protected <T> Set<Event<T>> splitTransit(Port<T> port, Set<Event<T>> events)
     {
-        sane(transit, "event", events, "events");
+        sane(port, "event", events, "events");
         // Transit -> EntityEvent, Mutate, Transit
-        if (transit.t0 != null && transit.t1 != null)
+        if (port.t0 != null && port.t1 != null)
         {
-            events.add(new Mutate<>(transit.t0, transit.t1));
+            events.add(new Mutate<>(port.t0, port.t1));
         }
-        if (transit.t1 != null)
+        if (port.t1 != null)
         {
-            events.add(new EntityEvent<>(transit.t1));
+            events.add(new EntityEvent<>(port.t1));
         }
         // Create
-        if (transit.t0 == null)
+        if (port.t0 == null)
         {
-            events.add(new Create<>(transit.t1));
-            events.add(new CU<>(transit.t1));
-            events.add(new CUD<>(transit.t1));
+            events.add(new Create<>(port.t1));
+            events.add(new CU<>(port.t1));
+            events.add(new CUD<>(port.t1));
             // events.add(new Write<>(transit.t1));
         }
         // Update
-        if (transit.t0 != null && transit.t1 != null)
+        if (port.t0 != null && port.t1 != null)
         {
-            events.add(new Change<>(transit.t1));
-            events.add(new Update<>(transit.t1));
-            events.add(new CU<>(transit.t1));
-            events.add(new UD<>(transit.t1));
-            events.add(new CUD<>(transit.t1));
+            events.add(new Change<>(port.t1));
+            events.add(new Update<>(port.t1));
+            events.add(new CU<>(port.t1));
+            events.add(new UD<>(port.t1));
+            events.add(new CUD<>(port.t1));
             // events.add(new Write<>(transit.t1));
         }
         // Delete
-        if (transit.t1 == null)
+        if (port.t1 == null)
         {
-            events.add(new Change<>(transit.t0));
-            events.add(new Delete<>(transit.t0));
-            events.add(new UD<>(transit.t0));
-            events.add(new CUD<>(transit.t0));
+            events.add(new Change<>(port.t0));
+            events.add(new Delete<>(port.t0));
+            events.add(new UD<>(port.t0));
+            events.add(new CUD<>(port.t0));
             // events.add(new Write<>(transit.t0));
         }
         return events;

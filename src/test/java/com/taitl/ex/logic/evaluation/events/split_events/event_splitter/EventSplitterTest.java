@@ -15,9 +15,9 @@ class EventSplitterTest
 {
     private static final class TestEventSplitter extends EventSplitter
     {
-        private <T> Set<Event<T>> splitTransitPublic(Transit<T> transit, Set<Event<T>> set)
+        private <T> Set<Event<T>> splitTransitPublic(Port<T> port, Set<Event<T>> set)
         {
-            return splitTransit(transit, set);
+            return splitTransit(port, set);
         }
     }
 
@@ -30,7 +30,7 @@ class EventSplitterTest
     class SplitEvent
     {
         @Nested
-        class TransitCases
+        class PortCases
         {
             @Test
             @DisplayName("Split transit uses updated entity for change")
@@ -40,7 +40,7 @@ class EventSplitterTest
                 String oldValue = new String("old");
                 String newValue = new String("new");
 
-                Set<Event<String>> events = splitter.splitEvent(new Transit<>(oldValue, newValue));
+                Set<Event<String>> events = splitter.splitEvent(new Port<>(oldValue, newValue));
 
                 Change<String> change = events.stream()
                         .filter(event -> event instanceof Change<?>)
@@ -57,17 +57,17 @@ class EventSplitterTest
             {
                 EventSplitter splitter = new EventSplitter();
 
-                Set<Event<String>> createdEvents = splitter.splitEvent(new Transit<>(null, "new"));
+                Set<Event<String>> createdEvents = splitter.splitEvent(new Port<>(null, "new"));
                 assertTrue(hasEvent(createdEvents, CU.class));
                 assertTrue(hasEvent(createdEvents, CUD.class));
                 assertFalse(hasEvent(createdEvents, UD.class));
 
-                Set<Event<String>> updatedEvents = splitter.splitEvent(new Transit<>("old", "new"));
+                Set<Event<String>> updatedEvents = splitter.splitEvent(new Port<>("old", "new"));
                 assertTrue(hasEvent(updatedEvents, CU.class));
                 assertTrue(hasEvent(updatedEvents, UD.class));
                 assertTrue(hasEvent(updatedEvents, CUD.class));
 
-                Set<Event<String>> deletedEvents = splitter.splitEvent(new Transit<>("old", null));
+                Set<Event<String>> deletedEvents = splitter.splitEvent(new Port<>("old", null));
                 assertTrue(hasEvent(deletedEvents, UD.class));
                 assertTrue(hasEvent(deletedEvents, CUD.class));
             }
@@ -88,7 +88,7 @@ class EventSplitterTest
                 String oldValue = new String("old");
                 String newValue = new String("new");
                 TypeKey<String> typeKey = new TypeKey<>(String.class);
-                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Transit<>(oldValue, newValue), typeKey, newValue,
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Port<>(oldValue, newValue), typeKey, newValue,
                         false);
 
                 Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
@@ -131,9 +131,9 @@ class EventSplitterTest
                 EventSplitter splitter = new EventSplitter();
                 String oldValue = new String("old");
                 String newValue = new String("new");
-                Transit<String> transit = new Transit<>(oldValue, newValue);
+                Port<String> port = new Port<>(oldValue, newValue);
                 TypeKey<String> typeKey = TypeKey.valueOf(String.class, true);
-                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(transit, typeKey, newValue, true);
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(port, typeKey, newValue, true);
 
                 Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, true);
 
@@ -161,7 +161,7 @@ class EventSplitterTest
     }
 
     @Nested
-    class SplitTransit
+    class SplitPort
     {
         @Nested
         class Rejects

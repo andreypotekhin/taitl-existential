@@ -105,7 +105,7 @@ class UserCanConfigureClassRules extends SpecBase
                     .build();
             String tran = ex.begin(op).id();
             List<String> values = new ArrayList<>(List.of("ok"));
-            ex.transit(null, values, typeKey, tran);
+            ex.port(null, values, typeKey, tran);
             ex.commit(tran);
         });
 

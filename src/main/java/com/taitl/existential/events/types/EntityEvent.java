@@ -22,7 +22,7 @@ import com.taitl.existential.events.combined_events.*;
  * @see ReadAndLock
  * @see Write
  * @see Mutate
- * @see Transit
+ * @see Port
  */
 public class EntityEvent<T> implements Event<T>
 {

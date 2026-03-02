@@ -37,7 +37,7 @@ public class EventMask
         });
         registerEventType(new TypeKey<Mutate>() {
         });
-        registerEventType(new TypeKey<Transit>() {
+        registerEventType(new TypeKey<Port>() {
         });
     }
 

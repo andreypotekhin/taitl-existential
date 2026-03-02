@@ -339,7 +339,7 @@ public final class Existential implements Closeable
     }
 
     /**
-     * Emits Transit<T> event based on before- and after- entity states,
+     * Emits Port<T> event based on before- and after- entity states,
      * where one of these states may be null.
      *
      * @param t0 previous entity value (if null, indicates entity creation)
@@ -348,22 +348,22 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void transit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void port(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        events.transit(t0, t1, type, tranID);
+        events.port(t0, t1, type, tranID);
     }
 
     /**
-     * Variant of transit() without type parameter. Only suitable for non-generic entity types.
+     * Variant of port() without type parameter. Only suitable for non-generic entity types.
      *
      * @param t0 previous entity value
      * @param t1 new entity value
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void transit(T t0, T t1, String tranID) throws ExistentialException
+    public <T> void port(T t0, T t1, String tranID) throws ExistentialException
     {
-        events.transit(t0, t1, tranID);
+        events.port(t0, t1, tranID);
     }
 
     /* Access event methods */

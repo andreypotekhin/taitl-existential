@@ -52,28 +52,27 @@ For any object of type X which satisfies a condition, a predicate holds true:
 
     ∀ x ∈ X | condition(x) ⊤(x)      All<X>(x -> condition(x), x -> predicate(x))
 
-For any object of type X that has been changed in the course of a business transaction, predicate holds true
-(use Mutation when both before and after states are present):
+For any object of type X that has been changed in the course of a business transaction, predicate holds true:
 
-    ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Mutation<X>>((x0, x1) -> predicate(x0, x1))
+    ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Porting<X>>((x0, x1) -> predicate(x0, x1))
     
-    Mutation<X> describes a change where both states are non-null.
+    Porting<X> describes a change where both states are non-null.
     x0 is the entity's initial state at the start of the transaction,
     x1 is its final state at the end of the transaction.
 
 For any object of type X that has been created, changed, or deleted in the course of a business transaction,
-predicate holds true (use Transition when one side may be null):
+predicate holds true (use Porting when one side may be null):
 
-    ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Transition<X>>((x0, x1) -> predicate(x0, x1))
+    ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Porting<X>>((x0, x1) -> predicate(x0, x1))
 
-    Transition<X> describes a change where exactly one of x0 or x1 may be null.
+    Porting<X> describes a change where exactly one of x0 or x1 may be null.
     If x0 is null, the entity was created during the transaction.
     If x1 is null, the entity was deleted during the transaction.
 
 Same as above when x0, x1 must also satisfy some condition:
 
-    ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      All<Mutation<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
-    ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      All<Transition<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      All<Porting<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      All<Porting<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
 
 ## Establishing Existence
 
@@ -104,12 +103,12 @@ For any object of type X that satisfies a condition, an object of type Y exists 
 For any object of type X that has been changed, an object of type Y exists for which a predicate holds:
 
     ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      All<Mutation<X>>((x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y))) 
-    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      All<Transition<X>>((x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      All<Porting<X>>((x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
 
 Same when x0, x1 must also satisfy some condition:
 
-    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Mutation<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
-    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Transition<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Porting<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Porting<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
 
 ## Documentation
 

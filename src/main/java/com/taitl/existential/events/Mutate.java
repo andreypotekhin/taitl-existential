@@ -7,7 +7,7 @@ import com.taitl.existential.events.types.*;
  * Signals a change to an application entity during the current transaction.
  *
  * Unlike {@link Event} classes, provides both the initial and final entity states.
- * Unlike {@link Transit}, both states are required and non-null.
+ * Unlike {@link Port}, both states are required and non-null.
  *
  * Initial state (before): entity state at the beginning of the transaction.
  * Final state (after): entity state at the end of the transaction.
@@ -19,7 +19,7 @@ import com.taitl.existential.events.types.*;
  * @param <T>
  *            Class of application entity
  * @see Event
- * @see Transit
+ * @see Port
  */
 // TODO: rename to Transit
 public class Mutate<T> extends BiEvent<T>

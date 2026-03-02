@@ -34,7 +34,7 @@ class UserCanSendEntityEvents extends SpecBase
     void sendEntityEventWithTypeKey() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.transit(null, cat, new TypeKey<Cat>(Cat.class), tran);
+        ex.port(null, cat, new TypeKey<Cat>(Cat.class), tran);
         ex.commit(tran);
     }
 
@@ -43,7 +43,7 @@ class UserCanSendEntityEvents extends SpecBase
     void sendDeleteTransitionWithoutTypeKey() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.transit(cat, null, tran);
+        ex.port(cat, null, tran);
         ex.commit(tran);
     }
 

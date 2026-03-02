@@ -214,7 +214,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> transit(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
-        return add(new OnTransit<T>(condition, null, description));
+        return add(new OnPort<T>(condition, null, description));
     }
 
     /**
@@ -227,7 +227,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition");
-        return add(new OnTransit<T>(condition, null, description));
+        return add(new OnPort<T>(condition, null, description));
     }
 
     /**

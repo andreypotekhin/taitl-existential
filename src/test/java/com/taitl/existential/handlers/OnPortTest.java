@@ -10,13 +10,13 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class OnTransitTest
+class OnPortTest
 {
     @Test
     @DisplayName("Condition only rejects when false")
     void conditionOnlyRejectsWhenFalse()
     {
-        OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
+        OnPort<Cat> handler = new OnPort<>(c -> "Black".equals(c.color), null, "Cats are black");
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("White", "Park");
 
@@ -30,7 +30,7 @@ class OnTransitTest
     @DisplayName("Condition only allows when true")
     void conditionOnlyAllowsWhenTrue()
     {
-        OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
+        OnPort<Cat> handler = new OnPort<>(c -> "Black".equals(c.color), null, "Cats are black");
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("Black", "Park");
 
@@ -41,7 +41,7 @@ class OnTransitTest
     @DisplayName("Bicondition only rejects when false")
     void biconditionOnlyRejectsWhenFalse()
     {
-        OnTransit<Cat> handler = new OnTransit<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");
+        OnPort<Cat> handler = new OnPort<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("White", "Park");
 
@@ -55,7 +55,7 @@ class OnTransitTest
     @DisplayName("Handle rejects both nulls")
     void handleRejectsBothNulls()
     {
-        OnTransit<Cat> handler = new OnTransit<>((t0, t1) -> {
+        OnPort<Cat> handler = new OnPort<>((t0, t1) -> {
         });
 
         var ex = assertThrows(IllegalArgumentException.class,
@@ -69,7 +69,7 @@ class OnTransitTest
     void handleRunsActionWhenNoConditionProvided() throws Exception
     {
         AtomicInteger counter = new AtomicInteger();
-        OnTransit<Integer> on = new OnTransit<>((t0, t1) -> counter.incrementAndGet());
+        OnPort<Integer> on = new OnPort<>((t0, t1) -> counter.incrementAndGet());
 
         on.handle(1, 2);
 
@@ -81,7 +81,7 @@ class OnTransitTest
     void handleSkipsActionWhenPredicateFails() throws Exception
     {
         AtomicInteger counter = new AtomicInteger();
-        OnTransit<Integer> on = new OnTransit<>(t1 -> t1 > 10, (t0, t1) -> counter.incrementAndGet());
+        OnPort<Integer> on = new OnPort<>(t1 -> t1 > 10, (t0, t1) -> counter.incrementAndGet());
 
         on.handle(1, 2);
 
@@ -93,7 +93,7 @@ class OnTransitTest
     void handleRunsActionWhenBiPredicatePasses() throws Exception
     {
         AtomicInteger counter = new AtomicInteger();
-        OnTransit<Integer> on = new OnTransit<>((t0, t1) -> t0 < t1, (t0, t1) -> counter.incrementAndGet());
+        OnPort<Integer> on = new OnPort<>((t0, t1) -> t0 < t1, (t0, t1) -> counter.incrementAndGet());
 
         on.handle(1, 2);
 

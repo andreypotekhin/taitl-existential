@@ -410,7 +410,7 @@ public class Intent<T> implements Evs<T>, Constraints<T>
     public Intent<T> transit(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        return add(new OnTransit<T>(condition, null, description));
+        return add(new OnPort<T>(condition, null, description));
     }
 
     /**
@@ -424,7 +424,7 @@ public class Intent<T> implements Evs<T>, Constraints<T>
     public Intent<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        return add(new OnTransit<T>(condition, null, description));
+        return add(new OnPort<T>(condition, null, description));
     }
 
     /**

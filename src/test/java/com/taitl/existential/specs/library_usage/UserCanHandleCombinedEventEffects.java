@@ -48,9 +48,9 @@ class UserCanHandleCombinedEventEffects extends SpecBase
             String tran = ex.begin(op).id();
             Cat created = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
             Cat updated = new Cat(CityTestData.BLACK_CAT.color(), "library");
-            ex.transit(null, created, tran);
-            ex.transit(created, updated, tran);
-            ex.transit(updated, null, tran);
+            ex.port(null, created, tran);
+            ex.port(created, updated, tran);
+            ex.port(updated, null, tran);
             ex.commit(tran);
         });
 

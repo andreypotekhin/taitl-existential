@@ -13,7 +13,7 @@ import java.util.function.*;
  *            Entity type handled by the modify event
  * @deprecated Use OnUpdate (rationale: same functionality)
  */
-@Deprecated(since = "2026-03", forRemoval = true)
+@Deprecated
 public class OnModify<T> extends On<T> implements UniEventHandler<T>
 {
 

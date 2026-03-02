@@ -164,25 +164,25 @@ public class ExistentialEvents implements Closeable
         mutate(t0, t1, typeKey(t1), tranID);
     }
 
-    public <T> void transit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void port(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
         sane(type, "type", tranID, "tranID");
         check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
         boolean haveNull = t0 == null || t1 == null;
-        BiEvent<T> event = haveNull ? new Transit<>(t0, t1) : new Mutate<>(t0, t1);
+        BiEvent<T> event = haveNull ? new Port<>(t0, t1) : new Mutate<>(t0, t1);
         event(event, type, tr(tranID));
     }
 
     /**
-     * Variant of transit(t0, t1) without type parameter,
+     * Variant of port(t0, t1) without type parameter,
      * only suitable for non-generic types.
      */
-    public <T> void transit(T t0, T t1, String tranID) throws ExistentialException
+    public <T> void port(T t0, T t1, String tranID) throws ExistentialException
     {
         sane(tranID, "tranID");
         check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
         T entity = (t1 != null) ? t1 : t0;
-        transit(t0, t1, typeKey(entity), tranID);
+        port(t0, t1, typeKey(entity), tranID);
     }
 
     public void close()

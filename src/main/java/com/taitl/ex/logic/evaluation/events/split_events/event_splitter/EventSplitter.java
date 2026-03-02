@@ -93,9 +93,9 @@ public class EventSplitter
         return runtimeKey.entity();
     }
 
-    protected <T> Set<Event<T>> splitTransit(Transit<T> transit, Set<Event<T>> events)
+    protected <T> Set<Event<T>> splitTransit(Port<T> port, Set<Event<T>> events)
     {
-        return splitByEventType.splitTransit(transit, events);
+        return splitByEventType.splitTransit(port, events);
     }
 
     protected <T> Set<Event<T>> splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> events)

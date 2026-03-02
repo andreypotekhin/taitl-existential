@@ -25,7 +25,7 @@ class ExecuteHandlersTest
         ValidationReport report = new ValidationReport();
         String oldValue = new String("old");
         String newValue = new String("new");
-        Transit<String> transit = new Transit<>(oldValue, newValue);
+        Port<String> port = new Port<>(oldValue, newValue);
         AtomicInteger unaryCalls = new AtomicInteger();
         AtomicInteger biCalls = new AtomicInteger();
 
@@ -39,13 +39,13 @@ class ExecuteHandlersTest
                     assertSame(oldValue, t0);
                     assertSame(newValue, t1);
                 }),
-                new OnTransit<String>((t0, t1) -> {
+                new OnPort<String>((t0, t1) -> {
                     biCalls.incrementAndGet();
                     assertSame(oldValue, t0);
                     assertSame(newValue, t1);
                 }));
 
-        executeHandlers.call(evs, transit, report);
+        executeHandlers.call(evs, port, report);
 
         assertEquals(1, unaryCalls.get());
         assertEquals(2, biCalls.get());

@@ -586,7 +586,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     public Effect<T> transit(BiConsumer<? super T, ? super T> action)
     {
         sane(action, "action");
-        return add(new OnTransit<T>(action));
+        return add(new OnPort<T>(action));
     }
 
     /**
@@ -599,7 +599,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     public Effect<T> transit(BiConsumer<? super T, ? super T> action, String description)
     {
         sane(action, "action", description, "description");
-        return add(new OnTransit<T>(action, description));
+        return add(new OnPort<T>(action, description));
     }
 
     /**
@@ -612,7 +612,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     public Effect<T> transit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
-        return add(new OnTransit<T>(condition, action));
+        return add(new OnPort<T>(condition, action));
     }
 
     /**
@@ -627,7 +627,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
             String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        return add(new OnTransit<T>(condition, action, description));
+        return add(new OnPort<T>(condition, action, description));
     }
 
     /**
@@ -640,7 +640,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     public Effect<T> transit(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
-        return add(new OnTransit<T>(condition, action));
+        return add(new OnPort<T>(condition, action));
     }
 
     /**
@@ -655,7 +655,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
             String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        return add(new OnTransit<T>(condition, action, description));
+        return add(new OnPort<T>(condition, action, description));
     }
 
     /**

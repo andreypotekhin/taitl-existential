@@ -12,7 +12,7 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Declarative handler for {@link Transit} events that involve two values.
+ * Declarative handler for {@link Port} events that involve two values.
  * The handler can be guarded by a predicate on the new value or a bi-predicate
  * on both values. When the condition passes, the action is invoked and any
  * execution failures are wrapped as {@link EventHandlerException}.
@@ -20,35 +20,34 @@ import static com.taitl.ex.common.helper.Args.*;
  * @param <T>
  *            Type of entity transitioning between values
  */
-// TODO: rename to OnPort
-public class OnTransit<T> implements BiEventHandler<T>
+public class OnPort<T> implements BiEventHandler<T>
 {
     Predicate<? super T> condition;
     BiPredicate<? super T, ? super T> bicondition;
     BiConsumer<? super T, ? super T> action;
     String description = null;
 
-    public OnTransit(BiConsumer<? super T, ? super T> action)
+    public OnPort(BiConsumer<? super T, ? super T> action)
     {
         sane(action, "action");
         this.action = action;
     }
 
-    public OnTransit(BiConsumer<? super T, ? super T> action, String description)
+    public OnPort(BiConsumer<? super T, ? super T> action, String description)
     {
         sane(action, "action");
         this.action = action;
         this.description = description;
     }
 
-    public OnTransit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
+    public OnPort(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
         this.condition = condition;
         this.action = action;
     }
 
-    public OnTransit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
+    public OnPort(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
     {
         sane(condition, "condition", description, "description");
         if (action != null)
@@ -60,14 +59,14 @@ public class OnTransit<T> implements BiEventHandler<T>
         this.description = description;
     }
 
-    public OnTransit(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action)
+    public OnPort(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action)
     {
         sane(bicondition, "bicondition", action, "action");
         this.bicondition = bicondition;
         this.action = action;
     }
 
-    public OnTransit(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action,
+    public OnPort(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action,
             String description)
     {
         sane(bicondition, "bicondition", description, "description");
@@ -144,6 +143,6 @@ public class OnTransit<T> implements BiEventHandler<T>
 
     public EventType eventType()
     {
-        return EventType.valueOf(Transit.class);
+        return EventType.valueOf(Port.class);
     }
 }

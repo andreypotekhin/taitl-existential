@@ -13,7 +13,7 @@ import java.util.function.*;
  *            Type of entity changed
  * @deprecated Use OnUpdate (rationale: same functionality)
  */
-@Deprecated(since = "2026-03", forRemoval = true)
+@Deprecated
 public class OnChange<T> extends On<T>
 {
 

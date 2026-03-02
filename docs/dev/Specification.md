@@ -176,7 +176,7 @@ User can't send any events before the transaction has started.
 User can't send any events after transaction has been committed/rolled back.
 User can't modify configurations (e.g. create invariants) after sending first event.
 - Except for specifying custom Transaction object for transaction run
-When emitting a transit event without an explicit type key, library infers the type from the non-null entity
+When emitting a port event without an explicit type key, library infers the type from the non-null entity
 value (preferring t1 when present, otherwise t0). Both t0 and t1 can't be null.
 When emitting a mutate event without an explicit type key, both t0 and t1 must be non-null.
 
@@ -203,7 +203,7 @@ Require another entity to exist when entity exists, (different classes, outside 
 ##### Constraints on entity evolution
 
 User can declare an invariant on entity mutation.
-User can declare an invariant on entity transition.
+User can declare an invariant on entity porting.
 
 ##### Constraints on evolution of multiple entities
 

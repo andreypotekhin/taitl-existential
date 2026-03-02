@@ -22,10 +22,9 @@ import com.taitl.existential.events.types.*;
  * @see Event
  * @see Mutate
  */
-// TODO: rename to Port
-public class Transit<T> extends BiEvent<T>
+public class Port<T> extends BiEvent<T>
 {
-    public Transit(T before, T after)
+    public Port(T before, T after)
     {
         super(before, after);
         PairArgs.requireNotBothNull(before, after, "Arguments 'before' and 'after' should not be both null");
