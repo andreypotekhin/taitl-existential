@@ -4,6 +4,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CreatorDeviceTest
 {
     @Test
+    @DisplayName("Inject uses binary name for local classes")
     void injectUsesBinaryNameForLocalClasses()
     {
         class LocalA
@@ -38,6 +40,7 @@ class CreatorDeviceTest
     }
 
     @Test
+    @DisplayName("Singleton uses single instance across threads")
     void singletonUsesSingleInstanceAcrossThreads() throws Exception
     {
         class One

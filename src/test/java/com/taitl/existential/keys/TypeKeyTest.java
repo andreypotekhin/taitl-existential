@@ -52,6 +52,7 @@ class TypeKeyTest
     }
 
     @Test
+    @DisplayName("Rejects raw anonymous subclass")
     void rejectsRawAnonymousSubclass()
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
@@ -60,6 +61,7 @@ class TypeKeyTest
     }
 
     @Test
+    @DisplayName("Value of uses full name flag")
     void valueOfUsesFullNameFlag()
     {
         assertThat(TypeKey.valueOf(TypeKeyTest.class, true).toString(),
@@ -71,24 +73,28 @@ class TypeKeyTest
     }
 
     @Test
+    @DisplayName("Test value of")
     void testValueOf()
     {
         assertThat(TypeKey.valueOf(TypeKeyTest.class, false).toString(), is("TypeKeyTest"));
     }
 
     @Test
+    @DisplayName("Test value of1")
     void testValueOf1()
     {
         assertThat(TypeKey.valueOf(Set.class, "Document", false).toString(), is("Set<Document>"));
     }
 
     @Test
+    @DisplayName("Test value of2")
     void testValueOf2()
     {
         assertThat(TypeKey.valueOf("Set<Document>").toString(), is("Set<Document>"));
     }
 
     @Test
+    @DisplayName("Test value of3")
     void testValueOf3()
     {
         TypeKeyTest t = new TypeKeyTest();
@@ -97,6 +103,7 @@ class TypeKeyTest
     }
 
     @Test
+    @DisplayName("Value of rejects null instance")
     void valueOfRejectsNullInstance()
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
@@ -108,6 +115,7 @@ class TypeKeyTest
     }
 
     @Test
+    @DisplayName("Test hash code")
     void testHashCode()
     {
         TypeKey<?> a = new TypeKey("Doc");
@@ -131,6 +139,7 @@ class TypeKeyTest
     }
 
     @Test
+    @DisplayName("Test to string")
     void testToString()
     {
         assertThat(new TypeKey("Document<JSON>").toString(), is("Document<JSON>"));

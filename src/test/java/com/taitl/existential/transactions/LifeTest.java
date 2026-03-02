@@ -15,12 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class LifeTest
 {
     @Test
+    @DisplayName("Default constructor requires anonymous subclass")
     void defaultConstructorRequiresAnonymousSubclass()
     {
         assertThrows(IllegalStateException.class, () -> new Life<Transaction>());
     }
 
     @Test
+    @DisplayName("Anonymous subclass infers type key")
     void anonymousSubclassInfersTypeKey()
     {
         Life<Transaction> life = new Life<Transaction>() {
@@ -30,6 +32,7 @@ class LifeTest
     }
 
     @Test
+    @DisplayName("Begin preserves description for conditional handler")
     void beginPreservesDescriptionForConditionalHandler()
     {
         Life<Transaction> life = new Life<>(Transaction.class);
@@ -44,6 +47,7 @@ class LifeTest
     }
 
     @Test
+    @DisplayName("Commit preserves description for conditional handler")
     void commitPreservesDescriptionForConditionalHandler()
     {
         Life<Transaction> life = new Life<>(Transaction.class);
@@ -58,6 +62,7 @@ class LifeTest
     }
 
     @Test
+    @DisplayName("Transaction getter requires assignment")
     void transactionGetterRequiresAssignment()
     {
         Life<Transaction> life = new Life<>(Transaction.class);

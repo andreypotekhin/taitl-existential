@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SplitByEventTypeTest
 {
     @Test
+    @DisplayName("Split transit rejects null events with events message")
     void splitTransitRejectsNullEventsWithEventsMessage()
     {
         SplitByEventType splitter = new SplitByEventType();
@@ -22,6 +23,7 @@ class SplitByEventTypeTest
     }
 
     @Test
+    @DisplayName("Split read and lock rejects null events with events message")
     void splitReadAndLockRejectsNullEventsWithEventsMessage()
     {
         SplitByEventType splitter = new SplitByEventType();

@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class OnMutateTest
 {
     @Test
+    @DisplayName("Condition only rejects when false")
     void conditionOnlyRejectsWhenFalse()
     {
         OnMutate<Cat> handler = new OnMutate<>(c -> "Black".equals(c.color), null, "Cats are black");
@@ -24,6 +25,7 @@ class OnMutateTest
     }
 
     @Test
+    @DisplayName("Condition only allows when true")
     void conditionOnlyAllowsWhenTrue()
     {
         OnMutate<Cat> handler = new OnMutate<>(c -> "Black".equals(c.color), null, "Cats are black");
@@ -34,6 +36,7 @@ class OnMutateTest
     }
 
     @Test
+    @DisplayName("Bicondition only rejects when false")
     void biconditionOnlyRejectsWhenFalse()
     {
         OnMutate<Cat> handler = new OnMutate<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");

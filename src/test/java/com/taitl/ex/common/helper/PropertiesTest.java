@@ -5,12 +5,14 @@ import java.nio.charset.StandardCharsets;
 
 import com.taitl.ex.common.helper.io.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PropertiesTest
 {
     @Test
+    @DisplayName("Load reads properties")
     void loadReadsProperties()
             throws Exception
     {
@@ -24,6 +26,7 @@ class PropertiesTest
     }
 
     @Test
+    @DisplayName("Load rejects oversized input")
     void loadRejectsOversizedInput()
     {
         StringBuilder text = new StringBuilder("flag=");
@@ -40,6 +43,7 @@ class PropertiesTest
     }
 
     @Test
+    @DisplayName("Parse boolean accepts trimmed case insensitive values")
     void parseBooleanAcceptsTrimmedCaseInsensitiveValues()
     {
         assertTrue(Properties.parseBoolean(" true "));
@@ -48,6 +52,7 @@ class PropertiesTest
     }
 
     @Test
+    @DisplayName("Parse boolean rejects invalid values")
     void parseBooleanRejectsInvalidValues()
     {
         IllegalArgumentException ex =

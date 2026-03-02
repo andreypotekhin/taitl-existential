@@ -12,6 +12,7 @@ class EventKeyTest
 {
 
     @Test
+    @DisplayName("Value of string")
     void valueOfString()
     {
         EventKey key = EventKey.valueOf("Create<String>");
@@ -20,6 +21,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Value of object")
     void valueOfObject()
     {
         EventKey key = EventKey.valueOf(new Sample(), false);
@@ -27,6 +29,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Value of object stores type key")
     void valueOfObjectStoresTypeKey()
     {
         EventKey key = EventKey.valueOf(new Sample(), false);
@@ -34,6 +37,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Value of full object")
     void valueOfFullObject()
     {
         EventKey key = EventKey.valueOf(new Sample(), true);
@@ -41,6 +45,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Value of event and type key")
     void valueOfEventAndTypeKey()
     {
         Create<String> event = new Create<>("alpha");
@@ -51,6 +56,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Value of event and type key full")
     void valueOfEventAndTypeKeyFull()
     {
         Create<String> event = new Create<>("alpha");
@@ -60,6 +66,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Value of event and type")
     void valueOfEventAndType()
     {
         Create<String> event = new Create<>("alpha");
@@ -68,6 +75,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Value of class and type")
     void valueOfClassAndType()
     {
         EventKey key = EventKey.valueOf(Create.class, "String", false);
@@ -75,6 +83,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Value of string rejects null")
     void valueOfStringRejectsNull()
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
@@ -83,6 +92,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Value of event rejects null parts")
     void valueOfEventRejectsNullParts()
     {
         Create<String> event = new Create<>("alpha");
@@ -100,6 +110,7 @@ class EventKeyTest
     }
 
     @Test
+    @DisplayName("Equals and hash code")
     void equalsAndHashCode()
     {
         EventKey a = EventKey.valueOf("Create<String>");

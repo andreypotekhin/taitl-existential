@@ -2,6 +2,7 @@ package com.taitl.ex.common.logic;
 
 import com.taitl.ex.common.helper.logic.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LoadPropertiesTest
 {
     @Test
+    @DisplayName("Loads from resource")
     void loadsFromResource()
             throws Exception
     {
@@ -30,6 +32,7 @@ class LoadPropertiesTest
     }
 
     @Test
+    @DisplayName("Resource and optional file applies overrides")
     void resourceAndOptionalFileAppliesOverrides()
             throws Exception
     {
@@ -55,6 +58,7 @@ class LoadPropertiesTest
     }
 
     @Test
+    @DisplayName("Optional file blank is ignored")
     void optionalFileBlankIsIgnored()
             throws Exception
     {
@@ -68,6 +72,7 @@ class LoadPropertiesTest
     }
 
     @Test
+    @DisplayName("Missing resource fails")
     void missingResourceFails()
     {
         LoadProperties load = new LoadProperties(new MemoryClassLoader(Map.of()), 1024);

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfigRegistryTest
 {
     @Test
+    @DisplayName("Get rejects missing config with op key message")
     void getRejectsMissingConfigWithOpKeyMessage()
     {
         ConfigRegistry registry = new ConfigRegistry(null);
@@ -20,6 +21,7 @@ class ConfigRegistryTest
     }
 
     @Test
+    @DisplayName("Remove rejects missing config with op key message")
     void removeRejectsMissingConfigWithOpKeyMessage()
     {
         ConfigRegistry registry = new ConfigRegistry(null);

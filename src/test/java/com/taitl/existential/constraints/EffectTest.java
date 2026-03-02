@@ -4,6 +4,7 @@ import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.handlers.On;
 import com.taitl.existential.keys.TypeKey;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -20,12 +21,14 @@ class EffectTest
     }
 
     @Test
+    @DisplayName("Default constructor requires anonymous subclass")
     void defaultConstructorRequiresAnonymousSubclass()
     {
         assertThrows(IllegalStateException.class, () -> new Effect<Widget>());
     }
 
     @Test
+    @DisplayName("Anonymous subclass infers type key")
     void anonymousSubclassInfersTypeKey()
     {
         Effect<Widget> effect = new Effect<Widget>() {
@@ -35,6 +38,7 @@ class EffectTest
     }
 
     @Test
+    @DisplayName("On handler preserves condition action and description")
     void onHandlerPreservesConditionActionAndDescription()
     {
         Effect<String> effect = new Effect<>(String.class);
@@ -51,6 +55,7 @@ class EffectTest
     }
 
     @Test
+    @DisplayName("Transaction getter requires assignment")
     void transactionGetterRequiresAssignment()
     {
         Effect<String> effect = new Effect<>(String.class);

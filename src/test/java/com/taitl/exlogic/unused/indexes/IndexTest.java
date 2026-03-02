@@ -81,6 +81,7 @@ class IndexTest
     }
 
     @Test
+    @DisplayName("Test contains with predicate")
     void testContainsWithPredicate()
     {
         assertTrue(cats_by_color.contains("Grey", cats -> cats.size() == 1), "Contains exactly one element under key");
@@ -143,6 +144,7 @@ class IndexTest
     }
 
     @Test
+    @DisplayName("Test get obj")
     void testGetObj()
     {
         assertEquals(GREY_CAT, getFirst(cats_by_color.getObj("Grey")));
@@ -159,6 +161,7 @@ class IndexTest
     }
 
     @Test
+    @DisplayName("Test rekey uses value equality")
     void testRekeyUsesValueEquality()
     {
         Index<String, Cat> index = new Index<>(cat -> new String(cat.color));

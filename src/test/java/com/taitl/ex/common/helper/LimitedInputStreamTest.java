@@ -5,12 +5,14 @@ import java.io.PushbackInputStream;
 
 import com.taitl.ex.common.helper.io.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class LimitedInputStreamTest
 {
     @Test
+    @DisplayName("Read does not consume extra byte when limit reached")
     void readDoesNotConsumeExtraByteWhenLimitReached() throws Exception
     {
         byte[] data = new byte[] { 1, 2, 3 };
@@ -25,6 +27,7 @@ class LimitedInputStreamTest
     }
 
     @Test
+    @DisplayName("Read array does not consume extra byte when limit reached")
     void readArrayDoesNotConsumeExtraByteWhenLimitReached() throws Exception
     {
         byte[] data = new byte[] { 1, 2, 3, 4 };

@@ -68,6 +68,7 @@ class EvaluablesTest
     }
 
     @Test
+    @DisplayName("Default single flags reflect evs nature")
     void defaultSingleFlagsReflectEvsNature()
     {
         assertThat(new NamedEv("one").single(), is(true));
@@ -75,6 +76,7 @@ class EvaluablesTest
     }
 
     @Test
+    @DisplayName("Evaluator traverses evs in order")
     void evaluatorTraversesEvsInOrder()
     {
         NamedEv first = new NamedEv("first");
@@ -90,6 +92,7 @@ class EvaluablesTest
     }
 
     @Test
+    @DisplayName("Evaluator traverses evaluable in order")
     void evaluatorTraversesEvaluableInOrder()
     {
         NamedEv first = new NamedEv("first");

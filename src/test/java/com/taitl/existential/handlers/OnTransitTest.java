@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class OnTransitTest
 {
     @Test
+    @DisplayName("Condition only rejects when false")
     void conditionOnlyRejectsWhenFalse()
     {
         OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
@@ -26,6 +27,7 @@ class OnTransitTest
     }
 
     @Test
+    @DisplayName("Condition only allows when true")
     void conditionOnlyAllowsWhenTrue()
     {
         OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
@@ -36,6 +38,7 @@ class OnTransitTest
     }
 
     @Test
+    @DisplayName("Bicondition only rejects when false")
     void biconditionOnlyRejectsWhenFalse()
     {
         OnTransit<Cat> handler = new OnTransit<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");
@@ -49,6 +52,7 @@ class OnTransitTest
     }
 
     @Test
+    @DisplayName("Handle rejects both nulls")
     void handleRejectsBothNulls()
     {
         OnTransit<Cat> handler = new OnTransit<>((t0, t1) -> {
@@ -61,6 +65,7 @@ class OnTransitTest
     }
 
     @Test
+    @DisplayName("Handle runs action when no condition provided")
     void handleRunsActionWhenNoConditionProvided() throws Exception
     {
         AtomicInteger counter = new AtomicInteger();
@@ -72,6 +77,7 @@ class OnTransitTest
     }
 
     @Test
+    @DisplayName("Handle skips action when predicate fails")
     void handleSkipsActionWhenPredicateFails() throws Exception
     {
         AtomicInteger counter = new AtomicInteger();
@@ -83,6 +89,7 @@ class OnTransitTest
     }
 
     @Test
+    @DisplayName("Handle runs action when bi predicate passes")
     void handleRunsActionWhenBiPredicatePasses() throws Exception
     {
         AtomicInteger counter = new AtomicInteger();

@@ -26,119 +26,157 @@ class EventSplitterTest
         return events.stream().anyMatch(eventClass::isInstance);
     }
 
-    @Test
-    void splitTransitUsesUpdatedEntityForChange()
+    @Nested
+    class SplitEvent
     {
-        EventSplitter splitter = new EventSplitter();
-        String oldValue = new String("old");
-        String newValue = new String("new");
+        @Nested
+        class TransitCases
+        {
+            @Test
+            @DisplayName("Split transit uses updated entity for change")
+            void updatedEntityForChange()
+            {
+                EventSplitter splitter = new EventSplitter();
+                String oldValue = new String("old");
+                String newValue = new String("new");
 
-        Set<Event<String>> events = splitter.splitEvent(new Transit<>(oldValue, newValue));
+                Set<Event<String>> events = splitter.splitEvent(new Transit<>(oldValue, newValue));
 
-        Change<String> change = events.stream()
-                .filter(event -> event instanceof Change<?>)
-                .map(event -> (Change<String>) event)
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("Change event not found"));
+                Change<String> change = events.stream()
+                        .filter(event -> event instanceof Change<?>)
+                        .map(event -> (Change<String>) event)
+                        .findFirst()
+                        .orElseThrow(() -> new AssertionError("Change event not found"));
 
-        assertSame(newValue, change.t);
+                assertSame(newValue, change.t);
+            }
+
+            @Test
+            @DisplayName("Split transit emits combined events for create update delete")
+            void combinedCreateUpdateDelete()
+            {
+                EventSplitter splitter = new EventSplitter();
+
+                Set<Event<String>> createdEvents = splitter.splitEvent(new Transit<>(null, "new"));
+                assertTrue(hasEvent(createdEvents, CU.class));
+                assertTrue(hasEvent(createdEvents, CUD.class));
+                assertFalse(hasEvent(createdEvents, UD.class));
+
+                Set<Event<String>> updatedEvents = splitter.splitEvent(new Transit<>("old", "new"));
+                assertTrue(hasEvent(updatedEvents, CU.class));
+                assertTrue(hasEvent(updatedEvents, UD.class));
+                assertTrue(hasEvent(updatedEvents, CUD.class));
+
+                Set<Event<String>> deletedEvents = splitter.splitEvent(new Transit<>("old", null));
+                assertTrue(hasEvent(deletedEvents, UD.class));
+                assertTrue(hasEvent(deletedEvents, CUD.class));
+            }
+        }
     }
 
-    @Test
-    void splitRuntimeKeySplitsByUnderlyingEventAndKeepsTypeKey()
+    @Nested
+    class Split
     {
-        EventSplitter splitter = new EventSplitter();
-        String oldValue = new String("old");
-        String newValue = new String("new");
-        TypeKey<String> typeKey = new TypeKey<>(String.class);
-        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Transit<>(oldValue, newValue), typeKey, newValue, false);
+        @Nested
+        class RuntimeKeyCases
+        {
+            @Test
+            @DisplayName("Split runtime key splits by underlying event and keeps type key")
+            void byUnderlyingEventKeepsTypeKey()
+            {
+                EventSplitter splitter = new EventSplitter();
+                String oldValue = new String("old");
+                String newValue = new String("new");
+                TypeKey<String> typeKey = new TypeKey<>(String.class);
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Transit<>(oldValue, newValue), typeKey, newValue,
+                        false);
 
-        Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
 
-        assertTrue(splitKeys.stream().anyMatch(key -> key.toString().startsWith("Mutate<String>+")));
-        assertTrue(splitKeys.stream().allMatch(key -> key.typeKey().toString().equals("String")));
+                assertTrue(splitKeys.stream().anyMatch(key -> key.toString().startsWith("Mutate<String>+")));
+                assertTrue(splitKeys.stream().allMatch(key -> key.typeKey().toString().equals("String")));
+            }
+
+            @Test
+            @DisplayName("Split runtime key also splits type key by generics dimension")
+            void byGenericsDimension()
+            {
+                EventSplitter splitter = new EventSplitter();
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(
+                        new Read<>("value"),
+                        TypeKey.valueOf("T<A<X>,B<Y>>"),
+                        "value",
+                        false);
+
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
+                Set<String> keys =
+                        splitKeys.stream().map(Object::toString).collect(java.util.stream.Collectors.toSet());
+
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B<Y>>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B<?>>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B<Y>>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B<?>>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B<Y>>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B<?>>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B>>+")));
+                assertTrue(keys.stream().allMatch(k -> k.startsWith("Read<")));
+            }
+
+            @Test
+            @DisplayName("Split runtime key preserves full event names")
+            void preservesFullEventNames()
+            {
+                EventSplitter splitter = new EventSplitter();
+                String oldValue = new String("old");
+                String newValue = new String("new");
+                Transit<String> transit = new Transit<>(oldValue, newValue);
+                TypeKey<String> typeKey = TypeKey.valueOf(String.class, true);
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(transit, typeKey, newValue, true);
+
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, true);
+
+                assertTrue(splitKeys.stream()
+                        .allMatch(key -> key.toString().startsWith("com.taitl.existential.events")));
+            }
+        }
+
+        @Nested
+        class Rejects
+        {
+            @Test
+            @DisplayName("Split rejects runtime key without event")
+            void runtimeKeyWithoutEvent()
+            {
+                EventSplitter splitter = new EventSplitter();
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(String.class, "String", "value", false);
+
+                IllegalArgumentException error =
+                        assertThrows(IllegalArgumentException.class, () -> splitter.split(runtimeKey));
+
+                assertEquals("Argument 'event' must not be null", error.getMessage());
+            }
+        }
     }
 
-    @Test
-    void splitRuntimeKeyAlsoSplitsTypeKeyByGenericsDimension()
+    @Nested
+    class SplitTransit
     {
-        EventSplitter splitter = new EventSplitter();
-        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(
-                new Read<>("value"),
-                TypeKey.valueOf("T<A<X>,B<Y>>"),
-                "value",
-                false);
+        @Nested
+        class Rejects
+        {
+            @Test
+            @DisplayName("Split transit rejects null transit with event message")
+            void nullTransitWithEventMessage()
+            {
+                TestEventSplitter splitter = new TestEventSplitter();
 
-        Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
-        Set<String> keys = splitKeys.stream().map(Object::toString).collect(java.util.stream.Collectors.toSet());
+                IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                        () -> splitter.splitTransitPublic(null, new LinkedHashSet<>()));
 
-        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B<Y>>>+")));
-        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B<?>>>+")));
-        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B>>+")));
-        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B<Y>>>+")));
-        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B<?>>>+")));
-        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B>>+")));
-        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B<Y>>>+")));
-        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B<?>>>+")));
-        assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B>>+")));
-        assertTrue(keys.stream().allMatch(k -> k.startsWith("Read<")));
-    }
-
-    @Test
-    void splitRuntimeKeyPreservesFullEventNames()
-    {
-        EventSplitter splitter = new EventSplitter();
-        String oldValue = new String("old");
-        String newValue = new String("new");
-        Transit<String> transit = new Transit<>(oldValue, newValue);
-        TypeKey<String> typeKey = TypeKey.valueOf(String.class, true);
-        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(transit, typeKey, newValue, true);
-
-        Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, true);
-
-        assertTrue(splitKeys.stream()
-                .allMatch(key -> key.toString().startsWith("com.taitl.existential.events")));
-    }
-
-    @Test
-    void splitRejectsRuntimeKeyWithoutEvent()
-    {
-        EventSplitter splitter = new EventSplitter();
-        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(String.class, "String", "value", false);
-
-        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, () -> splitter.split(runtimeKey));
-
-        assertEquals("Argument 'event' must not be null", error.getMessage());
-    }
-
-    @Test
-    void splitTransitRejectsNullTransitWithEventMessage()
-    {
-        TestEventSplitter splitter = new TestEventSplitter();
-
-        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
-                () -> splitter.splitTransitPublic(null, new LinkedHashSet<>()));
-
-        assertEquals("Argument 'event' must not be null", error.getMessage());
-    }
-
-    @Test
-    void splitTransitEmitsCombinedEventsForCreateUpdateDelete()
-    {
-        EventSplitter splitter = new EventSplitter();
-
-        Set<Event<String>> createdEvents = splitter.splitEvent(new Transit<>(null, "new"));
-        assertTrue(hasEvent(createdEvents, CU.class));
-        assertTrue(hasEvent(createdEvents, CUD.class));
-        assertFalse(hasEvent(createdEvents, UD.class));
-
-        Set<Event<String>> updatedEvents = splitter.splitEvent(new Transit<>("old", "new"));
-        assertTrue(hasEvent(updatedEvents, CU.class));
-        assertTrue(hasEvent(updatedEvents, UD.class));
-        assertTrue(hasEvent(updatedEvents, CUD.class));
-
-        Set<Event<String>> deletedEvents = splitter.splitEvent(new Transit<>("old", null));
-        assertTrue(hasEvent(deletedEvents, UD.class));
-        assertTrue(hasEvent(deletedEvents, CUD.class));
+                assertEquals("Argument 'event' must not be null", error.getMessage());
+            }
+        }
     }
 }

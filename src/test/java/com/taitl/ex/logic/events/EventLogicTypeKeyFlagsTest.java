@@ -10,6 +10,7 @@ import com.taitl.existential.keys.RuntimeKey;
 import com.taitl.existential.keys.TypeKey;
 import com.taitl.existential.transactions.Tr;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -31,6 +32,7 @@ class EventLogicTypeKeyFlagsTest
     }
 
     @Test
+    @DisplayName("Inferred type uses short class name by default")
     void inferredTypeUsesShortClassNameByDefault()
     {
         ex = new Existential();
@@ -44,6 +46,7 @@ class EventLogicTypeKeyFlagsTest
     }
 
     @Test
+    @DisplayName("Inferred type uses full class name when flag enabled")
     void inferredTypeUsesFullClassNameWhenFlagEnabled()
     {
         ex = new Existential();
@@ -54,6 +57,7 @@ class EventLogicTypeKeyFlagsTest
     }
 
     @Test
+    @DisplayName("Runtime indexing uses full names across type and event keys when flag enabled")
     void runtimeIndexingUsesFullNamesAcrossTypeAndEventKeysWhenFlagEnabled()
     {
         ex = new Existential();

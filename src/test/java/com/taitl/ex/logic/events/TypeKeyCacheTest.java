@@ -10,6 +10,7 @@ import static org.hamcrest.MatcherAssert.*;
 class TypeKeyCacheTest
 {
     @Test
+    @DisplayName("Caches short names per class")
     void cachesShortNamesPerClass()
     {
         TypeKeyCache cache = new TypeKeyCache();
@@ -22,6 +23,7 @@ class TypeKeyCacheTest
     }
 
     @Test
+    @DisplayName("Caches full names separately from short names")
     void cachesFullNamesSeparatelyFromShortNames()
     {
         TypeKeyCache cache = new TypeKeyCache();

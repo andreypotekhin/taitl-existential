@@ -17,6 +17,7 @@ class ConcretePathTest
     }
 
     @Test
+    @DisplayName("Detects parent presence")
     void detectsParentPresence()
     {
         assertThat(new ConcretePath("/app/orders").hasParent(), is(true));
@@ -24,6 +25,7 @@ class ConcretePathTest
     }
 
     @Test
+    @DisplayName("Get parent returns parent path")
     void getParentReturnsParentPath()
     {
         ConcretePath path = new ConcretePath("/app/orders/update");
@@ -32,6 +34,7 @@ class ConcretePathTest
     }
 
     @Test
+    @DisplayName("Get parent throws for top level")
     void getParentThrowsForTopLevel()
     {
         ConcretePath path = new ConcretePath("/app");
@@ -41,6 +44,7 @@ class ConcretePathTest
     }
 
     @Test
+    @DisplayName("Validate rejects missing leading slash")
     void validateRejectsMissingLeadingSlash()
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
@@ -49,6 +53,7 @@ class ConcretePathTest
     }
 
     @Test
+    @DisplayName("Validate rejects single slash")
     void validateRejectsSingleSlash()
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
@@ -57,6 +62,7 @@ class ConcretePathTest
     }
 
     @Test
+    @DisplayName("Validate rejects ending slash")
     void validateRejectsEndingSlash()
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
@@ -65,6 +71,7 @@ class ConcretePathTest
     }
 
     @Test
+    @DisplayName("Validate rejects wildcards")
     void validateRejectsWildcards()
     {
         assertThat(assertThrows(IllegalArgumentException.class, () -> {

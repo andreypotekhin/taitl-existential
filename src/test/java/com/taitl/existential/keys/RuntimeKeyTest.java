@@ -11,6 +11,7 @@ class RuntimeKeyTest
 {
 
     @Test
+    @DisplayName("Value of uses identity for equality")
     void valueOfUsesIdentityForEquality()
     {
         String one = new String("alpha");
@@ -26,6 +27,7 @@ class RuntimeKeyTest
     }
 
     @Test
+    @DisplayName("To string includes key and entity")
     void toStringIncludesKeyAndEntity()
     {
         String value = "alpha";
@@ -35,6 +37,7 @@ class RuntimeKeyTest
     }
 
     @Test
+    @DisplayName("Hash code matches equals")
     void hashCodeMatchesEquals()
     {
         String value = new String("alpha");
@@ -47,6 +50,7 @@ class RuntimeKeyTest
     }
 
     @Test
+    @DisplayName("Validate requires key and entity")
     void validateRequiresKeyAndEntity()
     {
         RuntimeKeyProbe<String> probe = new RuntimeKeyProbe<>("alpha");

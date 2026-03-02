@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ExecuteHandlersTest
 {
     @Test
+    @DisplayName("Call uses original event payload")
     void callUsesOriginalEventPayload() throws Exception
     {
         ExecuteHandlers executeHandlers = new ExecuteHandlers();
@@ -51,6 +52,7 @@ class ExecuteHandlersTest
     }
 
     @Test
+    @DisplayName("Call evaluates all expression")
     void callEvaluatesAllExpression() throws Exception
     {
         ExecuteHandlers executeHandlers = new ExecuteHandlers();
@@ -69,6 +71,7 @@ class ExecuteHandlersTest
     }
 
     @Test
+    @DisplayName("Call evaluates invariant all and collects predicate failure")
     void callEvaluatesInvariantAllAndCollectsPredicateFailure() throws Exception
     {
         ExecuteHandlers executeHandlers = new ExecuteHandlers();

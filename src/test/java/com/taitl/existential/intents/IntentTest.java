@@ -23,12 +23,14 @@ class IntentTest
     }
 
     @Test
+    @DisplayName("Default constructor requires anonymous subclass")
     void defaultConstructorRequiresAnonymousSubclass()
     {
         assertThrows(IllegalStateException.class, () -> new Intent<Widget>());
     }
 
     @Test
+    @DisplayName("Anonymous subclass infers type key")
     void anonymousSubclassInfersTypeKey()
     {
         Intent<Widget> intent = new Intent<Widget>() {
@@ -38,6 +40,7 @@ class IntentTest
     }
 
     @Test
+    @DisplayName("Fluent intents append handlers in order")
     void fluentIntentsAppendHandlersInOrder()
     {
         Intent<String> intent = new Intent<>(String.class);
@@ -61,6 +64,7 @@ class IntentTest
     }
 
     @Test
+    @DisplayName("Transaction and type key can be replaced")
     void transactionAndTypeKeyCanBeReplaced()
     {
         Intent<String> intent = new Intent<>(String.class);
@@ -75,6 +79,7 @@ class IntentTest
     }
 
     @Test
+    @DisplayName("Read with description preserves condition")
     void readWithDescriptionPreservesCondition()
     {
         Intent<String> intent = new Intent<>(String.class);
