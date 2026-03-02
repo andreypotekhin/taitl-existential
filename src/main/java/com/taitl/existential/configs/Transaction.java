@@ -70,14 +70,11 @@ public class Transaction implements Configurable, Evaluable
     public String name;
     public Context context;
 
+    /**
+     * Configured rules: invariants, effects, intents.
+     */
     // TODO: split by stage (execution, validation)
     List<Evs<?>> evs = new ArrayList<>();
-
-    /**
-     * Instructions - event handlers. Includes all event handlers (rules)
-     * defined in this context.
-     */
-    // public Instructions instructions = new Instructions();
 
     TransactionIndexes indexes = new TransactionIndexes(this);
 

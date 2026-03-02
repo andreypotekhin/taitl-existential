@@ -108,54 +108,57 @@ User can specify side effect for transaction lifecycle event (begin, commit, rol
 +User can configure intents using builders and rule instances in Context and Transaction.
 +Intent supports handlers for access and entity events, such as read, write, change and update.
 
-##### Configuration stages
+##### Execution stages
 
-User can assign rules to different stages of transaction lifecycle.
-Configuration stages include: Precondition (Early), Runtime (Middle) and Validation (Late).
+User can assign rules to different stages of transaction execution.
+The execution stages include: Precondition (Early), Immediate (Middle) and Validation (Late).
 By default, the rules are assigned to Validation stage.
-Precondition stage rules execute on transaction start.
-Runtime stage rules execute within transaction upon encountering a trigger event.
-Validation stage rules execute on transaction commit or checkpoint.
+- Precondition stage rules execute once per trigger event.
+  They may be used to initialize itermediate data structures, such as indexes, and the like.
+  Subsequent trigger events of same type are ignored for precondition rules.
+- Immediate stage rules execute on each trigger event - at any point during transaction.
+- Validation stage rules execute on transaction commit or checkpoint.
 
 ##### Configuring Custom Events
 
 #### Evaluation workflow
 
-Evaluation is the process of executing the rules (evaluating expressions, calling event handlers) configured for a business operation.
-Evaluations start when an existential transaction begins and end when it ends.
-There is a separate evaluation per stage: Precondition, Runtime and Validation.
+Evaluation is the process of executing the rules (evaluating expressions, calling event handlers) configured for an execution stage as part of a business operation.
 
 Each existential transaction is associated with a business operation key, and through that with the closest matching context, its parent contexts,  
-matching wildcard contexts, any configured Transaction factory and any passed-in Transaction instance. The rules 
-configured in these contexts and transactions participate in evaluations. 
-Evaluation of Early stage rules is called Preconditions evaluation. It is invoked upon transaction start.
-Evaluation of Middle stage rules is called Runtime evaluation. It is invoked for each trigger event.
-Evaluation of Late stage rules is called Validation evaluation. It is invoked upon transaction commit or at checkpoint.
-
-Evaluations of separate existential transactions are independent, even if these transactions are nested.
-Only the events reported during a transaction participate in its evaluations.
-
-Rules defined in parent contexts/transactions are considered to be defined 'earlier' than the rules in children contexts/transactions.
+matching wildcard contexts, any configured Transaction factory and any passed-in Transaction instance. 
+The rules configured in these contexts and transactions participate in evaluations.
+The rules defined in parent contexts/transactions are considered to be defined 'earlier' than the rules in children contexts/transactions.
 The order of execution of rules follows the order of their definition.
 For each event, the order of invocations of its event handlers, if multiple handlers are defined, follows the order of their definition
-Immediately evaluated rules are out-of-order. 
+
+There is a separate evaluation per execution stage: Precondition, Immediate and Validation.
+Evaluation of Precondition stage rules is called Preconditions evaluation. 
+Evaluation of Immediate stage rules is called Immediate evaluation.
+Evaluation of Validation stage rules is called Validation evaluation.
+
+Evaluations of separate transactions are independent, even if these transactions are nested.
+Only the events reported during a transaction participate in its evaluations.
 
 ##### Preconditions evaluation
 
-User can assign any rule to early stage.
-Early stage rules are evaluated at the beginning of existential transaction.
-Precondition expressions are evaluated at transaction start.
-Precondition event handlers get invoked upon receiving a trigger event (any time during transaction).
+User can assign any rule to Precondition stage.
+Preconditions evaluation becomes active (ready to accept trigger events) on transaction start, and lasts until commit/checkpoint/rollback.
+Precondition stage rules are evaluated once per trigger event, as soon as event has been received, at any time during transaction.
 
-##### Runtime evaluation
+##### Immediate evaluation
 
-The rules assigned to middle stage are evaluated immediately upon receiving the corresponding trigger event.
+Immediate evaluation becomes active (ready to accept trigger events) on transaction start, and lasts until commit/checkpoint/rollback.
+Immediate stage rules are evaluated each time per trigger event, as soon as event has been received, at any time during transaction.
+Since this may affect performance, using Immediate stage is considered an advanced technique. Normally, if you don't use
+side effects, you should be fine with precondition and validation (default) stages.
 
 ##### Validation evaluation
 
-Validation evaluation is triggered on a commit or checkpoint of an existential transaction.
-Effects are evaluated by applying event handlers for each event reported during a transaction to the corresponding entity.
-Intents are evaluated as lists of predicates. Violations are added to validation report.
+Validation evaluation is triggered on a commit or checkpoint of an existential transaction, ignored on rollback.
+The Effects are evaluated by applying event handlers for each event reported during a transaction to the corresponding entity.
+Validation stage rules are evaluated once per trigger event, from an in-memory index of such events (a runtime index),
+that folds duplicate events of same type into single event.
 
 
 ## Concepts
@@ -305,7 +308,7 @@ User can add the Library as a dependency to their project using Maven-based depe
 
 #### Public interface
 
-##### Public classes.
+##### Public classes
 User can interact with the library as a whole using Ex, Existential classes.
 User can configure rules per op using builders (ConfigBuilder, ContextBuilder, etc.).
 User can specify configuration rules per context using Context, ContextBuilder.
@@ -313,13 +316,13 @@ User can specify configuration rules per business method invocation using Transa
 User can interact with the business transaction using Ex, Existential and Tr classes.
 User can send messages to library using Ex, Existential and Tr classes.
 
-##### Internal indexing.
+##### Internal indexing
 System automatically finalizes configuration for op upon start of a transaction.
 System indexes configuration rules per op when configuration is finalized.
 Configuration indexes are owned by Config object for business op.
-System indexes the received events at run time.
-Runtime indexes are owned by Tr object.
-Evaluation runs (e.g. at Validation state) use config and runtime indexes for performance.
+System indexes the received events at runtime.
+The runtime indexes are owned by Tr object.
+Evaluation runs (e.g. at Validation state) use configuration and runtime indexes for performance.
 
 
 ### Appendix

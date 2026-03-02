@@ -130,8 +130,8 @@ Use modern test frameworks capabilities to the maximum for structuring the tests
 - Try to achieve significant (89%) coverage, but do not insist on coverage of units which are in active development
 - Test by coherent sets of units (e.g. class+immediate dependencies) rather than testing each class in total isolation
 - The above means our unit tests are often also end-to-end tests (that's ok)
-- We include all tests into test coverage
-- Regression tests refer to issue number in name and title in test description
+- We include all tests (including integration ones) when measuring test coverage 
+- Regression tests refer to issue number in test method name and issue title in display name
 
 ##### Testing - various
 - Prefer entities to primitives/stock classes when testing events/rules (e.g. OnCreate<Cat> rather than OnCreate<String>)

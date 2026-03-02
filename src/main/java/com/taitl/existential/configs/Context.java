@@ -36,16 +36,10 @@ public class Context implements Configurable, Evaluable
     protected Context parent;
 
     /**
-     * Configured rule sets: invariants, effects, intents.
+     * Configured rules: invariants, effects, intents.
      */
     // TODO: split by stage (execution, validation)
     List<Evs<?>> evs = new ArrayList<>();
-
-    /**
-     * Instructions - event handlers. Includes all event handlers (rules)
-     * defined in this context.
-     */
-    // protected Instructions instructions = new Instructions();
 
     /** Transaction factory */
     protected Supplier<? extends Transaction> transactionFactory = Transaction.FACTORY;

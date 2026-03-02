@@ -19,7 +19,7 @@ import static com.taitl.ex.common.helper.lang.Generics.*;
  * Declares side effects for entities of type T.
  * By default, effects are evaluated (carried out) in validation stage,
  * when a transaction is validated.
- * But they also can be attached at earlier stages (e.g. runtime stage),
+ * But they also can be attached at earlier stages (e.g. Immediate stage),
  * for immediate execution upon receiving the trigger event.
  * Be aware that doing so may affect performance, since during runtime
  * stage, every trigger event causes execution of the effect, 

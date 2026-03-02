@@ -18,6 +18,5 @@ public class BeginTran extends TranAction
     {
         tr.onBegin();
         tl.validationLogic.prepareForValidation(tr);
-        // TODO: Execute transaction preconditions
     }
 }
