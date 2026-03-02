@@ -7,7 +7,6 @@ import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
-import java.util.stream.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -67,13 +66,10 @@ public class EventField
     {
         sane(multiKey, "multiKey");
         String key = multiKey.toString();
-        List<Ev<T>> result;
         List<Ev<?>> cached = map.get(key);
         if (cached != null)
         {
-            // TODO: check performance
-            result = cached.stream().map(e -> (Ev<T>) e).collect(Collectors.toList());
-            return result;
+            return (List<Ev<T>>) (List<?>) cached;
         }
         ConfiguredHandlers configured = source();
         verify(configured.ready(), "Configured handlers index is not ready");
@@ -96,8 +92,6 @@ public class EventField
         {
             map.putList(key, cached);
         }
-        // TODO: check performance
-        result = cached.stream().map(e -> (Ev<T>) e).collect(Collectors.toList());
-        return result;
+        return (List<Ev<T>>) (List<?>) cached;
     }
 }
