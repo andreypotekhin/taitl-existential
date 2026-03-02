@@ -1,7 +1,7 @@
 package com.taitl.ex.logic.evaluation.intents.maps;
 
 import com.taitl.ex.logic.configuration.indexes.data.*;
-import com.taitl.existential.configs.*;
+import com.taitl.existential.constants.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.types.*;

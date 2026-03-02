@@ -2,6 +2,7 @@ package com.taitl.existential.configs;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.indexes.*;
+import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.indexes.*;

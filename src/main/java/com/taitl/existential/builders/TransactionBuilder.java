@@ -1,6 +1,7 @@
 package com.taitl.existential.builders;
 
 import com.taitl.existential.configs.*;
+import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;

@@ -1,32 +1,25 @@
 package com.taitl.existential.transactions;
 
+import com.taitl.ex.common.helper.*;
 import com.taitl.ex.common.helper.collections.*;
-import com.taitl.ex.common.helper.State;
-import com.taitl.ex.logic.evaluation.actions.ExecuteHandler;
-import com.taitl.ex.logic.indexing.data.IndexData;
-import com.taitl.ex.logic.transactions.TransactionLogic;
-import com.taitl.ex.logic.validation.data.ValidationData;
-import com.taitl.existential.configs.Context;
+import com.taitl.ex.logic.evaluation.actions.*;
+import com.taitl.ex.logic.indexing.data.*;
+import com.taitl.ex.logic.transactions.*;
+import com.taitl.ex.logic.validation.data.*;
+import com.taitl.existential.configs.*;
+import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
-import com.taitl.existential.configs.StageName;
-import com.taitl.existential.configs.Transaction;
-import com.taitl.existential.events.transaction_events.Begin;
-import com.taitl.existential.events.transaction_events.Checkpoint;
-import com.taitl.existential.events.transaction_events.Commit;
-import com.taitl.existential.events.transaction_events.Rollback;
-import com.taitl.existential.events.types.EventType;
-import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.handlers.On;
+import com.taitl.existential.events.transaction_events.*;
+import com.taitl.existential.events.types.*;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
-import com.taitl.existential.keys.EventKey;
-import com.taitl.existential.keys.OpKey;
-import com.taitl.existential.keys.RuntimeKey;
-import com.taitl.existential.keys.TypeKey;
+import com.taitl.existential.keys.*;
 
 import java.util.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Defines an existential transaction, the backbone of the library transaction model.

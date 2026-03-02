@@ -4,6 +4,7 @@ import com.taitl.ex.logic.configuration.indexes.actions.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.configuration.rules.*;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.constants.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;

@@ -1,4 +1,4 @@
-package com.taitl.existential.configs;
+package com.taitl.existential.constants;
 
 /**
  * Names of execution stages for configured rules.

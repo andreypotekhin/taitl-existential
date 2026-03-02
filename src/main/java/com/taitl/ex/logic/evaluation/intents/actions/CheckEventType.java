@@ -1,7 +1,7 @@
 package com.taitl.ex.logic.evaluation.intents.actions;
 
 import com.taitl.ex.logic.configuration.indexes.*;
-import com.taitl.existential.configs.*;
+import com.taitl.existential.constants.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.transactions.*;
 

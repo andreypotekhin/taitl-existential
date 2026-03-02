@@ -1,5 +1,6 @@
 package com.taitl.existential.configs;
 
+import com.taitl.existential.constants.*;
 import com.taitl.existential.evaluables.*;
 
 import java.util.*;
@@ -7,7 +8,7 @@ import java.util.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Stores configured rule sets partitioned by execution stage.
+ * Stores configured rule sets partitioned by execution stage (Precondition, Immediate, Validation).
  */
 public class Stage
 {
