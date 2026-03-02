@@ -132,13 +132,13 @@ public class Transaction implements Configurable, Evaluable
     public <T> void invariant(Invariant<T> invariant, StageName stageName)
     {
         sane(invariant, "invariant");
-        Transaction tr = invariant.transactionOrNull();
-        if (tr == null)
+        if (!invariant.hasTransaction())
         {
             invariant.transaction(this);
         }
         else
         {
+            Transaction tr = invariant.transaction();
             check(tr == this, "Argument 'invariant' must belong to this transaction. " +
                     "Create it here or call invariant.transaction(this).");
         }
@@ -159,13 +159,13 @@ public class Transaction implements Configurable, Evaluable
     public <T> void effect(Effect<T> effect, StageName stageName)
     {
         sane(effect, "effect");
-        Transaction tr = effect.transactionOrNull();
-        if (tr == null)
+        if (!effect.hasTransaction())
         {
             effect.setTransaction(this);
         }
         else
         {
+            Transaction tr = effect.getTransaction();
             check(tr == this, "Argument 'effect' must belong to this transaction. " +
                     "Create it here or call effect.setTransaction(this).");
         }
@@ -188,13 +188,13 @@ public class Transaction implements Configurable, Evaluable
     public <T> void intent(Intent<T> intent, StageName stageName)
     {
         sane(intent, "intent");
-        Transaction tr = intent.transactionOrNull();
-        if (tr == null)
+        if (!intent.hasTransaction())
         {
             intent.transaction(this);
         }
         else
         {
+            Transaction tr = intent.transaction();
             check(tr == this, "Argument 'intent' must belong to this transaction. " +
                     "Create it here or call intent.transaction(this).");
         }
@@ -215,13 +215,13 @@ public class Transaction implements Configurable, Evaluable
     public <T extends Transaction> void cycle(Life<T> cycle, StageName stageName)
     {
         sane(cycle, "cycle");
-        Transaction tr = cycle.transactionOrNull();
-        if (tr == null)
+        if (!cycle.hasTransaction())
         {
             cycle.transaction(this);
         }
         else
         {
+            Transaction tr = cycle.transaction();
             check(tr == this, "Argument 'cycle' must belong to same transaction");
         }
         add(cycle, stageName);

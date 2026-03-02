@@ -390,9 +390,9 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return tran;
     }
 
-    public Transaction transactionOrNull()
+    public boolean hasTransaction()
     {
-        return tran;
+        return tran != null;
     }
 
     /**

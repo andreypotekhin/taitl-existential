@@ -546,9 +546,9 @@ public class Intent<T> implements Evs<T>, Constraints<T>
         return transaction;
     }
 
-    public Transaction transactionOrNull()
+    public boolean hasTransaction()
     {
-        return transaction;
+        return transaction != null;
     }
 
     /**

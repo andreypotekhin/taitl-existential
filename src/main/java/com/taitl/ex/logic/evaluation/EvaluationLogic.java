@@ -84,16 +84,17 @@ public class EvaluationLogic implements Closeable
         return config;
     }
 
-    protected Config configOrNull(Tr tr)
+    protected boolean hasConfig(Tr tr)
     {
         sane(tr, "tr");
         try
         {
-            return tl.ex().configs().config(tr.op);
+            tl.ex().configs().config(tr.op);
+            return true;
         }
         catch (RuntimeException ex)
         {
-            return null;
+            return false;
         }
     }
 
@@ -148,7 +149,6 @@ public class EvaluationLogic implements Closeable
         {
             return true;
         }
-        Config config = configOrNull(tr);
-        return config != null && config.indexes(stageName).hasIntentEventTypes();
+        return hasConfig(tr) && config(tr).indexes(stageName).hasIntentEventTypes();
     }
 }

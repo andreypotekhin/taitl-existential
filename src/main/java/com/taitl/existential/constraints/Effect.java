@@ -811,9 +811,9 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
         return tran;
     }
 
-    public Transaction transactionOrNull()
+    public boolean hasTransaction()
     {
-        return tran;
+        return tran != null;
     }
 
     /**
