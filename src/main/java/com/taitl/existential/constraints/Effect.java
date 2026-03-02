@@ -578,7 +578,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     }
 
     /**
-     * Creates an effect for Transit event.
+     * Creates an effect for Port event.
      *
      * @param action Action to perform for old/new entity values
      * @return This effect for chaining
@@ -590,7 +590,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     }
 
     /**
-     * Creates an effect for Transit event.
+     * Creates an effect for Port event.
      *
      * @param action Action to perform for old/new entity values
      * @param description Description of effect
@@ -603,7 +603,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     }
 
     /**
-     * Creates an effect for Transit event.
+     * Creates an effect for Port event.
      *
      * @param condition Condition on current entities to which apply action
      * @param action Action to perform for old/new entity values
@@ -616,7 +616,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     }
 
     /**
-     * Creates an effect for Transit event.
+     * Creates an effect for Port event.
      *
      * @param condition Condition on current entities to which apply action
      * @param action Action to perform for old/new entity values
@@ -631,7 +631,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     }
 
     /**
-     * Creates an effect for Transit event.
+     * Creates an effect for Port event.
      *
      * @param condition Condition on old/new entity values
      * @param action Action to perform for old/new entity values
@@ -644,7 +644,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     }
 
     /**
-     * Creates an effect for Transit event.
+     * Creates an effect for Port event.
      *
      * @param condition Condition on old/new entity values
      * @param action Action to perform for old/new entity values

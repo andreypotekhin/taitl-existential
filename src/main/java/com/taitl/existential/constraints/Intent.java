@@ -401,7 +401,7 @@ public class Intent<T> implements Evs<T>, Constraints<T>
 
     /**
      * Declares intent to transit entities of this type.
-     * (indicates that Transit event may be sent during transaction).
+     * (indicates that Port event may be sent during transaction).
      *
      * @param condition Condition which the entities that receive this event must satisfy
      * @param description Description of intent
@@ -415,7 +415,7 @@ public class Intent<T> implements Evs<T>, Constraints<T>
 
     /**
      * Declares intent to transit entities of this type.
-     * (indicates that Transit event may be sent during transaction).
+     * (indicates that Port event may be sent during transaction).
      *
      * @param condition Condition which old/new entity values must satisfy
      * @param description Description of intent

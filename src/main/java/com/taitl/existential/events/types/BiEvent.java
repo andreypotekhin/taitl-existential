@@ -6,7 +6,7 @@ import com.taitl.existential.events.combined_events.*;
 
 /**
  * Indicates a change event on an entity, capturing both initial and final states.
- * Serves as a base type for mutation events (Mutate<T>, Transit<T>).
+ * Serves as a base type for mutation events (Mutate<T>, Port<T>).
  * Unlike Event<T>, this event provides the initial and final states of its entity.
  * The initial state (t0) is the entity state at the beginning of the transaction.
  * The final state (t1) is the entity state at the end of the transaction.

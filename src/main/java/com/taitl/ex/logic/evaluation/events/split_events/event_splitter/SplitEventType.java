@@ -16,14 +16,20 @@ import static com.taitl.ex.common.helper.Args.*;
  *
  * Examples:
  * <pre>
- * CUD -> CUD, CU, Create, Update, Delete
- * CU -> CU, Create, Update
+ * CUD -> CUD, CU, Create, Update, Delete, Mutate, Port
+ * CU -> CU, Create, Update, Mutate, Port
+ * UD -> UD, Update, Delete, Mutate, Port
  * Mutate -> Mutate, Update
- * Transit -> Transit, Mutate, Create, Update, Delete, CU, UD, CUD
+ * Port -> Port, Mutate, Create, Update, Delete, CU, UD, CUD
  * ReadAndLock -> ReadAndLock, Read
+ *
+ * // TODO: also need more general events from elementary:
+ * Create -> Create, CUD, CU, Port
+ * Update -> Update, CUD, CU, Mutate
+ * Delete -> Delete, CUD, UD, Port
  * </pre>
  */
-public class SplitByEventType
+public class SplitEventType
 {
     @SuppressWarnings("unchecked")
     public <T> Set<Event<T>> call(Event<T> event, Set<Event<T>> events)
@@ -33,7 +39,7 @@ public class SplitByEventType
         {
             return splitTransit((Port<T>) event, events);
         }
-        check(!(event instanceof Mutate<?>), "Please specify event of type Transit<>");
+        check(!(event instanceof Mutate<?>), "Please specify event of type Port<>");
         // TODO: Mutate
         if (event instanceof ReadAndLock<?>)
         {
@@ -47,7 +53,7 @@ public class SplitByEventType
     protected <T> Set<Event<T>> splitTransit(Port<T> port, Set<Event<T>> events)
     {
         sane(port, "event", events, "events");
-        // Transit -> EntityEvent, Mutate, Transit
+        // Port -> EntityEvent, Mutate, Port
         if (port.t0 != null && port.t1 != null)
         {
             events.add(new Mutate<>(port.t0, port.t1));

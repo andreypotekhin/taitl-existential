@@ -15,7 +15,7 @@ public class EvaluateEvents
     protected SplitEvent splitEvent = Creator.singleton(SplitEvent.class);
     protected ExecuteHandlers executeHandlers = Creator.singleton(ExecuteHandlers.class);
 
-    public void call(RuntimeKey<?> runtimeKey, EventField eventField, ValidationReport report,
+    public <T> void call(RuntimeKey<T> runtimeKey, EventField eventField, ValidationReport report,
             boolean useFullEventNames)
             throws ExistentialException
     {

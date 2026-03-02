@@ -17,9 +17,14 @@ import static com.taitl.ex.common.helper.Args.*;
  *
  * Example:
  * Incoming event: ex.transit(null, cat, tr);
- * Resulting events: Transit<Cat>, Create<Cat>
+ * Resulting events: Port<Cat>, Create<Cat>
  * Incoming event: ex.transit(doc, null, tr); // (doc type: Doc<JSON>)
  * Resulting events: Delete<Doc<JSON>>, Delete<Doc<?>, Delete<Doc>
+ *
+ * // TODO: also need more general events from elementary:
+ * Create -> Create, CUD, CU, Port
+ * Update -> Update, CUD, CU, Mutate
+ * Delete -> Delete, CUD, UD, Port
  */
 public class SplitEvent
 {

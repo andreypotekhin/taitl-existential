@@ -6,14 +6,14 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SplitByEventTypeTest
+class SplitEventTypeTest
 {
-    SplitByEventType splitter;
+    SplitEventType splitter;
 
     @BeforeEach
     void setUp()
     {
-        splitter = new SplitByEventType();
+        splitter = new SplitEventType();
     }
 
     @Test

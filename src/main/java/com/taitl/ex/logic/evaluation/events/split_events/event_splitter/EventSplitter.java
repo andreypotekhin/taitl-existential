@@ -14,10 +14,10 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * Splits compound events, such as Mutation, CUD, into set of elementary events for individual handling.
  * 
- * For example, splits a single transition {@code Transit<House>} into the following event set:
+ * For example, splits a single transition {@code Port<House>} into the following event set:
  * <pre>{@code
  *   Mutate<House>
- *   Transit<House>
+ *   Port<House>
  *   On<House>
  * }
  * </pre>
@@ -43,8 +43,8 @@ import static com.taitl.ex.common.helper.Args.*;
 public class EventSplitter
 {
     public static Supplier<? extends EventSplitter> FACTORY = () -> Creator.create(EventSplitter.class);
+    protected SplitEventType splitEventType = Creator.create(SplitEventType.class);
     protected SplitTypeKey splitTypeKey = Creator.create(SplitTypeKey.class);
-    protected SplitByEventType splitByEventType = Creator.create(SplitByEventType.class);
 
     public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
     {
@@ -75,7 +75,7 @@ public class EventSplitter
         sane(event, "event");
         Set<Event<T>> events = new LinkedHashSet<>();
         events.add(event);
-        return splitByEventType.call(event, events);
+        return splitEventType.call(event, events);
     }
 
     @SuppressWarnings("unchecked")
@@ -95,11 +95,11 @@ public class EventSplitter
 
     protected <T> Set<Event<T>> splitTransit(Port<T> port, Set<Event<T>> events)
     {
-        return splitByEventType.splitTransit(port, events);
+        return splitEventType.splitTransit(port, events);
     }
 
     protected <T> Set<Event<T>> splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> events)
     {
-        return splitByEventType.splitReadAndLock(event, events);
+        return splitEventType.splitReadAndLock(event, events);
     }
 }

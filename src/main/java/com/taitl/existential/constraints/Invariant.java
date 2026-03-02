@@ -205,7 +205,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Declares an invariant for Transit event.
+     * Declares an invariant for Port event.
      *
      * @param condition Predicate to enforce for the entities that received the event
      * @param description Description of invariant
@@ -218,7 +218,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Declares an invariant for Transit event.
+     * Declares an invariant for Port event.
      *
      * @param condition Predicate to enforce for old/new entity values
      * @param description Description of invariant

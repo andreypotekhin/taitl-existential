@@ -12,7 +12,7 @@ import com.taitl.existential.events.types.*;
  * Initial state (before): entity state at the beginning of the transaction. Null means the entity was created.
  * Final state (after): entity state at the end of the transaction. Null means the entity was deleted.
  *
- * Example: Transit<Account> is raised when an Account entity is created, updated, or deleted during the
+ * Example: Port<Account> is raised when an Account entity is created, updated, or deleted during the
  * current transaction.
  *
  * Database analogs: INSERT, UPDATE, DELETE

@@ -12,7 +12,7 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * Maps event key to a set of configured event handlers/expressions (Evs)
  * Example: E<Doc<JSON>> -> Set<On[Е]<Doc<JSON>>>
- * where E is one of Create, Update, Delete, Read, Write, Mutate, Transit.
+ * where E is one of Create, Update, Delete, Read, Write, Mutate, Port.
  *
  * Example:
  *   To retrieve the event handlers/expressions defined for the type "Create<Doc<JSON>>":
