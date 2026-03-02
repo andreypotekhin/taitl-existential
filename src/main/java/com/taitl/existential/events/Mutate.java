@@ -21,6 +21,7 @@ import com.taitl.existential.events.types.*;
  * @see Event
  * @see Transit
  */
+// TODO: rename to Transit
 public class Mutate<T> extends BiEvent<T>
 {
     public Mutate(T before, T after)

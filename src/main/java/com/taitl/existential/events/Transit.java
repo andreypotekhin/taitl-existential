@@ -22,6 +22,7 @@ import com.taitl.existential.events.types.*;
  * @see Event
  * @see Mutate
  */
+// TODO: rename to Port
 public class Transit<T> extends BiEvent<T>
 {
     public Transit(T before, T after)

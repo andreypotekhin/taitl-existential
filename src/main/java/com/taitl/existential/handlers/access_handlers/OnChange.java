@@ -1,16 +1,19 @@
 package com.taitl.existential.handlers.access_handlers;
 
-import java.util.function.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.*;
+
+import java.util.function.*;
 
 /**
  * Declares a handler that runs when an entity is changed.
  *
  * @param <T>
  *            Type of entity changed
+ * @deprecated Use OnUpdate (rationale: same functionality)
  */
+@Deprecated(since = "2026-03", forRemoval = true)
 public class OnChange<T> extends On<T>
 {
 

@@ -20,6 +20,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * @param <T>
  *            Type of entity transitioning between values
  */
+// TODO: rename to OnPort
 public class OnTransit<T> implements BiEventHandler<T>
 {
     Predicate<? super T> condition;

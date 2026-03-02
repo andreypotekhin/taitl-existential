@@ -20,6 +20,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * @param <T>
  *            Type of entity being mutated
  */
+// TODO: rename to OnTransit
 public class OnMutate<T> implements BiEventHandler<T>
 {
     Predicate<? super T> condition;

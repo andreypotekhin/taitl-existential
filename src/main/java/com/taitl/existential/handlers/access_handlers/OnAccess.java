@@ -12,7 +12,9 @@ import java.util.function.*;
  *
  * @param <T>
  *            Type of entity accessed
+ * @deprecated Use On (rationale: same function)
  */
+@Deprecated(since = "2026-03", forRemoval = true)
 public class OnAccess<T> extends On<T>
 {
 
