@@ -23,24 +23,24 @@ import static com.taitl.ex.common.helper.Args.*;
  * For instance, if a constraint for Read<Doc> is declared before a constraint
  * for ReadAndLock<Doc<JSON>> (e.g. in a parent context), it will be evaluated first.
  */
-public class SplitResult
+public class SplitResult<T>
 {
-    protected final List<Ev<?>> evaluables;
-    protected final Event<?> event;
+    protected final List<Ev<T>> evaluables;
+    protected final Event<T> event;
 
-    public SplitResult(List<Ev<?>> evaluables, Event<?> event)
+    public SplitResult(List<Ev<T>> evaluables, Event<T> event)
     {
         sane(evaluables, "evaluables", event, "event");
         this.evaluables = evaluables;
         this.event = event;
     }
 
-    public List<Ev<?>> evaluables()
+    public List<Ev<T>> evaluables()
     {
         return evaluables;
     }
 
-    public Event<?> event()
+    public Event<T> event()
     {
         return event;
     }

@@ -16,19 +16,19 @@ public class ExecuteHandlers
 {
     protected OnException onException = new OnException();
 
-    public void call(List<Ev<?>> evs, Event<?> event, ValidationReport report)
+    public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report)
             throws ExistentialException
     {
         sane(evs, "evs", event, "event", report, "report");
-        for (Ev<?> ev : evs)
+        for (Ev<T> ev : evs)
         {
             if (ev instanceof EventHandler<?>)
             {
-                executeHandler((EventHandler<?>) ev, event, report);
+                executeHandler((EventHandler<T>) ev, event, report);
             }
             else if (ev instanceof Expression<?>)
             {
-                executeExpression((Expression<?>) ev, event, report);
+                executeExpression((Expression<T>) ev, event, report);
             }
             else
             {
@@ -37,7 +37,7 @@ public class ExecuteHandlers
         }
     }
 
-    protected void executeHandler(EventHandler<?> handler, Event<?> event, ValidationReport report)
+    protected <T> void executeHandler(EventHandler<T> handler, Event<T> event, ValidationReport report)
             throws ExistentialException
     {
         sane(handler, "handler", event, "event", report, "report");
@@ -51,7 +51,7 @@ public class ExecuteHandlers
         }
     }
 
-    protected void executeExpression(Expression<?> expression, Event<?> event, ValidationReport report)
+    protected <T> void executeExpression(Expression<T> expression, Event<T> event, ValidationReport report)
             throws ExistentialException
     {
         sane(expression, "expression", event, "event", report, "report");
@@ -66,7 +66,7 @@ public class ExecuteHandlers
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected void callEventHandler(EventHandler<?> handler, Event<?> event)
+    protected <T> void callEventHandler(EventHandler<T> handler, Event<T> event)
             throws ExistentialException
     {
         sane(handler, "handler", event, "event");
@@ -98,13 +98,13 @@ public class ExecuteHandlers
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected void callExpression(Expression<?> expression, Event<?> event) throws ExistentialException
+    protected <T> void callExpression(Expression<T> expression, Event<T> event) throws ExistentialException
     {
         sane(expression, "expression", event, "event");
         ((Expression) expression).evaluate(entity(event));
     }
 
-    protected Object entity(Event<?> event)
+    protected <T> Object entity(Event<T> event)
     {
         sane(event, "event");
         if (event instanceof BiEvent<?>)

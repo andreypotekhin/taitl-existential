@@ -31,13 +31,13 @@ public class SplitEvent
     // TODO: source from ExistentialEvents instead of singleton
     protected EventSplitter eventSplitter = Creator.singleton(EventSplitter.class);
 
-    public <T> SplitResult call(RuntimeKey<T> runtimeKey, EventField eventField, boolean useFullEventNames)
+    public <T> SplitResult<T> call(RuntimeKey<T> runtimeKey, EventField eventField, boolean useFullEventNames)
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField");
         Set<RuntimeKey<T>> splitKeys = split(runtimeKey, useFullEventNames);
         MultiKey<T> multiKey = multiKey(splitKeys);
-        List<Ev<?>> evaluables = eventField.get(multiKey);
-        return new SplitResult(evaluables, runtimeKey.event());
+        List<Ev<T>> evaluables = eventField.get(multiKey);
+        return new SplitResult<T>(evaluables, runtimeKey.event());
     }
 
     protected <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)

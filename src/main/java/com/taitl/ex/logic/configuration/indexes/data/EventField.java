@@ -7,6 +7,7 @@ import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -61,14 +62,18 @@ public class EventField
      * sorts them by their declaration order and returns as a list of Ev<?>.
      * Caches the result for subsequent retrievals.
      */
-    public <T> List<Ev<?>> get(MultiKey<T> multiKey)
+    @SuppressWarnings("unchecked")
+    public <T> List<Ev<T>> get(MultiKey<T> multiKey)
     {
         sane(multiKey, "multiKey");
         String key = multiKey.toString();
+        List<Ev<T>> result;
         List<Ev<?>> cached = map.get(key);
         if (cached != null)
         {
-            return cached;
+            // TODO: check performance
+            result = cached.stream().map(e -> (Ev<T>) e).collect(Collectors.toList());
+            return result;
         }
         ConfiguredHandlers configured = source();
         verify(configured.ready(), "Configured handlers index is not ready");
@@ -91,6 +96,8 @@ public class EventField
         {
             map.putList(key, cached);
         }
-        return cached;
+        // TODO: check performance
+        result = cached.stream().map(e -> (Ev<T>) e).collect(Collectors.toList());
+        return result;
     }
 }

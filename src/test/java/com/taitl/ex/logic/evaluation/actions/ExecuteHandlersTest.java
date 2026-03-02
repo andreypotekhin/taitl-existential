@@ -29,7 +29,7 @@ class ExecuteHandlersTest
         AtomicInteger unaryCalls = new AtomicInteger();
         AtomicInteger biCalls = new AtomicInteger();
 
-        List<Ev<?>> evs = List.of(
+        List<Ev<String>> evs = List.of(
                 new OnUpdate<String>(null, value -> {
                     unaryCalls.incrementAndGet();
                     assertSame(newValue, value);
@@ -60,7 +60,7 @@ class ExecuteHandlersTest
         ValidationReport report = new ValidationReport();
         AtomicInteger calls = new AtomicInteger();
 
-        List<Ev<?>> evs = List.of(new All<String>(value -> {
+        List<Ev<String>> evs = List.of(new All<String>(value -> {
             calls.incrementAndGet();
             return value.startsWith("n");
         }, "value should start with 'n'"));
@@ -85,7 +85,7 @@ class ExecuteHandlersTest
             return value.startsWith("n");
         }, "value should start with 'n'");
 
-        List<Ev<?>> evs = new ArrayList<>();
+        List<Ev<String>> evs = new ArrayList<>();
         evs.addAll(invariant.list());
 
         executeHandlers.call(evs, new Create<>("old"), report);

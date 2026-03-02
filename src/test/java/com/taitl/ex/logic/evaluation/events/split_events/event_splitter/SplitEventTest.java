@@ -22,7 +22,7 @@ class SplitEventTest
         Port<String> port = new Port<>(oldValue, null);
         RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(port, new TypeKey<>(String.class), null, false);
 
-        SplitResult result = splitEvent.call(runtimeKey, indexes.eventField(), false);
+        SplitResult<String> result = splitEvent.call(runtimeKey, indexes.eventField(), false);
 
         assertSame(port, result.event());
         assertTrue(result.evaluables().isEmpty());
