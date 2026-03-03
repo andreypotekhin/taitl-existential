@@ -48,7 +48,6 @@ Workaround 2: Use configure-with-builders style.
     .context("/api/cats")
        .invariant(Cat.class)
          .create(c -> "Black".equals(c.color), "Cats are born black")
-       .done()
 ```
 Details: Double-brace initialization creates an anonymous subclass, which is in
 line with the code above. It is often overkill for collections, so PMD flags it

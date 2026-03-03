@@ -20,7 +20,6 @@ Example of custom indentation:
     .context("/api/cats")
        .invariant(Cat.class)
          .create(c -> "Black".equals(c.color), "Cats are born black")
-       .done()
 ```
 To preserve indentation, wrap the section with formatter switch comments:
 - Before the code section: `// @formatter:off`
