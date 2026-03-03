@@ -130,7 +130,7 @@ class EvaluationLogicTest
 
     private <T> Tr transitTr(String op, TypeKey<T> typeKey, T t0, T t1)
     {
-        Tr tr = new Tr(op, UUID.randomUUID(), ex.transactions().logic());
+        Tr tr = new Tr(op, UUID.randomUUID(), ex.transactions().logic(), ex.events().eventLogic);
         tr.runtimeIndexes().encounteredUniqueEvents.add(RuntimeKey.valueOf(new Port<>(t0, t1), typeKey, t1, false));
         return tr;
     }

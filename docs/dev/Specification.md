@@ -41,6 +41,7 @@ User can configure transaction lifecycle rules for a class.
 +User can initiate transaction checkpoint.
 +User can send events to record entity modification.
 +User can send events to record entity access.
++User can send entity and access events directly through a transaction object.
 User can't send events outside a transaction.
 +User can't send events if no rules have been configured.
 

@@ -1,9 +1,11 @@
 package com.taitl.existential.specs.library_usage;
 
 import com.taitl.ex.examples.night_city.model.*;
+import com.taitl.existential.events.*;
 import com.taitl.existential.Ex;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.specs.*;
+import com.taitl.existential.transactions.Tr;
 import org.junit.jupiter.api.*;
 
 class UserCanSendEntityEvents extends SpecBase
@@ -81,6 +83,29 @@ class UserCanSendEntityEvents extends SpecBase
         String tran = Ex.begin(op).id();
         Ex.update(cat, new TypeKey<Cat>(Cat.class), tran);
         Ex.commit(tran);
+    }
+
+    @Test
+    @DisplayName("User can send entity events using transaction shortcuts")
+    void sendEntityEventsUsingTransactionShortcuts() throws Exception
+    {
+        Tr tr = ex.begin(op);
+        tr.create(cat);
+        tr.update(cat, new TypeKey<Cat>(Cat.class));
+        tr.mutate(cat, cat);
+        tr.port(cat, null);
+        tr.delete(cat);
+        tr.commit();
+    }
+
+    @Test
+    @DisplayName("User can send raw events using transaction shortcuts")
+    void sendRawEventsUsingTransactionShortcuts() throws Exception
+    {
+        Tr tr = ex.begin(op);
+        tr.event(new Create<>(cat), cat, new TypeKey<Cat>(Cat.class));
+        tr.event(new Port<>(null, cat), new TypeKey<Cat>(Cat.class));
+        tr.commit();
     }
 
     // TODO

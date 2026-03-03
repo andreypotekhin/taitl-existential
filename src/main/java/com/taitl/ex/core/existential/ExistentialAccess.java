@@ -4,7 +4,6 @@ import com.taitl.ex.cross.caching.*;
 import com.taitl.ex.logic.events.*;
 import java.io.*;
 import com.taitl.existential.constants.*;
-import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
@@ -26,7 +25,7 @@ public class ExistentialAccess implements Closeable
     public <T> void read(T entity, TypeKey<T> type, String tranID) throws ExistentialException
     {
         sane(entity, "entity", type, "type", tranID, "tranID");
-        eventLogic().event(new Read<>(entity), entity, type, tr(tranID));
+        eventLogic().read(entity, type, tr(tranID));
     }
 
     public <T> void read(T entity, String tranID) throws ExistentialException
@@ -38,7 +37,7 @@ public class ExistentialAccess implements Closeable
     public <T> void write(T entity, TypeKey<T> type, String tranID) throws ExistentialException
     {
         sane(entity, "entity", type, "type", tranID, "tranID");
-        eventLogic().event(new Write<>(entity), entity, type, tr(tranID));
+        eventLogic().write(entity, type, tr(tranID));
     }
 
     public <T> void write(T entity, String tranID) throws ExistentialException

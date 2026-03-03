@@ -2,6 +2,7 @@ package com.taitl.ex.logic.transactions.actions;
 
 import com.taitl.ex.common.creator.Creator;
 import com.taitl.ex.logic.configuration.rules.MatchParentName;
+import com.taitl.ex.logic.events.EventLogic;
 import com.taitl.ex.logic.transactions.TransactionLogic;
 import com.taitl.existential.configs.Config;
 import com.taitl.existential.configs.Context;
@@ -43,7 +44,7 @@ public class CreateTran extends TranAction
     {
         sane(op, "op", config, "config", contextFactory, "contextFactory");
         OpKey.validate(op);
-        // Tr o = new Tr(op, generateId(), tl);
+        // Tr o = new Tr(op, generateId(), tl, tl.ex().events().eventLogic);
         Tr o = trInstance(op);
         for (Context context : config.contexts())
         {
@@ -68,7 +69,7 @@ public class CreateTran extends TranAction
     {
         sane(op, "op", contexts, "contexts", contextFactory, "contextFactory");
         OpKey.validate(op);
-        // Tr o = new Tr(op, generateId(), tl);
+        // Tr o = new Tr(op, generateId(), tl, tl.ex().events().eventLogic);
         Tr o = trInstance(op);
         for (Context context : contexts)
         {
@@ -98,9 +99,10 @@ public class CreateTran extends TranAction
 
     protected Tr trInstance(String op)
     {
-        // return new Tr(op, generateId(), tl);
-        return Creator.create(Tr.class, new Class[] { String.class, UUID.class, TransactionLogic.class },
-                op, generateId(), tl);
+        // return new Tr(op, generateId(), tl, tl.ex().events().eventLogic);
+        return Creator.create(Tr.class,
+                new Class[] { String.class, UUID.class, TransactionLogic.class, EventLogic.class },
+                op, generateId(), tl, tl.ex().events().eventLogic);
     }
 
     static void requireTransactionOpMatchesContext(Transaction transaction, Context context)

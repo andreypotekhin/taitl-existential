@@ -2,6 +2,7 @@ package com.taitl.existential.transactions;
 
 import com.taitl.ex.common.helper.*;
 import com.taitl.ex.common.helper.collections.*;
+import com.taitl.ex.logic.events.*;
 import com.taitl.ex.logic.evaluation.events.actions.*;
 import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.ex.logic.stages.validation.data.*;
@@ -35,6 +36,7 @@ public class Tr
     public final UUID id;
     public String op;
     protected TransactionLogic tl;
+    protected EventLogic el;
     protected List<Transaction> transactions = new ArrayList<>();
     protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
     protected IndexData runtimeIndexes;
@@ -52,13 +54,14 @@ public class Tr
      * @param id
      *            Transaction identifier
      */
-    public Tr(String op, UUID id, TransactionLogic tl)
+    public Tr(String op, UUID id, TransactionLogic tl, EventLogic el)
     {
-        sane(op, "op", id, "id");
+        sane(op, "op", id, "id", tl, "tl", el, "el");
         OpKey.validate(op);
         this.op = op;
         this.id = id;
         this.tl = tl;
+        this.el = el;
         runtimeIndexes = new IndexData();
         validationData = new ValidationData(this);
         for (StageName stageName : StageName.values())
@@ -120,6 +123,92 @@ public class Tr
     public void rollback() throws ExistentialException
     {
         tl.rollback(this);
+    }
+
+    /* Event methods */
+
+    public <T> void event(Event<T> event, T t, TypeKey<T> type) throws ExistentialException
+    {
+        el.event(event, t, type, this);
+    }
+
+    public <T> void event(BiEvent<T> event, TypeKey<T> type) throws ExistentialException
+    {
+        el.event(event, type, this);
+    }
+
+    /* Event methods: convenience / shortcut methods */
+
+    public <T> void create(T t, TypeKey<T> type) throws ExistentialException
+    {
+        el.create(t, type, this);
+    }
+
+    public <T> void create(T t) throws ExistentialException
+    {
+        el.create(t, this);
+    }
+
+    public <T> void delete(T t, TypeKey<T> type) throws ExistentialException
+    {
+        el.delete(t, type, this);
+    }
+
+    public <T> void delete(T t) throws ExistentialException
+    {
+        el.delete(t, this);
+    }
+
+    public <T> void update(T t, TypeKey<T> type) throws ExistentialException
+    {
+        el.update(t, type, this);
+    }
+
+    public <T> void update(T t) throws ExistentialException
+    {
+        el.update(t, this);
+    }
+
+    public <T> void mutate(T t0, T t1, TypeKey<T> type) throws ExistentialException
+    {
+        el.mutate(t0, t1, type, this);
+    }
+
+    public <T> void mutate(T t0, T t1) throws ExistentialException
+    {
+        el.mutate(t0, t1, this);
+    }
+
+    public <T> void port(T t0, T t1, TypeKey<T> type) throws ExistentialException
+    {
+        el.port(t0, t1, type, this);
+    }
+
+    public <T> void port(T t0, T t1) throws ExistentialException
+    {
+        el.port(t0, t1, this);
+    }
+
+    /* Access event methods */
+
+    public <T> void read(T entity, TypeKey<T> type) throws ExistentialException
+    {
+        el.read(entity, type, this);
+    }
+
+    public <T> void read(T entity) throws ExistentialException
+    {
+        el.read(entity, this);
+    }
+
+    public <T> void write(T entity, TypeKey<T> type) throws ExistentialException
+    {
+        el.write(entity, type, this);
+    }
+
+    public <T> void write(T entity) throws ExistentialException
+    {
+        el.write(entity, this);
     }
 
     /* Lifecycle events */
@@ -438,6 +527,7 @@ public class Tr
         validationData = null;
         transactions = null;
         tl = null;
+        el = null;
         already = null;
         stageData = null;
         preconditionEncounteredEventKeys = null;

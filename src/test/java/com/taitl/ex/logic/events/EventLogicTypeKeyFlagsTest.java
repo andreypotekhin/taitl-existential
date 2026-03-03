@@ -65,7 +65,7 @@ class EventLogicTypeKeyFlagsTest
         ExistentialEvents ev = new ExistentialEvents(ex);
         EventLogic logic = new EventLogic(ev);
         IndexingLogic indexing = new IndexingLogic(ev);
-        Tr tr = new Tr("/api/test", UUID.randomUUID(), ex.transactions().logic());
+        Tr tr = new Tr("/api/test", UUID.randomUUID(), ex.transactions().logic(), logic);
 
         Update<String> event = new Update<>("ok");
         TypeKey<String> type = logic.typeKey("ok");
