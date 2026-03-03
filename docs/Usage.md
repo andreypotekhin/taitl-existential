@@ -31,8 +31,7 @@ Configure rules:
     Ex.configure()
       .context("/app/orders/submit")
           .invariant(Order.class)
-              .create(o -> o.total() > 0, "Total must be positive")
-              .done();
+              .create(o -> o.total() > 0, "Total must be positive");
 
 Create transaction, send events:
 
@@ -68,8 +67,7 @@ such as "creating an order" or "updating an account".
           .invariant(Account.class)
               .create(a -> validEmail(a.emailAddress()), "Ensure valid email address")
               .update(a -> !a.locked(), "Can't update a locked account")
-              .delete(a -> !balancePresent(a), "Can't delete an account with a balance")
-              .done();
+              .delete(a -> !balancePresent(a), "Can't delete an account with a balance");
 
 Constraints can apply to entity creation, deletion, modification, entity access (such as loading the entity from storage).
 They can also involve multiple entities, such as all entities in a collection (All<> quantifier).

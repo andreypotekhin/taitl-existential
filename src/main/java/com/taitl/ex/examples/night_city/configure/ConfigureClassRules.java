@@ -76,8 +76,7 @@ public class ConfigureClassRules
                     .begin((Transaction tr) -> tr.index("cats").clear())
                     .commit((Transaction tr) -> tr.index("cats").clear())
                     .rollback((Transaction tr) -> tr.index("cats").clear())
-                    .checkpoint((Transaction tr) -> tr.index("cats").clear())
-                .done();
+                    .checkpoint((Transaction tr) -> tr.index("cats").clear());
         // @formatter:on
     }
 }

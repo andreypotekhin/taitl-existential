@@ -39,6 +39,7 @@ public class TransactionBuilder
         this.evsSuppliers = new ArrayList<>();
         this.evsStages = new ArrayList<>();
         this.transactionFactory = parent::createTransactionInstance;
+        installParentTransactionFactory();
     }
 
     /**
@@ -57,51 +58,7 @@ public class TransactionBuilder
         this.evsSuppliers = new ArrayList<>();
         this.evsStages = new ArrayList<>();
         this.transactionFactory = transactionFactory;
-    }
-
-    /**
-     * Finalizes transaction configuration and returns the parent {@link ContextBuilder}.
-     *
-     * @return Parent builder
-     */
-    public ContextBuilder done()
-    {
-        parent.transactionFactory = () -> {
-            Transaction tr = createInstance();
-
-            if (op != null)
-            {
-                tr.op(op);
-            }
-
-            for (int i = 0; i < this.evsSuppliers.size(); i++)
-            {
-                Evs<?> evs = evsSuppliers.get(i).get();
-                StageName stageName = evsStages.get(i);
-                if (evs instanceof Invariant<?>)
-                {
-                    tr.invariant((Invariant<?>) evs, stageName);
-                }
-                else if (evs instanceof Effect<?>)
-                {
-                    tr.effect((Effect<?>) evs, stageName);
-                }
-                else if (evs instanceof Intent<?>)
-                {
-                    tr.intent((Intent<?>) evs, stageName);
-                }
-                else if (evs instanceof Life<?>)
-                {
-                    tr.cycle((Life<?>) evs, stageName);
-                }
-                else
-                {
-                    throw new IllegalStateException("Unexpected class in ruleSet: " + evs);
-                }
-            }
-            return tr;
-        };
-        return parent;
+        installParentTransactionFactory();
     }
 
     /**
@@ -253,6 +210,17 @@ public class TransactionBuilder
         sane(intent, "intent");
         register(() -> intent, StageName.IMMEDIATE);
         return this;
+    }
+
+    public ContextBuilder context(String name)
+    {
+        sane(name, "name");
+        return parent.context(name);
+    }
+
+    public ContextBuilder context()
+    {
+        return parent.context();
     }
 
     public TransactionBuilder precondition()
@@ -462,16 +430,6 @@ public class TransactionBuilder
     }
 
     /**
-     * No-op convenience for fluent call sites.
-     *
-     * @return This builder
-     */
-    // public TransactionBuilder done()
-    // {
-    // return this;
-    // }
-
-    /**
      * Centralizes lifecycle handler wiring to keep the fluent entry points uniform.
      */
     protected <T extends Transaction> TransactionBuilder addLifecycle(Consumer<? super T> action,
@@ -500,10 +458,54 @@ public class TransactionBuilder
         return transactionFactory.get();
     }
 
+    protected ContextBuilder contextBuilder()
+    {
+        return parent;
+    }
+
     protected void register(Supplier<? extends Evs<?>> supplier, StageName defaultStage)
     {
         sane(supplier, "supplier", defaultStage, "defaultStage");
         evsSuppliers.add(supplier);
         evsStages.add(stageCursor != null ? stageCursor : defaultStage);
+    }
+
+    protected void installParentTransactionFactory()
+    {
+        parent.transactionFactory = () -> {
+            Transaction tr = createInstance();
+
+            if (op != null)
+            {
+                tr.op(op);
+            }
+
+            for (int i = 0; i < this.evsSuppliers.size(); i++)
+            {
+                Evs<?> evs = evsSuppliers.get(i).get();
+                StageName stageName = evsStages.get(i);
+                if (evs instanceof Invariant<?>)
+                {
+                    tr.invariant((Invariant<?>) evs, stageName);
+                }
+                else if (evs instanceof Effect<?>)
+                {
+                    tr.effect((Effect<?>) evs, stageName);
+                }
+                else if (evs instanceof Intent<?>)
+                {
+                    tr.intent((Intent<?>) evs, stageName);
+                }
+                else if (evs instanceof Life<?>)
+                {
+                    tr.cycle((Life<?>) evs, stageName);
+                }
+                else
+                {
+                    throw new IllegalStateException("Unexpected class in ruleSet: " + evs);
+                }
+            }
+            return tr;
+        };
     }
 }

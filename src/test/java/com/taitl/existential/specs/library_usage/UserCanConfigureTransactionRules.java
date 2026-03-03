@@ -40,8 +40,7 @@ class UserCanConfigureTransactionRules extends SpecBase
                     writeIntent.write();
                     tr.intent(writeIntent);
                     return tr;
-                })
-                .done();
+                });
         // @formatter:on
 
         String tran = ex.begin(op).id();
