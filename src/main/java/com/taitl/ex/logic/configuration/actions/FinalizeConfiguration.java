@@ -1,6 +1,5 @@
 package com.taitl.ex.logic.configuration.actions;
 
-import java.util.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
@@ -13,14 +12,14 @@ public class FinalizeConfiguration
     protected ConfigurationLogic cl;
     protected ExistentialConfigs ec;
     protected Existential ex;
-    protected BuildConfigs buildConfigs;
+    protected BuildConfig buildConfig;
 
     public FinalizeConfiguration(ConfigurationLogic cl)
     {
         this.cl = cl;
         this.ec = cl.ec();
         this.ex = cl.ex();
-        this.buildConfigs = new BuildConfigs(cl);
+        this.buildConfig = new BuildConfig(cl);
     }
 
     /**
@@ -34,7 +33,7 @@ public class FinalizeConfiguration
     {
         if (!ex.configured())
         {
-            if (cl.isEmpty() && cl.configBuilders().isEmpty())
+            if (cl.isEmpty() && cl.configBuilder() == null)
             {
                 throw new IllegalStateException("You need to configure at least one context");
             }
@@ -49,18 +48,18 @@ public class FinalizeConfiguration
                 // and every intent(), effect() method of each custom context,
                 // and therefore will create instances of each Invariant, Intent
                 // provided during setup.
-                buildConfigs();
+                buildConfig();
             }
         }
     }
 
-    public void buildConfigs()
+    public void buildConfig()
     {
-        Map<String, ConfigBuilder> configBuilders = cl.configBuilders();
-        verify(!configBuilders.isEmpty(), "No config builders exist");
-        buildConfigs.call(configBuilders);
-        // Configuration done. Prevent any further use of configBuilders.
-        configBuilders.clear();
+        ConfigBuilder configBuilder = cl.configBuilder();
+        verify(configBuilder != null, "No config builder exists");
+        buildConfig.call(configBuilder);
+        // Configuration done. Prevent any further use of configBuilder.
+        cl.configBuilder(null);
     }
 
     /**

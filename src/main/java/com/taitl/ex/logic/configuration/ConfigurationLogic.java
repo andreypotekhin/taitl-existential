@@ -17,7 +17,7 @@ import static com.taitl.ex.common.helper.State.*;
 
 public class ConfigurationLogic implements Closeable
 {
-    protected Map<String, ConfigBuilder> configBuilders = new LinkedHashMap<>();
+    protected ConfigBuilder configBuilder;
     public SetMap<String, Context> contexts = new SetMap<>();
 
     protected ExistentialConfigs ec;
@@ -93,7 +93,7 @@ public class ConfigurationLogic implements Closeable
 
     public void close()
     {
-        configBuilders.clear();
+        configBuilder = null;
         contexts.clear();
     }
 
@@ -140,9 +140,14 @@ public class ConfigurationLogic implements Closeable
         return registry;
     }
 
-    public Map<String, ConfigBuilder> configBuilders()
+    public ConfigBuilder configBuilder()
     {
-        return configBuilders;
+        return configBuilder;
+    }
+
+    public void configBuilder(ConfigBuilder configBuilder)
+    {
+        this.configBuilder = configBuilder;
     }
 
     public Config config(String op)

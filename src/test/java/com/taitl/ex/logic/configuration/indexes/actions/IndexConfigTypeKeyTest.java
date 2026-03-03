@@ -96,4 +96,22 @@ class IndexConfigTypeKeyTest
                 config.indexes(StageName.IMMEDIATE).configuredIntents
                         .contains(EventKey.valueOfFull(Read.class, fullTypeKey)));
     }
+
+    @Test
+    @DisplayName("Rejects wildcard op when indexing config")
+    void rejectsWildcardOpWhenIndexingConfig()
+    {
+        Config config = new Config();
+        Context context = new Context("/api/*/create");
+        Effect<String> effect = new Effect<>(String.class);
+        effect.create(v -> {
+        }, "typed effect");
+        context.effect(effect);
+        config.addContext(context);
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> config.indexes(StageName.VALIDATION).indexConfig("/api/*/create", config));
+
+        assertTrue(ex.getMessage().contains("Cannot index wildcard context"));
+    }
 }

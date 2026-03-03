@@ -40,12 +40,14 @@ public class ConfigurationIndexes
     public void indexConfig(String op, Config config)
     {
         sane(op, "op", config, "config");
+        requireConcreteOp(op);
         indexConfig.call(op, config, StageName.VALIDATION);
     }
 
     public void indexConfig(String op, Config config, StageName stageName)
     {
         sane(op, "op", config, "config", stageName, "stageName");
+        requireConcreteOp(op);
         indexConfig.call(op, config, stageName);
     }
 
@@ -117,5 +119,13 @@ public class ConfigurationIndexes
         configuredHandlers.clear();
         configuredIntents.clear();
         intentEventTypes.clear();
+    }
+
+    protected void requireConcreteOp(String op)
+    {
+        sane(op, "op");
+        ContextKey.validate(op);
+        check(!op.contains("*"),
+                String.format("Cannot index wildcard context '%s': transaction operation keys must be concrete", op));
     }
 }
