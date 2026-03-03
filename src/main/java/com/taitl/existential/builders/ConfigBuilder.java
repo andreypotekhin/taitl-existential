@@ -32,13 +32,6 @@ public class ConfigBuilder
     protected Supplier<? extends Transaction> transactionFactory = () -> Creator.create(Transaction.class);
 
     /**
-     * Constructs an instance-wide configuration builder.
-     */
-    public ConfigBuilder()
-    {
-    }
-
-    /**
      * Creates a ContextBuilder for a context.
      *
      * @return ContextBuilder for Context class
