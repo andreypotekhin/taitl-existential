@@ -1,5 +1,6 @@
 package com.taitl.existential.builders;
 
+import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
 
@@ -247,13 +248,147 @@ public class IntentBuilder<T> implements EvsBuilder<T>
         return target;
     }
 
-    public ContextBuilder done()
+    public <U> InvariantBuilder<U> invariant(Class<U> cls)
     {
-        return parent;
+        sane(cls, "cls");
+        if (parent != null)
+        {
+            return parent.invariant(cls);
+        }
+        return parent2.invariant(cls);
+    }
+
+    public <U> InvariantBuilder<U> invariant(TypeKey<U> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        if (parent != null)
+        {
+            return parent.invariant(typeKey);
+        }
+        return parent2.invariant(typeKey);
+    }
+
+    public <U> ContextBuilder invariant(Invariant<U> invariant)
+    {
+        sane(invariant, "invariant");
+        return parentContext().invariant(invariant);
+    }
+
+    public <U> EffectBuilder<U> effect(Class<U> cls)
+    {
+        sane(cls, "cls");
+        if (parent != null)
+        {
+            return parent.effect(cls);
+        }
+        return parent2.effect(cls);
+    }
+
+    public <U> EffectBuilder<U> effect(TypeKey<U> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        if (parent != null)
+        {
+            return parent.effect(typeKey);
+        }
+        return parent2.effect(typeKey);
+    }
+
+    public <U> ContextBuilder effect(Effect<U> effect)
+    {
+        sane(effect, "effect");
+        return parentContext().effect(effect);
+    }
+
+    public <U> IntentBuilder<U> intent(Class<U> cls)
+    {
+        sane(cls, "cls");
+        if (parent != null)
+        {
+            return parent.intent(cls);
+        }
+        return parent2.intent(cls);
+    }
+
+    public <U> IntentBuilder<U> intent(TypeKey<U> typeKey)
+    {
+        sane(typeKey, "typeKey");
+        if (parent != null)
+        {
+            return parent.intent(typeKey);
+        }
+        return parent2.intent(typeKey);
+    }
+
+    public <U> ContextBuilder intent(Intent<U> intent)
+    {
+        sane(intent, "intent");
+        return parentContext().intent(intent);
+    }
+
+    public ContextBuilder precondition()
+    {
+        return parentContext().precondition();
+    }
+
+    public ContextBuilder immediate()
+    {
+        return parentContext().immediate();
+    }
+
+    public ContextBuilder validation()
+    {
+        return parentContext().validation();
+    }
+
+    public TransactionBuilder transaction(String name)
+    {
+        sane(name, "name");
+        return parentContext().transaction(name);
+    }
+
+    public TransactionBuilder transaction(Supplier<? extends Transaction> supplier)
+    {
+        sane(supplier, "supplier");
+        return parentContext().transaction(supplier);
+    }
+
+    public ContextBuilder contextFactory(Supplier<? extends Context> supplier)
+    {
+        sane(supplier, "supplier");
+        return parentContext().contextFactory(supplier);
+    }
+
+    public ContextBuilder context(String name)
+    {
+        sane(name, "name");
+        if (parent != null)
+        {
+            return parent.context(name);
+        }
+        return parent2.done().context(name);
+    }
+
+    public ContextBuilder context()
+    {
+        if (parent != null)
+        {
+            return parent.context();
+        }
+        return parent2.done();
     }
 
     public TransactionBuilder doneTran()
     {
         return parent2;
+    }
+
+    protected ContextBuilder parentContext()
+    {
+        if (parent != null)
+        {
+            return parent;
+        }
+        return parent2.done();
     }
 }

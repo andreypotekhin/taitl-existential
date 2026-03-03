@@ -98,10 +98,8 @@ class UserCanConfigureClassRules extends SpecBase
                         invariantChecks.incrementAndGet();
                         return !v.isEmpty();
                     }, "require at least one value")
-                    .done()
                     .effect(typeKey)
-                    .create(v -> effectCalls.incrementAndGet(), "track list creates")
-                    .done();
+                    .create(v -> effectCalls.incrementAndGet(), "track list creates");
             String tran = ex.begin(op).id();
             List<String> values = new ArrayList<>(List.of("ok"));
             ex.port(null, values, typeKey, tran);
@@ -120,22 +118,17 @@ class UserCanConfigureClassRules extends SpecBase
         AtomicInteger immediateCalls = new AtomicInteger();
         AtomicInteger validationCalls = new AtomicInteger();
 
-        // @formatter:off
         ex.configure()
-            .context(op)
+                .context(op)
                 .precondition()
-                    .effect(cat.getClass())
-                        .create(c -> preconditionCalls.incrementAndGet(), "precondition create")
-                        .done()
+                .effect(cat.getClass())
+                .create(c -> preconditionCalls.incrementAndGet(), "precondition create")
                 .immediate()
-                    .effect(cat.getClass())
-                        .create(c -> immediateCalls.incrementAndGet(), "immediate create")
-                        .done()
+                .effect(cat.getClass())
+                .create(c -> immediateCalls.incrementAndGet(), "immediate create")
                 .validation()
-                    .effect(cat.getClass())
-                        .create(c -> validationCalls.incrementAndGet(), "validation create")
-                        .done();
-        // @formatter:on
+                .effect(cat.getClass())
+                .create(c -> validationCalls.incrementAndGet(), "validation create");
 
         String tran = ex.begin(op).id();
         ex.create(cat, tran);

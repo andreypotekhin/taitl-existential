@@ -36,8 +36,7 @@ class UserCanConfigureAccessRules extends SpecBase
             .context(op)
                 .intent(cat.getClass())
                     .read()
-                    .write()
-                    .done();
+                    .write();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -54,8 +53,7 @@ class UserCanConfigureAccessRules extends SpecBase
         ex.configure()
             .context(op)
                 .intent(cat.getClass())
-                    .read()
-                    .done();
+                    .read();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -75,8 +73,7 @@ class UserCanConfigureAccessRules extends SpecBase
         ex.configure()
             .context(op)
                 .intent(cat.getClass())
-                    .write(c -> writes.getAndIncrement() == 0)
-                    .done();
+                    .write(c -> writes.getAndIncrement() == 0);
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -96,8 +93,7 @@ class UserCanConfigureAccessRules extends SpecBase
         ex.configure()
             .context(op)
                 .intent(cat.getClass())
-                    .read()
-                    .done();
+                    .read();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -116,8 +112,7 @@ class UserCanConfigureAccessRules extends SpecBase
             .context(op)
                 .validation()
                     .intent(cat.getClass())
-                        .write()
-                        .done();
+                        .write();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -134,8 +129,7 @@ class UserCanConfigureAccessRules extends SpecBase
             .context(op)
                 .validation()
                     .intent(cat.getClass())
-                        .write()
-                        .done();
+                        .write();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -156,8 +150,7 @@ class UserCanConfigureAccessRules extends SpecBase
             .context(op)
                 .precondition()
                     .intent(cat.getClass())
-                        .write(c -> checks.incrementAndGet() == 1)
-                        .done();
+                        .write(c -> checks.incrementAndGet() == 1);
         // @formatter:on
 
         String tran = ex.begin(op).id();

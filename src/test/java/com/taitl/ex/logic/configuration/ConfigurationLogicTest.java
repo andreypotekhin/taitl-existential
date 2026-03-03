@@ -37,8 +37,7 @@ class ConfigurationLogicTest
             ex.configure()
                     .context("/api/*/update")
                         .effect(String.class)
-                        .update(v -> updateCalls.incrementAndGet(), "wildcard update")
-                        .done();
+                        .update(v -> updateCalls.incrementAndGet(), "wildcard update");
             // @formatter:on
 
             String tran = ex.begin("/api/cats/update").id();
@@ -59,8 +58,7 @@ class ConfigurationLogicTest
                     .context("/api/cats/update")
                     .effect(String.class)
                     .update(v -> {
-                    }, "update")
-                    .done();
+                    }, "update");
 
             assertDoesNotThrow(() -> {
                 String tran = ex.begin("/api/cats/update").id();

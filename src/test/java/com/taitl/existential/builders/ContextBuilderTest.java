@@ -53,12 +53,10 @@ class ContextBuilderTest
 
                 configBuilder.context("/app/one")
                         .invariant(String.class)
-                        .create(v -> true, "ctx one")
-                        .done();
+                        .create(v -> true, "ctx one");
                 ContextBuilder contextBuilder = configBuilder.context("/app/two");
                 contextBuilder.invariant(String.class)
-                        .create(v -> true, "ctx two")
-                        .done();
+                        .create(v -> true, "ctx two");
 
                 configBuilder.buildContexts();
 
@@ -76,7 +74,7 @@ class ContextBuilderTest
             {
                 ConfigBuilder configBuilder = new ConfigBuilder();
                 ContextBuilder contextBuilder = configBuilder.context("/app");
-                contextBuilder.invariant(String.class).create(v -> true, "rule").done();
+                contextBuilder.invariant(String.class).create(v -> true, "rule");
 
                 configBuilder.buildContexts();
                 configBuilder.buildContexts();
@@ -103,6 +101,33 @@ class ContextBuilderTest
 
                 assertEquals("/app", sibling.op);
             }
+
+            @Test
+            @DisplayName("Rule builders can short-circuit to sibling context")
+            void ruleBuildersShortCircuitToSiblingContext()
+            {
+                ConfigBuilder configBuilder = new ConfigBuilder();
+
+                configBuilder.context("/app")
+                        .invariant(String.class)
+                        .create(v -> true, "ctx one")
+                        .context("/app/two")
+                        .effect(String.class)
+                        .create(v -> {
+                        }, "ctx two")
+                        .context("/app/two/three")
+                        .intent(String.class)
+                        .read();
+
+                configBuilder.buildContexts();
+
+                List<String> names = new ArrayList<>();
+                for (Context context : configBuilder.contexts)
+                {
+                    names.add(context.name());
+                }
+                assertEquals(List.of("/app", "/app/two", "/app/two/three"), names);
+            }
         }
 
         @Nested
@@ -123,8 +148,7 @@ class ContextBuilderTest
 
                 // @formatter:off
                 contextBuilder.invariant(String.class)
-                    .create(s -> true, "inv2")
-                    .done();
+                    .create(s -> true, "inv2");
                 // @formatter:on
 
                 Effect<String> eff1 = new Effect<>(String.class);
@@ -139,11 +163,9 @@ class ContextBuilderTest
                 // @formatter:off
                 contextBuilder.effect(String.class)
                     .create(s -> {
-                    }, "eff2")
-                    .done();
+                    }, "eff2");
                 contextBuilder.intent(String.class)
-                    .write()
-                    .done();
+                    .write();
                 // @formatter:on
 
                 contextBuilder.buildContext();
@@ -245,11 +267,15 @@ class ContextBuilderTest
                 };
                 TypeKey<String> stringType = new TypeKey<>("String");
 
-                contextBuilder.invariant(String.class).create(s -> true, "inv").done();
-                contextBuilder.invariant(reflectionType).create(v -> true, "list inv").done();
-                contextBuilder.effect(stringType).create(s -> {
-                }, "eff").done();
-                contextBuilder.intent(String.class).read().done();
+                contextBuilder.invariant(String.class)
+                        .create(s -> true, "inv")
+                        .invariant(reflectionType)
+                        .create(v -> true, "list inv")
+                        .effect(stringType)
+                        .create(s -> {
+                        }, "eff")
+                        .intent(String.class)
+                        .read();
 
                 contextBuilder.buildContext();
 
@@ -364,22 +390,17 @@ class ContextBuilderTest
             Context context = new Context("/app");
             contextBuilder.contextFactory(() -> context);
 
-            // @formatter:off
-                contextBuilder
-                .precondition()
+            contextBuilder
+                    .precondition()
                     .effect(String.class)
-                        .create(v -> {
-                        }, "precondition effect")
-                    .done()
-                .immediate()
+                    .create(v -> {
+                    }, "precondition effect")
+                    .immediate()
                     .invariant(String.class)
-                        .create(v -> true, "immediate invariant")
-                    .done()
-                .validation()
+                    .create(v -> true, "immediate invariant")
+                    .validation()
                     .intent(String.class)
-                        .read()
-                    .done();
-            // @formatter:on
+                    .read();
             contextBuilder.buildContext();
 
             assertEquals(1, context.stage().at(StageName.PRECONDITION).size());

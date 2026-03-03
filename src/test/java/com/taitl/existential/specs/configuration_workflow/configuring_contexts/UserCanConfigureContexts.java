@@ -56,11 +56,9 @@ class UserCanConfigureContexts extends SpecBase
                 .context("/api/cats")
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
-                    .done()
-                .context("/api/cats/create")
+                    .context("/api/cats/create")
                     .invariant(Cat.class)
-                    .create(v -> true, "ok")
-                    .done();
+                    .create(v -> true, "ok");
             // @formatter:on
 
             String tran = ex.begin("/api/cats/create").id();
@@ -80,11 +78,9 @@ class UserCanConfigureContexts extends SpecBase
             .context("/api/cats")
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("parent"))
-                .done()
-            .context("/api/cats/create")
+                .context("/api/cats/create")
                 .effect(Cat.class)
-                .create(v -> effectOrder.add("child"))
-                .done();
+                .create(v -> effectOrder.add("child"));
         // @formatter:on
 
         assertDoesNotThrow(() -> {
@@ -110,8 +106,7 @@ class UserCanConfigureContexts extends SpecBase
                 .context("/api/cats")
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
-                .done()
-                .transaction(() -> {
+                    .transaction(() -> {
                         Transaction tr = new Transaction("/api/cats/create", "root");
                         tr.begin((Transaction current) -> rootType.set(current.context().getClass()));
                         return tr;
@@ -121,12 +116,11 @@ class UserCanConfigureContexts extends SpecBase
                     .contextFactory(() -> new SpecificContext("/unused"))
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
-                .done()
-                .transaction(() -> {
-                    Transaction tr = new Transaction("/api/cats/create", "specific");
-                    tr.begin((Transaction current) -> specificType.set(current.context().getClass()));
-                    return tr;
-                })
+                    .transaction(() -> {
+                        Transaction tr = new Transaction("/api/cats/create", "specific");
+                        tr.begin((Transaction current) -> specificType.set(current.context().getClass()));
+                        return tr;
+                    })
                 .done();
             // @formatter:on
 
@@ -150,11 +144,9 @@ class UserCanConfigureContexts extends SpecBase
             .context("/api/*/create")
                 .effect(Cat.class)
                     .create(v -> effectOrder.add("wildcard"))
-                .done()
-            .context("/api/cats/create")
+                .context("/api/cats/create")
                 .effect(Cat.class)
-                    .create(v -> effectOrder.add("concrete"))
-                .done();
+                    .create(v -> effectOrder.add("concrete"));
         // @formatter:on
 
         assertDoesNotThrow(() -> {
@@ -191,12 +183,10 @@ class UserCanConfigureContexts extends SpecBase
             configBuilder.context("/api/cats/create")
                     .invariant(String.class)
                     .create(v -> true, "ok")
-                    .done()
                 ;
             configBuilder.context("/admin/users")
                     .invariant(String.class)
-                    .create(v -> true, "ok")
-                    .done();
+                    .create(v -> true, "ok");
             // @formatter:on
         });
     }

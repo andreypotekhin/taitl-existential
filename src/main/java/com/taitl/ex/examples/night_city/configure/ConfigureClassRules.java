@@ -9,15 +9,13 @@ public class ConfigureClassRules
 {
     public void configure()
     {
-        // @formatter:off
         Ex.configure()
-            .context("/api/cats")
+                .context("/api/cats")
                 .invariant(Cat.class)
-                    .create(c -> "Black".equals(c.color), "Cats are born black")
-                    .done()
+                .create(c -> "Black".equals(c.color), "Cats are born black")
                 .effect(Cat.class)
-                    .create(c -> c.location = new Location("Park"), "Set location for all new cats")
-                    .done();
+                .create(c -> c.location = new Location("Park"), "Set location for all new cats");
+
         // TODO:
         // ex.configure()
         // .context(new Context("/api/houses/create") {
@@ -26,7 +24,6 @@ public class ConfigureClassRules
         // { can't move house where there is a Being
         // .context(new Context("/api/houses/delete") {
         // { can't delete house where exists a Being
-        // @formatter:on
     }
 
     // public void configureWithClasses()
@@ -59,19 +56,15 @@ public class ConfigureClassRules
 
     public void configureMixingFluentAndBuilders()
     {
-        // @formatter:off
         Ex.configure()
-            .context("/api/cats")
+                .context("/api/cats")
                 .invariant(Cat.class)
-                    .create(c -> "Black".equals(c.color), "Cats are born black")
-                .done()
+                .create(c -> "Black".equals(c.color), "Cats are born black")
                 .effect(new Effect<Cat>() {
                     {
                         create(c -> c.location = new Location("Park"), "Set location for all new cats");
                     }
-                })
-                .done();
-        // @formatter:on
+                });
     }
 
     public void configureTransactionRules()
