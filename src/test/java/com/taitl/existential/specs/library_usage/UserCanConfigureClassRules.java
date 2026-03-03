@@ -118,17 +118,19 @@ class UserCanConfigureClassRules extends SpecBase
         AtomicInteger immediateCalls = new AtomicInteger();
         AtomicInteger validationCalls = new AtomicInteger();
 
+        // @formatter:off
         ex.configure()
                 .context(op)
                 .precondition()
-                .effect(cat.getClass())
-                .create(c -> preconditionCalls.incrementAndGet(), "precondition create")
+                    .effect(cat.getClass())
+                        .create(c -> preconditionCalls.incrementAndGet(), "precondition create")
                 .immediate()
-                .effect(cat.getClass())
-                .create(c -> immediateCalls.incrementAndGet(), "immediate create")
+                    .effect(cat.getClass())
+                        .create(c -> immediateCalls.incrementAndGet(), "immediate create")
                 .validation()
-                .effect(cat.getClass())
-                .create(c -> validationCalls.incrementAndGet(), "validation create");
+                    .effect(cat.getClass())
+                        .create(c -> validationCalls.incrementAndGet(), "validation create");
+        // @formatter:on
 
         String tran = ex.begin(op).id();
         ex.create(cat, tran);

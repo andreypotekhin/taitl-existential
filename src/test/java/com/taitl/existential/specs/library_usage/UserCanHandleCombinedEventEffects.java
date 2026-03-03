@@ -40,10 +40,12 @@ class UserCanHandleCombinedEventEffects extends SpecBase
                 .add(new OnUD<>(c -> udCalls.incrementAndGet(), "ud"));
 
         assertDoesNotThrow(() -> {
+            // @formatter:off
             ex.configure()
                     .context(op)
-                    .effect(effect)
-                    .done();
+                        .effect(effect)
+                        .done();
+            // @formatter:on
             String tran = ex.begin(op).id();
             Cat created = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
             Cat updated = new Cat(CityTestData.BLACK_CAT.color(), "library");

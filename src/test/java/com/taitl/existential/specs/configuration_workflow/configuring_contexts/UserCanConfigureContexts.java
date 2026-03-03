@@ -55,8 +55,8 @@ class UserCanConfigureContexts extends SpecBase
             Ex.configure()
                 .context("/api/cats")
                     .invariant(Cat.class)
-                    .create(v -> true, "ok")
-                    .context("/api/cats/create")
+                        .create(v -> true, "ok")
+                .context("/api/cats/create")
                     .invariant(Cat.class)
                     .create(v -> true, "ok");
             // @formatter:on
@@ -77,10 +77,10 @@ class UserCanConfigureContexts extends SpecBase
         Ex.configure()
             .context("/api/cats")
                 .effect(Cat.class)
-                .create(v -> effectOrder.add("parent"))
-                .context("/api/cats/create")
+                    .create(v -> effectOrder.add("parent"))
+            .context("/api/cats/create")
                 .effect(Cat.class)
-                .create(v -> effectOrder.add("child"));
+                    .create(v -> effectOrder.add("child"));
         // @formatter:on
 
         assertDoesNotThrow(() -> {
@@ -105,7 +105,7 @@ class UserCanConfigureContexts extends SpecBase
                 .contextFactory(() -> new GlobalContext("/unused"))
                 .context("/api/cats")
                     .invariant(Cat.class)
-                    .create(v -> true, "ok")
+                        .create(v -> true, "ok")
                     .transaction(() -> {
                         Transaction tr = new Transaction("/api/cats/create", "root");
                         tr.begin((Transaction current) -> rootType.set(current.context().getClass()));
@@ -115,7 +115,7 @@ class UserCanConfigureContexts extends SpecBase
                 .context("/api/cats/create")
                     .contextFactory(() -> new SpecificContext("/unused"))
                     .invariant(Cat.class)
-                    .create(v -> true, "ok")
+                        .create(v -> true, "ok")
                     .transaction(() -> {
                         Transaction tr = new Transaction("/api/cats/create", "specific");
                         tr.begin((Transaction current) -> specificType.set(current.context().getClass()));
