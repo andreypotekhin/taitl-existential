@@ -1,14 +1,15 @@
 package com.taitl.existential.interfaces;
 
+import com.taitl.existential.constraints.*;
+
 /**
-<<<<<<< ours
- * Marker interface for constraints, such as an Invariant for an entity.
-=======
- * Marker interface for constraints, such as Invariant<Entity>.
->>>>>>> theirs
+ * Marker interface for constraints, such as an Invariant or Intent for an entity.
  *
  * @param <T>
  *            Type of entity
+ *
+ * @see Invariant
+ * @see Intent
  */
 public interface Constraints<T>
 {

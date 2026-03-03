@@ -21,7 +21,7 @@ class SplitEventTypeTest
     void splitTransitRejectsNullEventsWithEventsMessage()
     {
         IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
-                () -> splitter.splitTransit(new Port<>("old", "new"), null));
+                () -> splitter.splitPort(new Port<>("old", "new"), null));
         assertEquals("Argument 'events' must not be null", error.getMessage());
     }
 

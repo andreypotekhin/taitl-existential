@@ -5,12 +5,11 @@ import com.taitl.ex.common.helper.collections.*;
 import java.util.*;
 import java.util.function.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
-import static com.taitl.ex.common.helper.State.verify;
+import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Index maps a single key (K) to a set of values (V).
- * Indexes make Exists expressions more performant.
+ * Maps a key (K) to a set of values (V), to make Exists expressions more performant.
  * Note: null is not allowed as a key or as a value.
  *
  * @param <K>

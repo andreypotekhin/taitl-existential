@@ -12,13 +12,12 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Declarative handler for {@link Transit} events that involve two values.
- * The handler can be guarded by a predicate on the new value or a
- * bi-predicate on both values. When no action is provided, the handler
- * behaves as a constraint and throws when the condition is not met.
+ * Event handler for Transit events - events that involve before- and after- states of entity.
  *
  * @param <T>
  *            Type of entity being mutated
+ *
+ * @see Transit
  */
 public class OnTransit<T> implements BiEventHandler<T>
 {

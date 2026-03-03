@@ -1,17 +1,18 @@
 package com.taitl.existential.handlers;
 
-import java.util.function.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.types.*;
 
+import java.util.function.*;
+
 /**
- * Declarative handler for {@link Create} events.
- * Extends {@link On} to capture an optional condition, an action, and a
- * human-friendly description for entity creation.
+ * Event handler for Create events.
  *
  * @param <T>
  *            Type of entity created
+ *
+ * @see Create
  */
 public class OnCreate<T> extends On<T> implements UniEventHandler<T>
 {

@@ -10,6 +10,8 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
+ * Event handler for On event (that is, matching any event).
+ *
  * Base handler declaration that captures an optional condition, an action,
  * and a human-friendly description for an event.
  *
@@ -18,6 +20,8 @@ import static com.taitl.ex.common.helper.Args.*;
  *
  * @param <T>
  *            Type of entity or value handled by the event
+ *
+ * @see On
  */
 public class On<T> implements EventHandler<T>
 {

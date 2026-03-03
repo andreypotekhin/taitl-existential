@@ -1,12 +1,14 @@
 package com.taitl.existential.interfaces;
 
+import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 
 /**
- * Contract for configuration containers, such as Context and Transaction.
- * Implementations expose a minimal surface for attaching operational metadata
- * and validation or execution hooks.
+ * Contract interface for rule containers such as Context and Transaction.
+ *
+ * @see Context
+ * @see Transaction
  */
 public interface Configurable
 {

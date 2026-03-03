@@ -1,15 +1,18 @@
 package com.taitl.existential.handlers;
 
-import java.util.function.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.types.*;
 
+import java.util.function.*;
+
 /**
- * Event handler for update operations.
+ * Event handler for Update event.
  *
  * @param <T>
  *            Entity type handled by the update event
+ *
+ * @see Update
  */
 public class OnUpdate<T> extends On<T> implements UniEventHandler<T>
 {

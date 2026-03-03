@@ -1,7 +1,7 @@
 package com.taitl.existential.interfaces;
 
 /**
- * Provides a human-readable description of the implementing instance.
+ * Provides a human-readable description.
  */
 public interface Describable
 {

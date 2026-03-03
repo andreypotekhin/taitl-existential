@@ -12,13 +12,13 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Handler for {@link Port} events that involve two values.
- * The handler can be guarded by a predicate on the new value or a bi-predicate
- * on both values. When the condition passes, the action is invoked and any
- * execution failures are wrapped as {@link EventHandlerException}.
+ * Event handler for Port events - events that involve before- and after- states of entity,
+ * one ff which may be null.
  *
  * @param <T>
- *            Type of entity transitioning between values
+ *            Type of entity being mutated
+ *
+ * @see Port
  */
 public class OnPort<T> implements BiEventHandler<T>
 {
