@@ -64,7 +64,7 @@ public class TransactionBuilder
      *
      * @return Parent builder
      */
-    public ContextBuilder build()
+    public ContextBuilder done()
     {
         parent.transactionFactory = () -> {
             Transaction tr = createInstance();
@@ -466,10 +466,10 @@ public class TransactionBuilder
      *
      * @return This builder
      */
-    public TransactionBuilder done()
-    {
-        return this;
-    }
+    // public TransactionBuilder done()
+    // {
+    // return this;
+    // }
 
     /**
      * Centralizes lifecycle handler wiring to keep the fluent entry points uniform.

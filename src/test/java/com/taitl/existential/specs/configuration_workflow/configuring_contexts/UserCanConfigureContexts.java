@@ -119,7 +119,7 @@ class UserCanConfigureContexts extends SpecBase
                         tr.begin((Transaction current) -> rootType.set(current.context().getClass()));
                         return tr;
                     })
-                .build()
+                .done()
                 .context("/api/cats/create")
                     .contextFactory(() -> new SpecificContext("/unused"))
                     .invariant(Cat.class)
@@ -130,7 +130,7 @@ class UserCanConfigureContexts extends SpecBase
                     tr.begin((Transaction current) -> specificType.set(current.context().getClass()));
                     return tr;
                 })
-                .build();
+                .done();
             // @formatter:on
 
             String tran = ex.begin("/api/cats/create").id();

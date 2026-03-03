@@ -12,7 +12,7 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Declarative handler for {@link Port} events that involve two values.
+ * Handler for {@link Port} events that involve two values.
  * The handler can be guarded by a predicate on the new value or a bi-predicate
  * on both values. When the condition passes, the action is invoked and any
  * execution failures are wrapped as {@link EventHandlerException}.
@@ -80,7 +80,7 @@ public class OnPort<T> implements BiEventHandler<T>
     }
 
     /**
-     * Handles a transition between two values.
+     * Handles entity transition between two states, one of which may be null.
      *
      * @param t0
      *            Previous value (may be null)

@@ -1,12 +1,9 @@
 package com.taitl.ex.examples.night_city.configure;
 
-import com.taitl.ex.examples.night_city.model.Cat;
-import com.taitl.ex.examples.night_city.model.Location;
-import com.taitl.existential.Ex;
-import com.taitl.existential.configs.Context;
-import com.taitl.existential.configs.Transaction;
-import com.taitl.existential.constraints.Effect;
-import com.taitl.existential.constraints.Invariant;
+import com.taitl.ex.examples.night_city.model.*;
+import com.taitl.existential.*;
+import com.taitl.existential.configs.*;
+import com.taitl.existential.constraints.*;
 
 public class ConfigureClassRules
 {
@@ -89,7 +86,7 @@ public class ConfigureClassRules
                     .commit((Transaction tr) -> tr.index("cats").clear())
                     .rollback((Transaction tr) -> tr.index("cats").clear())
                     .checkpoint((Transaction tr) -> tr.index("cats").clear())
-                .build()
+                .done()
             .build();
         // @formatter:on
     }

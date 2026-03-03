@@ -16,7 +16,6 @@ import static com.taitl.ex.common.helper.State.*;
  * Configures a single Context inside a {@link com.taitl.existential.configs.Config}.
  * Collects invariants, effects, intents, and optional transaction settings for the context.
  */
-// TODO: add context() method to build child contexts
 public class ContextBuilder
 {
     ConfigBuilder parent;
