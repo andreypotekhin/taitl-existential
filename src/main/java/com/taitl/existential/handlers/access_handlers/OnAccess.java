@@ -35,6 +35,6 @@ public class OnAccess<T> extends On<T>
 
     public EventType eventType()
     {
-        return EventType.valueOf(Change.class);
+        return EventType.valueOf(Access.class);
     }
 }

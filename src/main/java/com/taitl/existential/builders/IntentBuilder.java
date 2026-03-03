@@ -94,26 +94,6 @@ public class IntentBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public IntentBuilder<T> change()
-    {
-        target.change();
-        return this;
-    }
-
-    public IntentBuilder<T> change(Predicate<? super T> condition)
-    {
-        sane(condition, "condition");
-        target.change(condition);
-        return this;
-    }
-
-    public IntentBuilder<T> change(Predicate<? super T> condition, String description)
-    {
-        sane(condition, "condition", description, "description");
-        target.change(condition, description);
-        return this;
-    }
-
     public IntentBuilder<T> delete()
     {
         target.delete();
@@ -131,26 +111,6 @@ public class IntentBuilder<T> implements EvsBuilder<T>
     {
         sane(condition, "condition", description, "description");
         target.delete(condition, description);
-        return this;
-    }
-
-    public IntentBuilder<T> modify()
-    {
-        target.modify();
-        return this;
-    }
-
-    public IntentBuilder<T> modify(Predicate<? super T> condition)
-    {
-        sane(condition, "condition");
-        target.modify(condition);
-        return this;
-    }
-
-    public IntentBuilder<T> modify(Predicate<? super T> condition, String description)
-    {
-        sane(condition, "condition", description, "description");
-        target.modify(condition, description);
         return this;
     }
 

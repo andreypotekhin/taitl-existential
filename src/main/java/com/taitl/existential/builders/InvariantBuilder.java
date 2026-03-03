@@ -84,22 +84,6 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     }
 
     /**
-     * Adds a change invariant with a description.
-     *
-     * @param condition
-     *            Predicate to validate on change
-     * @param description
-     *            Human-friendly description of the rule
-     * @return This builder for chaining
-     */
-    public InvariantBuilder<T> change(Predicate<? super T> condition, String description)
-    {
-        sane(condition, "condition", description, "description");
-        target.change(condition, description);
-        return this;
-    }
-
-    /**
      * Adds a delete invariant with a description.
      *
      * @param condition
@@ -112,22 +96,6 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     {
         sane(condition, "condition", description, "description");
         target.delete(condition, description);
-        return this;
-    }
-
-    /**
-     * Adds a modify invariant with a description.
-     *
-     * @param condition
-     *            Predicate to validate on modify
-     * @param description
-     *            Human-friendly description of the rule
-     * @return This builder for chaining
-     */
-    public InvariantBuilder<T> modify(Predicate<? super T> condition, String description)
-    {
-        sane(condition, "condition", description, "description");
-        target.modify(condition, description);
         return this;
     }
 

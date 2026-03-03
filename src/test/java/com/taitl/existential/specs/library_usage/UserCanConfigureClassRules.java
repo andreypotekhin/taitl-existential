@@ -44,7 +44,7 @@ class UserCanConfigureClassRules extends SpecBase
         assertDoesNotThrow(() -> {
             configure();
             String tran = ex.begin(op).id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
         });
     }
 
@@ -55,7 +55,7 @@ class UserCanConfigureClassRules extends SpecBase
         assertDoesNotThrow(() -> {
             configureWithInstances();
             String tran = ex.begin(op).id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
         });
     }
 
@@ -66,7 +66,7 @@ class UserCanConfigureClassRules extends SpecBase
         assertDoesNotThrow(() -> {
             configure();
             String tran = ex.begin(op).id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
         });
     }
 
@@ -77,7 +77,7 @@ class UserCanConfigureClassRules extends SpecBase
         assertDoesNotThrow(() -> {
             configureMixingFluentAndBuilders();
             String tran = ex.begin(op).id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
         });
     }
 

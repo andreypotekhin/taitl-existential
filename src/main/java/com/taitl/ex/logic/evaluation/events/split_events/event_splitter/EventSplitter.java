@@ -23,7 +23,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * </pre>
  * Further, depending on type of transition (Create, Update, Delete), emits the following events:
  *   Created: {@code Create<House>, CU<House>, CUD<House> }
- *   Updated: {@code Update<House>, CU<House>, UD<House>, CUD<House>, Change<House>, Mutate<House> }
+ *   Updated: {@code Update<House>, CU<House>, UD<House>, CUD<House>, Mutate<House> }
  *   Deleted: {@code Delete<House>, UD<House>, CUD<House> }
  * 
  * Execution order

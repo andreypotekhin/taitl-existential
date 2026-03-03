@@ -4,7 +4,7 @@ import com.taitl.ex.core.existential.ExistentialEvents;
 import com.taitl.ex.logic.indexing.IndexingLogic;
 import com.taitl.existential.Existential;
 import com.taitl.existential.constants.Flags;
-import com.taitl.existential.events.access_events.Change;
+import com.taitl.existential.events.Update;
 import com.taitl.existential.keys.EventKey;
 import com.taitl.existential.keys.RuntimeKey;
 import com.taitl.existential.keys.TypeKey;
@@ -67,7 +67,7 @@ class EventLogicTypeKeyFlagsTest
         IndexingLogic indexing = new IndexingLogic(ev);
         Tr tr = new Tr("/api/test", UUID.randomUUID(), ex.transactions().logic());
 
-        Change<String> event = new Change<>("ok");
+        Update<String> event = new Update<>("ok");
         TypeKey<String> type = logic.typeKey("ok");
         indexing.indexEvent(event, "ok", type, tr);
 

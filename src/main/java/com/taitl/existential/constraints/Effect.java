@@ -186,58 +186,6 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     }
 
     /**
-     * Creates an effect for Change event.
-     *
-     * @param action Action to perform for the entities that received this event
-     * @return This effect for chaining
-     */
-    public Effect<T> change(Consumer<? super T> action)
-    {
-        sane(action, "action");
-        return add(new OnChange<T>(null, action));
-    }
-
-    /**
-     * Creates an effect for Change event.
-     *
-     * @param action Action to perform for the entities that received this event
-     * @param description Description of effect
-     * @return This effect for chaining
-     */
-    public Effect<T> change(Consumer<? super T> action, String description)
-    {
-        sane(action, "action", description, "description");
-        return add(new OnChange<T>(action, description));
-    }
-
-    /**
-     * Creates an effect for Change event.
-     *
-     * @param condition Condition on the entities to which apply action
-     * @param action Action to perform for the entities that received this event
-     * @return This effect for chaining
-     */
-    public Effect<T> change(Predicate<? super T> condition, Consumer<? super T> action)
-    {
-        sane(condition, "condition", action, "action");
-        return add(new OnChange<T>(condition, action));
-    }
-
-    /**
-     * Creates an effect for Change event.
-     *
-     * @param condition Condition on the entities to which apply action
-     * @param action Action to perform for the entities that received this event
-     * @param description Description of effect
-     * @return This effect for chaining
-     */
-    public Effect<T> change(Predicate<? super T> condition, Consumer<? super T> action, String description)
-    {
-        sane(condition, "condition", action, "action", description, "description");
-        return add(new OnChange<T>(condition, action, description));
-    }
-
-    /**
      * Creates an effect for Delete event.
      *
      * @param action Action to perform for the entities that received this event
@@ -287,58 +235,6 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnDelete<T>(condition, action, description));
-    }
-
-    /**
-     * Creates an effect for Modify event.
-     *
-     * @param action Action to perform for the entities that received this event
-     * @return This effect for chaining
-     */
-    public Effect<T> modify(Consumer<? super T> action)
-    {
-        sane(action, "action");
-        return add(new OnModify<T>(null, action));
-    }
-
-    /**
-     * Creates an effect for Modify event.
-     *
-     * @param action Action to perform for the entities that received this event
-     * @param description Description of effect
-     * @return This effect for chaining
-     */
-    public Effect<T> modify(Consumer<? super T> action, String description)
-    {
-        sane(action, "action", description, "description");
-        return add(new OnModify<T>(action, description));
-    }
-
-    /**
-     * Creates an effect for Modify event.
-     *
-     * @param condition Condition on the entities to which apply action
-     * @param action Action to perform for the entities that received this event
-     * @return This effect for chaining
-     */
-    public Effect<T> modify(Predicate<? super T> condition, Consumer<? super T> action)
-    {
-        sane(condition, "condition", action, "action");
-        return add(new OnModify<T>(condition, action));
-    }
-
-    /**
-     * Creates an effect for Modify event.
-     *
-     * @param condition Condition on the entities to which apply action
-     * @param action Action to perform for the entities that received this event
-     * @param description Description of effect
-     * @return This effect for chaining
-     */
-    public Effect<T> modify(Predicate<? super T> condition, Consumer<? super T> action, String description)
-    {
-        sane(condition, "condition", action, "action", description, "description");
-        return add(new OnModify<T>(condition, action, description));
     }
 
     /**

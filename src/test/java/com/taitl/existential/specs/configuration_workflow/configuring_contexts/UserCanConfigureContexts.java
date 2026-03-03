@@ -65,7 +65,7 @@ class UserCanConfigureContexts extends SpecBase
             // @formatter:on
 
             String tran = ex.begin("/api/cats/create").id();
-            ex.change("ok", tran);
+            ex.update("ok", tran);
             ex.commit(tran);
         });
     }
@@ -92,7 +92,7 @@ class UserCanConfigureContexts extends SpecBase
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create").id();
-            ex.change("ok", tran);
+            ex.update("ok", tran);
             ex.commit(tran);
         });
 
@@ -134,7 +134,7 @@ class UserCanConfigureContexts extends SpecBase
             // @formatter:on
 
             String tran = ex.begin("/api/cats/create").id();
-            ex.change("ok", tran);
+            ex.update("ok", tran);
             ex.commit(tran);
         });
 
@@ -164,7 +164,7 @@ class UserCanConfigureContexts extends SpecBase
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create").id();
-            ex.change("ok", tran);
+            ex.update("ok", tran);
             ex.commit(tran);
         });
         assertEquals(List.of("wildcard", "concrete"), effectOrder);

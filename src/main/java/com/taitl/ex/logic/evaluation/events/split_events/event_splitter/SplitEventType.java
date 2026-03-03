@@ -73,7 +73,6 @@ public class SplitEventType
         // Update
         if (port.t0 != null && port.t1 != null)
         {
-            events.add(new Change<>(port.t1));
             events.add(new Update<>(port.t1));
             events.add(new CU<>(port.t1));
             events.add(new UD<>(port.t1));
@@ -83,7 +82,6 @@ public class SplitEventType
         // Delete
         if (port.t1 == null)
         {
-            events.add(new Change<>(port.t0));
             events.add(new Delete<>(port.t0));
             events.add(new UD<>(port.t0));
             events.add(new CUD<>(port.t0));

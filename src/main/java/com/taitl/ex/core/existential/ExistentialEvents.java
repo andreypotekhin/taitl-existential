@@ -96,23 +96,6 @@ public class ExistentialEvents implements Closeable
         event(new Delete<>(t), t, typeKey(t), tranID);
     }
 
-    public <T> void modify(T t, TypeKey<T> type, String tranID) throws ExistentialException
-    {
-        sane(t, "t", type, "type", tranID, "tranID");
-        event(new Modify<>(t), t, type, tr(tranID));
-    }
-
-    /**
-     * Variant of modify(t) without type parameter, when entity type may be
-     * deducted at run time - that is, if entity class is not generic.
-     * Only suitable for non-generic types.
-     */
-    public <T> void modify(T t, String tranID) throws ExistentialException
-    {
-        sane(t, "t", tranID, "tranID");
-        event(new Modify<>(t), t, typeKey(t), tranID);
-    }
-
     public <T> void update(T t, TypeKey<T> type, String tranID) throws ExistentialException
     {
         sane(t, "t", type, "type", tranID, "tranID");
@@ -128,23 +111,6 @@ public class ExistentialEvents implements Closeable
     {
         sane(t, "t", tranID, "tranID");
         event(new Update<>(t), t, typeKey(t), tranID);
-    }
-
-    public <T> void change(T t, TypeKey<T> type, String tranID) throws ExistentialException
-    {
-        sane(t, "t", type, "type", tranID, "tranID");
-        event(new Change<T>(t), t, type, tr(tranID));
-    }
-
-    /**
-     * Variant of event(t) without type parameter, when entity type may be
-     * deducted at run time - that is, if entity class is not generic.
-     * Only suitable for non-generic types.
-     */
-    public <T> void change(T t, String tranID) throws ExistentialException
-    {
-        sane(t, "t", tranID, "tranID");
-        event(new Change<T>(t), t, typeKey(t), tranID);
     }
 
     public <T> void mutate(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException

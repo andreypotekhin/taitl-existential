@@ -101,19 +101,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Declares an invariant for Change event.
-     *
-     * @param condition Predicate to enforce for the entities that received the event
-     * @param description Description of invariant
-     * @return This invariant for chaining
-     */
-    public Invariant<T> change(Predicate<? super T> condition, String description)
-    {
-        sane(condition, "condition");
-        return add(new OnChange<T>(condition, null, description));
-    }
-
-    /**
      * Declares an invariant for Delete event.
      *
      * @param condition Predicate to enforce for the entities that received the event
@@ -124,19 +111,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     {
         sane(condition, "condition");
         return add(new OnDelete<T>(condition, null, description));
-    }
-
-    /**
-     * Declares an invariant for Modify event.
-     *
-     * @param condition Predicate to enforce for the entities that received the event
-     * @param description Description of invariant
-     * @return This invariant for chaining
-     */
-    public Invariant<T> modify(Predicate<? super T> condition, String description)
-    {
-        sane(condition, "condition");
-        return add(new OnModify<T>(condition, null, description));
     }
 
     /**

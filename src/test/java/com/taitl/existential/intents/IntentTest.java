@@ -47,20 +47,18 @@ class IntentTest
 
         intent.create()
                 .read()
-                .change()
                 .update()
                 .upsert()
                 .on();
 
         List<Ev<String>> evs = intent.list();
 
-        assertThat(evs, hasSize(6));
+        assertThat(evs, hasSize(5));
         assertThat(evs.get(0), instanceOf(OnCreate.class));
         assertThat(evs.get(1), instanceOf(OnRead.class));
-        assertThat(evs.get(2), instanceOf(OnChange.class));
-        assertThat(evs.get(3), instanceOf(OnUpdate.class));
-        assertThat(evs.get(4), instanceOf(OnCU.class));
-        assertThat(evs.get(5), instanceOf(On.class));
+        assertThat(evs.get(2), instanceOf(OnUpdate.class));
+        assertThat(evs.get(3), instanceOf(OnCU.class));
+        assertThat(evs.get(4), instanceOf(On.class));
     }
 
     @Test

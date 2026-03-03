@@ -6,7 +6,7 @@ The Existential library aims to:
 - Uphold these truths by automatically verifying them at specific points of execution.
 
 To apply the rules, the library:
-- Allows the user to send events about an entity, for example Change<MyEntity> when the entity changes.
+- Allows the user to send events about an entity, for example Update<MyEntity> when the entity changes.
 - Automatically validates rules that are applicable based on the encountered events.
 - An event may concern the entity lifecycle (Create, Update, Delete), access to the entity (Read, Write), or the
   transaction lifecycle (Begin, Commit, Rollback). This allows rules to be attached to specific points or

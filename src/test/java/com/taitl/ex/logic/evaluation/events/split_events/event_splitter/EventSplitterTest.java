@@ -33,8 +33,8 @@ class EventSplitterTest
         class PortCases
         {
             @Test
-            @DisplayName("Split transit uses updated entity for change")
-            void updatedEntityForChange()
+            @DisplayName("Split transit uses updated entity for update")
+            void updatedEntityForUpdate()
             {
                 EventSplitter splitter = new EventSplitter();
                 String oldValue = new String("old");
@@ -42,13 +42,13 @@ class EventSplitterTest
 
                 Set<Event<String>> events = splitter.splitEvent(new Port<>(oldValue, newValue));
 
-                Change<String> change = events.stream()
-                        .filter(event -> event instanceof Change<?>)
-                        .map(event -> (Change<String>) event)
+                Update<String> update = events.stream()
+                        .filter(event -> event instanceof Update<?>)
+                        .map(event -> (Update<String>) event)
                         .findFirst()
-                        .orElseThrow(() -> new AssertionError("Change event not found"));
+                        .orElseThrow(() -> new AssertionError("Update event not found"));
 
-                assertSame(newValue, change.t);
+                assertSame(newValue, update.t);
             }
 
             @Test

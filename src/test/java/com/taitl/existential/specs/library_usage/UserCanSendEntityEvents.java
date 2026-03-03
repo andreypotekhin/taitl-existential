@@ -70,7 +70,7 @@ class UserCanSendEntityEvents extends SpecBase
     void sendModifyEvent() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.modify(cat, tran);
+        ex.update(cat, tran);
         ex.commit(tran);
     }
 

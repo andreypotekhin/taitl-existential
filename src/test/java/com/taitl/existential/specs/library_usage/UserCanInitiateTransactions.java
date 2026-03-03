@@ -35,7 +35,7 @@ class UserCanInitiateTransactions extends SpecBase
     void commit() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.change(cat, tran);
+        ex.update(cat, tran);
         ex.commit(tran);
     }
 
@@ -44,7 +44,7 @@ class UserCanInitiateTransactions extends SpecBase
     void rollback() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.change(cat, tran);
+        ex.update(cat, tran);
         ex.rollback(tran);
     }
 
@@ -53,7 +53,7 @@ class UserCanInitiateTransactions extends SpecBase
     void checkpoint() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.change(cat, tran);
+        ex.update(cat, tran);
         ex.checkpoint(tran);
     }
 }

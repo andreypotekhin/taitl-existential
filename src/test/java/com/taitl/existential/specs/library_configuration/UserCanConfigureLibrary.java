@@ -50,7 +50,7 @@ class UserCanConfigureLibrary extends SpecBase
     {
         assertThat(assertThrows(IllegalStateException.class, () -> {
             String tran = ex.begin(op).id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
         }).getMessage(), containsString("You need to configure at least one context"));
     }
 

@@ -82,34 +82,6 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public EffectBuilder<T> change(Consumer<? super T> action)
-    {
-        sane(action, "action");
-        target.change(action);
-        return this;
-    }
-
-    public EffectBuilder<T> change(Consumer<? super T> action, String description)
-    {
-        sane(action, "action", description, "description");
-        target.change(action, description);
-        return this;
-    }
-
-    public EffectBuilder<T> change(Predicate<? super T> condition, Consumer<? super T> action)
-    {
-        sane(condition, "condition", action, "action");
-        target.change(condition, action);
-        return this;
-    }
-
-    public EffectBuilder<T> change(Predicate<? super T> condition, Consumer<? super T> action, String description)
-    {
-        sane(condition, "condition", action, "action", description, "description");
-        target.change(condition, action, description);
-        return this;
-    }
-
     public EffectBuilder<T> delete(Consumer<? super T> action)
     {
         sane(action, "action");
@@ -135,34 +107,6 @@ public class EffectBuilder<T> implements EvsBuilder<T>
     {
         sane(condition, "condition", action, "action", description, "description");
         target.delete(condition, action, description);
-        return this;
-    }
-
-    public EffectBuilder<T> modify(Consumer<? super T> action)
-    {
-        sane(action, "action");
-        target.modify(action);
-        return this;
-    }
-
-    public EffectBuilder<T> modify(Consumer<? super T> action, String description)
-    {
-        sane(action, "action", description, "description");
-        target.modify(action, description);
-        return this;
-    }
-
-    public EffectBuilder<T> modify(Predicate<? super T> condition, Consumer<? super T> action)
-    {
-        sane(condition, "condition", action, "action");
-        target.modify(condition, action);
-        return this;
-    }
-
-    public EffectBuilder<T> modify(Predicate<? super T> condition, Consumer<? super T> action, String description)
-    {
-        sane(condition, "condition", action, "action", description, "description");
-        target.modify(condition, action, description);
         return this;
     }
 

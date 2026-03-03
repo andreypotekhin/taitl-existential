@@ -15,7 +15,7 @@ import static com.taitl.ex.common.helper.strings.Text.*;
  * For generic types, the key is the class short name with the qualifier in angle brackets,
  * such as Set&lt;House&gt;.
  * This allows event handlers to be registered for fully-qualified types, for example
- * OnChange&lt;Document&lt;HTML&gt;&gt; and OnChange&lt;Document&lt;JSON&gt;&gt;.
+ * OnUpdate&lt;Document&lt;HTML&gt;&gt; and OnUpdate&lt;Document&lt;JSON&gt;&gt;.
  */
 public class TypeKey<T>
 {

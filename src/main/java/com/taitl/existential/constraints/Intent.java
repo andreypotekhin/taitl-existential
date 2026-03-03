@@ -144,44 +144,6 @@ public class Intent<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Declares intent to change entities of this type.
-     * (indicates that Change event may be sent during transaction).
-     *
-     * @return This intent for chaining
-     */
-    public Intent<T> change()
-    {
-        return change(value -> true);
-    }
-
-    /**
-     * Declares intent to change entities of this type.
-     * (indicates that Change event may be sent during transaction).
-     *
-     * @param condition Condition which the entities that receive this event must satisfy
-     * @return This intent for chaining
-     */
-    public Intent<T> change(Predicate<? super T> condition)
-    {
-        sane(condition, "condition");
-        return add(new OnChange<T>(condition, null));
-    }
-
-    /**
-     * Declares intent to change entities of this type.
-     * (indicates that Change event may be sent during transaction).
-     *
-     * @param condition Condition which the entities that receive this event must satisfy
-     * @param description Description of intent
-     * @return This intent for chaining
-     */
-    public Intent<T> change(Predicate<? super T> condition, String description)
-    {
-        sane(condition, "condition", description, "description");
-        return add(new OnChange<T>(condition, null, description));
-    }
-
-    /**
      * Declares intent to delete entities of this type.
      * (indicates that Delete event may be sent during transaction).
      *
@@ -217,44 +179,6 @@ public class Intent<T> implements Evs<T>, Constraints<T>
     {
         sane(condition, "condition", description, "description");
         return add(new OnDelete<T>(condition, null, description));
-    }
-
-    /**
-     * Declares intent to modify entities of this type.
-     * (indicates that Modify event may be sent during transaction).
-     *
-     * @return This intent for chaining
-     */
-    public Intent<T> modify()
-    {
-        return modify(value -> true);
-    }
-
-    /**
-     * Declares intent to modify entities of this type.
-     * (indicates that Modify event may be sent during transaction).
-     *
-     * @param condition Condition which the entities that receive this event must satisfy
-     * @return This intent for chaining
-     */
-    public Intent<T> modify(Predicate<? super T> condition)
-    {
-        sane(condition, "condition");
-        return add(new OnModify<T>(condition, null));
-    }
-
-    /**
-     * Declares intent to modify entities of this type.
-     * (indicates that Modify event may be sent during transaction).
-     *
-     * @param condition Condition which the entities that receive this event must satisfy
-     * @param description Description of intent
-     * @return This intent for chaining
-     */
-    public Intent<T> modify(Predicate<? super T> condition, String description)
-    {
-        sane(condition, "condition", description, "description");
-        return add(new OnModify<T>(condition, null, description));
     }
 
     /**

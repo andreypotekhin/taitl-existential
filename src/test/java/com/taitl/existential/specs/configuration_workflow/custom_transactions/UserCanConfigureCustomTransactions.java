@@ -53,7 +53,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
         assertDoesNotThrow(() -> {
             fixt.configureTransactionRules();
             String tran = ex.begin(op).id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
             ex.commit(tran);
         });
     }
@@ -66,7 +66,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
             fixt.configureTransactionRules();
             Transaction custom = new Transaction(op, "request-scope");
             String tran = ex.begin(op, custom).id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
             ex.commit(tran);
         });
     }
@@ -92,7 +92,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create").id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
             ex.commit(tran);
         });
 
@@ -121,7 +121,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create").id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
             ex.commit(tran);
         });
 
@@ -149,7 +149,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create").id();
-            ex.change(cat, tran);
+            ex.update(cat, tran);
             ex.commit(tran);
         });
 
