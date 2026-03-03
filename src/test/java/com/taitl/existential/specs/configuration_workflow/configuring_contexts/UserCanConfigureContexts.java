@@ -113,24 +113,24 @@ class UserCanConfigureContexts extends SpecBase
                 .context()
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
-                    .done()
-                    .transaction(() -> {
+                .done()
+                .transaction(() -> {
                         Transaction tr = new Transaction("/api/cats/create", "root");
                         tr.begin((Transaction current) -> rootType.set(current.context().getClass()));
                         return tr;
                     })
-                    .build()
+                .build()
                 .context("/api/cats/create")
                     .contextFactory(() -> new SpecificContext("/unused"))
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
-                    .done()
-                    .transaction(() -> {
-                        Transaction tr = new Transaction("/api/cats/create", "specific");
-                        tr.begin((Transaction current) -> specificType.set(current.context().getClass()));
-                        return tr;
-                    })
-                    .build();
+                .done()
+                .transaction(() -> {
+                    Transaction tr = new Transaction("/api/cats/create", "specific");
+                    tr.begin((Transaction current) -> specificType.set(current.context().getClass()));
+                    return tr;
+                })
+                .build();
             // @formatter:on
 
             String tran = ex.begin("/api/cats/create").id();
@@ -152,14 +152,14 @@ class UserCanConfigureContexts extends SpecBase
         Ex.configure("/api/cats/create")
             .context("/api/*/create")
                 .effect(Cat.class)
-                .create(v -> effectOrder.add("wildcard"))
+                    .create(v -> effectOrder.add("wildcard"))
                 .done()
-                .build()
+            .build()
             .context()
                 .effect(Cat.class)
-                .create(v -> effectOrder.add("concrete"))
+                    .create(v -> effectOrder.add("concrete"))
                 .done()
-                .build();
+            .build();
         // @formatter:on
 
         assertDoesNotThrow(() -> {
@@ -167,7 +167,6 @@ class UserCanConfigureContexts extends SpecBase
             ex.change("ok", tran);
             ex.commit(tran);
         });
-
         assertEquals(List.of("wildcard", "concrete"), effectOrder);
     }
 
@@ -175,15 +174,13 @@ class UserCanConfigureContexts extends SpecBase
     @DisplayName("Configuring contexts - parent context cannot be added under child config")
     void parentContextCannotBeAddedUnderChildConfig()
     {
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                // @formatter:off
-                    Ex.configure("/api/cats/create")
-                        .context("/api/cats");
-                    // @formatter:on
-                });
-
+        // @formatter:off
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+            () -> {
+                Ex.configure("/api/cats/create")
+                    .context("/api/cats");
+            });
+        // @formatter:on
         assertTrue(ex.getMessage().contains("must match"));
     }
 
@@ -191,15 +188,13 @@ class UserCanConfigureContexts extends SpecBase
     @DisplayName("Configuring contexts - unrelated context name is rejected")
     void unrelatedContextNameIsRejected()
     {
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                // @formatter:off
-                    Ex.configure("/api/cats/create")
-                        .context("/admin/users");
-                    // @formatter:on
-                });
-
+        // @formatter:off
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+            () -> {
+                Ex.configure("/api/cats/create")
+                    .context("/admin/users");
+            });
+        // @formatter:on
         assertTrue(ex.getMessage().contains("must match"));
     }
 
@@ -207,16 +202,14 @@ class UserCanConfigureContexts extends SpecBase
     @DisplayName("Configuring contexts - cannot define empty context")
     void cannotDefineEmptyContext()
     {
-        IllegalStateException ex = assertThrows(
-                IllegalStateException.class,
-                () -> {
-                // @formatter:off
-                    Ex.configure("/api/cats/create")
-                        .context()
-                        .build();
-                    // @formatter:on
-                });
-
+        // @formatter:off
+        IllegalStateException ex = assertThrows(IllegalStateException.class,
+            () -> {
+                Ex.configure("/api/cats/create")
+                    .context()
+                    .build();
+            });
+        // @formatter:on
         assertTrue(ex.getMessage().contains("Cannot configure context without defining rules"));
     }
 }

@@ -20,7 +20,7 @@ public class EvaluateEvents
             throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField", report, "report");
-        SplitResult splitResult = splitEvent.call(runtimeKey, eventField, useFullEventNames);
+        SplitResult<T> splitResult = splitEvent.call(runtimeKey, eventField, useFullEventNames);
         executeHandlers.call(splitResult.evaluables(), splitResult.event(), report);
     }
 }

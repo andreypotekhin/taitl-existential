@@ -3,6 +3,7 @@ package com.taitl.ex.logic.configuration;
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
+import com.taitl.ex.logic.configuration.rules.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
@@ -24,6 +25,7 @@ public class ConfigurationLogic implements Closeable
     protected ConfigRegistry registry;
     protected CreateBuilders createBuilders;
     protected BuildContexts buildContexts;
+    protected FallbackOnNearestParent fallbackOnNearestParent;
     protected FinalizeConfiguration finalizeConfiguration;
 
     public ConfigurationLogic(ExistentialConfigs ec)
@@ -32,6 +34,7 @@ public class ConfigurationLogic implements Closeable
         this.registry = new ConfigRegistry(this);
         this.createBuilders = new CreateBuilders(this);
         this.buildContexts = new BuildContexts(this);
+        this.fallbackOnNearestParent = new FallbackOnNearestParent(registry);
         this.finalizeConfiguration = new FinalizeConfiguration(this);
     }
 
@@ -143,42 +146,9 @@ public class ConfigurationLogic implements Closeable
         Config config = registry.configs().get(op);
         if (config == null)
         {
-            config = nearestParentConfig(op);
+            config = fallbackOnNearestParent.call(op);
         }
         verify(config != null, String.format("Config not found for op '%s'", op));
         return config;
-    }
-
-    protected Config nearestParentConfig(String op)
-    {
-        sane(op, "op");
-        Config closest = null;
-        for (Map.Entry<String, Config> entry : registry.configs().entrySet())
-        {
-            String candidate = entry.getKey();
-            if (!matchesOrParent(op, candidate))
-            {
-                continue;
-            }
-            if (closest == null || candidate.length() > closest.name().length())
-            {
-                closest = entry.getValue();
-            }
-        }
-        return closest;
-    }
-
-    protected boolean matchesOrParent(String op, String candidate)
-    {
-        sane(op, "op", candidate, "candidate");
-        if (op.equals(candidate))
-        {
-            return true;
-        }
-        if ("/".equals(candidate))
-        {
-            return true;
-        }
-        return op.startsWith(candidate + "/");
     }
 }

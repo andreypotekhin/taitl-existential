@@ -1,17 +1,13 @@
 package com.taitl.existential.keys;
 
-import com.taitl.existential.events.types.Event;
+import com.taitl.existential.events.types.*;
 
-import static com.taitl.ex.common.helper.State.verify;
+import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Combines an event key (event type + type key) with object identity for executing configured rules.
  *
-<<<<<<< ours
  * Examples: Create<Doc<Json>> + object reference, Update<Measurement<Float>> + object reference.
-=======
- * Examples: Create<Doc<Json>> + object ref, Update<Measurement<Float>> + object ref.
->>>>>>> theirs
  *
  * @see TypeKey
  * @see Event
