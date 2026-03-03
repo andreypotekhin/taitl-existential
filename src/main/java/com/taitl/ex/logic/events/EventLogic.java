@@ -95,21 +95,21 @@ public class EventLogic implements Closeable
         update(t, typeKey(t), tr);
     }
 
-    public <T> void mutate(T t0, T t1, TypeKey<T> type, Tr tr) throws ExistentialException
+    public <T> void transit(T t0, T t1, TypeKey<T> type, Tr tr) throws ExistentialException
     {
         sane(t0, "t0", t1, "t1", type, "type", tr, "tr");
-        event(new Mutate<>(t0, t1), type, tr);
+        event(new Transit<>(t0, t1), type, tr);
     }
 
     /**
-     * Variant of mutate(t0, t1) without type parameter,
+     * Variant of transit(t0, t1) without type parameter,
      * only suitable for non-generic types.
      */
-    public <T> void mutate(T t0, T t1, Tr tr) throws ExistentialException
+    public <T> void transit(T t0, T t1, Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
         check(t0 != null && t1 != null, "Both t0 and t1 should not be null.");
-        mutate(t0, t1, typeKey(t1), tr);
+        transit(t0, t1, typeKey(t1), tr);
     }
 
     public <T> void port(T t0, T t1, TypeKey<T> type, Tr tr) throws ExistentialException
@@ -117,7 +117,7 @@ public class EventLogic implements Closeable
         sane(type, "type", tr, "tr");
         check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
         boolean haveNull = t0 == null || t1 == null;
-        BiEvent<T> event = haveNull ? new Port<>(t0, t1) : new Mutate<>(t0, t1);
+        BiEvent<T> event = haveNull ? new Port<>(t0, t1) : new Transit<>(t0, t1);
         event(event, type, tr);
     }
 

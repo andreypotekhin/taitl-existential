@@ -7,7 +7,7 @@ import com.taitl.existential.events.types.*;
  * Signals that an entity was created, updated, or deleted during the current transaction.
  *
  * Unlike {@link Event} classes, provides both the initial and final entity states.
- * Unlike {@link Mutate}, either state may be null.
+ * Unlike {@link Transit}, either state may be null.
  *
  * Initial state (before): entity state at the beginning of the transaction. Null means the entity was created.
  * Final state (after): entity state at the end of the transaction. Null means the entity was deleted.
@@ -20,7 +20,7 @@ import com.taitl.existential.events.types.*;
  * @param <T>
  *            Class of application entity
  * @see Event
- * @see Mutate
+ * @see Transit
  */
 public class Port<T> extends BiEvent<T>
 {

@@ -268,7 +268,7 @@ public final class Ex
     }
 
     /**
-     * Emits Mutate<T> event based on before- and after- entity states.
+     * Emits Transit<T> event based on before- and after- entity states.
      *
      * @param t0 previous entity value
      * @param t1 new entity value
@@ -276,22 +276,22 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void mutate(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public static <T> void transit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
     {
-        instance().mutate(t0, t1, type, tranID);
+        instance().transit(t0, t1, type, tranID);
     }
 
     /**
-     * Variant of mutate() without type parameter. Only suitable for non-generic entity types.
+     * Variant of transit() without type parameter. Only suitable for non-generic entity types.
      *
      * @param t0 previous entity value
      * @param t1 new entity value
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void mutate(T t0, T t1, String tranID) throws ExistentialException
+    public static <T> void transit(T t0, T t1, String tranID) throws ExistentialException
     {
-        instance().mutate(t0, t1, tranID);
+        instance().transit(t0, t1, tranID);
     }
 
     /**

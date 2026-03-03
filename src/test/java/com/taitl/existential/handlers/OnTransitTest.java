@@ -8,13 +8,13 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class OnMutateTest
+class OnTransitTest
 {
     @Test
     @DisplayName("Condition only rejects when false")
     void conditionOnlyRejectsWhenFalse()
     {
-        OnMutate<Cat> handler = new OnMutate<>(c -> "Black".equals(c.color), null, "Cats are black");
+        OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("White", "Park");
 
@@ -28,7 +28,7 @@ class OnMutateTest
     @DisplayName("Condition only allows when true")
     void conditionOnlyAllowsWhenTrue()
     {
-        OnMutate<Cat> handler = new OnMutate<>(c -> "Black".equals(c.color), null, "Cats are black");
+        OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("Black", "Park");
 
@@ -39,7 +39,7 @@ class OnMutateTest
     @DisplayName("Bicondition only rejects when false")
     void biconditionOnlyRejectsWhenFalse()
     {
-        OnMutate<Cat> handler = new OnMutate<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");
+        OnTransit<Cat> handler = new OnTransit<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");
         Cat before = new Cat("Black", "Park");
         Cat after = new Cat("White", "Park");
 

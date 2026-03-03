@@ -2,7 +2,7 @@ package com.taitl.existential.constraints;
 
 import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.handlers.OnCreate;
-import com.taitl.existential.handlers.OnMutate;
+import com.taitl.existential.handlers.OnTransit;
 import com.taitl.existential.keys.TypeKey;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -48,15 +48,15 @@ class InvariantTest
         BiPredicate<String, String> bicondition = (before, after) -> before.length() <= after.length();
 
         invariant.create(condition, "Must be long enough")
-                .mutate(bicondition, "Length cannot shrink");
+                .transit(bicondition, "Length cannot shrink");
 
         assertThat(invariant.list().get(0), instanceOf(OnCreate.class));
         OnCreate<String> create = (OnCreate<String>) invariant.list().get(0);
         assertThat(create.description(), is("Must be long enough"));
 
-        assertThat(invariant.list().get(1), instanceOf(OnMutate.class));
-        OnMutate<String> mutate = (OnMutate<String>) invariant.list().get(1);
-        assertThat(mutate.description(), is("Length cannot shrink"));
+        assertThat(invariant.list().get(1), instanceOf(OnTransit.class));
+        OnTransit<String> transit = (OnTransit<String>) invariant.list().get(1);
+        assertThat(transit.description(), is("Length cannot shrink"));
     }
 
     @Test

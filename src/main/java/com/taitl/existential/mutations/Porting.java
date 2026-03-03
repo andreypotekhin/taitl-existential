@@ -3,7 +3,7 @@ package com.taitl.existential.mutations;
 import com.taitl.ex.common.helper.*;
 
 /**
- * Represents an object mutation that, unlike Mutation<T>, allows either 'from' or 'to' state to be null (but not both).
+ * Represents an object mutation that, unlike Transition<T>, allows either 'from' or 'to' state to be null (but not both).
  *
  * t0 represents object data at the start of transaction (object initial state). t1 represents object data at the end of
  * transaction (object final state).
@@ -14,7 +14,7 @@ import com.taitl.ex.common.helper.*;
  * @param <T>
  *            Type of mutating object
  *
- * @see Mutation
+ * @see Transition
  */
 public final class Porting<T>
 {

@@ -111,47 +111,49 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public EffectBuilder<T> mutate(BiConsumer<? super T, ? super T> action)
+    public EffectBuilder<T> transit(BiConsumer<? super T, ? super T> action)
     {
         sane(action, "action");
-        target.mutate(action);
+        target.transit(action);
         return this;
     }
 
-    public EffectBuilder<T> mutate(BiConsumer<? super T, ? super T> action, String description)
+    public EffectBuilder<T> transit(BiConsumer<? super T, ? super T> action, String description)
     {
         sane(action, "action", description, "description");
-        target.mutate(action, description);
+        target.transit(action, description);
         return this;
     }
 
-    public EffectBuilder<T> mutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
+    public EffectBuilder<T> transit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
-        target.mutate(condition, action);
+        target.transit(condition, action);
         return this;
     }
 
-    public EffectBuilder<T> mutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action,
+    public EffectBuilder<T> transit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action,
             String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        target.mutate(condition, action, description);
+        target.transit(condition, action, description);
         return this;
     }
 
-    public EffectBuilder<T> mutate(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action)
+    public EffectBuilder<T> transit(BiPredicate<? super T, ? super T> condition,
+            BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
-        target.mutate(condition, action);
+        target.transit(condition, action);
         return this;
     }
 
-    public EffectBuilder<T> mutate(BiPredicate<? super T, ? super T> condition, BiConsumer<? super T, ? super T> action,
+    public EffectBuilder<T> transit(BiPredicate<? super T, ? super T> condition,
+            BiConsumer<? super T, ? super T> action,
             String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        target.mutate(condition, action, description);
+        target.transit(condition, action, description);
         return this;
     }
 
@@ -239,48 +241,48 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public EffectBuilder<T> transit(BiConsumer<? super T, ? super T> action)
+    public EffectBuilder<T> port(BiConsumer<? super T, ? super T> action)
     {
         sane(action, "action");
-        target.transit(action);
+        target.port(action);
         return this;
     }
 
-    public EffectBuilder<T> transit(BiConsumer<? super T, ? super T> action, String description)
+    public EffectBuilder<T> port(BiConsumer<? super T, ? super T> action, String description)
     {
         sane(action, "action", description, "description");
-        target.transit(action, description);
+        target.port(action, description);
         return this;
     }
 
-    public EffectBuilder<T> transit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
+    public EffectBuilder<T> port(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
-        target.transit(condition, action);
+        target.port(condition, action);
         return this;
     }
 
-    public EffectBuilder<T> transit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action,
+    public EffectBuilder<T> port(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action,
             String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        target.transit(condition, action, description);
+        target.port(condition, action, description);
         return this;
     }
 
-    public EffectBuilder<T> transit(BiPredicate<? super T, ? super T> condition,
+    public EffectBuilder<T> port(BiPredicate<? super T, ? super T> condition,
             BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
-        target.transit(condition, action);
+        target.port(condition, action);
         return this;
     }
 
-    public EffectBuilder<T> transit(BiPredicate<? super T, ? super T> condition,
+    public EffectBuilder<T> port(BiPredicate<? super T, ? super T> condition,
             BiConsumer<? super T, ? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        target.transit(condition, action, description);
+        target.port(condition, action, description);
         return this;
     }
 

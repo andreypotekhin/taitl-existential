@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * Maps entity type to a set of configured event handlers, Set<On[E]<T<U>>>
  * Example: Doc<JSON> -> Set<On[Е]<Doc<JSON>>>
- * where E is one of Create, Update, Upsert, Delete, Read, Mutate, Port.
+ * where E is one of Create, Update, Upsert, Delete, Read, Transit, Port.
  *
  * Example:
  *   To retrieve the event handlers defined for the type "Doc<JSON>":

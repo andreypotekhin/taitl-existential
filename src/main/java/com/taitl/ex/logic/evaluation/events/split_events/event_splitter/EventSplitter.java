@@ -12,18 +12,18 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Splits compound events, such as Mutation, CUD, into set of elementary events for individual handling.
+ * Splits compound events, such as Transition, CUD, into set of elementary events for individual handling.
  * 
  * For example, splits a single transition {@code Port<House>} into the following event set:
  * <pre>{@code
- *   Mutate<House>
+ *   Transit<House>
  *   Port<House>
  *   On<House>
  * }
  * </pre>
  * Further, depending on type of transition (Create, Update, Delete), emits the following events:
  *   Created: {@code Create<House>, CU<House>, CUD<House> }
- *   Updated: {@code Update<House>, CU<House>, UD<House>, CUD<House>, Mutate<House> }
+ *   Updated: {@code Update<House>, CU<House>, UD<House>, CUD<House>, Transit<House> }
  *   Deleted: {@code Delete<House>, UD<House>, CUD<House> }
  * 
  * Execution order

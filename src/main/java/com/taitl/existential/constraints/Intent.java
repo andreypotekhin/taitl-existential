@@ -182,31 +182,31 @@ public class Intent<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Declares intent to mutate entities of this type.
-     * (indicates that Mutate event may be sent during transaction).
+     * Declares intent to transit entities of this type.
+     * (indicates that Transit event may be sent during transaction).
      *
      * @param condition Condition which the entities that receive this event must satisfy
      * @param description Description of intent
      * @return This intent for chaining
      */
-    public Intent<T> mutate(Predicate<? super T> condition, String description)
+    public Intent<T> transit(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        return add(new OnMutate<T>(condition, null, description));
+        return add(new OnTransit<T>(condition, null, description));
     }
 
     /**
-     * Declares intent to mutate entities of this type.
-     * (indicates that Mutate event may be sent during transaction).
+     * Declares intent to transit entities of this type.
+     * (indicates that Transit event may be sent during transaction).
      *
      * @param condition Condition which old/new entity values must satisfy
      * @param description Description of intent
      * @return This intent for chaining
      */
-    public Intent<T> mutate(BiPredicate<? super T, ? super T> condition, String description)
+    public Intent<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        return add(new OnMutate<T>(condition, null, description));
+        return add(new OnTransit<T>(condition, null, description));
     }
 
     /**
@@ -324,28 +324,28 @@ public class Intent<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Declares intent to transit entities of this type.
+     * Declares intent to port entities of this type.
      * (indicates that Port event may be sent during transaction).
      *
      * @param condition Condition which the entities that receive this event must satisfy
      * @param description Description of intent
      * @return This intent for chaining
      */
-    public Intent<T> transit(Predicate<? super T> condition, String description)
+    public Intent<T> port(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnPort<T>(condition, null, description));
     }
 
     /**
-     * Declares intent to transit entities of this type.
+     * Declares intent to port entities of this type.
      * (indicates that Port event may be sent during transaction).
      *
      * @param condition Condition which old/new entity values must satisfy
      * @param description Description of intent
      * @return This intent for chaining
      */
-    public Intent<T> transit(BiPredicate<? super T, ? super T> condition, String description)
+    public Intent<T> port(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnPort<T>(condition, null, description));

@@ -27,7 +27,7 @@ class UserCanSendEntityEvents extends SpecBase
     void sendEntityEvent() throws Exception
     {
         String tran = ex.begin(op).id();
-        ex.mutate(null, cat, tran);
+        ex.transit(null, cat, tran);
         ex.commit(tran);
     }
 
@@ -92,7 +92,7 @@ class UserCanSendEntityEvents extends SpecBase
         Tr tr = ex.begin(op);
         tr.create(cat);
         tr.update(cat, new TypeKey<Cat>(Cat.class));
-        tr.mutate(cat, cat);
+        tr.transit(cat, cat);
         tr.port(cat, null);
         tr.delete(cat);
         tr.commit();

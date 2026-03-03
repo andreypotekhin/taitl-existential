@@ -43,7 +43,7 @@ class EvaluateIntentTest
             @DisplayName("Returns false when bi intent does not match non bi event")
             void biIntentAgainstSingleEvent() throws Exception
             {
-                EventHandler<?> intent = new OnMutate<String>((left, right) -> true, null, "must match");
+                EventHandler<?> intent = new OnTransit<String>((left, right) -> true, null, "must match");
                 assertFalse(evaluateIntent.call(intent, new Read<>("cat")));
             }
         }

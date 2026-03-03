@@ -93,7 +93,7 @@ class EventSplitterTest
 
                 Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
 
-                assertTrue(splitKeys.stream().anyMatch(key -> key.toString().startsWith("Mutate<String>+")));
+                assertTrue(splitKeys.stream().anyMatch(key -> key.toString().startsWith("Transit<String>+")));
                 assertTrue(splitKeys.stream().allMatch(key -> key.typeKey().toString().equals("String")));
             }
 

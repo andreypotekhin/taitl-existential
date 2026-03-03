@@ -35,7 +35,7 @@ public class EventMask
         });
         registerEventType(new TypeKey<BiEvent>() {
         });
-        registerEventType(new TypeKey<Mutate>() {
+        registerEventType(new TypeKey<Transit>() {
         });
         registerEventType(new TypeKey<Port>() {
         });
@@ -53,12 +53,12 @@ public class EventMask
      *   Upsert -> 3
      *   Delete -> 4
      *   Read -> 5
-     *   Mutate -> 11
+     *   Transit -> 11
      *   Permutate -> 12
      * </pre>
      * For use in event bit masks, e.g. in Transaction class
      *
-     * @param et EventKey, e.g. Create, Update, Delete, Read, Mutate, etc.
+     * @param et EventKey, e.g. Create, Update, Delete, Read, Transit, etc.
      * @return The number representing a bit position for this type in events bitmask
      */
     public static int getEventBit(TypeKey et)

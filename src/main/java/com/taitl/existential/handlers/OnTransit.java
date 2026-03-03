@@ -12,7 +12,7 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Declarative handler for {@link Mutate} events that involve two values.
+ * Declarative handler for {@link Transit} events that involve two values.
  * The handler can be guarded by a predicate on the new value or a
  * bi-predicate on both values. When no action is provided, the handler
  * behaves as a constraint and throws when the condition is not met.
@@ -20,35 +20,34 @@ import static com.taitl.ex.common.helper.Args.*;
  * @param <T>
  *            Type of entity being mutated
  */
-// TODO: rename to OnTransit
-public class OnMutate<T> implements BiEventHandler<T>
+public class OnTransit<T> implements BiEventHandler<T>
 {
     Predicate<? super T> condition;
     BiPredicate<? super T, ? super T> bicondition;
     BiConsumer<? super T, ? super T> action;
     String description = null;
 
-    public OnMutate(BiConsumer<? super T, ? super T> action)
+    public OnTransit(BiConsumer<? super T, ? super T> action)
     {
         sane(action, "action");
         this.action = action;
     }
 
-    public OnMutate(BiConsumer<? super T, ? super T> action, String description)
+    public OnTransit(BiConsumer<? super T, ? super T> action, String description)
     {
         sane(action, "action");
         this.action = action;
         this.description = description;
     }
 
-    public OnMutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
+    public OnTransit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action)
     {
         sane(condition, "condition", action, "action");
         this.condition = condition;
         this.action = action;
     }
 
-    public OnMutate(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
+    public OnTransit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
     {
         sane(condition, "condition", description, "description");
         if (action != null)
@@ -60,14 +59,14 @@ public class OnMutate<T> implements BiEventHandler<T>
         this.description = description;
     }
 
-    public OnMutate(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action)
+    public OnTransit(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action)
     {
         sane(bicondition, "bicondition", action, "action");
         this.bicondition = bicondition;
         this.action = action;
     }
 
-    public OnMutate(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action,
+    public OnTransit(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action,
             String description)
     {
         sane(bicondition, "bicondition", description, "description");
@@ -145,6 +144,6 @@ public class OnMutate<T> implements BiEventHandler<T>
 
     public EventType eventType()
     {
-        return EventType.valueOf(Mutate.class);
+        return EventType.valueOf(Transit.class);
     }
 }

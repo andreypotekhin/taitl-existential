@@ -12,7 +12,7 @@ import com.taitl.existential.events.types.*;
  * Initial state (before): entity state at the beginning of the transaction.
  * Final state (after): entity state at the end of the transaction.
  *
- * Example: Mutate<Account> is raised when an Account entity is updated during the current transaction.
+ * Example: Transit<Account> is raised when an Account entity is updated during the current transaction.
  *
  * Database analog: UPDATE
  *
@@ -21,10 +21,9 @@ import com.taitl.existential.events.types.*;
  * @see Event
  * @see Port
  */
-// TODO: rename to Port
-public class Mutate<T> extends BiEvent<T>
+public class Transit<T> extends BiEvent<T>
 {
-    public Mutate(T before, T after)
+    public Transit(T before, T after)
     {
         super(before, after);
         PairArgs.requireBothNonNull(before, after, "Argument 'before' should not be null",

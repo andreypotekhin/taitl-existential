@@ -17,7 +17,7 @@ import com.taitl.existential.events.combined_events.*;
  * @see Read
  * @see ReadAndLock
  * @see Write
- * @see Mutate
+ * @see Transit
  * @see Port
  */
 public interface Event<T>

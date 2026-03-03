@@ -43,8 +43,8 @@ Library Transaction (Tr): a unit of execution in the library, associated with an
   - The rules are evaluated at the end of transaction (commit or checkpoint), unless assigned to an earlier stage
   - In case of a constraint violation, an exception is raised and violations are reported
 Quantifier: a logical expression such as All or Exists
-Mutation: an event that records both before and after states of an entity 
-Porting: a Mutation that can have a null in the before or after state (but not both) 
+Transition: an event that records both before and after states of an entity 
+Porting: a Transition that can have a null in the before or after state (but not both) 
   - The null in 'before' state indicates creation of an entity
   - The null in 'after' state indicates deletion of an entity
   - Both 'before' and 'after' states being non-null indicate a change (mutation) of an entity

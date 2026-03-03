@@ -179,7 +179,7 @@ User can't modify configurations (e.g. create invariants) after sending first ev
 - Except for specifying custom Transaction object for transaction run
 When emitting a port event without an explicit type key, library infers the type from the non-null entity
 value (preferring t1 when present, otherwise t0). Both t0 and t1 can't be null.
-When emitting a mutate event without an explicit type key, both t0 and t1 must be non-null.
+When emitting a transit event without an explicit type key, both t0 and t1 must be non-null.
 
 ### Constraints.
 (Below, the terms 'constraints' and 'invariants' are used interchangeably)
@@ -229,7 +229,7 @@ Optionally, user can configure the library to require a description for each con
 User can create an invariant for an entity class using the 'All' quantifier.
 User can restrict the 'All' quantifier to only apply to certain entities, by specifying a condition.
 User can define the 'All' quantifier on an entity class.
-User can define the 'All' quantifier on an entity mutation class (Mutation<T>).
+User can define the 'All' quantifier on an entity mutation class (Transition<T>).
 
 #### Existence Quantifier
 

@@ -101,34 +101,34 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     }
 
     /**
-     * Adds a mutate invariant using a single-entity predicate.
+     * Adds a transit invariant using a single-entity predicate.
      *
      * @param condition
-     *            Predicate to validate on mutate
+     *            Predicate to validate on transit
      * @param description
      *            Human-friendly description of the rule
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> mutate(Predicate<? super T> condition, String description)
+    public InvariantBuilder<T> transit(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.mutate(condition, description);
+        target.transit(condition, description);
         return this;
     }
 
     /**
-     * Adds a mutate invariant using a two-entity predicate.
+     * Adds a transit invariant using a two-entity predicate.
      *
      * @param condition
-     *            Predicate to validate on mutate
+     *            Predicate to validate on transit
      * @param description
      *            Human-friendly description of the rule
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> mutate(BiPredicate<? super T, ? super T> condition, String description)
+    public InvariantBuilder<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.mutate(condition, description);
+        target.transit(condition, description);
         return this;
     }
 
@@ -181,34 +181,34 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     }
 
     /**
-     * Adds a transit invariant with a description.
+     * Adds a port invariant with a description.
      *
      * @param condition
-     *            Predicate to validate on transit
+     *            Predicate to validate on port
      * @param description
      *            Human-friendly description of the rule
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> transit(Predicate<? super T> condition, String description)
+    public InvariantBuilder<T> port(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.transit(condition, description);
+        target.port(condition, description);
         return this;
     }
 
     /**
-     * Adds a transit invariant using a two-entity predicate.
+     * Adds a port invariant using a two-entity predicate.
      *
      * @param condition
-     *            Predicate to validate on transit
+     *            Predicate to validate on port
      * @param description
      *            Human-friendly description of the rule
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> transit(BiPredicate<? super T, ? super T> condition, String description)
+    public InvariantBuilder<T> port(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.transit(condition, description);
+        target.port(condition, description);
         return this;
     }
 

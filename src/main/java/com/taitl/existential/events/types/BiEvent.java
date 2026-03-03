@@ -6,7 +6,7 @@ import com.taitl.existential.events.combined_events.*;
 
 /**
  * Indicates a change event on an entity, capturing both initial and final states.
- * Serves as a base type for mutation events (Mutate<T>, Port<T>).
+ * Serves as a base type for mutation events (Transit<T>, Port<T>).
  * Unlike Event<T>, this event provides the initial and final states of its entity.
  * The initial state (t0) is the entity state at the beginning of the transaction.
  * The final state (t1) is the entity state at the end of the transaction.
@@ -21,7 +21,7 @@ import com.taitl.existential.events.combined_events.*;
  * @see Read
  * @see ReadAndLock
  * @see Write
- * @see Mutate
+ * @see Transit
  * @see Port
  */
 public class BiEvent<T> implements Event<T>

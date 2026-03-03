@@ -34,7 +34,7 @@ class ExecuteHandlersTest
                     unaryCalls.incrementAndGet();
                     assertSame(newValue, value);
                 }),
-                new OnMutate<String>((t0, t1) -> {
+                new OnTransit<String>((t0, t1) -> {
                     biCalls.incrementAndGet();
                     assertSame(oldValue, t0);
                     assertSame(newValue, t1);

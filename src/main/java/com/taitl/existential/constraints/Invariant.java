@@ -114,29 +114,29 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Declares an invariant for Mutate event.
+     * Declares an invariant for Transit event.
      *
      * @param condition Predicate to enforce for the entities that received the event
      * @param description Description of invariant
      * @return This invariant for chaining
      */
-    public Invariant<T> mutate(Predicate<? super T> condition, String description)
+    public Invariant<T> transit(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
-        return add(new OnMutate<T>(condition, null, description));
+        return add(new OnTransit<T>(condition, null, description));
     }
 
     /**
-     * Declares an invariant for Mutate event.
+     * Declares an invariant for Transit event.
      *
      * @param condition Predicate to enforce for old/new entity values
      * @param description Description of invariant
      * @return This invariant for chaining
      */
-    public Invariant<T> mutate(BiPredicate<? super T, ? super T> condition, String description)
+    public Invariant<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition");
-        return add(new OnMutate<T>(condition, null, description));
+        return add(new OnTransit<T>(condition, null, description));
     }
 
     /**
@@ -185,7 +185,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param description Description of invariant
      * @return This invariant for chaining
      */
-    public Invariant<T> transit(Predicate<? super T> condition, String description)
+    public Invariant<T> port(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
         return add(new OnPort<T>(condition, null, description));
@@ -198,7 +198,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param description Description of invariant
      * @return This invariant for chaining
      */
-    public Invariant<T> transit(BiPredicate<? super T, ? super T> condition, String description)
+    public Invariant<T> port(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition");
         return add(new OnPort<T>(condition, null, description));

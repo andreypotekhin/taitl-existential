@@ -23,7 +23,7 @@ import static com.taitl.ex.common.helper.Args.*;
  *
  * // TODO: also need more general events from elementary:
  * Create -> Create, CUD, CU, Port
- * Update -> Update, CUD, CU, Mutate
+ * Update -> Update, CUD, CU, Transit
  * Delete -> Delete, CUD, UD, Port
  */
 public class SplitEvent

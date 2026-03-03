@@ -102,7 +102,7 @@ For any object of type X that satisfies a condition, an object of type Y exists 
 
 For any object of type X that has been changed, an object of type Y exists for which a predicate holds:
 
-    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      All<Mutation<X>>((x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y))) 
+    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      All<Transition<X>>((x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y))) 
     ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      All<Porting<X>>((x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
 
 Same when x0, x1 must also satisfy some condition:

@@ -115,17 +115,17 @@ public class IntentBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public IntentBuilder<T> mutate(Predicate<? super T> condition, String description)
+    public IntentBuilder<T> transit(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.mutate(condition, description);
+        target.transit(condition, description);
         return this;
     }
 
-    public IntentBuilder<T> mutate(BiPredicate<? super T, ? super T> condition, String description)
+    public IntentBuilder<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.mutate(condition, description);
+        target.transit(condition, description);
         return this;
     }
 
@@ -189,17 +189,17 @@ public class IntentBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public IntentBuilder<T> transit(Predicate<? super T> condition, String description)
+    public IntentBuilder<T> port(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.transit(condition, description);
+        target.port(condition, description);
         return this;
     }
 
-    public IntentBuilder<T> transit(BiPredicate<? super T, ? super T> condition, String description)
+    public IntentBuilder<T> port(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.transit(condition, description);
+        target.port(condition, description);
         return this;
     }
 

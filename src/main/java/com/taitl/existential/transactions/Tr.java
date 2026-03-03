@@ -169,14 +169,14 @@ public class Tr
         el.update(t, this);
     }
 
-    public <T> void mutate(T t0, T t1, TypeKey<T> type) throws ExistentialException
+    public <T> void transit(T t0, T t1, TypeKey<T> type) throws ExistentialException
     {
-        el.mutate(t0, t1, type, this);
+        el.transit(t0, t1, type, this);
     }
 
-    public <T> void mutate(T t0, T t1) throws ExistentialException
+    public <T> void transit(T t0, T t1) throws ExistentialException
     {
-        el.mutate(t0, t1, this);
+        el.transit(t0, t1, this);
     }
 
     public <T> void port(T t0, T t1, TypeKey<T> type) throws ExistentialException
