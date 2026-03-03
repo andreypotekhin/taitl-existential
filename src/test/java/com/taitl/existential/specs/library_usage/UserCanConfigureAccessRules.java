@@ -37,8 +37,7 @@ class UserCanConfigureAccessRules extends SpecBase
                 .intent(cat.getClass())
                     .read()
                     .write()
-                    .done()
-                .build();
+                    .done();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -56,8 +55,7 @@ class UserCanConfigureAccessRules extends SpecBase
             .context(op)
                 .intent(cat.getClass())
                     .read()
-                    .done()
-                .build();
+                    .done();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -78,8 +76,7 @@ class UserCanConfigureAccessRules extends SpecBase
             .context(op)
                 .intent(cat.getClass())
                     .write(c -> writes.getAndIncrement() == 0)
-                    .done()
-                .build();
+                    .done();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -100,8 +97,7 @@ class UserCanConfigureAccessRules extends SpecBase
             .context(op)
                 .intent(cat.getClass())
                     .read()
-                    .done()
-                .build();
+                    .done();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -121,8 +117,7 @@ class UserCanConfigureAccessRules extends SpecBase
                 .validation()
                     .intent(cat.getClass())
                         .write()
-                        .done()
-                .build();
+                        .done();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -140,8 +135,7 @@ class UserCanConfigureAccessRules extends SpecBase
                 .validation()
                     .intent(cat.getClass())
                         .write()
-                        .done()
-                .build();
+                        .done();
         // @formatter:on
 
         String tran = ex.begin(op).id();
@@ -163,8 +157,7 @@ class UserCanConfigureAccessRules extends SpecBase
                 .precondition()
                     .intent(cat.getClass())
                         .write(c -> checks.incrementAndGet() == 1)
-                        .done()
-                .build();
+                        .done();
         // @formatter:on
 
         String tran = ex.begin(op).id();

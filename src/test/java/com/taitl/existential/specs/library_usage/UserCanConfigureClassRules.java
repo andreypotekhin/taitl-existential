@@ -101,8 +101,7 @@ class UserCanConfigureClassRules extends SpecBase
                     .done()
                     .effect(typeKey)
                     .create(v -> effectCalls.incrementAndGet(), "track list creates")
-                    .done()
-                    .build();
+                    .done();
             String tran = ex.begin(op).id();
             List<String> values = new ArrayList<>(List.of("ok"));
             ex.port(null, values, typeKey, tran);
@@ -135,8 +134,7 @@ class UserCanConfigureClassRules extends SpecBase
                 .validation()
                     .effect(cat.getClass())
                         .create(c -> validationCalls.incrementAndGet(), "validation create")
-                        .done()
-                .build();
+                        .done();
         // @formatter:on
 
         String tran = ex.begin(op).id();

@@ -11,14 +11,13 @@ public class ConfigureClassRules
     {
         // @formatter:off
         Ex.configure()
-            .context("/api/cats/create")
+            .context("/api/cats")
                 .invariant(Cat.class)
                     .create(c -> "Black".equals(c.color), "Cats are born black")
                     .done()
                 .effect(Cat.class)
                     .create(c -> c.location = new Location("Park"), "Set location for all new cats")
-                    .done()
-                .build();
+                    .done();
         // TODO:
         // ex.configure()
         // .context(new Context("/api/houses/create") {
@@ -47,7 +46,7 @@ public class ConfigureClassRules
     {
         // @formatter:off
         Ex.configure()
-            .context(new Context("/api/cats/create") {{
+            .context(new Context("/api/cats") {{
                 invariant(new Invariant<Cat>() {{
                     create(c -> "Black".equals(c.color), "Cats are born black");
                 }});
@@ -62,7 +61,7 @@ public class ConfigureClassRules
     {
         // @formatter:off
         Ex.configure()
-            .context("/api/cats/create")
+            .context("/api/cats")
                 .invariant(Cat.class)
                     .create(c -> "Black".equals(c.color), "Cats are born black")
                 .done()
@@ -71,8 +70,7 @@ public class ConfigureClassRules
                         create(c -> c.location = new Location("Park"), "Set location for all new cats");
                     }
                 })
-                .done()
-            .build();
+                .done();
         // @formatter:on
     }
 
@@ -86,8 +84,7 @@ public class ConfigureClassRules
                     .commit((Transaction tr) -> tr.index("cats").clear())
                     .rollback((Transaction tr) -> tr.index("cats").clear())
                     .checkpoint((Transaction tr) -> tr.index("cats").clear())
-                .done()
-            .build();
+                .done();
         // @formatter:on
     }
 }

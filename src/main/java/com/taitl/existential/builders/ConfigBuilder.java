@@ -24,6 +24,7 @@ public class ConfigBuilder
      * Contexts declared for this Existential instance.
      */
     List<Context> contexts = new ArrayList<>();
+    List<ContextBuilder> contextBuilders = new ArrayList<>();
 
     /**
      * Default context and transaction factories used by new context builders.
@@ -38,7 +39,9 @@ public class ConfigBuilder
      */
     public ContextBuilder context(String name)
     {
-        return new ContextBuilder(this, contextName(name));
+        ContextBuilder contextBuilder = new ContextBuilder(this, contextName(name));
+        contextBuilders.add(contextBuilder);
+        return contextBuilder;
     }
 
     /**
@@ -98,6 +101,7 @@ public class ConfigBuilder
     public Config build(ExistentialConfigs ec)
     {
         sane(ec, "ec");
+        buildContexts();
         // TODO:
         // Link each configured Context to direct or indirect parent Context
         // as well as to any matching wildcard Context(s) by comparing context names.
@@ -173,6 +177,14 @@ public class ConfigBuilder
         sane(cont, "cont");
         verify(!contexts.contains(cont), "This context is already added");
         contexts.add(cont);
+    }
+
+    void buildContexts()
+    {
+        for (ContextBuilder contextBuilder : contextBuilders)
+        {
+            contextBuilder.buildContext();
+        }
     }
 
     protected String requireContextNameMatchesParentContext(String contextName, String parentContextName)

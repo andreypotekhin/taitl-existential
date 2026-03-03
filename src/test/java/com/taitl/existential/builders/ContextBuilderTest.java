@@ -39,10 +39,49 @@ class ContextBuilderTest
                 contextBuilder.contextFactory(() -> context);
                 contextBuilder.invariant(new Invariant<>(String.class));
 
-                contextBuilder.build();
+                contextBuilder.buildContext();
 
                 assertEquals(1, configBuilder.contexts.size());
                 assertSame(context, configBuilder.contexts.get(0));
+            }
+
+            @Test
+            @DisplayName("Build on one context builds all pending contexts")
+            void buildsAllPendingContexts()
+            {
+                ConfigBuilder configBuilder = new ConfigBuilder();
+
+                configBuilder.context("/app/one")
+                        .invariant(String.class)
+                        .create(v -> true, "ctx one")
+                        .done();
+                ContextBuilder contextBuilder = configBuilder.context("/app/two");
+                contextBuilder.invariant(String.class)
+                        .create(v -> true, "ctx two")
+                        .done();
+
+                configBuilder.buildContexts();
+
+                List<String> names = new ArrayList<>();
+                for (Context context : configBuilder.contexts)
+                {
+                    names.add(context.name());
+                }
+                assertEquals(List.of("/app/one", "/app/two"), names);
+            }
+
+            @Test
+            @DisplayName("Repeated internal build calls are idempotent")
+            void repeatedCalls()
+            {
+                ConfigBuilder configBuilder = new ConfigBuilder();
+                ContextBuilder contextBuilder = configBuilder.context("/app");
+                contextBuilder.invariant(String.class).create(v -> true, "rule").done();
+
+                configBuilder.buildContexts();
+                configBuilder.buildContexts();
+
+                assertEquals(1, configBuilder.contexts.size());
             }
         }
     }
@@ -58,7 +97,7 @@ class ContextBuilderTest
             void parameterlessDelegatesToParentConfigOp()
             {
                 ConfigBuilder configBuilder = new ConfigBuilder();
-                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+                ContextBuilder contextBuilder = configBuilder.context("/app");
 
                 ContextBuilder sibling = contextBuilder.context();
 
@@ -74,7 +113,7 @@ class ContextBuilderTest
             void preserves()
             {
                 ConfigBuilder configBuilder = new ConfigBuilder();
-                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+                ContextBuilder contextBuilder = configBuilder.context("/app");
                 Context context = new Context("/app");
                 contextBuilder.contextFactory(() -> context);
 
@@ -107,7 +146,7 @@ class ContextBuilderTest
                     .done();
                 // @formatter:on
 
-                contextBuilder.build();
+                contextBuilder.buildContext();
 
                 List<Evs<?>> precondition = context.stage().at(StageName.PRECONDITION);
                 List<Evs<?>> immediate = context.stage().at(StageName.IMMEDIATE);
@@ -138,7 +177,7 @@ class ContextBuilderTest
             void preserves()
             {
                 ConfigBuilder configBuilder = new ConfigBuilder();
-                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+                ContextBuilder contextBuilder = configBuilder.context("/app");
                 TransactionBuilder transactionBuilder =
                         contextBuilder.transaction(() -> new Transaction("/app", "test"));
 
@@ -199,7 +238,7 @@ class ContextBuilderTest
             void attachesFromClassAndTypeKeyOverloads()
             {
                 ConfigBuilder configBuilder = new ConfigBuilder();
-                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+                ContextBuilder contextBuilder = configBuilder.context("/app");
                 Context context = new Context("/app");
                 contextBuilder.contextFactory(() -> context);
                 TypeKey<List<String>> reflectionType = new TypeKey<List<String>>() {
@@ -212,7 +251,7 @@ class ContextBuilderTest
                 }, "eff").done();
                 contextBuilder.intent(String.class).read().done();
 
-                contextBuilder.build();
+                contextBuilder.buildContext();
 
                 List<Evs<?>> immediate = context.stage().at(StageName.IMMEDIATE);
                 List<Evs<?>> validation = context.stage().at(StageName.VALIDATION);
@@ -232,7 +271,7 @@ class ContextBuilderTest
             void assignsTypeKeyToLife()
             {
                 ConfigBuilder configBuilder = new ConfigBuilder();
-                ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+                ContextBuilder contextBuilder = configBuilder.context("/app");
                 TransactionBuilder transactionBuilder = contextBuilder.transaction(CustomTransaction::new);
                 TypeKey<CustomTransaction> reflectionFullNameType = new TypeKey<CustomTransaction>(true) {
                 };
@@ -321,12 +360,12 @@ class ContextBuilderTest
         void builderSelectorsOverrideDefaults()
         {
             ConfigBuilder configBuilder = new ConfigBuilder();
-            ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
+            ContextBuilder contextBuilder = configBuilder.context("/app");
             Context context = new Context("/app");
             contextBuilder.contextFactory(() -> context);
 
             // @formatter:off
-            contextBuilder
+                contextBuilder
                 .precondition()
                     .effect(String.class)
                         .create(v -> {
@@ -339,9 +378,9 @@ class ContextBuilderTest
                 .validation()
                     .intent(String.class)
                         .read()
-                    .done()
-                .build();
+                    .done();
             // @formatter:on
+            contextBuilder.buildContext();
 
             assertEquals(1, context.stage().at(StageName.PRECONDITION).size());
             assertEquals(1, context.stage().at(StageName.IMMEDIATE).size());

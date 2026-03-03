@@ -38,8 +38,7 @@ class ConfigurationLogicTest
                     .context("/api/*/update")
                         .effect(String.class)
                         .update(v -> updateCalls.incrementAndGet(), "wildcard update")
-                        .done()
-                    .build();
+                        .done();
             // @formatter:on
 
             String tran = ex.begin("/api/cats/update").id();
@@ -47,6 +46,27 @@ class ConfigurationLogicTest
             ex.commit(tran);
 
             assertEquals(1, updateCalls.get());
+        }
+    }
+
+    @Test
+    @DisplayName("Begin finalizes configuration when build was never called")
+    void beginFinalizesWithoutExplicitBuild()
+    {
+        try (Existential ex = new Existential())
+        {
+            ex.configure()
+                    .context("/api/cats/update")
+                    .effect(String.class)
+                    .update(v -> {
+                    }, "update")
+                    .done();
+
+            assertDoesNotThrow(() -> {
+                String tran = ex.begin("/api/cats/update").id();
+                ex.update("ok", tran);
+                ex.commit(tran);
+            });
         }
     }
 }

@@ -151,7 +151,7 @@ public class ContextBuilder
         sane(name, "name");
         if (hasPendingConfiguration())
         {
-            build();
+            buildContext();
         }
         return parent.context(parent.requireContextNameMatchesParentContext(name, op));
     }
@@ -165,7 +165,7 @@ public class ContextBuilder
     {
         if (hasPendingConfiguration())
         {
-            build();
+            buildContext();
         }
         return parent.context(op);
     }
@@ -227,16 +227,11 @@ public class ContextBuilder
         return this;
     }
 
-    /**
-     * Builds the configured context and returns the parent {@link ConfigBuilder}.
-     *
-     * @return Parent builder
-     */
-    public ConfigBuilder build()
+    void buildContext()
     {
         if (built)
         {
-            return parent;
+            return;
         }
         verify(!evsSuppliers.isEmpty() || transactionFactory != null,
                 "Cannot configure context without defining rules");
@@ -264,7 +259,6 @@ public class ContextBuilder
         }
         parent.context(context);
         built = true;
-        return parent;
     }
 
     /**
