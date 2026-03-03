@@ -35,27 +35,28 @@ Configure rules:
 
 Create transaction, send events:
 
-    Tr tr = Ex.begin("/app/orders/submit");
+    Tr tr = Ex.begin("/app/orders/submit"); // <-- (1)
     try
     {
         // ...create Order...
-        Ex.create(order, tr.id()); // <-- (1)  
+        Ex.create(order, tr.id()); // <-- (2)
         // ...
-        Ex.commit(tr); // <-- (2)
+        Ex.commit(tr); // <-- (3)
     }
     catch (ExistentialException e)
     {
-        Ex.rollback(tr); // <-- (3)
+        Ex.rollback(tr); // <-- (4)
         throw e;
     }
 
-    (1) Send 'Create' event, to invoke corresponding rules on commit  
-    (2) Evaluates the rules that match received events, throws on violation
-    (3) No evaluation in case of rollback
+    (1) Start a transaction to collect application events and apply the configured rules   
+    (2) Notify the library about entity creation by sending 'Create' event  
+    (3) Evaluate the rules that match received events, throw on violations
+    (4) No rule evaluation takes place in case of a rollback
 
 Notes:
-- Configuration code may be live in a separate place from transaction code, e.g. in application startup.
-- After `commit()` or `rollback()`, the transaction object becomes invalid (not usable).
+- Configuration code may live in a separate place from transaction code, e.g. at application startup.
+- After `commit()` or `rollback()`, transaction object becomes unusable.
 
 ### Creating a constraint on an entity
 Constraints are created in the context of a business operation, 
