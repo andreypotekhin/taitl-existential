@@ -40,8 +40,8 @@ class UserCanHandleCombinedEventEffects extends SpecBase
                 .add(new OnUD<>(c -> udCalls.incrementAndGet(), "ud"));
 
         assertDoesNotThrow(() -> {
-            ex.configure(op)
-                    .context()
+            ex.configure()
+                    .context(op)
                     .effect(effect)
                     .done()
                     .build();

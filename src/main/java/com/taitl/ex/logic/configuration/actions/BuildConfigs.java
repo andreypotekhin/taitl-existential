@@ -15,16 +15,24 @@ public class BuildConfigs
     }
 
     /**
-     * Builds Configs from list of ConfigBuilders and adds them to ConfigRegistry.
+     * Builds Config from ConfigBuilder and adds it to ConfigRegistry.
      */
     public void call(Map<String, ConfigBuilder> configBuilders)
     {
-        for (String op : configBuilders.keySet())
+        for (ConfigBuilder cb : configBuilders.values())
         {
-            ConfigBuilder cb = configBuilders.get(op);
             Config config = cb.build(cl.ec());
             cl.registry().addConfig(config);
-            cl.onFinishConfiguration(op);
+
+            Set<String> ops = new LinkedHashSet<>();
+            for (Context context : config.contexts())
+            {
+                ops.add(context.name());
+            }
+            for (String op : ops)
+            {
+                cl.onFinishConfiguration(op);
+            }
         }
     }
 }

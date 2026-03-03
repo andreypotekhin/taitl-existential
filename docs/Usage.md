@@ -28,7 +28,7 @@ Minimal workflow: configure rules, initiate transaction, send events.
 
 Configure rules:
 
-    Ex.configure("/app/orders")
+    Ex.configure()
       .context("/app/orders/submit")
           .invariant(Order.class)
               .create(o -> o.total() > 0, "Total must be positive")
@@ -63,7 +63,7 @@ Notes:
 Constraints are created in the context of a business operation, 
 such as "creating an order" or "updating an account".
 
-    Ex.configure("/api/accounts")
+    Ex.configure()
       .context("/api/accounts/update")
           .invariant(Account.class)
               .create(a -> validEmail(a.emailAddress()), "Ensure valid email address")

@@ -158,9 +158,9 @@ public class ContextBuilder
     }
 
     /**
-     * Starts building the main context on the parent builder.
+     * Starts building a sibling context with the same operation key.
      *
-     * @return Context builder for the parent config op key
+     * @return Context builder for this context operation key
      */
     public ContextBuilder context()
     {
@@ -168,7 +168,7 @@ public class ContextBuilder
         {
             build();
         }
-        return parent.context();
+        return parent.context(op);
     }
 
     public <T> IntentBuilder<T> intent(Class<T> cls)

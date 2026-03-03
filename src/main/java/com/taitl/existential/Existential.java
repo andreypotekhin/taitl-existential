@@ -44,14 +44,13 @@ public final class Existential implements Closeable
     }
 
     /**
-     * Starts configuration for the specified business operation.
+     * Starts configuration for this {@link Existential} instance.
      *
-     * @param op operation name, for example "/app/orders/update"
      * @return builder used to configure contexts and rules
      */
-    public ConfigBuilder configure(String op)
+    public ConfigBuilder configure()
     {
-        return configs.getBuilder(op);
+        return configs.getBuilder();
     }
 
     /**

@@ -33,14 +33,16 @@ class CreateTranTest
     class ForConfig
     {
         @Test
-        @DisplayName("For config builds context transactions and custom")
+        @DisplayName("For config builds only matching context transactions and custom")
         void contextsAndCustom()
         {
-            Context c1 = context("/ctx1");
-            Context c2 = context("/ctx2");
+            Context c1 = context("/op");
+            Context c2 = context("/");
+            Context ignored = context("/other");
             Config config = new Config();
             config.addContext(c1);
             config.addContext(c2);
+            config.addContext(ignored);
             Transaction custom = new Transaction("custom", "custom");
 
             Tr tr = createTran.forConfig("/op", config, custom, CreateTran::forContext);

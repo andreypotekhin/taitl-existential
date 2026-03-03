@@ -1,17 +1,17 @@
 package com.taitl.ex.logic.configuration;
 
-import java.util.*;
 import com.taitl.existential.configs.*;
+import com.taitl.ex.logic.configuration.rules.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.Outcome.*;
 
 /**
- * ConfigRegistry holds references to Configs, keyed by op key.
+ * ConfigRegistry holds a single Config for the Existential instance.
  */
 public class ConfigRegistry
 {
-    protected Map<String, Config> configs = new LinkedHashMap<>();
+    protected Config config;
     protected ConfigurationLogic cl;
 
     public ConfigRegistry(ConfigurationLogic cl)
@@ -21,45 +21,52 @@ public class ConfigRegistry
 
     public boolean has(String op)
     {
-        return configs.containsKey(op);
+        return config != null && hasMatchingContext(op);
     }
 
     public Config get(String op)
     {
         sane(op, "op");
-        Config o = configs.get(op);
-        verify(o != null, String.format("Config not found for op '%s'", op));
-        return o;
+        verify(config != null, String.format("Config not found for op '%s'", op));
+        verify(hasMatchingContext(op), String.format("Config not found for op '%s'", op));
+        return config;
     }
 
     public Config remove(String op)
     {
         sane(op, "op");
-        Config o = configs.get(op);
-        verify(o != null, String.format("Config not found for op '%s'", op));
-        synchronized (configs)
+        verify(config != null, String.format("Config not found for op '%s'", op));
+        verify(hasMatchingContext(op), String.format("Config not found for op '%s'", op));
+        synchronized (this)
         {
-            configs.remove(op);
+            Config prev = config;
+            config = null;
+            return prev;
         }
-        return o;
     }
 
     public void addConfig(Config config)
     {
         sane(config, "config");
-        String op = config.name();
-        verify(!configs.containsKey(op),
-                String.format("Cannot add Config for '%s' - config already exists", op));
-        configs.put(op, config);
+        verify(this.config == null, "Cannot add Config - config already exists");
+        this.config = config;
     }
 
     public boolean isEmpty()
     {
-        return configs.isEmpty();
+        return config == null;
     }
 
-    public Map<String, Config> configs()
+    protected boolean hasMatchingContext(String op)
     {
-        return configs;
+        sane(op, "op");
+        for (Context context : config.contexts())
+        {
+            if (MatchParentName.matches(op, context.name()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

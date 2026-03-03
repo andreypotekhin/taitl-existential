@@ -16,7 +16,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * This convenience implies a single {@link Existential} instance per JVM. This is
  * fine for most applications, but it can be limiting in library code.
  *
- * Usage: Ex.configure("/api/resource/create").context()...
+ * Usage: Ex.configure().context("/api/resource/create")...
  * Documentation: https://github.com/andreypotekhin/taitl-existential
  *
  * @author Andrey Potekhin
@@ -53,14 +53,13 @@ public final class Ex
     }
 
     /**
-     * Starts configuration for the specified business operation.
+     * Starts configuration for this {@link Existential} instance.
      *
-     * @param op operation name, for example "/app/orders/update"
      * @return builder used to configure contexts and rules
      */
-    public static ConfigBuilder configure(String op)
+    public static ConfigBuilder configure()
     {
-        return instance().configure(op);
+        return instance().configure();
     }
 
     /**

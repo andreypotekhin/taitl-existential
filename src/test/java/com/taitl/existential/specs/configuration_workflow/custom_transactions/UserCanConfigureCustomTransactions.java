@@ -79,8 +79,8 @@ class UserCanConfigureCustomTransactions extends SpecBase
         AtomicReference<String> transactionType = new AtomicReference<>();
 
         // @formatter:off
-        Ex.configure("/api/cats/create")
-            .context()
+        Ex.configure()
+            .context("/api/cats/create")
                 .transaction(() -> {
                     created.incrementAndGet();
                     return new ChildTransaction("/api/cats/create");
@@ -107,8 +107,8 @@ class UserCanConfigureCustomTransactions extends SpecBase
         List<String> transactionTypes = new ArrayList<>();
 
         // @formatter:off
-        Ex.configure("/api/cats")
-            .context()
+        Ex.configure()
+            .context("/api/cats")
                 .transaction(() -> new RootTransaction("/api/cats"))
                 .begin((RootTransaction tr) -> transactionTypes.add(tr.getClass().getSimpleName()))
                 .build()
@@ -139,8 +139,8 @@ class UserCanConfigureCustomTransactions extends SpecBase
         };
 
         // @formatter:off
-        Ex.configure("/api/cats/create")
-            .context()
+        Ex.configure()
+            .context("/api/cats/create")
                 .transaction(() -> new ChildTransaction("/api/cats/create"))
                 .begin(childTypeKey, tr -> childBeginCalls.incrementAndGet())
                 .build()

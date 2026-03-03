@@ -3,9 +3,6 @@ package com.taitl.ex.logic.configuration.actions;
 import java.util.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.builders.*;
-import com.taitl.existential.configs.*;
-
-import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Provides ConfigBuilder instances and builds the Configs,
@@ -13,6 +10,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class CreateBuilders
 {
+    protected static final String INSTANCE_BUILDER_KEY = "_instance";
     protected Map<String, ConfigBuilder> configBuilders;
     protected ConfigurationLogic cl;
 
@@ -22,33 +20,32 @@ public class CreateBuilders
         this.configBuilders = cl.configBuilders();
     }
 
-    public ConfigBuilder getCreateBuilder(String op)
+    public ConfigBuilder getCreateBuilder()
     {
-        sane(op, "op");
-        ConfigBuilder o = configBuilders.get(op);
-        return (o != null) ? o : createBuilder(op);
+        ConfigBuilder o = configBuilders.get(INSTANCE_BUILDER_KEY);
+        return (o != null) ? o : createBuilder();
     }
 
     /**
-     * @deprecated Use {@link #getCreateBuilder(String)} instead.
+     * @deprecated Use {@link #getCreateBuilder()} instead.
      */
     @Deprecated
-    public ConfigBuilder getcreateBuilder(String op)
+    public ConfigBuilder getcreateBuilder()
     {
-        return getCreateBuilder(op);
+        return getCreateBuilder();
     }
 
-    public ConfigBuilder createBuilder(String op)
+    public ConfigBuilder createBuilder()
     {
-        sane(op, "op");
-        ConfigBuilder o = new ConfigBuilder(op);
+        ConfigBuilder o = new ConfigBuilder();
         synchronized (this)
         {
-            for (Context context : cl.buildContexts(op))
+            ConfigBuilder existing = configBuilders.get(INSTANCE_BUILDER_KEY);
+            if (existing != null)
             {
-                o.addContext(context);
+                return existing;
             }
-            configBuilders.put(op, o);
+            configBuilders.put(INSTANCE_BUILDER_KEY, o);
         }
         return o;
     }

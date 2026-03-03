@@ -33,8 +33,8 @@ class ContextBuilderTest
             @DisplayName("Build attaches context to parent")
             void attachesToParent()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder("/app");
-                ContextBuilder contextBuilder = configBuilder.context();
+                ConfigBuilder configBuilder = new ConfigBuilder();
+                ContextBuilder contextBuilder = configBuilder.context("/app");
                 com.taitl.existential.configs.Context context = new com.taitl.existential.configs.Context("/app");
                 contextBuilder.contextFactory(() -> context);
                 contextBuilder.invariant(new Invariant<>(String.class));
@@ -57,7 +57,7 @@ class ContextBuilderTest
             @DisplayName("Parameterless sibling context delegates to parent config op")
             void parameterlessDelegatesToParentConfigOp()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ConfigBuilder configBuilder = new ConfigBuilder();
                 ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
 
                 ContextBuilder sibling = contextBuilder.context();
@@ -73,7 +73,7 @@ class ContextBuilderTest
             @DisplayName("Preserves context rule order")
             void preserves()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ConfigBuilder configBuilder = new ConfigBuilder();
                 ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
                 Context context = new Context("/app");
                 contextBuilder.contextFactory(() -> context);
@@ -137,7 +137,7 @@ class ContextBuilderTest
             @DisplayName("Preserves transaction rule order")
             void preserves()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ConfigBuilder configBuilder = new ConfigBuilder();
                 ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
                 TransactionBuilder transactionBuilder =
                         contextBuilder.transaction(() -> new Transaction("/app", "test"));
@@ -198,7 +198,7 @@ class ContextBuilderTest
             @DisplayName("Context builder attaches type keys from class and type key overloads")
             void attachesFromClassAndTypeKeyOverloads()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ConfigBuilder configBuilder = new ConfigBuilder();
                 ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
                 Context context = new Context("/app");
                 contextBuilder.contextFactory(() -> context);
@@ -231,7 +231,7 @@ class ContextBuilderTest
             @DisplayName("Transaction lifecycle overloads assign type key to life")
             void assignsTypeKeyToLife()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder("/app");
+                ConfigBuilder configBuilder = new ConfigBuilder();
                 ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
                 TransactionBuilder transactionBuilder = contextBuilder.transaction(CustomTransaction::new);
                 TypeKey<CustomTransaction> reflectionFullNameType = new TypeKey<CustomTransaction>(true) {
@@ -320,7 +320,7 @@ class ContextBuilderTest
         @DisplayName("Builder stage selectors override default routing")
         void builderSelectorsOverrideDefaults()
         {
-            ConfigBuilder configBuilder = new ConfigBuilder("/app");
+            ConfigBuilder configBuilder = new ConfigBuilder();
             ContextBuilder contextBuilder = new ContextBuilder(configBuilder, "/app");
             Context context = new Context("/app");
             contextBuilder.contextFactory(() -> context);

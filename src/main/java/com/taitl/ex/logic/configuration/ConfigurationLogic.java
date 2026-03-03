@@ -3,7 +3,7 @@ package com.taitl.ex.logic.configuration;
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
-import com.taitl.ex.logic.configuration.rules.*;
+import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
@@ -25,7 +25,6 @@ public class ConfigurationLogic implements Closeable
     protected ConfigRegistry registry;
     protected CreateBuilders createBuilders;
     protected BuildContexts buildContexts;
-    protected FallbackOnNearestParent fallbackOnNearestParent;
     protected FinalizeConfiguration finalizeConfiguration;
 
     public ConfigurationLogic(ExistentialConfigs ec)
@@ -34,21 +33,19 @@ public class ConfigurationLogic implements Closeable
         this.registry = new ConfigRegistry(this);
         this.createBuilders = new CreateBuilders(this);
         this.buildContexts = new BuildContexts(this);
-        this.fallbackOnNearestParent = new FallbackOnNearestParent(registry);
         this.finalizeConfiguration = new FinalizeConfiguration(this);
     }
 
     /**
      * Creates (or returns already existing) instance of ConfigBuilder
-     * as the starting point of configuring rules for a business operation.
-     * Called by Existential.config() method.
+     * as the starting point of configuring rules for this Existential instance.
+     * Called by Existential.configure() method.
      */
-    public ConfigBuilder getBuilder(String op)
+    public ConfigBuilder getBuilder()
     {
-        sane(op, "op");
         verify(!ec.ex().configured(),
                 "Cannot call this method because setup has already been finalized");
-        return createBuilders.getCreateBuilder(op);
+        return createBuilders.getCreateBuilder();
     }
 
     /**
@@ -107,9 +104,17 @@ public class ConfigurationLogic implements Closeable
     {
         sane(op, "op");
         Config config = registry.get(op);
-        for (StageName stageName : StageName.values())
+        synchronized (config)
         {
-            config.indexes(stageName).indexConfig(op, config, stageName);
+            ConfigurationIndexes validationIndexes = config.indexes(op, StageName.VALIDATION);
+            if (validationIndexes.configuredHandlers.ready() && validationIndexes.configuredIntents.ready())
+            {
+                return;
+            }
+            for (StageName stageName : StageName.values())
+            {
+                config.indexes(op, stageName).indexConfig(op, config, stageName);
+            }
         }
     }
 
@@ -143,12 +148,8 @@ public class ConfigurationLogic implements Closeable
     public Config config(String op)
     {
         sane(op, "op");
-        Config config = registry.configs().get(op);
-        if (config == null)
-        {
-            config = fallbackOnNearestParent.call(op);
-        }
-        verify(config != null, String.format("Config not found for op '%s'", op));
+        Config config = registry.get(op);
+        indexConfig(op);
         return config;
     }
 }

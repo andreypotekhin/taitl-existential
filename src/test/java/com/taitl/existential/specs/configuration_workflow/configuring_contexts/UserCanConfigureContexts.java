@@ -51,8 +51,8 @@ class UserCanConfigureContexts extends SpecBase
     {
         assertDoesNotThrow(() -> {
             // @formatter:off
-            Ex.configure("/api/cats")
-                .context()
+            Ex.configure()
+                .context("/api/cats")
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
                     .done()
@@ -77,8 +77,8 @@ class UserCanConfigureContexts extends SpecBase
         List<String> effectOrder = new ArrayList<>();
 
         // @formatter:off
-        Ex.configure("/api/cats")
-            .context()
+        Ex.configure()
+            .context("/api/cats")
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("parent"))
                 .done()
@@ -108,9 +108,9 @@ class UserCanConfigureContexts extends SpecBase
 
         assertDoesNotThrow(() -> {
             // @formatter:off
-            Ex.configure("/api/cats")
+            Ex.configure()
                 .contextFactory(() -> new GlobalContext("/unused"))
-                .context()
+                .context("/api/cats")
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
                 .done()
@@ -149,13 +149,13 @@ class UserCanConfigureContexts extends SpecBase
         List<String> effectOrder = new ArrayList<>();
 
         // @formatter:off
-        Ex.configure("/api/cats/create")
+        Ex.configure()
             .context("/api/*/create")
                 .effect(Cat.class)
                     .create(v -> effectOrder.add("wildcard"))
                 .done()
             .build()
-            .context()
+            .context("/api/cats/create")
                 .effect(Cat.class)
                     .create(v -> effectOrder.add("concrete"))
                 .done()
@@ -171,13 +171,14 @@ class UserCanConfigureContexts extends SpecBase
     }
 
     @Test
-    @DisplayName("Configuring contexts - parent context cannot be added under child config")
+    @DisplayName("Configuring contexts - child context builder rejects parent context name")
     void parentContextCannotBeAddedUnderChildConfig()
     {
         // @formatter:off
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
             () -> {
-                Ex.configure("/api/cats/create")
+                Ex.configure()
+                    .context("/api/cats/create")
                     .context("/api/cats");
             });
         // @formatter:on
@@ -185,17 +186,24 @@ class UserCanConfigureContexts extends SpecBase
     }
 
     @Test
-    @DisplayName("Configuring contexts - unrelated context name is rejected")
-    void unrelatedContextNameIsRejected()
+    @DisplayName("Configuring contexts - unrelated context names can be declared on the root builder")
+    void unrelatedContextNameIsAcceptedOnRootBuilder()
     {
-        // @formatter:off
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-            () -> {
-                Ex.configure("/api/cats/create")
-                    .context("/admin/users");
-            });
-        // @formatter:on
-        assertTrue(ex.getMessage().contains("must match"));
+        assertDoesNotThrow(() -> {
+            // @formatter:off
+            Ex.configure()
+                .context("/api/cats/create")
+                    .invariant(String.class)
+                    .create(v -> true, "ok")
+                    .done()
+                    .build()
+                .context("/admin/users")
+                    .invariant(String.class)
+                    .create(v -> true, "ok")
+                    .done()
+                    .build();
+            // @formatter:on
+        });
     }
 
     @Test
@@ -205,8 +213,8 @@ class UserCanConfigureContexts extends SpecBase
         // @formatter:off
         IllegalStateException ex = assertThrows(IllegalStateException.class,
             () -> {
-                Ex.configure("/api/cats/create")
-                    .context()
+                Ex.configure()
+                    .context("/api/cats/create")
                     .build();
             });
         // @formatter:on

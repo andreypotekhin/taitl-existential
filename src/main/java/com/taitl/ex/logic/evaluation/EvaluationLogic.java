@@ -93,7 +93,7 @@ public class EvaluationLogic implements Closeable
     protected EventField eventField(Tr tr)
     {
         sane(tr, "tr");
-        return config(tr).indexes(StageName.VALIDATION).eventField();
+        return config(tr).indexes(tr.op, StageName.VALIDATION).eventField();
     }
 
     protected EventField eventField(Tr tr, StageName stageName)
@@ -103,7 +103,7 @@ public class EvaluationLogic implements Closeable
         {
             return eventField(tr);
         }
-        return config(tr).indexes(stageName).eventField();
+        return config(tr).indexes(tr.op, stageName).eventField();
     }
 
     public boolean useFullClassNames()
@@ -129,6 +129,6 @@ public class EvaluationLogic implements Closeable
         {
             return true;
         }
-        return config(tr).indexes(stageName).hasIntents();
+        return config(tr).indexes(tr.op, stageName).hasIntents();
     }
 }

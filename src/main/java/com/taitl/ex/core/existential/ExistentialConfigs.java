@@ -18,14 +18,13 @@ public class ExistentialConfigs implements Closeable
     }
 
     /**
-     * Provides an instance of ConfigBuilder as starting point
-     * for configuring a business operation. Repeat calls
-     * result in the same instance returned as the initial call.
-     * Called from Existential.configure(op)
+     * Provides a {@link ConfigBuilder} as starting point for configuring rules
+     * for this Existential instance. Repeat calls return the same builder.
+     * Called from Existential.configure().
      */
-    public ConfigBuilder getBuilder(String op)
+    public ConfigBuilder getBuilder()
     {
-        return configLogic.getBuilder(op);
+        return configLogic.getBuilder();
     }
 
     /**

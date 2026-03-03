@@ -38,7 +38,7 @@ public class EvaluateIntents
     public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException
     {
         sane(tr, "tr", runtimeKey, "runtimeKey", stageName, "stageName");
-        ConfigurationIndexes indexes = el.config(tr).indexes(stageName);
+        ConfigurationIndexes indexes = el.config(tr).indexes(tr.op, stageName);
         if (!indexes.hasIntents() && !tr.hasIntents(stageName))
         {
             return;

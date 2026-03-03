@@ -3,8 +3,6 @@ package com.taitl.ex.logic.configuration.rules;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.configs.*;
 
-import java.util.*;
-
 import static com.taitl.ex.common.helper.Args.*;
 
 public class FallbackOnNearestParent
@@ -19,33 +17,17 @@ public class FallbackOnNearestParent
     public Config call(String op)
     {
         sane(op, "op");
-        Config closest = null;
-        for (Map.Entry<String, Config> entry : registry.configs().entrySet())
+        if (!registry.has(op))
         {
-            String candidate = entry.getKey();
-            if (!matchesOrParent(op, candidate))
-            {
-                continue;
-            }
-            if (closest == null || candidate.length() > closest.name().length())
-            {
-                closest = entry.getValue();
-            }
+            return null;
         }
-        return closest;
+        return registry.get(op);
     }
 
     protected boolean matchesOrParent(String op, String candidate)
     {
         sane(op, "op", candidate, "candidate");
-        if (op.equals(candidate))
-        {
-            return true;
-        }
-        if ("/".equals(candidate))
-        {
-            return true;
-        }
-        return op.startsWith(candidate + "/");
+        return MatchParentName.matches(op, candidate);
     }
+
 }

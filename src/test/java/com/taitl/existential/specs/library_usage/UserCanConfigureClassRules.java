@@ -91,8 +91,8 @@ class UserCanConfigureClassRules extends SpecBase
         };
 
         assertDoesNotThrow(() -> {
-            ex.configure(op)
-                    .context()
+            ex.configure()
+                    .context(op)
                     .invariant(typeKey)
                     .create(v -> {
                         invariantChecks.incrementAndGet();
@@ -122,8 +122,8 @@ class UserCanConfigureClassRules extends SpecBase
         AtomicInteger validationCalls = new AtomicInteger();
 
         // @formatter:off
-        ex.configure(op)
-            .context()
+        ex.configure()
+            .context(op)
                 .precondition()
                     .effect(cat.getClass())
                         .create(c -> preconditionCalls.incrementAndGet(), "precondition create")

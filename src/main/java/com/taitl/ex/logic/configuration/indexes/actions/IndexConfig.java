@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.configuration.indexes.actions;
 
 import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.ex.logic.configuration.rules.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -24,23 +25,27 @@ public class IndexConfig
     public void call(String op, Config config)
     {
         sane(op, "op", config, "config");
-        indexConfig(config, StageName.VALIDATION);
+        indexConfig(op, config, StageName.VALIDATION);
     }
 
     public void call(String op, Config config, StageName stageName)
     {
         sane(op, "op", config, "config", stageName, "stageName");
-        indexConfig(config, stageName);
+        indexConfig(op, config, stageName);
     }
 
     /**
      * Add all configured rules to indexes, in the order of declaration.
      */
-    public void indexConfig(Config config, StageName stageName)
+    public void indexConfig(String op, Config config, StageName stageName)
     {
-        sane(config, "config", stageName, "stageName");
+        sane(op, "op", config, "config", stageName, "stageName");
         for (Context context : config.contexts())
         {
+            if (!MatchParentName.matches(op, context.name()))
+            {
+                continue;
+            }
             TraverseContext tc = new TraverseContext();
             for (Evs<?> evs : context.stage().at(stageName))
             {

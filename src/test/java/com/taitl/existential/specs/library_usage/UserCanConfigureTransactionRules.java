@@ -32,8 +32,8 @@ class UserCanConfigureTransactionRules extends SpecBase
     void configureIntentsOnTransactionObject() throws Exception
     {
         // @formatter:off
-        ex.configure(op)
-            .context()
+        ex.configure()
+            .context(op)
                 .transaction(() -> {
                     Transaction tr = new Transaction("undefined", "undefined");
                     Intent<Cat> writeIntent = new Intent<>(Cat.class);

@@ -32,8 +32,8 @@ class UserCanConfigureAccessRules extends SpecBase
     void configureAccessRulesForClass() throws Exception
     {
         // @formatter:off
-        ex.configure(op)
-            .context()
+        ex.configure()
+            .context(op)
                 .intent(cat.getClass())
                     .read()
                     .write()
@@ -52,8 +52,8 @@ class UserCanConfigureAccessRules extends SpecBase
     void otherClassRequiresExplicitReadIntent() throws Exception
     {
         // @formatter:off
-        ex.configure(op)
-            .context()
+        ex.configure()
+            .context(op)
                 .intent(cat.getClass())
                     .read()
                     .done()
@@ -74,8 +74,8 @@ class UserCanConfigureAccessRules extends SpecBase
         AtomicInteger writes = new AtomicInteger();
 
         // @formatter:off
-        ex.configure(op)
-            .context()
+        ex.configure()
+            .context(op)
                 .intent(cat.getClass())
                     .write(c -> writes.getAndIncrement() == 0)
                     .done()
@@ -96,8 +96,8 @@ class UserCanConfigureAccessRules extends SpecBase
         ex.on(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
 
         // @formatter:off
-        ex.configure(op)
-            .context()
+        ex.configure()
+            .context(op)
                 .intent(cat.getClass())
                     .read()
                     .done()
@@ -116,8 +116,8 @@ class UserCanConfigureAccessRules extends SpecBase
     void intentCanBeAssignedToValidationStage() throws Exception
     {
         // @formatter:off
-        ex.configure(op)
-            .context()
+        ex.configure()
+            .context(op)
                 .validation()
                     .intent(cat.getClass())
                         .write()
@@ -135,8 +135,8 @@ class UserCanConfigureAccessRules extends SpecBase
     void validationStageIntentRejectsUnauthorizedTypeAtCommit() throws Exception
     {
         // @formatter:off
-        ex.configure(op)
-            .context()
+        ex.configure()
+            .context(op)
                 .validation()
                     .intent(cat.getClass())
                         .write()
@@ -158,8 +158,8 @@ class UserCanConfigureAccessRules extends SpecBase
         AtomicInteger checks = new AtomicInteger();
 
         // @formatter:off
-        ex.configure(op)
-            .context()
+        ex.configure()
+            .context(op)
                 .precondition()
                     .intent(cat.getClass())
                         .write(c -> checks.incrementAndGet() == 1)

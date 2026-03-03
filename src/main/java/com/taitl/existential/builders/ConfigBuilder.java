@@ -15,44 +15,27 @@ import static com.taitl.ex.common.helper.State.*;
 import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
- * Builds a Config object for a single business operation as a set of Context
- * objects configured with constraints, invariants, intents, qualifiers, and effects.
+ * Builds the full set of {@link Config} objects for a single Existential
+ * instance based on declared contexts.
  */
 public class ConfigBuilder
 {
     /**
-     * Name of business operation, e.g. "/app/docs/update",
-     * or a wildcard name, "/app/docs/*"
-     */
-    String name;
-
-    /**
-     * Context(s) that apply to this operation. This includes main context
-     * (e.g. "/app/docs/update") as well as any matching wildcard contexts
-     * (e.g. "/app/docs/*")
+     * Contexts declared for this Existential instance.
      */
     List<Context> contexts = new ArrayList<>();
 
     /**
-     * Factories for Context class. There is one default factory. Additional
-     * factories are created by calling context() method.
-     * The order of factories is important: execution order of rules follows
-     * the order of factories, which follows the order of context() method calls.
+     * Default context and transaction factories used by new context builders.
      */
     protected Supplier<? extends Context> contextFactory = () -> Creator.create(Context.class);
     protected Supplier<? extends Transaction> transactionFactory = () -> Creator.create(Transaction.class);
 
     /**
-     * Constructs a Config object with a specified name.
-     * Examples: "/app/docs/update", "/app/docs/*"
-     *
-     * @param name Name of context
+     * Constructs an instance-wide configuration builder.
      */
-    public ConfigBuilder(String name)
+    public ConfigBuilder()
     {
-        String trimmed = trimmed(name, "op");
-        ContextKey.validate(trimmed);
-        this.name = trimmed;
     }
 
     /**
@@ -62,17 +45,7 @@ public class ConfigBuilder
      */
     public ContextBuilder context(String name)
     {
-        return new ContextBuilder(this, requireContextNameMatchesConfigOp(name));
-    }
-
-    /**
-     * Creates a ContextBuilder for the main context of this operation.
-     *
-     * @return ContextBuilder for Context class
-     */
-    public ContextBuilder context()
-    {
-        return context(name);
+        return new ContextBuilder(this, contextName(name));
     }
 
     /**
@@ -82,8 +55,8 @@ public class ConfigBuilder
      * for the context using an instance of a custom context class.
      *
      * Example:
-     *   Ex.configure("/app/docs/update")            <-- ConfigBuilder
-     *     .context(new Context(){{                  <-- Custom context
+     *   Ex.configure()                              <-- ConfigBuilder
+     *     .context(new Context("/app/docs/update"){{ <-- Custom context
      *        intent(new Intent<Document<?>>() {{
      *             read();
      *             write();
@@ -108,7 +81,7 @@ public class ConfigBuilder
     public ConfigBuilder context(Context context)
     {
         sane(context, "context");
-        context.op(requireContextNameMatchesConfigOp(context.name()));
+        context.op(contextName(context.name()));
 
         // Guard against multiple calls to .context() with same argument,
         // for instance, if such call exists somewhere in the middle of
@@ -131,6 +104,7 @@ public class ConfigBuilder
      */
     public Config build(ExistentialConfigs ec)
     {
+        sane(ec, "ec");
         // TODO:
         // Link each configured Context to direct or indirect parent Context
         // as well as to any matching wildcard Context(s) by comparing context names.
@@ -139,19 +113,12 @@ public class ConfigBuilder
         // this may cause side effects to be called more than once
 
         Config config = Creator.create(Config.class);
-        config.name(name);
+        boolean useFullClassNames = ec.ex().get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
         for (Context context : contexts)
         {
             config.addContext(context);
         }
-
-        boolean useFullClassNames = ec.ex().get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
-        for (StageName stageName : StageName.values())
-        {
-            config.indexes(stageName).useFullClassNames(useFullClassNames);
-        }
-
-        // Intermediates are built after config is registered.
+        applyTypeKeyNaming(config, useFullClassNames);
         return config;
     }
 
@@ -215,13 +182,21 @@ public class ConfigBuilder
         contexts.add(cont);
     }
 
-    protected String requireContextNameMatchesConfigOp(String contextName)
-    {
-        return MatchParentName.require(contextName, name, "config operation key");
-    }
-
     protected String requireContextNameMatchesParentContext(String contextName, String parentContextName)
     {
         return MatchParentName.require(contextName, parentContextName, "parent context");
+    }
+
+    protected void applyTypeKeyNaming(Config config, boolean useFullClassNames)
+    {
+        sane(config, "config");
+        config.useFullClassNames(useFullClassNames);
+    }
+
+    protected String contextName(String name)
+    {
+        String trimmedName = trimmed(name, "name");
+        ContextKey.validate(trimmedName);
+        return trimmedName;
     }
 }

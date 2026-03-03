@@ -17,7 +17,7 @@ class ConfigBuilderContextCollisionTest
         @DisplayName("Sibling contexts stay addressable by distinct keys")
         void siblingContextsStayAddressableByDistinctKeys()
         {
-            ConfigBuilder builder = new ConfigBuilder("/api/cats");
+            ConfigBuilder builder = new ConfigBuilder();
             Context create = new Context("/api/cats/create");
             Context update = new Context("/api/cats/update");
 
@@ -30,7 +30,7 @@ class ConfigBuilderContextCollisionTest
         @DisplayName("Wildcard and specific contexts remain distinct")
         void wildcardAndSpecificContextsRemainDistinct()
         {
-            ConfigBuilder builder = new ConfigBuilder("/api/cats/create");
+            ConfigBuilder builder = new ConfigBuilder();
             Context wildcard = new Context("/api/*/create");
             Context specific = new Context("/api/cats/create");
 
@@ -45,7 +45,7 @@ class ConfigBuilderContextCollisionTest
         @DisplayName("Parent contexts precede child contexts")
         void parentContextsPrecedeChildContexts()
         {
-            ConfigBuilder builder = new ConfigBuilder("/api/cats");
+            ConfigBuilder builder = new ConfigBuilder();
             Context parent = new Context("/api/cats");
             Context child = new Context("/api/cats/create");
 
@@ -55,39 +55,32 @@ class ConfigBuilderContextCollisionTest
         }
 
         @Test
-        @DisplayName("Rejects parent context under child config")
-        void rejectsParentContextUnderChildConfig()
+        @DisplayName("Accepts parent and child named contexts on root builder")
+        void acceptsParentAndChildNamedContextsOnRootBuilder()
         {
-            ConfigBuilder builder = new ConfigBuilder("/api/cats/create");
+            ConfigBuilder builder = new ConfigBuilder();
 
-            IllegalArgumentException ex =
-                    assertThrows(IllegalArgumentException.class, () -> builder.context("/api/cats"));
-            assertTrue(ex.getMessage().contains("must match"));
+            assertDoesNotThrow(() -> {
+                builder.context("/api/cats/create");
+                builder.context("/api/cats");
+            });
         }
 
         @Test
-        @DisplayName("Rejects unrelated named context")
-        void rejectsUnrelatedNamedContext()
+        @DisplayName("Accepts unrelated named contexts")
+        void acceptsUnrelatedNamedContext()
         {
-            ConfigBuilder builder = new ConfigBuilder("/api/cats/create");
+            ConfigBuilder builder = new ConfigBuilder();
 
-            IllegalArgumentException ex =
-                    assertThrows(IllegalArgumentException.class, () -> builder.context("/admin/users"));
-            assertTrue(ex.getMessage().contains("must match"));
+            assertDoesNotThrow(() -> builder.context("/admin/users"));
         }
 
         @Test
-        @DisplayName("Parameterless context uses config op key")
-        void parameterlessContextUsesConfigOpKey()
+        @DisplayName("Rejects blank context name")
+        void rejectsBlankContextName()
         {
-            ConfigBuilder builder = new ConfigBuilder("/api/cats/create");
-            builder.context()
-                    .invariant(String.class)
-                    .create(v -> true, "ok")
-                    .done()
-                    .build();
-
-            assertEquals(List.of("/api/cats/create"), contextNames(builder.contexts));
+            ConfigBuilder builder = new ConfigBuilder();
+            assertThrows(IllegalArgumentException.class, () -> builder.context(" "));
         }
     }
 

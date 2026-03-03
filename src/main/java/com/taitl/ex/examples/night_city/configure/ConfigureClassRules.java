@@ -13,7 +13,7 @@ public class ConfigureClassRules
     public void configure()
     {
         // @formatter:off
-        Ex.configure("/api/cats")
+        Ex.configure()
             .context("/api/cats/create")
                 .invariant(Cat.class)
                     .create(c -> "Black".equals(c.color), "Cats are born black")
@@ -23,7 +23,7 @@ public class ConfigureClassRules
                     .done()
                 .build();
         // TODO:
-        // ex.configure("/api/houses")
+        // ex.configure()
         // .context(new Context("/api/houses/create") {
         // { can't build house on North st.
         // .context(new Context("/api/houses/update") {
@@ -35,7 +35,7 @@ public class ConfigureClassRules
 
     // public void configureWithClasses()
     // {
-    // Ex.configure("/api/cats")
+    // Ex.configure()
     // .context(new Context("/api/cats/create") {
     // {
     // invariant(Cat.class)
@@ -49,7 +49,7 @@ public class ConfigureClassRules
     public void configureWithInstances()
     {
         // @formatter:off
-        Ex.configure("/api/cats")
+        Ex.configure()
             .context(new Context("/api/cats/create") {{
                 invariant(new Invariant<Cat>() {{
                     create(c -> "Black".equals(c.color), "Cats are born black");
@@ -64,7 +64,7 @@ public class ConfigureClassRules
     public void configureMixingFluentAndBuilders()
     {
         // @formatter:off
-        Ex.configure("/api/cats")
+        Ex.configure()
             .context("/api/cats/create")
                 .invariant(Cat.class)
                     .create(c -> "Black".equals(c.color), "Cats are born black")
@@ -82,7 +82,7 @@ public class ConfigureClassRules
     public void configureTransactionRules()
     {
         // @formatter:off
-        Ex.configure("/api/cats")
+        Ex.configure()
             .context("/api/cats")
                 .transaction("/api/cats/transaction")
                     .begin((Transaction tr) -> tr.index("cats").clear())

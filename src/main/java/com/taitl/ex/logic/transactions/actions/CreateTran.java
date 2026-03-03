@@ -47,6 +47,10 @@ public class CreateTran extends TranAction
         Tr o = trInstance(op);
         for (Context context : config.contexts())
         {
+            if (!MatchParentName.matches(op, context.name()))
+            {
+                continue;
+            }
             o.addTransaction(contextFactory.apply(context));
         }
         if (custom != null)
