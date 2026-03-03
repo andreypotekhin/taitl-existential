@@ -203,7 +203,7 @@ Require another entity to exist when entity exists, (different classes, outside 
 
 ##### Constraints on entity evolution
 
-User can declare an invariant on entity mutation.
+User can declare an invariant on entity transition.
 User can declare an invariant on entity porting.
 
 ##### Constraints on evolution of multiple entities
@@ -229,7 +229,7 @@ Optionally, user can configure the library to require a description for each con
 User can create an invariant for an entity class using the 'All' quantifier.
 User can restrict the 'All' quantifier to only apply to certain entities, by specifying a condition.
 User can define the 'All' quantifier on an entity class.
-User can define the 'All' quantifier on an entity mutation class (Transition<T>).
+User can define the 'All' quantifier on an entity transition class (Transition<T>).
 
 #### Existence Quantifier
 

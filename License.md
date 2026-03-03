@@ -15,10 +15,10 @@ Prohibited use:
 - Development of fully autonomous weapons.
 - Development of general artificial intelligence or super-intelligence.
 - Engagement, or prior engagement, in an activity that is incompatible with democratic values.
-- Engagement, or prior engagement, in a violation of international law.
+- Engagement, or prior engagement, in any violation of international law.
 - Engagement, or prior engagement, in aiding or abetting genocide.
 - Use by any government, military, law enforcement, or any contractor or subcontractor thereof.
-- Use for purposes of national security (any country).
+- Use for purposes of national security of any country.
 
 These conditions should also apply to any derived work.
 You must include this Ethical Use Policy text in any source

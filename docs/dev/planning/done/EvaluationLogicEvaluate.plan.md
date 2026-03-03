@@ -21,7 +21,7 @@ This plan is maintained according to `/docs/dev/auto/Plans.md`.
 ## Surprises & Discoveries
 
 - Observation: `EvaluationLogic.evaluate()` currently returns `void` without a `throws` clause, but the required behavior includes propagating non-violation handler failures, which are checked `ExistentialException`s.
-  Evidence: `ExecuteHandler.handle(...)`, `OnMutate.handle(...)`, and `OnPort.handle(...)` all declare `throws ExistentialException`.
+  Evidence: `ExecuteHandler.handle(...)`, `OnTransit.handle(...)`, and `OnPort.handle(...)` all declare `throws ExistentialException`.
 
 - Observation: `EventField.get(...)` threw `NullPointerException` when a split runtime event included event keys with no configured handlers (a normal case for `MultiKey` lookups).
   Evidence: New evaluator tests failed in `EventField.get(...)` when only `Create<T>` was configured for a split `Port<T>` event; `configuredHandlers.get(eventKey)` returned `null` and `handlers.addAll(set)` dereferenced it.
@@ -53,11 +53,11 @@ Runtime events are indexed in `/src/main/java/com/taitl/ex/logic/indexing/data/E
 
 Configured rules are indexed into `Config.indexes().eventField()` (`/src/main/java/com/taitl/ex/logic/configuration/indexes/data/EventField.java`) and retrieved by `MultiKey`, which is a comma-joined list of event keys representing the split elementary events for a single runtime event. Event splitting is implemented in `/src/main/java/com/taitl/ex/logic/evaluation/logic/EventSplitter.java` (wrapped by `SplitEvent`).
 
-Handlers in this codebase are `Ev<?>` entries, usually implementations of `EventHandler<?>` (for single-value events) or `BiEventHandlerWithSideEffects<?>` (for two-value events like mutate/port). Single-value `On<T>` handlers use `ExecuteHandler.handle(...)`; `OnMutate` and `OnPort` expose `handle(t0, t1)` directly. Constraint-like immutable handlers may throw condition failures that should be recorded in `ValidationReport`, while other handler failures should abort evaluation.
+Handlers in this codebase are `Ev<?>` entries, usually implementations of `EventHandler<?>` (for single-value events) or `BiEventHandlerWithSideEffects<?>` (for two-value events like transit/port). Single-value `On<T>` handlers use `ExecuteHandler.handle(...)`; `OnTransit` and `OnPort` expose `handle(t0, t1)` directly. Constraint-like immutable handlers may throw condition failures that should be recorded in `ValidationReport`, while other handler failures should abort evaluation.
 
 ## Plan of Work
 
-Implement the evaluator by iterating `tr.runtimeIndexes().encounteredUniqueEvents.stream()`. For each encountered runtime key, use `SplitEvent` to produce split runtime keys and derive a `MultiKey` from their `EventKey`s. Resolve configured `Ev<?>` entries from the operation config's `EventField` and execute only event handlers. For single-value handlers (`On<?>` or `EventHandlerWithSideEffects<?>` implementations based on `On`), execute with the split runtime key entity. For bi-event handlers (`OnMutate`, `OnPort` via `BiEventHandlerWithSideEffects<?>`), extract `t0`/`t1` from the split runtime key event when it is a `BiEvent<?>` and invoke the bi-handler.
+Implement the evaluator by iterating `tr.runtimeIndexes().encounteredUniqueEvents.stream()`. For each encountered runtime key, use `SplitEvent` to produce split runtime keys and derive a `MultiKey` from their `EventKey`s. Resolve configured `Ev<?>` entries from the operation config's `EventField` and execute only event handlers. For single-value handlers (`On<?>` or `EventHandlerWithSideEffects<?>` implementations based on `On`), execute with the split runtime key entity. For bi-event handlers (`OnTransit`, `OnPort` via `BiEventHandlerWithSideEffects<?>`), extract `t0`/`t1` from the split runtime key event when it is a `BiEvent<?>` and invoke the bi-handler.
 
 Add exception routing helpers in `EvaluationLogic` so constraint violations are added to `ValidationReport` and all other `ExistentialException`s are rethrown. Include a conservative rule for immutable bi-handlers, which currently report condition failures as `EventHandlerException` with no cause and a "condition is not met" message.
 

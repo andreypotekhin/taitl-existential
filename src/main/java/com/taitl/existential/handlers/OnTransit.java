@@ -80,7 +80,7 @@ public class OnTransit<T> implements BiEventHandler<T>
     }
 
     /**
-     * Handles a mutation between two values.
+     * Handles entity transition between before- and after- states.
      *
      * @param t0
      *            Previous value

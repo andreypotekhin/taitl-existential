@@ -114,19 +114,10 @@ Same when x0, x1 must also satisfy some condition:
 
 See /docs directory for further documentation.
 See /docs/Usage.md for quick-start and usage patterns.
-See /Troubleshooting.md for solutions to address common issues.
 
-## Type Keys
+## Troubleshooting
 
-When multiple entity classes share the same short name across packages, use fully-qualified type keys:
-`TypeKey.valueOfFull(MyEntity.class)` or `TypeKey.valueOfFull(MyEntity.class, "Qualifier")`.
-For library-inferred keys (for example `event(entity, tranID)` overloads), enable
-`Flags.BEHAVIOR_TYPE_KEYS_USE_FULL_CLASS_NAMES` to switch inference to fully-qualified class names.
-
-For generic type capture, use the anonymous subclass pattern:
-`new TypeKey<List<Order>>() {}`.
-
-Troubleshooting: `/Troubleshooting.md#type-key-format`
+See /Troubleshooting.md for solutions for common issues.
 
 ## License
 

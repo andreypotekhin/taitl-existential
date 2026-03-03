@@ -47,6 +47,6 @@ Transition: an event that records both before and after states of an entity
 Porting: a Transition that can have a null in the before or after state (but not both) 
   - The null in 'before' state indicates creation of an entity
   - The null in 'after' state indicates deletion of an entity
-  - Both 'before' and 'after' states being non-null indicate a change (mutation) of an entity
+  - Both 'before' and 'after' states being non-null indicate a change (transition) of an entity
 
 For additional documentation, see /Readme.md, /docs and /docs/dev.
