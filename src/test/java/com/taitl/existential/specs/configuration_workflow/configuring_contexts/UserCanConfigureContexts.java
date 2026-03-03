@@ -2,6 +2,7 @@ package com.taitl.existential.specs.configuration_workflow.configuring_contexts;
 
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.*;
+import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
@@ -56,12 +57,10 @@ class UserCanConfigureContexts extends SpecBase
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
                     .done()
-                    .build()
                 .context("/api/cats/create")
                     .invariant(Cat.class)
                     .create(v -> true, "ok")
-                    .done()
-                    .build();
+                    .done();
             // @formatter:on
 
             String tran = ex.begin("/api/cats/create").id();
@@ -82,17 +81,15 @@ class UserCanConfigureContexts extends SpecBase
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("parent"))
                 .done()
-                .build()
             .context("/api/cats/create")
                 .effect(Cat.class)
                 .create(v -> effectOrder.add("child"))
-                .done()
-                .build();
+                .done();
         // @formatter:on
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create").id();
-            ex.update("ok", tran);
+            ex.create(cat, tran);
             ex.commit(tran);
         });
 
@@ -154,17 +151,15 @@ class UserCanConfigureContexts extends SpecBase
                 .effect(Cat.class)
                     .create(v -> effectOrder.add("wildcard"))
                 .done()
-            .build()
             .context("/api/cats/create")
                 .effect(Cat.class)
                     .create(v -> effectOrder.add("concrete"))
-                .done()
-            .build();
+                .done();
         // @formatter:on
 
         assertDoesNotThrow(() -> {
             String tran = ex.begin("/api/cats/create").id();
-            ex.update("ok", tran);
+            ex.create(cat, tran);
             ex.commit(tran);
         });
         assertEquals(List.of("wildcard", "concrete"), effectOrder);
@@ -190,18 +185,18 @@ class UserCanConfigureContexts extends SpecBase
     void unrelatedContextNameIsAcceptedOnRootBuilder()
     {
         assertDoesNotThrow(() -> {
+            ConfigBuilder configBuilder = Ex.configure();
+
             // @formatter:off
-            Ex.configure()
-                .context("/api/cats/create")
+            configBuilder.context("/api/cats/create")
                     .invariant(String.class)
                     .create(v -> true, "ok")
                     .done()
-                    .build()
-                .context("/admin/users")
+                ;
+            configBuilder.context("/admin/users")
                     .invariant(String.class)
                     .create(v -> true, "ok")
-                    .done()
-                    .build();
+                    .done();
             // @formatter:on
         });
     }
@@ -214,8 +209,8 @@ class UserCanConfigureContexts extends SpecBase
         IllegalStateException ex = assertThrows(IllegalStateException.class,
             () -> {
                 Ex.configure()
-                    .context("/api/cats/create")
-                    .build();
+                    .context("/api/cats/create");
+                this.ex.begin("/api/cats/create");
             });
         // @formatter:on
         assertTrue(ex.getMessage().contains("Cannot configure context without defining rules"));

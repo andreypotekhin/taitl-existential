@@ -83,7 +83,7 @@ public class ConfigurationLogic implements Closeable
     }
 
     /**
-     * Called from ConfigBuilder.build() to indicate
+     * Called from configuration finalization flow to indicate
      * that the configuration for an op has been completed.
      */
     public void onFinishConfiguration(String op)

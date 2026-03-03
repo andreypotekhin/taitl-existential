@@ -43,8 +43,7 @@ class UserCanHandleCombinedEventEffects extends SpecBase
             ex.configure()
                     .context(op)
                     .effect(effect)
-                    .done()
-                    .build();
+                    .done();
             String tran = ex.begin(op).id();
             Cat created = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
             Cat updated = new Cat(CityTestData.BLACK_CAT.color(), "library");

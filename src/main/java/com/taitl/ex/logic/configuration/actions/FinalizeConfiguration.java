@@ -63,7 +63,7 @@ public class FinalizeConfiguration
     }
 
     /**
-     * Called from ConfigBuilder.build() to indicate
+     * Called from configuration finalization flow to indicate
      * that the configuration for an op has been completed
      * and to create intermediaries for the other processing stages.
      */
