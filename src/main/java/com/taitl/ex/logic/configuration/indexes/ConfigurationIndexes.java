@@ -37,13 +37,6 @@ public class ConfigurationIndexes
     /**
      * Add all configured rules to indexes, in the order of declaration.
      */
-    public void indexConfig(String op, Config config)
-    {
-        sane(op, "op", config, "config");
-        requireConcreteOp(op);
-        indexConfig.call(op, config, StageName.VALIDATION);
-    }
-
     public void indexConfig(String op, Config config, StageName stageName)
     {
         sane(op, "op", config, "config", stageName, "stageName");

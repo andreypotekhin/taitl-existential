@@ -38,7 +38,7 @@ class IndexConfigTypeKeyTest
         context.effect(reflectionKeyEffect);
 
         config.addContext(context);
-        config.indexes(StageName.VALIDATION).indexConfig("/app", config);
+        config.indexes(StageName.VALIDATION).indexConfig("/app", config, StageName.VALIDATION);
 
         assertTrue(
                 config.indexes(StageName.VALIDATION).configuredHandlers
@@ -69,7 +69,7 @@ class IndexConfigTypeKeyTest
         context.effect(effect);
         config.addContext(context);
 
-        config.indexes(StageName.VALIDATION).indexConfig("/app", config);
+        config.indexes(StageName.VALIDATION).indexConfig("/app", config, StageName.VALIDATION);
 
         assertTrue(config.indexes(StageName.VALIDATION).configuredHandlers.contains(
                 EventKey.valueOfFull(com.taitl.existential.events.Create.class, fullTypeKey)));
@@ -110,7 +110,7 @@ class IndexConfigTypeKeyTest
         config.addContext(context);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> config.indexes(StageName.VALIDATION).indexConfig("/api/*/create", config));
+                () -> config.indexes(StageName.VALIDATION).indexConfig("/api/*/create", config, StageName.VALIDATION));
 
         assertTrue(ex.getMessage().contains("Cannot index wildcard context"));
     }

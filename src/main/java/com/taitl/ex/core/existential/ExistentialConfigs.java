@@ -1,10 +1,11 @@
 package com.taitl.ex.core.existential;
 
-import java.io.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
+
+import java.io.*;
 
 public class ExistentialConfigs implements Closeable
 {
@@ -37,15 +38,6 @@ public class ExistentialConfigs implements Closeable
     public void done()
     {
         configLogic.finalizeConfiguration();
-    }
-
-    /**
-     * Called from ConfigBuilder.build() to indicate
-     * that the configuration for an op has been completed.
-     */
-    public void onFinishConfiguration(String op)
-    {
-        configLogic.onFinishConfiguration(op);
     }
 
     public boolean isEmpty()
