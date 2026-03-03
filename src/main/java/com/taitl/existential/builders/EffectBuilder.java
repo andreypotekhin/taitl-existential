@@ -463,7 +463,7 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         {
             return parent.context(name);
         }
-        return parent2.done().context(name);
+        return parent2.context(name);
     }
 
     public ContextBuilder context()
@@ -472,7 +472,7 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         {
             return parent.context();
         }
-        return parent2.done();
+        return parent2.contextBuilder();
     }
 
     public TransactionBuilder doneTran()
@@ -486,6 +486,6 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         {
             return parent;
         }
-        return parent2.done();
+        return parent2.contextBuilder();
     }
 }

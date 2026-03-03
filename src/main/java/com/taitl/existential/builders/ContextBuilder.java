@@ -274,16 +274,6 @@ public class ContextBuilder
     }
 
     /**
-     * No-op convenience for fluent chaining.
-     *
-     * @return This builder
-     */
-    public ContextBuilder done()
-    {
-        return this;
-    }
-
-    /**
      * Starts building a transaction using the supplied factory.
      *
      * @param supplier

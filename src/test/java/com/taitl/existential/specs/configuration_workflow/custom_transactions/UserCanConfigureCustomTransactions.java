@@ -86,7 +86,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
                     return new ChildTransaction("/api/cats/create");
                 })
                     .begin((ChildTransaction tr) -> transactionType.set(tr.getClass().getSimpleName()))
-                    .done();
+                ;
         // @formatter:on
 
         assertDoesNotThrow(() -> {
@@ -110,11 +110,10 @@ class UserCanConfigureCustomTransactions extends SpecBase
             .context("/api/cats")
                 .transaction(() -> new RootTransaction("/api/cats"))
                     .begin((RootTransaction tr) -> transactionTypes.add(tr.getClass().getSimpleName()))
-                    .done()
-            .context("/api/cats/create")
+                    .context("/api/cats/create")
                 .transaction(() -> new ChildTransaction("/api/cats/create"))
                     .begin((ChildTransaction tr) -> transactionTypes.add(tr.getClass().getSimpleName()))
-                    .done();
+                ;
         // @formatter:on
 
         assertDoesNotThrow(() -> {
@@ -141,7 +140,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
             .context("/api/cats/create")
                 .transaction(() -> new ChildTransaction("/api/cats/create"))
                     .begin(childTypeKey, tr -> childBeginCalls.incrementAndGet())
-                    .done();
+                ;
         // @formatter:on
 
         assertDoesNotThrow(() -> {

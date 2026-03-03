@@ -43,8 +43,7 @@ class UserCanHandleCombinedEventEffects extends SpecBase
             // @formatter:off
             ex.configure()
                     .context(op)
-                        .effect(effect)
-                        .done();
+                        .effect(effect);
             // @formatter:on
             String tran = ex.begin(op).id();
             Cat created = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());

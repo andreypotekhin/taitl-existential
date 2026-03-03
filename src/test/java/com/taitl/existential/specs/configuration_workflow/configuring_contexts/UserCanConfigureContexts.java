@@ -105,23 +105,22 @@ class UserCanConfigureContexts extends SpecBase
                 .contextFactory(() -> new GlobalContext("/unused"))
                 .context("/api/cats")
                     .invariant(Cat.class)
-                        .create(v -> true, "ok")
+                    .create(v -> true, "ok")
                     .transaction(() -> {
                         Transaction tr = new Transaction("/api/cats/create", "root");
                         tr.begin((Transaction current) -> rootType.set(current.context().getClass()));
                         return tr;
                     })
-                .done()
                 .context("/api/cats/create")
                     .contextFactory(() -> new SpecificContext("/unused"))
                     .invariant(Cat.class)
-                        .create(v -> true, "ok")
+                    .create(v -> true, "ok")
                     .transaction(() -> {
                         Transaction tr = new Transaction("/api/cats/create", "specific");
                         tr.begin((Transaction current) -> specificType.set(current.context().getClass()));
                         return tr;
                     })
-                .done();
+                ;
             // @formatter:on
 
             String tran = ex.begin("/api/cats/create").id();
