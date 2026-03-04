@@ -51,7 +51,7 @@ public class ConfiguredEventHandlers
     {
         sane(key, "key");
         sane(value, "value");
-        return handlers.put(key.toString(), value);
+        return handlers.add(key.toString(), value);
     }
 
     public void clear()

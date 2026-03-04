@@ -64,7 +64,7 @@ public class ConfiguredHandlers
         synchronized (this)
         {
             OrderlyEv<T> orderedValue = ci.maintainGlobalOrder.globallyOrdered(value);
-            return handlers.put(key.toString(), orderedValue);
+            return handlers.add(key.toString(), orderedValue);
         }
     }
 

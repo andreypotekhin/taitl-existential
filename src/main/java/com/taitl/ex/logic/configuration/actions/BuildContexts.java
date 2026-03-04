@@ -85,7 +85,7 @@ public class BuildContexts
                 result = cl.contexts.get(op);
                 if (result == null || result.isEmpty())
                 {
-                    result = cl.contexts.put(op, context);
+                    result = cl.contexts.add(op, context);
                 }
             }
         }

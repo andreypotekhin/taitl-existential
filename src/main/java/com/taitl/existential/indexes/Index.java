@@ -122,7 +122,7 @@ public class Index<K, V>
     {
         sane(k, "key");
         sane(v, "value");
-        return storage.put(k, v);
+        return storage.add(k, v);
     }
 
     /**
@@ -135,7 +135,7 @@ public class Index<K, V>
     {
         sane(v, "value");
         verify(getKey != null, NEED_GET_KEY);
-        return storage.put(getKey.apply(v), v);
+        return storage.add(getKey.apply(v), v);
     }
 
     /**
@@ -153,7 +153,7 @@ public class Index<K, V>
     {
         sane(k, "key");
         sane(v, "value");
-        return storage.remove(k, v);
+        return storage.removeValue(k, v);
     }
 
     /**
@@ -167,7 +167,7 @@ public class Index<K, V>
     {
         sane(k, "key");
         sane(match, "match");
-        return storage.remove(k, match);
+        return storage.removeMatching(k, match);
     }
 
     /**

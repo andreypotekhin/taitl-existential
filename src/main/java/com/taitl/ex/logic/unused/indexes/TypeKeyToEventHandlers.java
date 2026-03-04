@@ -60,7 +60,7 @@ public class TypeKeyToEventHandlers<T>
         {
             throw new IllegalArgumentException("Argument 'value' must not be null");
         }
-        return handlers.put(key.toString(), value);
+        return handlers.add(key.toString(), value);
     }
 
     public void clear()

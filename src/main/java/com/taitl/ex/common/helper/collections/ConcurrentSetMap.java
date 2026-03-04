@@ -11,7 +11,8 @@ import java.util.function.Predicate;
  */
 public class ConcurrentSetMap<K, V> extends SetMap<K, V>
 {
-    public Set<V> get(K key)
+    @Override
+    public Set<V> get(Object key)
     {
         requireKey(key);
         synchronized (this)
@@ -21,7 +22,7 @@ public class ConcurrentSetMap<K, V> extends SetMap<K, V>
         }
     }
 
-    public Set<V> put(K key, V value)
+    public Set<V> add(K key, V value)
     {
         requireKey(key);
         requireValue(value);
@@ -38,34 +39,45 @@ public class ConcurrentSetMap<K, V> extends SetMap<K, V>
         }
     }
 
-    public V remove(Object key, V value)
+    @Override
+    public Set<V> remove(Object key)
+    {
+        requireKey(key);
+        synchronized (this)
+        {
+            Set<V> removed = super.remove(key);
+            return removed == null ? null : snapshot(removed);
+        }
+    }
+
+    public V removeValue(Object key, V value)
     {
         requireKey(key);
         requireValue(value);
         synchronized (this)
         {
-            return super.remove(key, value);
+            return super.removeValue(key, value);
         }
     }
 
-    public Set<V> remove(Object key, Predicate<? super V> match)
+    public Set<V> removeMatching(Object key, Predicate<? super V> match)
     {
         requireKey(key);
         requireMatch(match);
         synchronized (this)
         {
-            Set<V> removed = super.remove(key, match);
+            Set<V> removed = super.removeMatching(key, match);
             return removed == null ? null : snapshot(removed);
         }
     }
 
-    public boolean containsKey(K key)
+    @Override
+    public boolean containsKey(Object key)
     {
         requireKey(key);
         synchronized (this)
         {
-            Set<V> values = storage.get(key);
-            return values != null && !values.isEmpty();
+            return storage.containsKey(key);
         }
     }
 
