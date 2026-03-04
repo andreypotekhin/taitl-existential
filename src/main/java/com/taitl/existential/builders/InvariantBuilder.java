@@ -3,7 +3,6 @@ package com.taitl.existential.builders;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
-import com.taitl.existential.quantifiers.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -281,72 +280,129 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     }
 
     /**
-     * Creates an existential quantifier over provided values.
+     * Creates an existential quantifier over a collection.
      *
-     * @param values
-     *            Values to evaluate
-     * @param predicate
-     *            Predicate evaluated against each value
-     * @return Exists quantifier
+     * @param coll Collection to evaluate
+     * @param predicate Predicate to evaluate against each value
+     * @return This builder for chaining
      */
     // TODO: add description
-    public Exists<T> exists(Collection<T> values, Predicate<T> predicate)
+    public InvariantBuilder<T> exists(Collection<T> coll, Predicate<T> predicate)
     {
-        sane(values, "values", predicate, "predicate");
-        return target.exists(values, predicate);
+        sane(coll, "coll", predicate, "predicate");
+        target.exists(coll, predicate);
+        return this;
     }
 
     /**
-     * Creates an existential quantifier over provided values.
+     * Creates an existential quantifier over a map.
      *
-     * @param values
-     *            Values to evaluate
-     * @param bipredicate
-     *            Predicate evaluated against each value and transaction
-     * @return Exists quantifier
+     * @param map Map to evaluate
+     * @param predicate Predicate to evaluate against each value
+     * @return This builder for chaining
      */
     // TODO: add description
-    public Exists<T> exists(Collection<T> values, BiPredicate<T, Transaction> bipredicate)
+    public <K> InvariantBuilder<T> exists(Map<T, K> map, Predicate<T> predicate)
     {
-        sane(values, "values", bipredicate, "bipredicate");
-        return target.exists(values, bipredicate);
+        sane(map, "map", predicate, "predicate");
+        target.exists(map, predicate);
+        return this;
     }
 
     /**
-     * Creates an existential quantifier over the collection as a whole.
+     * Creates an existential quantifier over a collection.
      *
-     * @param values
-     *            Values to evaluate
-     * @param predicate
-     *            Predicate evaluated against the full collection
-     * @param placeholder
-     *            Overload disambiguator
-     * @return Exists quantifier
+     * @param coll Collection to evaluate
+     * @param bipredicate Predicate evaluated against collection and transaction
+     * @return This builder for chaining
      */
     // TODO: add description
-    public Exists<T> exists(Collection<T> values, Predicate<Collection<T>> predicate, int placeholder)
+    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate)
     {
-        sane(values, "values", predicate, "predicate");
-        return target.exists(values, predicate, placeholder);
+        sane(coll, "coll", bipredicate, "bipredicate");
+        target.exists(coll, bipredicate);
+        return this;
     }
 
     /**
-     * Creates an existential quantifier over the collection as a whole.
+     * Creates an existential quantifier over a map.
      *
-     * @param values
-     *            Values to evaluate
-     * @param bipredicate
-     *            Predicate evaluated against collection and transaction
-     * @param placeholder
-     *            Overload disambiguator
-     * @return Exists quantifier
+     * @param map Map to evaluate
+     * @param bipredicate Predicate evaluated against collection and transaction
+     * @return This builder for chaining
      */
     // TODO: add description
-    public Exists<T> exists(Collection<T> values, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<T, Transaction> bipredicate)
+    {
+        sane(map, "coll", bipredicate, "bipredicate");
+        target.exists(map, bipredicate);
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
+     * @param predicate Predicate evaluated against the full collection
+     * @param placeholder Overload disambiguator
+     * @return This builder for chaining
+     */
+    // TODO: add description
+    public InvariantBuilder<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder)
+    {
+        sane(coll, "coll", predicate, "predicate");
+        target.exists(coll, predicate, placeholder);
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a map.
+     *
+     * @param map Map to evaluate
+     * @param predicate Predicate evaluated against the full collection
+     * @param placeholder Overload disambiguator
+     * @return This builder for chaining
+     */
+    // TODO: add description
+    public <K> InvariantBuilder<T> exists(Map<T, K> map, Predicate<Collection<T>> predicate, int placeholder)
+    {
+        sane(map, "map", predicate, "predicate");
+        target.exists(map, predicate, placeholder);
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
+     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param placeholder Overload disambiguator
+     * @return This builder for chaining
+     */
+    // TODO: add description
+    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate,
             int placeholder)
     {
-        sane(values, "values", bipredicate, "bipredicate");
-        return target.exists(values, bipredicate, placeholder);
+        sane(coll, "coll", bipredicate, "bipredicate");
+        target.exists(coll, bipredicate, placeholder);
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a map.
+     *
+     * @param coll Map to evaluate
+     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param placeholder Overload disambiguator
+     * @return This builder for chaining
+     */
+    // TODO: add description
+    public <K> InvariantBuilder<T> exists(Map<T, K> coll, BiPredicate<Collection<T>, Transaction> bipredicate,
+            int placeholder)
+    {
+        sane(coll, "coll", bipredicate, "bipredicate");
+        target.exists(coll, bipredicate, placeholder);
+        return this;
     }
 
     /**

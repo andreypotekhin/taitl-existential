@@ -41,6 +41,7 @@ public class CityTestData
     public static Set<Mouse> MICE;
     public static Set<House> HOUSES;
     public static Set<Dwelling<?, ?>> DWELLINGS;
+    public static Map<Mouse, Dwelling<Mouse, ?>> MouseDwelling;
 
     static
     {
@@ -52,5 +53,16 @@ public class CityTestData
         MICE.add(ORANGE_MOUSE);
         HOUSES = Set.of(GREEN_HOUSE, YELLOW_HOUSE, RED_HOUSE, ORANGE_HOUSE);
         DWELLINGS = Set.of(RUG_PILE, CAT_HOUSE, TRASH_CAN, STOVE_PIPE);
+        MouseDwelling = new HashMap<>();
+        for (Mouse m : MICE)
+        {
+            for (Dwelling<?, ?> d : DWELLINGS)
+            {
+                if (d.location().equals(m.location()))
+                {
+                    MouseDwelling.put(m, (Dwelling<Mouse, ?>) d);
+                }
+            }
+        }
     }
 }

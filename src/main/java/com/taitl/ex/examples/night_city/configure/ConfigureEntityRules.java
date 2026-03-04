@@ -47,22 +47,21 @@ public class ConfigureEntityRules
                     .create(b -> !b.color.equals("Neon"), "No neon mice")
         ;
 
-        // Cross-entity rules
+        // Existence rules
+        // Single-entity existence
+        Ex.configure()
+                .context("/")
+                .invariant(Mouse.class)
+                    .exists(MICE, m -> m.color().equals("Red"));
+
+        // Cross-entity existence
         Ex.configure()
             .context("/")
                 .invariant(Mouse.class)
-                    .exists(MICE, m -> m.color().equals("Red"));
-                // TODO: exists on a map/index to other type:
-//                .invariant(Mouse.class)
-//                    .exists<Dwelling, Location>(DWELLINGS, d -> d.location(), m -> m.location(), m -> m.color().equals("Red"),
-//                    "Dwelling exists with red mouse");
+                    .exists(MouseDwelling, m -> true); // At the end of transaction, every mouse is in a dwelling
+        ;
 
-//        Ex.configure()
-//                .context("/api")
-//                .invariant(new TypeKey<Being<?>>(){})
-//                    .create(b -> b.age > 0, "Beings must be born alive");
-
-        // Rules for narrower context
+        // Rules for narrower contexts
 //        Ex.configure()
 //                .context("/api/cats")
 

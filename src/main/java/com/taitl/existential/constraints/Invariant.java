@@ -262,58 +262,122 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Creates an existential quantifier over provided values.
+     * Creates an existential quantifier over a collection.
      *
-     * @param values Values to evaluate
-     * @param predicate Predicate evaluated against each value
+     * @param coll Collection to evaluate
+     * @param predicate Predicate to evaluate against each value
      * @return Exists quantifier
      */
-    public Exists<T> exists(Collection<T> values, Predicate<T> predicate)
+    public Invariant<T> exists(Collection<T> coll, Predicate<T> predicate)
     {
-        sane(values, "values", predicate, "predicate");
-        return new Exists<T>(values, predicate);
+        sane(coll, "coll", predicate, "predicate");
+        add(new Exists<T>(coll, predicate));
+        return this;
     }
 
     /**
-     * Creates an existential quantifier over provided values.
+     * Creates an existential quantifier over a map.
      *
-     * @param values Values to evaluate
+     * @param map Map to evaluate
+     * @param predicate Predicate to evaluate against each value
+     * @return Exists quantifier
+     */
+    // TODO: add predicate-less variant
+    public <K> Invariant<T> exists(Map<T, K> map, Predicate<T> predicate)
+    {
+        sane(map, "map", predicate, "predicate");
+        add(new Exists<T>(map, predicate));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
      * @param bipredicate Predicate evaluated against each value and transaction
      * @return Exists quantifier
      */
-    public Exists<T> exists(Collection<T> values, BiPredicate<T, Transaction> bipredicate)
+    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate)
     {
-        sane(values, "values", bipredicate, "bipredicate");
-        return new Exists<T>(values, bipredicate);
+        sane(coll, "coll", bipredicate, "bipredicate");
+        add(new Exists<T>(coll, bipredicate));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a map.
+     *
+     * @param map Map to evaluate
+     * @param bipredicate Predicate evaluated against each value and transaction
+     * @return Exists quantifier
+     */
+    public <K> Invariant<T> exists(Map<T, K> map, BiPredicate<T, Transaction> bipredicate)
+    {
+        sane(map, "map", bipredicate, "bipredicate");
+        add(new Exists<T>(map, bipredicate));
+        return this;
     }
 
     /**
      * Creates an existential quantifier over the collection as a whole.
      *
-     * @param values Values to evaluate
-     * @param predicate Predicate evaluated against the full collection
+     * @param coll Values to evaluate
+     * @param predicate Predicate evaluated against the map
      * @param placeholder Overload disambiguator
      * @return Exists quantifier
      */
-    public Exists<T> exists(Collection<T> values, Predicate<Collection<T>> predicate, int placeholder)
+    public Invariant<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder)
     {
-        sane(values, "values", predicate, "predicate");
-        return new Exists<T>(values, predicate, placeholder);
+        sane(coll, "coll", predicate, "predicate");
+        add(new Exists<T>(coll, predicate, placeholder));
+        return this;
     }
 
     /**
-     * Creates an existential quantifier over the collection as a whole.
+     * Creates an existential quantifier over a map.
      *
-     * @param values Values to evaluate
+     * @param map Map to evaluate
+     * @param predicate Predicate evaluated against the map
+     * @param placeholder Overload disambiguator
+     * @return Exists quantifier
+     */
+    public <K> Invariant<T> exists(Map<T, K> map, Predicate<Collection<T>> predicate, int placeholder)
+    {
+        sane(map, "map", predicate, "predicate");
+        add(new Exists<T>(map, predicate, placeholder));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
      * @param bipredicate Predicate evaluated against collection and transaction
      * @param placeholder Overload disambiguator
      * @return Exists quantifier
      */
-    public Exists<T> exists(Collection<T> values, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public Invariant<T> exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate,
             int placeholder)
     {
-        sane(values, "values", bipredicate, "bipredicate");
-        return new Exists<T>(values, bipredicate, placeholder);
+        sane(coll, "coll", bipredicate, "bipredicate");
+        add(new Exists<T>(coll, bipredicate, placeholder));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a map.
+     *
+     * @param map Map to evaluate
+     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param placeholder Overload disambiguator
+     * @return Exists quantifier
+     */
+    public <K> Invariant<T> exists(Map<T, K> map, BiPredicate<Collection<T>, Transaction> bipredicate,
+            int placeholder)
+    {
+        sane(map, "map", bipredicate, "bipredicate");
+        add(new Exists<T>(map, bipredicate, placeholder));
+        return this;
     }
 
     /* Evs implementation */

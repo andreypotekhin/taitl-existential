@@ -1,67 +1,101 @@
 package com.taitl.ex.concrete;
 
+import com.taitl.existential.configs.*;
+import com.taitl.existential.exceptions.*;
+import com.taitl.existential.expressions.*;
+
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.*;
-import com.taitl.existential.configs.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
-public class ConcreteExists<V> implements Predicate<Transaction>
+public class ConcreteExists<V> implements Expression<V>
 {
     Collection<V> coll;
-    Stream<V> stream; // TODO
-    // Set<V> values;
-    Predicate<Collection<V>> cpredicate;
-    BiPredicate<Collection<V>, Transaction> cbipredicate;
-    // Predicate<Set<V>> spredicate;
-    // BiPredicate<Set<V>, Transaction> sbipredicate;
+    Map<V, ?> map;
     Predicate<V> vpredicate;
     BiPredicate<V, Transaction> vbipredicate;
+    Predicate<Collection<V>> cpredicate;
+    BiPredicate<Collection<V>, Transaction> cbipredicate;
+    Predicate<Map<V, ?>> mpredicate;
+    BiPredicate<Map<V, ?>, Transaction> mbipredicate;
+    Transaction tran;
+    String description;
+
+    /* Implement Expression */
+
+    public Object evaluate(V t) throws ExistentialException
+    {
+        if (!test(t))
+        {
+            throw new PredicateFailure(description());
+        }
+        return null;
+    }
+
+    public String description()
+    {
+        return description;
+    }
 
     /* Implement Predicate */
 
     /**
      * Tests if the predicate holds for given transaction.
      *
-     * @param tran Transaction object
      * @return True if predicate holds
      */
-    public boolean test(Transaction tran)
+    public boolean test(V entity)
     {
-        return testOnColl(tran);
-        // if (coll != null)
-        // {
-        // return testOnColl(tran);
-        // }
-        // else if (values != null)
-        // {
-        // return testOnSet(tran);
-        // }
-        // else
-        // {
-        // throw new IllegalStateException("Neither collection nor set is defined");
-        // }
+        if (coll != null)
+        {
+            return testOnColl(entity);
+        }
+        else if (map != null)
+        {
+            return testOnMap(entity);
+        }
+        else
+        {
+            throw new IllegalStateException("Neither collection nor set is defined");
+        }
     }
 
-    protected boolean testOnColl(Transaction tran)
+    protected boolean testOnColl(V entity)
     {
-        sane(tran, "tran");
-        cool(coll, "values");
+        sane(entity, "entity");
+        cool(coll, "coll");
         if (cpredicate != null)
         {
-            return cpredicate.test(coll);
+            Collection<V> matching = new ArrayList<>();
+            for (V v : coll)
+            {
+                if (entity.equals(v))
+                {
+                    matching.add(v);
+                }
+            }
+            return cpredicate.test(matching);
         }
         if (cbipredicate != null)
         {
-            return cbipredicate.test(coll, tran);
+            cool(tran, "tran");
+            Collection<V> matching = new ArrayList<>();
+            for (V v : coll)
+            {
+                if (entity.equals(v))
+                {
+                    matching.add(v);
+                }
+            }
+            return cbipredicate.test(matching, tran);
         }
         if (vpredicate != null)
         {
-            for (V value : coll)
+            for (V v : coll)
             {
-                if (vpredicate.test(value))
+                if (entity.equals(v) && vpredicate.test(v))
                 {
                     return true;
                 }
@@ -70,9 +104,10 @@ public class ConcreteExists<V> implements Predicate<Transaction>
         }
         if (vbipredicate != null)
         {
-            for (V value : coll)
+            cool(tran, "tran");
+            for (V v : coll)
             {
-                if (vbipredicate.test(value, tran))
+                if (entity.equals(v) && vbipredicate.test(v, tran))
                 {
                     return true;
                 }
@@ -82,18 +117,57 @@ public class ConcreteExists<V> implements Predicate<Transaction>
         return false;
     }
 
-    // protected boolean testOnSet(Transaction tran)
+    protected boolean testOnMap(V entity)
+    {
+        sane(entity, "entity");
+        cool(map, "map");
+        // TODO
+
+        // if (cpredicate != null)
+        // {
+        // return cpredicate.test(coll);
+        // }
+        // if (cbipredicate != null)
+        // {
+        // return cbipredicate.test(coll, tran);
+        // }
+        // if (vpredicate != null)
+        // {
+        // for (V value : coll)
+        // {
+        // if (vpredicate.test(value))
+        // {
+        // return true;
+        // }
+        // }
+        // return false;
+        // }
+        // if (vbipredicate != null)
+        // {
+        // for (V value : coll)
+        // {
+        // if (vbipredicate.test(value, tran))
+        // {
+        // return true;
+        // }
+        // }
+        // return false;
+        // }
+        return false;
+    }
+
+    // protected boolean testOnSet()
     // {
     // Args.cool(tran, "tran");
     // State.cool(values, "values");
     // boolean result;
-    // if (spredicate != null)
+    // if (mpredicate != null)
     // {
-    // result = spredicate.test(values);
+    // result = mpredicate.test(values);
     // }
-    // else if (sbipredicate != null)
+    // else if (mbipredicate != null)
     // {
-    // result = sbipredicate.test(values, tran);
+    // result = mbipredicate.test(values, tran);
     // }
     // else if (values.isEmpty())
     // {

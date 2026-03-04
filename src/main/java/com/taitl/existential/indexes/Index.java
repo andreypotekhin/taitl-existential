@@ -176,7 +176,7 @@ public class Index<K, V>
      * @param k1 New key
      * @param v Value
      */
-    public void rekey(K k0, K k1, V v)
+    public void reindex(K k0, K k1, V v)
     {
         sane(k0, "oldKey");
         sane(k1, "newKey");

@@ -1,11 +1,12 @@
 package com.taitl.exlogic.unused.indexes;
 
-import java.util.*;
-import java.util.function.*;
 import com.taitl.ex.examples.night_city.data.*;
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.indexes.*;
 import org.junit.jupiter.api.*;
+
+import java.util.*;
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.collections.Coll.*;
 import static com.taitl.ex.examples.night_city.data.CityTestData.*;
@@ -105,10 +106,10 @@ class IndexTest
             Index<String, Cat> index = new Index<>(cat -> new String(cat.color));
             Cat cat = CityTestData.BLACK_CAT;
             index.add("Black", cat);
-            assertDoesNotThrow(() -> index.rekey("Black", new String("Black"), cat));
+            assertDoesNotThrow(() -> index.reindex("Black", new String("Black"), cat));
             assertTrue(index.contains("Black", cat));
             IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                    () -> index.rekey("Black", "Orange", cat));
+                    () -> index.reindex("Black", "Orange", cat));
             assertTrue(ex.getMessage().contains("newKey"));
         }
     }
