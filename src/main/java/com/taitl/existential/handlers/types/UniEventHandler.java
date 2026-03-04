@@ -3,9 +3,7 @@ package com.taitl.existential.handlers.types;
 import com.taitl.existential.exceptions.*;
 
 /**
- * Base interface for event handlers with side effects, such as OnUpdate<T>.
- *
- * Here, E is one of Create, Update, Delete, Read, Write, CU, UD, CUD.
+ * Base interface for event handler, such as OnUpdate<T>.
  *
  * @param <T>
  *            Type of entity

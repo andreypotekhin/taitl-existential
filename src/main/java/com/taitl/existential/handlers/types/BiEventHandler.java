@@ -1,11 +1,9 @@
 package com.taitl.existential.handlers.types;
 
-import com.taitl.existential.exceptions.ExistentialException;
+import com.taitl.existential.exceptions.*;
 
 /**
  * Base interface for BiEvent<T> handlers with side effects, such as OnTransit<T>.
- *
- * Here, E is one of events: Transit, Permutate.
  *
  * @param <T>
  *            Type of entity

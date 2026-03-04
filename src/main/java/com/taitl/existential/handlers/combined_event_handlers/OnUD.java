@@ -1,13 +1,14 @@
 package com.taitl.existential.handlers.combined_event_handlers;
 
-import java.util.function.*;
 import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 
+import java.util.function.*;
+
 /**
- * Handles update and delete events for a given entity type.
+ * Event handler for Update and Delete events.
  *
  * @param <T>
  *            Entity type

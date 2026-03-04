@@ -1,12 +1,13 @@
 package com.taitl.existential.handlers.access_handlers;
 
-import java.util.function.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.*;
 
+import java.util.function.*;
+
 /**
- * Declares a handler that runs when an entity is read.
+ * Event handler for Read events.
  *
  * @param <T>
  *            Type of entity being read

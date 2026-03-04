@@ -1,15 +1,14 @@
 package com.taitl.existential.handlers.transaction_handlers;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-
-import com.taitl.existential.handlers.*;
-import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.configs.*;
 import com.taitl.existential.events.transaction_events.*;
 import com.taitl.existential.events.types.*;
+import com.taitl.existential.handlers.*;
+
+import java.util.function.*;
 
 /**
- * Transaction lifecycle handler for begin events.
+ * Event handler for transaction Begin events.
  *
  * @param <T>
  *            Transaction type handled by the begin event

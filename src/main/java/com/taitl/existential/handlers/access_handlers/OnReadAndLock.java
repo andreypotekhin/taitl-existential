@@ -1,14 +1,13 @@
 package com.taitl.existential.handlers.access_handlers;
 
-import java.util.function.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.*;
 
+import java.util.function.*;
+
 /**
- * Declarative handler for {@link ReadAndLock} access events.
- * Extends {@link On} to capture conditional actions that run when an
- * entity is read and locked.
+ * Event handler for ReadAndLock events.
  *
  * @param <T>
  *            Type of entity read and locked

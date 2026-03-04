@@ -1,13 +1,14 @@
 package com.taitl.existential.handlers.transaction_handlers;
 
-import java.util.function.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.events.transaction_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.*;
 
+import java.util.function.*;
+
 /**
- * Declares a handler that runs when a transaction rolls back.
+ * Event handler for transaction Rollback events.
  *
  * @param <T>
  *            Transaction type

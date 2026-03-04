@@ -1,13 +1,14 @@
 package com.taitl.existential.handlers.access_handlers;
 
-import java.util.function.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 
+import java.util.function.*;
+
 /**
- * Declares a handler that runs when an entity is written.
+ * Event handler for Write events.
  *
  * @param <T>
  *            Type of entity being written

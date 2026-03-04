@@ -1,14 +1,14 @@
 package com.taitl.existential.handlers.combined_event_handlers;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 
+import java.util.function.*;
+
 /**
- * Handles create and update events for a given entity type.
+ * Event handler for Create and Update events.
  *
  * @param <T>
  *            Entity type
