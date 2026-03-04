@@ -54,6 +54,16 @@ class IndexTest
     }
 
     @Test
+    void testSize()
+    {
+        assertEquals(3, cats_by_color.size());
+        cats_by_color.remove("Grey", GREY_CAT);
+        assertEquals(2, cats_by_color.size());
+        cats_by_color.clear();
+        assertEquals(0, cats_by_color.size());
+    }
+
+    @Test
     void testGet()
     {
         assertEquals(GREY_CAT, getFirst(cats_by_color.get("Grey")));
@@ -131,6 +141,22 @@ class IndexTest
         assertTrue(index_without_get_index_function.contains("Grey", GREY_CAT));
         assertThrows(IllegalStateException.class,
                 () -> index_without_get_index_function.add(CityTestData.ORANGE_CAT));
+    }
+
+    @Test
+    void testReindexUsingExtractor()
+    {
+        Cat orange = new Cat("Orange", "Garden");
+        cats_by_location.add(orange);
+        orange.location = LOCATION_PARK;
+        cats_by_location.reindex(LOCATION_GARDEN, orange);
+
+        assertFalse(cats_by_location.contains(LOCATION_GARDEN, orange));
+        assertTrue(cats_by_location.contains(LOCATION_PARK, orange));
+
+        Index<Location, Cat> noExtractor = new Index<>();
+        noExtractor.add(LOCATION_GARDEN, orange);
+        assertThrows(IllegalStateException.class, () -> noExtractor.reindex(LOCATION_GARDEN, orange));
     }
 
     @Test
