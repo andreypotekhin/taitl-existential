@@ -3,7 +3,9 @@ package com.taitl.existential.builders;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.quantifiers.*;
 
+import java.util.*;
 import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -242,6 +244,105 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
         sane(condition, "condition", description, "description");
         target.upsert(condition, description);
         return this;
+    }
+
+    /**
+     * Adds an all-entities invariant evaluated against the current entity type.
+     *
+     * @param predicate
+     *            Predicate to enforce for all entities
+     * @param description
+     *            Description of invariant
+     * @return This builder for chaining
+     */
+    public InvariantBuilder<T> all(Predicate<? super T> predicate, String description)
+    {
+        sane(predicate, "predicate", description, "description");
+        target.all(predicate, description);
+        return this;
+    }
+
+    /**
+     * Adds an all-entities invariant evaluated on entities matching the condition.
+     *
+     * @param condition
+     *            Predicate selecting entities to check
+     * @param predicate
+     *            Predicate to enforce on selected entities
+     * @param description
+     *            Description of invariant
+     * @return This builder for chaining
+     */
+    public InvariantBuilder<T> all(Predicate<? super T> condition, Predicate<? super T> predicate, String description)
+    {
+        sane(condition, "condition", predicate, "predicate", description, "description");
+        target.all(condition, predicate, description);
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over provided values.
+     *
+     * @param values
+     *            Values to evaluate
+     * @param predicate
+     *            Predicate evaluated against each value
+     * @return Exists quantifier
+     */
+    public Exists<T> exists(Collection<T> values, Predicate<T> predicate)
+    {
+        sane(values, "values", predicate, "predicate");
+        return target.exists(values, predicate);
+    }
+
+    /**
+     * Creates an existential quantifier over provided values.
+     *
+     * @param values
+     *            Values to evaluate
+     * @param bipredicate
+     *            Predicate evaluated against each value and transaction
+     * @return Exists quantifier
+     */
+    public Exists<T> exists(Collection<T> values, BiPredicate<T, Transaction> bipredicate)
+    {
+        sane(values, "values", bipredicate, "bipredicate");
+        return target.exists(values, bipredicate);
+    }
+
+    /**
+     * Creates an existential quantifier over the collection as a whole.
+     *
+     * @param values
+     *            Values to evaluate
+     * @param predicate
+     *            Predicate evaluated against the full collection
+     * @param placeholder
+     *            Overload disambiguator
+     * @return Exists quantifier
+     */
+    public Exists<T> exists(Collection<T> values, Predicate<Collection<T>> predicate, int placeholder)
+    {
+        sane(values, "values", predicate, "predicate");
+        return target.exists(values, predicate, placeholder);
+    }
+
+    /**
+     * Creates an existential quantifier over the collection as a whole.
+     *
+     * @param values
+     *            Values to evaluate
+     * @param bipredicate
+     *            Predicate evaluated against collection and transaction
+     * @param placeholder
+     *            Overload disambiguator
+     * @return Exists quantifier
+     */
+    public Exists<T> exists(Collection<T> values, BiPredicate<Collection<T>, Transaction> bipredicate,
+            int placeholder)
+    {
+        sane(values, "values", bipredicate, "bipredicate");
+        return target.exists(values, bipredicate, placeholder);
     }
 
     /**

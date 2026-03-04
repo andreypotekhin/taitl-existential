@@ -25,6 +25,7 @@ public class ConcreteExistsBuilder<V>
         result.cpredicate = cpredicate;
         result.cbipredicate = cbipredicate;
         result.vpredicate = vpredicate;
+        result.vbipredicate = vbipredicate;
         return result;
     }
 
