@@ -35,29 +35,83 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class SplitEventType
 {
-    @SuppressWarnings("unchecked")
     public <T> Set<Event<T>> call(Event<T> event, Set<Event<T>> events)
+    {
+        return call(event, events, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Set<Event<T>> call(Event<T> event, Set<Event<T>> events, boolean splitElementaryToCompound)
+    {
+        sane(event, "event", events, "events");
+        splitCompoundRoot(event, events);
+        if (splitElementaryToCompound)
+        {
+            splitElementaryRoot(event, events);
+        }
+        return events;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> Set<Event<T>> splitCompoundRoot(Event<T> event, Set<Event<T>> events)
     {
         sane(event, "event", events, "events");
         if (event instanceof Port<?>)
         {
             return splitPort((Port<T>) event, events);
         }
-        check(!(event instanceof Transit<?>), "Please specify event of type Port<>");
-        // TODO: Transit
+        if (event instanceof Transit<?>)
+        {
+            return splitTransit((Transit<T>) event, events);
+        }
         if (event instanceof ReadAndLock<?>)
         {
             return splitReadAndLock((ReadAndLock<T>) event, events);
         }
-        // TODO: other
+        if (event instanceof CUD<?>)
+        {
+            return splitCud((CUD<T>) event, events);
+        }
+        if (event instanceof CU<?>)
+        {
+            return splitCu((CU<T>) event, events);
+        }
+        if (event instanceof UD<?>)
+        {
+            return splitUd((UD<T>) event, events);
+        }
+        return events;
+    }
 
+    @SuppressWarnings("unchecked")
+    protected <T> Set<Event<T>> splitElementaryRoot(Event<T> event, Set<Event<T>> events)
+    {
+        sane(event, "event", events, "events");
+        if (event instanceof Create<?>)
+        {
+            return splitCreate((Create<T>) event, events);
+        }
+        if (event instanceof Update<?>)
+        {
+            return splitUpdate((Update<T>) event, events);
+        }
+        if (event instanceof Delete<?>)
+        {
+            return splitDelete((Delete<T>) event, events);
+        }
+        return events;
+    }
+
+    protected <T> Set<Event<T>> splitTransit(Transit<T> event, Set<Event<T>> events)
+    {
+        sane(event, "event", events, "events");
+        events.add(new Update<>(event.t1));
         return events;
     }
 
     protected <T> Set<Event<T>> splitPort(Port<T> port, Set<Event<T>> events)
     {
         sane(port, "event", events, "events");
-        // Port -> EntityEvent, Transit, Port
         if (port.t0 != null && port.t1 != null)
         {
             events.add(new Transit<>(port.t0, port.t1));
@@ -88,6 +142,71 @@ public class SplitEventType
             events.add(new UD<>(port.t0));
             events.add(new CUD<>(port.t0));
         }
+        return events;
+    }
+
+    protected <T> Set<Event<T>> splitCud(CUD<T> event, Set<Event<T>> events)
+    {
+        sane(event, "event", events, "events");
+        T entity = event.t;
+        events.add(new CU<>(entity));
+        events.add(new Create<>(entity));
+        events.add(new Update<>(entity));
+        events.add(new Delete<>(entity));
+        events.add(new Transit<>(entity, entity));
+        events.add(new Port<>(entity, entity));
+        return events;
+    }
+
+    protected <T> Set<Event<T>> splitCu(CU<T> event, Set<Event<T>> events)
+    {
+        sane(event, "event", events, "events");
+        T entity = event.t;
+        events.add(new Create<>(entity));
+        events.add(new Update<>(entity));
+        events.add(new Transit<>(entity, entity));
+        events.add(new Port<>(entity, entity));
+        return events;
+    }
+
+    protected <T> Set<Event<T>> splitUd(UD<T> event, Set<Event<T>> events)
+    {
+        sane(event, "event", events, "events");
+        T entity = event.t;
+        events.add(new Update<>(entity));
+        events.add(new Delete<>(entity));
+        events.add(new Transit<>(entity, entity));
+        events.add(new Port<>(entity, entity));
+        return events;
+    }
+
+    protected <T> Set<Event<T>> splitCreate(Create<T> event, Set<Event<T>> events)
+    {
+        sane(event, "event", events, "events");
+        T entity = event.t;
+        events.add(new CUD<>(entity));
+        events.add(new CU<>(entity));
+        events.add(new Port<>(entity, entity));
+        return events;
+    }
+
+    protected <T> Set<Event<T>> splitUpdate(Update<T> event, Set<Event<T>> events)
+    {
+        sane(event, "event", events, "events");
+        T entity = event.t;
+        events.add(new CUD<>(entity));
+        events.add(new CU<>(entity));
+        events.add(new Transit<>(entity, entity));
+        return events;
+    }
+
+    protected <T> Set<Event<T>> splitDelete(Delete<T> event, Set<Event<T>> events)
+    {
+        sane(event, "event", events, "events");
+        T entity = event.t;
+        events.add(new CUD<>(entity));
+        events.add(new UD<>(entity));
+        events.add(new Port<>(entity, entity));
         return events;
     }
 

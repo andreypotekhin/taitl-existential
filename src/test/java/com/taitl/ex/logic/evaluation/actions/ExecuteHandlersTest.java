@@ -5,6 +5,7 @@ import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.*;
+import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.quantifiers.*;
@@ -93,5 +94,46 @@ class ExecuteHandlersTest
         assertEquals(1, calls.get());
         assertEquals(1, report.exceptions().size());
         assertInstanceOf(PredicateFailure.class, report.exceptions().get(0));
+    }
+
+    @Test
+    @DisplayName("Call adapts bi handler payload for elementary create event")
+    void callAdaptsBiPayloadForCreate() throws Exception
+    {
+        ExecuteHandlers executeHandlers = new ExecuteHandlers();
+        ValidationReport report = new ValidationReport();
+        String entity = new String("new");
+        AtomicInteger calls = new AtomicInteger();
+
+        List<Ev<String>> evs = List.of(
+                new OnPort<String>((t0, t1) -> {
+                    calls.incrementAndGet();
+                    assertSame(entity, t0);
+                    assertSame(entity, t1);
+                }),
+                new OnTransit<String>((t0, t1) -> {
+                    calls.incrementAndGet();
+                    assertSame(entity, t0);
+                    assertSame(entity, t1);
+                }));
+
+        executeHandlers.call(evs, new Create<>(entity), report);
+
+        assertEquals(2, calls.get());
+        assertTrue(report.exceptions().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Call rejects bi handler for non transition single events")
+    void callRejectsBiHandlerForRead()
+    {
+        ExecuteHandlers executeHandlers = new ExecuteHandlers();
+        ValidationReport report = new ValidationReport();
+
+        IllegalStateException error = assertThrows(IllegalStateException.class,
+                () -> executeHandlers.call(List.of(new OnPort<String>((t0, t1) -> {
+                })), new Read<>("v"), report));
+
+        assertTrue(error.getMessage().contains("Bi-event handler requires BiEvent runtime event"));
     }
 }

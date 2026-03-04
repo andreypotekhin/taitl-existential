@@ -40,4 +40,30 @@ public class BiEvent<T> implements Event<T>
         this.t0 = t0;
         this.t1 = t1;
     }
+
+    public int hashCode()
+    {
+        int result = getClass().hashCode();
+        result = 31 * result + System.identityHashCode(t0);
+        result = 31 * result + System.identityHashCode(t1);
+        return result;
+    }
+
+    public boolean equals(Object other)
+    {
+        if (other == this)
+        {
+            return true;
+        }
+        if (other == null)
+        {
+            return false;
+        }
+        if (other.getClass() != getClass())
+        {
+            return false;
+        }
+        BiEvent<?> o = (BiEvent<?>) other;
+        return o.t0 == t0 && o.t1 == t1;
+    }
 }

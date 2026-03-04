@@ -66,7 +66,7 @@ public class EvaluationLogic implements Closeable
     {
         sane(runtimeKey, "runtimeKey", tr, "tr", stageName, "stageName", report, "report");
         EventField eventField = eventField(tr, stageName);
-        evaluateEvents.call(runtimeKey, eventField, report, useFullClassNames());
+        evaluateEvents.call(runtimeKey, eventField, report, useFullClassNames(), splitElementaryToCompound());
     }
 
     public <T> void evaluateIntents(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException
@@ -109,6 +109,11 @@ public class EvaluationLogic implements Closeable
     public boolean useFullClassNames()
     {
         return tl.ex().get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
+    }
+
+    public boolean splitElementaryToCompound()
+    {
+        return !tl.ex().get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND);
     }
 
     protected void throwIfStageFailed(StageName stageName, ValidationReport report) throws ExistentialException

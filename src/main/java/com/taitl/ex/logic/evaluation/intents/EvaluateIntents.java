@@ -50,7 +50,8 @@ public class EvaluateIntents
 
     public <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey)
     {
-        return toSplitKeys.call(eventSplitter.split(runtimeKey, el.useFullClassNames()));
+        return toSplitKeys
+                .call(eventSplitter.split(runtimeKey, el.useFullClassNames(), el.splitElementaryToCompound()));
     }
 
     public <T> void iterateSplitKeys(
