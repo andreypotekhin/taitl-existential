@@ -11,56 +11,75 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SplitTypeKeyTest
 {
-    @Test
-    @DisplayName("Root removes generic part and keeps only type name")
-    void rootRemovesGenericPartAndKeepsOnlyTypeName()
+    private SplitTypeKey splitter;
+
+    @BeforeEach
+    void setup()
     {
-        SplitTypeKey splitter = new SplitTypeKey();
-        assertEquals("Read", splitter.root("Read<Cat<JSON>>"));
+        splitter = new SplitTypeKey();
     }
 
-    @Test
-    @DisplayName("Root supports plain names and whitespace")
-    void rootSupportsPlainNamesAndWhitespace()
+    @Nested
+    class Root
     {
-        SplitTypeKey splitter = new SplitTypeKey();
-        assertEquals("Write", splitter.root("  Write  "));
+        @Test
+        @DisplayName("Removes generic part and keeps only type name")
+        void removesGenericPart()
+        {
+            assertEquals("Read", splitter.root("Read<Cat<JSON>>"));
+        }
+
+        @Test
+        @DisplayName("Supports plain names and whitespace")
+        void supportsWhitespace()
+        {
+            assertEquals("Write", splitter.root("  Write  "));
+        }
     }
 
-    @Test
-    @DisplayName("Split single dimension")
-    void splitSingleDimension()
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class Split
     {
-        SplitTypeKey splitter = new SplitTypeKey();
+        private Set<String> expectedMulti;
 
-        Set<String> keys = splitter.split(TypeKey.valueOf("T<A<X>>"))
-                .stream()
-                .map(TypeKey::toString)
-                .collect(Collectors.toCollection(java.util.LinkedHashSet::new));
+        @BeforeAll
+        void setupExpected()
+        {
+            expectedMulti = Set.of(
+                    "T<A<X>,B<Y>>",
+                    "T<A<X>,B<?>>",
+                    "T<A<X>,B>",
+                    "T<A<?>,B<Y>>",
+                    "T<A<?>,B<?>>",
+                    "T<A<?>,B>",
+                    "T<A,B<Y>>",
+                    "T<A,B<?>>",
+                    "T<A,B>");
+        }
 
-        assertEquals(Set.of("T<A<X>>", "T<A<?>>", "T<A>"), keys);
-    }
+        @Test
+        @DisplayName("Single dimension")
+        void single()
+        {
+            Set<String> keys = splitter.split(TypeKey.valueOf("T<A<X>>"))
+                    .stream()
+                    .map(TypeKey::toString)
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
 
-    @Test
-    @DisplayName("Split multiple dimensions")
-    void splitMultipleDimensions()
-    {
-        SplitTypeKey splitter = new SplitTypeKey();
+            assertEquals(Set.of("T<A<X>>", "T<A<?>>", "T<A>"), keys);
+        }
 
-        Set<String> keys = splitter.split(TypeKey.valueOf("T<A<X>,B<Y>>"))
-                .stream()
-                .map(TypeKey::toString)
-                .collect(Collectors.toSet());
+        @Test
+        @DisplayName("Multiple dimensions")
+        void multiple()
+        {
+            Set<String> keys = splitter.split(TypeKey.valueOf("T<A<X>,B<Y>>"))
+                    .stream()
+                    .map(TypeKey::toString)
+                    .collect(Collectors.toSet());
 
-        assertEquals(Set.of(
-                "T<A<X>,B<Y>>",
-                "T<A<X>,B<?>>",
-                "T<A<X>,B>",
-                "T<A<?>,B<Y>>",
-                "T<A<?>,B<?>>",
-                "T<A<?>,B>",
-                "T<A,B<Y>>",
-                "T<A,B<?>>",
-                "T<A,B>"), keys);
+            assertEquals(expectedMulti, keys);
+        }
     }
 }

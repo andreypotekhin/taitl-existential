@@ -11,25 +11,38 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConfigurationLogicTest
 {
-    @Test
-    @DisplayName("Config rejects missing config with op key message")
-    void configRejectsMissingConfigWithOpKeyMessage()
+    private Existential ex;
+
+    @BeforeEach
+    void setup()
     {
-        try (Existential ex = new Existential())
+        ex = new Existential();
+    }
+
+    @AfterEach
+    void cleanup()
+    {
+        ex.close();
+    }
+
+    @Nested
+    class ConfigLookup
+    {
+        @Test
+        @DisplayName("Rejects missing config with op key message")
+        void rejectsMissingConfig()
         {
-            String op = "/app/orders";
-
-            RuntimeException error = assertThrows(RuntimeException.class, () -> ex.configs().config(op));
-
-            assertThat(error.getMessage(), is("Config not found for op '" + op + "'"));
+            RuntimeException error = assertThrows(RuntimeException.class, () -> ex.configs().config("/app/orders"));
+            assertThat(error.getMessage(), is("Config not found for op '/app/orders'"));
         }
     }
 
-    @Test
-    @DisplayName("Config indexes wildcard context for concrete operation")
-    void configIndexesWildcardContextForConcreteOperation() throws Exception
+    @Nested
+    class WildcardContexts
     {
-        try (Existential ex = new Existential())
+        @Test
+        @DisplayName("Indexes wildcard context for concrete operation")
+        void indexesConcreteOperation() throws Exception
         {
             AtomicInteger updateCalls = new AtomicInteger();
 
@@ -48,11 +61,12 @@ class ConfigurationLogicTest
         }
     }
 
-    @Test
-    @DisplayName("Begin finalizes configuration when build was never called")
-    void beginFinalizesWithoutExplicitBuild()
+    @Nested
+    class BuildLifecycle
     {
-        try (Existential ex = new Existential())
+        @Test
+        @DisplayName("Begin finalizes configuration when build was never called")
+        void finalizesOnBegin()
         {
             ex.configure()
                     .context("/api/cats/update")
