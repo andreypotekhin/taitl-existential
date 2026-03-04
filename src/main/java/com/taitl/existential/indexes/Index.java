@@ -28,6 +28,8 @@ public class Index<K, V>
     protected SetMap<K, V> storage = new SetMap<>();
     protected Function<V, K> getKey;
 
+    protected static final String NEED_GET_KEY = "You need to call 'setGetKey()' first";
+
     /**
      * Creates an empty index without a key extractor.
      * Call {@link #setGetKey(Function)} or use {@link #add(Object, Object)}.
@@ -132,7 +134,7 @@ public class Index<K, V>
     public Set<V> add(V v)
     {
         sane(v, "value");
-        verify(getKey != null, "You need to call 'setGetKey()' first");
+        verify(getKey != null, NEED_GET_KEY);
         return storage.put(getKey.apply(v), v);
     }
 
@@ -199,6 +201,20 @@ public class Index<K, V>
     }
 
     /**
+     * Reinserts a value using the current key extracted by {@link #setGetKey(Function)}.
+     *
+     * @param k0 Old key
+     * @param v Value to reindex
+     */
+    public void reindex(K k0, V v)
+    {
+        sane(k0, "oldKey");
+        sane(v, "value");
+        verify(getKey != null, NEED_GET_KEY);
+        reindex(k0, getKey.apply(v), v);
+    }
+
+    /**
      * In some scenarios, the exact key type is not known.
      * This provides a method to query by an {@link Object} key.
      *
@@ -238,5 +254,13 @@ public class Index<K, V>
     public void clear()
     {
         storage.clear();
+    }
+
+    /**
+     * Returns amount of keys that currently have at least one value.
+     */
+    public int size()
+    {
+        return storage.size();
     }
 }
