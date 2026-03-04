@@ -1,8 +1,10 @@
 package com.taitl.ex.examples.night_city.model;
 
-import java.util.Objects;
+import com.taitl.ex.examples.night_city.model.taxonomy.*;
 
-public class Being
+import java.util.*;
+
+public class Being<T extends Family>
 {
     public String color;
     public Location location;

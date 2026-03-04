@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserCanConfigureClassRules extends SpecBase
+class UserCanConfigureEntityRules extends SpecBase
 {
     {
         autoConfigure = false;

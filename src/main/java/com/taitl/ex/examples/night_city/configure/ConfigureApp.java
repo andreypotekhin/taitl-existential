@@ -2,26 +2,27 @@ package com.taitl.ex.examples.night_city.configure;
 
 public class ConfigureApp
 {
-    ConfigureClassRules configureClassRules = new ConfigureClassRules();
+    ConfigureEntityRules configureEntityRules = new ConfigureEntityRules();
+    ConfigureTransactionRules configureTransactionRules = new ConfigureTransactionRules();
     ConfigureAccessRules configureAccessRules = new ConfigureAccessRules();
 
     public void configure()
     {
-        configureClassRules.configure();
+        configureEntityRules.configure();
     }
 
     public void configureWithInstances()
     {
-        configureClassRules.configureWithInstances();
+        configureEntityRules.configureWithInstances();
     }
 
     public void configureMixingFluentAndBuilders()
     {
-        configureClassRules.configureMixingFluentAndBuilders();
+        configureEntityRules.configureMixingFluentAndBuilders();
     }
 
     public void configureTransactionRules()
     {
-        configureClassRules.configureTransactionRules();
+        configureTransactionRules.configureTransaction();
     }
 }

@@ -289,6 +289,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      *            Predicate evaluated against each value
      * @return Exists quantifier
      */
+    // TODO: add description
     public Exists<T> exists(Collection<T> values, Predicate<T> predicate)
     {
         sane(values, "values", predicate, "predicate");
@@ -304,6 +305,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      *            Predicate evaluated against each value and transaction
      * @return Exists quantifier
      */
+    // TODO: add description
     public Exists<T> exists(Collection<T> values, BiPredicate<T, Transaction> bipredicate)
     {
         sane(values, "values", bipredicate, "bipredicate");
@@ -321,6 +323,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      *            Overload disambiguator
      * @return Exists quantifier
      */
+    // TODO: add description
     public Exists<T> exists(Collection<T> values, Predicate<Collection<T>> predicate, int placeholder)
     {
         sane(values, "values", predicate, "predicate");
@@ -338,6 +341,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      *            Overload disambiguator
      * @return Exists quantifier
      */
+    // TODO: add description
     public Exists<T> exists(Collection<T> values, BiPredicate<Collection<T>, Transaction> bipredicate,
             int placeholder)
     {

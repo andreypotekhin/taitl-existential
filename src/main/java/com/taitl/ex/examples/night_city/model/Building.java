@@ -1,6 +1,8 @@
 package com.taitl.ex.examples.night_city.model;
 
-public class Building
+import com.taitl.ex.examples.night_city.model.material.*;
+
+public class Building<T extends Material>
 {
     public String color;
 

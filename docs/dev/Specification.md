@@ -238,7 +238,7 @@ User can require entity existence when certain condition is met (same class, wit
 User can require entity existence when certain condition is met (different classes, outside entity class code).
 User can specify 'Exists' quantifier as a parameter to the 'All' quantifier, thus creating an All-Exists invariant.
 User can define the 'Exists' quantifier on a collection.
-User can define the 'Exists' quantifier on a stream.
+User can define the 'Exists' quantifier on a map (index).
 User can specify a transaction object for the 'Exists' quantifier.
 
 #### Indexes

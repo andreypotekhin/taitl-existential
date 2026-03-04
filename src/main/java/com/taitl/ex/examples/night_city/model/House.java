@@ -1,6 +1,8 @@
 package com.taitl.ex.examples.night_city.model;
 
-public class House extends Building
+import com.taitl.ex.examples.night_city.model.material.*;
+
+public class House extends Building<Brick>
 {
     public Address address;
     public boolean hasRoof = true;

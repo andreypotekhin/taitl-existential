@@ -19,6 +19,7 @@
 		<exclude name="MissingOverride" />
 		<exclude name="AbstractClassWithoutAbstractMethod" />
 		<exclude name="UseVarargs" />
+		<exclude name="LiteralsFirstInComparisons" />
 	</rule>
 	<rule ref="category/java/codestyle.xml">
 		<exclude name="ClassNamingConventions" />

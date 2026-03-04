@@ -1,6 +1,8 @@
 package com.taitl.ex.examples.night_city.model;
 
-public class Dwelling<T extends Being>
+import com.taitl.ex.examples.night_city.model.material.*;
+
+public class Dwelling<T extends Being<?>, M extends Material>
 {
     public String color;
     public Location location;
