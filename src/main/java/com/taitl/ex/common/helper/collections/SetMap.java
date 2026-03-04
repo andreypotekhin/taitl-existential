@@ -7,7 +7,7 @@ import java.util.function.*;
  * Maps key to a set of values.
  * SetMap<K, V> == Map<K, Set<V>>
  */
-public class SetMap<K, V>
+public class SetMap<K, V> implements Map<K, Set<V>>
 {
     public final Supplier<Map<K, Set<V>>> DEFAULT_MAP_FACTORY = LinkedHashMap::new;
     public final Supplier<Set<V>> DEFAULT_SET_FACTORY = LinkedHashSet::new;
@@ -32,17 +32,18 @@ public class SetMap<K, V>
 
     /**
      * Gets an element of multimap, in the form of Set<V>
-     * 
-     * @return Null or empty set if value not present in map
+     *
+     * @return Null if value not present in map
      */
-    public Set<V> get(K key)
+    @Override
+    public Set<V> get(Object key)
     {
         requireKey(key);
         Set<V> result = storage.get(key);
         return result == null ? null : Collections.unmodifiableSet(result);
     }
 
-    public Set<V> put(K key, V value)
+    public Set<V> add(K key, V value)
     {
         requireKey(key);
         requireValue(value);
@@ -59,7 +60,23 @@ public class SetMap<K, V>
         }
     }
 
-    public V remove(Object key, V value)
+    @Override
+    public Set<V> put(K key, Set<V> values)
+    {
+        requireKey(key);
+        requireValue(values);
+        synchronized (this)
+        {
+            Set<V> copy = setFactory.get();
+            copy.addAll(values);
+            Set<V> previous = storage.put(key, copy);
+            size = storage.size();
+            validateSize();
+            return previous == null ? null : Collections.unmodifiableSet(previous);
+        }
+    }
+
+    public V removeValue(Object key, V value)
     {
         requireKey(key);
         requireValue(value);
@@ -73,6 +90,7 @@ public class SetMap<K, V>
             boolean removed = values.remove(value);
             if (removed && values.isEmpty())
             {
+                storage.remove(key);
                 size--;
                 validateSize();
             }
@@ -80,7 +98,23 @@ public class SetMap<K, V>
         }
     }
 
-    public Set<V> remove(Object key, Predicate<? super V> match)
+    @Override
+    public Set<V> remove(Object key)
+    {
+        requireKey(key);
+        synchronized (this)
+        {
+            Set<V> removed = storage.remove(key);
+            if (removed != null)
+            {
+                size--;
+                validateSize();
+            }
+            return removed == null ? null : Collections.unmodifiableSet(removed);
+        }
+    }
+
+    public Set<V> removeMatching(Object key, Predicate<? super V> match)
     {
         requireKey(key);
         requireMatch(match);
@@ -94,6 +128,7 @@ public class SetMap<K, V>
             Set<V> removed = Coll.removeMatching(values, match, setFactory);
             if (!removed.isEmpty() && values.isEmpty())
             {
+                storage.remove(key);
                 size--;
                 validateSize();
             }
@@ -101,22 +136,79 @@ public class SetMap<K, V>
         }
     }
 
-    public boolean containsKey(K key)
+    @Override
+    public boolean containsKey(Object key)
     {
         requireKey(key);
-        Set<V> values = storage.get(key);
-        return values != null && !values.isEmpty();
+        return storage.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value)
+    {
+        requireValue(value);
+        return storage.containsValue(value);
     }
 
     /**
      * Returns the number of keys that currently hold at least one value.
      */
+    @Override
     public int size()
     {
         validateSize();
         return size;
     }
 
+    @Override
+    public boolean isEmpty()
+    {
+        return size() == 0;
+    }
+
+    @Override
+    public void putAll(Map<? extends K, ? extends Set<V>> m)
+    {
+        requireValue(m);
+        synchronized (this)
+        {
+            for (Entry<? extends K, ? extends Set<V>> entry : m.entrySet())
+            {
+                put(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    @Override
+    public Set<K> keySet()
+    {
+        return Collections.unmodifiableSet(storage.keySet());
+    }
+
+    @Override
+    public Collection<Set<V>> values()
+    {
+        List<Set<V>> wrapped = new ArrayList<>();
+        for (Set<V> set : storage.values())
+        {
+            wrapped.add(Collections.unmodifiableSet(set));
+        }
+        return Collections.unmodifiableList(wrapped);
+    }
+
+    @Override
+    public Set<Entry<K, Set<V>>> entrySet()
+    {
+        Set<Entry<K, Set<V>>> wrapped = new LinkedHashSet<>();
+        for (Entry<K, Set<V>> entry : storage.entrySet())
+        {
+            wrapped.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(),
+                    Collections.unmodifiableSet(entry.getValue())));
+        }
+        return Collections.unmodifiableSet(wrapped);
+    }
+
+    @Override
     public void clear()
     {
         synchronized (this)

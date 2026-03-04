@@ -76,14 +76,14 @@ public class CollJoin<K, V, W>
     {
         sane(key, "key");
         sane(value, "value");
-        return leftByKey.put(key, value);
+        return leftByKey.add(key, value);
     }
 
     public Set<W> addRight(K key, W value)
     {
         sane(key, "key");
         sane(value, "value");
-        return rightByKey.put(key, value);
+        return rightByKey.add(key, value);
     }
 
     public Set<V> addLeft(V value)
@@ -104,14 +104,14 @@ public class CollJoin<K, V, W>
     {
         sane(key, "key");
         sane(value, "value");
-        return leftByKey.remove(key, value);
+        return leftByKey.removeValue(key, value);
     }
 
     public W removeRight(K key, W value)
     {
         sane(key, "key");
         sane(value, "value");
-        return rightByKey.remove(key, value);
+        return rightByKey.removeValue(key, value);
     }
 
     public void reindexLeft(K oldKey, K newKey, V value)

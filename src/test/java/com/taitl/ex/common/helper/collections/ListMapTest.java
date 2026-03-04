@@ -8,37 +8,52 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ListMapTest
 {
-    @Nested
-    @DisplayName("putList")
-    class PutList
+    @Test
+    @DisplayName("add appends values under the same key")
+    void add()
     {
-        @Test
-        @DisplayName("adjusts size when list contents change")
-        void adjustsSize()
-        {
-            ListMap<String, String> map = new ListMap<>();
-            assertEquals(0, map.size());
-            map.putList("a", List.of("x"));
-            assertEquals(1, map.size());
-            assertEquals(List.of("x"), map.get("a"));
-            map.putList("a", List.of("y", "z"));
-            assertEquals(1, map.size());
-            assertEquals(List.of("y", "z"), map.get("a"));
-            map.putList("a", List.of());
-            assertEquals(0, map.size());
-            assertEquals(List.of(), map.get("a"));
-        }
+        ListMap<String, String> map = new ListMap<>();
+        map.add("a", "x");
+        map.add("a", "y");
 
-        @Test
-        @DisplayName("keeps size zero for empty list on new key")
-        void keepsZeroSize()
-        {
-            ListMap<String, String> map = new ListMap<>();
-            assertEquals(0, map.size());
-            map.putList("a", List.of());
-            assertEquals(0, map.size());
-            map.putList("a", List.of("x"));
-            assertEquals(1, map.size());
-        }
+        assertEquals(List.of("x", "y"), map.get("a"));
+        assertEquals(1, map.size());
     }
+
+    @Test
+    @DisplayName("put replaces list and supports Map API")
+    void supportsMapApi()
+    {
+        ListMap<String, String> listMap = new ListMap<>();
+        listMap.add("a", "x");
+
+        Map<String, List<String>> map = listMap;
+        List<String> previous = map.put("a", List.of("y", "z"));
+
+        assertEquals(List.of("x"), previous);
+        assertEquals(List.of("y", "z"), map.get("a"));
+        assertTrue(map.containsKey("a"));
+
+        List<String> removed = map.remove("a");
+        assertEquals(List.of("y", "z"), removed);
+        assertFalse(map.containsKey("a"));
+        assertTrue(map.isEmpty());
+    }
+
+    @Test
+    @DisplayName("removeValue and removeMatching remove key when list becomes empty")
+    void removeHelpers()
+    {
+        ListMap<String, String> map = new ListMap<>();
+        map.add("a", "x");
+        map.add("a", "y");
+
+        assertEquals("x", map.removeValue("a", "x"));
+        assertEquals(List.of("y"), map.get("a"));
+
+        assertEquals(List.of("y"), map.removeMatching("a", v -> true));
+        assertNull(map.get("a"));
+        assertEquals(0, map.size());
+    }
+
 }

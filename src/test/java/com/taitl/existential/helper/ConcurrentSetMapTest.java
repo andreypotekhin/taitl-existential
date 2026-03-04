@@ -19,8 +19,8 @@ class ConcurrentSetMapTest
     void setUp()
     {
         o = new ConcurrentSetMap<Location, Cat>();
-        o.put(LOCATION_PARK, GREY_CAT);
-        o.put(LOCATION_PARK, YELLOW_CAT);
+        o.add(LOCATION_PARK, GREY_CAT);
+        o.add(LOCATION_PARK, YELLOW_CAT);
     }
 
     @Nested
@@ -33,10 +33,10 @@ class ConcurrentSetMapTest
             Set<Cat> snapshot = o.get(LOCATION_PARK);
             assertEquals(2, snapshot.size());
 
-            o.put(LOCATION_PARK, BLACK_CAT);
+            o.add(LOCATION_PARK, BLACK_CAT);
             assertEquals(2, snapshot.size());
 
-            o.remove(LOCATION_PARK, GREY_CAT);
+            o.removeValue(LOCATION_PARK, GREY_CAT);
             assertEquals(2, snapshot.size());
         }
 
@@ -44,7 +44,7 @@ class ConcurrentSetMapTest
         @DisplayName("Remove predicate returns snapshot")
         void removePredicate()
         {
-            Set<Cat> removed = o.remove(LOCATION_PARK, cat -> true);
+            Set<Cat> removed = o.removeMatching(LOCATION_PARK, cat -> true);
             assertEquals(2, removed.size());
             assertThrows(UnsupportedOperationException.class, () -> removed.clear());
         }

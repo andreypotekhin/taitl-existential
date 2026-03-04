@@ -372,7 +372,7 @@ public class Tr
             EventHandler<?> handler = (EventHandler<?>) ev;
             EventType eventType = handler.eventType();
             data.intentEventTypes.add(eventType);
-            data.intentHandlers.put(intentKey(eventType, typeKey), handler);
+            data.intentHandlers.add(intentKey(eventType, typeKey), handler);
         }
     }
 
