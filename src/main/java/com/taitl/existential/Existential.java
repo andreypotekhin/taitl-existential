@@ -35,11 +35,11 @@ public final class Existential implements Closeable
     public Existential()
     {
         init = Creator.create(ExistentialInit.class, new Class[] { Existential.class }, this);
-        access = Creator.create(ExistentialAccess.class, new Class[] { Existential.class }, this);
         configs = Creator.create(ExistentialConfigs.class, new Class[] { Existential.class }, this);
         transactions = Creator.create(ExistentialTransactions.class, new Class[] { Existential.class }, this);
-        events = Creator.create(ExistentialEvents.class, new Class[] { Existential.class }, this);
         flags = Creator.create(ExistentialFlags.class, new Class[] { Existential.class }, this);
+        access = Creator.create(ExistentialAccess.class, new Class[] { Existential.class }, this);
+        events = Creator.create(ExistentialEvents.class, new Class[] { Existential.class }, this);
         init.startup();
     }
 

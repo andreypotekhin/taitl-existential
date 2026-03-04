@@ -26,7 +26,7 @@ class EvaluateIntentsTest
             this.splitElementaryToCompound = splitElementaryToCompound;
         }
 
-        public boolean splitElementaryToCompound()
+        public boolean shouldSplitElementary()
         {
             return splitElementaryToCompound;
         }

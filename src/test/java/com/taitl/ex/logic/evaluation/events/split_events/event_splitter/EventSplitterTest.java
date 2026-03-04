@@ -125,7 +125,7 @@ class EventSplitterTest
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Port<>(oldValue, newValue), typeKey, newValue,
                         false);
 
-                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true);
 
                 assertTrue(splitKeys.stream().anyMatch(key -> key.toString().startsWith("Transit<String>+")));
                 assertTrue(splitKeys.stream().allMatch(key -> key.typeKey().toString().equals("String")));
@@ -142,7 +142,7 @@ class EventSplitterTest
                         "value",
                         false);
 
-                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey);
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true);
                 Set<String> keys =
                         splitKeys.stream().map(Object::toString).collect(java.util.stream.Collectors.toSet());
 
@@ -169,7 +169,7 @@ class EventSplitterTest
                 TypeKey<String> typeKey = TypeKey.valueOf(String.class, true);
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(port, typeKey, newValue, true);
 
-                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, true);
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, true, true);
 
                 assertTrue(splitKeys.stream()
                         .allMatch(key -> key.toString().startsWith("com.taitl.existential.events")));
@@ -202,7 +202,7 @@ class EventSplitterTest
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(String.class, "String", "value", false);
 
                 IllegalArgumentException error =
-                        assertThrows(IllegalArgumentException.class, () -> splitter.split(runtimeKey));
+                        assertThrows(IllegalArgumentException.class, () -> splitter.split(runtimeKey, true, true));
 
                 assertEquals("Argument 'event' must not be null", error.getMessage());
             }

@@ -7,7 +7,6 @@ import com.taitl.ex.logic.indexing.*;
 import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
-import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
@@ -27,9 +26,9 @@ public class ExistentialEvents implements Closeable
     public ExistentialEvents(Existential ex)
     {
         this.ex = ex;
-        this.eventLogic = Creator.create(EventLogic.class,
-                new Class[] { ExistentialEvents.class }, this);
         this.indexingLogic = Creator.create(IndexingLogic.class,
+                new Class[] { ExistentialEvents.class }, this);
+        this.eventLogic = Creator.create(EventLogic.class,
                 new Class[] { ExistentialEvents.class }, this);
         this.typeKeyCache = Creator.singleton(TypeKeyCache.class);
     }

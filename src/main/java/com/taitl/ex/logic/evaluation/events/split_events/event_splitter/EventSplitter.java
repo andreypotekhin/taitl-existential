@@ -46,16 +46,6 @@ public class EventSplitter
     protected SplitEventType splitEventType = Creator.create(SplitEventType.class);
     protected SplitTypeKey splitTypeKey = Creator.create(SplitTypeKey.class);
 
-    public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
-    {
-        return split(runtimeKey, false, true);
-    }
-
-    public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey, boolean useFullEventNames)
-    {
-        return split(runtimeKey, useFullEventNames, true);
-    }
-
     public <T> Set<RuntimeKey<T>> split(
             RuntimeKey<T> runtimeKey,
             boolean useFullEventNames,
