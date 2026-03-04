@@ -3,10 +3,7 @@ package com.taitl.existential.helper;
 import com.taitl.ex.common.helper.collections.SetMap;
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.model.Location;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -85,18 +82,22 @@ class SetMapTest
         assertNull(o.get(LOCATION_GARDEN));
     }
 
-    @Test
-    @DisplayName("Test remove predicate evaluated once")
-    void testRemovePredicateEvaluatedOnce()
+    @Nested
+    class RemovePredicate
     {
-        AtomicInteger calls = new AtomicInteger();
-        Set<Cat> removed = o.remove(LOCATION_PARK, cat -> {
-            calls.incrementAndGet();
-            return false;
-        });
-        assertNull(removed);
-        assertEquals(2, calls.get());
-        assertEquals(2, o.get(LOCATION_PARK).size());
+        @Test
+        @DisplayName("Test remove predicate evaluated once")
+        void evaluatedOnce()
+        {
+            AtomicInteger calls = new AtomicInteger();
+            Set<Cat> removed = o.remove(LOCATION_PARK, cat -> {
+                calls.incrementAndGet();
+                return false;
+            });
+            assertNull(removed);
+            assertEquals(2, calls.get());
+            assertEquals(2, o.get(LOCATION_PARK).size());
+        }
     }
 
     @Test

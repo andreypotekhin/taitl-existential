@@ -28,29 +28,37 @@ class GenericsTest
     {
     }
 
-    @Test
-    @DisplayName("Anonymous superclass type argument extracts type")
-    void anonymousSuperclassTypeArgumentExtractsType()
+    @Nested
+    class AnonymousSuperclassTypeArgument
     {
-        Type type = Generics.anonymousSuperclassTypeArgument(StringBox.class, Box.class);
+        @Test
+        @DisplayName("Extracts type")
+        void extractsType()
+        {
+            Type type = Generics.anonymousSuperclassTypeArgument(StringBox.class, Box.class);
 
-        assertThat(type, is(String.class));
+            assertThat(type, is(String.class));
+        }
+
+        @Test
+        @DisplayName("Rejects raw subclass")
+        void rejectsRawSubclass()
+        {
+            assertThrows(IllegalArgumentException.class,
+                    () -> Generics.anonymousSuperclassTypeArgument(RawBox.class, Box.class));
+        }
     }
 
-    @Test
-    @DisplayName("Anonymous superclass type argument rejects raw subclass")
-    void anonymousSuperclassTypeArgumentRejectsRawSubclass()
+    @Nested
+    class TypeName
     {
-        assertThrows(IllegalArgumentException.class,
-                () -> Generics.anonymousSuperclassTypeArgument(RawBox.class, Box.class));
-    }
+        @Test
+        @DisplayName("Renders parameterized types")
+        void rendersParameterizedTypes()
+        {
+            Type type = StringList.class.getGenericSuperclass();
 
-    @Test
-    @DisplayName("Type name renders parameterized types")
-    void typeNameRendersParameterizedTypes()
-    {
-        Type type = StringList.class.getGenericSuperclass();
-
-        assertThat(Generics.typeName(type, false), is("ArrayList<String>"));
+            assertThat(Generics.typeName(type, false), is("ArrayList<String>"));
+        }
     }
 }

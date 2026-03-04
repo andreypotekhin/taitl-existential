@@ -49,7 +49,7 @@ class EventSplitterTest
 
             @Test
             @DisplayName("Split create can disable elementary to compound split")
-            void createCanDisableElementaryToCompoundSplit()
+            void disableElementaryToCompound()
             {
                 EventSplitter splitter = new EventSplitter();
 
@@ -116,7 +116,7 @@ class EventSplitterTest
         {
             @Test
             @DisplayName("Split runtime key splits by underlying event and keeps type key")
-            void byUnderlyingEventKeepsTypeKey()
+            void byUnderlyingEvent()
             {
                 EventSplitter splitter = new EventSplitter();
                 String oldValue = new String("old");
@@ -133,7 +133,7 @@ class EventSplitterTest
 
             @Test
             @DisplayName("Split runtime key also splits type key by generics dimension")
-            void byGenericsDimension()
+            void byGenerics()
             {
                 EventSplitter splitter = new EventSplitter();
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(
@@ -177,7 +177,7 @@ class EventSplitterTest
 
             @Test
             @DisplayName("Split runtime key for create can disable elementary to compound mapping")
-            void createDisableElementaryToCompound()
+            void createWithoutCompound()
             {
                 EventSplitter splitter = new EventSplitter();
                 String entity = new String("new");
@@ -196,7 +196,7 @@ class EventSplitterTest
         {
             @Test
             @DisplayName("Split rejects runtime key without event")
-            void runtimeKeyWithoutEvent()
+            void missingEvent()
             {
                 EventSplitter splitter = new EventSplitter();
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(String.class, "String", "value", false);
@@ -217,7 +217,7 @@ class EventSplitterTest
         {
             @Test
             @DisplayName("Split transit rejects null transit with event message")
-            void nullTransitWithEventMessage()
+            void nullTransit()
             {
                 TestEventSplitter splitter = new TestEventSplitter();
 

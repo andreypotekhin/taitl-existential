@@ -18,122 +18,137 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ExecuteHandlersTest
 {
-    @Test
-    @DisplayName("Call uses original event payload")
-    void callUsesOriginalEventPayload() throws Exception
+    ExecuteHandlers executeHandlers;
+    ValidationReport report;
+
+    @BeforeEach
+    void setup()
     {
-        ExecuteHandlers executeHandlers = new ExecuteHandlers();
-        ValidationReport report = new ValidationReport();
-        String oldValue = new String("old");
-        String newValue = new String("new");
-        Port<String> port = new Port<>(oldValue, newValue);
-        AtomicInteger unaryCalls = new AtomicInteger();
-        AtomicInteger biCalls = new AtomicInteger();
-
-        List<Ev<String>> evs = List.of(
-                new OnUpdate<String>(null, value -> {
-                    unaryCalls.incrementAndGet();
-                    assertSame(newValue, value);
-                }),
-                new OnTransit<String>((t0, t1) -> {
-                    biCalls.incrementAndGet();
-                    assertSame(oldValue, t0);
-                    assertSame(newValue, t1);
-                }),
-                new OnPort<String>((t0, t1) -> {
-                    biCalls.incrementAndGet();
-                    assertSame(oldValue, t0);
-                    assertSame(newValue, t1);
-                }));
-
-        executeHandlers.call(evs, port, report);
-
-        assertEquals(1, unaryCalls.get());
-        assertEquals(2, biCalls.get());
-        assertTrue(report.exceptions().isEmpty());
+        executeHandlers = new ExecuteHandlers();
+        report = new ValidationReport();
     }
 
-    @Test
-    @DisplayName("Call evaluates all expression")
-    void callEvaluatesAllExpression() throws Exception
+    @Nested
+    class Call
     {
-        ExecuteHandlers executeHandlers = new ExecuteHandlers();
-        ValidationReport report = new ValidationReport();
-        AtomicInteger calls = new AtomicInteger();
+        @Nested
+        class Payload
+        {
+            @Test
+            @DisplayName("Uses original event payload")
+            void originalEventPayload() throws Exception
+            {
+                String oldValue = new String("old");
+                String newValue = new String("new");
+                Port<String> port = new Port<>(oldValue, newValue);
+                AtomicInteger unaryCalls = new AtomicInteger();
+                AtomicInteger biCalls = new AtomicInteger();
 
-        List<Ev<String>> evs = List.of(new All<String>(value -> {
-            calls.incrementAndGet();
-            return value.startsWith("n");
-        }, "value should start with 'n'"));
+                List<Ev<String>> evs = List.of(
+                        new OnUpdate<String>(null, value -> {
+                            unaryCalls.incrementAndGet();
+                            assertSame(newValue, value);
+                        }),
+                        new OnTransit<String>((t0, t1) -> {
+                            biCalls.incrementAndGet();
+                            assertSame(oldValue, t0);
+                            assertSame(newValue, t1);
+                        }),
+                        new OnPort<String>((t0, t1) -> {
+                            biCalls.incrementAndGet();
+                            assertSame(oldValue, t0);
+                            assertSame(newValue, t1);
+                        }));
 
-        executeHandlers.call(evs, new Create<>("new"), report);
+                executeHandlers.call(evs, port, report);
 
-        assertEquals(1, calls.get());
-        assertTrue(report.exceptions().isEmpty());
-    }
+                assertEquals(1, unaryCalls.get());
+                assertEquals(2, biCalls.get());
+                assertTrue(report.exceptions().isEmpty());
+            }
 
-    @Test
-    @DisplayName("Call evaluates invariant all and collects predicate failure")
-    void callEvaluatesInvariantAllAndCollectsPredicateFailure() throws Exception
-    {
-        ExecuteHandlers executeHandlers = new ExecuteHandlers();
-        ValidationReport report = new ValidationReport();
-        AtomicInteger calls = new AtomicInteger();
+            @Test
+            @DisplayName("Adapts bi handler payload for elementary create event")
+            void adaptedForCreate() throws Exception
+            {
+                String entity = new String("new");
+                AtomicInteger calls = new AtomicInteger();
 
-        Invariant<String> invariant = new Invariant<>(String.class);
-        invariant.all(value -> {
-            calls.incrementAndGet();
-            return value.startsWith("n");
-        }, "value should start with 'n'");
+                List<Ev<String>> evs = List.of(
+                        new OnPort<String>((t0, t1) -> {
+                            calls.incrementAndGet();
+                            assertSame(entity, t0);
+                            assertSame(entity, t1);
+                        }),
+                        new OnTransit<String>((t0, t1) -> {
+                            calls.incrementAndGet();
+                            assertSame(entity, t0);
+                            assertSame(entity, t1);
+                        }));
 
-        List<Ev<String>> evs = new ArrayList<>();
-        evs.addAll(invariant.list());
+                executeHandlers.call(evs, new Create<>(entity), report);
 
-        executeHandlers.call(evs, new Create<>("old"), report);
+                assertEquals(2, calls.get());
+                assertTrue(report.exceptions().isEmpty());
+            }
+        }
 
-        assertEquals(1, calls.get());
-        assertEquals(1, report.exceptions().size());
-        assertInstanceOf(PredicateFailure.class, report.exceptions().get(0));
-    }
+        @Nested
+        class Expressions
+        {
+            @Test
+            @DisplayName("Evaluates all expression")
+            void allExpression() throws Exception
+            {
+                AtomicInteger calls = new AtomicInteger();
 
-    @Test
-    @DisplayName("Call adapts bi handler payload for elementary create event")
-    void callAdaptsBiPayloadForCreate() throws Exception
-    {
-        ExecuteHandlers executeHandlers = new ExecuteHandlers();
-        ValidationReport report = new ValidationReport();
-        String entity = new String("new");
-        AtomicInteger calls = new AtomicInteger();
-
-        List<Ev<String>> evs = List.of(
-                new OnPort<String>((t0, t1) -> {
+                List<Ev<String>> evs = List.of(new All<String>(value -> {
                     calls.incrementAndGet();
-                    assertSame(entity, t0);
-                    assertSame(entity, t1);
-                }),
-                new OnTransit<String>((t0, t1) -> {
+                    return value.startsWith("n");
+                }, "value should start with 'n'"));
+
+                executeHandlers.call(evs, new Create<>("new"), report);
+
+                assertEquals(1, calls.get());
+                assertTrue(report.exceptions().isEmpty());
+            }
+
+            @Test
+            @DisplayName("Evaluates invariant all and collects predicate failure")
+            void invariantAll() throws Exception
+            {
+                AtomicInteger calls = new AtomicInteger();
+
+                Invariant<String> invariant = new Invariant<>(String.class);
+                invariant.all(value -> {
                     calls.incrementAndGet();
-                    assertSame(entity, t0);
-                    assertSame(entity, t1);
-                }));
+                    return value.startsWith("n");
+                }, "value should start with 'n'");
 
-        executeHandlers.call(evs, new Create<>(entity), report);
+                List<Ev<String>> evs = new ArrayList<>();
+                evs.addAll(invariant.list());
 
-        assertEquals(2, calls.get());
-        assertTrue(report.exceptions().isEmpty());
-    }
+                executeHandlers.call(evs, new Create<>("old"), report);
 
-    @Test
-    @DisplayName("Call rejects bi handler for non transition single events")
-    void callRejectsBiHandlerForRead()
-    {
-        ExecuteHandlers executeHandlers = new ExecuteHandlers();
-        ValidationReport report = new ValidationReport();
+                assertEquals(1, calls.get());
+                assertEquals(1, report.exceptions().size());
+                assertInstanceOf(PredicateFailure.class, report.exceptions().get(0));
+            }
+        }
 
-        IllegalStateException error = assertThrows(IllegalStateException.class,
-                () -> executeHandlers.call(List.of(new OnPort<String>((t0, t1) -> {
-                })), new Read<>("v"), report));
+        @Nested
+        class Rejects
+        {
+            @Test
+            @DisplayName("Rejects bi handler for non transition single events")
+            void biHandlerForRead()
+            {
+                IllegalStateException error = assertThrows(IllegalStateException.class,
+                        () -> executeHandlers.call(List.of(new OnPort<String>((t0, t1) -> {
+                        })), new Read<>("v"), report));
 
-        assertTrue(error.getMessage().contains("Bi-event handler requires BiEvent runtime event"));
+                assertTrue(error.getMessage().contains("Bi-event handler requires BiEvent runtime event"));
+            }
+        }
     }
 }

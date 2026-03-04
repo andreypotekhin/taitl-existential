@@ -9,30 +9,38 @@ import static org.hamcrest.MatcherAssert.*;
 
 class TypeKeyCacheTest
 {
-    @Test
-    @DisplayName("Caches short names per class")
-    void cachesShortNamesPerClass()
+    TypeKeyCache cache;
+
+    @BeforeEach
+    void setup()
     {
-        TypeKeyCache cache = new TypeKeyCache();
-
-        TypeKey<String> a = cache.get("one", false);
-        TypeKey<String> b = cache.get("two", false);
-
-        assertThat(a == b, is(true));
-        assertThat(a.toString(), is("String"));
+        cache = new TypeKeyCache();
     }
 
-    @Test
-    @DisplayName("Caches full names separately from short names")
-    void cachesFullNamesSeparatelyFromShortNames()
+    @Nested
+    class Caching
     {
-        TypeKeyCache cache = new TypeKeyCache();
+        @Test
+        @DisplayName("Caches short names per class")
+        void shortNames()
+        {
+            TypeKey<String> a = cache.get("one", false);
+            TypeKey<String> b = cache.get("two", false);
 
-        TypeKey<String> shortName = cache.get(String.class, false);
-        TypeKey<String> fullName = cache.get(String.class, true);
+            assertThat(a == b, is(true));
+            assertThat(a.toString(), is("String"));
+        }
 
-        assertThat(shortName == fullName, is(false));
-        assertThat(shortName.toString(), is("String"));
-        assertThat(fullName.toString(), is("java.lang.String"));
+        @Test
+        @DisplayName("Caches full names separately from short names")
+        void fullNamesSeparately()
+        {
+            TypeKey<String> shortName = cache.get(String.class, false);
+            TypeKey<String> fullName = cache.get(String.class, true);
+
+            assertThat(shortName == fullName, is(false));
+            assertThat(shortName.toString(), is("String"));
+            assertThat(fullName.toString(), is("java.lang.String"));
+        }
     }
 }

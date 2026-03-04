@@ -27,26 +27,31 @@ class UserCanConfigureTransactionRules extends SpecBase
         super.cleanup();
     }
 
-    @Test
-    @DisplayName("User can configure intents on a transaction object")
-    void configureIntentsOnTransactionObject() throws Exception
+    @Nested
+    class Scenarios
     {
-        // @formatter:off
-        ex.configure()
-            .context(op)
-                .transaction(() -> {
-                    Transaction tr = new Transaction("undefined", "undefined");
-                    Intent<Cat> writeIntent = new Intent<>(Cat.class);
-                    writeIntent.write();
-                    tr.intent(writeIntent);
-                    return tr;
-                });
-        // @formatter:on
+        @Test
+        @DisplayName("User can configure intents on a transaction object")
+        void configureIntentsOnTransaction() throws Exception
+        {
+            // @formatter:off
+            ex.configure()
+                .context(op)
+                    .transaction(() -> {
+                        Transaction tr = new Transaction("undefined", "undefined");
+                        Intent<Cat> writeIntent = new Intent<>(Cat.class);
+                        writeIntent.write();
+                        tr.intent(writeIntent);
+                        return tr;
+                    });
+            // @formatter:on
 
-        String tran = ex.begin(op).id();
-        ex.write(cat, tran);
-        IntentViolation ex = assertThrows(IntentViolation.class, () -> this.ex.write("other", tran));
-        assertTrue(ex.getMessage().contains("No intent is configured"));
-        this.ex.rollback(tran);
+            String tran = ex.begin(op).id();
+            ex.write(cat, tran);
+            IntentViolation ex = assertThrows(IntentViolation.class,
+                    () -> UserCanConfigureTransactionRules.this.ex.write("other", tran));
+            assertTrue(ex.getMessage().contains("No intent is configured"));
+            UserCanConfigureTransactionRules.this.ex.rollback(tran);
+        }
     }
 }

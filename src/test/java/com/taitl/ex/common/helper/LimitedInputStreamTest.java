@@ -4,42 +4,49 @@ import java.io.ByteArrayInputStream;
 import java.io.PushbackInputStream;
 
 import com.taitl.ex.common.helper.io.*;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class LimitedInputStreamTest
 {
-    @Test
-    @DisplayName("Read does not consume extra byte when limit reached")
-    void readDoesNotConsumeExtraByteWhenLimitReached() throws Exception
+    @Nested
+    class Read
     {
-        byte[] data = new byte[] { 1, 2, 3 };
-        PushbackInputStream pushback = new PushbackInputStream(new ByteArrayInputStream(data), 1);
-        LimitedInputStream limited = new LimitedInputStream(pushback, 2);
+        @Test
+        @DisplayName("Does not consume extra byte when limit reached")
+        void limitReached() throws Exception
+        {
+            byte[] data = new byte[] { 1, 2, 3 };
+            PushbackInputStream pushback = new PushbackInputStream(new ByteArrayInputStream(data), 1);
+            LimitedInputStream limited = new LimitedInputStream(pushback, 2);
 
-        assertEquals(1, limited.read());
-        assertEquals(2, limited.read());
+            assertEquals(1, limited.read());
+            assertEquals(2, limited.read());
 
-        assertThrows(LimitedInputStream.MaxSizeExceededException.class, limited::read);
-        assertEquals(3, pushback.read());
+            assertThrows(LimitedInputStream.MaxSizeExceededException.class, limited::read);
+            assertEquals(3, pushback.read());
+        }
     }
 
-    @Test
-    @DisplayName("Read array does not consume extra byte when limit reached")
-    void readArrayDoesNotConsumeExtraByteWhenLimitReached() throws Exception
+    @Nested
+    class ReadArray
     {
-        byte[] data = new byte[] { 1, 2, 3, 4 };
-        PushbackInputStream pushback = new PushbackInputStream(new ByteArrayInputStream(data), 1);
-        LimitedInputStream limited = new LimitedInputStream(pushback, 3);
+        @Test
+        @DisplayName("Does not consume extra byte when limit reached")
+        void limitReached() throws Exception
+        {
+            byte[] data = new byte[] { 1, 2, 3, 4 };
+            PushbackInputStream pushback = new PushbackInputStream(new ByteArrayInputStream(data), 1);
+            LimitedInputStream limited = new LimitedInputStream(pushback, 3);
 
-        byte[] buffer = new byte[2];
-        assertEquals(2, limited.read(buffer, 0, 2));
-        assertEquals(1, limited.read(buffer, 0, 2));
+            byte[] buffer = new byte[2];
+            assertEquals(2, limited.read(buffer, 0, 2));
+            assertEquals(1, limited.read(buffer, 0, 2));
 
-        assertThrows(LimitedInputStream.MaxSizeExceededException.class,
-                () -> limited.read(buffer, 0, 2));
-        assertEquals(4, pushback.read());
+            assertThrows(LimitedInputStream.MaxSizeExceededException.class,
+                    () -> limited.read(buffer, 0, 2));
+            assertEquals(4, pushback.read());
+        }
     }
 }

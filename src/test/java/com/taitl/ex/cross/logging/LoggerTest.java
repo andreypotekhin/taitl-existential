@@ -22,12 +22,16 @@ class LoggerTest
         logger = new TestLogger();
     }
 
-    @Test
-    @DisplayName("Sanitize escapes control characters")
-    void sanitizeEscapesControlCharacters()
+    @Nested
+    class Sanitize
     {
-        String input = "start\nmid\rend\t\u001b[31mX\u007f";
-        String output = logger.sanitizePublic(input);
-        assertEquals("start\\nmid\\rend\\u0009\\u001b[31mX\\u007f", output);
+        @Test
+        @DisplayName("Escapes control characters")
+        void escapesControlCharacters()
+        {
+            String input = "start\nmid\rend\t\u001b[31mX\u007f";
+            String output = logger.sanitizePublic(input);
+            assertEquals("start\\nmid\\rend\\u0009\\u001b[31mX\\u007f", output);
+        }
     }
 }

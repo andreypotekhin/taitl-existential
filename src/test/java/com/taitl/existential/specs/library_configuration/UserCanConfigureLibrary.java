@@ -33,94 +33,98 @@ class UserCanConfigureLibrary extends SpecBase
         super.cleanup();
     }
 
-    @Test
-    @DisplayName("User can change library configuration options programmatically")
-    void changeLibraryOptions()
+    @Nested
+    class Scenarios
     {
-        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
-        ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
-        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
-        ex.toggle(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
-        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
-
-        assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(false));
-        ex.on(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND);
-        assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(true));
-        ex.off(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND);
-        assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(false));
-    }
-
-    @Test
-    @DisplayName("User must configure the library before use")
-    void sendEventsToUnconfiguredLibrary()
-    {
-        assertThat(assertThrows(IllegalStateException.class, () -> {
-            String tran = ex.begin(op).id();
-            ex.update(cat, tran);
-        }).getMessage(), containsString("You need to configure at least one context"));
-    }
-
-    @Test
-    @DisplayName("User can configure library options using a config file")
-    void configureWithFile() throws Exception
-    {
-        Path file = Files.createTempFile("existential-", ".properties");
-        Files.writeString(file, "behavior.rules.requireDescriptions=true", StandardCharsets.UTF_8);
-
-        ConfigureLibrary loader = new ConfigureLibrary(ex,
-                name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? file.toString() : null,
-                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
-                        "behavior.rules.requireDescriptions=false")));
-        loader.configure();
-
-        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
-        Files.deleteIfExists(file);
-    }
-
-    @Test
-    @DisplayName("User can configure library options using a classpath resource")
-    void configureWithClasspathResource()
-    {
-        ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
-        ConfigureLibrary loader = new ConfigureLibrary(ex,
-                name -> null,
-                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
-                        "behavior.rules.requireDescriptions=false")));
-
-        loader.configure();
-
-        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
-    }
-
-    @Test
-    @DisplayName("User can specify the config file with an environment variable")
-    void specifyConfigFileUsingEnvironmentVariable() throws Exception
-    {
-        Path file = Files.createTempFile("existential-", ".properties");
-        Files.writeString(file, "behavior.rules.requireDescriptions=true", StandardCharsets.UTF_8);
-
-        ConfigureLibrary loader = new ConfigureLibrary(ex,
-                name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? file.toString() : null,
-                new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
-                        "behavior.rules.requireDescriptions=false")));
-
-        loader.configure();
-
-        assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
-        Files.deleteIfExists(file);
-    }
-
-    @Test
-    @DisplayName("Initial version of config is available as classpath resource")
-    void defaultConfigAvailableOnClasspath() throws Exception
-    {
-        try (InputStream stream =
-                Thread.currentThread()
-                        .getContextClassLoader()
-                        .getResourceAsStream(
-                                ConfigureLibrary.CLASSPATH_CONFIG_FILE))
+        @Test
+        @DisplayName("User can change library configuration options programmatically")
+        void changeLibraryOptions()
         {
-            assertNotNull(stream);
+            assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
+            ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+            assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
+            ex.toggle(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+            assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
+
+            assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(false));
+            ex.on(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND);
+            assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(true));
+            ex.off(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND);
+            assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(false));
+        }
+
+        @Test
+        @DisplayName("User must configure the library before use")
+        void sendEventsToUnconfiguredLibrary()
+        {
+            assertThat(assertThrows(IllegalStateException.class, () -> {
+                String tran = ex.begin(op).id();
+                ex.update(cat, tran);
+            }).getMessage(), containsString("You need to configure at least one context"));
+        }
+
+        @Test
+        @DisplayName("User can configure library options using a config file")
+        void configureWithFile() throws Exception
+        {
+            Path file = Files.createTempFile("existential-", ".properties");
+            Files.writeString(file, "behavior.rules.requireDescriptions=true", StandardCharsets.UTF_8);
+
+            ConfigureLibrary loader = new ConfigureLibrary(ex,
+                    name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? file.toString() : null,
+                    new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                            "behavior.rules.requireDescriptions=false")));
+            loader.configure();
+
+            assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
+            Files.deleteIfExists(file);
+        }
+
+        @Test
+        @DisplayName("User can configure library options using a classpath resource")
+        void configureWithClasspathResource()
+        {
+            ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+            ConfigureLibrary loader = new ConfigureLibrary(ex,
+                    name -> null,
+                    new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                            "behavior.rules.requireDescriptions=false")));
+
+            loader.configure();
+
+            assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
+        }
+
+        @Test
+        @DisplayName("User can specify the config file with an environment variable")
+        void specifyConfigFileUsingEnvironmentVariable() throws Exception
+        {
+            Path file = Files.createTempFile("existential-", ".properties");
+            Files.writeString(file, "behavior.rules.requireDescriptions=true", StandardCharsets.UTF_8);
+
+            ConfigureLibrary loader = new ConfigureLibrary(ex,
+                    name -> ConfigureLibrary.ENV_CONFIG_FILE.equals(name) ? file.toString() : null,
+                    new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                            "behavior.rules.requireDescriptions=false")));
+
+            loader.configure();
+
+            assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
+            Files.deleteIfExists(file);
+        }
+
+        @Test
+        @DisplayName("Initial version of config is available as classpath resource")
+        void defaultConfigAvailableOnClasspath() throws Exception
+        {
+            try (InputStream stream =
+                    Thread.currentThread()
+                            .getContextClassLoader()
+                            .getResourceAsStream(
+                                    ConfigureLibrary.CLASSPATH_CONFIG_FILE))
+            {
+                assertNotNull(stream);
+            }
         }
     }
 

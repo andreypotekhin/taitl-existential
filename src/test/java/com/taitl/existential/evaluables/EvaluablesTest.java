@@ -67,47 +67,55 @@ class EvaluablesTest
         }
     }
 
-    @Test
-    @DisplayName("Default single flags reflect evs nature")
-    void defaultSingleFlagsReflectEvsNature()
+    @Nested
+    class SingleFlags
     {
-        assertThat(new NamedEv("one").single(), is(true));
-        assertThat(new NamedEvs().single(), is(false));
+        @Test
+        @DisplayName("Default single flags reflect evs nature")
+        void reflectEvsNature()
+        {
+            assertThat(new NamedEv("one").single(), is(true));
+            assertThat(new NamedEvs().single(), is(false));
+        }
     }
 
-    @Test
-    @DisplayName("Evaluator traverses evs in order")
-    void evaluatorTraversesEvsInOrder()
+    @Nested
+    class EvaluatorTraversal
     {
-        NamedEv first = new NamedEv("first");
-        NamedEv second = new NamedEv("second");
-        NamedEvs evs = new NamedEvs();
-        evs.add(first).add(second);
+        @Test
+        @DisplayName("Evaluator traverses evs in order")
+        void evsInOrder()
+        {
+            NamedEv first = new NamedEv("first");
+            NamedEv second = new NamedEv("second");
+            NamedEvs evs = new NamedEvs();
+            evs.add(first).add(second);
 
-        RecordingEvaluator evaluator = new RecordingEvaluator();
+            RecordingEvaluator evaluator = new RecordingEvaluator();
 
-        evs.accept(evaluator);
+            evs.accept(evaluator);
 
-        assertThat(evaluator.visited, contains(first, second));
-    }
+            assertThat(evaluator.visited, contains(first, second));
+        }
 
-    @Test
-    @DisplayName("Evaluator traverses evaluable in order")
-    void evaluatorTraversesEvaluableInOrder()
-    {
-        NamedEv first = new NamedEv("first");
-        NamedEv second = new NamedEv("second");
-        NamedEv third = new NamedEv("third");
-        NamedEvs evsA = new NamedEvs();
-        NamedEvs evsB = new NamedEvs();
-        evsA.add(first).add(second);
-        evsB.add(third);
+        @Test
+        @DisplayName("Evaluator traverses evaluable in order")
+        void evaluableInOrder()
+        {
+            NamedEv first = new NamedEv("first");
+            NamedEv second = new NamedEv("second");
+            NamedEv third = new NamedEv("third");
+            NamedEvs evsA = new NamedEvs();
+            NamedEvs evsB = new NamedEvs();
+            evsA.add(first).add(second);
+            evsB.add(third);
 
-        RecordingEvaluator evaluator = new RecordingEvaluator();
-        NamedEvaluable evaluable = new NamedEvaluable(List.of(evsA, evsB));
+            RecordingEvaluator evaluator = new RecordingEvaluator();
+            NamedEvaluable evaluable = new NamedEvaluable(List.of(evsA, evsB));
 
-        evaluable.accept(evaluator);
+            evaluable.accept(evaluator);
 
-        assertThat(evaluator.visited, contains(first, second, third));
+            assertThat(evaluator.visited, contains(first, second, third));
+        }
     }
 }

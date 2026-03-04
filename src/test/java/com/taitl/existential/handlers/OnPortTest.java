@@ -12,91 +12,90 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class OnPortTest
 {
-    @Test
-    @DisplayName("Condition only rejects when false")
-    void conditionOnlyRejectsWhenFalse()
+    Cat cat(String color)
     {
-        OnPort<Cat> handler = new OnPort<>(c -> "Black".equals(c.color), null, "Cats are black");
-        Cat before = new Cat("Black", "Park");
-        Cat after = new Cat("White", "Park");
-
-        var ex = assertThrows(EventHandlerException.class,
-                () -> handler.handle(before, after));
-
-        assertThat(ex.getMessage(), containsString("Cats are black"));
+        return new Cat(color, "Park");
     }
 
-    @Test
-    @DisplayName("Condition only allows when true")
-    void conditionOnlyAllowsWhenTrue()
+    @Nested
+    class Conditions
     {
-        OnPort<Cat> handler = new OnPort<>(c -> "Black".equals(c.color), null, "Cats are black");
-        Cat before = new Cat("Black", "Park");
-        Cat after = new Cat("Black", "Park");
+        @Test
+        @DisplayName("Condition only rejects when false")
+        void conditionRejectsWhenFalse()
+        {
+            OnPort<Cat> handler = new OnPort<>(c -> "Black".equals(c.color), null, "Cats are black");
+            var ex = assertThrows(EventHandlerException.class, () -> handler.handle(cat("Black"), cat("White")));
+            assertThat(ex.getMessage(), containsString("Cats are black"));
+        }
 
-        assertDoesNotThrow(() -> handler.handle(before, after));
+        @Test
+        @DisplayName("Condition only allows when true")
+        void conditionAllowsWhenTrue()
+        {
+            OnPort<Cat> handler = new OnPort<>(c -> "Black".equals(c.color), null, "Cats are black");
+            assertDoesNotThrow(() -> handler.handle(cat("Black"), cat("Black")));
+        }
+
+        @Test
+        @DisplayName("Bicondition only rejects when false")
+        void biconditionRejectsWhenFalse()
+        {
+            OnPort<Cat> handler = new OnPort<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");
+            var ex = assertThrows(EventHandlerException.class, () -> handler.handle(cat("Black"), cat("White")));
+            assertThat(ex.getMessage(), containsString("Colors must match"));
+        }
+
+        @Test
+        @DisplayName("Handle rejects both nulls")
+        void rejectsBothNulls()
+        {
+            OnPort<Cat> handler = new OnPort<>((t0, t1) -> {
+            });
+
+            var ex = assertThrows(IllegalArgumentException.class, () -> handler.handle(null, null));
+
+            assertThat(ex.getMessage(), containsString("Arguments 't0' and 't1' should not be both null"));
+        }
     }
 
-    @Test
-    @DisplayName("Bicondition only rejects when false")
-    void biconditionOnlyRejectsWhenFalse()
+    @Nested
+    class Handle
     {
-        OnPort<Cat> handler = new OnPort<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");
-        Cat before = new Cat("Black", "Park");
-        Cat after = new Cat("White", "Park");
+        @Test
+        @DisplayName("Runs action when no condition provided")
+        void runsActionWithoutCondition() throws Exception
+        {
+            AtomicInteger counter = new AtomicInteger();
+            OnPort<Integer> on = new OnPort<>((t0, t1) -> counter.incrementAndGet());
 
-        var ex = assertThrows(EventHandlerException.class,
-                () -> handler.handle(before, after));
+            on.handle(1, 2);
 
-        assertThat(ex.getMessage(), containsString("Colors must match"));
-    }
+            assertThat(counter.get(), is(1));
+        }
 
-    @Test
-    @DisplayName("Handle rejects both nulls")
-    void handleRejectsBothNulls()
-    {
-        OnPort<Cat> handler = new OnPort<>((t0, t1) -> {
-        });
+        @Test
+        @DisplayName("Skips action when predicate fails")
+        void skipsActionWhenPredicateFails() throws Exception
+        {
+            AtomicInteger counter = new AtomicInteger();
+            OnPort<Integer> on = new OnPort<>(t1 -> t1 > 10, (t0, t1) -> counter.incrementAndGet());
 
-        var ex = assertThrows(IllegalArgumentException.class,
-                () -> handler.handle(null, null));
+            on.handle(1, 2);
 
-        assertThat(ex.getMessage(), containsString("Arguments 't0' and 't1' should not be both null"));
-    }
+            assertThat(counter.get(), is(0));
+        }
 
-    @Test
-    @DisplayName("Handle runs action when no condition provided")
-    void handleRunsActionWhenNoConditionProvided() throws Exception
-    {
-        AtomicInteger counter = new AtomicInteger();
-        OnPort<Integer> on = new OnPort<>((t0, t1) -> counter.incrementAndGet());
+        @Test
+        @DisplayName("Runs action when bi predicate passes")
+        void runsActionWhenBiPredicatePasses() throws Exception
+        {
+            AtomicInteger counter = new AtomicInteger();
+            OnPort<Integer> on = new OnPort<>((t0, t1) -> t0 < t1, (t0, t1) -> counter.incrementAndGet());
 
-        on.handle(1, 2);
+            on.handle(1, 2);
 
-        assertThat(counter.get(), is(1));
-    }
-
-    @Test
-    @DisplayName("Handle skips action when predicate fails")
-    void handleSkipsActionWhenPredicateFails() throws Exception
-    {
-        AtomicInteger counter = new AtomicInteger();
-        OnPort<Integer> on = new OnPort<>(t1 -> t1 > 10, (t0, t1) -> counter.incrementAndGet());
-
-        on.handle(1, 2);
-
-        assertThat(counter.get(), is(0));
-    }
-
-    @Test
-    @DisplayName("Handle runs action when bi predicate passes")
-    void handleRunsActionWhenBiPredicatePasses() throws Exception
-    {
-        AtomicInteger counter = new AtomicInteger();
-        OnPort<Integer> on = new OnPort<>((t0, t1) -> t0 < t1, (t0, t1) -> counter.incrementAndGet());
-
-        on.handle(1, 2);
-
-        assertThat(counter.get(), is(1));
+            assertThat(counter.get(), is(1));
+        }
     }
 }

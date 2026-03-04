@@ -2,8 +2,7 @@ package com.taitl.ex.core.transactions;
 
 import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.indexes.Index;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -12,26 +11,32 @@ import static org.hamcrest.Matchers.sameInstance;
 
 class TransactionIndexesTest
 {
-    @Test
-    @DisplayName("Index creates on first access")
-    void indexCreatesOnFirstAccess()
+    Transaction tr;
+
+    @BeforeEach
+    void setup()
     {
-        Transaction tr = new Transaction("/op", "name");
-
-        Index<String, String> index = tr.index("accounts");
-
-        assertThat(index, is(notNullValue()));
+        tr = new Transaction("/op", "name");
     }
 
-    @Test
-    @DisplayName("Index returns same instance")
-    void indexReturnsSameInstance()
+    @Nested
+    class IndexLookup
     {
-        Transaction tr = new Transaction("/op", "name");
+        @Test
+        @DisplayName("Index creates on first access")
+        void creates()
+        {
+            Index<String, String> index = tr.index("accounts");
+            assertThat(index, is(notNullValue()));
+        }
 
-        Index<String, String> first = tr.index("accounts");
-        Index<String, String> second = tr.index("accounts");
-
-        assertThat(second, is(sameInstance(first)));
+        @Test
+        @DisplayName("Index returns same instance")
+        void reuses()
+        {
+            Index<String, String> first = tr.index("accounts");
+            Index<String, String> second = tr.index("accounts");
+            assertThat(second, is(sameInstance(first)));
+        }
     }
 }

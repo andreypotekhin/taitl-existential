@@ -41,7 +41,7 @@ class EvaluateIntentTest
         {
             @Test
             @DisplayName("Returns false when bi intent does not match non bi event")
-            void biIntentAgainstSingleEvent() throws Exception
+            void biIntentAgainstSingle() throws Exception
             {
                 EventHandler<?> intent = new OnTransit<String>((left, right) -> true, null, "must match");
                 assertFalse(evaluateIntent.call(intent, new Read<>("cat")));
@@ -53,7 +53,7 @@ class EvaluateIntentTest
         {
             @Test
             @DisplayName("Wraps unsupported handler types as intent violation")
-            void wrapsAsIntentViolation()
+            void wrapsUnsupportedHandler()
             {
                 EventHandler<Object> unsupported = new EventHandler<>() {
                     public String description()

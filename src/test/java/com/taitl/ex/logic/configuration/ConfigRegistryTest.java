@@ -8,27 +8,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConfigRegistryTest
 {
-    @Test
-    @DisplayName("Get rejects missing config with op key message")
-    void getRejectsMissingConfigWithOpKeyMessage()
+    ConfigRegistry registry;
+
+    @BeforeEach
+    void setup()
     {
-        ConfigRegistry registry = new ConfigRegistry(null);
-        String op = "/app/orders";
-
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> registry.get(op));
-
-        assertThat(ex.getMessage(), is("Config not found for op '" + op + "'"));
+        registry = new ConfigRegistry(null);
     }
 
-    @Test
-    @DisplayName("Remove rejects missing config with op key message")
-    void removeRejectsMissingConfigWithOpKeyMessage()
+    @Nested
+    class MissingConfig
     {
-        ConfigRegistry registry = new ConfigRegistry(null);
-        String op = "/app/orders";
+        @Test
+        @DisplayName("Get rejects missing config with op key message")
+        void getRejects()
+        {
+            RuntimeException ex = assertThrows(RuntimeException.class, () -> registry.get("/app/orders"));
+            assertThat(ex.getMessage(), is("Config not found for op '/app/orders'"));
+        }
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> registry.remove(op));
-
-        assertThat(ex.getMessage(), is("Config not found for op '" + op + "'"));
+        @Test
+        @DisplayName("Remove rejects missing config with op key message")
+        void removeRejects()
+        {
+            RuntimeException ex = assertThrows(RuntimeException.class, () -> registry.remove("/app/orders"));
+            assertThat(ex.getMessage(), is("Config not found for op '/app/orders'"));
+        }
     }
 }

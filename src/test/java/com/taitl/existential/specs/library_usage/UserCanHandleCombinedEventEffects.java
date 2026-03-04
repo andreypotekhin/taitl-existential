@@ -29,32 +29,36 @@ class UserCanHandleCombinedEventEffects extends SpecBase
         super.cleanup();
     }
 
-    @Test
-    @DisplayName("User can define effects for combined events (CU, UD, CUD)")
-    void handleCombinedEventEffects()
+    @Nested
+    class Scenarios
     {
-        AtomicInteger cudCalls = new AtomicInteger();
-        AtomicInteger udCalls = new AtomicInteger();
-        Effect<Cat> effect = new Effect<>(Cat.class)
-                .add(new OnCUD<>(c -> cudCalls.incrementAndGet(), "cud"))
-                .add(new OnUD<>(c -> udCalls.incrementAndGet(), "ud"));
+        @Test
+        @DisplayName("User can define effects for combined events (CU, UD, CUD)")
+        void handleCombinedEffects()
+        {
+            AtomicInteger cudCalls = new AtomicInteger();
+            AtomicInteger udCalls = new AtomicInteger();
+            Effect<Cat> effect = new Effect<>(Cat.class)
+                    .add(new OnCUD<>(c -> cudCalls.incrementAndGet(), "cud"))
+                    .add(new OnUD<>(c -> udCalls.incrementAndGet(), "ud"));
 
-        assertDoesNotThrow(() -> {
-            // @formatter:off
-            ex.configure()
-                    .context(op)
-                        .effect(effect);
-            // @formatter:on
-            String tran = ex.begin(op).id();
-            Cat created = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
-            Cat updated = new Cat(CityTestData.BLACK_CAT.color(), "library");
-            ex.port(null, created, tran);
-            ex.port(created, updated, tran);
-            ex.port(updated, null, tran);
-            ex.commit(tran);
-        });
+            assertDoesNotThrow(() -> {
+                // @formatter:off
+                ex.configure()
+                        .context(op)
+                            .effect(effect);
+                // @formatter:on
+                String tran = ex.begin(op).id();
+                Cat created = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
+                Cat updated = new Cat(CityTestData.BLACK_CAT.color(), "library");
+                ex.port(null, created, tran);
+                ex.port(created, updated, tran);
+                ex.port(updated, null, tran);
+                ex.commit(tran);
+            });
 
-        assertEquals(3, cudCalls.get());
-        assertEquals(2, udCalls.get());
+            assertEquals(3, cudCalls.get());
+            assertEquals(2, udCalls.get());
+        }
     }
 }

@@ -1,10 +1,6 @@
 package com.taitl.existential.keys;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import com.taitl.existential.keys.OpKey;
 
@@ -25,39 +21,47 @@ class ConfigBuilderKeyTest
         o = null;
     }
 
-    @Test
-    @DisplayName("Test op key constructor")
-    void testOpKeyConstructor()
+    @Nested
+    class Constructor
     {
-        new OpKey("/a/b/c");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new OpKey(null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new OpKey(""));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new OpKey("/"));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new OpKey("/a/b/c/"));
+        @Test
+        @DisplayName("Validates op key constructor")
+        void validates()
+        {
+            new OpKey("/a/b/c");
+            Assertions.assertThrows(IllegalArgumentException.class, () -> new OpKey(null));
+            Assertions.assertThrows(IllegalArgumentException.class, () -> new OpKey(""));
+            Assertions.assertThrows(IllegalArgumentException.class, () -> new OpKey("/"));
+            Assertions.assertThrows(IllegalArgumentException.class, () -> new OpKey("/a/b/c/"));
+        }
+
+        @Test
+        @DisplayName("To string")
+        void toStringValue()
+        {
+            Assertions.assertEquals("/a/b/c", new OpKey("/a/b/c").toString());
+        }
     }
 
-    @Test
-    @DisplayName("Test to string")
-    void testToString()
+    @Nested
+    class Parent
     {
-        Assertions.assertEquals("/a/b/c", new OpKey("/a/b/c").toString());
-    }
+        @Test
+        @DisplayName("Has parent")
+        void hasParent()
+        {
+            Assertions.assertTrue(new OpKey("/a/b/c").hasParent());
+            Assertions.assertTrue(new OpKey("/a/b").hasParent());
+            Assertions.assertFalse(new OpKey("/a").hasParent());
+        }
 
-    @Test
-    @DisplayName("Test has parent")
-    void testHasParent()
-    {
-        Assertions.assertTrue(new OpKey("/a/b/c").hasParent());
-        Assertions.assertTrue(new OpKey("/a/b").hasParent());
-        Assertions.assertFalse(new OpKey("/a").hasParent());
-    }
-
-    @Test
-    @DisplayName("Test get parent")
-    void testGetParent()
-    {
-        Assertions.assertEquals(OpKey.valueOf("/a/b"), new OpKey("/a/b/c").getParent());
-        Assertions.assertEquals(OpKey.valueOf("/a"), new OpKey("/a/b").getParent());
-        Assertions.assertThrows(IllegalStateException.class, () -> new OpKey("/a").getParent());
+        @Test
+        @DisplayName("Get parent")
+        void getParent()
+        {
+            Assertions.assertEquals(OpKey.valueOf("/a/b"), new OpKey("/a/b/c").getParent());
+            Assertions.assertEquals(OpKey.valueOf("/a"), new OpKey("/a/b").getParent());
+            Assertions.assertThrows(IllegalStateException.class, () -> new OpKey("/a").getParent());
+        }
     }
 }

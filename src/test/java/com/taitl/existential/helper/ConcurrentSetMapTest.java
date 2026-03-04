@@ -3,9 +3,7 @@ package com.taitl.existential.helper;
 import com.taitl.ex.common.helper.collections.ConcurrentSetMap;
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.model.Location;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Set;
 
@@ -25,26 +23,30 @@ class ConcurrentSetMapTest
         o.put(LOCATION_PARK, YELLOW_CAT);
     }
 
-    @Test
-    @DisplayName("Test get returns snapshot")
-    void testGetReturnsSnapshot()
+    @Nested
+    class Snapshots
     {
-        Set<Cat> snapshot = o.get(LOCATION_PARK);
-        assertEquals(2, snapshot.size());
+        @Test
+        @DisplayName("Get returns snapshot")
+        void get()
+        {
+            Set<Cat> snapshot = o.get(LOCATION_PARK);
+            assertEquals(2, snapshot.size());
 
-        o.put(LOCATION_PARK, BLACK_CAT);
-        assertEquals(2, snapshot.size());
+            o.put(LOCATION_PARK, BLACK_CAT);
+            assertEquals(2, snapshot.size());
 
-        o.remove(LOCATION_PARK, GREY_CAT);
-        assertEquals(2, snapshot.size());
-    }
+            o.remove(LOCATION_PARK, GREY_CAT);
+            assertEquals(2, snapshot.size());
+        }
 
-    @Test
-    @DisplayName("Test remove predicate returns snapshot")
-    void testRemovePredicateReturnsSnapshot()
-    {
-        Set<Cat> removed = o.remove(LOCATION_PARK, cat -> true);
-        assertEquals(2, removed.size());
-        assertThrows(UnsupportedOperationException.class, () -> removed.clear());
+        @Test
+        @DisplayName("Remove predicate returns snapshot")
+        void removePredicate()
+        {
+            Set<Cat> removed = o.remove(LOCATION_PARK, cat -> true);
+            assertEquals(2, removed.size());
+            assertThrows(UnsupportedOperationException.class, () -> removed.clear());
+        }
     }
 }

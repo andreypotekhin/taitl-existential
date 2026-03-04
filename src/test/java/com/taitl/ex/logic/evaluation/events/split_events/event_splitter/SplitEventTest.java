@@ -10,21 +10,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SplitEventTest
 {
-    @Test
-    @DisplayName("Call stores original event")
-    void callStoresOriginalEvent()
+    ConfigurationIndexes indexes;
+    SplitEvent splitEvent;
+
+    @BeforeEach
+    void setup()
     {
-        ConfigurationIndexes indexes = new ConfigurationIndexes();
+        indexes = new ConfigurationIndexes();
         indexes.doneIndexing();
+        splitEvent = new SplitEvent();
+    }
 
-        SplitEvent splitEvent = new SplitEvent();
-        String oldValue = new String("old");
-        Port<String> port = new Port<>(oldValue, null);
-        RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(port, new TypeKey<>(String.class), null, false);
+    @Nested
+    class Call
+    {
+        @Test
+        @DisplayName("Stores original event")
+        void storesOriginalEvent()
+        {
+            String oldValue = new String("old");
+            Port<String> port = new Port<>(oldValue, null);
+            RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(port, new TypeKey<>(String.class), null, false);
 
-        SplitResult<String> result = splitEvent.call(runtimeKey, indexes.eventField(), false);
+            SplitResult<String> result = splitEvent.call(runtimeKey, indexes.eventField(), false);
 
-        assertSame(port, result.event());
-        assertTrue(result.evaluables().isEmpty());
+            assertSame(port, result.event());
+            assertTrue(result.evaluables().isEmpty());
+        }
     }
 }

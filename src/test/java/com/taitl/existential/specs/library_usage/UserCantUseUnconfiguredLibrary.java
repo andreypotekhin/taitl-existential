@@ -25,22 +25,26 @@ class UserCantUseUnconfiguredLibrary extends SpecBase
         super.cleanup();
     }
 
-    @Test
-    @DisplayName("User can't send events if no rules has been configured")
-    void sendingEventsToUnconfiguredLibrary()
+    @Nested
+    class Scenarios
     {
-        assertThat(assertThrows(IllegalStateException.class, () -> {
-            String tran = ex.begin(op).id();
-            ex.update(cat, tran);
-        }).getMessage(), containsString("You need to configure at least one context"));
-    }
+        @Test
+        @DisplayName("User can't send events if no rules has been configured")
+        void sendingEventsToUnconfiguredLibrary()
+        {
+            assertThat(assertThrows(IllegalStateException.class, () -> {
+                String tran = ex.begin(op).id();
+                ex.update(cat, tran);
+            }).getMessage(), containsString("You need to configure at least one context"));
+        }
 
-    @Test
-    @DisplayName("User can't send events if no rules has been configured")
-    void sendingEventsToLibraryBeforeItIsConfigured()
-    {
-        assertThat(assertThrows(IllegalStateException.class, () -> {
-            ex.begin(op);
-        }).getMessage(), containsString("You need to configure at least one context"));
+        @Test
+        @DisplayName("User can't send events if no rules has been configured")
+        void sendingEventsBeforeConfiguration()
+        {
+            assertThat(assertThrows(IllegalStateException.class, () -> {
+                ex.begin(op);
+            }).getMessage(), containsString("You need to configure at least one context"));
+        }
     }
 }

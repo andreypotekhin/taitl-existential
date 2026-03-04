@@ -10,42 +10,45 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class OnTransitTest
 {
-    @Test
-    @DisplayName("Condition only rejects when false")
-    void conditionOnlyRejectsWhenFalse()
+    Cat cat(String color)
     {
-        OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
-        Cat before = new Cat("Black", "Park");
-        Cat after = new Cat("White", "Park");
-
-        EventHandlerException ex = assertThrows(EventHandlerException.class,
-                () -> handler.handle(before, after));
-
-        assertThat(ex.getMessage(), containsString("Cats are black"));
+        return new Cat(color, "Park");
     }
 
-    @Test
-    @DisplayName("Condition only allows when true")
-    void conditionOnlyAllowsWhenTrue()
+    @Nested
+    class ConditionOnly
     {
-        OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
-        Cat before = new Cat("Black", "Park");
-        Cat after = new Cat("Black", "Park");
+        @Test
+        @DisplayName("Rejects when false")
+        void rejectsWhenFalse()
+        {
+            OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
 
-        assertDoesNotThrow(() -> handler.handle(before, after));
-    }
+            EventHandlerException ex = assertThrows(EventHandlerException.class,
+                    () -> handler.handle(cat("Black"), cat("White")));
 
-    @Test
-    @DisplayName("Bicondition only rejects when false")
-    void biconditionOnlyRejectsWhenFalse()
-    {
-        OnTransit<Cat> handler = new OnTransit<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");
-        Cat before = new Cat("Black", "Park");
-        Cat after = new Cat("White", "Park");
+            assertThat(ex.getMessage(), containsString("Cats are black"));
+        }
 
-        EventHandlerException ex = assertThrows(EventHandlerException.class,
-                () -> handler.handle(before, after));
+        @Test
+        @DisplayName("Allows when true")
+        void allowsWhenTrue()
+        {
+            OnTransit<Cat> handler = new OnTransit<>(c -> "Black".equals(c.color), null, "Cats are black");
+            assertDoesNotThrow(() -> handler.handle(cat("Black"), cat("Black")));
+        }
 
-        assertThat(ex.getMessage(), containsString("Colors must match"));
+        @Test
+        @DisplayName("Bicondition rejects when false")
+        void biconditionRejectsWhenFalse()
+        {
+            OnTransit<Cat> handler =
+                    new OnTransit<>((c0, c1) -> c0.color.equals(c1.color), null, "Colors must match");
+
+            EventHandlerException ex = assertThrows(EventHandlerException.class,
+                    () -> handler.handle(cat("Black"), cat("White")));
+
+            assertThat(ex.getMessage(), containsString("Colors must match"));
+        }
     }
 }

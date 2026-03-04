@@ -1,8 +1,7 @@
 package com.taitl.ex.common.logic;
 
 import com.taitl.ex.common.helper.logic.*;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -16,68 +15,69 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LoadPropertiesTest
 {
-    @Test
-    @DisplayName("Loads from resource")
-    void loadsFromResource()
-            throws Exception
+    LoadProperties load(Map<String, String> resources)
     {
-        LoadProperties load = new LoadProperties(
-                new MemoryClassLoader(Map.of("a.properties", "flag=true\nname=base")),
-                1024);
-
-        java.util.Properties props = load.fromResource("a.properties");
-
-        assertEquals("true", props.getProperty("flag"));
-        assertEquals("base", props.getProperty("name"));
+        return new LoadProperties(new MemoryClassLoader(resources), 1024);
     }
 
-    @Test
-    @DisplayName("Resource and optional file applies overrides")
-    void resourceAndOptionalFileAppliesOverrides()
-            throws Exception
+    @Nested
+    class FromResource
     {
-        Path file = Files.createTempFile("load-properties-", ".properties");
-        try
+        @Test
+        @DisplayName("Loads from resource")
+        void loads() throws Exception
         {
-            Files.writeString(file, "flag=true\nname=file", StandardCharsets.UTF_8);
-
-            LoadProperties load = new LoadProperties(
-                    new MemoryClassLoader(Map.of("a.properties", "flag=false\nbase=ok")),
-                    1024);
-
-            java.util.Properties props = load.fromResourceAndOptionalFile("a.properties", file.toString());
+            java.util.Properties props =
+                    load(Map.of("a.properties", "flag=true\nname=base")).fromResource("a.properties");
 
             assertEquals("true", props.getProperty("flag"));
-            assertEquals("ok", props.getProperty("base"));
-            assertEquals("file", props.getProperty("name"));
+            assertEquals("base", props.getProperty("name"));
         }
-        finally
+
+        @Test
+        @DisplayName("Missing resource fails")
+        void missing()
         {
-            Files.deleteIfExists(file);
+            assertThrows(FileNotFoundException.class, () -> load(Map.of()).fromResource("missing.properties"));
         }
     }
 
-    @Test
-    @DisplayName("Optional file blank is ignored")
-    void optionalFileBlankIsIgnored()
-            throws Exception
+    @Nested
+    class FromResourceAndOptionalFile
     {
-        LoadProperties load = new LoadProperties(
-                new MemoryClassLoader(Map.of("a.properties", "flag=false")),
-                1024);
+        @Test
+        @DisplayName("Resource and optional file applies overrides")
+        void appliesOverrides() throws Exception
+        {
+            Path file = Files.createTempFile("load-properties-", ".properties");
+            try
+            {
+                Files.writeString(file, "flag=true\nname=file", StandardCharsets.UTF_8);
 
-        java.util.Properties props = load.fromResourceAndOptionalFile("a.properties", "   ");
+                java.util.Properties props =
+                        load(Map.of("a.properties", "flag=false\nbase=ok")).fromResourceAndOptionalFile(
+                                "a.properties", file.toString());
 
-        assertEquals("false", props.getProperty("flag"));
-    }
+                assertEquals("true", props.getProperty("flag"));
+                assertEquals("ok", props.getProperty("base"));
+                assertEquals("file", props.getProperty("name"));
+            }
+            finally
+            {
+                Files.deleteIfExists(file);
+            }
+        }
 
-    @Test
-    @DisplayName("Missing resource fails")
-    void missingResourceFails()
-    {
-        LoadProperties load = new LoadProperties(new MemoryClassLoader(Map.of()), 1024);
+        @Test
+        @DisplayName("Optional file blank is ignored")
+        void optionalFileBlank()
+                throws Exception
+        {
+            java.util.Properties props =
+                    load(Map.of("a.properties", "flag=false")).fromResourceAndOptionalFile("a.properties", "   ");
 
-        assertThrows(FileNotFoundException.class, () -> load.fromResource("missing.properties"));
+            assertEquals("false", props.getProperty("flag"));
+        }
     }
 
     private static class MemoryClassLoader extends ClassLoader

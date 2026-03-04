@@ -22,71 +22,87 @@ class IntentTest
     {
     }
 
-    @Test
-    @DisplayName("Default constructor requires anonymous subclass")
-    void defaultConstructorRequiresAnonymousSubclass()
+    @Nested
+    class Constructors
     {
-        assertThrows(IllegalStateException.class, () -> new Intent<Widget>());
+        @Test
+        @DisplayName("Default constructor requires anonymous subclass")
+        void defaultRequiresAnonymousSubclass()
+        {
+            assertThrows(IllegalStateException.class, () -> new Intent<Widget>());
+        }
+
+        @Test
+        @DisplayName("Anonymous subclass infers type key")
+        void anonymousInfersTypeKey()
+        {
+            Intent<Widget> intent = new Intent<Widget>() {
+            };
+
+            assertThat(intent.typeKey(), is(new TypeKey<>(Widget.class)));
+        }
     }
 
-    @Test
-    @DisplayName("Anonymous subclass infers type key")
-    void anonymousSubclassInfersTypeKey()
+    @Nested
+    class FluentApi
     {
-        Intent<Widget> intent = new Intent<Widget>() {
-        };
+        @Test
+        @DisplayName("Fluent intents append handlers in order")
+        void appendsHandlersInOrder()
+        {
+            Intent<String> intent = new Intent<>(String.class);
 
-        assertThat(intent.typeKey(), is(new TypeKey<>(Widget.class)));
+            intent.create()
+                    .read()
+                    .update()
+                    .upsert()
+                    .on();
+
+            List<Ev<String>> evs = intent.list();
+
+            assertThat(evs, hasSize(5));
+            assertThat(evs.get(0), instanceOf(OnCreate.class));
+            assertThat(evs.get(1), instanceOf(OnRead.class));
+            assertThat(evs.get(2), instanceOf(OnUpdate.class));
+            assertThat(evs.get(3), instanceOf(OnCU.class));
+            assertThat(evs.get(4), instanceOf(On.class));
+        }
     }
 
-    @Test
-    @DisplayName("Fluent intents append handlers in order")
-    void fluentIntentsAppendHandlersInOrder()
+    @Nested
+    class Assignment
     {
-        Intent<String> intent = new Intent<>(String.class);
+        @Test
+        @DisplayName("Transaction and type key can be replaced")
+        void transactionAndTypeKeyCanBeReplaced()
+        {
+            Intent<String> intent = new Intent<>(String.class);
+            Transaction transaction = new Transaction("op", "name");
+            TypeKey<String> typeKey = new TypeKey<>(String.class);
 
-        intent.create()
-                .read()
-                .update()
-                .upsert()
-                .on();
+            intent.transaction(transaction);
+            intent.typeKey(typeKey);
 
-        List<Ev<String>> evs = intent.list();
-
-        assertThat(evs, hasSize(5));
-        assertThat(evs.get(0), instanceOf(OnCreate.class));
-        assertThat(evs.get(1), instanceOf(OnRead.class));
-        assertThat(evs.get(2), instanceOf(OnUpdate.class));
-        assertThat(evs.get(3), instanceOf(OnCU.class));
-        assertThat(evs.get(4), instanceOf(On.class));
+            assertThat(intent.transaction(), is(transaction));
+            assertThat(intent.typeKey(), is(typeKey));
+        }
     }
 
-    @Test
-    @DisplayName("Transaction and type key can be replaced")
-    void transactionAndTypeKeyCanBeReplaced()
+    @Nested
+    class Handlers
     {
-        Intent<String> intent = new Intent<>(String.class);
-        Transaction transaction = new Transaction("op", "name");
-        TypeKey<String> typeKey = new TypeKey<>(String.class);
+        @Test
+        @DisplayName("Read with description preserves condition")
+        void readPreservesCondition()
+        {
+            Intent<String> intent = new Intent<>(String.class);
+            Predicate<String> condition = value -> value.startsWith("R");
 
-        intent.transaction(transaction);
-        intent.typeKey(typeKey);
+            intent.read(condition, "Read must start with R");
 
-        assertThat(intent.transaction(), is(transaction));
-        assertThat(intent.typeKey(), is(typeKey));
-    }
-
-    @Test
-    @DisplayName("Read with description preserves condition")
-    void readWithDescriptionPreservesCondition()
-    {
-        Intent<String> intent = new Intent<>(String.class);
-        Predicate<String> condition = value -> value.startsWith("R");
-
-        intent.read(condition, "Read must start with R");
-
-        OnRead<String> handler = (OnRead<String>) intent.list().get(0);
-        assertThat(handler.condition, is(condition));
-        assertThat(handler.description(), is("Read must start with R"));
+            OnRead<String> handler = (OnRead<String>) intent.list().get(0);
+            assertThat(handler.condition, is(condition));
+            assertThat(handler.description(), is("Read must start with R"));
+        }
     }
 }

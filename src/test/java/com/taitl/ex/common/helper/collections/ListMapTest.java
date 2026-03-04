@@ -14,7 +14,7 @@ class ListMapTest
     {
         @Test
         @DisplayName("adjusts size when list contents change")
-        void adjustsSizeWhenListContentsChange()
+        void adjustsSize()
         {
             ListMap<String, String> map = new ListMap<>();
             assertEquals(0, map.size());
@@ -31,7 +31,7 @@ class ListMapTest
 
         @Test
         @DisplayName("keeps size zero for empty list on new key")
-        void keepsSizeZeroForEmptyListOnNewKey()
+        void keepsZeroSize()
         {
             ListMap<String, String> map = new ListMap<>();
             assertEquals(0, map.size());

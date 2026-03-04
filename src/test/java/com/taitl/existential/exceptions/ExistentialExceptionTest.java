@@ -2,39 +2,27 @@ package com.taitl.existential.exceptions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class ExistentialExceptionTest
 {
-    ExistentialException o;
-
-    @BeforeEach
-    void setUp()
+    @Nested
+    class Constructor
     {
-    }
+        @Test
+        @DisplayName("Default constructor leaves message null")
+        void defaultMessage()
+        {
+            ExistentialException error = new ExistentialException();
+            assertEquals(null, error.getMessage());
+        }
 
-    @AfterEach
-    void tearDown()
-    {
+        @Test
+        @DisplayName("String constructor keeps message")
+        void customMessage()
+        {
+            ExistentialException error = new ExistentialException("My message");
+            assertEquals("My message", error.getMessage());
+        }
     }
-
-    @Test
-    @DisplayName("Test failure exception")
-    void testFailureException()
-    {
-        o = new ExistentialException();
-        assertEquals(null, o.getMessage());
-    }
-
-    @Test
-    @DisplayName("Test failure exception string")
-    void testFailureExceptionString()
-    {
-        o = new ExistentialException("My message");
-        assertEquals("My message", o.getMessage());
-    }
-
 }

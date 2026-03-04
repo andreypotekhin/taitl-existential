@@ -51,25 +51,29 @@ class TypeKeyTest
         }).getMessage(), containsString("must be of proper format"));
     }
 
-    @Test
-    @DisplayName("Rejects raw anonymous subclass")
-    void rejectsRawAnonymousSubclass()
+    @Nested
+    class FactoryFlags
     {
-        assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            new RawTypeKey();
-        }).getMessage(), containsString("anonymous subclass"));
-    }
+        @Test
+        @DisplayName("Rejects raw anonymous subclass")
+        void rejectsRawAnonymousSubclass()
+        {
+            assertThat(assertThrows(IllegalArgumentException.class, () -> {
+                new RawTypeKey();
+            }).getMessage(), containsString("anonymous subclass"));
+        }
 
-    @Test
-    @DisplayName("Value of uses full name flag")
-    void valueOfUsesFullNameFlag()
-    {
-        assertThat(TypeKey.valueOf(TypeKeyTest.class, true).toString(),
-                is("com.taitl.existential.keys.TypeKeyTest"));
-        assertThat(TypeKey.valueOf(Set.class, "List<Document>", true).toString(),
-                is("java.util.Set<List<Document>>"));
-        assertThat(TypeKey.valueOf(new TypeKeyTest(), true).toString(),
-                is("com.taitl.existential.keys.TypeKeyTest"));
+        @Test
+        @DisplayName("Value of uses full name flag")
+        void valueOfUsesFullNameFlag()
+        {
+            assertThat(TypeKey.valueOf(TypeKeyTest.class, true).toString(),
+                    is("com.taitl.existential.keys.TypeKeyTest"));
+            assertThat(TypeKey.valueOf(Set.class, "List<Document>", true).toString(),
+                    is("java.util.Set<List<Document>>"));
+            assertThat(TypeKey.valueOf(new TypeKeyTest(), true).toString(),
+                    is("com.taitl.existential.keys.TypeKeyTest"));
+        }
     }
 
     @Test
@@ -102,16 +106,20 @@ class TypeKeyTest
         assertThat(TypeKey.valueOf(t, "JSON", false).toString(), is("TypeKeyTest<JSON>"));
     }
 
-    @Test
-    @DisplayName("Value of rejects null instance")
-    void valueOfRejectsNullInstance()
+    @Nested
+    class ValueOfRejects
     {
-        assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            TypeKey.valueOf((TypeKeyTest) null, false);
-        }).getMessage(), containsString("'t' must not be null"));
-        assertThat(assertThrows(IllegalArgumentException.class, () -> {
-            TypeKey.valueOf((TypeKeyTest) null, "JSON", false);
-        }).getMessage(), containsString("'t' must not be null"));
+        @Test
+        @DisplayName("Value of rejects null instance")
+        void nullInstance()
+        {
+            assertThat(assertThrows(IllegalArgumentException.class, () -> {
+                TypeKey.valueOf((TypeKeyTest) null, false);
+            }).getMessage(), containsString("'t' must not be null"));
+            assertThat(assertThrows(IllegalArgumentException.class, () -> {
+                TypeKey.valueOf((TypeKeyTest) null, "JSON", false);
+            }).getMessage(), containsString("'t' must not be null"));
+        }
     }
 
     @Test

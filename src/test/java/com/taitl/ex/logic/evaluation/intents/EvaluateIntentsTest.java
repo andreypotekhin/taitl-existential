@@ -33,50 +33,58 @@ class EvaluateIntentsTest
     }
 
     protected Existential ex;
+    protected String entity;
+
+    @BeforeEach
+    void setup()
+    {
+        ex = new Existential();
+        entity = new String("new");
+    }
 
     @AfterEach
     void cleanup()
     {
-        if (ex != null)
+        ex.close();
+    }
+
+    RuntimeKey<String> createKey()
+    {
+        return RuntimeKey.valueOf(new Create<>(entity), new TypeKey<>(String.class), entity, false);
+    }
+
+    EvaluateIntents evaluateIntents(boolean splitElementary)
+    {
+        EvaluationLogic logic = new TestEvaluationLogic(ex.transactions().logic(), splitElementary);
+        return new EvaluateIntents(logic);
+    }
+
+    @Nested
+    class SplitAndGroupByEventType
+    {
+        @Test
+        @DisplayName("Includes port family when elementary to compound is enabled")
+        void includesPortFamily()
         {
-            ex.close();
+            Map<EventType, List<RuntimeKey<String>>> grouped =
+                    evaluateIntents(true).splitAndGroupByEventType(createKey());
+
+            assertTrue(hasEventType(grouped, Create.class));
+            assertTrue(hasEventType(grouped, Port.class));
+            assertTrue(hasEventType(grouped, CUD.class));
         }
-    }
 
-    @Test
-    @DisplayName("Split and group includes port family when elementary to compound is enabled")
-    void splitIncludesPortWhenEnabled()
-    {
-        ex = new Existential();
-        EvaluationLogic logic = new TestEvaluationLogic(ex.transactions().logic(), true);
-        EvaluateIntents evaluateIntents = new EvaluateIntents(logic);
-        String entity = new String("new");
-        RuntimeKey<String> runtimeKey =
-                RuntimeKey.valueOf(new Create<>(entity), new TypeKey<>(String.class), entity, false);
+        @Test
+        @DisplayName("Skips port family when elementary to compound is disabled")
+        void skipsPortFamily()
+        {
+            Map<EventType, List<RuntimeKey<String>>> grouped =
+                    evaluateIntents(false).splitAndGroupByEventType(createKey());
 
-        Map<EventType, List<RuntimeKey<String>>> grouped = evaluateIntents.splitAndGroupByEventType(runtimeKey);
-
-        assertTrue(hasEventType(grouped, Create.class));
-        assertTrue(hasEventType(grouped, Port.class));
-        assertTrue(hasEventType(grouped, CUD.class));
-    }
-
-    @Test
-    @DisplayName("Split and group skips port family when elementary to compound is disabled")
-    void splitSkipsPortWhenDisabled()
-    {
-        ex = new Existential();
-        EvaluationLogic logic = new TestEvaluationLogic(ex.transactions().logic(), false);
-        EvaluateIntents evaluateIntents = new EvaluateIntents(logic);
-        String entity = new String("new");
-        RuntimeKey<String> runtimeKey =
-                RuntimeKey.valueOf(new Create<>(entity), new TypeKey<>(String.class), entity, false);
-
-        Map<EventType, List<RuntimeKey<String>>> grouped = evaluateIntents.splitAndGroupByEventType(runtimeKey);
-
-        assertTrue(hasEventType(grouped, Create.class));
-        assertFalse(hasEventType(grouped, Port.class));
-        assertFalse(hasEventType(grouped, CUD.class));
+            assertTrue(hasEventType(grouped, Create.class));
+            assertFalse(hasEventType(grouped, Port.class));
+            assertFalse(hasEventType(grouped, CUD.class));
+        }
     }
 
     protected boolean hasEventType(Map<EventType, List<RuntimeKey<String>>> grouped, Class<?> eventClass)

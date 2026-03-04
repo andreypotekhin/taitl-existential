@@ -254,7 +254,7 @@ class ConfigureLibraryTest extends SpecBase
     {
         @Test
         @DisplayName("Startup delegates to configure library")
-        void delegatesToConfigureLibrary()
+        void delegates()
         {
             StubConfigureLibrary loader = new StubConfigureLibrary(ex);
             ExistentialInit ei = new ExistentialInit(ex, loader);

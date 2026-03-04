@@ -36,96 +36,105 @@ class EvaluationLogicTest
     }
 
     private Existential ex;
+    private TypeKey<String> typeKey;
+
+    @BeforeEach
+    void setup()
+    {
+        ex = new Existential();
+        typeKey = new TypeKey<>(String.class);
+    }
 
     @AfterEach
     void cleanup()
     {
-        if (ex != null)
+        ex.close();
+    }
+
+    ConfigurationIndexes indexes()
+    {
+        return new ConfigurationIndexes();
+    }
+
+    EvaluationLogic logic(ConfigurationIndexes indexes)
+    {
+        return new TestEvaluationLogic(ex.transactions().logic(), indexes.eventField());
+    }
+
+    @Nested
+    class EvaluateValidation
+    {
+        @Disabled("Config not found for op: /api/eval/collect")
+        @Test
+        @DisplayName("Executes effects and collects constraint violations")
+        void executesEffectsAndCollectsViolations() throws Exception
         {
-            ex.close();
+            AtomicInteger effectCalls = new AtomicInteger();
+            ConfigurationIndexes indexes = indexes();
+            indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
+                    new OnCreate<String>(null, v -> effectCalls.incrementAndGet()));
+            indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
+                    new OnCreate<String>(v -> false, null, "must pass"));
+            indexes.doneIndexing();
+
+            Tr tr = transitTr("/api/eval/collect", typeKey, null, "value");
+            ValidationReport report = new ValidationReport();
+            logic(indexes).evaluateValidation(tr, report);
+
+            assertEquals(1, effectCalls.get());
+            assertEquals(1, report.exceptions().size());
+            assertInstanceOf(ConditionNotMetException.class, report.exceptions().get(0));
         }
-    }
 
-    @Disabled("Config not found for op: /api/eval/collect")
-    @Test
-    @DisplayName("Evaluate executes effects and collects constraint violations")
-    void evaluateExecutesEffectsAndCollectsConstraintViolations() throws Exception
-    {
-        ex = new Existential();
-        AtomicInteger effectCalls = new AtomicInteger();
-        TypeKey<String> typeKey = new TypeKey<>(String.class);
-        ConfigurationIndexes indexes = new ConfigurationIndexes();
-        indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
-                new OnCreate<String>(null, v -> effectCalls.incrementAndGet()));
-        indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
-                new OnCreate<String>(v -> false, null, "must pass"));
-        indexes.doneIndexing();
-
-        Tr tr = transitTr("/api/eval/collect", typeKey, null, "value");
-        EvaluationLogic logic = new TestEvaluationLogic(ex.transactions().logic(), indexes.eventField());
-
-        ValidationReport report = new ValidationReport();
-        logic.evaluateValidation(tr, report);
-
-        assertEquals(1, effectCalls.get());
-        assertEquals(1, report.exceptions().size());
-        assertInstanceOf(ConditionNotMetException.class, report.exceptions().get(0));
-    }
-
-    @Disabled("Config not found for op: /api/eval/partial")
-    @Test
-    @DisplayName("Evaluate rethrows non violation handler exception and keeps partial report")
-    void evaluateRethrowsNonViolationHandlerExceptionAndKeepsPartialReport() throws Exception
-    {
-        ex = new Existential();
-        TypeKey<String> typeKey = new TypeKey<>(String.class);
-        ConfigurationIndexes indexes = new ConfigurationIndexes();
-        indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
-                new OnCreate<String>(v -> false, null, "broken invariant"));
-        indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
-                new OnCreate<String>(null, v -> {
-                    throw new IllegalStateException("boom");
-                }));
-        indexes.doneIndexing();
-
-        Tr tr = transitTr("/api/eval/partial", typeKey, null, "value");
-        EvaluationLogic logic = new TestEvaluationLogic(ex.transactions().logic(), indexes.eventField());
-
-        ValidationReport report = new ValidationReport();
-        EventHandlerException error = assertThrows(
-                EventHandlerException.class,
-                () -> logic.evaluateValidation(tr, report));
-
-        assertNotNull(error.getCause());
-        assertInstanceOf(IllegalStateException.class, error.getCause());
-        assertEquals(1, report.exceptions().size());
-        assertInstanceOf(ConditionNotMetException.class, report.exceptions().get(0));
-    }
-
-    @Disabled("Config not found for op '/api/eval/predicate-failure'")
-    @Test
-    @DisplayName("Evaluate collects predicate failure from invariant all")
-    void evaluateCollectsPredicateFailureFromInvariantAll() throws Exception
-    {
-        ex = new Existential();
-        TypeKey<String> typeKey = new TypeKey<>(String.class);
-        ConfigurationIndexes indexes = new ConfigurationIndexes();
-
-        Invariant<String> invariant = new Invariant<>(String.class);
-        invariant.all(v -> false, "must pass all");
-        for (var ev : invariant.list())
+        @Disabled("Config not found for op: /api/eval/partial")
+        @Test
+        @DisplayName("Rethrows non violation handler exception and keeps partial report")
+        void rethrowsAndKeepsPartialReport() throws Exception
         {
-            indexes.addHandler(EventKey.valueOf(Create.class, typeKey), ev);
+            ConfigurationIndexes indexes = indexes();
+            indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
+                    new OnCreate<String>(v -> false, null, "broken invariant"));
+            indexes.addHandler(EventKey.valueOf(Create.class, typeKey),
+                    new OnCreate<String>(null, v -> {
+                        throw new IllegalStateException("boom");
+                    }));
+            indexes.doneIndexing();
+
+            Tr tr = transitTr("/api/eval/partial", typeKey, null, "value");
+            ValidationReport report = new ValidationReport();
+
+            EventHandlerException error = assertThrows(
+                    EventHandlerException.class,
+                    () -> logic(indexes).evaluateValidation(tr, report));
+
+            assertNotNull(error.getCause());
+            assertInstanceOf(IllegalStateException.class, error.getCause());
+            assertEquals(1, report.exceptions().size());
+            assertInstanceOf(ConditionNotMetException.class, report.exceptions().get(0));
         }
-        indexes.doneIndexing();
 
-        Tr tr = transitTr("/api/eval/predicate-failure", typeKey, null, "value");
-        EvaluationLogic logic = new TestEvaluationLogic(ex.transactions().logic(), indexes.eventField());
+        @Disabled("Config not found for op '/api/eval/predicate-failure'")
+        @Test
+        @DisplayName("Collects predicate failure from invariant all")
+        void collectsPredicateFailure() throws Exception
+        {
+            ConfigurationIndexes indexes = indexes();
 
-        ValidationReport report = new ValidationReport();
-        assertDoesNotThrow(() -> logic.evaluateValidation(tr, report));
-        assertEquals(1, report.exceptions().size());
-        assertInstanceOf(PredicateFailure.class, report.exceptions().get(0));
+            Invariant<String> invariant = new Invariant<>(String.class);
+            invariant.all(v -> false, "must pass all");
+            for (var ev : invariant.list())
+            {
+                indexes.addHandler(EventKey.valueOf(Create.class, typeKey), ev);
+            }
+            indexes.doneIndexing();
+
+            Tr tr = transitTr("/api/eval/predicate-failure", typeKey, null, "value");
+            ValidationReport report = new ValidationReport();
+            assertDoesNotThrow(() -> logic(indexes).evaluateValidation(tr, report));
+
+            assertEquals(1, report.exceptions().size());
+            assertInstanceOf(PredicateFailure.class, report.exceptions().get(0));
+        }
     }
 
     private <T> Tr transitTr(String op, TypeKey<T> typeKey, T t0, T t1)

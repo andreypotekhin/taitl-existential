@@ -3,8 +3,7 @@ package com.taitl.existential.constraints;
 import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.handlers.On;
 import com.taitl.existential.keys.TypeKey;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -20,51 +19,63 @@ class EffectTest
     {
     }
 
-    @Test
-    @DisplayName("Default constructor requires anonymous subclass")
-    void defaultConstructorRequiresAnonymousSubclass()
+    @Nested
+    class Constructors
     {
-        assertThrows(IllegalStateException.class, () -> new Effect<Widget>());
+        @Test
+        @DisplayName("Default constructor requires anonymous subclass")
+        void defaultRequiresAnonymousSubclass()
+        {
+            assertThrows(IllegalStateException.class, () -> new Effect<Widget>());
+        }
+
+        @Test
+        @DisplayName("Anonymous subclass infers type key")
+        void anonymousInfersTypeKey()
+        {
+            Effect<Widget> effect = new Effect<Widget>() {
+            };
+
+            assertThat(effect.typeKey(), is(new TypeKey<>(Widget.class)));
+        }
     }
 
-    @Test
-    @DisplayName("Anonymous subclass infers type key")
-    void anonymousSubclassInfersTypeKey()
+    @Nested
+    class Handlers
     {
-        Effect<Widget> effect = new Effect<Widget>() {
-        };
+        @Test
+        @DisplayName("On handler preserves condition action and description")
+        void preservesConditionActionAndDescription()
+        {
+            Effect<String> effect = new Effect<>(String.class);
+            Predicate<String> condition = value -> value.startsWith("a");
+            Consumer<String> action = value -> {
+            };
 
-        assertThat(effect.typeKey(), is(new TypeKey<>(Widget.class)));
+            effect.on(condition, action, "Runs on a-values");
+
+            On<String> handler = (On<String>) effect.list().get(0);
+            assertThat(handler.condition, is(condition));
+            assertThat(handler.action, is(action));
+            assertThat(handler.description(), is("Runs on a-values"));
+        }
     }
 
-    @Test
-    @DisplayName("On handler preserves condition action and description")
-    void onHandlerPreservesConditionActionAndDescription()
+    @Nested
+    class TransactionAssignment
     {
-        Effect<String> effect = new Effect<>(String.class);
-        Predicate<String> condition = value -> value.startsWith("a");
-        Consumer<String> action = value -> {
-        };
+        @Test
+        @DisplayName("Transaction getter requires assignment")
+        void getterRequiresAssignment()
+        {
+            Effect<String> effect = new Effect<>(String.class);
 
-        effect.on(condition, action, "Runs on a-values");
+            assertThat(assertThrows(IllegalStateException.class, effect::getTransaction)
+                    .getMessage(), containsString("tran"));
 
-        On<String> handler = (On<String>) effect.list().get(0);
-        assertThat(handler.condition, is(condition));
-        assertThat(handler.action, is(action));
-        assertThat(handler.description(), is("Runs on a-values"));
-    }
-
-    @Test
-    @DisplayName("Transaction getter requires assignment")
-    void transactionGetterRequiresAssignment()
-    {
-        Effect<String> effect = new Effect<>(String.class);
-
-        assertThat(assertThrows(IllegalStateException.class, effect::getTransaction)
-                .getMessage(), containsString("tran"));
-
-        Transaction transaction = new Transaction("op", "name");
-        effect.setTransaction(transaction);
-        assertThat(effect.getTransaction(), is(transaction));
+            Transaction transaction = new Transaction("op", "name");
+            effect.setTransaction(transaction);
+            assertThat(effect.getTransaction(), is(transaction));
+        }
     }
 }

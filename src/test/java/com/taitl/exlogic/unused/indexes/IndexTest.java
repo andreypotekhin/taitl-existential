@@ -80,17 +80,37 @@ class IndexTest
         assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains("Black", (Predicate<Set<Cat>>) null));
     }
 
-    @Test
-    @DisplayName("Test contains with predicate")
-    void testContainsWithPredicate()
+    @Nested
+    class AdvancedCases
     {
-        assertTrue(cats_by_color.contains("Grey", cats -> cats.size() == 1), "Contains exactly one element under key");
-        assertFalse(cats_by_color.contains("Yellow", cats -> cats.size() > 1), "Contains 2 or more elements");
-        assertTrue(cats_by_color.contains("Black", cats -> cats.contains(BLACK_CAT)),
-                "Contains specific element");
-        assertTrue(!cats_by_color.contains("non-existing", cats -> true));
-        assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains("Grey", (Cat) null));
-        assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains("Grey", (Predicate<Set<Cat>>) null));
+        @Test
+        @DisplayName("Test contains with predicate")
+        void containsWithPredicate()
+        {
+            assertTrue(cats_by_color.contains("Grey", cats -> cats.size() == 1),
+                    "Contains exactly one element under key");
+            assertFalse(cats_by_color.contains("Yellow", cats -> cats.size() > 1), "Contains 2 or more elements");
+            assertTrue(cats_by_color.contains("Black", cats -> cats.contains(BLACK_CAT)),
+                    "Contains specific element");
+            assertTrue(!cats_by_color.contains("non-existing", cats -> true));
+            assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains("Grey", (Cat) null));
+            assertThrows(IllegalArgumentException.class,
+                    () -> cats_by_color.contains("Grey", (Predicate<Set<Cat>>) null));
+        }
+
+        @Test
+        @DisplayName("Test rekey uses value equality")
+        void rekeyUsesValueEquality()
+        {
+            Index<String, Cat> index = new Index<>(cat -> new String(cat.color));
+            Cat cat = CityTestData.BLACK_CAT;
+            index.add("Black", cat);
+            assertDoesNotThrow(() -> index.rekey("Black", new String("Black"), cat));
+            assertTrue(index.contains("Black", cat));
+            IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                    () -> index.rekey("Black", "Orange", cat));
+            assertTrue(ex.getMessage().contains("newKey"));
+        }
     }
 
     @Test
@@ -160,17 +180,4 @@ class IndexTest
                 () -> cats_by_color.getObj(BLACK_CAT), "Wrong type of key");
     }
 
-    @Test
-    @DisplayName("Test rekey uses value equality")
-    void testRekeyUsesValueEquality()
-    {
-        Index<String, Cat> index = new Index<>(cat -> new String(cat.color));
-        Cat cat = CityTestData.BLACK_CAT;
-        index.add("Black", cat);
-        assertDoesNotThrow(() -> index.rekey("Black", new String("Black"), cat));
-        assertTrue(index.contains("Black", cat));
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
-                () -> index.rekey("Black", "Orange", cat));
-        assertTrue(ex.getMessage().contains("newKey"));
-    }
 }
