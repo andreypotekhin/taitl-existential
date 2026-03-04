@@ -48,15 +48,23 @@ public class EventSplitter
 
     public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
     {
-        return split(runtimeKey, false);
+        return split(runtimeKey, false, true);
     }
 
     public <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey, boolean useFullEventNames)
     {
+        return split(runtimeKey, useFullEventNames, true);
+    }
+
+    public <T> Set<RuntimeKey<T>> split(
+            RuntimeKey<T> runtimeKey,
+            boolean useFullEventNames,
+            boolean splitElementaryToCompound)
+    {
         sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();
         sane(event, "event");
-        Set<Event<T>> events = splitEvent(event);
+        Set<Event<T>> events = splitEvent(event, splitElementaryToCompound);
         Set<TypeKey<T>> typeKeys = splitTypeKey.split(runtimeKey.typeKey());
         Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
         for (Event<T> splitEvent : events)
@@ -72,10 +80,15 @@ public class EventSplitter
 
     public <T> Set<Event<T>> splitEvent(Event<T> event)
     {
+        return splitEvent(event, true);
+    }
+
+    public <T> Set<Event<T>> splitEvent(Event<T> event, boolean splitElementaryToCompound)
+    {
         sane(event, "event");
         Set<Event<T>> events = new LinkedHashSet<>();
         events.add(event);
-        return splitEventType.call(event, events);
+        return splitEventType.call(event, events, splitElementaryToCompound);
     }
 
     @SuppressWarnings("unchecked")

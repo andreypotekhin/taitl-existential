@@ -16,11 +16,12 @@ public class EvaluateEvents
     protected ExecuteHandlers executeHandlers = Creator.singleton(ExecuteHandlers.class);
 
     public <T> void call(RuntimeKey<T> runtimeKey, EventField eventField, ValidationReport report,
-            boolean useFullEventNames)
+            boolean useFullEventNames, boolean splitElementaryToCompound)
             throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField", report, "report");
-        SplitResult<T> splitResult = splitEvent.call(runtimeKey, eventField, useFullEventNames);
+        SplitResult<T> splitResult =
+                splitEvent.call(runtimeKey, eventField, useFullEventNames, splitElementaryToCompound);
         executeHandlers.call(splitResult.evaluables(), splitResult.event(), report);
     }
 }

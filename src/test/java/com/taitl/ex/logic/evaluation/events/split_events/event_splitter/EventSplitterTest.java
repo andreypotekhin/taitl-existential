@@ -30,6 +30,40 @@ class EventSplitterTest
     class SplitEvent
     {
         @Nested
+        class ElementaryCases
+        {
+            @Test
+            @DisplayName("Split create emits compound families by default")
+            void createEmitsCompoundByDefault()
+            {
+                EventSplitter splitter = new EventSplitter();
+                String entity = new String("new");
+
+                Set<Event<String>> events = splitter.splitEvent(new Create<>(entity));
+
+                assertTrue(hasEvent(events, Create.class));
+                assertTrue(hasEvent(events, CU.class));
+                assertTrue(hasEvent(events, CUD.class));
+                assertTrue(hasEvent(events, Port.class));
+            }
+
+            @Test
+            @DisplayName("Split create can disable elementary to compound split")
+            void createCanDisableElementaryToCompoundSplit()
+            {
+                EventSplitter splitter = new EventSplitter();
+
+                Set<Event<String>> events = splitter.splitEvent(new Create<>("new"), false);
+
+                assertEquals(1, events.size());
+                assertTrue(hasEvent(events, Create.class));
+                assertFalse(hasEvent(events, CU.class));
+                assertFalse(hasEvent(events, CUD.class));
+                assertFalse(hasEvent(events, Port.class));
+            }
+        }
+
+        @Nested
         class PortCases
         {
             @Test
@@ -139,6 +173,21 @@ class EventSplitterTest
 
                 assertTrue(splitKeys.stream()
                         .allMatch(key -> key.toString().startsWith("com.taitl.existential.events")));
+            }
+
+            @Test
+            @DisplayName("Split runtime key for create can disable elementary to compound mapping")
+            void createDisableElementaryToCompound()
+            {
+                EventSplitter splitter = new EventSplitter();
+                String entity = new String("new");
+                TypeKey<String> typeKey = new TypeKey<>(String.class);
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Create<>(entity), typeKey, entity, false);
+
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, false);
+
+                assertEquals(1, splitKeys.size());
+                assertTrue(splitKeys.stream().allMatch(key -> key.key().toString().startsWith("Create<")));
             }
         }
 

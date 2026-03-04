@@ -2,6 +2,8 @@ package com.taitl.ex.logic.evaluation.events.actions;
 
 import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.existential.evaluables.*;
+import com.taitl.existential.events.*;
+import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.expressions.*;
@@ -79,12 +81,7 @@ public class ExecuteHandlers
 
         if (handler instanceof BiEventHandler<?>)
         {
-            if (!(event instanceof BiEvent<?>))
-            {
-                throw new IllegalStateException("Bi-event handler requires BiEvent runtime event");
-            }
-            BiEvent<?> biEvent = (BiEvent<?>) event;
-            ((BiEventHandler) handler).handle(biEvent.t0, biEvent.t1);
+            callBiHandler((BiEventHandler) handler, event);
             return;
         }
 
@@ -95,6 +92,24 @@ public class ExecuteHandlers
         }
 
         throw new IllegalStateException("Unsupported event handler type: " + handler.getClass().getName());
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected void callBiHandler(BiEventHandler handler, Event<?> event) throws ExistentialException
+    {
+        sane(handler, "handler", event, "event");
+        if (event instanceof BiEvent<?>)
+        {
+            BiEvent<?> biEvent = (BiEvent<?>) event;
+            handler.handle(biEvent.t0, biEvent.t1);
+            return;
+        }
+        if (!supportsSyntheticBiPayload(event))
+        {
+            throw new IllegalStateException("Bi-event handler requires BiEvent runtime event");
+        }
+        Object entity = entity(event);
+        handler.handle(entity, entity);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -118,6 +133,17 @@ public class ExecuteHandlers
         }
         throw new IllegalStateException(
                 "Unable to derive handler entity from event type: " + event.getClass().getName());
+    }
+
+    protected boolean supportsSyntheticBiPayload(Event<?> event)
+    {
+        sane(event, "event");
+        return event instanceof Create<?>
+                || event instanceof Update<?>
+                || event instanceof Delete<?>
+                || event instanceof CU<?>
+                || event instanceof UD<?>
+                || event instanceof CUD<?>;
     }
 
     protected void routeHandlerException(ExistentialException ex, ValidationReport report) throws ExistentialException

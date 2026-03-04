@@ -36,4 +36,29 @@ public class EntityEvent<T> implements Event<T>
         }
         this.t = t;
     }
+
+    public int hashCode()
+    {
+        int result = getClass().hashCode();
+        result = 31 * result + System.identityHashCode(t);
+        return result;
+    }
+
+    public boolean equals(Object other)
+    {
+        if (other == this)
+        {
+            return true;
+        }
+        if (other == null)
+        {
+            return false;
+        }
+        if (other.getClass() != getClass())
+        {
+            return false;
+        }
+        EntityEvent<?> o = (EntityEvent<?>) other;
+        return o.t == t;
+    }
 }

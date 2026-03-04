@@ -42,6 +42,12 @@ class UserCanConfigureLibrary extends SpecBase
         assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(true));
         ex.toggle(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
         assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
+
+        assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(false));
+        ex.on(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND);
+        assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(true));
+        ex.off(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND);
+        assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(false));
     }
 
     @Test

@@ -22,6 +22,11 @@ public class Flags
     public static final int TYPE_KEYS_USE_FULL_CLASS_NAMES = 32;
 
     /**
+     * Disables elementary-event expansion into compound/bi-event families during event splitting.
+     */
+    public static final int EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND = 64;
+
+    /**
      * Highest supported flag value in this registry.
      */
     public static final int MAX_FLAG = 4096;
