@@ -297,7 +297,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param description Description of invariant
      * @return Exists quantifier
      */
-    public <K> Invariant<T> exists(Map<T, K> map, String description)
+    public <D> Invariant<T> exists(Map<T, D> map, String description)
     {
         sane(map, "map", description, "description");
         add(new Exists<T>(map, description));
@@ -312,7 +312,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param description Description of invariant
      * @return Exists quantifier
      */
-    public <K> Invariant<T> exists(Map<T, K> map, Predicate<T> predicate, String description)
+    public <D> Invariant<T> exists(Map<T, D> map, Predicate<T> predicate, String description)
     {
         sane(map, "map", predicate, "predicate", description, "description");
         add(new Exists<T>(map, predicate, description));
@@ -342,7 +342,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param description Description of invariant
      * @return Exists quantifier
      */
-    public <K> Invariant<T> exists(Map<T, K> map, BiPredicate<T, Transaction> bipredicate, String description)
+    public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<T, Transaction> bipredicate, String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");
         add(new Exists<T>(map, bipredicate, description));
@@ -375,7 +375,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param description Description of invariant
      * @return Exists quantifier
      */
-    public <K> Invariant<T> exists(Map<T, K> map, Predicate<Collection<T>> predicate, int placeholder,
+    public <D> Invariant<T> exists(Map<T, D> map, Predicate<Collection<T>> predicate, int placeholder,
             String description)
     {
         sane(map, "map", predicate, "predicate", description, "description");
@@ -409,7 +409,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param description Description of invariant
      * @return Exists quantifier
      */
-    public <K> Invariant<T> exists(Map<T, K> map, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<Collection<T>, Transaction> bipredicate,
             int placeholder, String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");

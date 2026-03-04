@@ -11,22 +11,22 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
-public class ConcreteExists<V> implements Expression<V>
+public class ConcreteExists<T> implements Expression<T>
 {
-    Collection<V> coll;
-    Map<V, ?> map;
-    Predicate<V> vpredicate;
-    BiPredicate<V, Transaction> vbipredicate;
-    Predicate<Collection<V>> cpredicate;
-    BiPredicate<Collection<V>, Transaction> cbipredicate;
-    Predicate<Map<V, ?>> mpredicate;
-    BiPredicate<Map<V, ?>, Transaction> mbipredicate;
+    Collection<T> coll;
+    Map<T, ?> map;
+    Predicate<T> vpredicate;
+    BiPredicate<T, Transaction> vbipredicate;
+    Predicate<Collection<T>> cpredicate;
+    BiPredicate<Collection<T>, Transaction> cbipredicate;
+    // Predicate<Map<T, ?>> mpredicate;
+    // BiPredicate<Map<T, ?>, Transaction> mbipredicate;
     Transaction tran;
     String description;
 
     /* Implement Expression */
 
-    public Object evaluate(V t) throws ExistentialException
+    public Object evaluate(T t) throws ExistentialException
     {
         if (!test(t))
         {
@@ -47,7 +47,7 @@ public class ConcreteExists<V> implements Expression<V>
      *
      * @return True if predicate holds
      */
-    public boolean test(V entity)
+    public boolean test(T entity)
     {
         if (coll != null)
         {
@@ -63,19 +63,17 @@ public class ConcreteExists<V> implements Expression<V>
         }
     }
 
-    protected boolean testOnColl(V entity)
+    protected boolean testOnColl(T entity)
     {
         sane(entity, "entity");
         cool(coll, "coll");
-        verify(map == null, "Collection and map sources are mutually exclusive.");
-        if (mpredicate != null || mbipredicate != null)
-        {
-            cool(map, "map");
-        }
+        verify(map == null, "Only one of coll or map fields can be set, not both.");
+        // verify(mpredicate == null && mbipredicate == null,
+        // "Map predicates canno be set if collection is specified");
         if (cpredicate != null)
         {
-            Collection<V> matching = new ArrayList<>();
-            for (V v : coll)
+            Collection<T> matching = new ArrayList<>();
+            for (T v : coll)
             {
                 if (entity.equals(v))
                 {
@@ -87,8 +85,8 @@ public class ConcreteExists<V> implements Expression<V>
         if (cbipredicate != null)
         {
             cool(tran, "tran");
-            Collection<V> matching = new ArrayList<>();
-            for (V v : coll)
+            Collection<T> matching = new ArrayList<>();
+            for (T v : coll)
             {
                 if (entity.equals(v))
                 {
@@ -99,7 +97,7 @@ public class ConcreteExists<V> implements Expression<V>
         }
         if (vpredicate != null)
         {
-            for (V v : coll)
+            for (T v : coll)
             {
                 if (entity.equals(v) && vpredicate.test(v))
                 {
@@ -111,7 +109,7 @@ public class ConcreteExists<V> implements Expression<V>
         if (vbipredicate != null)
         {
             cool(tran, "tran");
-            for (V v : coll)
+            for (T v : coll)
             {
                 if (entity.equals(v) && vbipredicate.test(v, tran))
                 {
@@ -123,26 +121,24 @@ public class ConcreteExists<V> implements Expression<V>
         return false;
     }
 
-    protected boolean testOnMap(V entity)
+    protected boolean testOnMap(T entity)
     {
         sane(entity, "entity");
         cool(map, "map");
-        verify(coll == null, "Collection and map sources are mutually exclusive.");
-        verify((mpredicate == null && mbipredicate == null) || (cpredicate == null && cbipredicate == null),
-                "Map-level predicates are mutually exclusive with collection-level predicates.");
-        if (mpredicate != null)
-        {
-            return mpredicate.test(map);
-        }
-        if (mbipredicate != null)
-        {
-            cool(tran, "tran");
-            return mbipredicate.test(map, tran);
-        }
+        verify(coll == null, "Only one of coll or map fields can be set, not both.");
+        // if (mpredicate != null)
+        // {
+        // return mpredicate.test(map);
+        // }
+        // if (mbipredicate != null)
+        // {
+        // cool(tran, "tran");
+        // return mbipredicate.test(map, tran);
+        // }
         if (cpredicate != null)
         {
-            Collection<V> matching = new ArrayList<>();
-            for (V v : map.keySet())
+            Collection<T> matching = new ArrayList<>();
+            for (T v : map.keySet())
             {
                 if (entity.equals(v))
                 {
@@ -154,8 +150,8 @@ public class ConcreteExists<V> implements Expression<V>
         if (cbipredicate != null)
         {
             cool(tran, "tran");
-            Collection<V> matching = new ArrayList<>();
-            for (V v : map.keySet())
+            Collection<T> matching = new ArrayList<>();
+            for (T v : map.keySet())
             {
                 if (entity.equals(v))
                 {
@@ -166,7 +162,7 @@ public class ConcreteExists<V> implements Expression<V>
         }
         if (vpredicate != null)
         {
-            for (V v : map.keySet())
+            for (T v : map.keySet())
             {
                 if (entity.equals(v) && vpredicate.test(v))
                 {
@@ -178,7 +174,7 @@ public class ConcreteExists<V> implements Expression<V>
         if (vbipredicate != null)
         {
             cool(tran, "tran");
-            for (V v : map.keySet())
+            for (T v : map.keySet())
             {
                 if (entity.equals(v) && vbipredicate.test(v, tran))
                 {
@@ -189,43 +185,4 @@ public class ConcreteExists<V> implements Expression<V>
         }
         return false;
     }
-
-    // protected boolean testOnSet()
-    // {
-    // Args.cool(tran, "tran");
-    // State.cool(values, "values");
-    // boolean result;
-    // if (mpredicate != null)
-    // {
-    // result = mpredicate.test(values);
-    // }
-    // else if (mbipredicate != null)
-    // {
-    // result = mbipredicate.test(values, tran);
-    // }
-    // else if (values.isEmpty())
-    // {
-    // result = false;
-    // }
-    // else
-    // {
-    // result = false;
-    // for (V value : values)
-    // {
-    // if (vpredicate != null)
-    // {
-    // result = vpredicate.test(value);
-    // }
-    // else if (vbipredicate != null)
-    // {
-    // result = vbipredicate.test(value, tran);
-    // }
-    // if (result)
-    // {
-    // break;
-    // }
-    // }
-    // }
-    // return result;
-    // }
 }

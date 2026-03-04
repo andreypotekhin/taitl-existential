@@ -15,12 +15,12 @@ import static com.taitl.ex.common.helper.Args.*;
  * Existential quantifier over a collection, evaluated in the scope of a transaction.
  * Used within invariants to assert that a predicate holds for at least one value.
  *
- * @param <V>
+ * @param <T>
  *            Element type in the examined collection
  */
-public class Exists<V> implements Expression<V>
+public class Exists<T> implements Expression<T>
 {
-    ConcreteExists<V> concrete;
+    ConcreteExists<T> concrete;
 
     /**
      * Builds a collection-based exists predicate that matches by identity.
@@ -28,7 +28,7 @@ public class Exists<V> implements Expression<V>
      * @param coll
      *            Collection to scan
      */
-    public Exists(Collection<V> coll)
+    public Exists(Collection<T> coll)
     {
         sane(coll, "coll");
         concrete = createBuilder()
@@ -45,7 +45,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public Exists(Collection<V> coll, String description)
+    public Exists(Collection<T> coll, String description)
     {
         sane(coll, "coll", description, "description");
         concrete = createBuilder()
@@ -63,7 +63,7 @@ public class Exists<V> implements Expression<V>
      * @param predicate
      *            Predicate that must hold for at least one element
      */
-    public Exists(Collection<V> coll, Predicate<V> predicate)
+    public Exists(Collection<T> coll, Predicate<T> predicate)
     {
         sane(coll, "coll", predicate, "predicate");
         concrete = createBuilder()
@@ -82,7 +82,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public Exists(Collection<V> coll, Predicate<V> predicate, String description)
+    public Exists(Collection<T> coll, Predicate<T> predicate, String description)
     {
         sane(coll, "coll", predicate, "predicate", description, "description");
         concrete = createBuilder()
@@ -100,7 +100,7 @@ public class Exists<V> implements Expression<V>
      * @param bipredicate
      *            Predicate that inspects the element and transaction
      */
-    public Exists(Collection<V> coll, BiPredicate<V, Transaction> bipredicate)
+    public Exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate)
     {
         sane(coll, "coll", bipredicate, "bipredicate");
         concrete = createBuilder()
@@ -119,7 +119,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public Exists(Collection<V> coll, BiPredicate<V, Transaction> bipredicate, String description)
+    public Exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate, String description)
     {
         sane(coll, "coll", bipredicate, "bipredicate", description, "description");
         concrete = createBuilder()
@@ -140,7 +140,7 @@ public class Exists<V> implements Expression<V>
      * @param placeholder
      *            Placeholder value used only for overload resolution
      */
-    public Exists(Collection<V> coll, Predicate<Collection<V>> predicate, int placeholder)
+    public Exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder)
     {
         sane(coll, "coll", predicate, "predicate");
         concrete = createBuilder()
@@ -162,7 +162,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public Exists(Collection<V> coll, Predicate<Collection<V>> predicate, int placeholder, String description)
+    public Exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder, String description)
     {
         sane(coll, "coll", predicate, "predicate", description, "description");
         concrete = createBuilder()
@@ -183,7 +183,7 @@ public class Exists<V> implements Expression<V>
      * @param placeholder
      *            Placeholder value used only for overload resolution
      */
-    public Exists(Collection<V> coll, BiPredicate<Collection<V>, Transaction> bipredicate, int placeholder)
+    public Exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate, int placeholder)
     {
         sane(coll, "coll", bipredicate, "bipredicate");
         concrete = createBuilder()
@@ -205,7 +205,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public Exists(Collection<V> coll, BiPredicate<Collection<V>, Transaction> bipredicate, int placeholder,
+    public Exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate, int placeholder,
             String description)
     {
         sane(coll, "coll", bipredicate, "bipredicate", description, "description");
@@ -222,7 +222,7 @@ public class Exists<V> implements Expression<V>
      * @param map
      *            Map to scan
      */
-    public <K> Exists(Map<V, K> map)
+    public <D> Exists(Map<T, D> map)
     {
         sane(map, "map");
         concrete = createBuilder()
@@ -239,7 +239,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public <K> Exists(Map<V, K> map, String description)
+    public <D> Exists(Map<T, D> map, String description)
     {
         sane(map, "map", description, "description");
         concrete = createBuilder()
@@ -257,7 +257,7 @@ public class Exists<V> implements Expression<V>
      * @param predicate
      *            Predicate that must hold for at least one element
      */
-    public <K> Exists(Map<V, K> map, Predicate<V> predicate)
+    public <D> Exists(Map<T, D> map, Predicate<T> predicate)
     {
         sane(map, "map", predicate, "predicate");
         concrete = createBuilder()
@@ -276,7 +276,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public <K> Exists(Map<V, K> map, Predicate<V> predicate, String description)
+    public <D> Exists(Map<T, D> map, Predicate<T> predicate, String description)
     {
         sane(map, "map", predicate, "predicate", description, "description");
         concrete = createBuilder()
@@ -294,7 +294,7 @@ public class Exists<V> implements Expression<V>
      * @param bipredicate
      *            Predicate that inspects the element and transaction
      */
-    public <K> Exists(Map<V, K> map, BiPredicate<V, Transaction> bipredicate)
+    public <D> Exists(Map<T, D> map, BiPredicate<T, Transaction> bipredicate)
     {
         sane(map, "map", bipredicate, "bipredicate");
         concrete = createBuilder()
@@ -313,7 +313,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public <K> Exists(Map<V, K> map, BiPredicate<V, Transaction> bipredicate, String description)
+    public <D> Exists(Map<T, D> map, BiPredicate<T, Transaction> bipredicate, String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");
         concrete = createBuilder()
@@ -334,7 +334,7 @@ public class Exists<V> implements Expression<V>
      * @param placeholder
      *            Placeholder value used only for overload resolution
      */
-    public <K> Exists(Map<V, K> map, Predicate<Collection<V>> predicate, int placeholder)
+    public <D> Exists(Map<T, D> map, Predicate<Collection<T>> predicate, int placeholder)
     {
         sane(map, "map", predicate, "predicate");
         concrete = createBuilder()
@@ -356,7 +356,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public <K> Exists(Map<V, K> map, Predicate<Collection<V>> predicate, int placeholder, String description)
+    public <D> Exists(Map<T, D> map, Predicate<Collection<T>> predicate, int placeholder, String description)
     {
         sane(map, "map", predicate, "predicate", description, "description");
         concrete = createBuilder()
@@ -377,7 +377,7 @@ public class Exists<V> implements Expression<V>
      * @param placeholder
      *            Placeholder value used only for overload resolution
      */
-    public <K> Exists(Map<V, K> map, BiPredicate<Collection<V>, Transaction> bipredicate, int placeholder)
+    public <D> Exists(Map<T, D> map, BiPredicate<Collection<T>, Transaction> bipredicate, int placeholder)
     {
         sane(map, "map", bipredicate, "bipredicate");
         concrete = createBuilder()
@@ -399,7 +399,7 @@ public class Exists<V> implements Expression<V>
      * @param description
      *            Human-friendly description used in violations
      */
-    public <K> Exists(Map<V, K> map, BiPredicate<Collection<V>, Transaction> bipredicate, int placeholder,
+    public <D> Exists(Map<T, D> map, BiPredicate<Collection<T>, Transaction> bipredicate, int placeholder,
             String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");
@@ -412,7 +412,7 @@ public class Exists<V> implements Expression<V>
 
     /* Implement Expression */
 
-    public Object evaluate(V entity) throws ExistentialException
+    public Object evaluate(T entity) throws ExistentialException
     {
         return concrete.evaluate(entity);
     }
@@ -430,13 +430,13 @@ public class Exists<V> implements Expression<V>
      * @param entity Entity object
      * @return True if predicate holds
      */
-    public boolean test(V entity)
+    public boolean test(T entity)
     {
         return concrete.test(entity);
     }
 
     @SuppressWarnings("unchecked")
-    ConcreteExistsBuilder<V> createBuilder()
+    ConcreteExistsBuilder<T> createBuilder()
     {
         return Creator.create(ConcreteExistsBuilder.class);
     }

@@ -13,14 +13,14 @@ import static com.taitl.ex.common.helper.State.*;
  * Stores V and W values in separate {@link SetMap} indexes and allows querying either side
  * through the other side's key.
  *
- * @param <K>
- *            Shared key type
  * @param <V>
  *            Left value type
  * @param <W>
  *            Right value type
+ * @param <K>
+ *            Shared key type
  */
-public class CollJoin<K, V, W>
+public class CollJoin<V, W, K>
 {
     protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
     protected static final String ARG_LEFT_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"

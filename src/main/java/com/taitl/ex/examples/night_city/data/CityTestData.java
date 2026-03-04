@@ -2,6 +2,7 @@ package com.taitl.ex.examples.night_city.data;
 
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.ex.examples.night_city.model.material.*;
+import com.taitl.existential.indexes.*;
 
 import java.util.*;
 
@@ -41,7 +42,8 @@ public class CityTestData
     public static Set<Mouse> MICE;
     public static Set<House> HOUSES;
     public static Set<Dwelling<?, ?>> DWELLINGS;
-    public static Map<Mouse, Dwelling<Mouse, ?>> MouseDwelling;
+    public static Map<Mouse, Dwelling<Mouse, ?>> MOUSE_DWELLING_MAP;
+    public static CollJoin<Mouse, Dwelling<Mouse, ?>, String> mouseDwellingJoin;
 
     static
     {
@@ -53,14 +55,28 @@ public class CityTestData
         MICE.add(ORANGE_MOUSE);
         HOUSES = Set.of(GREEN_HOUSE, YELLOW_HOUSE, RED_HOUSE, ORANGE_HOUSE);
         DWELLINGS = Set.of(RUG_PILE, CAT_HOUSE, TRASH_CAN, STOVE_PIPE);
-        MouseDwelling = new HashMap<>();
+
+        MOUSE_DWELLING_MAP = new HashMap<>();
         for (Mouse m : MICE)
         {
             for (Dwelling<?, ?> d : DWELLINGS)
             {
                 if (d.location().equals(m.location()))
                 {
-                    MouseDwelling.put(m, (Dwelling<Mouse, ?>) d);
+                    MOUSE_DWELLING_MAP.put(m, (Dwelling<Mouse, ?>) d);
+                }
+            }
+        }
+
+        mouseDwellingJoin = new CollJoin<>(m -> m.location(), d -> d.location());
+        for (Mouse m : MICE)
+        {
+            for (Dwelling<?, ?> d : DWELLINGS)
+            {
+                if (d.location().equals(m.location()))
+                {
+                    mouseDwellingJoin.addLeft(m);
+                    mouseDwellingJoin.addRight((Dwelling<Mouse, ?>) d);
                 }
             }
         }

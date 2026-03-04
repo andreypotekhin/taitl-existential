@@ -16,8 +16,8 @@ public class ConcreteExistsBuilder<V>
     Stream<V> stream; // TODO
     Predicate<Collection<V>> cpredicate;
     BiPredicate<Collection<V>, Transaction> cbipredicate;
-    Predicate<Map<V, ?>> mpredicate;
-    BiPredicate<Map<V, ?>, Transaction> mbipredicate;
+    // Predicate<Map<V, ?>> mpredicate;
+    // BiPredicate<Map<V, ?>, Transaction> mbipredicate;
     Predicate<V> vpredicate;
     BiPredicate<V, Transaction> vbipredicate;
     Transaction transaction;
@@ -31,8 +31,8 @@ public class ConcreteExistsBuilder<V>
         result.map = map;
         result.cpredicate = cpredicate;
         result.cbipredicate = cbipredicate;
-        result.mpredicate = mpredicate;
-        result.mbipredicate = mbipredicate;
+        // result.mpredicate = mpredicate;
+        // result.mbipredicate = mbipredicate;
         result.vpredicate = vpredicate;
         result.vbipredicate = vbipredicate;
         result.tran = transaction;
@@ -43,7 +43,9 @@ public class ConcreteExistsBuilder<V>
     void validate()
     {
         verify(coll != null || map != null, "Either coll or map must be provided.");
-        verify(cpredicate != null || cbipredicate != null || mpredicate != null || mbipredicate != null
+        verify(coll == null || map == null, "Coll or map must be provided, but not both.");
+        verify(cpredicate != null || cbipredicate != null
+        // || mpredicate != null || mbipredicate != null
                 || vpredicate != null || vbipredicate != null,
                 "At least one predicate must be provided.");
     }
@@ -106,17 +108,17 @@ public class ConcreteExistsBuilder<V>
         return this;
     }
 
-    public ConcreteExistsBuilder<V> mpredicate(Predicate<Map<V, ?>> predicate)
-    {
-        sane(map, "map", predicate, "predicate");
-        this.mpredicate = predicate;
-        return this;
-    }
-
-    public ConcreteExistsBuilder<V> mbipredicate(BiPredicate<Map<V, ?>, Transaction> bipredicate)
-    {
-        sane(map, "map", bipredicate, "bipredicate");
-        this.mbipredicate = bipredicate;
-        return this;
-    }
+    // public ConcreteExistsBuilder<V> mpredicate(Predicate<Map<V, ?>> predicate)
+    // {
+    // sane(map, "map", predicate, "predicate");
+    // this.mpredicate = predicate;
+    // return this;
+    // }
+    //
+    // public ConcreteExistsBuilder<V> mbipredicate(BiPredicate<Map<V, ?>, Transaction> bipredicate)
+    // {
+    // sane(map, "map", bipredicate, "bipredicate");
+    // this.mbipredicate = bipredicate;
+    // return this;
+    // }
 }

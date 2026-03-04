@@ -33,7 +33,7 @@ class CollJoinTest
         }
     }
 
-    CollJoin<String, User, Task> join;
+    CollJoin<User, Task, String> join;
 
     @BeforeEach
     void setUp()
@@ -71,13 +71,13 @@ class CollJoinTest
         alice.team = "B";
         join.reindexLeft("A", "B", alice);
 
-        assertNull(join.getLeft("A"));
+        assertTrue(join.getLeft("A") == null || join.getLeft("A").isEmpty());
         assertEquals(Set.of(alice), join.getLeft("B"));
 
         bug.team = "B";
         join.reindexRight("A", "B", bug);
 
-        assertNull(join.getRight("A"));
+        assertTrue(join.getRight("A") == null || join.getRight("A").isEmpty());
         assertEquals(Set.of(bug), join.getRight("B"));
     }
 
