@@ -65,7 +65,7 @@ class InvariantBuilderTest
         void evaluatesPerValue()
         {
             InvariantBuilder<String> builder = builder();
-            Invariant<String> invariant = builder.exists(List.of("a", "boat"), value -> true).build();
+            Invariant<String> invariant = builder.exists(List.of("a", "boat")).build();
             Exists<String> exists = findFirst(invariant, Exists.class);
             assertTrue(exists.test("boat"));
             assertFalse(exists.test("goat"));
@@ -80,6 +80,29 @@ class InvariantBuilderTest
             Exists<String> exists = findFirst(invariant, Exists.class);
             assertTrue(exists.test("boat"));
             assertFalse(exists.test("a"));
+        }
+
+        @Test
+        @DisplayName("exists(values, predicate, description) stores description")
+        void storesPredicateDescription()
+        {
+            InvariantBuilder<String> builder = builder();
+            Invariant<String> invariant = builder.exists(List.of("a", "boat"), value -> value.length() > 3,
+                    "At least one long value must exist").build();
+            Exists<String> exists = findFirst(invariant, Exists.class);
+            assertEquals("At least one long value must exist", exists.description());
+        }
+
+        @Test
+        @DisplayName("exists(map) evaluates keys")
+        void evaluatesMapKeys()
+        {
+            InvariantBuilder<String> builder = builder();
+            Map<String, Integer> values = Map.of("a", 1, "boat", 2);
+            Invariant<String> invariant = builder.exists(values).build();
+            Exists<String> exists = findFirst(invariant, Exists.class);
+            assertTrue(exists.test("boat"));
+            assertFalse(exists.test("goat"));
         }
 
         // @Test

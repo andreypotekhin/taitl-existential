@@ -265,13 +265,42 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param predicate Predicate to evaluate against each value
+     * @param description Description of invariant
      * @return Exists quantifier
      */
-    public Invariant<T> exists(Collection<T> coll, Predicate<T> predicate)
+    public Invariant<T> exists(Collection<T> coll, String description)
     {
-        sane(coll, "coll", predicate, "predicate");
-        add(new Exists<T>(coll, predicate));
+        sane(coll, "coll", description, "description");
+        add(new Exists<T>(coll, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
+     * @param predicate Predicate to evaluate against each value
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Collection<T> coll, Predicate<T> predicate, String description)
+    {
+        sane(coll, "coll", predicate, "predicate", description, "description");
+        add(new Exists<T>(coll, predicate, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a map.
+     *
+     * @param map Map to evaluate
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public <K> Invariant<T> exists(Map<T, K> map, String description)
+    {
+        sane(map, "map", description, "description");
+        add(new Exists<T>(map, description));
         return this;
     }
 
@@ -280,13 +309,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      *
      * @param map Map to evaluate
      * @param predicate Predicate to evaluate against each value
+     * @param description Description of invariant
      * @return Exists quantifier
      */
-    // TODO: add predicate-less variant
-    public <K> Invariant<T> exists(Map<T, K> map, Predicate<T> predicate)
+    public <K> Invariant<T> exists(Map<T, K> map, Predicate<T> predicate, String description)
     {
-        sane(map, "map", predicate, "predicate");
-        add(new Exists<T>(map, predicate));
+        sane(map, "map", predicate, "predicate", description, "description");
+        add(new Exists<T>(map, predicate, description));
         return this;
     }
 
@@ -295,12 +324,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      *
      * @param coll Collection to evaluate
      * @param bipredicate Predicate evaluated against each value and transaction
+     * @param description Description of invariant
      * @return Exists quantifier
      */
-    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate)
+    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate, String description)
     {
-        sane(coll, "coll", bipredicate, "bipredicate");
-        add(new Exists<T>(coll, bipredicate));
+        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        add(new Exists<T>(coll, bipredicate, description));
         return this;
     }
 
@@ -309,12 +339,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      *
      * @param map Map to evaluate
      * @param bipredicate Predicate evaluated against each value and transaction
+     * @param description Description of invariant
      * @return Exists quantifier
      */
-    public <K> Invariant<T> exists(Map<T, K> map, BiPredicate<T, Transaction> bipredicate)
+    public <K> Invariant<T> exists(Map<T, K> map, BiPredicate<T, Transaction> bipredicate, String description)
     {
-        sane(map, "map", bipredicate, "bipredicate");
-        add(new Exists<T>(map, bipredicate));
+        sane(map, "map", bipredicate, "bipredicate", description, "description");
+        add(new Exists<T>(map, bipredicate, description));
         return this;
     }
 
@@ -324,12 +355,14 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param coll Values to evaluate
      * @param predicate Predicate evaluated against the map
      * @param placeholder Overload disambiguator
+     * @param description Description of invariant
      * @return Exists quantifier
      */
-    public Invariant<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder)
+    public Invariant<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder,
+            String description)
     {
-        sane(coll, "coll", predicate, "predicate");
-        add(new Exists<T>(coll, predicate, placeholder));
+        sane(coll, "coll", predicate, "predicate", description, "description");
+        add(new Exists<T>(coll, predicate, placeholder, description));
         return this;
     }
 
@@ -339,12 +372,14 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param map Map to evaluate
      * @param predicate Predicate evaluated against the map
      * @param placeholder Overload disambiguator
+     * @param description Description of invariant
      * @return Exists quantifier
      */
-    public <K> Invariant<T> exists(Map<T, K> map, Predicate<Collection<T>> predicate, int placeholder)
+    public <K> Invariant<T> exists(Map<T, K> map, Predicate<Collection<T>> predicate, int placeholder,
+            String description)
     {
-        sane(map, "map", predicate, "predicate");
-        add(new Exists<T>(map, predicate, placeholder));
+        sane(map, "map", predicate, "predicate", description, "description");
+        add(new Exists<T>(map, predicate, placeholder, description));
         return this;
     }
 
@@ -354,13 +389,14 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param coll Collection to evaluate
      * @param bipredicate Predicate evaluated against collection and transaction
      * @param placeholder Overload disambiguator
+     * @param description Description of invariant
      * @return Exists quantifier
      */
     public Invariant<T> exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate,
-            int placeholder)
+            int placeholder, String description)
     {
-        sane(coll, "coll", bipredicate, "bipredicate");
-        add(new Exists<T>(coll, bipredicate, placeholder));
+        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        add(new Exists<T>(coll, bipredicate, placeholder, description));
         return this;
     }
 
@@ -370,13 +406,14 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param map Map to evaluate
      * @param bipredicate Predicate evaluated against collection and transaction
      * @param placeholder Overload disambiguator
+     * @param description Description of invariant
      * @return Exists quantifier
      */
     public <K> Invariant<T> exists(Map<T, K> map, BiPredicate<Collection<T>, Transaction> bipredicate,
-            int placeholder)
+            int placeholder, String description)
     {
-        sane(map, "map", bipredicate, "bipredicate");
-        add(new Exists<T>(map, bipredicate, placeholder));
+        sane(map, "map", bipredicate, "bipredicate", description, "description");
+        add(new Exists<T>(map, bipredicate, placeholder, description));
         return this;
     }
 

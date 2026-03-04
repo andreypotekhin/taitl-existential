@@ -42,8 +42,9 @@ public class ConcreteExistsBuilder<V>
 
     void validate()
     {
-        sane(coll, "coll");
-        verify(cpredicate != null || cbipredicate != null || vpredicate != null || vbipredicate != null,
+        verify(coll != null || map != null, "Either coll or map must be provided.");
+        verify(cpredicate != null || cbipredicate != null || mpredicate != null || mbipredicate != null
+                || vpredicate != null || vbipredicate != null,
                 "At least one predicate must be provided.");
     }
 
@@ -91,28 +92,30 @@ public class ConcreteExistsBuilder<V>
 
     public ConcreteExistsBuilder<V> cpredicate(Predicate<Collection<V>> predicate)
     {
-        sane(coll, "coll", predicate, "predicate");
+        verify(coll != null || map != null, "Either coll or map must be provided before predicate assignment.");
+        sane(predicate, "predicate");
         this.cpredicate = predicate;
         return this;
     }
 
     public ConcreteExistsBuilder<V> cbipredicate(BiPredicate<Collection<V>, Transaction> bipredicate)
     {
-        sane(coll, "coll", bipredicate, "bipredicate");
+        verify(coll != null || map != null, "Either coll or map must be provided before predicate assignment.");
+        sane(bipredicate, "bipredicate");
         this.cbipredicate = bipredicate;
         return this;
     }
 
     public ConcreteExistsBuilder<V> mpredicate(Predicate<Map<V, ?>> predicate)
     {
-        sane(coll, "coll", predicate, "predicate");
+        sane(map, "map", predicate, "predicate");
         this.mpredicate = predicate;
         return this;
     }
 
     public ConcreteExistsBuilder<V> mbipredicate(BiPredicate<Map<V, ?>, Transaction> bipredicate)
     {
-        sane(coll, "coll", bipredicate, "bipredicate");
+        sane(map, "map", bipredicate, "bipredicate");
         this.mbipredicate = bipredicate;
         return this;
     }

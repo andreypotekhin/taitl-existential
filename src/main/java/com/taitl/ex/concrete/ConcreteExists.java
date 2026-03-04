@@ -1,5 +1,6 @@
 package com.taitl.ex.concrete;
 
+import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.expressions.*;
@@ -36,7 +37,7 @@ public class ConcreteExists<V> implements Expression<V>
 
     public String description()
     {
-        return description;
+        return Descriptions.text(description);
     }
 
     /* Implement Predicate */
@@ -66,6 +67,11 @@ public class ConcreteExists<V> implements Expression<V>
     {
         sane(entity, "entity");
         cool(coll, "coll");
+        verify(map == null, "Collection and map sources are mutually exclusive.");
+        if (mpredicate != null || mbipredicate != null)
+        {
+            cool(map, "map");
+        }
         if (cpredicate != null)
         {
             Collection<V> matching = new ArrayList<>();
@@ -121,38 +127,66 @@ public class ConcreteExists<V> implements Expression<V>
     {
         sane(entity, "entity");
         cool(map, "map");
-        // TODO
-
-        // if (cpredicate != null)
-        // {
-        // return cpredicate.test(coll);
-        // }
-        // if (cbipredicate != null)
-        // {
-        // return cbipredicate.test(coll, tran);
-        // }
-        // if (vpredicate != null)
-        // {
-        // for (V value : coll)
-        // {
-        // if (vpredicate.test(value))
-        // {
-        // return true;
-        // }
-        // }
-        // return false;
-        // }
-        // if (vbipredicate != null)
-        // {
-        // for (V value : coll)
-        // {
-        // if (vbipredicate.test(value, tran))
-        // {
-        // return true;
-        // }
-        // }
-        // return false;
-        // }
+        verify(coll == null, "Collection and map sources are mutually exclusive.");
+        verify((mpredicate == null && mbipredicate == null) || (cpredicate == null && cbipredicate == null),
+                "Map-level predicates are mutually exclusive with collection-level predicates.");
+        if (mpredicate != null)
+        {
+            return mpredicate.test(map);
+        }
+        if (mbipredicate != null)
+        {
+            cool(tran, "tran");
+            return mbipredicate.test(map, tran);
+        }
+        if (cpredicate != null)
+        {
+            Collection<V> matching = new ArrayList<>();
+            for (V v : map.keySet())
+            {
+                if (entity.equals(v))
+                {
+                    matching.add(v);
+                }
+            }
+            return cpredicate.test(matching);
+        }
+        if (cbipredicate != null)
+        {
+            cool(tran, "tran");
+            Collection<V> matching = new ArrayList<>();
+            for (V v : map.keySet())
+            {
+                if (entity.equals(v))
+                {
+                    matching.add(v);
+                }
+            }
+            return cbipredicate.test(matching, tran);
+        }
+        if (vpredicate != null)
+        {
+            for (V v : map.keySet())
+            {
+                if (entity.equals(v) && vpredicate.test(v))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (vbipredicate != null)
+        {
+            cool(tran, "tran");
+            for (V v : map.keySet())
+            {
+                if (entity.equals(v) && vbipredicate.test(v, tran))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         return false;
     }
 
