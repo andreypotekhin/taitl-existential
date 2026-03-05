@@ -4,11 +4,11 @@
 
 Please do not open public issues for security vulnerabilities.
 
-If this repository is hosted on GitHub, use the Security Advisories workflow to open a private report and
+Use GitHub the Security Advisories workflow to open a private report and
 include a clear, minimal reproduction along with the affected version(s).
 
-If GitHub Security Advisories are not available, contact the maintainers using a private channel (for example,
-an email address listed in repository metadata) and wait for a response before publishing details.
+If GitHub Security Advisories are not available, contact library maintainer 
+and wait for a response before publishing details.
 
 ## Supported Versions
 

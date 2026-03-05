@@ -112,7 +112,7 @@ Same when x0, x1 must also satisfy some condition:
 
 ## Documentation
 
-See /docs directory for further documentation.
+See /docs directory for further documentation.  
 See /docs/Usage.md for quick-start and usage patterns.
 
 ## Troubleshooting
@@ -121,11 +121,11 @@ See /Troubleshooting.md for solutions for common issues.
 
 ## License
 
-See /License.md document
+See /License.md
 
 ## Community
 
 - Contributing: /Contributing.md
-- Code of Conduct: /Conduct.md
+- Conduct: /Conduct.md
 - Support: /Support.md
 - Security: /Security.md

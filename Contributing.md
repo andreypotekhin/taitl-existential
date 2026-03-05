@@ -21,16 +21,16 @@ Follow /docs/dev/Setup.md to configure your local environment.
 
 ## Tests
 
-- Run tests with `mvn test` before opening a PR.
+- Fully build with tests before opening a PR.
 - If you add or change behavior, add or update tests accordingly.
 
 ## Documentation
 
-- Update /Readme.md and relevant files in /docs when public-facing behavior changes.
+- Update relevant files in /docs when public-facing behavior changes.
 - Keep Javadocs concise and aligned with /docs/dev/Style.md.
 
 ## Pull requests
 
 - Keep PRs small and focused.
-- Describe the intent, scope, and risk of the change.
+- Describe the problem, symptoms, cause, and provided solution.
 - Include reproduction steps for bug fixes and relevant benchmarks for performance work.

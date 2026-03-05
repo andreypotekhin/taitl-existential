@@ -26,11 +26,7 @@ Fix:
 
 ## Condition Not Met
 
-<<<<<<< ours
-**Problem: A rule or handler fails with `ConditionNotMetException` or `EventHandlerExecutionException`**
-=======
 **Problem: Rule or handler fails with `ConditionNotMetException` or `EventHandlerException`**
->>>>>>> theirs
 
 Common causes include:
 - The condition predicate evaluates to `false` for the current entity state.
