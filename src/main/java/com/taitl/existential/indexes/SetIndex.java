@@ -17,7 +17,8 @@ import static com.taitl.ex.common.helper.State.*;
  * @param <V>
  *            Value type
  */
-public class Index<K, V>
+// Todo: delegate to ConcreteSetIndex
+public class SetIndex<K, V>
 {
     protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
     protected static final String ARG_KEY_CLASS = "Argument 'key' class '%s' does not match the key class '%s'"
@@ -34,7 +35,7 @@ public class Index<K, V>
      * Creates an empty index without a key extractor.
      * Call {@link #setGetKey(Function)} or use {@link #add(Object, Object)}.
      */
-    public Index()
+    public SetIndex()
     {
     }
 
@@ -43,7 +44,7 @@ public class Index<K, V>
      *
      * @param getKey Function to extract keys from values
      */
-    public Index(Function<V, K> getKey)
+    public SetIndex(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
         setGetKey(getKey);

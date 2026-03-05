@@ -12,21 +12,21 @@ import static com.taitl.ex.common.helper.collections.Coll.*;
 import static com.taitl.ex.examples.night_city.data.CityTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class IndexTest
+class SetIndexTest
 {
-    Index<String, Cat> cats_by_color;
-    Index<Location, Cat> cats_by_location = new Index<>();
+    SetIndex<String, Cat> cats_by_color;
+    SetIndex<Location, Cat> cats_by_location = new SetIndex<>();
     Cat cat;
 
     @BeforeEach
     void setUp()
     {
-        cats_by_color = new Index<>(c -> c.color);
+        cats_by_color = new SetIndex<>(c -> c.color);
         cats_by_color.add(GREY_CAT);
         cats_by_color.add(YELLOW_CAT);
         cats_by_color.add(BLACK_CAT);
 
-        cats_by_location = new Index<>(c -> c.location);
+        cats_by_location = new SetIndex<>(c -> c.location);
         cats_by_location.add(GREY_CAT);
         cats_by_location.add(YELLOW_CAT);
         cats_by_location.add(BLACK_CAT);
@@ -41,16 +41,16 @@ class IndexTest
     @Test
     void testConstructor()
     {
-        cats_by_location = new Index<>();
+        cats_by_location = new SetIndex<>();
         cats_by_location.add(GREY_CAT.location, GREY_CAT);
         assertTrue(cats_by_location.contains(LOCATION_PARK));
-        cats_by_location = new Index<>(cat -> cat.location);
+        cats_by_location = new SetIndex<>(cat -> cat.location);
         cats_by_location.add(BLACK_CAT);
         assertTrue(cats_by_location.contains(LOCATION_GARDEN));
-        cats_by_color = new Index<>(c -> c.location.toString());
+        cats_by_color = new SetIndex<>(c -> c.location.toString());
         cats_by_color.add(CityTestData.ORANGE_CAT);
         assertTrue(cats_by_color.contains("Garden"));
-        assertThrows(IllegalArgumentException.class, () -> new Index<>(null));
+        assertThrows(IllegalArgumentException.class, () -> new SetIndex<>(null));
     }
 
     @Test
@@ -113,7 +113,7 @@ class IndexTest
         @DisplayName("Test rekey uses value equality")
         void rekeyUsesValueEquality()
         {
-            Index<String, Cat> index = new Index<>(cat -> new String(cat.color));
+            SetIndex<String, Cat> index = new SetIndex<>(cat -> new String(cat.color));
             Cat cat = CityTestData.BLACK_CAT;
             index.add("Black", cat);
             assertDoesNotThrow(() -> index.reindex("Black", new String("Black"), cat));
@@ -127,7 +127,7 @@ class IndexTest
     @Test
     void testAdd()
     {
-        cats_by_location = new Index<>(cat -> cat.location);
+        cats_by_location = new SetIndex<>(cat -> cat.location);
         cats_by_location.add(LOCATION_PARK, GREY_CAT);
         assertTrue(cats_by_location.contains(LOCATION_PARK), "Add using explicit key");
         cats_by_location.add(BLACK_CAT);
@@ -136,11 +136,11 @@ class IndexTest
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(null));
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(null, BLACK_CAT));
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(LOCATION_PARK, null));
-        Index<String, Cat> index_without_get_index_function = new Index<>();
-        index_without_get_index_function.add("Grey", GREY_CAT);
-        assertTrue(index_without_get_index_function.contains("Grey", GREY_CAT));
+        SetIndex<String, Cat> index_without_get_Set_index_function = new SetIndex<>();
+        index_without_get_Set_index_function.add("Grey", GREY_CAT);
+        assertTrue(index_without_get_Set_index_function.contains("Grey", GREY_CAT));
         assertThrows(IllegalStateException.class,
-                () -> index_without_get_index_function.add(CityTestData.ORANGE_CAT));
+                () -> index_without_get_Set_index_function.add(CityTestData.ORANGE_CAT));
     }
 
     @Test
@@ -154,7 +154,7 @@ class IndexTest
         assertFalse(cats_by_location.contains(LOCATION_GARDEN, orange));
         assertTrue(cats_by_location.contains(LOCATION_PARK, orange));
 
-        Index<Location, Cat> noExtractor = new Index<>();
+        SetIndex<Location, Cat> noExtractor = new SetIndex<>();
         noExtractor.add(LOCATION_GARDEN, orange);
         assertThrows(IllegalStateException.class, () -> noExtractor.reindex(LOCATION_GARDEN, orange));
     }

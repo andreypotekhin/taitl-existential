@@ -3,7 +3,7 @@ package com.taitl.ex.examples.night_city.configure;
 import com.taitl.existential.*;
 import com.taitl.existential.configs.*;
 
-public class ConfigureTransactionRules
+public class ConfigureTransaction
 {
     public void configureTransaction()
     {

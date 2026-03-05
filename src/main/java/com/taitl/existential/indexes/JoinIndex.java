@@ -9,7 +9,7 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Joins two value collections (V and W) by a shared key type (K).
+ * Joins two value collections of types V and W by a shared key type (K).
  * Stores V and W values in separate {@link SetMap} indexes and allows querying either side
  * through the other side's key.
  *
@@ -20,7 +20,8 @@ import static com.taitl.ex.common.helper.State.*;
  * @param <K>
  *            Shared key type
  */
-public class CollJoin<V, W, K>
+// Todo: delegate to ConcreteJoinIndex
+public class JoinIndex<V, W, K>
 {
     protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
     protected static final String ARG_LEFT_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
@@ -36,11 +37,11 @@ public class CollJoin<V, W, K>
     protected Function<V, K> getLeftKey;
     protected Function<W, K> getRightKey;
 
-    public CollJoin()
+    public JoinIndex()
     {
     }
 
-    public CollJoin(Function<V, K> getLeftKey, Function<W, K> getRightKey)
+    public JoinIndex(Function<V, K> getLeftKey, Function<W, K> getRightKey)
     {
         sane(getLeftKey, "getLeftKey");
         sane(getRightKey, "getRightKey");
@@ -77,7 +78,7 @@ public class CollJoin<V, W, K>
      */
     public Map<V, Set<W>> left()
     {
-        return Collections.unmodifiableMap(rightByLeft);
+        return rightByLeft;
     }
 
     /**
@@ -85,7 +86,7 @@ public class CollJoin<V, W, K>
      */
     public Map<W, Set<V>> right()
     {
-        return Collections.unmodifiableMap(leftByRight);
+        return leftByRight;
     }
 
     public Set<V> addLeft(K key, V value)

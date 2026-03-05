@@ -40,7 +40,7 @@ public class Being<T extends Family>
         {
             return false;
         }
-        Cat o = (Cat) other;
+        Being<T> o = (Being<T>) other;
         boolean sameColor = (o.color == null && this.color == null) || o.color.equals(this.color);
         boolean sameLocation = (o.location == null && this.location == null) || o.color.equals(this.color);
         return sameColor && sameLocation;

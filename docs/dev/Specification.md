@@ -239,14 +239,13 @@ User can require entity existence when certain condition is met (different class
 User can specify 'Exists' quantifier as a parameter to the 'All' quantifier, thus creating an All-Exists invariant.
 User can define the 'Exists' quantifier on a collection.
 User can define the 'Exists' quantifier on a map (index).
-User can specify a transaction object for the 'Exists' quantifier.
 
 #### Indexes
 
 User can use an index to speed up evaluation of Exists expression.
-User can use an index to speed up evaluation of other expressions.
-User can create an in-transaction index to pass information between the rules.
-User can create an out-of-transaction index to pass information between the rules.
+  We use SetIndex and JoinIndex classes for this
+User can create an index to pass information between the rules.
+  We use Index and JoinIndex classes for this 
 
 ### Effects
 

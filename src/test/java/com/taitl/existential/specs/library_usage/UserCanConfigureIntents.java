@@ -1,7 +1,7 @@
 package com.taitl.existential.specs.library_usage;
 
-import com.taitl.existential.exceptions.*;
 import com.taitl.existential.constants.*;
+import com.taitl.existential.exceptions.*;
 import com.taitl.existential.specs.*;
 import org.junit.jupiter.api.*;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserCanConfigureAccessRules extends SpecBase
+class UserCanConfigureIntents extends SpecBase
 {
     {
         autoConfigure = false;
@@ -61,10 +61,10 @@ class UserCanConfigureAccessRules extends SpecBase
 
             String tran = ex.begin(op).id();
             IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> UserCanConfigureAccessRules.this.ex.read("guest", tran));
+                    () -> UserCanConfigureIntents.this.ex.read("guest", tran));
             assertTrue(ex.getMessage().contains("No intent is configured"));
             assertTrue(ex.getMessage().contains("/Troubleshooting.md#intent-violation"));
-            UserCanConfigureAccessRules.this.ex.rollback(tran);
+            UserCanConfigureIntents.this.ex.rollback(tran);
         }
 
         @Test
@@ -83,9 +83,9 @@ class UserCanConfigureAccessRules extends SpecBase
             String tran = ex.begin(op).id();
             ex.write(cat, tran);
             IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> UserCanConfigureAccessRules.this.ex.write(cat, tran));
+                    () -> UserCanConfigureIntents.this.ex.write(cat, tran));
             assertTrue(ex.getMessage().contains("Intent condition is not met"));
-            UserCanConfigureAccessRules.this.ex.rollback(tran);
+            UserCanConfigureIntents.this.ex.rollback(tran);
         }
 
         @Test
@@ -104,9 +104,9 @@ class UserCanConfigureAccessRules extends SpecBase
             String tran = ex.begin(op).id();
             ex.read(cat, tran);
             IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> UserCanConfigureAccessRules.this.ex.read("guest", tran));
+                    () -> UserCanConfigureIntents.this.ex.read("guest", tran));
             assertTrue(ex.getMessage().contains("No intent is configured"));
-            UserCanConfigureAccessRules.this.ex.rollback(tran);
+            UserCanConfigureIntents.this.ex.rollback(tran);
         }
 
         @Test
@@ -141,9 +141,9 @@ class UserCanConfigureAccessRules extends SpecBase
             String tran = ex.begin(op).id();
             ex.write("guest", tran);
             IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> UserCanConfigureAccessRules.this.ex.commit(tran));
+                    () -> UserCanConfigureIntents.this.ex.commit(tran));
             assertTrue(ex.getMessage().contains("No intent is configured"));
-            UserCanConfigureAccessRules.this.ex.rollback(tran);
+            UserCanConfigureIntents.this.ex.rollback(tran);
         }
 
         @Test

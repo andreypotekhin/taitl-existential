@@ -8,7 +8,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CollJoinTest
+class JoinIndexTest
 {
     static class User
     {
@@ -34,12 +34,12 @@ class CollJoinTest
         }
     }
 
-    CollJoin<User, Task, String> join;
+    JoinIndex<User, Task, String> join;
 
     @BeforeEach
     void setUp()
     {
-        join = new CollJoin<>(u -> u.team, t -> t.team);
+        join = new JoinIndex<>(u -> u.team, t -> t.team);
     }
 
     @Test

@@ -7,22 +7,22 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 
-import static com.taitl.ex.common.helper.Args.sane;
+import static com.taitl.ex.common.helper.Args.*;
 
 public class TransactionIndexes
 {
     protected Transaction transaction;
-    protected Map<String, Index<?, ?>> indexes = new ConcurrentHashMap<>();
+    protected Map<String, SetIndex<?, ?>> indexes = new ConcurrentHashMap<>();
 
     public TransactionIndexes(Transaction tr)
     {
         this.transaction = tr;
     }
 
-    public <K, V> Index<K, V> create(String name, Supplier<Index<K, V>> createIndex, Function<V, K> getKey)
+    public <K, V> SetIndex<K, V> create(String name, Supplier<SetIndex<K, V>> createIndex, Function<V, K> getKey)
     {
         sane(name, "name");
-        Index<K, V> index = (createIndex != null) ? createIndex.get() : new Index<>();
+        SetIndex<K, V> index = (createIndex != null) ? createIndex.get() : new SetIndex<>();
         if (getKey != null)
         {
             index.setGetKey(getKey);
@@ -34,26 +34,26 @@ public class TransactionIndexes
         return index;
     }
 
-    public <K, V> Index<K, V> create(String name, Supplier<Index<K, V>> createIndex)
+    public <K, V> SetIndex<K, V> create(String name, Supplier<SetIndex<K, V>> createIndex)
     {
         return create(name, createIndex, null);
     }
 
-    public <K, V> Index<K, V> create(String name)
+    public <K, V> SetIndex<K, V> create(String name)
     {
         return create(name, null, null);
     }
 
     @SuppressWarnings("unchecked")
-    public <K, V> Index<K, V> get(String name)
+    public <K, V> SetIndex<K, V> get(String name)
     {
-        return (Index<K, V>) indexes.get(name);
+        return (SetIndex<K, V>) indexes.get(name);
     }
 
     @SuppressWarnings("unchecked")
-    public <K, V> Index<K, V> getOrCreate(String name)
+    public <K, V> SetIndex<K, V> getOrCreate(String name)
     {
         sane(name, "name");
-        return (Index<K, V>) indexes.computeIfAbsent(name, ignored -> new Index<>());
+        return (SetIndex<K, V>) indexes.computeIfAbsent(name, ignored -> new SetIndex<>());
     }
 }

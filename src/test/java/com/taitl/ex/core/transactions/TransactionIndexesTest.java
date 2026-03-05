@@ -1,13 +1,11 @@
 package com.taitl.ex.core.transactions;
 
-import com.taitl.existential.configs.Transaction;
-import com.taitl.existential.indexes.Index;
+import com.taitl.existential.configs.*;
+import com.taitl.existential.indexes.*;
 import org.junit.jupiter.api.*;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 
 class TransactionIndexesTest
 {
@@ -20,13 +18,13 @@ class TransactionIndexesTest
     }
 
     @Nested
-    class IndexLookup
+    class SetIndexLookup
     {
         @Test
         @DisplayName("Index creates on first access")
         void creates()
         {
-            Index<String, String> index = tr.index("accounts");
+            SetIndex<String, String> index = tr.index("accounts");
             assertThat(index, is(notNullValue()));
         }
 
@@ -34,8 +32,8 @@ class TransactionIndexesTest
         @DisplayName("Index returns same instance")
         void reuses()
         {
-            Index<String, String> first = tr.index("accounts");
-            Index<String, String> second = tr.index("accounts");
+            SetIndex<String, String> first = tr.index("accounts");
+            SetIndex<String, String> second = tr.index("accounts");
             assertThat(second, is(sameInstance(first)));
         }
     }

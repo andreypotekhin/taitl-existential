@@ -170,7 +170,7 @@ public class TransactionBuilder
      *            Transaction type handled by the life
      * @return This builder for chaining
      */
-    public <T extends Transaction> TransactionBuilder cycle(Life<T> cycle)
+    protected <T extends Transaction> TransactionBuilder cycle(Life<T> cycle)
     {
         sane(cycle, "cycle");
         if (stageCursor != null)

@@ -11,7 +11,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class IndexConfigTypeKeyTest
+class SetIndexConfigTypeKeyTest
 {
     private Config config;
     private Context context;

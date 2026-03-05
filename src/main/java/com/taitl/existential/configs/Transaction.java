@@ -102,7 +102,7 @@ public class Transaction implements Configurable, Evaluable
      * @param name index name
      * @return index instance
      */
-    public <K, V> Index<K, V> index(String name)
+    public <K, V> SetIndex<K, V> index(String name)
     {
         sane(name, "name");
         return indexes.getOrCreate(name);

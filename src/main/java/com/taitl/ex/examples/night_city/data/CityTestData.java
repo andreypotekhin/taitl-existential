@@ -42,41 +42,51 @@ public class CityTestData
     public static Set<Mouse> MICE;
     public static Set<House> HOUSES;
     public static Set<Dwelling<?, ?>> DWELLINGS;
-    public static Map<Mouse, Dwelling<Mouse, ?>> MOUSE_DWELLING_MAP;
-    public static CollJoin<Mouse, Dwelling<Mouse, ?>, String> mouseDwellingJoin;
+    public static Map<Being<?>, Dwelling<Being<?>, ?>> BEING_DWELLING_MAP;
+    public static JoinIndex<Mouse, Dwelling<Mouse, ?>, String> mouseDwelling;
+    public static JoinIndex<Being<?>, Dwelling<Being<?>, ?>, String> beingDwelling;
 
     static
     {
         CATS = Set.of(GREY_CAT, YELLOW_CAT, BLACK_CAT, ORANGE_CAT);
-        MICE = new HashSet<>();
-        MICE.add(GREY_MOUSE);
-        MICE.add(BLUE_MOUSE);
-        MICE.add(RED_MOUSE);
-        MICE.add(ORANGE_MOUSE);
+        MICE = Set.of(GREY_MOUSE, BLUE_MOUSE, RED_MOUSE, ORANGE_MOUSE);
         HOUSES = Set.of(GREEN_HOUSE, YELLOW_HOUSE, RED_HOUSE, ORANGE_HOUSE);
         DWELLINGS = Set.of(RUG_PILE, CAT_HOUSE, TRASH_CAN, STOVE_PIPE);
 
-        MOUSE_DWELLING_MAP = new HashMap<>();
+        BEING_DWELLING_MAP = new HashMap<>();
         for (Mouse m : MICE)
         {
             for (Dwelling<?, ?> d : DWELLINGS)
             {
                 if (d.location().equals(m.location()))
                 {
-                    MOUSE_DWELLING_MAP.put(m, (Dwelling<Mouse, ?>) d);
+                    BEING_DWELLING_MAP.put(m, (Dwelling<Being<?>, ?>) d);
                 }
             }
         }
 
-        mouseDwellingJoin = new CollJoin<>(m -> m.location(), d -> d.location());
+        mouseDwelling = new JoinIndex<>(m -> m.location(), d -> d.location());
         for (Mouse m : MICE)
         {
             for (Dwelling<?, ?> d : DWELLINGS)
             {
                 if (d.location().equals(m.location()))
                 {
-                    mouseDwellingJoin.addLeft(m);
-                    mouseDwellingJoin.addRight((Dwelling<Mouse, ?>) d);
+                    mouseDwelling.addLeft(m);
+                    mouseDwelling.addRight((Dwelling<Mouse, ?>) d);
+                }
+            }
+        }
+
+        beingDwelling = new JoinIndex<>(m -> m.location(), d -> d.location());
+        for (Mouse m : MICE)
+        {
+            for (Dwelling<?, ?> d : DWELLINGS)
+            {
+                if (d.location().equals(m.location()))
+                {
+                    beingDwelling.addLeft(m);
+                    beingDwelling.addRight((Dwelling<Being<?>, ?>) d);
                 }
             }
         }

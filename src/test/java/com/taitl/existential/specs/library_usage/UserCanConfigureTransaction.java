@@ -9,7 +9,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserCanConfigureTransactionRules extends SpecBase
+class UserCanConfigureTransaction extends SpecBase
 {
     {
         autoConfigure = false;
@@ -49,9 +49,9 @@ class UserCanConfigureTransactionRules extends SpecBase
             String tran = ex.begin(op).id();
             ex.write(cat, tran);
             IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> UserCanConfigureTransactionRules.this.ex.write("other", tran));
+                    () -> UserCanConfigureTransaction.this.ex.write("other", tran));
             assertTrue(ex.getMessage().contains("No intent is configured"));
-            UserCanConfigureTransactionRules.this.ex.rollback(tran);
+            UserCanConfigureTransaction.this.ex.rollback(tran);
         }
     }
 }

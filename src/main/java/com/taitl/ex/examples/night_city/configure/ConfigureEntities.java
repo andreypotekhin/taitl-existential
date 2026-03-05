@@ -8,9 +8,11 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
 
+import java.util.*;
+
 import static com.taitl.ex.examples.night_city.data.CityTestData.*;
 
-public class ConfigureEntityRules
+public class ConfigureEntities
 {
     public void defaultConfig()
     {
@@ -29,16 +31,15 @@ public class ConfigureEntityRules
                 .invariant(new TypeKey<Building>(){})
                     .create(b -> !b.color.equals("Bleak"), "No bleak buildings")
                 .invariant(new TypeKey<Building<Brick>>(){})
-                    .create(b -> !b.color.equals("Miserable"), "No miserable houses")
+                    .create(b -> !b.color.equals("Ordinary"), "No ordinary houses")
                 .invariant(new TypeKey<Building<Cardboard>>(){})
-                    .create(b -> b.color.equals("Pink"),
-                            "Cardboard buildings should be pink!")
+                    .create(b -> b.color.equals("Pink"), "All cardboard buildings should be pink")
                 ;
 
         Ex.configure()
             .context("/")
                 .invariant(new TypeKey<Being<?>>(){})
-                    .create(b -> !b.color.equals("Invisible"), "No invisible begins")
+                    .create(b -> !b.color.equals("Unappreciated"), "No unappreciated begins")
                 .invariant(new TypeKey<Being>(){})
                     .create(b -> !b.color.equals("Unattractive"), "No unattractive begins")
                 .invariant(new TypeKey<Being<Felidae>>(){})
@@ -50,7 +51,7 @@ public class ConfigureEntityRules
         // Existence rules
         // Single-entity existence
         Ex.configure()
-                .context("/")
+            .context("/")
                 .invariant(Mouse.class)
                     .exists(MICE, m -> m.color().equals("Red"));
 
@@ -58,20 +59,27 @@ public class ConfigureEntityRules
         Ex.configure()
             .context("/")
                 .invariant(Mouse.class)
-                    .exists(MOUSE_DWELLING_MAP, "At the end of transaction, every mouse is in a dwelling")
+                    .exists((Map<Mouse, Set<Dwelling<Mouse, ?>>>)(Map<?, ?>) BEING_DWELLING_MAP,
+                        "At the end of transaction, every mouse is in a dwelling")
         ;
 
         // Cross-entity existence - dynamic map: adjusts with entity changes
         Ex.configure()
             .context("/")
-                .effect(Mouse.class)
-                    .port((t0, t1) -> mouseDwellingJoin.indexLeft(t0, t1),
+                .effect(Being.class)
+                    .port((t0, t1) -> beingDwelling.indexLeft(t0, t1),
                         "Update mouse-dwelling on mouse movements")
-                .effect(new TypeKey<Dwelling<Mouse, ?>>(){})
-                    .port((t0, t1) -> mouseDwellingJoin.indexRight(t0, t1),
+                .effect(Dwelling.class)
+                    .port((t0, t1) -> beingDwelling.indexRight(t0, t1),
                        "Update mouse-dwelling on dwelling movements")
                 .invariant(Mouse.class)
-                    .exists(mouseDwellingJoin.left(), "At the end of transaction, every mouse is in a dwelling")
+                    .exists(mouseDwelling.left(),
+                        "At the end of transaction, every mouse is in a dwelling")
+                    .exists((Map<Mouse, Set<Dwelling<Mouse, ?>>>)(Map<?, ?>) beingDwelling.left(),
+                        "At the end of transaction, every mouse is in a dwelling")
+//                .invariant(Being.class)
+//                    .exists((Map<Being, Set<Dwelling<Being<?>, ?>>>)(Map<?, ?>)beingDwelling.left(),
+//                        "At the end of transaction, every mouse is in a dwelling")
         ;
 
         // Rules assigned to narrower context

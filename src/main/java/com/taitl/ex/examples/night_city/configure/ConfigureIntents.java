@@ -1,6 +1,6 @@
 package com.taitl.ex.examples.night_city.configure;
 
-public class ConfigureAccessRules
+public class ConfigureIntents
 {
     public void configureAccess()
     {
