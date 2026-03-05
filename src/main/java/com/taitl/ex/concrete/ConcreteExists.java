@@ -11,12 +11,13 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
-public class ConcreteExists<T> implements Expression<T>
+public class ConcreteExists<T, K> implements Expression<T>
 {
     Collection<T> coll;
-    Map<T, ?> map;
+    Map<T, K> map;
     Predicate<T> vpredicate;
     BiPredicate<T, Transaction> vbipredicate;
+    BiPredicate<T, K> mbipredicate;
     Predicate<Collection<T>> cpredicate;
     BiPredicate<Collection<T>, Transaction> cbipredicate;
     // Predicate<Map<T, ?>> mpredicate;
@@ -171,12 +172,12 @@ public class ConcreteExists<T> implements Expression<T>
             }
             return false;
         }
-        if (vbipredicate != null)
+        if (mbipredicate != null)
         {
-            cool(tran, "tran");
-            for (T v : map.keySet())
+            for (Map.Entry<T, K> entry : map.entrySet())
             {
-                if (entity.equals(v) && vbipredicate.test(v, tran))
+                T key = entry.getKey();
+                if (entity.equals(key) && mbipredicate.test(key, entry.getValue()))
                 {
                     return true;
                 }

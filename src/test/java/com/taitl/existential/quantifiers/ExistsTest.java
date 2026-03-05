@@ -46,5 +46,14 @@ class ExistsTest
             assertTrue(exists.test("boat"));
             assertFalse(exists.test("goat"));
         }
+
+        @Test
+        @DisplayName("Construct map key-value bipredicate")
+        void withMapKeyValueBipredicate()
+        {
+            Exists<String> exists = new Exists<>(Map.of("a", 1, "boat", 2), (key, value) -> key.length() > value);
+            assertTrue(exists.test("boat"));
+            assertFalse(exists.test("a"));
+        }
     }
 }

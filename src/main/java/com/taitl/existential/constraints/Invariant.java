@@ -338,11 +338,11 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * Creates an existential quantifier over a map.
      *
      * @param map Map to evaluate
-     * @param bipredicate Predicate evaluated against each value and transaction
+     * @param bipredicate Predicate evaluated against each key and mapped value
      * @param description Description of invariant
      * @return Exists quantifier
      */
-    public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<T, Transaction> bipredicate, String description)
+    public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<T, D> bipredicate, String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");
         add(new Exists<T>(map, bipredicate, description));

@@ -105,6 +105,18 @@ class InvariantBuilderTest
             assertFalse(exists.test("goat"));
         }
 
+        @Test
+        @DisplayName("exists(map, bipredicate) evaluates key and map value")
+        void evaluatesMapKeyAndValue()
+        {
+            InvariantBuilder<String> builder = builder();
+            Map<String, Integer> values = Map.of("a", 1, "boat", 2);
+            Invariant<String> invariant = builder.exists(values, (key, value) -> key.length() > value).build();
+            Exists<String> exists = findFirst(invariant, Exists.class);
+            assertTrue(exists.test("boat"));
+            assertFalse(exists.test("a"));
+        }
+
         // @Test
         // @DisplayName("exists(values, bipredicate) evaluates value and transaction")
         // void evaluatesValueAndTransaction()

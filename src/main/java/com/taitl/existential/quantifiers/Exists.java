@@ -20,7 +20,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class Exists<T> implements Expression<T>
 {
-    ConcreteExists<T> concrete;
+    ConcreteExists<T, ?> concrete;
 
     /**
      * Builds a collection-based exists predicate that matches by identity.
@@ -225,7 +225,7 @@ public class Exists<T> implements Expression<T>
     public <D> Exists(Map<T, D> map)
     {
         sane(map, "map");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
                 .predicate(value -> true)
                 .build();
@@ -242,7 +242,7 @@ public class Exists<T> implements Expression<T>
     public <D> Exists(Map<T, D> map, String description)
     {
         sane(map, "map", description, "description");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
                 .predicate(value -> true)
                 .description(description)
@@ -260,7 +260,7 @@ public class Exists<T> implements Expression<T>
     public <D> Exists(Map<T, D> map, Predicate<T> predicate)
     {
         sane(map, "map", predicate, "predicate");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
                 .predicate(predicate)
                 .build();
@@ -279,7 +279,7 @@ public class Exists<T> implements Expression<T>
     public <D> Exists(Map<T, D> map, Predicate<T> predicate, String description)
     {
         sane(map, "map", predicate, "predicate", description, "description");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
                 .predicate(predicate)
                 .description(description)
@@ -287,38 +287,38 @@ public class Exists<T> implements Expression<T>
     }
 
     /**
-     * Builds a map-based exists predicate that depends on transaction state.
+     * Builds a map-based exists predicate that depends on mapped values.
      *
      * @param map
      *            Map to scan
      * @param bipredicate
-     *            Predicate that inspects the element and transaction
+     *            Predicate that inspects the key and mapped value
      */
-    public <D> Exists(Map<T, D> map, BiPredicate<T, Transaction> bipredicate)
+    public <D> Exists(Map<T, D> map, BiPredicate<T, D> bipredicate)
     {
         sane(map, "map", bipredicate, "bipredicate");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
-                .bipredicate(bipredicate)
+                .mbipredicate(bipredicate)
                 .build();
     }
 
     /**
-     * Builds a map-based exists predicate that depends on transaction state.
+     * Builds a map-based exists predicate that depends on mapped values.
      *
      * @param map
      *            Map to scan
      * @param bipredicate
-     *            Predicate that inspects the element and transaction
+     *            Predicate that inspects the key and mapped value
      * @param description
      *            Human-friendly description used in violations
      */
-    public <D> Exists(Map<T, D> map, BiPredicate<T, Transaction> bipredicate, String description)
+    public <D> Exists(Map<T, D> map, BiPredicate<T, D> bipredicate, String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
-                .bipredicate(bipredicate)
+                .mbipredicate(bipredicate)
                 .description(description)
                 .build();
     }
@@ -337,7 +337,7 @@ public class Exists<T> implements Expression<T>
     public <D> Exists(Map<T, D> map, Predicate<Collection<T>> predicate, int placeholder)
     {
         sane(map, "map", predicate, "predicate");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
                 .cpredicate(predicate)
                 .build();
@@ -359,7 +359,7 @@ public class Exists<T> implements Expression<T>
     public <D> Exists(Map<T, D> map, Predicate<Collection<T>> predicate, int placeholder, String description)
     {
         sane(map, "map", predicate, "predicate", description, "description");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
                 .cpredicate(predicate)
                 .description(description)
@@ -380,7 +380,7 @@ public class Exists<T> implements Expression<T>
     public <D> Exists(Map<T, D> map, BiPredicate<Collection<T>, Transaction> bipredicate, int placeholder)
     {
         sane(map, "map", bipredicate, "bipredicate");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
                 .cbipredicate(bipredicate)
                 .build();
@@ -403,7 +403,7 @@ public class Exists<T> implements Expression<T>
             String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");
-        concrete = createBuilder()
+        concrete = this.<D> createBuilder()
                 .map(map)
                 .cbipredicate(bipredicate)
                 .description(description)
@@ -436,7 +436,7 @@ public class Exists<T> implements Expression<T>
     }
 
     @SuppressWarnings("unchecked")
-    ConcreteExistsBuilder<T> createBuilder()
+    <K> ConcreteExistsBuilder<T, K> createBuilder()
     {
         return Creator.create(ConcreteExistsBuilder.class);
     }

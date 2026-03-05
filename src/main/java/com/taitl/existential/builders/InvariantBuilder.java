@@ -424,10 +424,10 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a map.
      *
      * @param map Map to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against key and mapped value
      * @return This builder for chaining
      */
-    public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<T, Transaction> bipredicate)
+    public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<T, K> bipredicate)
     {
         sane(map, "map", bipredicate, "bipredicate");
         target.exists(map, bipredicate, "");
@@ -438,11 +438,11 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a map.
      *
      * @param map Map to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against key and mapped value
      * @param description Description of invariant
      * @return This builder for chaining
      */
-    public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<T, Transaction> bipredicate, String description)
+    public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<T, K> bipredicate, String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");
         target.exists(map, bipredicate, description);
