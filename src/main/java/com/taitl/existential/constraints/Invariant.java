@@ -387,12 +387,12 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against evaluated entity and matching entries
      * @param placeholder Overload disambiguator
      * @param description Description of invariant
      * @return Exists quantifier
      */
-    public Invariant<T> exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder, String description)
     {
         sane(coll, "coll", bipredicate, "bipredicate", description, "description");
@@ -404,12 +404,12 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * Creates an existential quantifier over a map.
      *
      * @param map Map to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against evaluated entity and matching map keys
      * @param placeholder Overload disambiguator
      * @param description Description of invariant
      * @return Exists quantifier
      */
-    public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder, String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");

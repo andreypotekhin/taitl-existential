@@ -13,7 +13,7 @@ public class ConcreteExistsBuilder<V, K>
     Collection<V> coll;
     Map<V, K> map;
     Predicate<Collection<V>> cpredicate;
-    BiPredicate<Collection<V>, Transaction> cbipredicate;
+    BiPredicate<V, Collection<V>> cbipredicate;
     Predicate<V> vpredicate;
     BiPredicate<V, V> vbipredicate;
     BiPredicate<V, K> mbipredicate;
@@ -107,7 +107,7 @@ public class ConcreteExistsBuilder<V, K>
         return this;
     }
 
-    public ConcreteExistsBuilder<V, K> cbipredicate(BiPredicate<Collection<V>, Transaction> bipredicate)
+    public ConcreteExistsBuilder<V, K> cbipredicate(BiPredicate<V, Collection<V>> bipredicate)
     {
         verify(coll != null || map != null, "Either coll or map must be provided before predicate assignment.");
         sane(bipredicate, "bipredicate");

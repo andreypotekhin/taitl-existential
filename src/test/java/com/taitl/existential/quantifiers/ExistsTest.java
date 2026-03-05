@@ -59,12 +59,32 @@ class ExistsTest
         }
 
         @Test
+        @DisplayName("Construct collection entity-matches bipredicate")
+        void withCollectionEntityMatchesBipredicate()
+        {
+            Exists<String> exists = new Exists<>(List.of("a", "boat"),
+                    (entity, matches) -> matches.size() == 1 && matches.contains(entity), 0);
+            assertTrue(exists.test("boat"));
+            assertFalse(exists.test("goat"));
+        }
+
+        @Test
         @DisplayName("Construct map key-value bipredicate")
         void withMapKeyValueBipredicate()
         {
             Exists<String> exists = new Exists<>(Map.of("a", 1, "boat", 2), (key, value) -> key.length() > value);
             assertTrue(exists.test("boat"));
             assertFalse(exists.test("a"));
+        }
+
+        @Test
+        @DisplayName("Construct map entity-matches bipredicate")
+        void withMapEntityMatchesBipredicate()
+        {
+            Exists<String> exists = new Exists<>(Map.of("a", 1, "boat", 2),
+                    (entity, matches) -> matches.size() == 1 && matches.contains(entity), 0);
+            assertTrue(exists.test("boat"));
+            assertFalse(exists.test("goat"));
         }
     }
 }

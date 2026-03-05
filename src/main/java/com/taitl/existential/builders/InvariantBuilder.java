@@ -517,11 +517,11 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against evaluated entity and matching entries
      * @param placeholder Overload disambiguator
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder)
     {
         sane(coll, "coll", bipredicate, "bipredicate");
@@ -533,12 +533,12 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against evaluated entity and matching entries
      * @param placeholder Overload disambiguator
      * @param description Description of invariant
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder, String description)
     {
         sane(coll, "coll", bipredicate, "bipredicate", description, "description");
@@ -550,11 +550,11 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a map.
      *
      * @param map Map to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against evaluated entity and matching map keys
      * @param placeholder Overload disambiguator
      * @return This builder for chaining
      */
-    public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder)
     {
         sane(map, "map", bipredicate, "bipredicate");
@@ -566,12 +566,12 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a map.
      *
      * @param map Map to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against evaluated entity and matching map keys
      * @param placeholder Overload disambiguator
      * @param description Description of invariant
      * @return This builder for chaining
      */
-    public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<Collection<T>, Transaction> bipredicate,
+    public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder, String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");

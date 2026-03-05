@@ -18,7 +18,7 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
     Predicate<T> vpredicate;
     BiPredicate<T, T> vbipredicate;
     Predicate<Collection<T>> cpredicate;
-    BiPredicate<Collection<T>, Transaction> cbipredicate;
+    BiPredicate<T, Collection<T>> cbipredicate;
     BiPredicate<T, K> mbipredicate;
     Transaction tran;
     String description;
@@ -93,7 +93,6 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
         }
         if (cbipredicate != null)
         {
-            cool(tran, "tran");
             Collection<T> matching = new ArrayList<>();
             for (T v : coll)
             {
@@ -102,7 +101,7 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
                     matching.add(v);
                 }
             }
-            return cbipredicate.test(matching, tran);
+            return cbipredicate.test(entity, matching);
         }
         if (vpredicate != null)
         {
@@ -148,7 +147,6 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
         }
         if (cbipredicate != null)
         {
-            cool(tran, "tran");
             Collection<T> matching = new ArrayList<>();
             for (T v : map.keySet())
             {
@@ -157,7 +155,7 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
                     matching.add(v);
                 }
             }
-            return cbipredicate.test(matching, tran);
+            return cbipredicate.test(entity, matching);
         }
         if (vpredicate != null)
         {

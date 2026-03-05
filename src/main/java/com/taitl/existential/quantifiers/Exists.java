@@ -173,17 +173,17 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     }
 
     /**
-     * Builds a transaction-aware collection-level exists predicate.
+     * Builds a collection-level exists predicate.
      * The placeholder parameter disambiguates constructor overloads.
      *
      * @param coll
      *            Collection to scan
      * @param bipredicate
-     *            Predicate applied to the collection and transaction
+     *            Predicate applied to evaluated entity and matching entries
      * @param placeholder
      *            Placeholder value used only for overload resolution
      */
-    public Exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate, int placeholder)
+    public Exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate, int placeholder)
     {
         sane(coll, "coll", bipredicate, "bipredicate");
         concrete = createBuilder()
@@ -193,19 +193,19 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     }
 
     /**
-     * Builds a transaction-aware collection-level exists predicate.
+     * Builds a collection-level exists predicate.
      * The placeholder parameter disambiguates constructor overloads.
      *
      * @param coll
      *            Collection to scan
      * @param bipredicate
-     *            Predicate applied to the collection and transaction
+     *            Predicate applied to evaluated entity and matching entries
      * @param placeholder
      *            Placeholder value used only for overload resolution
      * @param description
      *            Human-friendly description used in violations
      */
-    public Exists(Collection<T> coll, BiPredicate<Collection<T>, Transaction> bipredicate, int placeholder,
+    public Exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate, int placeholder,
             String description)
     {
         sane(coll, "coll", bipredicate, "bipredicate", description, "description");
@@ -367,17 +367,17 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     }
 
     /**
-     * Builds a transaction-aware map-based exists predicate.
+     * Builds a map-based exists predicate.
      * The placeholder parameter disambiguates constructor overloads.
      *
      * @param map
      *            Map to scan
      * @param bipredicate
-     *            Predicate applied to the collection and transaction
+     *            Predicate applied to evaluated entity and matching map keys
      * @param placeholder
      *            Placeholder value used only for overload resolution
      */
-    public <D> Exists(Map<T, D> map, BiPredicate<Collection<T>, Transaction> bipredicate, int placeholder)
+    public <D> Exists(Map<T, D> map, BiPredicate<T, Collection<T>> bipredicate, int placeholder)
     {
         sane(map, "map", bipredicate, "bipredicate");
         concrete = this.<D> createBuilder()
@@ -387,19 +387,19 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     }
 
     /**
-     * Builds a transaction-aware map-based exists predicate.
+     * Builds a map-based exists predicate.
      * The placeholder parameter disambiguates constructor overloads.
      *
      * @param map
      *            Map to scan
      * @param bipredicate
-     *            Predicate applied to the collection and transaction
+     *            Predicate applied to evaluated entity and matching map keys
      * @param placeholder
      *            Placeholder value used only for overload resolution
      * @param description
      *            Human-friendly description used in violations
      */
-    public <D> Exists(Map<T, D> map, BiPredicate<Collection<T>, Transaction> bipredicate, int placeholder,
+    public <D> Exists(Map<T, D> map, BiPredicate<T, Collection<T>> bipredicate, int placeholder,
             String description)
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");

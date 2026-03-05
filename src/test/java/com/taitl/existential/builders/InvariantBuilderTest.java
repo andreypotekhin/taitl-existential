@@ -139,6 +139,31 @@ class InvariantBuilderTest
             assertTrue(exists.test("boat"));
         }
 
+        @Test
+        @DisplayName("exists(values, collection-bipredicate, placeholder) evaluates entity and matches")
+        void evaluatesEntityAndMatches()
+        {
+            InvariantBuilder<String> builder = builder();
+            Invariant<String> invariant = builder.exists(List.of("a", "boat"),
+                    (entity, matches) -> matches.size() == 1 && matches.contains(entity), 0).build();
+            Exists<String> exists = findFirst(invariant, Exists.class);
+            assertTrue(exists.test("boat"));
+            assertFalse(exists.test("goat"));
+        }
+
+        @Test
+        @DisplayName("exists(map, collection-bipredicate, placeholder) evaluates entity and key matches")
+        void evaluatesEntityAndMapKeyMatches()
+        {
+            InvariantBuilder<String> builder = builder();
+            Map<String, Integer> values = Map.of("a", 1, "boat", 2);
+            Invariant<String> invariant = builder.exists(values,
+                    (entity, matches) -> matches.size() == 1 && matches.contains(entity), 0).build();
+            Exists<String> exists = findFirst(invariant, Exists.class);
+            assertTrue(exists.test("boat"));
+            assertFalse(exists.test("goat"));
+        }
+
         // @Test
         // @DisplayName("exists(values, collection-bipredicate, placeholder) evaluates collection
         // and transaction")
