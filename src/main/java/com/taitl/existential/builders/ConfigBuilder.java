@@ -15,8 +15,9 @@ import static com.taitl.ex.common.helper.State.*;
 import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
- * Builds the full set of {@link Config} objects for a single Existential
- * instance based on declared contexts.
+ * Builds full configuration for a single Existential instance based on declared contexts.
+ *
+ * @see ContextBuilder
  */
 public class ConfigBuilder
 {

@@ -1,18 +1,17 @@
 package com.taitl.existential.builders;
 
-import java.util.function.*;
-
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
 
+import java.util.function.*;
+
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Fluent builder for {@link Effect} rules.
- * Provides typed helpers for associating actions with events.
+ * Builds {@link Effect} rules.
  *
- * @param <T> Subject type the effects target
+ * @param <T> Type to apply the effects
  */
 public class EffectBuilder<T> implements EvsBuilder<T>
 {

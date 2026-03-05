@@ -10,8 +10,6 @@ import com.taitl.ex.common.helper.*;
  *
  * @param <T>
  *            Type of mutating object
- *
- * @see Porting
  */
 public final class Transition<T>
 {

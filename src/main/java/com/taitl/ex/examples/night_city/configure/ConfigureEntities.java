@@ -43,9 +43,9 @@ public class ConfigureEntities
                 .invariant(new TypeKey<Being>(){})
                     .create(b -> !b.color.equals("Unattractive"), "No unattractive begins")
                 .invariant(new TypeKey<Being<Felidae>>(){})
-                    .create(b -> !b.color.equals("Blue"), "No blue cats")
+                    .create(b -> !b.color.equals("Shy"), "No shy cats")
                 .invariant(new TypeKey<Being<Muridae>>(){})
-                    .create(b -> !b.color.equals("Neon"), "No neon mice")
+                    .create(b -> !b.color.equals("Careless"), "No careless mice")
         ;
 
         // Existence rules

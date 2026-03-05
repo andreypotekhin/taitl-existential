@@ -21,7 +21,6 @@ import static com.taitl.ex.common.helper.Args.*;
  * @see Config
  * @see Transaction
  */
-// TODO: add context() method for adding child contexts
 public class Context implements Configurable, Evaluable
 {
     public static Supplier<? extends Context> FACTORY = () -> Creator.create(Context.class);

@@ -9,10 +9,9 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Fluent builder for {@link Intent} rules.
+ * Builds {@link Intent} rules.
  *
- * @param <T>
- *            Subject type the intents target
+ * @param <T> Type to apply the intents
  */
 public class IntentBuilder<T> implements EvsBuilder<T>
 {

@@ -13,8 +13,11 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Configures a single Context inside a {@link com.taitl.existential.configs.Config}.
- * Collects invariants, effects, intents, and optional transaction settings for the context.
+ * Builds a single Context - the rules that apply to a particular business operation,
+ * for instance, 'api/users/create'.
+ * Combines invariants, effects, intents, and optionally a transaction definition for the Context.
+ *
+ * @see ConfigBuilder
  */
 public class ContextBuilder
 {

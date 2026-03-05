@@ -10,10 +10,9 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Fluent builder for {@link Invariant} rules.
- * Allows describing constraints for specific event types.
+ * Builds {@link Invariant} rules.
  *
- * @param <T> Subject type the invariants target
+ * @param <T> Type to apply the invariants
  */
 public class InvariantBuilder<T> implements EvsBuilder<T>
 {

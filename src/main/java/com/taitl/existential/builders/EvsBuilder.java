@@ -3,9 +3,9 @@ package com.taitl.existential.builders;
 import com.taitl.existential.evaluables.*;
 
 /**
- * Builder contract for assembling a concrete {@link Evs} instance.
+ * Builder interface for {@link Evs}.
  *
- * @param <T> Subject type the rule set targets
+ * @param <T> Subject type for Evs rules
  */
 public interface EvsBuilder<T>
 {
