@@ -131,9 +131,9 @@ public class Context implements Configurable, Evaluable
         add(intent);
     }
 
-    public Context precondition()
+    public Context begin()
     {
-        stageCursor = StageName.PRECONDITION;
+        stageCursor = StageName.BEGIN;
         return this;
     }
 
@@ -146,6 +146,24 @@ public class Context implements Configurable, Evaluable
     public Context validation()
     {
         stageCursor = StageName.VALIDATION;
+        return this;
+    }
+
+    public Context commit()
+    {
+        stageCursor = StageName.COMMIT;
+        return this;
+    }
+
+    public Context checkpoint()
+    {
+        stageCursor = StageName.CHECKPOINT;
+        return this;
+    }
+
+    public Context rollback()
+    {
+        stageCursor = StageName.ROLLBACK;
         return this;
     }
 

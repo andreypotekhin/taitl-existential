@@ -5,7 +5,7 @@ package com.taitl.existential.constants;
  */
 public enum StageName
 {
-    PRECONDITION, IMMEDIATE, VALIDATION;
+    BEGIN, IMMEDIATE, COMMIT, CHECKPOINT, ROLLBACK, VALIDATION;
 
     public String label()
     {

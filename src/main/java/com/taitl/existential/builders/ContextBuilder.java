@@ -209,9 +209,9 @@ public class ContextBuilder
         return this;
     }
 
-    public ContextBuilder precondition()
+    public ContextBuilder begin()
     {
-        stageCursor = StageName.PRECONDITION;
+        stageCursor = StageName.BEGIN;
         return this;
     }
 
@@ -224,6 +224,24 @@ public class ContextBuilder
     public ContextBuilder validation()
     {
         stageCursor = StageName.VALIDATION;
+        return this;
+    }
+
+    public ContextBuilder commit()
+    {
+        stageCursor = StageName.COMMIT;
+        return this;
+    }
+
+    public ContextBuilder checkpoint()
+    {
+        stageCursor = StageName.CHECKPOINT;
+        return this;
+    }
+
+    public ContextBuilder rollback()
+    {
+        stageCursor = StageName.ROLLBACK;
         return this;
     }
 

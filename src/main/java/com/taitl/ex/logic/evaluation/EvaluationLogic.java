@@ -29,12 +29,12 @@ public class EvaluationLogic implements Closeable
         this.evaluateIntents = Creator.create(EvaluateIntents.class, new Class[] { EvaluationLogic.class }, this);
     }
 
-    public <T> void evaluatePreconditions(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    public <T> void evaluateBegin(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", tr, "tr");
         ValidationReport report = Creator.create(ValidationReport.class);
-        evaluateEvents(runtimeKey, tr, StageName.PRECONDITION, report);
-        throwIfStageFailed(StageName.PRECONDITION, report);
+        evaluateEvents(runtimeKey, tr, StageName.BEGIN, report);
+        throwIfStageFailed(StageName.BEGIN, report);
     }
 
     public <T> void evaluateImmediate(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
@@ -43,6 +43,21 @@ public class EvaluationLogic implements Closeable
         ValidationReport report = Creator.create(ValidationReport.class);
         evaluateEvents(runtimeKey, tr, StageName.IMMEDIATE, report);
         throwIfStageFailed(StageName.IMMEDIATE, report);
+    }
+
+    public void evaluateCommit(Tr tr) throws ExistentialException
+    {
+        evaluateEncountered(tr, StageName.COMMIT);
+    }
+
+    public void evaluateCheckpoint(Tr tr) throws ExistentialException
+    {
+        evaluateEncountered(tr, StageName.CHECKPOINT);
+    }
+
+    public void evaluateRollback(Tr tr) throws ExistentialException
+    {
+        evaluateEncountered(tr, StageName.ROLLBACK);
     }
 
     public void evaluateValidation(Tr tr, ValidationReport report) throws ExistentialException
@@ -67,6 +82,21 @@ public class EvaluationLogic implements Closeable
         sane(runtimeKey, "runtimeKey", tr, "tr", stageName, "stageName", report, "report");
         EventField eventField = eventField(tr, stageName);
         evaluateEvents.call(runtimeKey, eventField, report, useFullClassNames(), shouldSplitElementary());
+    }
+
+    protected void evaluateEncountered(Tr tr, StageName stageName) throws ExistentialException
+    {
+        sane(tr, "tr", stageName, "stageName");
+        ValidationReport report = Creator.create(ValidationReport.class);
+        for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
+        {
+            if (hasIntents(tr, stageName))
+            {
+                evaluateIntents(runtimeKey, tr, stageName);
+            }
+            evaluateEvents(runtimeKey, tr, stageName, report);
+        }
+        throwIfStageFailed(stageName, report);
     }
 
     public <T> void evaluateIntents(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException

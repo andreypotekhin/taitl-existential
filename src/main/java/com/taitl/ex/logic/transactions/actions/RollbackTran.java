@@ -17,5 +17,6 @@ public class RollbackTran extends TranAction
     public void call(Tr tr) throws ExistentialException
     {
         tr.onRollback();
+        tl.rollbackLogic.onRollback(tr);
     }
 }

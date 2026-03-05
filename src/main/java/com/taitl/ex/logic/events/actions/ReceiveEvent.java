@@ -47,7 +47,7 @@ public class ReceiveEvent
     protected <T> void evaluateStages(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", tr, "tr");
-        transactionLogic.preconditionLogic.onEvent(runtimeKey, tr);
+        transactionLogic.beginLogic.onEvent(runtimeKey, tr);
         transactionLogic.immediateLogic.onEvent(runtimeKey, tr);
     }
 }

@@ -42,8 +42,8 @@ public class Tr
     protected IndexData runtimeIndexes;
     protected ValidationData validationData;
     protected Map<StageName, StageData> stageData = new EnumMap<>(StageName.class);
-    protected Set<String> preconditionEncounteredEventKeys = new LinkedHashSet<>();
-    protected boolean preconditionActive;
+    protected Set<String> beginEncounteredEventKeys = new LinkedHashSet<>();
+    protected boolean beginActive;
     protected boolean immediateActive;
 
     /**
@@ -219,9 +219,9 @@ public class Tr
      */
     public void onBegin() throws ExistentialException
     {
-        preconditionActive = true;
+        beginActive = true;
         immediateActive = true;
-        executeLifecycle(Begin.class);
+        executeLifecycle(Begin.class, StageName.BEGIN);
     }
 
     /**
@@ -230,9 +230,9 @@ public class Tr
      */
     public void onCheckpoint() throws ExistentialException
     {
-        preconditionActive = false;
+        beginActive = false;
         immediateActive = false;
-        executeLifecycle(Checkpoint.class);
+        executeLifecycle(Checkpoint.class, StageName.CHECKPOINT);
     }
 
     /**
@@ -241,9 +241,9 @@ public class Tr
      */
     public void onCommit() throws ExistentialException
     {
-        preconditionActive = false;
+        beginActive = false;
         immediateActive = false;
-        executeLifecycle(Commit.class);
+        executeLifecycle(Commit.class, StageName.COMMIT);
     }
 
     /**
@@ -252,9 +252,9 @@ public class Tr
      */
     public void onRollback() throws ExistentialException
     {
-        preconditionActive = false;
+        beginActive = false;
         immediateActive = false;
-        executeLifecycle(Rollback.class);
+        executeLifecycle(Rollback.class, StageName.ROLLBACK);
     }
 
     /* Attributes */
@@ -398,9 +398,9 @@ public class Tr
         }
     }
 
-    public boolean preconditionActive()
+    public boolean beginActive()
     {
-        return preconditionActive;
+        return beginActive;
     }
 
     public boolean immediateActive()
@@ -408,57 +408,55 @@ public class Tr
         return immediateActive;
     }
 
-    public <T> boolean shouldEvaluatePrecondition(RuntimeKey<T> runtimeKey)
+    public <T> boolean shouldEvaluateBegin(RuntimeKey<T> runtimeKey)
     {
         sane(runtimeKey, "runtimeKey");
         String key = runtimeKey.key().toString();
-        return preconditionEncounteredEventKeys.add(key);
+        return beginEncounteredEventKeys.add(key);
     }
 
-    protected void executeLifecycle(Class<?> eventClass) throws ExistentialException
+    protected void executeLifecycle(Class<?> eventClass, StageName stageName) throws ExistentialException
     {
-        sane(eventClass, "eventClass");
+        sane(eventClass, "eventClass", stageName, "stageName");
         for (Transaction transaction : transactions)
         {
-            executeLifecycle(eventClass, transaction);
+            executeLifecycle(eventClass, stageName, transaction);
         }
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected void executeLifecycle(Class<?> eventClass, Transaction transaction) throws ExistentialException
+    protected void executeLifecycle(Class<?> eventClass, StageName stageName, Transaction transaction)
+            throws ExistentialException
     {
-        sane(eventClass, "eventClass", transaction, "transaction");
-        for (StageName stageName : StageName.values())
+        sane(eventClass, "eventClass", stageName, "stageName", transaction, "transaction");
+        for (Evs<?> evs : transaction.stage().at(stageName))
         {
-            for (Evs<?> evs : transaction.stage().at(stageName))
+            if (!(evs instanceof Life<?>))
             {
-                if (!(evs instanceof Life<?>))
+                continue;
+            }
+            Life<?> life = (Life<?>) evs;
+            if (!matchesType(life.typeKey(), transaction))
+            {
+                continue;
+            }
+            for (Ev<?> ev : life.list())
+            {
+                if (!(ev instanceof EventHandler<?>))
                 {
                     continue;
                 }
-                Life<?> life = (Life<?>) evs;
-                if (!matchesType(life.typeKey(), transaction))
+                EventHandler<?> eventHandler = (EventHandler<?>) ev;
+                if (!eventClass.equals(eventHandler.eventType().eventClass()))
                 {
                     continue;
                 }
-                for (Ev<?> ev : life.list())
+                if (!(eventHandler instanceof On<?>))
                 {
-                    if (!(ev instanceof EventHandler<?>))
-                    {
-                        continue;
-                    }
-                    EventHandler<?> eventHandler = (EventHandler<?>) ev;
-                    if (!eventClass.equals(eventHandler.eventType().eventClass()))
-                    {
-                        continue;
-                    }
-                    if (!(eventHandler instanceof On<?>))
-                    {
-                        throw new IllegalStateException("Lifecycle handler must extend On, got "
-                                + eventHandler.getClass().getName());
-                    }
-                    ExecuteHandler.handle((On) eventHandler, transaction);
+                    throw new IllegalStateException("Lifecycle handler must extend On, got "
+                            + eventHandler.getClass().getName());
                 }
+                ExecuteHandler.handle((On) eventHandler, transaction);
             }
         }
     }
@@ -530,8 +528,8 @@ public class Tr
         el = null;
         already = null;
         stageData = null;
-        preconditionEncounteredEventKeys = null;
-        preconditionActive = false;
+        beginEncounteredEventKeys = null;
+        beginActive = false;
         immediateActive = false;
     }
 }

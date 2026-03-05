@@ -667,9 +667,24 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
         return parentContext().intent(intent);
     }
 
-    public ContextBuilder precondition()
+    public ContextBuilder begin()
     {
-        return parentContext().precondition();
+        return parentContext().begin();
+    }
+
+    public ContextBuilder commit()
+    {
+        return parentContext().commit();
+    }
+
+    public ContextBuilder checkpoint()
+    {
+        return parentContext().checkpoint();
+    }
+
+    public ContextBuilder rollback()
+    {
+        return parentContext().rollback();
     }
 
     public ContextBuilder immediate()

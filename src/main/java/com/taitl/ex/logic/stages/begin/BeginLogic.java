@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.stages.preconditions;
+package com.taitl.ex.logic.stages.begin;
 
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.transactions.*;
@@ -9,11 +9,11 @@ import com.taitl.existential.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class PreconditionLogic
+public class BeginLogic
 {
     protected TransactionLogic tl;
 
-    public PreconditionLogic(TransactionLogic tl)
+    public BeginLogic(TransactionLogic tl)
     {
         sane(tl, "tl");
         this.tl = tl;
@@ -22,12 +22,12 @@ public class PreconditionLogic
     public <T> void onEvent(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", tr, "tr");
-        if (!tr.preconditionActive() || !tr.shouldEvaluatePrecondition(runtimeKey))
+        if (!tr.beginActive() || !tr.shouldEvaluateBegin(runtimeKey))
         {
             return;
         }
-        evaluationLogic().evaluateIntents(runtimeKey, tr, StageName.PRECONDITION);
-        evaluationLogic().evaluatePreconditions(runtimeKey, tr);
+        evaluationLogic().evaluateIntents(runtimeKey, tr, StageName.BEGIN);
+        evaluationLogic().evaluateBegin(runtimeKey, tr);
     }
 
     protected EvaluationLogic evaluationLogic()

@@ -3,8 +3,11 @@ package com.taitl.ex.logic.transactions;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.evaluation.*;
+import com.taitl.ex.logic.stages.begin.*;
+import com.taitl.ex.logic.stages.checkpoint.*;
+import com.taitl.ex.logic.stages.commit.*;
 import com.taitl.ex.logic.stages.immediate.*;
-import com.taitl.ex.logic.stages.preconditions.*;
+import com.taitl.ex.logic.stages.rollback.*;
 import com.taitl.ex.logic.stages.validation.*;
 import com.taitl.ex.logic.transactions.actions.*;
 import com.taitl.ex.logic.transactions.data.*;
@@ -29,8 +32,11 @@ public class TransactionLogic implements Closeable
     protected RollbackTran rollbackTran;
     protected DisposeTran disposeTran;
     public EvaluationLogic evaluationLogic;
-    public PreconditionLogic preconditionLogic;
+    public BeginLogic beginLogic;
     public ImmediateLogic immediateLogic;
+    public CommitLogic commitLogic;
+    public CheckpointLogic checkpointLogic;
+    public RollbackLogic rollbackLogic;
     public ValidationLogic validationLogic;
 
     public TransactionLogic(ExistentialTransactions ee)
@@ -44,8 +50,11 @@ public class TransactionLogic implements Closeable
         this.rollbackTran = new RollbackTran(this);
         this.disposeTran = new DisposeTran(this);
         this.evaluationLogic = Creator.create(EvaluationLogic.class, new Class[] { TransactionLogic.class }, this);
-        this.preconditionLogic = Creator.create(PreconditionLogic.class, new Class[] { TransactionLogic.class }, this);
+        this.beginLogic = Creator.create(BeginLogic.class, new Class[] { TransactionLogic.class }, this);
         this.immediateLogic = Creator.create(ImmediateLogic.class, new Class[] { TransactionLogic.class }, this);
+        this.commitLogic = Creator.create(CommitLogic.class, new Class[] { TransactionLogic.class }, this);
+        this.checkpointLogic = Creator.create(CheckpointLogic.class, new Class[] { TransactionLogic.class }, this);
+        this.rollbackLogic = Creator.create(RollbackLogic.class, new Class[] { TransactionLogic.class }, this);
         this.validationLogic = Creator.create(ValidationLogic.class, new Class[] { TransactionLogic.class }, this);
     }
 

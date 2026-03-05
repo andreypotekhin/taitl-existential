@@ -4,6 +4,8 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
+import com.taitl.existential.handlers.transaction_handlers.*;
+import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
@@ -17,6 +19,8 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class TransactionBuilder
 {
+    protected static final Map<Class<?>, StageName> LIFECYCLE_STAGE_BY_HANDLER = lifecycleStageByHandler();
+
     ContextBuilder parent;
     String op;
     List<Supplier<? extends Evs<?>>> evsSuppliers;
@@ -169,7 +173,17 @@ public class TransactionBuilder
     public <T extends Transaction> TransactionBuilder cycle(Life<T> cycle)
     {
         sane(cycle, "cycle");
-        register(() -> cycle, StageName.PRECONDITION);
+        if (stageCursor != null)
+        {
+            register(() -> cycle, stageCursor);
+            return this;
+        }
+
+        EnumSet<StageName> lifecycleStages = lifecycleStages(cycle);
+        for (StageName stageName : lifecycleStages)
+        {
+            register(() -> cycle, stageName);
+        }
         return this;
     }
 
@@ -223,9 +237,9 @@ public class TransactionBuilder
         return parent.context();
     }
 
-    public TransactionBuilder precondition()
+    public TransactionBuilder begin()
     {
-        stageCursor = StageName.PRECONDITION;
+        stageCursor = StageName.BEGIN;
         return this;
     }
 
@@ -241,6 +255,24 @@ public class TransactionBuilder
         return this;
     }
 
+    public TransactionBuilder commit()
+    {
+        stageCursor = StageName.COMMIT;
+        return this;
+    }
+
+    public TransactionBuilder checkpoint()
+    {
+        stageCursor = StageName.CHECKPOINT;
+        return this;
+    }
+
+    public TransactionBuilder rollback()
+    {
+        stageCursor = StageName.ROLLBACK;
+        return this;
+    }
+
     /**
      * Adds a begin handler to the transaction lifecycle.
      *
@@ -252,7 +284,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder begin(Consumer<? super T> action)
     {
-        return addLifecycle(action, cycle -> cycle.begin(action));
+        return addLifecycle(action, StageName.BEGIN, cycle -> cycle.begin(action));
     }
 
     /**
@@ -268,7 +300,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder begin(TypeKey<T> typeKey, Consumer<? super T> action)
     {
-        return addLifecycle(typeKey, action, cycle -> cycle.begin(action));
+        return addLifecycle(typeKey, action, StageName.BEGIN, cycle -> cycle.begin(action));
     }
 
     /**
@@ -299,7 +331,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder commit(Consumer<? super T> action)
     {
-        return addLifecycle(action, cycle -> cycle.commit(action));
+        return addLifecycle(action, StageName.COMMIT, cycle -> cycle.commit(action));
     }
 
     /**
@@ -315,7 +347,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder commit(TypeKey<T> typeKey, Consumer<? super T> action)
     {
-        return addLifecycle(typeKey, action, cycle -> cycle.commit(action));
+        return addLifecycle(typeKey, action, StageName.COMMIT, cycle -> cycle.commit(action));
     }
 
     /**
@@ -346,7 +378,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder rollback(Consumer<? super T> action)
     {
-        return addLifecycle(action, cycle -> cycle.rollback(action));
+        return addLifecycle(action, StageName.ROLLBACK, cycle -> cycle.rollback(action));
     }
 
     /**
@@ -362,7 +394,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder rollback(TypeKey<T> typeKey, Consumer<? super T> action)
     {
-        return addLifecycle(typeKey, action, cycle -> cycle.rollback(action));
+        return addLifecycle(typeKey, action, StageName.ROLLBACK, cycle -> cycle.rollback(action));
     }
 
     /**
@@ -393,7 +425,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder checkpoint(Consumer<? super T> action)
     {
-        return addLifecycle(action, cycle -> cycle.checkpoint(action));
+        return addLifecycle(action, StageName.CHECKPOINT, cycle -> cycle.checkpoint(action));
     }
 
     /**
@@ -409,7 +441,7 @@ public class TransactionBuilder
      */
     public <T extends Transaction> TransactionBuilder checkpoint(TypeKey<T> typeKey, Consumer<? super T> action)
     {
-        return addLifecycle(typeKey, action, cycle -> cycle.checkpoint(action));
+        return addLifecycle(typeKey, action, StageName.CHECKPOINT, cycle -> cycle.checkpoint(action));
     }
 
     /**
@@ -432,19 +464,25 @@ public class TransactionBuilder
     /**
      * Centralizes lifecycle handler wiring to keep the fluent entry points uniform.
      */
-    protected <T extends Transaction> TransactionBuilder addLifecycle(Consumer<? super T> action,
+    protected <T extends Transaction> TransactionBuilder addLifecycle(
+            Consumer<? super T> action,
+            StageName stageName,
             Consumer<Life<T>> registrar)
     {
-        return addLifecycle(transactionTypeKey(), action, registrar);
+        return addLifecycle(transactionTypeKey(), action, stageName, registrar);
     }
 
-    protected <T extends Transaction> TransactionBuilder addLifecycle(TypeKey<T> typeKey, Consumer<? super T> action,
+    protected <T extends Transaction> TransactionBuilder addLifecycle(
+            TypeKey<T> typeKey,
+            Consumer<? super T> action,
+            StageName stageName,
             Consumer<Life<T>> registrar)
     {
-        sane(typeKey, "typeKey", action, "action");
+        sane(typeKey, "typeKey", action, "action", stageName, "stageName");
         Life<T> cycle = new Life<>(typeKey);
         registrar.accept(cycle);
-        return cycle(cycle);
+        registerAtStage(() -> cycle, stageName);
+        return this;
     }
 
     @SuppressWarnings("unchecked")
@@ -468,6 +506,13 @@ public class TransactionBuilder
         sane(supplier, "supplier", defaultStage, "defaultStage");
         evsSuppliers.add(supplier);
         evsStages.add(stageCursor != null ? stageCursor : defaultStage);
+    }
+
+    protected void registerAtStage(Supplier<? extends Evs<?>> supplier, StageName stageName)
+    {
+        sane(supplier, "supplier", stageName, "stageName");
+        evsSuppliers.add(supplier);
+        evsStages.add(stageName);
     }
 
     protected void installParentTransactionFactory()
@@ -507,5 +552,54 @@ public class TransactionBuilder
             }
             return tr;
         };
+    }
+
+    protected StageName lifecycleStage(EventHandler<?> handler)
+    {
+        sane(handler, "handler");
+        StageName stageName = LIFECYCLE_STAGE_BY_HANDLER.get(handler.getClass());
+        if (stageName != null)
+        {
+            return stageName;
+        }
+        for (Map.Entry<Class<?>, StageName> entry : LIFECYCLE_STAGE_BY_HANDLER.entrySet())
+        {
+            if (entry.getKey().isAssignableFrom(handler.getClass()))
+            {
+                return entry.getValue();
+            }
+        }
+        throw new IllegalArgumentException(
+                "Unsupported lifecycle handler type: " + handler.getClass().getName());
+    }
+
+    protected <T extends Transaction> EnumSet<StageName> lifecycleStages(Life<T> cycle)
+    {
+        sane(cycle, "cycle");
+        EnumSet<StageName> stages = EnumSet.noneOf(StageName.class);
+        for (Ev<T> ev : cycle.list())
+        {
+            if (!(ev instanceof EventHandler<?>))
+            {
+                throw new IllegalArgumentException(
+                        "Lifecycle rule must be an EventHandler: " + ev.getClass().getName());
+            }
+            stages.add(lifecycleStage((EventHandler<?>) ev));
+        }
+        if (stages.isEmpty())
+        {
+            throw new IllegalArgumentException("Lifecycle rule set must contain at least one handler");
+        }
+        return stages;
+    }
+
+    protected static Map<Class<?>, StageName> lifecycleStageByHandler()
+    {
+        Map<Class<?>, StageName> map = new LinkedHashMap<>();
+        map.put(OnBegin.class, StageName.BEGIN);
+        map.put(OnCommit.class, StageName.COMMIT);
+        map.put(OnCheckpoint.class, StageName.CHECKPOINT);
+        map.put(OnRollback.class, StageName.ROLLBACK);
+        return Collections.unmodifiableMap(map);
     }
 }

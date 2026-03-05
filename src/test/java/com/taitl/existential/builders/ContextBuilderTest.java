@@ -170,11 +170,11 @@ class ContextBuilderTest
 
                 contextBuilder.buildContext();
 
-                List<Evs<?>> precondition = context.stage().at(StageName.PRECONDITION);
+                List<Evs<?>> begin = context.stage().at(StageName.BEGIN);
                 List<Evs<?>> immediate = context.stage().at(StageName.IMMEDIATE);
                 List<Evs<?>> validation = context.stage().at(StageName.VALIDATION);
 
-                assertEquals(0, precondition.size());
+                assertEquals(0, begin.size());
                 assertEquals(2, immediate.size());
                 assertEquals(4, validation.size());
                 assertSame(inv1, validation.get(0));
@@ -361,24 +361,105 @@ class ContextBuilderTest
             context.effect(new Effect<>(String.class));
             context.intent(new Intent<>(String.class));
 
-            assertEquals(0, context.stage().at(StageName.PRECONDITION).size());
+            assertEquals(0, context.stage().at(StageName.BEGIN).size());
             assertEquals(1, context.stage().at(StageName.IMMEDIATE).size());
             assertEquals(2, context.stage().at(StageName.VALIDATION).size());
         }
 
         @Test
-        @DisplayName("Transaction defaults route lifecycle rules to precondition stage")
+        @DisplayName("Transaction defaults route lifecycle rules to begin stage")
         void transactionDefaults()
         {
             Transaction transaction = new Transaction("/app", "tx");
             transaction.invariant(new Invariant<>(String.class));
             transaction.effect(new Effect<>(String.class));
             transaction.intent(new Intent<>(String.class));
-            transaction.cycle(new Life<>(Transaction.class));
+            transaction.begin((Transaction tr) -> {
+            });
 
-            assertEquals(1, transaction.stage().at(StageName.PRECONDITION).size());
+            assertEquals(1, transaction.stage().at(StageName.BEGIN).size());
             assertEquals(1, transaction.stage().at(StageName.IMMEDIATE).size());
             assertEquals(2, transaction.stage().at(StageName.VALIDATION).size());
+        }
+
+        @Test
+        @DisplayName("Transaction lifecycle methods pin handlers to lifecycle stages")
+        void transactionLifecycleMethodsPinStages()
+        {
+            Transaction transaction = new Transaction("/app", "tx");
+
+            transaction.validation();
+            transaction.rollback((Transaction tr) -> {
+            });
+
+            assertEquals(1, transaction.stage().at(StageName.ROLLBACK).size());
+            assertEquals(0, transaction.stage().at(StageName.VALIDATION).size());
+        }
+
+        @Test
+        @DisplayName("Transaction lifecycle methods route cycles to lifecycle stages")
+        void transactionLifecycleStageRouting()
+        {
+            ConfigBuilder configBuilder = new ConfigBuilder();
+            TransactionBuilder builder = configBuilder.context("/app").transaction("tx");
+
+            builder.begin((Transaction tr) -> {
+            });
+            builder.commit((Transaction tr) -> {
+            });
+            builder.checkpoint((Transaction tr) -> {
+            });
+            builder.rollback((Transaction tr) -> {
+            });
+
+            assertEquals(List.of(StageName.BEGIN, StageName.COMMIT, StageName.CHECKPOINT, StageName.ROLLBACK),
+                    builder.evsStages);
+        }
+
+        @Test
+        @DisplayName("Lifecycle methods pin handlers to their stage despite stage cursor")
+        void lifecycleMethodsPinStage()
+        {
+            ConfigBuilder configBuilder = new ConfigBuilder();
+            TransactionBuilder builder = configBuilder.context("/app").transaction("tx");
+
+            builder.validation().rollback((Transaction tr) -> {
+            });
+
+            assertEquals(1, builder.evsStages.size());
+            assertEquals(StageName.ROLLBACK, builder.evsStages.get(0));
+        }
+
+        @Test
+        @DisplayName("Empty cycle fails when stage cannot be inferred")
+        void emptyCycleFailsWhenUnstaged()
+        {
+            ConfigBuilder configBuilder = new ConfigBuilder();
+            TransactionBuilder builder = configBuilder.context("/app").transaction("tx");
+
+            assertThrows(IllegalArgumentException.class, () -> builder.cycle(new Life<>(Transaction.class)));
+        }
+
+        @Test
+        @DisplayName("Cycle with multiple handlers is registered in matching lifecycle stages")
+        void cycleWithMultipleHandlersStageRouting()
+        {
+            ConfigBuilder configBuilder = new ConfigBuilder();
+            TransactionBuilder builder = configBuilder.context("/app").transaction("tx");
+            Life<Transaction> life = new Life<>(Transaction.class);
+            life.begin(tr -> {
+            });
+            life.commit(tr -> {
+            });
+            life.rollback(tr -> {
+            });
+
+            builder.cycle(life);
+
+            assertEquals(List.of(StageName.BEGIN, StageName.COMMIT, StageName.ROLLBACK), builder.evsStages);
+            assertSame(life, builder.evsSuppliers.get(0).get());
+            assertSame(life, builder.evsSuppliers.get(1).get());
+            assertSame(life, builder.evsSuppliers.get(2).get());
         }
 
         @Test
@@ -392,7 +473,7 @@ class ContextBuilderTest
 
             // @formatter:off
             contextBuilder
-                .precondition()
+                .begin()
                     .effect(String.class)
                         .create(v -> {}, "precondition effect")
                 .immediate()
@@ -404,9 +485,37 @@ class ContextBuilderTest
             contextBuilder.buildContext();
             // @formatter:on
 
-            assertEquals(1, context.stage().at(StageName.PRECONDITION).size());
+            assertEquals(1, context.stage().at(StageName.BEGIN).size());
             assertEquals(1, context.stage().at(StageName.IMMEDIATE).size());
             assertEquals(1, context.stage().at(StageName.VALIDATION).size());
+        }
+
+        @Test
+        @DisplayName("Builder supports transaction-oriented stage selectors")
+        void builderSupportsTransactionOrientedSelectors()
+        {
+            ConfigBuilder configBuilder = new ConfigBuilder();
+            ContextBuilder contextBuilder = configBuilder.context("/app");
+            Context context = new Context("/app");
+            contextBuilder.contextFactory(() -> context);
+
+            // @formatter:off
+            contextBuilder
+                .commit()
+                    .effect(String.class)
+                        .create(v -> {}, "commit effect")
+                .checkpoint()
+                    .effect(String.class)
+                        .create(v -> {}, "checkpoint effect")
+                .rollback()
+                    .effect(String.class)
+                        .create(v -> {}, "rollback effect");
+            contextBuilder.buildContext();
+            // @formatter:on
+
+            assertEquals(1, context.stage().at(StageName.COMMIT).size());
+            assertEquals(1, context.stage().at(StageName.CHECKPOINT).size());
+            assertEquals(1, context.stage().at(StageName.ROLLBACK).size());
         }
     }
 }

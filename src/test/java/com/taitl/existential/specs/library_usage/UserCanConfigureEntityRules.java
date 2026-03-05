@@ -114,19 +114,19 @@ class UserCanConfigureEntityRules extends SpecBase
         }
 
         @Test
-        @DisplayName("Execution stages evaluate precondition once and immediate on each event")
+        @DisplayName("Execution stages evaluate begin once and immediate on each event")
         void executionStages() throws Exception
         {
-            AtomicInteger preconditionCalls = new AtomicInteger();
+            AtomicInteger beginCalls = new AtomicInteger();
             AtomicInteger immediateCalls = new AtomicInteger();
             AtomicInteger validationCalls = new AtomicInteger();
 
             // @formatter:off
             ex.configure()
                     .context(op)
-                    .precondition()
+                    .begin()
                         .effect(cat.getClass())
-                            .create(c -> preconditionCalls.incrementAndGet(), "precondition create")
+                            .create(c -> beginCalls.incrementAndGet(), "begin create")
                     .immediate()
                         .effect(cat.getClass())
                             .create(c -> immediateCalls.incrementAndGet(), "immediate create")
@@ -140,9 +140,80 @@ class UserCanConfigureEntityRules extends SpecBase
             ex.create(cat, tran);
             ex.commit(tran);
 
-            assertEquals(1, preconditionCalls.get());
+            assertEquals(1, beginCalls.get());
             assertEquals(2, immediateCalls.get());
             assertEquals(1, validationCalls.get());
+        }
+
+        @Test
+        @DisplayName("Commit stage is evaluated immediately before validation")
+        void commitStageBeforeValidation() throws Exception
+        {
+            AtomicBoolean commitDone = new AtomicBoolean();
+
+            // @formatter:off
+            ex.configure()
+                    .context(op)
+                    .commit()
+                        .effect(cat.getClass())
+                            .create(c -> commitDone.set(true), "commit effect")
+                    .validation()
+                        .invariant(cat.getClass())
+                            .create(c -> commitDone.get(), "commit should run before validation");
+            // @formatter:on
+
+            String tran = ex.begin(op).id();
+            ex.create(cat, tran);
+            assertDoesNotThrow(() -> ex.commit(tran));
+            assertTrue(commitDone.get());
+        }
+
+        @Test
+        @DisplayName("Checkpoint stage is evaluated on checkpoint and not on commit")
+        void checkpointStageOnlyOnCheckpoint() throws Exception
+        {
+            AtomicInteger checkpointCalls = new AtomicInteger();
+
+            // @formatter:off
+            ex.configure()
+                    .context(op)
+                    .checkpoint()
+                        .effect(cat.getClass())
+                            .create(c -> checkpointCalls.incrementAndGet(), "checkpoint effect");
+            // @formatter:on
+
+            String tran = ex.begin(op).id();
+            ex.create(cat, tran);
+            ex.checkpoint(tran);
+            assertEquals(1, checkpointCalls.get());
+
+            ex.commit(tran);
+            assertEquals(1, checkpointCalls.get());
+        }
+
+        @Test
+        @DisplayName("Rollback stage is evaluated only on rollback")
+        void rollbackStageOnlyOnRollback() throws Exception
+        {
+            AtomicInteger rollbackCalls = new AtomicInteger();
+
+            // @formatter:off
+            ex.configure()
+                    .context(op)
+                    .rollback()
+                        .effect(cat.getClass())
+                            .create(c -> rollbackCalls.incrementAndGet(), "rollback effect");
+            // @formatter:on
+
+            String committed = ex.begin(op).id();
+            ex.create(cat, committed);
+            ex.commit(committed);
+            assertEquals(0, rollbackCalls.get());
+
+            String rolledBack = ex.begin(op).id();
+            ex.create(cat, rolledBack);
+            ex.rollback(rolledBack);
+            assertEquals(1, rollbackCalls.get());
         }
     }
 }

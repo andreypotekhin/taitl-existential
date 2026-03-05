@@ -147,15 +147,15 @@ class UserCanConfigureAccessRules extends SpecBase
         }
 
         @Test
-        @DisplayName("Precondition stage intent is evaluated once per event key")
-        void preconditionIntentOncePerEventKey() throws Exception
+        @DisplayName("Begin stage intent is evaluated once per event key")
+        void beginIntentOncePerEventKey() throws Exception
         {
             AtomicInteger checks = new AtomicInteger();
 
             // @formatter:off
             ex.configure()
                 .context(op)
-                    .precondition()
+                    .begin()
                         .intent(cat.getClass())
                             .write(c -> checks.incrementAndGet() == 1);
             // @formatter:on

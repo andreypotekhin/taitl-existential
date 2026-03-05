@@ -5,6 +5,8 @@ import com.taitl.ex.core.indexes.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
+import com.taitl.existential.handlers.transaction_handlers.*;
+import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.indexes.*;
 import com.taitl.existential.interfaces.*;
 
@@ -65,6 +67,7 @@ import static com.taitl.ex.common.helper.State.*;
 public class Transaction implements Configurable, Evaluable
 {
     public static Supplier<? extends Transaction> FACTORY = () -> Creator.create(Transaction.class);
+    protected static final Map<Class<?>, StageName> LIFECYCLE_STAGE_BY_HANDLER = lifecycleStageByHandler();
 
     public final UUID id;
     public String op;
@@ -210,7 +213,18 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void cycle(Life<T> cycle)
     {
-        cycle(cycle, resolvedStage(cycle));
+        sane(cycle, "cycle");
+        if (stageCursor != null)
+        {
+            cycle(cycle, stageCursor);
+            return;
+        }
+
+        EnumSet<StageName> lifecycleStages = lifecycleStages(cycle);
+        for (StageName stageName : lifecycleStages)
+        {
+            cycle(cycle, stageName);
+        }
     }
 
     public <T extends Transaction> void cycle(Life<T> cycle, StageName stageName)
@@ -251,12 +265,7 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void begin(Consumer<? super T> action)
     {
-        sane(action, "action");
-        cycle(new Life<T>(transactionTypeKey()) {
-            {
-                begin(action);
-            }
-        });
+        addLifecycle(action, StageName.BEGIN, cycle -> cycle.begin(action));
     }
 
     /**
@@ -267,12 +276,7 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void commit(Consumer<? super T> action)
     {
-        sane(action, "action");
-        cycle(new Life<T>(transactionTypeKey()) {
-            {
-                commit(action);
-            }
-        });
+        addLifecycle(action, StageName.COMMIT, cycle -> cycle.commit(action));
     }
 
     /**
@@ -283,12 +287,7 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void rollback(Consumer<? super T> action)
     {
-        sane(action, "action");
-        cycle(new Life<T>(transactionTypeKey()) {
-            {
-                rollback(action);
-            }
-        });
+        addLifecycle(action, StageName.ROLLBACK, cycle -> cycle.rollback(action));
     }
 
     /**
@@ -299,12 +298,7 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void checkpoint(Consumer<? super T> action)
     {
-        sane(action, "action");
-        cycle(new Life<T>(transactionTypeKey()) {
-            {
-                checkpoint(action);
-            }
-        });
+        addLifecycle(action, StageName.CHECKPOINT, cycle -> cycle.checkpoint(action));
     }
 
     /*
@@ -328,9 +322,9 @@ public class Transaction implements Configurable, Evaluable
         stage.add(stageName, evs);
     }
 
-    public Transaction precondition()
+    public Transaction begin()
     {
-        stageCursor = StageName.PRECONDITION;
+        stageCursor = StageName.BEGIN;
         return this;
     }
 
@@ -343,6 +337,24 @@ public class Transaction implements Configurable, Evaluable
     public Transaction validation()
     {
         stageCursor = StageName.VALIDATION;
+        return this;
+    }
+
+    public Transaction commit()
+    {
+        stageCursor = StageName.COMMIT;
+        return this;
+    }
+
+    public Transaction checkpoint()
+    {
+        stageCursor = StageName.CHECKPOINT;
+        return this;
+    }
+
+    public Transaction rollback()
+    {
+        stageCursor = StageName.ROLLBACK;
         return this;
     }
 
@@ -441,8 +453,67 @@ public class Transaction implements Configurable, Evaluable
         }
         if (evs instanceof Life<?>)
         {
-            return StageName.PRECONDITION;
+            return StageName.BEGIN;
         }
         return StageName.VALIDATION;
+    }
+
+    protected StageName lifecycleStage(EventHandler<?> handler)
+    {
+        sane(handler, "handler");
+        StageName stageName = LIFECYCLE_STAGE_BY_HANDLER.get(handler.getClass());
+        if (stageName != null)
+        {
+            return stageName;
+        }
+        for (Map.Entry<Class<?>, StageName> entry : LIFECYCLE_STAGE_BY_HANDLER.entrySet())
+        {
+            if (entry.getKey().isAssignableFrom(handler.getClass()))
+            {
+                return entry.getValue();
+            }
+        }
+        throw new IllegalArgumentException("Unsupported lifecycle handler type: " + handler.getClass().getName());
+    }
+
+    protected <T extends Transaction> EnumSet<StageName> lifecycleStages(Life<T> cycle)
+    {
+        sane(cycle, "cycle");
+        EnumSet<StageName> stages = EnumSet.noneOf(StageName.class);
+        for (Ev<T> ev : cycle.list())
+        {
+            if (!(ev instanceof EventHandler<?>))
+            {
+                throw new IllegalArgumentException(
+                        "Lifecycle rule must be an EventHandler: " + ev.getClass().getName());
+            }
+            stages.add(lifecycleStage((EventHandler<?>) ev));
+        }
+        if (stages.isEmpty())
+        {
+            throw new IllegalArgumentException("Lifecycle rule set must contain at least one handler");
+        }
+        return stages;
+    }
+
+    protected <T extends Transaction> void addLifecycle(
+            Consumer<? super T> action,
+            StageName stageName,
+            Consumer<Life<T>> registrar)
+    {
+        sane(action, "action", stageName, "stageName", registrar, "registrar");
+        Life<T> cycle = new Life<>(transactionTypeKey());
+        registrar.accept(cycle);
+        cycle(cycle, stageName);
+    }
+
+    protected static Map<Class<?>, StageName> lifecycleStageByHandler()
+    {
+        Map<Class<?>, StageName> map = new LinkedHashMap<>();
+        map.put(OnBegin.class, StageName.BEGIN);
+        map.put(OnCommit.class, StageName.COMMIT);
+        map.put(OnCheckpoint.class, StageName.CHECKPOINT);
+        map.put(OnRollback.class, StageName.ROLLBACK);
+        return Collections.unmodifiableMap(map);
     }
 }

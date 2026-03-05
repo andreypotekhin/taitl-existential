@@ -8,7 +8,7 @@ import java.util.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Stores configured rule sets partitioned by execution stage (Precondition, Immediate, Validation).
+ * Stores configured rule sets partitioned by execution stage.
  */
 public class Stage
 {
