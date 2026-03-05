@@ -11,7 +11,7 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
-public class ConcreteExists<T, K> implements Expression<T>
+public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
 {
     Collection<T> coll;
     Map<T, K> map;
@@ -23,7 +23,19 @@ public class ConcreteExists<T, K> implements Expression<T>
     Transaction tran;
     String description;
 
-    /* Implement Expression */
+    void validate()
+    {
+        verify(coll != null || map != null, "Either coll or map must be provided.");
+        verify(coll == null || map == null, "Coll or map must be provided, but not both.");
+        verify(cpredicate != null || cbipredicate != null || mbipredicate != null
+                || vpredicate != null || vbipredicate != null,
+                "At least one predicate must be provided.");
+        verify(cpredicate == null || cbipredicate == null || mbipredicate == null
+                || vpredicate == null || vbipredicate == null,
+                "Only one predicate should be specified.");
+    }
+
+    /* Implement Expression interface */
 
     public Object evaluate(T t) throws ExistentialException
     {
@@ -39,7 +51,7 @@ public class ConcreteExists<T, K> implements Expression<T>
         return Descriptions.text(description);
     }
 
-    /* Implement Predicate */
+    /* Implement Predicate interface */
 
     /**
      * Tests if the predicate holds for given transaction.
@@ -148,23 +160,23 @@ public class ConcreteExists<T, K> implements Expression<T>
             }
             return cbipredicate.test(matching, tran);
         }
-        if (mbipredicate != null)
+        if (vpredicate != null)
         {
-            for (Map.Entry<T, K> entry : map.entrySet())
+            for (T v : map.keySet())
             {
-                T key = entry.getKey();
-                if (entity.equals(key) && mbipredicate.test(key, entry.getValue()))
+                if (entity.equals(v) && vpredicate.test(v))
                 {
                     return true;
                 }
             }
             return false;
         }
-        if (vpredicate != null)
+        if (mbipredicate != null)
         {
-            for (T v : map.keySet())
+            for (Map.Entry<T, K> entry : map.entrySet())
             {
-                if (entity.equals(v) && vpredicate.test(v))
+                T key = entry.getKey();
+                if (entity.equals(key) && mbipredicate.test(key, entry.getValue()))
                 {
                     return true;
                 }

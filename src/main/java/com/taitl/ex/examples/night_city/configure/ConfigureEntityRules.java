@@ -74,9 +74,11 @@ public class ConfigureEntityRules
                     .exists(mouseDwellingJoin.left(), "At the end of transaction, every mouse is in a dwelling")
         ;
 
-        // Rules for narrower contexts
+        // Rules assigned to narrower context
 //        Ex.configure()
 //                .context("/api/cats")
+
+        // Rules assigned to a transaction
 
         // @formatter:on
     }

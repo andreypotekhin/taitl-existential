@@ -390,18 +390,19 @@ class ContextBuilderTest
             Context context = new Context("/app");
             contextBuilder.contextFactory(() -> context);
 
+            // @formatter:off
             contextBuilder
-                    .precondition()
+                .precondition()
                     .effect(String.class)
-                    .create(v -> {
-                    }, "precondition effect")
-                    .immediate()
+                        .create(v -> {}, "precondition effect")
+                .immediate()
                     .invariant(String.class)
-                    .create(v -> true, "immediate invariant")
-                    .validation()
+                        .create(v -> true, "immediate invariant")
+                .validation()
                     .intent(String.class)
-                    .read();
+                        .read();
             contextBuilder.buildContext();
+            // @formatter:on
 
             assertEquals(1, context.stage().at(StageName.PRECONDITION).size());
             assertEquals(1, context.stage().at(StageName.IMMEDIATE).size());

@@ -4,7 +4,6 @@ import com.taitl.existential.configs.*;
 
 import java.util.*;
 import java.util.function.*;
-import java.util.stream.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -34,6 +33,7 @@ public class ConcreteExistsBuilder<V, K>
         result.mbipredicate = mbipredicate;
         result.tran = transaction;
         result.description = description;
+        result.validate();
         return result;
     }
 
@@ -44,6 +44,9 @@ public class ConcreteExistsBuilder<V, K>
         verify(cpredicate != null || cbipredicate != null || mbipredicate != null
                 || vpredicate != null || vbipredicate != null,
                 "At least one predicate must be provided.");
+        verify(cpredicate == null || cbipredicate == null || mbipredicate == null
+                || vpredicate == null || vbipredicate == null,
+                "Only one predicate should be specified.");
     }
 
     public ConcreteExistsBuilder<V, K> coll(Collection<V> coll)

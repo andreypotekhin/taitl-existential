@@ -18,7 +18,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * @param <T>
  *            Element type in the examined collection
  */
-public class Exists<T> implements Expression<T>
+public class Exists<T> implements Expression<T>, Predicate<T>
 {
     ConcreteExists<T, ?> concrete;
 
@@ -410,7 +410,7 @@ public class Exists<T> implements Expression<T>
                 .build();
     }
 
-    /* Implement Expression */
+    /* Implement Expression interface */
 
     public Object evaluate(T entity) throws ExistentialException
     {
@@ -422,7 +422,7 @@ public class Exists<T> implements Expression<T>
         return concrete.description();
     }
 
-    /* Implement Predicate */
+    /* Implement Predicate interface */
 
     /**
      * Tests if the predicate holds for the given entity.
