@@ -30,6 +30,8 @@ public class CollJoin<V, W, K>
 
     protected SetMap<K, V> leftByKey = new SetMap<>();
     protected SetMap<K, W> rightByKey = new SetMap<>();
+    protected SetMap<V, W> rightByLeft = new SetMap<>();
+    protected SetMap<W, V> leftByRight = new SetMap<>();
 
     protected Function<V, K> getLeftKey;
     protected Function<W, K> getRightKey;
@@ -61,29 +63,53 @@ public class CollJoin<V, W, K>
     public Set<W> getRightByLeft(V left)
     {
         sane(left, "left");
-        verify(getLeftKey != null, "You need to call 'setGetLeftKey()' first");
-        return getRight(getLeftKey.apply(left));
+        return rightByLeft.get(left);
     }
 
     public Set<V> getLeftByRight(W right)
     {
         sane(right, "right");
-        verify(getRightKey != null, "You need to call 'setGetRightKey()' first");
-        return getLeft(getRightKey.apply(right));
+        return leftByRight.get(right);
+    }
+
+    /**
+     * Returns a dynamic read-only map from left values to matching right values.
+     */
+    public Map<V, Set<W>> left()
+    {
+        return Collections.unmodifiableMap(rightByLeft);
+    }
+
+    /**
+     * Returns a dynamic read-only map from right values to matching left values.
+     */
+    public Map<W, Set<V>> right()
+    {
+        return Collections.unmodifiableMap(leftByRight);
     }
 
     public Set<V> addLeft(K key, V value)
     {
         sane(key, "key");
         sane(value, "value");
-        return leftByKey.add(key, value);
+        synchronized (this)
+        {
+            Set<V> result = leftByKey.add(key, value);
+            rebuildViews();
+            return result;
+        }
     }
 
     public Set<W> addRight(K key, W value)
     {
         sane(key, "key");
         sane(value, "value");
-        return rightByKey.add(key, value);
+        synchronized (this)
+        {
+            Set<W> result = rightByKey.add(key, value);
+            rebuildViews();
+            return result;
+        }
     }
 
     public Set<V> addLeft(V value)
@@ -104,14 +130,30 @@ public class CollJoin<V, W, K>
     {
         sane(key, "key");
         sane(value, "value");
-        return leftByKey.removeValue(key, value);
+        synchronized (this)
+        {
+            V removed = leftByKey.removeValue(key, value);
+            if (removed != null)
+            {
+                rebuildViews();
+            }
+            return removed;
+        }
     }
 
     public W removeRight(K key, W value)
     {
         sane(key, "key");
         sane(value, "value");
-        return rightByKey.removeValue(key, value);
+        synchronized (this)
+        {
+            W removed = rightByKey.removeValue(key, value);
+            if (removed != null)
+            {
+                rebuildViews();
+            }
+            return removed;
+        }
     }
 
     public void reindexLeft(K oldKey, K newKey, V value)
@@ -129,8 +171,12 @@ public class CollJoin<V, W, K>
         }
         synchronized (this)
         {
-            removeLeft(oldKey, value);
-            addLeft(newKey, value);
+            V removed = leftByKey.removeValue(oldKey, value);
+            if (removed != null)
+            {
+                leftByKey.add(newKey, value);
+            }
+            rebuildViews();
         }
     }
 
@@ -149,8 +195,12 @@ public class CollJoin<V, W, K>
         }
         synchronized (this)
         {
-            removeRight(oldKey, value);
-            addRight(newKey, value);
+            W removed = rightByKey.removeValue(oldKey, value);
+            if (removed != null)
+            {
+                rightByKey.add(newKey, value);
+            }
+            rebuildViews();
         }
     }
 
@@ -168,7 +218,37 @@ public class CollJoin<V, W, K>
 
     public void clear()
     {
-        leftByKey.clear();
-        rightByKey.clear();
+        synchronized (this)
+        {
+            leftByKey.clear();
+            rightByKey.clear();
+            rightByLeft.clear();
+            leftByRight.clear();
+        }
+    }
+
+    protected void rebuildViews()
+    {
+        rightByLeft.clear();
+        leftByRight.clear();
+
+        for (Map.Entry<K, Set<V>> entry : leftByKey.entrySet())
+        {
+            K key = entry.getKey();
+            Set<W> right = rightByKey.get(key);
+            if (right == null || right.isEmpty())
+            {
+                continue;
+            }
+
+            for (V leftValue : entry.getValue())
+            {
+                for (W rightValue : right)
+                {
+                    rightByLeft.add(leftValue, rightValue);
+                    leftByRight.add(rightValue, leftValue);
+                }
+            }
+        }
     }
 }

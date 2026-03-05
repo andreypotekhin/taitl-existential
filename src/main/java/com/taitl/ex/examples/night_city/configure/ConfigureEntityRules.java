@@ -71,7 +71,7 @@ public class ConfigureEntityRules
                     .transit((t0, t1) -> mouseDwellingJoin.reindexRight(t0.location(), t1.location(), t1),
                            "Update mouse-dwelling on dwelling movements")
 //                .invariant(Mouse.class)
-//                    .exists(mouseDwellingJoin, "At the end of transaction, every mouse is in a dwelling")
+//                    .exists(mouseDwellingJoin.left(), "At the end of transaction, every mouse is in a dwelling")
         ;
 
         // Rules for narrower contexts

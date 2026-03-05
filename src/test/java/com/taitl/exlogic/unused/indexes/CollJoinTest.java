@@ -1,6 +1,7 @@
 package com.taitl.exlogic.unused.indexes;
 
 import com.taitl.existential.indexes.*;
+import com.taitl.existential.quantifiers.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;
@@ -95,5 +96,29 @@ class CollJoinTest
         IllegalArgumentException rightEx = assertThrows(IllegalArgumentException.class,
                 () -> join.reindexRight("A", "B", bug));
         assertTrue(rightEx.getMessage().contains("newKey"));
+    }
+
+    @Test
+    void testJoinViewsAndExistsOnLeftView()
+    {
+        User alice = new User("A", "Alice");
+        User bob = new User("A", "Bob");
+        Task bug = new Task("A", "Fix bug");
+        Task feature = new Task("A", "Build feature");
+        Task deploy = new Task("B", "Deploy");
+
+        join.addLeft(alice);
+        join.addLeft(bob);
+        join.addRight(bug);
+        join.addRight(feature);
+        join.addRight(deploy);
+
+        assertEquals(Set.of(bug, feature), join.left().get(alice));
+        assertEquals(Set.of(alice, bob), join.right().get(bug));
+        assertNull(join.left().get(new User("A", "Ghost")));
+
+        Exists<User> exists = new Exists<>(join.left());
+        assertTrue(exists.test(alice));
+        assertFalse(exists.test(new User("A", "Ghost")));
     }
 }
