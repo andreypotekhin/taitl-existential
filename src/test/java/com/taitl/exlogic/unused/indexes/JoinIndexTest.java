@@ -99,6 +99,21 @@ class JoinIndexTest
     }
 
     @Test
+    void testIndexNullRemoves()
+    {
+        User alice = new User("A", "Alice");
+        Task bug = new Task("A", "Fix bug");
+        join.addLeft(alice);
+        join.addRight(bug);
+
+        join.indexLeft(alice, null);
+        join.indexRight(bug, null);
+
+        assertTrue(join.getLeft("A") == null || join.getLeft("A").isEmpty());
+        assertTrue(join.getRight("A") == null || join.getRight("A").isEmpty());
+    }
+
+    @Test
     void testJoinViewsAndExistsOnLeftView()
     {
         User alice = new User("A", "Alice");

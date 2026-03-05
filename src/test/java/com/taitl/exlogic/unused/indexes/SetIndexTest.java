@@ -42,14 +42,15 @@ class SetIndexTest
     void testConstructor()
     {
         cats_by_location = new SetIndex<>();
+        assertTrue(cats_by_location instanceof Map);
         cats_by_location.add(GREY_CAT.location, GREY_CAT);
-        assertTrue(cats_by_location.contains(LOCATION_PARK));
+        assertTrue(cats_by_location.containsKey(LOCATION_PARK));
         cats_by_location = new SetIndex<>(cat -> cat.location);
         cats_by_location.add(BLACK_CAT);
-        assertTrue(cats_by_location.contains(LOCATION_GARDEN));
+        assertTrue(cats_by_location.containsKey(LOCATION_GARDEN));
         cats_by_color = new SetIndex<>(c -> c.location.toString());
         cats_by_color.add(CityTestData.ORANGE_CAT);
-        assertTrue(cats_by_color.contains("Garden"));
+        assertTrue(cats_by_color.containsKey("Garden"));
         assertThrows(IllegalArgumentException.class, () -> new SetIndex<>(null));
     }
 
@@ -57,7 +58,7 @@ class SetIndexTest
     void testSize()
     {
         assertEquals(3, cats_by_color.size());
-        cats_by_color.remove("Grey", GREY_CAT);
+        cats_by_color.removeValue("Grey", GREY_CAT);
         assertEquals(2, cats_by_color.size());
         cats_by_color.clear();
         assertEquals(0, cats_by_color.size());
@@ -76,16 +77,16 @@ class SetIndexTest
     @Test
     void testContains()
     {
-        assertTrue(cats_by_color.contains("Grey"));
-        assertTrue(cats_by_color.contains("Yellow"));
-        assertTrue(cats_by_color.contains("Black"));
+        assertTrue(cats_by_color.containsKey("Grey"));
+        assertTrue(cats_by_color.containsKey("Yellow"));
+        assertTrue(cats_by_color.containsKey("Black"));
         assertTrue(cats_by_color.contains("Black", BLACK_CAT));
         assertTrue(!cats_by_color.contains("Black", GREY_CAT));
-        assertTrue(!cats_by_color.contains("non-existing"));
+        assertTrue(!cats_by_color.containsKey("non-existing"));
         assertTrue(cats_by_location.contains(LOCATION_PARK, GREY_CAT));
         assertTrue(cats_by_location.contains(LOCATION_PARK, YELLOW_CAT));
         assertTrue(cats_by_location.contains(LOCATION_GARDEN, BLACK_CAT));
-        assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains(null));
+        assertThrows(IllegalArgumentException.class, () -> cats_by_color.containsKey(null));
         assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains(null, GREY_CAT));
         assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains("Black", (Cat) null));
         assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains("Black", (Predicate<Set<Cat>>) null));
@@ -129,9 +130,9 @@ class SetIndexTest
     {
         cats_by_location = new SetIndex<>(cat -> cat.location);
         cats_by_location.add(LOCATION_PARK, GREY_CAT);
-        assertTrue(cats_by_location.contains(LOCATION_PARK), "Add using explicit key");
+        assertTrue(cats_by_location.containsKey(LOCATION_PARK), "Add using explicit key");
         cats_by_location.add(BLACK_CAT);
-        assertTrue(cats_by_location.contains(LOCATION_GARDEN),
+        assertTrue(cats_by_location.containsKey(LOCATION_GARDEN),
                 "Add using key derived from object (cat.location)");
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(null));
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(null, BLACK_CAT));
@@ -160,30 +161,41 @@ class SetIndexTest
     }
 
     @Test
+    void testIndex()
+    {
+        Cat orange = new Cat("Orange", "Garden");
+        cats_by_location.index(null, orange);
+        assertTrue(cats_by_location.contains(LOCATION_GARDEN, orange));
+
+        cats_by_location.index(orange, null);
+        assertFalse(cats_by_location.contains(LOCATION_GARDEN, orange));
+    }
+
+    @Test
     void testRemove()
     {
-        assertEquals(BLACK_CAT, cats_by_location.remove(LOCATION_GARDEN, BLACK_CAT),
+        assertEquals(BLACK_CAT, cats_by_location.removeValue(LOCATION_GARDEN, BLACK_CAT),
                 "Remove single element / unique key");
-        assertNull(cats_by_location.remove(LOCATION_GARDEN, BLACK_CAT), "Try removing second time");
-        assertTrue(!cats_by_location.contains(LOCATION_GARDEN), "The key is not present anymore");
-        assertEquals(GREY_CAT, cats_by_location.remove(LOCATION_PARK, GREY_CAT),
+        assertNull(cats_by_location.removeValue(LOCATION_GARDEN, BLACK_CAT), "Try removing second time");
+        assertTrue(!cats_by_location.containsKey(LOCATION_GARDEN), "The key is not present anymore");
+        assertEquals(GREY_CAT, cats_by_location.removeValue(LOCATION_PARK, GREY_CAT),
                 "Remove element at a non-unique key");
-        assertTrue(cats_by_location.contains(LOCATION_PARK), "Assert the key still present");
+        assertTrue(cats_by_location.containsKey(LOCATION_PARK), "Assert the key still present");
         assertTrue(cats_by_location.contains(LOCATION_PARK, cats -> cats.contains(YELLOW_CAT)),
                 "Assert another value still present under key");
         assertEquals(YELLOW_CAT,
                 getFirst(cats_by_location.remove(LOCATION_PARK, cat -> cat == YELLOW_CAT)),
                 "Remove another element from non-unique key");
-        assertTrue(!cats_by_location.contains(LOCATION_PARK), "The key is not present anymore");
-        assertNull(cats_by_color.remove("Non-existing-key", BLACK_CAT),
+        assertTrue(!cats_by_location.containsKey(LOCATION_PARK), "The key is not present anymore");
+        assertNull(cats_by_color.removeValue("Non-existing-key", BLACK_CAT),
                 "Try removing a key that is not present");
-        assertNull(cats_by_color.remove("Grey", BLACK_CAT),
+        assertNull(cats_by_color.removeValue("Grey", BLACK_CAT),
                 "Try removing a object that is not present");
         assertNull(cats_by_color.remove("Grey", cat -> cat == BLACK_CAT),
                 "Try removing a object that is not present");
-        assertThrows(IllegalArgumentException.class, () -> cats_by_location.remove(null, BLACK_CAT));
+        assertThrows(IllegalArgumentException.class, () -> cats_by_location.removeValue(null, BLACK_CAT));
         assertThrows(IllegalArgumentException.class,
-                () -> cats_by_location.remove(LOCATION_GARDEN, (Cat) null));
+                () -> cats_by_location.removeValue(LOCATION_GARDEN, (Cat) null));
         assertThrows(IllegalArgumentException.class,
                 () -> cats_by_location.remove(LOCATION_GARDEN, (Predicate<Cat>) null));
         assertThrows(IllegalArgumentException.class,
@@ -191,20 +203,18 @@ class SetIndexTest
     }
 
     @Test
-    @DisplayName("Test get obj")
-    void testGetObj()
+    @DisplayName("Test get by object key")
+    void testGetByObjectKey()
     {
-        assertEquals(GREY_CAT, getFirst(cats_by_color.getObj("Grey")));
+        assertEquals(GREY_CAT, getFirst(cats_by_color.get("Grey")));
         assertThrows(IllegalArgumentException.class,
-                () -> cats_by_location.getObj(null));
-        assertThrows(IllegalStateException.class,
-                () -> cats_by_location.getObj(BLACK_CAT), "Wrong type of key");
+                () -> cats_by_location.get(null));
+        assertNull(cats_by_location.get(BLACK_CAT));
         cats_by_color.clear();
-        assertNull(cats_by_color.getObj("Grey"));
+        assertNull(cats_by_color.get("Grey"));
         cats_by_color.add(ORANGE_CAT);
-        assertEquals(ORANGE_CAT, getFirst(cats_by_color.getObj("Orange")));
-        assertThrows(IllegalStateException.class,
-                () -> cats_by_color.getObj(BLACK_CAT), "Wrong type of key");
+        assertEquals(ORANGE_CAT, getFirst(cats_by_color.get("Orange")));
+        assertNull(cats_by_color.get(BLACK_CAT));
     }
 
 }

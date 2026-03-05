@@ -1,12 +1,12 @@
 package com.taitl.existential.indexes;
 
-import com.taitl.ex.common.helper.collections.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.concrete.*;
 
 import java.util.*;
 import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Maps a key (K) to a set of values (V), to make Exists expressions more performant.
@@ -17,19 +17,9 @@ import static com.taitl.ex.common.helper.State.*;
  * @param <V>
  *            Value type
  */
-// Todo: delegate to ConcreteSetIndex
-public class SetIndex<K, V>
+public class SetIndex<K, V> implements Map<K, Set<V>>
 {
-    protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
-    protected static final String ARG_KEY_CLASS = "Argument 'key' class '%s' does not match the key class '%s'"
-            + " required by this index. See " + TROUBLESHOOTING_SECTION;
-    protected static final String ARG_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
-            + " returned by 'getKey' function. See " + TROUBLESHOOTING_SECTION;
-
-    protected SetMap<K, V> storage = new SetMap<>();
-    protected Function<V, K> getKey;
-
-    protected static final String NEED_GET_KEY = "You need to call 'setGetKey()' first";
+    protected ConcreteSetIndex<K, V> concrete;
 
     /**
      * Creates an empty index without a key extractor.
@@ -37,6 +27,7 @@ public class SetIndex<K, V>
      */
     public SetIndex()
     {
+        concrete = createConcrete();
     }
 
     /**
@@ -47,6 +38,7 @@ public class SetIndex<K, V>
     public SetIndex(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
+        concrete = createConcrete();
         setGetKey(getKey);
     }
 
@@ -56,22 +48,10 @@ public class SetIndex<K, V>
      * @param key Key to look up
      * @return Set of values for the key
      */
-    public Set<V> get(K key)
+    @Override
+    public Set<V> get(Object key)
     {
-        sane(key, "key");
-        return storage.get(key);
-    }
-
-    /**
-     * Returns true if the key is present in the index.
-     *
-     * @param key Key to check
-     * @return True when the key exists in the index
-     */
-    public boolean contains(K key)
-    {
-        sane(key, "key");
-        return storage.containsKey(key);
+        return concrete.get(key);
     }
 
     /**
@@ -83,14 +63,7 @@ public class SetIndex<K, V>
      */
     public boolean contains(K key, V value)
     {
-        sane(key, "key");
-        sane(value, "value");
-        Set<V> set = storage.get(key);
-        if (set == null || set.isEmpty())
-        {
-            return false;
-        }
-        return set.contains(value);
+        return concrete.contains(key, value);
     }
 
     /**
@@ -102,14 +75,7 @@ public class SetIndex<K, V>
      */
     public boolean contains(K key, Predicate<Set<V>> match)
     {
-        sane(key, "key");
-        sane(match, "match");
-        Set<V> set = storage.get(key);
-        if (set == null || set.isEmpty())
-        {
-            return false;
-        }
-        return match.test(set);
+        return concrete.contains(key, match);
     }
 
     /**
@@ -121,9 +87,7 @@ public class SetIndex<K, V>
      */
     public Set<V> add(K k, V v)
     {
-        sane(k, "key");
-        sane(v, "value");
-        return storage.add(k, v);
+        return concrete.add(k, v);
     }
 
     /**
@@ -134,9 +98,7 @@ public class SetIndex<K, V>
      */
     public Set<V> add(V v)
     {
-        sane(v, "value");
-        verify(getKey != null, NEED_GET_KEY);
-        return storage.add(getKey.apply(v), v);
+        return concrete.add(v);
     }
 
     /**
@@ -150,11 +112,9 @@ public class SetIndex<K, V>
      *            Value to be removed
      * @return The value being removed, or null if the value is not in the index
      */
-    public V remove(K k, V v)
+    public V removeValue(K k, V v)
     {
-        sane(k, "key");
-        sane(v, "value");
-        return storage.removeValue(k, v);
+        return concrete.removeValue(k, v);
     }
 
     /**
@@ -166,9 +126,7 @@ public class SetIndex<K, V>
      */
     public Set<V> remove(K k, Predicate<? super V> match)
     {
-        sane(k, "key");
-        sane(match, "match");
-        return storage.removeMatching(k, match);
+        return concrete.remove(k, match);
     }
 
     /**
@@ -181,24 +139,7 @@ public class SetIndex<K, V>
      */
     public void reindex(K k0, K k1, V v)
     {
-        sane(k0, "oldKey");
-        sane(k1, "newKey");
-        sane(v, "value");
-        if (getKey != null)
-        {
-            K k = getKey.apply(v);
-            if (!k1.equals(k))
-            {
-                throw new IllegalArgumentException(String.format(
-                        ARG_KEY_VALUE,
-                        k1, k));
-            }
-        }
-        synchronized (this)
-        {
-            remove(k0, v);
-            add(k1, v);
-        }
+        concrete.reindex(k0, k1, v);
     }
 
     /**
@@ -209,33 +150,15 @@ public class SetIndex<K, V>
      */
     public void reindex(K k0, V v)
     {
-        sane(k0, "oldKey");
-        sane(v, "value");
-        verify(getKey != null, NEED_GET_KEY);
-        reindex(k0, getKey.apply(v), v);
+        concrete.reindex(k0, v);
     }
 
     /**
-     * In some scenarios, the exact key type is not known.
-     * This provides a method to query by an {@link Object} key.
-     *
-     * @param key
-     *            Object representing a key
-     * @return Set of values stored under the key
+     * Indexes value transitions with null-tolerant semantics.
      */
-    @SuppressWarnings("unchecked")
-    public Set<V> getObj(Object key)
+    public void index(V oldValue, V newValue)
     {
-        sane(key, "key");
-        if (storage.size() == 0)
-        {
-            return null;
-        }
-        Class<? extends K> keyClass = storage.getKeyClass();
-        verify(keyClass.isAssignableFrom(key.getClass()),
-                String.format(ARG_KEY_CLASS,
-                        key.getClass().getSimpleName(), keyClass.getSimpleName()));
-        return storage.get((K) key);
+        concrete.index(oldValue, newValue);
     }
 
     /**
@@ -245,23 +168,84 @@ public class SetIndex<K, V>
      */
     public void setGetKey(Function<V, K> getKey)
     {
-        sane(getKey, "getKey");
-        this.getKey = getKey;
+        concrete.setGetKey(getKey);
+    }
+
+    @Override
+    public boolean containsKey(Object key)
+    {
+        return concrete.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value)
+    {
+        return concrete.containsValue(value);
+    }
+
+    @Override
+    public Set<V> put(K key, Set<V> value)
+    {
+        return concrete.put(key, value);
+    }
+
+    @Override
+    public Set<V> remove(Object key)
+    {
+        return concrete.remove(key);
+    }
+
+    @Override
+    public void putAll(Map<? extends K, ? extends Set<V>> m)
+    {
+        concrete.putAll(m);
     }
 
     /**
      * Removes all entries from the index.
      */
+    @Override
     public void clear()
     {
-        storage.clear();
+        concrete.clear();
     }
 
     /**
      * Returns amount of keys that currently have at least one value.
      */
+    @Override
     public int size()
     {
-        return storage.size();
+        return concrete.size();
+    }
+
+    @Override
+    public boolean isEmpty()
+    {
+        return concrete.isEmpty();
+    }
+
+    @Override
+    public Set<K> keySet()
+    {
+        return concrete.keySet();
+    }
+
+    @Override
+    public Collection<Set<V>> values()
+    {
+        return concrete.values();
+    }
+
+    @Override
+    public Set<Entry<K, Set<V>>> entrySet()
+    {
+        return concrete.entrySet();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected ConcreteSetIndex<K, V> createConcrete()
+    {
+        return Creator.create(ConcreteSetIndex.class);
     }
 }
