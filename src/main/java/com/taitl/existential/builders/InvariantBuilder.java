@@ -395,10 +395,10 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against evaluated entity and matching collection value
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate)
+    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate)
     {
         sane(coll, "coll", bipredicate, "bipredicate");
         target.exists(coll, bipredicate, "");
@@ -409,11 +409,11 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param bipredicate Predicate evaluated against collection and transaction
+     * @param bipredicate Predicate evaluated against evaluated entity and matching collection value
      * @param description Description of invariant
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate, String description)
+    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate, String description)
     {
         sane(coll, "coll", bipredicate, "bipredicate", description, "description");
         target.exists(coll, bipredicate, description);

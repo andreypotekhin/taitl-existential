@@ -16,7 +16,7 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
     Collection<T> coll;
     Map<T, K> map;
     Predicate<T> vpredicate;
-    BiPredicate<T, Transaction> vbipredicate;
+    BiPredicate<T, T> vbipredicate;
     Predicate<Collection<T>> cpredicate;
     BiPredicate<Collection<T>, Transaction> cbipredicate;
     BiPredicate<T, K> mbipredicate;
@@ -117,10 +117,9 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
         }
         if (vbipredicate != null)
         {
-            cool(tran, "tran");
             for (T v : coll)
             {
-                if (entity.equals(v) && vbipredicate.test(v, tran))
+                if (entity.equals(v) && vbipredicate.test(entity, v))
                 {
                     return true;
                 }

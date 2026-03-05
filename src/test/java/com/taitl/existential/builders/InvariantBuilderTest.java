@@ -117,17 +117,17 @@ class InvariantBuilderTest
             assertFalse(exists.test("a"));
         }
 
-        // @Test
-        // @DisplayName("exists(values, bipredicate) evaluates value and transaction")
-        // void evaluatesValueAndTransaction()
-        // {
-        // InvariantBuilder<String> builder = builder();
-        // Invariant<String> invariant = builder.exists(List.of("a", "boat"),
-        // (value, transaction) -> value.length() > 3 && transaction.name.equals("tx")).build();
-        // Exists<String> exists = findFirst(invariant, Exists.class);
-        // assertTrue(exists.test("boat"));
-        // assertFalse(exists.test("abc"));
-        // }
+        @Test
+        @DisplayName("exists(values, bipredicate) evaluates entity and matched value")
+        void evaluatesEntityAndMatchedValue()
+        {
+            InvariantBuilder<String> builder = builder();
+            Invariant<String> invariant = builder.exists(List.of(new String("boat")),
+                    (entity, matched) -> entity != matched && entity.equals(matched)).build();
+            Exists<String> exists = findFirst(invariant, Exists.class);
+            assertTrue(exists.test(new String("boat")));
+            assertFalse(exists.test("goat"));
+        }
 
         @Test
         @DisplayName("exists(values, collection-predicate, placeholder) evaluates collection")
@@ -159,8 +159,4 @@ class InvariantBuilderTest
         return configBuilder.context("/app").invariant(String.class);
     }
 
-    private Transaction transaction()
-    {
-        return new Transaction("/app", "tx");
-    }
 }

@@ -15,7 +15,7 @@ public class ConcreteExistsBuilder<V, K>
     Predicate<Collection<V>> cpredicate;
     BiPredicate<Collection<V>, Transaction> cbipredicate;
     Predicate<V> vpredicate;
-    BiPredicate<V, Transaction> vbipredicate;
+    BiPredicate<V, V> vbipredicate;
     BiPredicate<V, K> mbipredicate;
     Transaction transaction;
     String description;
@@ -84,7 +84,7 @@ public class ConcreteExistsBuilder<V, K>
         return this;
     }
 
-    public ConcreteExistsBuilder<V, K> bipredicate(BiPredicate<V, Transaction> bipredicate)
+    public ConcreteExistsBuilder<V, K> bipredicate(BiPredicate<V, V> bipredicate)
     {
         sane(bipredicate, "bipredicate");
         this.vbipredicate = bipredicate;

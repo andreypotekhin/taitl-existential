@@ -93,14 +93,14 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     }
 
     /**
-     * Builds a collection-based exists predicate that depends on transaction state.
+     * Builds a collection-based exists predicate that compares evaluated and matched values.
      *
      * @param coll
      *            Collection to scan
      * @param bipredicate
-     *            Predicate that inspects the element and transaction
+     *            Predicate that inspects the evaluated entity and the matching collection value
      */
-    public Exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate)
+    public Exists(Collection<T> coll, BiPredicate<T, T> bipredicate)
     {
         sane(coll, "coll", bipredicate, "bipredicate");
         concrete = createBuilder()
@@ -110,16 +110,16 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     }
 
     /**
-     * Builds a collection-based exists predicate that depends on transaction state.
+     * Builds a collection-based exists predicate that compares evaluated and matched values.
      *
      * @param coll
      *            Collection to scan
      * @param bipredicate
-     *            Predicate that inspects the element and transaction
+     *            Predicate that inspects the evaluated entity and the matching collection value
      * @param description
      *            Human-friendly description used in violations
      */
-    public Exists(Collection<T> coll, BiPredicate<T, Transaction> bipredicate, String description)
+    public Exists(Collection<T> coll, BiPredicate<T, T> bipredicate, String description)
     {
         sane(coll, "coll", bipredicate, "bipredicate", description, "description");
         concrete = createBuilder()

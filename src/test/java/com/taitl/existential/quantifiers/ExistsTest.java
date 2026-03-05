@@ -30,6 +30,17 @@ class ExistsTest
         }
 
         @Test
+        @DisplayName("Construct with collection entity-value bipredicate")
+        void withCollectionEntityValueBipredicate()
+        {
+            Exists<String> exists = new Exists<>(List.of(new String("boat")),
+                    (entity, matched) -> entity != matched && entity.equals(matched));
+
+            assertTrue(exists.test(new String("boat")));
+            assertFalse(exists.test("goat"));
+        }
+
+        @Test
         @DisplayName("Construct with map only")
         void withMapOnly()
         {
