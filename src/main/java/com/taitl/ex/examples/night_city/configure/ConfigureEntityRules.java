@@ -61,17 +61,17 @@ public class ConfigureEntityRules
                     .exists(MOUSE_DWELLING_MAP, "At the end of transaction, every mouse is in a dwelling")
         ;
 
-        // Cross-entity existence - dynamic map (adjusts with entity changes)
+        // Cross-entity existence - dynamic map: adjusts with entity changes
         Ex.configure()
             .context("/")
                 .effect(Mouse.class)
-                    .transit((t0, t1) -> mouseDwellingJoin.reindexLeft(t0.location(), t1.location(), t1),
-                            "Update mouse-dwelling on mouse movements")
-                .effect(Dwelling.class)
-                    .transit((t0, t1) -> mouseDwellingJoin.reindexRight(t0.location(), t1.location(), t1),
-                           "Update mouse-dwelling on dwelling movements")
-//                .invariant(Mouse.class)
-//                    .exists(mouseDwellingJoin.left(), "At the end of transaction, every mouse is in a dwelling")
+                    .port((t0, t1) -> mouseDwellingJoin.indexLeft(t0, t1),
+                        "Update mouse-dwelling on mouse movements")
+                .effect(new TypeKey<Dwelling<Mouse, ?>>(){})
+                    .port((t0, t1) -> mouseDwellingJoin.indexRight(t0, t1),
+                       "Update mouse-dwelling on dwelling movements")
+                .invariant(Mouse.class)
+                    .exists(mouseDwellingJoin.left(), "At the end of transaction, every mouse is in a dwelling")
         ;
 
         // Rules for narrower contexts

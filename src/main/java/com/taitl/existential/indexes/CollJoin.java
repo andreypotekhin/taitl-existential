@@ -141,6 +141,12 @@ public class CollJoin<V, W, K>
         }
     }
 
+    public V removeLeft(V value)
+    {
+        sane(value, "value");
+        return removeLeft(getLeftKey.apply(value), value);
+    }
+
     public W removeRight(K key, W value)
     {
         sane(key, "key");
@@ -154,6 +160,12 @@ public class CollJoin<V, W, K>
             }
             return removed;
         }
+    }
+
+    public W removeRight(W value)
+    {
+        sane(value, "value");
+        return removeRight(getRightKey.apply(value), value);
     }
 
     public void reindexLeft(K oldKey, K newKey, V value)
@@ -214,6 +226,54 @@ public class CollJoin<V, W, K>
     {
         sane(getRightKey, "getRightKey");
         this.getRightKey = getRightKey;
+    }
+
+    /**
+     * Indexes left value.
+     * This method tolerates nulls in oldValue and newValue parameters.
+     * When oldValue is null, this method interprets adds newValue to left index.
+     * When newValue is null, this method removes the oldValue from left index.
+     */
+    public void indexLeft(V oldValue, V newValue)
+    {
+        if (oldValue == null)
+        {
+            addLeft(newValue);
+            return;
+        }
+        if (newValue == null)
+        {
+            removeLeft(newValue);
+            return;
+        }
+        sane(oldValue, "oldValue", newValue, "value");
+        K oldKey = getLeftKey.apply(oldValue);
+        K newKey = getLeftKey.apply(newValue);
+        reindexLeft(oldKey, newKey, newValue);
+    }
+
+    /**
+     * Indexes right value.
+     * This method tolerates nulls in oldValue and newValue parameters.
+     * When oldValue is null, this method interprets adds newValue to right index.
+     * When newValue is null, this method removes the oldValue from right index.
+     */
+    public void indexRight(W oldValue, W newValue)
+    {
+        if (oldValue == null)
+        {
+            addRight(newValue);
+            return;
+        }
+        if (newValue == null)
+        {
+            removeRight(newValue);
+            return;
+        }
+        sane(oldValue, "oldValue", newValue, "value");
+        K oldKey = getRightKey.apply(oldValue);
+        K newKey = getRightKey.apply(newValue);
+        reindexRight(oldKey, newKey, newValue);
     }
 
     public void clear()
