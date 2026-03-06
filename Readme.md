@@ -112,6 +112,16 @@ Same when x0, x1 must also satisfy some condition:
     ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      transit((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, predicate(x0, x1, y)))
     ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      port((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, predicate(x0, x1, y)))
 
+## Other Constraints
+The library also allows to configure other constraints on application entities, such as:
+
+    create(x -> predicate(x)) # holds for any created object
+    update(x -> predicate(x)) # holds for any updated object
+    delete(x -> predicate(x)) # holds for any deleted object
+    read(x -> predicate(x)) # holds for any read/loaded object
+    write(x -> predicate(x)) # holds for any written/saved object
+    (and the like)
+
 ## Performance
 
 Evaluating the rules such as the above on a bigger collection can take much time, especially if evaluations 
@@ -120,9 +130,10 @@ happen on each element change.
 To facilitate performance, the library:
 - Avoids immediate rule evaluation and instead evaluates rules at the end of a business transaction, such as
   before committing the changed data to persistent storage.
-- During a transaction, allows to send 'events' into the library, notifying on object changes.
-- Multiple events of the same object are folded into a single event, to reduce the number of performed validations.
-- Allows to configure rules globally or within the context of a specific business operation (for example, an API endpoint).
+- During a transaction, the user sends 'events' into the library, notifying on object changes.
+- Multiple events of the same object are folded into a single event, reducing the number of performed validations.
+- User can configure rules globally or within the context of a specific business operation (for example, an API endpoint),
+reducing the number of evaluated rules.
 
 ## Documentation
 
