@@ -16,11 +16,6 @@ public class ValueIndex<K, V> implements Map<K, V>
 {
     protected ConcreteValueIndex<K, V> concrete;
 
-    public ValueIndex()
-    {
-        concrete = createConcrete();
-    }
-
     public ValueIndex(Function<V, K> getKey)
     {
         sane(getKey, "getKey");

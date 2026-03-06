@@ -25,11 +25,6 @@ public class JoinIndex<V, W, K>
 {
     protected ConcreteJoinIndex<V, W, K> concrete;
 
-    public JoinIndex()
-    {
-        concrete = createConcrete();
-    }
-
     public JoinIndex(Function<V, K> getLeftKey, Function<W, K> getRightKey)
     {
         sane(getLeftKey, "getLeftKey");
