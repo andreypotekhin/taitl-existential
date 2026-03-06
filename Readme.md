@@ -37,78 +37,91 @@ P == logical predicate (a boolean-valued function)
 ⊤ == "Truth", a logical predicate always rendering true
 
 In the examples below:
-- The *new* keyword is dropped in front of All and Exists for brevity. Java/Groovy must use *new*. Other JVM languages (Kotlin/Scala) may omit *new*.
 - Math notation is on the left, and corresponding Java notation is on the right.
+- The '.invariant(X.class).' part is omitted in front of all() and exists() method calls, for brevity.
 
 ## Establishing Truth
 
 For any object of type X, a predicate holds true:
 
-    ∀ x ∈ X ⊤(x)      All<X>(x -> predicate(x))
+    ∀ x ∈ X ⊤(x)      all(x -> predicate(x))
 
     Here, predicate() is any boolean function.
 
 For any object of type X which satisfies a condition, a predicate holds true:
 
-    ∀ x ∈ X | condition(x) ⊤(x)      All<X>(x -> condition(x), x -> predicate(x))
+    ∀ x ∈ X | condition(x) ⊤(x)      all(x -> condition(x), x -> predicate(x))
 
 For any object of type X that has been changed in the course of a business transaction, predicate holds true:
 
-    ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Porting<X>>((x0, x1) -> predicate(x0, x1))
+    ∀ x0, x1 ∈ X, ⊤(x0, x1)      transit((x0, x1) -> predicate(x0, x1))
     
-    Porting<X> describes a change where both states are non-null.
+    Transit describes a change where both states are non-null.
     x0 is the entity's initial state at the start of the transaction,
     x1 is its final state at the end of the transaction.
 
 For any object of type X that has been created, changed, or deleted in the course of a business transaction,
 predicate holds true (use Porting when one side may be null):
 
-    ∀ x0, x1 ∈ X, ⊤(x0, x1)      All<Porting<X>>((x0, x1) -> predicate(x0, x1))
+    ∀ x0, x1 ∈ X, ⊤(x0, x1)      port((x0, x1) -> predicate(x0, x1))
 
-    Porting<X> describes a change where exactly one of x0 or x1 may be null.
-    If x0 is null, the entity was created during the transaction.
-    If x1 is null, the entity was deleted during the transaction.
+    Port describes a change where one of x0 or x1 may be null (but not both).
+    If x0 is null, the entity considered being created during the transaction.
+    If x1 is null, the entity considered being deleted during the transaction.
 
 Same as above when x0, x1 must also satisfy some condition:
 
-    ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      All<Porting<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
-    ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      All<Porting<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      transit((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      port((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
 
 ## Establishing Existence
 
 An object of type X exists for which a predicate holds:
 
-    ∃ x ∈ X ⊤(x)      Exists<X>(coll, predicate(x))
+    ∃ x ∈ X ⊤(x)      exists(coll, predicate(x))
     
-    Here, coll is a collection where we should look for objects to establish existence.
     The Exists expression guarantees that at least one object in the collection satisfies the predicate.
-    This is a linear scan, so a more performant approach is shown next.
+    Here, coll is a collection where we should look for objects of X. We'll call it an 'underlying collection'.
+    Since this evaluation may be slow (a linear scan), we'll show a more performant approach is next.
 
 For more efficiency, use an *index* to determine the existence:
 
-    ∃ x ∈ X, ⊤(x)      Exists<X>(index, key(x), predicate(x))
+    ∃ x ∈ X, ⊤(x)      exists(index, predicate(x))
     
+    Here, index is a data structure (which we provide) allowing fast (constant) access time to the underlying collection X.
     Using an index with constant access time can greatly improve performance.
 
 For any object of type X, an object of type Y exists such that the predicate holds:
 
-    ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      All<X>(x -> Exists<Y>(index, key(x), predicate(x, y)))
+    ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      exists(index, predicate(x, y)))
     
-    Guarantees that there is at least one object y that satisfies the predicate.
+    This expression guarantees that for each x, there is at least one object y that satisfies the predicate.
+    Here, index is a data structure (which we provide) mapping X to Y with fast (constant) access time.
 
 For any object of type X that satisfies a condition, an object of type Y exists for which the predicate holds:
 
-    ∀ x ∈ X | condition(x) ∃ y ∈ Y ⊤(x, y)      All<X>(x -> condition(x), x -> Exists<Y>(index, key(x), predicate(x, y)))
+    ∀ x ∈ X | condition(x) ∃ y ∈ Y ⊤(x, y)      all(x -> condition(x), exists(index, predicate(x, y)))
 
 For any object of type X that has been changed, an object of type Y exists for which a predicate holds:
 
-    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      All<Transition<X>>((x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y))) 
-    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      All<Porting<X>>((x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      transit((x0, x1) -> exists(index, predicate(x0, x1, y))) 
+    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      port((x0, x1) -> exists(index, predicate(x0, x1, y)))
 
 Same when x0, x1 must also satisfy some condition:
 
-    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Porting<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
-    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      All<Porting<X>>((x0, x1) -> condition(x0, x1), (x0, x1) -> Exists<Y>(index, key(y), predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      transit((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      port((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, predicate(x0, x1, y)))
+
+## Performance
+
+Obviously, evaluating the rules such as above on a bigger collection can take much time, especially if evaluations 
+happen upon each element change.
+
+To stay performant, the library:
+- Avoids immediate rule evaluation; instead evaluates rules at the end of a business transaction, such as
+  before committing the changed data to persistent storage.
+- Multiple events of the same type are folded into a single event, reducing the number of validations performed.
+- User can to configure rules only to apply within the context of a specific business operation (an API endpoint, verb and so on).
 
 ## Documentation
 
