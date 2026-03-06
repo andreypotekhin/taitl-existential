@@ -112,51 +112,24 @@ Workflow:
   - `export EXISTENTIAL_CONFIG_FILE=/path/to/existential.properties`
 
 
-## Development
-See /docs/dev/ for development documentation.
-/docs/dev/Development.md is starting point.
+## Troubleshooting
+Troubleshooting:
+- See `/Troubleshooting.md`
+
+
+## Advanced Topics
 
 ### Terminology
-See /docs/dev/Terminology.md for concepts and terminology.
+See Concepts.md for concepts and terminology.
+See /docs/dev/Terminology.md for developer terminology.
 
-### User stories and use cases
-See /docs/dev/Specification.md for complete description of library behavior, in the form of user stories and use cases.
-
-### Concepts
-#### Operation keys
-Operation keys are path-like strings used to identify business operation and find all matching contexts.
-Examples:
-- `/app/orders/create`
-- `/admin/users/reset-password`
-
-Rules:
-- Must start with a slash (`/`).
-- Must contain at least one path segment (cannot be just `/`).
-- Must not end with a slash.
-- Must not include wildcard characters (`*`).
-
-#### Type keys
-In above examples, we use entity .class to specify the type of entity for the constraint. 
-Sometimes, however, our entities can be of a generic type, for instance, Document<HTML>, Document<JSON>.
-To be able to distinguish between such different generic types, we have TypeKey class to use instead of Class.
-
-Use the code similar to this to create a TypeKey that captures exact generic keys.
-(uses anonymous subclass to allow capturing the generic type information at runtime:
-`new TypeKey<List<Order>>() {}`.
-
-### Building the library
-1. Clone source code repository
-   https://github.com/andreypotekhin/taitl-existential 
-2. Build with maven:
-   `mvn clean install`
-
-### Extending the library
+### Customizing the library
 Regular use of the library does not require custom classes; the stock classes should work for most cases.
 
 For the rare cases where you want to significantly affect library behavior, we provide a few options.
 See the section "Extending the library with custom classes" below.
 
-### Code structure
+#### Code structure
 Package structure:
 - com.taitl.existential: public code (classes, interfaces) for use by end-user
 - com.taitl.ex and subpackages: private code, implementation details
@@ -172,7 +145,7 @@ Package structure:
     -  com.taitl.ex.transactions: transaction logic (e.g. BeginTransaction, RollbackTransaction)
     -  com.taitl.ex.validation: validation logic (e.g. ValidateTransaction)
 
-### Extending the library with custom classes
+#### Extending the library with custom classes
 For the rare cases where you aim to significantly affect the library's behavior (and cannot do it by other
 means), you can extend the library with your own versions of the classes, but do so at your own risk.
 
@@ -204,7 +177,15 @@ But remember, with this freedom comes responsibility:
 In short, treat extending the library with your own classes as hacking, which relies on undocumented
 features or features that are not guaranteed to survive multiple versions.
 
-## Troubleshooting
-Troubleshooting:
-- See `/Troubleshooting.md#type-key-format`
-- See `/Troubleshooting.md#invalid-operation-key`
+
+### Building the library
+1. Clone source code repository
+   https://github.com/andreypotekhin/taitl-existential
+2. Build with maven:
+   `mvn clean install`
+
+
+### Development
+See /docs/dev/ for development documentation.  
+/docs/dev/Development.md is starting point.
+

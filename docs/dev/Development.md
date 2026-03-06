@@ -22,9 +22,11 @@ To do so, the library allows end users to:
 2. Configure the rules to apply only within a specific business operation (such as an API endpoint or verb),
    allowing different sets of rules to apply to different circumstances.
 
-### Terminology, use cases, user stories
-See /docs/dev/Terminology.md for terminology.
-See /docs/dev/Specification.md for a detailed description of library behavior.
+### User stories and use cases
+See Specification.md for a detailed description of library behavior.
+
+### Terminology
+See Terminology.md for terminology.
 
 ### Architecture
 
@@ -61,6 +63,12 @@ Package structure:
   -  com.taitl.ex.library: dealing with library as a whole
   -  com.taitl.ex.transactions: transaction logic (e.g. BeginTransaction, RollbackTransaction)
   -  com.taitl.ex.validation: validation logic (e.g. ValidateTransaction)
+
+### Extending the library
+Regular use of the library does not require custom classes; the stock classes should work for most cases.
+
+For the rare cases where you want to significantly affect library behavior, we provide a few options.
+See the section "Extending the library with custom classes" below.
 
 ### Setup
 See /docs/dev/Setup.md for setup and prerequisites.
