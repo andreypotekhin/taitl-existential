@@ -72,4 +72,16 @@ class ValueIndexTest
         ValueIndex<String, User> index = new ValueIndex<>(u -> null);
         assertThrows(IllegalArgumentException.class, () -> index.add(new User("A", "Alice")));
     }
+
+    @Test
+    void testAddAll()
+    {
+        User alice = new User("A", "Alice");
+        User bob = new User("B", "Bob");
+        usersByTeam.addAll(List.of(alice, bob));
+
+        assertEquals(alice, usersByTeam.get("A"));
+        assertEquals(bob, usersByTeam.get("B"));
+        assertThrows(IllegalArgumentException.class, () -> usersByTeam.addAll(null));
+    }
 }

@@ -91,6 +91,11 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
         return concrete.add(v);
     }
 
+    public void addAll(Collection<? extends V> values)
+    {
+        concrete.addAll(values);
+    }
+
     /**
      * Removes a key-value pair from the multimap backing the index.
      * If other items exist for the same key, they remain intact.
@@ -133,7 +138,7 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     }
 
     /**
-     * Reinserts a value using the current key extracted by {@link #setGetKey(Function)}.
+     * Reinserts a value using the key extracted from value.
      *
      * @param k0 Old key
      * @param v Value to reindex
@@ -149,17 +154,6 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     public void index(V oldValue, V newValue)
     {
         concrete.index(oldValue, newValue);
-    }
-
-    /**
-     * Sets the key extractor used by {@link #add(Object)}.
-     *
-     * @param getKey Function to extract keys from values
-     */
-    public void setGetKey(Function<V, K> getKey)
-    {
-        sane(getKey, "getKey");
-        concrete.setGetKey(getKey);
     }
 
     @Override

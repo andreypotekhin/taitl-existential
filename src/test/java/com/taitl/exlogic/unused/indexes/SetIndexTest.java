@@ -146,6 +146,17 @@ class SetIndexTest
     }
 
     @Test
+    void testAddAll()
+    {
+        SetIndex<String, Cat> index = new SetIndex<>(c -> c.color);
+        index.addAll(List.of(GREY_CAT, BLACK_CAT));
+
+        assertTrue(index.contains("Grey", GREY_CAT));
+        assertTrue(index.contains("Black", BLACK_CAT));
+        assertThrows(IllegalArgumentException.class, () -> index.addAll(null));
+    }
+
+    @Test
     void testReindexUsingExtractor()
     {
         Cat orange = new Cat("Orange", "Garden");

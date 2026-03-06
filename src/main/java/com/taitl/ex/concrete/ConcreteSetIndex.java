@@ -15,7 +15,7 @@ public class ConcreteSetIndex<K, V> implements Map<K, Set<V>>
     protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
 
     protected SetMap<K, V> storage = new SetMap<>();
-    protected Function<V, K> getKey;
+    protected final Function<V, K> getKey;
 
     public ConcreteSetIndex(Function<V, K> getKey)
     {
@@ -58,6 +58,15 @@ public class ConcreteSetIndex<K, V> implements Map<K, Set<V>>
     {
         sane(value, "value");
         return storage.add(getKey.apply(value), value);
+    }
+
+    public void addAll(Collection<? extends V> values)
+    {
+        sane(values, "values");
+        for (V value : values)
+        {
+            add(value);
+        }
     }
 
     public V removeValue(K key, V value)
@@ -127,12 +136,6 @@ public class ConcreteSetIndex<K, V> implements Map<K, Set<V>>
             removeValue(oldKey, oldValue);
             add(newKey, newValue);
         }
-    }
-
-    public void setGetKey(Function<V, K> getKey)
-    {
-        sane(getKey, "getKey");
-        this.getKey = getKey;
     }
 
     @Override

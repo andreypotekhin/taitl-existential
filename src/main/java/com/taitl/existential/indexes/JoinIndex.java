@@ -83,9 +83,19 @@ public class JoinIndex<V, W, K>
         return concrete.addLeft(value);
     }
 
+    public void addAllLeft(Collection<? extends V> values)
+    {
+        concrete.addAllLeft(values);
+    }
+
     public Set<W> addRight(W value)
     {
         return concrete.addRight(value);
+    }
+
+    public void addAllRight(Collection<? extends W> values)
+    {
+        concrete.addAllRight(values);
     }
 
     public V removeLeft(K key, V value)
@@ -116,18 +126,6 @@ public class JoinIndex<V, W, K>
     public void reindexRight(K oldKey, K newKey, W value)
     {
         concrete.reindexRight(oldKey, newKey, value);
-    }
-
-    public void setGetLeftKey(Function<V, K> getLeftKey)
-    {
-        sane(getLeftKey, "getLeftKey");
-        concrete.setGetLeftKey(getLeftKey);
-    }
-
-    public void setGetRightKey(Function<W, K> getRightKey)
-    {
-        sane(getRightKey, "getRightKey");
-        concrete.setGetRightKey(getRightKey);
     }
 
     /**

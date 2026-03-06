@@ -107,7 +107,7 @@ Typical error messages:
 
 Fix:
 1. Ensure the index key type matches the key you pass to `get()`/`getObj()`.
-2. If you use `setGetKey()`, confirm it returns the same key you use with `add()` and `rekey()`.
+2. Confirm your index `getKey` function returns the same key you use with `add()` and `rekey()`.
 3. Prefer using `get(K)` with a strongly typed key when possible.
 
 ## Type key format

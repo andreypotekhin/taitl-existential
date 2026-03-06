@@ -13,7 +13,7 @@ public class ConcreteValueIndex<K, V> implements Map<K, V>
     protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
 
     protected Map<K, V> storage = new LinkedHashMap<>();
-    protected Function<V, K> getKey;
+    protected final Function<V, K> getKey;
 
     public ConcreteValueIndex(Function<V, K> getKey)
     {
@@ -42,6 +42,15 @@ public class ConcreteValueIndex<K, V> implements Map<K, V>
         sane(value, "value");
         put(getKey.apply(value), value);
         return value;
+    }
+
+    public void addAll(Collection<? extends V> values)
+    {
+        sane(values, "values");
+        for (V value : values)
+        {
+            add(value);
+        }
     }
 
     public V removeMatching(K key, Predicate<? super V> match)
@@ -115,12 +124,6 @@ public class ConcreteValueIndex<K, V> implements Map<K, V>
             remove(oldKey, oldValue);
             put(newKey, newValue);
         }
-    }
-
-    public void setGetKey(Function<V, K> getKey)
-    {
-        sane(getKey, "getKey");
-        this.getKey = getKey;
     }
 
     @Override

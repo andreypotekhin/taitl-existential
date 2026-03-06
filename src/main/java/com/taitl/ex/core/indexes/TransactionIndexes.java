@@ -24,7 +24,6 @@ public class TransactionIndexes
         sane(name, "name", getKey, "getKey");
         SetIndex<K, V> index = (createIndex != null) ? createIndex.get() : new SetIndex<>(getKey);
         sane(index, "index");
-        index.setGetKey(getKey);
         if (indexes.putIfAbsent(name, index) != null)
         {
             throw new IllegalStateException(String.format("Index with name '%s' already exists.", name));

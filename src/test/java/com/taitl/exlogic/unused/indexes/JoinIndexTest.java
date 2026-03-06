@@ -146,4 +146,23 @@ class JoinIndexTest
         JoinIndex<User, Task, String> nullRight = new JoinIndex<>(u -> u.team, t -> null);
         assertThrows(IllegalArgumentException.class, () -> nullRight.addRight(new Task("A", "Fix bug")));
     }
+
+    @Test
+    void testAddAll()
+    {
+        User alice = new User("A", "Alice");
+        User bob = new User("B", "Bob");
+        Task bug = new Task("A", "Fix bug");
+        Task deploy = new Task("B", "Deploy");
+
+        join.addAllLeft(List.of(alice, bob));
+        join.addAllRight(List.of(bug, deploy));
+
+        assertEquals(Set.of(alice), join.getLeft("A"));
+        assertEquals(Set.of(bob), join.getLeft("B"));
+        assertEquals(Set.of(bug), join.getRight("A"));
+        assertEquals(Set.of(deploy), join.getRight("B"));
+        assertThrows(IllegalArgumentException.class, () -> join.addAllLeft(null));
+        assertThrows(IllegalArgumentException.class, () -> join.addAllRight(null));
+    }
 }

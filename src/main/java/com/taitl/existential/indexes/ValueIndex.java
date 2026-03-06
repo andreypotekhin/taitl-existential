@@ -43,6 +43,11 @@ public class ValueIndex<K, V> implements Map<K, V>
         return concrete.add(value);
     }
 
+    public void addAll(Collection<? extends V> values)
+    {
+        concrete.addAll(values);
+    }
+
     public V removeMatching(K key, Predicate<? super V> match)
     {
         return concrete.removeMatching(key, match);
@@ -61,12 +66,6 @@ public class ValueIndex<K, V> implements Map<K, V>
     public void index(V oldValue, V newValue)
     {
         concrete.index(oldValue, newValue);
-    }
-
-    public void setGetKey(Function<V, K> getKey)
-    {
-        sane(getKey, "getKey");
-        concrete.setGetKey(getKey);
     }
 
     @Override

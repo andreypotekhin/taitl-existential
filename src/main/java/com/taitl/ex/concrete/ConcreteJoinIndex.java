@@ -22,8 +22,8 @@ public class ConcreteJoinIndex<V, W, K>
     protected SetMap<V, W> rightByLeft = new SetMap<>();
     protected SetMap<W, V> leftByRight = new SetMap<>();
 
-    protected Function<V, K> getLeftKey;
-    protected Function<W, K> getRightKey;
+    protected final Function<V, K> getLeftKey;
+    protected final Function<W, K> getRightKey;
 
     public ConcreteJoinIndex(Function<V, K> getLeftKey, Function<W, K> getRightKey)
     {
@@ -97,10 +97,28 @@ public class ConcreteJoinIndex<V, W, K>
         return addLeft(getLeftKey.apply(value), value);
     }
 
+    public void addAllLeft(Collection<? extends V> values)
+    {
+        sane(values, "values");
+        for (V value : values)
+        {
+            addLeft(value);
+        }
+    }
+
     public Set<W> addRight(W value)
     {
         sane(value, "value");
         return addRight(getRightKey.apply(value), value);
+    }
+
+    public void addAllRight(Collection<? extends W> values)
+    {
+        sane(values, "values");
+        for (W value : values)
+        {
+            addRight(value);
+        }
     }
 
     public V removeLeft(K key, V value)
@@ -185,18 +203,6 @@ public class ConcreteJoinIndex<V, W, K>
             }
             rebuildViews();
         }
-    }
-
-    public void setGetLeftKey(Function<V, K> getLeftKey)
-    {
-        sane(getLeftKey, "getLeftKey");
-        this.getLeftKey = getLeftKey;
-    }
-
-    public void setGetRightKey(Function<W, K> getRightKey)
-    {
-        sane(getRightKey, "getRightKey");
-        this.getRightKey = getRightKey;
     }
 
     /**
