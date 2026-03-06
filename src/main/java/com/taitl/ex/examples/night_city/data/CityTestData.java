@@ -79,16 +79,7 @@ public class CityTestData
         }
 
         beingDwelling = new JoinIndex<>(m -> m.location(), d -> d.location());
-        for (Mouse m : MICE)
-        {
-            for (Dwelling<?, ?> d : DWELLINGS)
-            {
-                if (d.location().equals(m.location()))
-                {
-                    beingDwelling.addLeft(m);
-                    beingDwelling.addRight((Dwelling<Being<?>, ?>) d);
-                }
-            }
-        }
+        beingDwelling.addAllLeft(MICE);
+        beingDwelling.addAllRight((Set<Dwelling<Being<?>, ?>>) (Set<?>) DWELLINGS);
     }
 }

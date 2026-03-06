@@ -23,6 +23,41 @@ public class ConcreteSetIndex<K, V> implements Map<K, Set<V>>
         this.getKey = getKey;
     }
 
+    /**
+     * Indexes value updates with null-tolerant semantics.
+     * If oldValue is null, add newValue.
+     * If newValue is null, remove oldValue.
+     * Otherwise move from old key to new key.
+     */
+    public void index(V oldValue, V newValue)
+    {
+        if (oldValue == null)
+        {
+            add(newValue);
+            return;
+        }
+        if (newValue == null)
+        {
+            removeValue(getKey.apply(oldValue), oldValue);
+            return;
+        }
+        sane(oldValue, "oldValue", newValue, "newValue");
+        K oldKey = getKey.apply(oldValue);
+        K newKey = getKey.apply(newValue);
+        synchronized (this)
+        {
+            removeValue(oldKey, oldValue);
+            add(newKey, newValue);
+        }
+    }
+
+    @Override
+    public Set<V> get(Object key)
+    {
+        sane(key, "key");
+        return storage.get(key);
+    }
+
     public boolean contains(K key, V value)
     {
         sane(key, "key");
@@ -47,17 +82,17 @@ public class ConcreteSetIndex<K, V> implements Map<K, Set<V>>
         return match.test(set);
     }
 
+    public Set<V> add(V value)
+    {
+        sane(value, "value");
+        return storage.add(getKey.apply(value), value);
+    }
+
     public Set<V> add(K key, V value)
     {
         sane(key, "key");
         sane(value, "value");
         return storage.add(key, value);
-    }
-
-    public Set<V> add(V value)
-    {
-        sane(value, "value");
-        return storage.add(getKey.apply(value), value);
     }
 
     public void addAll(Collection<? extends V> values)
@@ -108,41 +143,6 @@ public class ConcreteSetIndex<K, V> implements Map<K, Set<V>>
         sane(oldKey, "oldKey");
         sane(value, "value");
         reindex(oldKey, getKey.apply(value), value);
-    }
-
-    /**
-     * Indexes value updates with null-tolerant semantics.
-     * If oldValue is null, add newValue.
-     * If newValue is null, remove oldValue.
-     * Otherwise move from old key to new key.
-     */
-    public void index(V oldValue, V newValue)
-    {
-        if (oldValue == null)
-        {
-            add(newValue);
-            return;
-        }
-        if (newValue == null)
-        {
-            removeValue(getKey.apply(oldValue), oldValue);
-            return;
-        }
-        sane(oldValue, "oldValue", newValue, "newValue");
-        K oldKey = getKey.apply(oldValue);
-        K newKey = getKey.apply(newValue);
-        synchronized (this)
-        {
-            removeValue(oldKey, oldValue);
-            add(newKey, newValue);
-        }
-    }
-
-    @Override
-    public Set<V> get(Object key)
-    {
-        sane(key, "key");
-        return storage.get(key);
     }
 
     @Override

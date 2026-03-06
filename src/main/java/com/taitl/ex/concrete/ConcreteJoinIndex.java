@@ -33,6 +33,72 @@ public class ConcreteJoinIndex<V, W, K>
         this.getRightKey = getRightKey;
     }
 
+    public Map<V, Set<W>> left()
+    {
+        return rightByLeft;
+    }
+
+    public Map<W, Set<V>> right()
+    {
+        return leftByRight;
+    }
+
+    /**
+     * Indexes left value.
+     * This method tolerates nulls in oldValue and newValue parameters.
+     * When oldValue is null, this method interprets adds newValue to left index.
+     * When newValue is null, this method removes the oldValue from left index.
+     */
+    public void indexLeft(V oldValue, V newValue)
+    {
+        if (oldValue == null)
+        {
+            addLeft(newValue);
+            return;
+        }
+        if (newValue == null)
+        {
+            removeLeft(oldValue);
+            return;
+        }
+        sane(oldValue, "oldValue", newValue, "newValue");
+        K oldKey = getLeftKey.apply(oldValue);
+        K newKey = getLeftKey.apply(newValue);
+        synchronized (this)
+        {
+            removeLeft(oldKey, oldValue);
+            addLeft(newKey, newValue);
+        }
+    }
+
+    /**
+     * Indexes right value.
+     * This method tolerates nulls in oldValue and newValue parameters.
+     * When oldValue is null, this method interprets adds newValue to right index.
+     * When newValue is null, this method removes the oldValue from right index.
+     */
+    public void indexRight(W oldValue, W newValue)
+    {
+        if (oldValue == null)
+        {
+            addRight(newValue);
+            return;
+        }
+        if (newValue == null)
+        {
+            removeRight(oldValue);
+            return;
+        }
+        sane(oldValue, "oldValue", newValue, "newValue");
+        K oldKey = getRightKey.apply(oldValue);
+        K newKey = getRightKey.apply(newValue);
+        synchronized (this)
+        {
+            removeRight(oldKey, oldValue);
+            addRight(newKey, newValue);
+        }
+    }
+
     public Set<V> getLeft(K key)
     {
         sane(key, "key");
@@ -55,16 +121,6 @@ public class ConcreteJoinIndex<V, W, K>
     {
         sane(right, "right");
         return leftByRight.get(right);
-    }
-
-    public Map<V, Set<W>> left()
-    {
-        return rightByLeft;
-    }
-
-    public Map<W, Set<V>> right()
-    {
-        return leftByRight;
     }
 
     public Set<V> addLeft(K key, V value)
@@ -202,62 +258,6 @@ public class ConcreteJoinIndex<V, W, K>
                 rightByKey.add(newKey, value);
             }
             rebuildViews();
-        }
-    }
-
-    /**
-     * Indexes left value.
-     * This method tolerates nulls in oldValue and newValue parameters.
-     * When oldValue is null, this method interprets adds newValue to left index.
-     * When newValue is null, this method removes the oldValue from left index.
-     */
-    public void indexLeft(V oldValue, V newValue)
-    {
-        if (oldValue == null)
-        {
-            addLeft(newValue);
-            return;
-        }
-        if (newValue == null)
-        {
-            removeLeft(oldValue);
-            return;
-        }
-        sane(oldValue, "oldValue", newValue, "newValue");
-        K oldKey = getLeftKey.apply(oldValue);
-        K newKey = getLeftKey.apply(newValue);
-        synchronized (this)
-        {
-            removeLeft(oldKey, oldValue);
-            addLeft(newKey, newValue);
-        }
-    }
-
-    /**
-     * Indexes right value.
-     * This method tolerates nulls in oldValue and newValue parameters.
-     * When oldValue is null, this method interprets adds newValue to right index.
-     * When newValue is null, this method removes the oldValue from right index.
-     */
-    public void indexRight(W oldValue, W newValue)
-    {
-        if (oldValue == null)
-        {
-            addRight(newValue);
-            return;
-        }
-        if (newValue == null)
-        {
-            removeRight(oldValue);
-            return;
-        }
-        sane(oldValue, "oldValue", newValue, "newValue");
-        K oldKey = getRightKey.apply(oldValue);
-        K newKey = getRightKey.apply(newValue);
-        synchronized (this)
-        {
-            removeRight(oldKey, oldValue);
-            addRight(newKey, newValue);
         }
     }
 

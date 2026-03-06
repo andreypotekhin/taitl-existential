@@ -9,8 +9,15 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Maps a key (K) to a single value (V).
- * Note: null is not allowed as a key or as a value.
+ * Dynamic index optimized for a quick retrieval of a value (V) based on a key function K(V).
+ * Internally, it uses a Map<K, V> to store and map the values.
+ * The index is dynamic in the sense of allowing to change the key of a value without need to reinsert.
+ * Note: null is not allowed either as a key or as a value.
+ *
+ * @param <K>
+ *            Key type
+ * @param <V>
+ *            Value type
  */
 public class ValueIndex<K, V> implements Map<K, V>
 {
@@ -20,6 +27,14 @@ public class ValueIndex<K, V> implements Map<K, V>
     {
         sane(getKey, "getKey");
         concrete = createConcrete(getKey);
+    }
+
+    /**
+     * Indexes value transition with null-tolerant semantics.
+     */
+    public void index(V oldValue, V newValue)
+    {
+        concrete.index(oldValue, newValue);
     }
 
     @Override
@@ -61,11 +76,6 @@ public class ValueIndex<K, V> implements Map<K, V>
     public void reindex(K oldKey, V value)
     {
         concrete.reindex(oldKey, value);
-    }
-
-    public void index(V oldValue, V newValue)
-    {
-        concrete.index(oldValue, newValue);
     }
 
     @Override

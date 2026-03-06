@@ -9,10 +9,15 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Joins two value collections of types V and W by a shared key type (K).
- * Stores V and W values in separate {@link com.taitl.ex.common.helper.collections.SetMap} indexes
- * and allows querying either side
- * through the other side's key.
+ * Dynamic index optimized for a quick retrieval of two sets of values Set<V>, Set<W>
+ * based on key functions K(V), K(W).
+ * Conceptually, this allows to 'join' two value collections of types V and W by a shared key type (K),
+ * and 'map' from a value of one type to a set of matching values of the other type.
+ * The index exposes 'left' and 'right' maps (Map<V, Set<W>>, Map<V, Set<W>>)
+ * for matching from V to set of W and from W to set of V.
+ * Internally, it uses two SetIndex<K,V> and SetIndex<K,W> to store and map the values.
+ * The index is dynamic in the sense of allowing to change the key of any value without need to reinsert.
+ * Note: null is not allowed as a key or as a value.
  *
  * @param <V>
  *            Left value type
@@ -30,6 +35,44 @@ public class JoinIndex<V, W, K>
         sane(getLeftKey, "getLeftKey");
         sane(getRightKey, "getRightKey");
         concrete = createConcrete(getLeftKey, getRightKey);
+    }
+
+    /**
+     * Returns a dynamic read-only map from left values to matching right values.
+     */
+    public Map<V, Set<W>> left()
+    {
+        return concrete.left();
+    }
+
+    /**
+     * Returns a dynamic read-only map from right values to matching left values.
+     */
+    public Map<W, Set<V>> right()
+    {
+        return concrete.right();
+    }
+
+    /**
+     * Indexes left value.
+     * This method tolerates nulls in oldValue and newValue parameters.
+     * When oldValue is null, this method interprets adds newValue to left index.
+     * When newValue is null, this method removes the oldValue from left index.
+     */
+    public void indexLeft(V oldValue, V newValue)
+    {
+        concrete.indexLeft(oldValue, newValue);
+    }
+
+    /**
+     * Indexes right value.
+     * This method tolerates nulls in oldValue and newValue parameters.
+     * When oldValue is null, this method interprets adds newValue to right index.
+     * When newValue is null, this method removes the oldValue from right index.
+     */
+    public void indexRight(W oldValue, W newValue)
+    {
+        concrete.indexRight(oldValue, newValue);
     }
 
     public Set<V> getLeft(K key)
@@ -52,30 +95,9 @@ public class JoinIndex<V, W, K>
         return concrete.getLeftByRight(right);
     }
 
-    /**
-     * Returns a dynamic read-only map from left values to matching right values.
-     */
-    public Map<V, Set<W>> left()
-    {
-        return concrete.left();
-    }
-
-    /**
-     * Returns a dynamic read-only map from right values to matching left values.
-     */
-    public Map<W, Set<V>> right()
-    {
-        return concrete.right();
-    }
-
     public Set<V> addLeft(K key, V value)
     {
         return concrete.addLeft(key, value);
-    }
-
-    public Set<W> addRight(K key, W value)
-    {
-        return concrete.addRight(key, value);
     }
 
     public Set<V> addLeft(V value)
@@ -86,6 +108,11 @@ public class JoinIndex<V, W, K>
     public void addAllLeft(Collection<? extends V> values)
     {
         concrete.addAllLeft(values);
+    }
+
+    public Set<W> addRight(K key, W value)
+    {
+        return concrete.addRight(key, value);
     }
 
     public Set<W> addRight(W value)
@@ -126,28 +153,6 @@ public class JoinIndex<V, W, K>
     public void reindexRight(K oldKey, K newKey, W value)
     {
         concrete.reindexRight(oldKey, newKey, value);
-    }
-
-    /**
-     * Indexes left value.
-     * This method tolerates nulls in oldValue and newValue parameters.
-     * When oldValue is null, this method interprets adds newValue to left index.
-     * When newValue is null, this method removes the oldValue from left index.
-     */
-    public void indexLeft(V oldValue, V newValue)
-    {
-        concrete.indexLeft(oldValue, newValue);
-    }
-
-    /**
-     * Indexes right value.
-     * This method tolerates nulls in oldValue and newValue parameters.
-     * When oldValue is null, this method interprets adds newValue to right index.
-     * When newValue is null, this method removes the oldValue from right index.
-     */
-    public void indexRight(W oldValue, W newValue)
-    {
-        concrete.indexRight(oldValue, newValue);
     }
 
     public void clear()

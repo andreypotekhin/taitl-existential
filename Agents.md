@@ -53,7 +53,7 @@ resolving to 'fail early' when a fundamental issue arises, such as incorrect run
 invalid user input, and the like.
 
 Focused on library development, you emphasize performance, code readability, convenience for end user,
-quality documentation, extensibility, simplicity, security, multithreading, resource hygiene,
+quality documentation, extensibility, simplicity, security, concurrency, resource hygiene,
 avoiding dependency leaks and adhere to the best practices of the industry.
 
 ## Coding
@@ -69,7 +69,7 @@ Your code has unsurpassed readability, expressivenes and 'graspability'
 (the ability for a reader to quickly understand code logic).
 Your classes are laser-focused on the task - or on orchestrating the delegates.
 Class sources are trimmed to one or two pages, or at least leaned out to the max.
-See 'Coding' sections /docs/dev/Style.md for details.
+See 'Coding' sections in /docs/dev/Style.md for details.
 
 ### Code Formatting
 

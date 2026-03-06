@@ -9,7 +9,9 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Maps a key (K) to a set of values (V), to make Exists expressions more performant.
+ * Dynamic index optimized for a quick retrieval of a set of values Set<V> based on a key function K(V).
+ * Internally, it uses a Map<K, Set<V>> to store and map the values.
+ * The index is dynamic in the sense of allowing to change the key of a value without need to reinsert.
  * Note: null is not allowed as a key or as a value.
  *
  * @param <K>
@@ -30,6 +32,14 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     {
         sane(getKey, "getKey");
         concrete = createConcrete(getKey);
+    }
+
+    /**
+     * Indexes value transition with null-tolerant semantics.
+     */
+    public void index(V oldValue, V newValue)
+    {
+        concrete.index(oldValue, newValue);
     }
 
     /**
@@ -69,18 +79,6 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     }
 
     /**
-     * Adds a value under the provided key.
-     *
-     * @param k Key to add under
-     * @param v Value to add
-     * @return Set of values stored under the key
-     */
-    public Set<V> add(K k, V v)
-    {
-        return concrete.add(k, v);
-    }
-
-    /**
      * Adds a value using the configured key extractor.
      *
      * @param v Value to add
@@ -94,6 +92,18 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     public void addAll(Collection<? extends V> values)
     {
         concrete.addAll(values);
+    }
+
+    /**
+     * Adds a value under the provided key.
+     *
+     * @param k Key to add under
+     * @param v Value to add
+     * @return Set of values stored under the key
+     */
+    public Set<V> add(K k, V v)
+    {
+        return concrete.add(k, v);
     }
 
     /**
@@ -146,14 +156,6 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     public void reindex(K k0, V v)
     {
         concrete.reindex(k0, v);
-    }
-
-    /**
-     * Indexes value transitions with null-tolerant semantics.
-     */
-    public void index(V oldValue, V newValue)
-    {
-        concrete.index(oldValue, newValue);
     }
 
     @Override
