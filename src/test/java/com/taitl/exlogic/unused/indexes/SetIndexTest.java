@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SetIndexTest
 {
     SetIndex<String, Cat> cats_by_color;
-    SetIndex<Location, Cat> cats_by_location = new SetIndex<>();
+    SetIndex<Location, Cat> cats_by_location = new SetIndex<>(c -> c.location);
     Cat cat;
 
     @BeforeEach
@@ -41,11 +41,10 @@ class SetIndexTest
     @Test
     void testConstructor()
     {
-        cats_by_location = new SetIndex<>();
+        cats_by_location = new SetIndex<>(cat -> cat.location);
         assertTrue(cats_by_location instanceof Map);
         cats_by_location.add(GREY_CAT.location, GREY_CAT);
         assertTrue(cats_by_location.containsKey(LOCATION_PARK));
-        cats_by_location = new SetIndex<>(cat -> cat.location);
         cats_by_location.add(BLACK_CAT);
         assertTrue(cats_by_location.containsKey(LOCATION_GARDEN));
         cats_by_color = new SetIndex<>(c -> c.location.toString());
@@ -137,11 +136,13 @@ class SetIndexTest
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(null));
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(null, BLACK_CAT));
         assertThrows(IllegalArgumentException.class, () -> cats_by_location.add(LOCATION_PARK, null));
-        SetIndex<String, Cat> index_without_get_Set_index_function = new SetIndex<>();
-        index_without_get_Set_index_function.add("Grey", GREY_CAT);
-        assertTrue(index_without_get_Set_index_function.contains("Grey", GREY_CAT));
-        assertThrows(IllegalStateException.class,
-                () -> index_without_get_Set_index_function.add(CityTestData.ORANGE_CAT));
+    }
+
+    @Test
+    void testGetKeyReturnsNull()
+    {
+        SetIndex<String, Cat> index = new SetIndex<>(cat -> null);
+        assertThrows(IllegalArgumentException.class, () -> index.add(CityTestData.ORANGE_CAT));
     }
 
     @Test
@@ -154,10 +155,6 @@ class SetIndexTest
 
         assertFalse(cats_by_location.contains(LOCATION_GARDEN, orange));
         assertTrue(cats_by_location.contains(LOCATION_PARK, orange));
-
-        SetIndex<Location, Cat> noExtractor = new SetIndex<>();
-        noExtractor.add(LOCATION_GARDEN, orange);
-        assertThrows(IllegalStateException.class, () -> noExtractor.reindex(LOCATION_GARDEN, orange));
     }
 
     @Test

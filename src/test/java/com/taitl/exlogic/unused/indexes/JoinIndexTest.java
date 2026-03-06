@@ -136,4 +136,14 @@ class JoinIndexTest
         assertTrue(exists.test(alice));
         assertFalse(exists.test(new User("A", "Ghost")));
     }
+
+    @Test
+    void testGetKeysReturnNull()
+    {
+        JoinIndex<User, Task, String> nullLeft = new JoinIndex<>(u -> null, t -> t.team);
+        assertThrows(IllegalArgumentException.class, () -> nullLeft.addLeft(new User("A", "Alice")));
+
+        JoinIndex<User, Task, String> nullRight = new JoinIndex<>(u -> u.team, t -> null);
+        assertThrows(IllegalArgumentException.class, () -> nullRight.addRight(new Task("A", "Fix bug")));
+    }
 }

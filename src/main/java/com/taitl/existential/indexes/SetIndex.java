@@ -22,15 +22,6 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     protected ConcreteSetIndex<K, V> concrete;
 
     /**
-     * Creates an empty index without a key extractor.
-     * Call {@link #setGetKey(Function)} or use {@link #add(Object, Object)}.
-     */
-    public SetIndex()
-    {
-        concrete = createConcrete();
-    }
-
-    /**
      * Creates an index with a key extractor for value-based inserts.
      *
      * @param getKey Function to extract keys from values
@@ -38,8 +29,7 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     public SetIndex(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
-        concrete = createConcrete();
-        setGetKey(getKey);
+        concrete = createConcrete(getKey);
     }
 
     /**
@@ -168,6 +158,7 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
      */
     public void setGetKey(Function<V, K> getKey)
     {
+        sane(getKey, "getKey");
         concrete.setGetKey(getKey);
     }
 
@@ -244,8 +235,10 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     }
 
     @SuppressWarnings("unchecked")
-    protected ConcreteSetIndex<K, V> createConcrete()
+    protected ConcreteSetIndex<K, V> createConcrete(Function<V, K> getKey)
     {
-        return Creator.create(ConcreteSetIndex.class);
+        return Creator.create(ConcreteSetIndex.class,
+                new Class<?>[] { Function.class },
+                getKey);
     }
 }

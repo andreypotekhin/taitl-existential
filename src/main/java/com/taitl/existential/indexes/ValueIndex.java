@@ -19,8 +19,7 @@ public class ValueIndex<K, V> implements Map<K, V>
     public ValueIndex(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
-        concrete = createConcrete();
-        setGetKey(getKey);
+        concrete = createConcrete(getKey);
     }
 
     @Override
@@ -66,6 +65,7 @@ public class ValueIndex<K, V> implements Map<K, V>
 
     public void setGetKey(Function<V, K> getKey)
     {
+        sane(getKey, "getKey");
         concrete.setGetKey(getKey);
     }
 
@@ -136,8 +136,10 @@ public class ValueIndex<K, V> implements Map<K, V>
     }
 
     @SuppressWarnings("unchecked")
-    protected ConcreteValueIndex<K, V> createConcrete()
+    protected ConcreteValueIndex<K, V> createConcrete(Function<V, K> getKey)
     {
-        return Creator.create(ConcreteValueIndex.class);
+        return Creator.create(ConcreteValueIndex.class,
+                new Class<?>[] { Function.class },
+                getKey);
     }
 }

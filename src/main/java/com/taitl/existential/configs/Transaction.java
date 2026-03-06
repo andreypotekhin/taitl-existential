@@ -31,7 +31,8 @@ import static com.taitl.ex.common.helper.State.*;
  * TransactionIndexes
  * When we encounter events such as object creation or mutation, we may need to
  * store derived data. For example, an index can be created so that an Exists<>
- * expression evaluates efficiently: {@code On<Cat>((c, tr) -> tr.index("location_to_cats").put(c.location, c))}
+ * expression evaluates efficiently:
+ * {@code On<Cat>((c, tr) -> tr.index("location_to_cats", cat -> cat.location).add(c))}
  *
  * TransactionEvents
  * Different contexts may be interested in different event types. To speed up
@@ -102,10 +103,10 @@ public class Transaction implements Configurable, Evaluable
      * @param name index name
      * @return index instance
      */
-    public <K, V> SetIndex<K, V> index(String name)
+    public <K, V> SetIndex<K, V> index(String name, Function<V, K> getKey)
     {
-        sane(name, "name");
-        return indexes.getOrCreate(name);
+        sane(name, "name", getKey, "getKey");
+        return indexes.getOrCreate(name, getKey);
     }
 
     /*

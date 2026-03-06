@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Backing implementation for {@link com.taitl.existential.indexes.JoinIndex}.
@@ -25,10 +24,6 @@ public class ConcreteJoinIndex<V, W, K>
 
     protected Function<V, K> getLeftKey;
     protected Function<W, K> getRightKey;
-
-    public ConcreteJoinIndex()
-    {
-    }
 
     public ConcreteJoinIndex(Function<V, K> getLeftKey, Function<W, K> getRightKey)
     {
@@ -99,14 +94,12 @@ public class ConcreteJoinIndex<V, W, K>
     public Set<V> addLeft(V value)
     {
         sane(value, "value");
-        verify(getLeftKey != null, "You need to call 'setGetLeftKey()' first");
         return addLeft(getLeftKey.apply(value), value);
     }
 
     public Set<W> addRight(W value)
     {
         sane(value, "value");
-        verify(getRightKey != null, "You need to call 'setGetRightKey()' first");
         return addRight(getRightKey.apply(value), value);
     }
 
@@ -128,7 +121,6 @@ public class ConcreteJoinIndex<V, W, K>
     public V removeLeft(V value)
     {
         sane(value, "value");
-        verify(getLeftKey != null, "You need to call 'setGetLeftKey()' first");
         return removeLeft(getLeftKey.apply(value), value);
     }
 
@@ -150,7 +142,6 @@ public class ConcreteJoinIndex<V, W, K>
     public W removeRight(W value)
     {
         sane(value, "value");
-        verify(getRightKey != null, "You need to call 'setGetRightKey()' first");
         return removeRight(getRightKey.apply(value), value);
     }
 
@@ -159,13 +150,10 @@ public class ConcreteJoinIndex<V, W, K>
         sane(oldKey, "oldKey");
         sane(newKey, "newKey");
         sane(value, "value");
-        if (getLeftKey != null)
+        K key = getLeftKey.apply(value);
+        if (!newKey.equals(key))
         {
-            K key = getLeftKey.apply(value);
-            if (!newKey.equals(key))
-            {
-                throw new IllegalArgumentException(String.format(ARG_LEFT_KEY_VALUE, newKey, key));
-            }
+            throw new IllegalArgumentException(String.format(ARG_LEFT_KEY_VALUE, newKey, key));
         }
         synchronized (this)
         {
@@ -183,13 +171,10 @@ public class ConcreteJoinIndex<V, W, K>
         sane(oldKey, "oldKey");
         sane(newKey, "newKey");
         sane(value, "value");
-        if (getRightKey != null)
+        K key = getRightKey.apply(value);
+        if (!newKey.equals(key))
         {
-            K key = getRightKey.apply(value);
-            if (!newKey.equals(key))
-            {
-                throw new IllegalArgumentException(String.format(ARG_RIGHT_KEY_VALUE, newKey, key));
-            }
+            throw new IllegalArgumentException(String.format(ARG_RIGHT_KEY_VALUE, newKey, key));
         }
         synchronized (this)
         {
@@ -233,7 +218,6 @@ public class ConcreteJoinIndex<V, W, K>
             return;
         }
         sane(oldValue, "oldValue", newValue, "newValue");
-        verify(getLeftKey != null, "You need to call 'setGetLeftKey()' first");
         K oldKey = getLeftKey.apply(oldValue);
         K newKey = getLeftKey.apply(newValue);
         synchronized (this)
@@ -262,7 +246,6 @@ public class ConcreteJoinIndex<V, W, K>
             return;
         }
         sane(oldValue, "oldValue", newValue, "newValue");
-        verify(getRightKey != null, "You need to call 'setGetRightKey()' first");
         K oldKey = getRightKey.apply(oldValue);
         K newKey = getRightKey.apply(newValue);
         synchronized (this)

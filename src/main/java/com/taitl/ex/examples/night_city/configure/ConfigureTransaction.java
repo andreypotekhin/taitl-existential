@@ -11,10 +11,10 @@ public class ConfigureTransaction
         Ex.configure()
             .context("/api/cats")
                 .transaction("/api/cats/transaction")
-                    .begin((Transaction tr) -> tr.index("cats").clear())
-                    .commit((Transaction tr) -> tr.index("cats").clear())
-                    .rollback((Transaction tr) -> tr.index("cats").clear())
-                    .checkpoint((Transaction tr) -> tr.index("cats").clear());
+                    .begin((Transaction tr) -> tr.index("cats", Object::toString).clear())
+                    .commit((Transaction tr) -> tr.index("cats", Object::toString).clear())
+                    .rollback((Transaction tr) -> tr.index("cats", Object::toString).clear())
+                    .checkpoint((Transaction tr) -> tr.index("cats", Object::toString).clear());
         // @formatter:on
     }
 }

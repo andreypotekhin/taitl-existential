@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Backing implementation for {@link com.taitl.existential.indexes.ValueIndex}.
@@ -16,14 +15,10 @@ public class ConcreteValueIndex<K, V> implements Map<K, V>
     protected Map<K, V> storage = new LinkedHashMap<>();
     protected Function<V, K> getKey;
 
-    public ConcreteValueIndex()
-    {
-    }
-
     public ConcreteValueIndex(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
-        setGetKey(getKey);
+        this.getKey = getKey;
     }
 
     public boolean contains(K key, V value)
@@ -45,7 +40,6 @@ public class ConcreteValueIndex<K, V> implements Map<K, V>
     public V add(V value)
     {
         sane(value, "value");
-        verify(getKey != null, "You need to call 'setGetKey()' first");
         put(getKey.apply(value), value);
         return value;
     }
@@ -71,16 +65,13 @@ public class ConcreteValueIndex<K, V> implements Map<K, V>
         sane(oldKey, "oldKey");
         sane(newKey, "newKey");
         sane(value, "value");
-        if (getKey != null)
+        K key = getKey.apply(value);
+        if (!newKey.equals(key))
         {
-            K key = getKey.apply(value);
-            if (!newKey.equals(key))
-            {
-                throw new IllegalArgumentException(String.format(
-                        "Argument 'newKey' value '%s' does not match key value '%s'"
-                                + " returned by 'getKey' function. See " + TROUBLESHOOTING_SECTION,
-                        newKey, key));
-            }
+            throw new IllegalArgumentException(String.format(
+                    "Argument 'newKey' value '%s' does not match key value '%s'"
+                            + " returned by 'getKey' function. See " + TROUBLESHOOTING_SECTION,
+                    newKey, key));
         }
         synchronized (this)
         {
@@ -95,7 +86,6 @@ public class ConcreteValueIndex<K, V> implements Map<K, V>
     {
         sane(oldKey, "oldKey");
         sane(value, "value");
-        verify(getKey != null, "You need to call 'setGetKey()' first");
         reindex(oldKey, getKey.apply(value), value);
     }
 
@@ -114,12 +104,10 @@ public class ConcreteValueIndex<K, V> implements Map<K, V>
         }
         if (newValue == null)
         {
-            verify(getKey != null, "You need to call 'setGetKey()' first");
             remove(getKey.apply(oldValue), oldValue);
             return;
         }
         sane(oldValue, "oldValue", newValue, "newValue");
-        verify(getKey != null, "You need to call 'setGetKey()' first");
         K oldKey = getKey.apply(oldValue);
         K newKey = getKey.apply(newValue);
         synchronized (this)

@@ -65,4 +65,11 @@ class ValueIndexTest
         usersByTeam.index(aliceV1, null);
         assertNull(usersByTeam.get("B"));
     }
+
+    @Test
+    void testGetKeyReturnsNull()
+    {
+        ValueIndex<String, User> index = new ValueIndex<>(u -> null);
+        assertThrows(IllegalArgumentException.class, () -> index.add(new User("A", "Alice")));
+    }
 }

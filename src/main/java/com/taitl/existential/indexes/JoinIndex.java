@@ -29,9 +29,7 @@ public class JoinIndex<V, W, K>
     {
         sane(getLeftKey, "getLeftKey");
         sane(getRightKey, "getRightKey");
-        concrete = createConcrete();
-        setGetLeftKey(getLeftKey);
-        setGetRightKey(getRightKey);
+        concrete = createConcrete(getLeftKey, getRightKey);
     }
 
     public Set<V> getLeft(K key)
@@ -122,11 +120,13 @@ public class JoinIndex<V, W, K>
 
     public void setGetLeftKey(Function<V, K> getLeftKey)
     {
+        sane(getLeftKey, "getLeftKey");
         concrete.setGetLeftKey(getLeftKey);
     }
 
     public void setGetRightKey(Function<W, K> getRightKey)
     {
+        sane(getRightKey, "getRightKey");
         concrete.setGetRightKey(getRightKey);
     }
 
@@ -158,8 +158,11 @@ public class JoinIndex<V, W, K>
     }
 
     @SuppressWarnings("unchecked")
-    protected ConcreteJoinIndex<V, W, K> createConcrete()
+    protected ConcreteJoinIndex<V, W, K> createConcrete(Function<V, K> getLeftKey, Function<W, K> getRightKey)
     {
-        return Creator.create(ConcreteJoinIndex.class);
+        return Creator.create(ConcreteJoinIndex.class,
+                new Class<?>[] { Function.class, Function.class },
+                getLeftKey,
+                getRightKey);
     }
 }
