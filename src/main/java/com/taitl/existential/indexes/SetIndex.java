@@ -9,10 +9,15 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Dynamic index optimized for a quick retrieval of a set of values Set<V> based on a key function K(V).
+ * Dynamic index optimized for quick retrieval of a set of values Set<V> based on a key function K(V).
  * Internally, it uses a Map<K, Set<V>> to store and map the values.
+ * The key function K(V) is specified once at construction time.
  * The index is dynamic in the sense of allowing to change the key of a value without need to reinsert.
  * Note: null is not allowed as a key or as a value.
+ *
+ * Usage:
+ * boolean b = index.contains(value);
+ * Set<V> value = index.get(key);
  *
  * @param <K>
  *            Key type

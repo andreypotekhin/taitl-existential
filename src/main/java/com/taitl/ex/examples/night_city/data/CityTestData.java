@@ -43,8 +43,8 @@ public class CityTestData
     public static Set<House> HOUSES;
     public static Set<Dwelling<?, ?>> DWELLINGS;
     public static Map<Being<?>, Dwelling<Being<?>, ?>> BEING_DWELLING_MAP;
-    public static JoinIndex<Mouse, Dwelling<Mouse, ?>, String> mouseDwelling;
-    public static JoinIndex<Being<?>, Dwelling<Being<?>, ?>, String> beingDwelling;
+    public static SetJoin<Mouse, Dwelling<Mouse, ?>, String> mouseDwelling;
+    public static SetJoin<Being<?>, Dwelling<Being<?>, ?>, String> beingDwelling;
 
     static
     {
@@ -65,7 +65,7 @@ public class CityTestData
             }
         }
 
-        mouseDwelling = new JoinIndex<>(m -> m.location(), d -> d.location());
+        mouseDwelling = new SetJoin<>(m -> m.location(), d -> d.location());
         for (Mouse m : MICE)
         {
             for (Dwelling<?, ?> d : DWELLINGS)
@@ -78,7 +78,7 @@ public class CityTestData
             }
         }
 
-        beingDwelling = new JoinIndex<>(m -> m.location(), d -> d.location());
+        beingDwelling = new SetJoin<>(m -> m.location(), d -> d.location());
         beingDwelling.addAllLeft(MICE);
         beingDwelling.addAllRight((Set<Dwelling<Being<?>, ?>>) (Set<?>) DWELLINGS);
     }

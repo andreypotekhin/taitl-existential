@@ -11,18 +11,20 @@ URL: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
 
 Prohibited use:
 - Development of weapons of mass destruction.
-- Development of mass surveillance technology.
-- Development of fully autonomous weapons.
+- Development of or use in  mass surveillance technology.
+- Development of or use in fully autonomous weapons.
 - Development of general artificial intelligence or super-intelligence.
+- Use in no-human-in-the-loop environments.
 - Engagement, or prior engagement, in an activity that is incompatible with democratic values.
 - Engagement, or prior engagement, in any violation of international law.
 - Engagement, or prior engagement, in aiding or abetting genocide.
 - Use by any government, military, law enforcement, or any contractor or subcontractor thereof.
 - Use for purposes of national security of any country.
 
-These conditions should also apply to any derived work.
-You must include this Ethical Use Policy text in any source
-fork or any redistribution of this work.
+These terms and conditions should also apply to any derived work.
+You must include this Ethical Use Policy text in any derived work, 
+source fork and in any redistribution of this work, alone or as part
+of other product.
 
 ## Copyright
 

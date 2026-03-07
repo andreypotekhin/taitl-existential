@@ -75,11 +75,9 @@ public class ConfigureEntities
                 .invariant(Mouse.class)
                     .exists(mouseDwelling.left(),
                         "At the end of transaction, every mouse is in a dwelling")
-                    .exists((Map<Mouse, Set<Dwelling<Mouse, ?>>>)(Map<?, ?>) beingDwelling.left(),
+                .invariant(Being.class)
+                    .exists((Map<Being, Set<Dwelling<Being<?>, ?>>>)(Map<?, ?>)beingDwelling.left(),
                         "At the end of transaction, every mouse is in a dwelling")
-//                .invariant(Being.class)
-//                    .exists((Map<Being, Set<Dwelling<Being<?>, ?>>>)(Map<?, ?>)beingDwelling.left(),
-//                        "At the end of transaction, every mouse is in a dwelling")
         ;
 
         // Rules assigned to narrower context

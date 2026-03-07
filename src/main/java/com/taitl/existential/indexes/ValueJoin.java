@@ -9,15 +9,24 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Dynamic index optimized for a quick retrieval of two sets of values Set<V>, Set<W>
- * based on key functions K(V), K(W).
+ * Dynamic index optimized for quick retrieval of two values V and W
+ * based on key functions K(V), K(W) (specified at construction time).
  * Conceptually, this allows to 'join' two value collections of types V and W by a shared key type (K),
- * and 'map' from a value of one type to a set of matching values of the other type.
- * The index exposes 'left' and 'right' maps (Map<V, Set<W>>, Map<V, Set<W>>)
- * for matching from V to set of W and from W to set of V.
- * Internally, it uses two SetIndex<K,V> and SetIndex<K,W> to store and map the values.
- * The index is dynamic in the sense of allowing to change the key of any value without need to reinsert.
+ * and map from a value of one type to a matching value of the other type.
+ * The index exposes 'left' and 'right' maps (Map<V, W>, Map<W, V>)
+ * for matching from V to W and from W to V.
+ * Internally, it uses two a pair Map<K,V> and Map<K,W> to store and map the values.
+ * The index is dynamic in the sense of allowing to change the key of any value stored in it
+ * without need to remove and reinsert (but you need to call index()/reindex()).
  * Note: null is not allowed as a key or as a value.
+ *
+ * Usage:
+ * index.addAllLeft(collV);
+ * index.addAllRight(collW);
+ * boolean containsV = index.contains(v);
+ * boolean containsW = index.contains(w);
+ * W w1 = join.get(v);
+ * V v1 = join.get(w);
  *
  * @param <V>
  *            Left value type
@@ -26,11 +35,11 @@ import static com.taitl.ex.common.helper.Args.*;
  * @param <K>
  *            Shared key type
  */
-public class JoinIndex<V, W, K>
+public class ValueJoin<V, W, K>
 {
-    protected ConcreteJoinIndex<V, W, K> concrete;
+    protected ConcreteValueJoin<V, W, K> concrete;
 
-    public JoinIndex(Function<V, K> getLeftKey, Function<W, K> getRightKey)
+    public ValueJoin(Function<V, K> getLeftKey, Function<W, K> getRightKey)
     {
         sane(getLeftKey, "getLeftKey");
         sane(getRightKey, "getRightKey");
@@ -38,17 +47,17 @@ public class JoinIndex<V, W, K>
     }
 
     /**
-     * Returns a dynamic read-only map from left values to matching right values.
+     * Returns a dynamic read-only map from left values to matching right value.
      */
-    public Map<V, Set<W>> left()
+    public Map<V, W> left()
     {
         return concrete.left();
     }
 
     /**
-     * Returns a dynamic read-only map from right values to matching left values.
+     * Returns a dynamic read-only map from right values to matching left value.
      */
-    public Map<W, Set<V>> right()
+    public Map<W, V> right()
     {
         return concrete.right();
     }
@@ -75,32 +84,32 @@ public class JoinIndex<V, W, K>
         concrete.indexRight(oldValue, newValue);
     }
 
-    public Set<V> getLeft(K key)
+    public V getLeft(K key)
     {
         return concrete.getLeft(key);
     }
 
-    public Set<W> getRight(K key)
+    public W getRight(K key)
     {
         return concrete.getRight(key);
     }
 
-    public Set<W> getRightByLeft(V left)
+    public W getRightByLeft(V left)
     {
         return concrete.getRightByLeft(left);
     }
 
-    public Set<V> getLeftByRight(W right)
+    public V getLeftByRight(W right)
     {
         return concrete.getLeftByRight(right);
     }
 
-    public Set<V> addLeft(K key, V value)
+    public V addLeft(K key, V value)
     {
         return concrete.addLeft(key, value);
     }
 
-    public Set<V> addLeft(V value)
+    public V addLeft(V value)
     {
         return concrete.addLeft(value);
     }
@@ -110,12 +119,12 @@ public class JoinIndex<V, W, K>
         concrete.addAllLeft(values);
     }
 
-    public Set<W> addRight(K key, W value)
+    public W addRight(K key, W value)
     {
         return concrete.addRight(key, value);
     }
 
-    public Set<W> addRight(W value)
+    public W addRight(W value)
     {
         return concrete.addRight(value);
     }
@@ -161,9 +170,9 @@ public class JoinIndex<V, W, K>
     }
 
     @SuppressWarnings("unchecked")
-    protected ConcreteJoinIndex<V, W, K> createConcrete(Function<V, K> getLeftKey, Function<W, K> getRightKey)
+    protected ConcreteValueJoin<V, W, K> createConcrete(Function<V, K> getLeftKey, Function<W, K> getRightKey)
     {
-        return Creator.create(ConcreteJoinIndex.class,
+        return Creator.create(ConcreteValueJoin.class,
                 new Class<?>[] { Function.class, Function.class },
                 getLeftKey,
                 getRightKey);
