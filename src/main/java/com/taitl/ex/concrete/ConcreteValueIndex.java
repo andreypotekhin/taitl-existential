@@ -21,10 +21,11 @@ public class ConcreteValueIndex<K, V> implements Map<K, V>
         this.getKey = getKey;
     }
 
-    public boolean contains(K key, V value)
+    public boolean contains(V value)
     {
-        sane(key, "key");
         sane(value, "value");
+        K key = getKey.apply(value);
+        sane(key, "key");
         V current = storage.get(key);
         return current != null && current.equals(value);
     }

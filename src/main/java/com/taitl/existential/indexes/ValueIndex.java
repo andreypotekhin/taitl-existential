@@ -48,9 +48,9 @@ public class ValueIndex<K, V> implements Map<K, V>
         return concrete.get(key);
     }
 
-    public boolean contains(K key, V value)
+    public boolean contains(V value)
     {
-        return concrete.contains(key, value);
+        return concrete.contains(value);
     }
 
     public boolean contains(K key, Predicate<? super V> match)

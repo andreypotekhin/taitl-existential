@@ -125,6 +125,53 @@ public class ConcreteValueJoin<V, W, K>
         return leftByRight.get(right);
     }
 
+    public boolean containsLeft(Object value)
+    {
+        sane(value, "value");
+        return containsLeftValue(value);
+    }
+
+    public boolean containsRight(Object value)
+    {
+        sane(value, "value");
+        return containsRightValue(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T get(Object value)
+    {
+        sane(value, "value");
+        try
+        {
+            V left = (V) value;
+            K key = getLeftKey.apply(left);
+            V current = leftByKey.get(key);
+            if (current != null && current.equals(left))
+            {
+                return (T) rightByKey.get(key);
+            }
+        }
+        catch (ClassCastException ignored)
+        {
+            // Value is not a left-side type.
+        }
+        try
+        {
+            W right = (W) value;
+            K key = getRightKey.apply(right);
+            W current = rightByKey.get(key);
+            if (current != null && current.equals(right))
+            {
+                return (T) leftByKey.get(key);
+            }
+        }
+        catch (ClassCastException ignored)
+        {
+            // Value is not a right-side type.
+        }
+        return null;
+    }
+
     public V addLeft(K key, V value)
     {
         sane(key, "key");
@@ -294,6 +341,38 @@ public class ConcreteValueJoin<V, W, K>
         }
         rightByKey.remove(key);
         return current;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected boolean containsLeftValue(Object value)
+    {
+        try
+        {
+            V left = (V) value;
+            K key = getLeftKey.apply(left);
+            V current = leftByKey.get(key);
+            return current != null && current.equals(left);
+        }
+        catch (ClassCastException ignored)
+        {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected boolean containsRightValue(Object value)
+    {
+        try
+        {
+            W right = (W) value;
+            K key = getRightKey.apply(right);
+            W current = rightByKey.get(key);
+            return current != null && current.equals(right);
+        }
+        catch (ClassCastException ignored)
+        {
+            return false;
+        }
     }
 
     protected void rebuildViews()

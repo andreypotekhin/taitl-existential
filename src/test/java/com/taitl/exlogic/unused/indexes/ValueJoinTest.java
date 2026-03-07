@@ -55,8 +55,14 @@ class ValueJoinTest
         join.addRight(bug);
         join.addRight(deploy);
 
+        assertTrue(join.containsLeft(alice));
+        assertFalse(join.containsRight(alice));
+        assertTrue(join.containsRight(bug));
+        assertFalse(join.containsLeft(bug));
         assertEquals(alice, join.getLeft("A"));
         assertEquals(bob, join.getLeft("B"));
+        assertEquals(bug, join.get(alice));
+        assertEquals(alice, join.get(bug));
         assertEquals(bug, join.getRightByLeft(alice));
         assertEquals(alice, join.getLeftByRight(bug));
         assertEquals(deploy, join.getRight("B"));

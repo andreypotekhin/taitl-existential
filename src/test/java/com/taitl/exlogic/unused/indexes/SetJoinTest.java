@@ -55,7 +55,13 @@ class SetJoinTest
         join.addRight(bug);
         join.addRight(deploy);
 
+        assertTrue(join.containsLeft(alice));
+        assertFalse(join.containsRight(alice));
+        assertTrue(join.containsRight(bug));
+        assertFalse(join.containsLeft(bug));
         assertEquals(Set.of(alice, bob), join.getLeft("A"));
+        assertEquals(Set.of(bug), join.get(alice));
+        assertEquals(Set.of(alice, bob), join.get(bug));
         assertEquals(Set.of(bug), join.getRightByLeft(alice));
         assertEquals(Set.of(alice, bob), join.getLeftByRight(bug));
         assertEquals(Set.of(deploy), join.getRight("B"));

@@ -124,6 +124,53 @@ public class ConcreteJoin<V, W, K>
         return leftByRight.get(right);
     }
 
+    public boolean containsLeft(Object value)
+    {
+        sane(value, "value");
+        return containsLeftValue(value);
+    }
+
+    public boolean containsRight(Object value)
+    {
+        sane(value, "value");
+        return containsRightValue(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Set<T> get(Object value)
+    {
+        sane(value, "value");
+        try
+        {
+            V left = (V) value;
+            K key = getLeftKey.apply(left);
+            Set<V> current = leftByKey.get(key);
+            if (current != null && current.contains(left))
+            {
+                return (Set<T>) rightByKey.get(key);
+            }
+        }
+        catch (ClassCastException ignored)
+        {
+            // Value is not a left-side type.
+        }
+        try
+        {
+            W right = (W) value;
+            K key = getRightKey.apply(right);
+            Set<W> current = rightByKey.get(key);
+            if (current != null && current.contains(right))
+            {
+                return (Set<T>) leftByKey.get(key);
+            }
+        }
+        catch (ClassCastException ignored)
+        {
+            // Value is not a right-side type.
+        }
+        return null;
+    }
+
     public Set<V> addLeft(K key, V value)
     {
         sane(key, "key");
@@ -270,6 +317,38 @@ public class ConcreteJoin<V, W, K>
             rightByKey.clear();
             rightByLeft.clear();
             leftByRight.clear();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected boolean containsLeftValue(Object value)
+    {
+        try
+        {
+            V left = (V) value;
+            K key = getLeftKey.apply(left);
+            Set<V> current = leftByKey.get(key);
+            return current != null && current.contains(left);
+        }
+        catch (ClassCastException ignored)
+        {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected boolean containsRightValue(Object value)
+    {
+        try
+        {
+            W right = (W) value;
+            K key = getRightKey.apply(right);
+            Set<W> current = rightByKey.get(key);
+            return current != null && current.contains(right);
+        }
+        catch (ClassCastException ignored)
+        {
+            return false;
         }
     }
 

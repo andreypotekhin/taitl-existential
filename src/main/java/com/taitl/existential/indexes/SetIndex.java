@@ -60,15 +60,14 @@ public class SetIndex<K, V> implements Map<K, Set<V>>
     }
 
     /**
-     * Returns true if the key exists and the value is stored under it.
+     * Returns true if the value is indexed under its derived key.
      *
-     * @param key   Key to check
      * @param value Value to check
-     * @return True when the value is present under the key
+     * @return True when the value is indexed
      */
-    public boolean contains(K key, V value)
+    public boolean contains(V value)
     {
-        return concrete.contains(key, value);
+        return concrete.contains(value);
     }
 
     /**

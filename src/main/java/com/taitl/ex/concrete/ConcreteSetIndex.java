@@ -58,10 +58,11 @@ public class ConcreteSetIndex<K, V> implements Map<K, Set<V>>
         return storage.get(key);
     }
 
-    public boolean contains(K key, V value)
+    public boolean contains(V value)
     {
-        sane(key, "key");
         sane(value, "value");
+        K key = getKey.apply(value);
+        sane(key, "key");
         Set<V> set = storage.get(key);
         if (set == null || set.isEmpty())
         {

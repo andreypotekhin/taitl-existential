@@ -79,15 +79,14 @@ class SetIndexTest
         assertTrue(cats_by_color.containsKey("Grey"));
         assertTrue(cats_by_color.containsKey("Yellow"));
         assertTrue(cats_by_color.containsKey("Black"));
-        assertTrue(cats_by_color.contains("Black", BLACK_CAT));
-        assertTrue(!cats_by_color.contains("Black", GREY_CAT));
+        assertTrue(cats_by_color.contains(BLACK_CAT));
+        assertTrue(!cats_by_color.contains(new Cat("Black", "Ghost")));
         assertTrue(!cats_by_color.containsKey("non-existing"));
-        assertTrue(cats_by_location.contains(LOCATION_PARK, GREY_CAT));
-        assertTrue(cats_by_location.contains(LOCATION_PARK, YELLOW_CAT));
-        assertTrue(cats_by_location.contains(LOCATION_GARDEN, BLACK_CAT));
+        assertTrue(cats_by_location.contains(GREY_CAT));
+        assertTrue(cats_by_location.contains(YELLOW_CAT));
+        assertTrue(cats_by_location.contains(BLACK_CAT));
         assertThrows(IllegalArgumentException.class, () -> cats_by_color.containsKey(null));
-        assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains(null, GREY_CAT));
-        assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains("Black", (Cat) null));
+        assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains((Cat) null));
         assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains("Black", (Predicate<Set<Cat>>) null));
     }
 
@@ -104,7 +103,7 @@ class SetIndexTest
             assertTrue(cats_by_color.contains("Black", cats -> cats.contains(BLACK_CAT)),
                     "Contains specific element");
             assertTrue(!cats_by_color.contains("non-existing", cats -> true));
-            assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains("Grey", (Cat) null));
+            assertThrows(IllegalArgumentException.class, () -> cats_by_color.contains((Cat) null));
             assertThrows(IllegalArgumentException.class,
                     () -> cats_by_color.contains("Grey", (Predicate<Set<Cat>>) null));
         }
@@ -117,7 +116,7 @@ class SetIndexTest
             Cat cat = CityTestData.BLACK_CAT;
             index.add("Black", cat);
             assertDoesNotThrow(() -> index.reindex("Black", new String("Black"), cat));
-            assertTrue(index.contains("Black", cat));
+            assertTrue(index.contains(cat));
             IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                     () -> index.reindex("Black", "Orange", cat));
             assertTrue(ex.getMessage().contains("newKey"));
@@ -151,8 +150,8 @@ class SetIndexTest
         SetIndex<String, Cat> index = new SetIndex<>(c -> c.color);
         index.addAll(List.of(GREY_CAT, BLACK_CAT));
 
-        assertTrue(index.contains("Grey", GREY_CAT));
-        assertTrue(index.contains("Black", BLACK_CAT));
+        assertTrue(index.contains(GREY_CAT));
+        assertTrue(index.contains(BLACK_CAT));
         assertThrows(IllegalArgumentException.class, () -> index.addAll(null));
     }
 
@@ -164,8 +163,8 @@ class SetIndexTest
         orange.location = LOCATION_PARK;
         cats_by_location.reindex(LOCATION_GARDEN, orange);
 
-        assertFalse(cats_by_location.contains(LOCATION_GARDEN, orange));
-        assertTrue(cats_by_location.contains(LOCATION_PARK, orange));
+        assertFalse(cats_by_location.get(LOCATION_GARDEN).contains(orange));
+        assertTrue(cats_by_location.get(LOCATION_PARK).contains(orange));
     }
 
     @Test
@@ -173,10 +172,11 @@ class SetIndexTest
     {
         Cat orange = new Cat("Orange", "Garden");
         cats_by_location.index(null, orange);
-        assertTrue(cats_by_location.contains(LOCATION_GARDEN, orange));
+        assertTrue(cats_by_location.contains(orange));
+        assertTrue(cats_by_location.get(LOCATION_GARDEN).contains(orange));
 
         cats_by_location.index(orange, null);
-        assertFalse(cats_by_location.contains(LOCATION_GARDEN, orange));
+        assertFalse(cats_by_location.contains(orange));
     }
 
     @Test

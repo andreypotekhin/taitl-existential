@@ -36,6 +36,7 @@ class ValueIndexTest
         User alice = new User("A", "Alice");
         usersByTeam.add(alice);
         assertEquals(alice, usersByTeam.get("A"));
+        assertTrue(usersByTeam.contains(alice));
         assertTrue(usersByTeam.containsKey("A"));
     }
 

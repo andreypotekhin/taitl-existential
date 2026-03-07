@@ -21,10 +21,10 @@ import static com.taitl.ex.common.helper.Args.*;
  * Note: null is not allowed as a key or as a value.
  *
  * Usage:
- * index.addAllLeft(collV);
- * index.addAllRight(collW);
- * boolean containsV = index.contains(v);
- * boolean containsW = index.contains(w);
+ * join.addAllLeft(collV);
+ * join.addAllRight(collW);
+ * boolean containsV = join.containsLeft(v);
+ * boolean containsW = join.containsRight(w);
  * Set<W> ws = join.get(v);
  * Set<V> vs = join.get(w);
  *
@@ -102,6 +102,31 @@ public class SetJoin<V, W, K>
     public Set<V> getLeftByRight(W right)
     {
         return concrete.getLeftByRight(right);
+    }
+
+    /**
+     * Returns true if the provided value is present on the left side of the join.
+     */
+    public boolean containsLeft(Object value)
+    {
+        return concrete.containsLeft(value);
+    }
+
+    /**
+     * Returns true if the provided value is present on the right side of the join.
+     */
+    public boolean containsRight(Object value)
+    {
+        return concrete.containsRight(value);
+    }
+
+    /**
+     * Returns values matched by the same join key as the provided value.
+     * If the value is on the left side, returns right-side values; if on the right side, returns left-side values.
+     */
+    public <T> Set<T> get(Object value)
+    {
+        return concrete.get(value);
     }
 
     public Set<V> addLeft(K key, V value)
