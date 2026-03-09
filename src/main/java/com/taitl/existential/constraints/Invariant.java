@@ -262,35 +262,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Creates an existential quantifier over a collection.
-     *
-     * @param coll Collection to evaluate
-     * @param description Description of invariant
-     * @return Exists quantifier
-     */
-    public Invariant<T> exists(Collection<T> coll, String description)
-    {
-        sane(coll, "coll", description, "description");
-        add(new Exists<T>(coll, description));
-        return this;
-    }
-
-    /**
-     * Creates an existential quantifier over a collection.
-     *
-     * @param coll Collection to evaluate
-     * @param predicate Predicate to evaluate against each value
-     * @param description Description of invariant
-     * @return Exists quantifier
-     */
-    public Invariant<T> exists(Collection<T> coll, Predicate<T> predicate, String description)
-    {
-        sane(coll, "coll", predicate, "predicate", description, "description");
-        add(new Exists<T>(coll, predicate, description));
-        return this;
-    }
-
-    /**
      * Creates an existential quantifier over a map.
      *
      * @param map Map to evaluate
@@ -320,21 +291,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Creates an existential quantifier over a collection.
-     *
-     * @param coll Collection to evaluate
-     * @param bipredicate Predicate evaluated against evaluated entity and matching collection value
-     * @param description Description of invariant
-     * @return Exists quantifier
-     */
-    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate, String description)
-    {
-        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
-        add(new Exists<T>(coll, bipredicate, description));
-        return this;
-    }
-
-    /**
      * Creates an existential quantifier over a map.
      *
      * @param map Map to evaluate
@@ -350,27 +306,10 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     }
 
     /**
-     * Creates an existential quantifier over the collection as a whole.
-     *
-     * @param coll Values to evaluate
-     * @param predicate Predicate evaluated against the map
-     * @param placeholder Overload disambiguator
-     * @param description Description of invariant
-     * @return Exists quantifier
-     */
-    public Invariant<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder,
-            String description)
-    {
-        sane(coll, "coll", predicate, "predicate", description, "description");
-        add(new Exists<T>(coll, predicate, placeholder, description));
-        return this;
-    }
-
-    /**
      * Creates an existential quantifier over a map.
      *
      * @param map Map to evaluate
-     * @param predicate Predicate evaluated against the map
+     * @param predicate Predicate evaluated against matching map keys
      * @param placeholder Overload disambiguator
      * @param description Description of invariant
      * @return Exists quantifier
@@ -380,23 +319,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     {
         sane(map, "map", predicate, "predicate", description, "description");
         add(new Exists<T>(map, predicate, placeholder, description));
-        return this;
-    }
-
-    /**
-     * Creates an existential quantifier over a collection.
-     *
-     * @param coll Collection to evaluate
-     * @param bipredicate Predicate evaluated against evaluated entity and matching entries
-     * @param placeholder Overload disambiguator
-     * @param description Description of invariant
-     * @return Exists quantifier
-     */
-    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
-            int placeholder, String description)
-    {
-        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
-        add(new Exists<T>(coll, bipredicate, placeholder, description));
         return this;
     }
 
@@ -414,6 +336,162 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     {
         sane(map, "map", bipredicate, "bipredicate", description, "description");
         add(new Exists<T>(map, bipredicate, placeholder, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a set.
+     *
+     * @param set Set to evaluate
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Set<T> set, String description)
+    {
+        sane(set, "set", description, "description");
+        add(new Exists<T>(set, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a set.
+     *
+     * @param set Set to evaluate
+     * @param predicate Predicate to evaluate against each value
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Set<T> set, Predicate<T> predicate, String description)
+    {
+        sane(set, "set", predicate, "predicate", description, "description");
+        add(new Exists<T>(set, predicate, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a set.
+     *
+     * @param set Set to evaluate
+     * @param bipredicate Predicate evaluated against evaluated entity and matching set value
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Set<T> set, BiPredicate<T, T> bipredicate, String description)
+    {
+        sane(set, "set", bipredicate, "bipredicate", description, "description");
+        add(new Exists<T>(set, bipredicate, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over the set as a whole.
+     *
+     * @param set Values to evaluate
+     * @param predicate Predicate evaluated against the matching set values
+     * @param placeholder Overload disambiguator
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Set<T> set, Predicate<Set<T>> predicate, String placeholder,
+            String description)
+    {
+        sane(set, "set", predicate, "predicate", placeholder, "placeholder", description, "description");
+        add(new Exists<T>(set, predicate, placeholder, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a set.
+     *
+     * @param set Set to evaluate
+     * @param bipredicate Predicate evaluated against evaluated entity and matching set entries
+     * @param placeholder Overload disambiguator
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Set<T> set, BiPredicate<T, Set<T>> bipredicate,
+            String placeholder, String description)
+    {
+        sane(set, "set", bipredicate, "bipredicate", placeholder, "placeholder", description, "description");
+        add(new Exists<T>(set, bipredicate, placeholder, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Collection<T> coll, String description)
+    {
+        sane(coll, "coll", description, "description");
+        add(new Exists<T>(coll, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
+     * @param predicate Predicate to evaluate against each value
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Collection<T> coll, Predicate<T> predicate, String description)
+    {
+        sane(coll, "coll", predicate, "predicate", description, "description");
+        add(new Exists<T>(coll, predicate, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
+     * @param bipredicate Predicate evaluated against evaluated entity and matching collection value
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate, String description)
+    {
+        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        add(new Exists<T>(coll, bipredicate, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over the collection as a whole.
+     *
+     * @param coll Values to evaluate
+     * @param predicate Predicate evaluated against the matching collection values
+     * @param placeholder Overload disambiguator
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder,
+            String description)
+    {
+        sane(coll, "coll", predicate, "predicate", description, "description");
+        add(new Exists<T>(coll, predicate, placeholder, description));
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
+     * @param bipredicate Predicate evaluated against evaluated entity and matching collection entries
+     * @param placeholder Overload disambiguator
+     * @param description Description of invariant
+     * @return Exists quantifier
+     */
+    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
+            int placeholder, String description)
+    {
+        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        add(new Exists<T>(coll, bipredicate, placeholder, description));
         return this;
     }
 

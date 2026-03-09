@@ -12,31 +12,40 @@ class ExistsTest
     class Constructors
     {
         @Test
-        @DisplayName("Construct with collection only")
-        void withCollectionOnly()
+        @DisplayName("Construct with set only")
+        void withSetOnly()
         {
-            Exists<String> exists = new Exists<>(List.of("a", "boat"));
+            Exists<String> exists = new Exists<>(Set.of("a", "boat"));
             assertTrue(exists.test("boat"));
             assertFalse(exists.test("goat"));
             assertEquals("", exists.description());
         }
 
         @Test
-        @DisplayName("Construct with collection and description")
-        void withCollectionAndDescription()
+        @DisplayName("Construct with set and description")
+        void withSetAndDescription()
         {
-            Exists<String> exists = new Exists<>(List.of("a", "boat"), "At least one value must exist");
+            Exists<String> exists = new Exists<>(Set.of("a", "boat"), "At least one value must exist");
             assertEquals("At least one value must exist", exists.description());
         }
 
         @Test
-        @DisplayName("Construct with collection entity-value bipredicate")
-        void withCollectionEntityValueBipredicate()
+        @DisplayName("Construct with set entity-value bipredicate")
+        void withSetEntityValueBipredicate()
         {
-            Exists<String> exists = new Exists<>(List.of(new String("boat")),
+            Exists<String> exists = new Exists<>(Set.of(new String("boat")),
                     (entity, matched) -> entity != matched && entity.equals(matched));
 
             assertTrue(exists.test(new String("boat")));
+            assertFalse(exists.test("goat"));
+        }
+
+        @Test
+        @DisplayName("Construct with collection preserves duplicates in matching values")
+        void withCollectionPreservesDuplicates()
+        {
+            Exists<String> exists = new Exists<>(List.of("boat", "boat"), values -> values.size() == 2, 0);
+            assertTrue(exists.test("boat"));
             assertFalse(exists.test("goat"));
         }
 
@@ -59,11 +68,12 @@ class ExistsTest
         }
 
         @Test
-        @DisplayName("Construct collection entity-matches bipredicate")
-        void withCollectionEntityMatchesBipredicate()
+        @DisplayName("Construct set entity-matches bipredicate")
+        void withSetEntityMatchesBipredicate()
         {
-            Exists<String> exists = new Exists<>(List.of("a", "boat"),
-                    (entity, matches) -> matches.size() == 1 && matches.contains(entity), 0);
+            Exists<String> exists = new Exists<>(Set.of("a", "boat"),
+                    (String entity, Set<String> matches) -> matches.size() == 1 && matches.contains(entity), "set",
+                    "");
             assertTrue(exists.test("boat"));
             assertFalse(exists.test("goat"));
         }

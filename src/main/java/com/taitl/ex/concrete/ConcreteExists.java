@@ -14,25 +14,35 @@ import static com.taitl.ex.common.helper.State.*;
 public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
 {
     Collection<T> coll;
+    Set<T> set;
     Map<T, K> map;
     Predicate<T> vpredicate;
     BiPredicate<T, T> vbipredicate;
     Predicate<Collection<T>> cpredicate;
     BiPredicate<T, Collection<T>> cbipredicate;
+    Predicate<Set<T>> spredicate;
+    BiPredicate<T, Set<T>> sbipredicate;
     BiPredicate<T, K> mbipredicate;
     Transaction tran;
     String description;
 
     void validate()
     {
-        verify(coll != null || map != null, "Either coll or map must be provided.");
-        verify(coll == null || map == null, "Coll or map must be provided, but not both.");
-        verify(cpredicate != null || cbipredicate != null || mbipredicate != null
-                || vpredicate != null || vbipredicate != null,
-                "At least one predicate must be provided.");
-        verify(cpredicate == null || cbipredicate == null || mbipredicate == null
-                || vpredicate == null || vbipredicate == null,
-                "Only one predicate should be specified.");
+        int sources = 0;
+        sources += coll == null ? 0 : 1;
+        sources += set == null ? 0 : 1;
+        sources += map == null ? 0 : 1;
+        verify(sources == 1, "Exactly one source (coll, set, or map) must be provided.");
+
+        int predicates = 0;
+        predicates += cpredicate == null ? 0 : 1;
+        predicates += cbipredicate == null ? 0 : 1;
+        predicates += spredicate == null ? 0 : 1;
+        predicates += sbipredicate == null ? 0 : 1;
+        predicates += mbipredicate == null ? 0 : 1;
+        predicates += vpredicate == null ? 0 : 1;
+        predicates += vbipredicate == null ? 0 : 1;
+        verify(predicates == 1, "Exactly one predicate must be specified.");
     }
 
     /* Implement Expression interface */
@@ -53,61 +63,43 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
 
     /* Implement Predicate interface */
 
-    /**
-     * Tests if the predicate holds for given transaction.
-     *
-     * @return True if predicate holds
-     */
     public boolean test(T entity)
     {
         if (coll != null)
         {
-            return testOnColl(entity);
+            return testOnCollection(entity);
         }
-        else if (map != null)
+        if (set != null)
+        {
+            return testOnSet(entity);
+        }
+        if (map != null)
         {
             return testOnMap(entity);
         }
-        else
-        {
-            throw new IllegalStateException("Neither collection nor set is defined");
-        }
+        throw new IllegalStateException("Neither coll, set nor map is defined");
     }
 
-    protected boolean testOnColl(T entity)
+    protected boolean testOnCollection(T entity)
     {
         sane(entity, "entity");
         cool(coll, "coll");
-        verify(map == null, "Only one of coll or map fields can be set, not both.");
+        verify(set == null && map == null, "Only one of coll, set, or map fields can be set.");
         if (cpredicate != null)
         {
-            Collection<T> matching = new ArrayList<>();
-            for (T v : coll)
-            {
-                if (entity.equals(v))
-                {
-                    matching.add(v);
-                }
-            }
+            Collection<T> matching = findCollectionMatches(entity);
             return cpredicate.test(matching);
         }
         if (cbipredicate != null)
         {
-            Collection<T> matching = new ArrayList<>();
-            for (T v : coll)
-            {
-                if (entity.equals(v))
-                {
-                    matching.add(v);
-                }
-            }
+            Collection<T> matching = findCollectionMatches(entity);
             return cbipredicate.test(entity, matching);
         }
         if (vpredicate != null)
         {
-            for (T v : coll)
+            for (T value : coll)
             {
-                if (entity.equals(v) && vpredicate.test(v))
+                if (entity.equals(value) && vpredicate.test(value))
                 {
                     return true;
                 }
@@ -116,9 +108,9 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
         }
         if (vbipredicate != null)
         {
-            for (T v : coll)
+            for (T value : coll)
             {
-                if (entity.equals(v) && vbipredicate.test(entity, v))
+                if (entity.equals(value) && vbipredicate.test(entity, value))
                 {
                     return true;
                 }
@@ -128,58 +120,101 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
         return false;
     }
 
+    protected boolean testOnSet(T entity)
+    {
+        sane(entity, "entity");
+        cool(set, "set");
+        verify(coll == null && map == null, "Only one of coll, set, or map fields can be set.");
+        T match = findSetMatch(entity);
+        Set<T> matching = match == null ? Set.of() : Set.of(match);
+        if (spredicate != null)
+        {
+            return spredicate.test(matching);
+        }
+        if (sbipredicate != null)
+        {
+            return sbipredicate.test(entity, matching);
+        }
+        if (vpredicate != null)
+        {
+            return match != null && vpredicate.test(match);
+        }
+        if (vbipredicate != null)
+        {
+            return match != null && vbipredicate.test(entity, match);
+        }
+        return false;
+    }
+
     protected boolean testOnMap(T entity)
     {
         sane(entity, "entity");
         cool(map, "map");
-        verify(coll == null, "Only one of coll or map fields can be set, not both.");
+        verify(coll == null && set == null, "Only one of coll, set, or map fields can be set.");
+        T match = findMapKeyMatch(entity);
         if (cpredicate != null)
         {
-            Collection<T> matching = new ArrayList<>();
-            for (T v : map.keySet())
-            {
-                if (entity.equals(v))
-                {
-                    matching.add(v);
-                }
-            }
+            Collection<T> matching = match == null ? List.of() : List.of(match);
             return cpredicate.test(matching);
         }
         if (cbipredicate != null)
         {
-            Collection<T> matching = new ArrayList<>();
-            for (T v : map.keySet())
-            {
-                if (entity.equals(v))
-                {
-                    matching.add(v);
-                }
-            }
+            Collection<T> matching = match == null ? List.of() : List.of(match);
             return cbipredicate.test(entity, matching);
         }
         if (vpredicate != null)
         {
-            for (T v : map.keySet())
-            {
-                if (entity.equals(v) && vpredicate.test(v))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return match != null && vpredicate.test(match);
         }
         if (mbipredicate != null)
         {
-            for (Map.Entry<T, K> entry : map.entrySet())
-            {
-                T key = entry.getKey();
-                if (entity.equals(key) && mbipredicate.test(key, entry.getValue()))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return match != null && mbipredicate.test(match, map.get(match));
         }
         return false;
+    }
+
+    private Collection<T> findCollectionMatches(T entity)
+    {
+        List<T> matching = new ArrayList<>();
+        for (T value : coll)
+        {
+            if (entity.equals(value))
+            {
+                matching.add(value);
+            }
+        }
+        return matching;
+    }
+
+    private T findSetMatch(T entity)
+    {
+        if (!set.contains(entity))
+        {
+            return null;
+        }
+        for (T value : set)
+        {
+            if (entity.equals(value))
+            {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    private T findMapKeyMatch(T entity)
+    {
+        if (!map.containsKey(entity))
+        {
+            return null;
+        }
+        for (T key : map.keySet())
+        {
+            if (entity.equals(key))
+            {
+                return key;
+            }
+        }
+        return null;
     }
 }

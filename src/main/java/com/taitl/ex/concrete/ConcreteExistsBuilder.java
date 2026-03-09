@@ -11,9 +11,12 @@ import static com.taitl.ex.common.helper.State.*;
 public class ConcreteExistsBuilder<V, K>
 {
     Collection<V> coll;
+    Set<V> set;
     Map<V, K> map;
     Predicate<Collection<V>> cpredicate;
     BiPredicate<V, Collection<V>> cbipredicate;
+    Predicate<Set<V>> spredicate;
+    BiPredicate<V, Set<V>> sbipredicate;
     Predicate<V> vpredicate;
     BiPredicate<V, V> vbipredicate;
     BiPredicate<V, K> mbipredicate;
@@ -25,9 +28,12 @@ public class ConcreteExistsBuilder<V, K>
         validate();
         ConcreteExists<V, K> result = new ConcreteExists<>();
         result.coll = coll;
+        result.set = set;
         result.map = map;
         result.cpredicate = cpredicate;
         result.cbipredicate = cbipredicate;
+        result.spredicate = spredicate;
+        result.sbipredicate = sbipredicate;
         result.vpredicate = vpredicate;
         result.vbipredicate = vbipredicate;
         result.mbipredicate = mbipredicate;
@@ -39,20 +45,34 @@ public class ConcreteExistsBuilder<V, K>
 
     void validate()
     {
-        verify(coll != null || map != null, "Either coll or map must be provided.");
-        verify(coll == null || map == null, "Coll or map must be provided, but not both.");
-        verify(cpredicate != null || cbipredicate != null || mbipredicate != null
-                || vpredicate != null || vbipredicate != null,
-                "At least one predicate must be provided.");
-        verify(cpredicate == null || cbipredicate == null || mbipredicate == null
-                || vpredicate == null || vbipredicate == null,
-                "Only one predicate should be specified.");
+        int sources = 0;
+        sources += coll == null ? 0 : 1;
+        sources += set == null ? 0 : 1;
+        sources += map == null ? 0 : 1;
+        verify(sources == 1, "Exactly one source (coll, set, or map) must be provided.");
+
+        int predicates = 0;
+        predicates += cpredicate == null ? 0 : 1;
+        predicates += cbipredicate == null ? 0 : 1;
+        predicates += spredicate == null ? 0 : 1;
+        predicates += sbipredicate == null ? 0 : 1;
+        predicates += vpredicate == null ? 0 : 1;
+        predicates += vbipredicate == null ? 0 : 1;
+        predicates += mbipredicate == null ? 0 : 1;
+        verify(predicates == 1, "Exactly one predicate must be specified.");
     }
 
     public ConcreteExistsBuilder<V, K> coll(Collection<V> coll)
     {
         sane(coll, "coll");
         this.coll = coll;
+        return this;
+    }
+
+    public ConcreteExistsBuilder<V, K> set(Set<V> set)
+    {
+        sane(set, "set");
+        this.set = set;
         return this;
     }
 
@@ -112,6 +132,22 @@ public class ConcreteExistsBuilder<V, K>
         verify(coll != null || map != null, "Either coll or map must be provided before predicate assignment.");
         sane(bipredicate, "bipredicate");
         this.cbipredicate = bipredicate;
+        return this;
+    }
+
+    public ConcreteExistsBuilder<V, K> spredicate(Predicate<Set<V>> predicate)
+    {
+        verify(set != null, "Set must be provided before set predicate assignment.");
+        sane(predicate, "predicate");
+        this.spredicate = predicate;
+        return this;
+    }
+
+    public ConcreteExistsBuilder<V, K> sbipredicate(BiPredicate<V, Set<V>> bipredicate)
+    {
+        verify(set != null, "Set must be provided before set bipredicate assignment.");
+        sane(bipredicate, "bipredicate");
+        this.sbipredicate = bipredicate;
         return this;
     }
 }

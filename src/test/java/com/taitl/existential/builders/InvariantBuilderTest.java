@@ -65,7 +65,7 @@ class InvariantBuilderTest
         void evaluatesPerValue()
         {
             InvariantBuilder<String> builder = builder();
-            Invariant<String> invariant = builder.exists(List.of("a", "boat")).build();
+            Invariant<String> invariant = builder.exists(Set.of("a", "boat")).build();
             Exists<String> exists = findFirst(invariant, Exists.class);
             assertTrue(exists.test("boat"));
             assertFalse(exists.test("goat"));
@@ -76,7 +76,7 @@ class InvariantBuilderTest
         void evaluatesPerValueAndPredicate()
         {
             InvariantBuilder<String> builder = builder();
-            Invariant<String> invariant = builder.exists(List.of("a", "boat"), value -> value.length() > 3).build();
+            Invariant<String> invariant = builder.exists(Set.of("a", "boat"), value -> value.length() > 3).build();
             Exists<String> exists = findFirst(invariant, Exists.class);
             assertTrue(exists.test("boat"));
             assertFalse(exists.test("a"));
@@ -87,7 +87,7 @@ class InvariantBuilderTest
         void storesPredicateDescription()
         {
             InvariantBuilder<String> builder = builder();
-            Invariant<String> invariant = builder.exists(List.of("a", "boat"), value -> value.length() > 3,
+            Invariant<String> invariant = builder.exists(Set.of("a", "boat"), value -> value.length() > 3,
                     "At least one long value must exist").build();
             Exists<String> exists = findFirst(invariant, Exists.class);
             assertEquals("At least one long value must exist", exists.description());
@@ -122,7 +122,7 @@ class InvariantBuilderTest
         void evaluatesEntityAndMatchedValue()
         {
             InvariantBuilder<String> builder = builder();
-            Invariant<String> invariant = builder.exists(List.of(new String("boat")),
+            Invariant<String> invariant = builder.exists(Set.of(new String("boat")),
                     (entity, matched) -> entity != matched && entity.equals(matched)).build();
             Exists<String> exists = findFirst(invariant, Exists.class);
             assertTrue(exists.test(new String("boat")));
@@ -130,22 +130,37 @@ class InvariantBuilderTest
         }
 
         @Test
-        @DisplayName("exists(values, collection-predicate, placeholder) evaluates collection")
-        void evaluatesCollection()
+        @DisplayName("exists(values, set-predicate, placeholder) evaluates set")
+        void evaluatesSet()
         {
             InvariantBuilder<String> builder = builder();
-            Invariant<String> invariant = builder.exists(List.of("a", "boat"), values -> values.size() == 1, 0).build();
+            Invariant<String> invariant = builder.exists(Set.of("a", "boat"),
+                    (Set<String> values) -> values.size() == 1, "set", "").build();
             Exists<String> exists = findFirst(invariant, Exists.class);
             assertTrue(exists.test("boat"));
         }
 
         @Test
-        @DisplayName("exists(values, collection-bipredicate, placeholder) evaluates entity and matches")
+        @DisplayName("exists(values, set-bipredicate, placeholder) evaluates entity and matches")
         void evaluatesEntityAndMatches()
         {
             InvariantBuilder<String> builder = builder();
-            Invariant<String> invariant = builder.exists(List.of("a", "boat"),
-                    (entity, matches) -> matches.size() == 1 && matches.contains(entity), 0).build();
+            Invariant<String> invariant = builder.exists(Set.of("a", "boat"),
+                    (String entity, Set<String> matches) -> matches.size() == 1 && matches.contains(entity), "set",
+                    "")
+                    .build();
+            Exists<String> exists = findFirst(invariant, Exists.class);
+            assertTrue(exists.test("boat"));
+            assertFalse(exists.test("goat"));
+        }
+
+        @Test
+        @DisplayName("exists(collection, collection-predicate, placeholder) preserves duplicate matches")
+        void preservesDuplicateCollectionMatches()
+        {
+            InvariantBuilder<String> builder = builder();
+            Invariant<String> invariant = builder.exists(List.of("boat", "boat"), values -> values.size() == 2, 0)
+                    .build();
             Exists<String> exists = findFirst(invariant, Exists.class);
             assertTrue(exists.test("boat"));
             assertFalse(exists.test("goat"));
