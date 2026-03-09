@@ -43,7 +43,7 @@ Create transaction, send events:
         // ...
         Ex.commit(tr); // <-- (3)
     }
-    catch (ExistentialException e)
+    catch (Exception e)
     {
         Ex.rollback(tr); // <-- (4)
         throw e;
@@ -83,14 +83,26 @@ This is done by sending an event to the library.
         Ex.update(account, tr.id());
         Ex.commit(tr);
     }
-    catch (ExistentialException e)
+    catch (Exception e)
     {
         Ex.rollback(tr);
         throw e;
     }
 
+This can be simplified using @Op annotation:
+
+    @Op("/api/accounts/update")
+    public void updateAccount(Account account)
+    {
+        // ...update Account...
+        Ex.update(account, tr.id());
+    }
+
+With annotation, begin/commit calls are made automatically before and after
+the annotated method, and rollback is called in case of an exception or error.   
+
 ### Constraint validation
-Constraint validation is triggered automatically upon committing a transaction.
+Constraint validation is triggered automatically upon committing a transaction:
 
     Ex.commit(tr); // Detect and report constraint violations.
 

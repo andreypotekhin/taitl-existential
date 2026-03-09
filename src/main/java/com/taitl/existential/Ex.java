@@ -32,7 +32,7 @@ public final class Ex
         static Existential instance = new Existential();
     }
 
-    private static Existential instance()
+    public static Existential instance()
     {
         return InstanceHolder.instance;
     }
