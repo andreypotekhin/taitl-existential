@@ -25,7 +25,7 @@ public class TransactionBuilder
     String op;
     List<Supplier<? extends Evs<?>>> evsSuppliers;
     List<StageName> evsStages;
-    Supplier<? extends Transaction> transactionFactory;
+    BiFunction<String, String, ? extends Transaction> transactionFactory;
     StageName stageCursor;
 
     /**
@@ -55,6 +55,27 @@ public class TransactionBuilder
      *            Factory for creating transaction instances
      */
     public TransactionBuilder(ContextBuilder parentContext, Supplier<? extends Transaction> transactionFactory)
+    {
+        sane(parentContext, "parentContext", transactionFactory, "transactionFactory");
+        this.parent = parentContext;
+        this.op = null;
+        this.evsSuppliers = new ArrayList<>();
+        this.evsStages = new ArrayList<>();
+        this.transactionFactory = (op, name) -> transactionFactory.get();
+        installParentTransactionFactory();
+    }
+
+    /**
+     * Creates a transaction builder with a custom transaction factory.
+     *
+     * @param parentContext
+     *            Parent context builder
+     * @param transactionFactory
+     *            Factory for creating transaction instances
+     */
+    public TransactionBuilder(
+            ContextBuilder parentContext,
+            BiFunction<String, String, ? extends Transaction> transactionFactory)
     {
         sane(parentContext, "parentContext", transactionFactory, "transactionFactory");
         this.parent = parentContext;
@@ -491,9 +512,10 @@ public class TransactionBuilder
         return (TypeKey<T>) new TypeKey<Transaction>(Transaction.class);
     }
 
-    protected Transaction createInstance()
+    protected Transaction createInstance(String transactionOp, String transactionName)
     {
-        return transactionFactory.get();
+        sane(transactionOp, "transactionOp", transactionName, "transactionName");
+        return transactionFactory.apply(transactionOp, transactionName);
     }
 
     protected ContextBuilder contextBuilder()
@@ -517,13 +539,8 @@ public class TransactionBuilder
 
     protected void installParentTransactionFactory()
     {
-        parent.transactionFactory = () -> {
-            Transaction tr = createInstance();
-
-            if (op != null)
-            {
-                tr.op(op);
-            }
+        parent.transactionFactory = (transactionOp, transactionName) -> {
+            Transaction tr = createInstance(transactionOp, transactionName);
 
             for (int i = 0; i < this.evsSuppliers.size(); i++)
             {

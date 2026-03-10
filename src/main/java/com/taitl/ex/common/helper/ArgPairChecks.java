@@ -68,7 +68,7 @@ public class ArgPairChecks
         {
             if (!(args[i] instanceof Boolean))
             {
-                throw new IllegalArgumentException(String.format("Argument '%s' must be boolean expression", i));
+                throw new IllegalArgumentException(String.format("Argument '%s' must be boolean", i));
             }
             if (!((Boolean) args[i]))
             {

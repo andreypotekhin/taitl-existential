@@ -1,6 +1,5 @@
 package com.taitl.existential.configs;
 
-import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.indexes.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -67,7 +66,7 @@ import static com.taitl.ex.common.helper.State.*;
 // TODO: Delegate to ConcreteTransaction
 public class Transaction implements Configurable, Evaluable
 {
-    public static Supplier<? extends Transaction> FACTORY = () -> Creator.create(Transaction.class);
+    public static BiFunction<String, String, ? extends Transaction> FACTORY = Transaction::new;
     protected static final Map<Class<?>, StageName> LIFECYCLE_STAGE_BY_HANDLER = lifecycleStageByHandler();
 
     public final UUID id;
@@ -118,7 +117,7 @@ public class Transaction implements Configurable, Evaluable
      *
      * <pre>{@code
      * Ex.contexts().get("/app/flight_school")
-     *     .transaction(() -> new Transaction() {{
+     *     .transaction(() -> new Transaction("/app/flight_school", "flight-school") {{
      *         invariant(new Invariant<Pilot>() {{
      *             all((p0, p1) -> p1.hours >= p0.hours, "Flight hours cannot go down");
      *             transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
@@ -253,7 +252,7 @@ public class Transaction implements Configurable, Evaluable
      * Declare transaction member (curPilot) and initialize it at the start of transaction.
      * <pre>{@code
      * Ex.contexts().get("/app/flight_school/pilots/update")
-     *     .transaction(() -> new Transaction() {
+     *     .transaction(() -> new Transaction("/app/flight_school/pilots/update", "pilot-update") {
      *         Pilot curPilot;
      *         {
      *             begin(params -> curPilot = (Pilot) params.get("pilot"));

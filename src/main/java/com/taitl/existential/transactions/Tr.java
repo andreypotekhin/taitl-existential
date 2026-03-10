@@ -33,6 +33,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class Tr
 {
+    public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#transaction-closed";
     public final UUID id;
     public String op;
     protected TransactionLogic tl;
@@ -45,6 +46,7 @@ public class Tr
     protected Set<String> beginEncounteredEventKeys = new LinkedHashSet<>();
     protected boolean beginActive;
     protected boolean immediateActive;
+    protected boolean closed;
 
     /**
      * Creates a transaction instance for the given operation and id.
@@ -98,6 +100,7 @@ public class Tr
      */
     public void checkpoint() throws ExistentialException
     {
+        requireOpen("checkpoint");
         tl.checkpoint(this);
     }
 
@@ -110,6 +113,7 @@ public class Tr
      */
     public void commit() throws ExistentialException
     {
+        requireOpen("commit");
         tl.commit(this);
     }
 
@@ -122,6 +126,7 @@ public class Tr
      */
     public void rollback() throws ExistentialException
     {
+        requireOpen("rollback");
         tl.rollback(this);
     }
 
@@ -129,11 +134,13 @@ public class Tr
 
     public <T> void event(Event<T> event, T t, TypeKey<T> type) throws ExistentialException
     {
+        requireOpen("send events");
         el.event(event, t, type, this);
     }
 
     public <T> void event(BiEvent<T> event, TypeKey<T> type) throws ExistentialException
     {
+        requireOpen("send events");
         el.event(event, type, this);
     }
 
@@ -141,51 +148,61 @@ public class Tr
 
     public <T> void create(T t, TypeKey<T> type) throws ExistentialException
     {
+        requireOpen("send events");
         el.create(t, type, this);
     }
 
     public <T> void create(T t) throws ExistentialException
     {
+        requireOpen("send events");
         el.create(t, this);
     }
 
     public <T> void delete(T t, TypeKey<T> type) throws ExistentialException
     {
+        requireOpen("send events");
         el.delete(t, type, this);
     }
 
     public <T> void delete(T t) throws ExistentialException
     {
+        requireOpen("send events");
         el.delete(t, this);
     }
 
     public <T> void update(T t, TypeKey<T> type) throws ExistentialException
     {
+        requireOpen("send events");
         el.update(t, type, this);
     }
 
     public <T> void update(T t) throws ExistentialException
     {
+        requireOpen("send events");
         el.update(t, this);
     }
 
     public <T> void transit(T t0, T t1, TypeKey<T> type) throws ExistentialException
     {
+        requireOpen("send events");
         el.transit(t0, t1, type, this);
     }
 
     public <T> void transit(T t0, T t1) throws ExistentialException
     {
+        requireOpen("send events");
         el.transit(t0, t1, this);
     }
 
     public <T> void port(T t0, T t1, TypeKey<T> type) throws ExistentialException
     {
+        requireOpen("send events");
         el.port(t0, t1, type, this);
     }
 
     public <T> void port(T t0, T t1) throws ExistentialException
     {
+        requireOpen("send events");
         el.port(t0, t1, this);
     }
 
@@ -193,21 +210,25 @@ public class Tr
 
     public <T> void read(T entity, TypeKey<T> type) throws ExistentialException
     {
+        requireOpen("send events");
         el.read(entity, type, this);
     }
 
     public <T> void read(T entity) throws ExistentialException
     {
+        requireOpen("send events");
         el.read(entity, this);
     }
 
     public <T> void write(T entity, TypeKey<T> type) throws ExistentialException
     {
+        requireOpen("send events");
         el.write(entity, type, this);
     }
 
     public <T> void write(T entity) throws ExistentialException
     {
+        requireOpen("send events");
         el.write(entity, this);
     }
 
@@ -521,6 +542,11 @@ public class Tr
      */
     public void close()
     {
+        if (closed)
+        {
+            return;
+        }
+        closed = true;
         validationData.close();
         validationData = null;
         transactions = null;
@@ -531,5 +557,18 @@ public class Tr
         beginEncounteredEventKeys = null;
         beginActive = false;
         immediateActive = false;
+    }
+
+    protected void requireOpen(String action) throws ExistentialException
+    {
+        if (!closed)
+        {
+            return;
+        }
+        String verb = action != null ? action : "perform this operation";
+        throw new ExistentialException(String.format(
+                "Cannot %s because the transaction is closed. Begin a new transaction for additional work. See %s",
+                verb,
+                TROUBLESHOOTING_SECTION));
     }
 }

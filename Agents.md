@@ -288,10 +288,8 @@ Focus on the stable parts first.
 Add code and test cases for edge cases, and create suggestions and todo items for larger items.
 
 ### Round-robin role
-In the round-robin role, you rotate through the coding-involving roles from above.
-Evaluate which area is most needed at the moment for project progress, take the 
-corresponding role and deep dive / double down using role description and 
-its automation instructions in Automation.md.  
+In the round-robin role, you rotate through the 'scrutinizer' team roles as defined in this document.
+Perform the corresponding roles using role descriptions and corresponding automation instructions from Automation.md.  
 
 ## Task completion
 Ensure the project fully builds with tests at the end of each task.

@@ -55,6 +55,7 @@ public class ListMap<K, V> implements Map<K, List<V>>
             if (values.isEmpty())
             {
                 size++;
+                validateSize();
             }
             values.add(value);
             return Collections.unmodifiableList(values);
@@ -70,8 +71,9 @@ public class ListMap<K, V> implements Map<K, List<V>>
         {
             List<V> copy = listFactory.get();
             copy.addAll(list);
-            List<V> previous = storage.put(key, copy);
+            List<V> previous = copy.isEmpty() ? storage.remove(key) : storage.put(key, copy);
             size = storage.size();
+            validateSize();
             return previous == null ? null : Collections.unmodifiableList(previous);
         }
     }
@@ -97,6 +99,7 @@ public class ListMap<K, V> implements Map<K, List<V>>
             {
                 storage.remove(key);
                 size--;
+                validateSize();
             }
             return removed ? value : null;
         }
@@ -112,6 +115,7 @@ public class ListMap<K, V> implements Map<K, List<V>>
             if (removed != null)
             {
                 size--;
+                validateSize();
             }
             return removed == null ? null : Collections.unmodifiableList(removed);
         }
@@ -133,6 +137,7 @@ public class ListMap<K, V> implements Map<K, List<V>>
             {
                 storage.remove(key);
                 size--;
+                validateSize();
             }
             return !removed.isEmpty() ? removed : null;
         }
@@ -158,6 +163,7 @@ public class ListMap<K, V> implements Map<K, List<V>>
     @Override
     public int size()
     {
+        validateSize();
         return size;
     }
 
@@ -216,6 +222,19 @@ public class ListMap<K, V> implements Map<K, List<V>>
         {
             storage.clear();
             size = 0;
+            validateSize();
+        }
+    }
+
+    protected void validateSize()
+    {
+        if (size < 0)
+        {
+            throw new IllegalStateException("Failure detected: size less than zero.");
+        }
+        if (size > storage.size())
+        {
+            throw new IllegalStateException("Failure detected: size greater than storage size.");
         }
     }
 }

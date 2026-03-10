@@ -5,6 +5,8 @@ import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.model.Location;
 import org.junit.jupiter.api.*;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import static com.taitl.ex.examples.night_city.data.CityTestData.*;
@@ -47,6 +49,26 @@ class ConcurrentSetMapTest
             Set<Cat> removed = o.removeMatching(LOCATION_PARK, cat -> true);
             assertEquals(2, removed.size());
             assertThrows(UnsupportedOperationException.class, () -> removed.clear());
+        }
+
+        @Test
+        @DisplayName("Map view methods return snapshots")
+        void mapViews()
+        {
+            Set<Location> keys = o.keySet();
+            Collection<Set<Cat>> values = o.values();
+            Set<Map.Entry<Location, Set<Cat>>> entries = o.entrySet();
+
+            assertEquals(1, keys.size());
+            assertEquals(1, values.size());
+            assertEquals(1, entries.size());
+
+            o.add(LOCATION_GARDEN, BLACK_CAT);
+
+            assertEquals(1, keys.size());
+            assertEquals(1, values.size());
+            assertEquals(1, entries.size());
+            assertThrows(UnsupportedOperationException.class, keys::clear);
         }
     }
 }

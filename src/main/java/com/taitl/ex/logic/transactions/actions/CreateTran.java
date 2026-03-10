@@ -89,7 +89,7 @@ public class CreateTran extends TranAction
 
     public static Transaction forContext(Context context)
     {
-        Transaction t = context.transactionFactory().get();
+        Transaction t = context.transactionFactory().apply(context.name(), context.name());
         requireTransactionOpMatchesContext(t, context);
         t.op(context.name());
         t.name(context.name());
@@ -108,16 +108,6 @@ public class CreateTran extends TranAction
     static void requireTransactionOpMatchesContext(Transaction transaction, Context context)
     {
         sane(transaction, "transaction", context, "context");
-        if (isDefaultPlaceholderTransaction(transaction))
-        {
-            return;
-        }
         MatchParentName.require(transaction.op, context.name(), "parent context");
-    }
-
-    static boolean isDefaultPlaceholderTransaction(Transaction transaction)
-    {
-        return "undefined".equals(transaction.op)
-                && "undefined".equals(transaction.name);
     }
 }

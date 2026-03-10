@@ -42,7 +42,7 @@ public class Context implements Configurable, Evaluable
     protected StageName stageCursor;
 
     /** Transaction factory */
-    protected Supplier<? extends Transaction> transactionFactory = Transaction.FACTORY;
+    protected BiFunction<String, String, ? extends Transaction> transactionFactory = Transaction.FACTORY;
 
     /**
      * Creates a context with the provided operation name.
@@ -179,7 +179,7 @@ public class Context implements Configurable, Evaluable
      * Example:
      * <pre>{@code
      * Ex.contexts("/app/school")
-     *      .transaction(() -> new Transaction() {{
+     *      .transaction(() -> new Transaction("/app/school", "school") {{
      *          invariant(new Invariant<Student>() {{
      *              all(student -> student.awake());
      *          }});
@@ -199,7 +199,20 @@ public class Context implements Configurable, Evaluable
     public Context transaction(Supplier<? extends Transaction> supplier)
     {
         sane(supplier, "supplier");
-        transactionFactory = supplier;
+        transactionFactory = (op, name) -> supplier.get();
+        return this;
+    }
+
+    /**
+     * Associates a custom Transaction factory with this Context.
+     *
+     * @param factory transaction factory that receives operation and transaction name
+     * @return This context for chaining
+     */
+    public Context transaction(BiFunction<String, String, ? extends Transaction> factory)
+    {
+        sane(factory, "factory");
+        transactionFactory = factory;
         return this;
     }
 
@@ -307,7 +320,7 @@ public class Context implements Configurable, Evaluable
      *
      * @return Transaction factory
      */
-    public Supplier<? extends Transaction> transactionFactory()
+    public BiFunction<String, String, ? extends Transaction> transactionFactory()
     {
         if (transactionFactory != null)
         {

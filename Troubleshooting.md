@@ -82,6 +82,18 @@ Fix:
 2. Do not reuse transaction ids after `commit()` or `rollback()`.
 3. Keep transaction ids scoped to the runtime that created them.
 
+## Transaction closed
+
+**Problem: A call fails with `ExistentialException` stating `Cannot ... because the transaction is closed`**
+
+Common causes:
+- A transaction object was reused after `commit()` or `rollback()`.
+- A transaction object was closed by cleanup logic and then referenced again.
+
+Fix:
+1. Do not reuse `Tr` instances after `commit()` or `rollback()`.
+2. Start a new transaction with `begin()` for new work and event emission.
+
 ## Invalid operation key
 
 **Problem: A call fails with an IllegalArgumentException stating the operation key is invalid**

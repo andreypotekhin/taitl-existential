@@ -329,10 +329,7 @@ See 'Round-robin role' section in 'Team roles' of Agents.md
 
 Automation instructions
 
-- Evaluate which role is most needed at the moment
-- Take that role and deep dive / double down, following the instructions for that role
-- Use 3x extended quotes for the role: for instance, if instructions are 'Find 1-2 issues', 
-then for round-robin run, it would be 'Find 3-6 issues' 
+- For each role as described in 'Round-robin role', assume the role and perform tasks following instructions for that role.
 
 
 

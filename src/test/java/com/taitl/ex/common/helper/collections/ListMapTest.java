@@ -41,6 +41,20 @@ class ListMapTest
     }
 
     @Test
+    @DisplayName("put with empty list removes key and keeps size consistent")
+    void putEmptyListRemovesKey()
+    {
+        ListMap<String, String> map = new ListMap<>();
+        map.add("a", "x");
+
+        List<String> previous = map.put("a", List.of());
+        assertEquals(List.of("x"), previous);
+        assertNull(map.get("a"));
+        assertFalse(map.containsKey("a"));
+        assertEquals(0, map.size());
+    }
+
+    @Test
     @DisplayName("removeValue and removeMatching remove key when list becomes empty")
     void removeHelpers()
     {

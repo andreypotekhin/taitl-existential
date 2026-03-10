@@ -102,6 +102,19 @@ class SetMapTest
         assertTrue(map.isEmpty());
     }
 
+    @Test
+    @DisplayName("put with empty set removes key and keeps size consistent")
+    void putEmptySetRemovesKey()
+    {
+        Map<Location, Set<Cat>> map = o;
+        Set<Cat> previous = map.put(LOCATION_PARK, Set.of());
+
+        assertEquals(2, previous.size());
+        assertNull(map.get(LOCATION_PARK));
+        assertFalse(map.containsKey(LOCATION_PARK));
+        assertEquals(0, map.size());
+    }
+
     @Nested
     class RemovePredicate
     {

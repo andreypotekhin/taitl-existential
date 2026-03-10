@@ -120,6 +120,18 @@ class CreateTranTest
         class Allows
         {
             @Test
+            @DisplayName("For context allows default transaction factory")
+            void defaultFactory()
+            {
+                Context context = new Context("/ctx");
+
+                Transaction tr = CreateTran.forContext(context);
+
+                assertThat(tr.op, is("/ctx"));
+                assertThat(tr.name, is("/ctx"));
+            }
+
+            @Test
             @DisplayName("For context allows child transaction op")
             void childOp()
             {

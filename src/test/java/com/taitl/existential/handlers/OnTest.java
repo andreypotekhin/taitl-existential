@@ -3,6 +3,8 @@ package com.taitl.existential.handlers;
 import com.taitl.existential.exceptions.*;
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.examples.night_city.data.CityTestData;
+import com.taitl.existential.events.types.EventType;
+import com.taitl.existential.events.types.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,5 +53,13 @@ class OnTest
     {
         on = new On<>(c -> "Black".equals(c.color), null, "Cats are black");
         assertThat(on.description(), is("Cats are black"));
+    }
+
+    @Test
+    void eventTypeDefaultsToEvent()
+    {
+        on = new On<>(c -> {
+        }, "Any");
+        assertThat(on.eventType(), is(EventType.valueOf(Event.class)));
     }
 }

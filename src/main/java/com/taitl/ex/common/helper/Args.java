@@ -86,7 +86,7 @@ public class Args
         {
             if (!(args[i] instanceof Boolean))
             {
-                throw new IllegalArgumentException(String.format("Argument '%s' must be boolean expression", i));
+                throw new IllegalArgumentException(String.format("Argument '%s' must be boolean", i));
             }
         }
     }

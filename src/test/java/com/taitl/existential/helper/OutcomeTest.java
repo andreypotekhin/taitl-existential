@@ -57,7 +57,7 @@ class OutcomeTest
         }).getMessage(), containsString("must be of even length"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
             Outcome.verify(true, "msg1", o, "msg2");
-        }).getMessage(), containsString("must be boolean"));
+        }).getMessage(), is("Argument '0' must be boolean"));
         assertThat(assertThrows(IllegalArgumentException.class, () -> {
             Outcome.verify(true, "msg1", false);
         }).getMessage(), containsString("must be of even length"));

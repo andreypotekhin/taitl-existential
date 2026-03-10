@@ -30,7 +30,7 @@ import static com.taitl.ex.common.helper.Args.*;
  *   Q: In what order are these events created? This is important, since event handlers
  *      create side effects.
  *   A: All effort is made for event handler execution order to not depend on event split creation order.
- *      Execution order of event handlers follows the order in which event handles were
+ *      Execution order of event handlers follows the order in which event handlers were
  *      defined in the code. For example:
  *      <pre>{@code
  *        new OnWrite<Cat>(c -> call1()); // A

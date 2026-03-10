@@ -26,7 +26,7 @@ public class ContextBuilder
     List<Supplier<? extends Evs<?>>> evsSuppliers;
     List<StageName> evsStages;
     Supplier<? extends Context> contextFactory;
-    Supplier<? extends Transaction> transactionFactory;
+    BiFunction<String, String, ? extends Transaction> transactionFactory;
     StageName stageCursor;
     boolean built;
 
@@ -307,6 +307,12 @@ public class ContextBuilder
         return new TransactionBuilder(this, supplier);
     }
 
+    public TransactionBuilder transaction(BiFunction<String, String, ? extends Transaction> factory)
+    {
+        sane(factory, "factory");
+        return new TransactionBuilder(this, factory);
+    }
+
     Context createInstance()
     {
         if (contextFactory != null)
@@ -330,9 +336,9 @@ public class ContextBuilder
         return this;
     }
 
-    Transaction createTransactionInstance()
+    Transaction createTransactionInstance(String op, String name)
     {
-        return parent.createTransactionInstance();
+        return parent.createTransactionInstance(op, name);
     }
 
     protected void register(Supplier<? extends Evs<?>> supplier, StageName defaultStage)

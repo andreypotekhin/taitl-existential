@@ -2,6 +2,10 @@ package com.taitl.ex.common.helper.collections;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.AbstractMap;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -78,6 +82,43 @@ public class ConcurrentSetMap<K, V> extends SetMap<K, V>
         synchronized (this)
         {
             return storage.containsKey(key);
+        }
+    }
+
+    @Override
+    public Set<K> keySet()
+    {
+        synchronized (this)
+        {
+            return Collections.unmodifiableSet(new LinkedHashSet<>(storage.keySet()));
+        }
+    }
+
+    @Override
+    public java.util.Collection<Set<V>> values()
+    {
+        synchronized (this)
+        {
+            List<Set<V>> wrapped = new ArrayList<>();
+            for (Set<V> set : storage.values())
+            {
+                wrapped.add(snapshot(set));
+            }
+            return Collections.unmodifiableList(wrapped);
+        }
+    }
+
+    @Override
+    public Set<Map.Entry<K, Set<V>>> entrySet()
+    {
+        synchronized (this)
+        {
+            Set<Map.Entry<K, Set<V>>> wrapped = new LinkedHashSet<>();
+            for (Map.Entry<K, Set<V>> entry : storage.entrySet())
+            {
+                wrapped.add(new AbstractMap.SimpleImmutableEntry<>(entry.getKey(), snapshot(entry.getValue())));
+            }
+            return Collections.unmodifiableSet(wrapped);
         }
     }
 

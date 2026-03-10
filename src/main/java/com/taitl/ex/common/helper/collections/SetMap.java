@@ -69,7 +69,7 @@ public class SetMap<K, V> implements Map<K, Set<V>>
         {
             Set<V> copy = setFactory.get();
             copy.addAll(values);
-            Set<V> previous = storage.put(key, copy);
+            Set<V> previous = copy.isEmpty() ? storage.remove(key) : storage.put(key, copy);
             size = storage.size();
             validateSize();
             return previous == null ? null : Collections.unmodifiableSet(previous);

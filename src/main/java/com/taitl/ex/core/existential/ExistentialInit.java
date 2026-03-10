@@ -16,7 +16,6 @@ public class ExistentialInit implements Closeable
     static
     {
         inject(Context.class, () -> new Context("undefined"));
-        inject(Transaction.class, () -> new Transaction("undefined", "undefined"));
     }
 
     public ExistentialInit(Existential ex)

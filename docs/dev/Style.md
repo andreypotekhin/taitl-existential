@@ -47,7 +47,7 @@ In compound identifiers, do not convert all-capital abbreviations (HTML) to came
 
 ##### Comments
 Javadoc comments
-- Avoid HTML formatting tags in Javadocs, such as <p>, <br>, inline {@code}
+- Avoid HTML formatting tags in Javadocs, such as <p>, <br>, inline {@code}, but do use <pre> for multiline code examples. 
 - In user-facing code packages, use Javadoc comments with parameter, return and throws tags 
 - Add Javadoc comments on non-trivival private methods
 - In implementation (non end-user-facing) code packages, avoid parameter, return and throws tags

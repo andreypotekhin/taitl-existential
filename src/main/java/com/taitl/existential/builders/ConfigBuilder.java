@@ -31,7 +31,7 @@ public class ConfigBuilder
      * Default context and transaction factories used by new context builders.
      */
     protected Supplier<? extends Context> contextFactory = () -> Creator.create(Context.class);
-    protected Supplier<? extends Transaction> transactionFactory = () -> Creator.create(Transaction.class);
+    protected BiFunction<String, String, ? extends Transaction> transactionFactory = Transaction.FACTORY;
 
     /**
      * Creates a ContextBuilder for a context.
@@ -143,7 +143,20 @@ public class ConfigBuilder
     public ConfigBuilder transactionFactory(Supplier<? extends Transaction> supplier)
     {
         sane(supplier, "supplier");
-        transactionFactory = supplier;
+        transactionFactory = (op, name) -> supplier.get();
+        return this;
+    }
+
+    /**
+     * Specify a transaction factory for this operation.
+     *
+     * @param factory Custom transaction factory that receives operation and transaction name
+     * @return This
+     */
+    public ConfigBuilder transactionFactory(BiFunction<String, String, ? extends Transaction> factory)
+    {
+        sane(factory, "factory");
+        transactionFactory = factory;
         return this;
     }
 
@@ -162,9 +175,10 @@ public class ConfigBuilder
      *
      * @return Transaction instance
      */
-    public Transaction createTransactionInstance()
+    public Transaction createTransactionInstance(String op, String name)
     {
-        return transactionFactory.get();
+        sane(op, "op", name, "name");
+        return transactionFactory.apply(op, name);
     }
 
     /**

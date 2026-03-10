@@ -4,9 +4,14 @@ import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.Ex;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.exceptions.ExistentialException;
 import com.taitl.existential.specs.*;
 import com.taitl.existential.transactions.Tr;
 import org.junit.jupiter.api.*;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserCanSendEntityEvents extends SpecBase
 {
@@ -110,17 +115,15 @@ class UserCanSendEntityEvents extends SpecBase
             tr.event(new Port<>(null, cat), new TypeKey<Cat>(Cat.class));
             tr.commit();
         }
-    }
 
-    // TODO
-    // @Test
-    // @DisplayName("User can't send events outside a transaction")
-    // void sendingEventsOutsideTransaction()
-    // {
-    // assertThat(assertThrows(IllegalStateException.class, () -> {
-    // String tran = ex.begin(op);
-    // ex.commit(tran);
-    // ex.event(cat, tran);
-    // }).getMessage(), containsString("You cannot send events outside a transaction"));
-    // }
+        @Test
+        @DisplayName("User can't send events outside a transaction")
+        void sendingEventsOutsideTransaction() throws Exception
+        {
+            Tr tr = ex.begin(op);
+            tr.commit();
+            assertThat(assertThrows(ExistentialException.class, () -> tr.create(cat)).getMessage(),
+                    containsString("/Troubleshooting.md#transaction-closed"));
+        }
+    }
 }

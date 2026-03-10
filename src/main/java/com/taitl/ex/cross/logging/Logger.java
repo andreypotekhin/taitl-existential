@@ -38,7 +38,7 @@ public class Logger
         }
         if (keyValuePairs != null && keyValuePairs.length % 2 != 0)
         {
-            throw new IllegalArgumentException("Argument 'keyValuePairs' must have even number of elements");
+            throw new IllegalArgumentException("Argument 'keyValuePairs' must be of even length");
         }
         PrintStream outStream = out;
         if (level == LogLevel.LEVEL_ERROR)

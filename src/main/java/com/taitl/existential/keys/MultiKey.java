@@ -4,7 +4,6 @@ import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
 
 import java.util.*;
-import java.util.stream.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
@@ -56,9 +55,20 @@ public class MultiKey<T>
 
     protected static <T> String joinedKey(List<EventKey<T>> eventKeys)
     {
-        return eventKeys.stream()
-                .map(Object::toString)
-                .collect(Collectors.joining(","));
+        if (eventKeys.isEmpty())
+        {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < eventKeys.size(); i++)
+        {
+            if (i > 0)
+            {
+                builder.append(',');
+            }
+            builder.append(eventKeys.get(i));
+        }
+        return builder.toString();
     }
 
     @SuppressWarnings("unchecked")
