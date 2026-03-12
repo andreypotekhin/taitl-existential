@@ -34,7 +34,26 @@ public class ConfigBuilder
     protected BiFunction<String, String, ? extends Transaction> transactionFactory = Transaction.FACTORY;
 
     /**
-     * Creates a ContextBuilder for a context.
+     * Builds a custom Context for the specified business operation.
+     * Allows defining rules, such as invariants and intents,
+     * for the context using a ContextBuilder.
+     *
+     * Example:
+     *   Ex.configure()                 <-- ConfigBuilder (this)
+     *     .context("/app/docs/update") <-- ContextBuilder
+     *        .intent()
+     *             .read()
+     *             .write()
+     *        .effect()
+     *             .write(doc -> doc.spellCheck())
+     *        .effect(new TypeKey<Document<JSON>>())
+     *             .write(doc -> doc.validate())
+     *        .invariant(Document.class)
+     *             .all(doc -> doc.valid());
+     *
+     *  This method allows creating multiple calls with same operation name,
+     *  to be able to append custom rules from different parts of the application
+     *  (for example, in multiple classes or components).
      *
      * @return ContextBuilder for Context class
      */
@@ -46,7 +65,7 @@ public class ConfigBuilder
     }
 
     /**
-     * Associates a custom Context with the Op.
+     * Associates a custom Context instance with the Op.
      *
      * Allows defining rules, such as invariants and intents,
      * for the context using an instance of a custom context class.

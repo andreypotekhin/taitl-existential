@@ -395,9 +395,9 @@ public class Intent<T> implements Evs<T>, Constraints<T>
      *
      * @return This intent for chaining
      */
-    public Intent<T> upsert()
+    public Intent<T> cu()
     {
-        return upsert(value -> true);
+        return cu(value -> true);
     }
 
     /**
@@ -407,7 +407,7 @@ public class Intent<T> implements Evs<T>, Constraints<T>
      * @param condition Condition which the entities that receive this event must satisfy
      * @return This intent for chaining
      */
-    public Intent<T> upsert(Predicate<? super T> condition)
+    public Intent<T> cu(Predicate<? super T> condition)
     {
         sane(condition, "condition");
         return add(new OnCU<T>(condition, null));
@@ -421,7 +421,7 @@ public class Intent<T> implements Evs<T>, Constraints<T>
      * @param description Description of intent
      * @return This intent for chaining
      */
-    public Intent<T> upsert(Predicate<? super T> condition, String description)
+    public Intent<T> cu(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
         return add(new OnCU<T>(condition, null, description));

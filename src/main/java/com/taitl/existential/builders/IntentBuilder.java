@@ -222,23 +222,23 @@ public class IntentBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public IntentBuilder<T> upsert()
+    public IntentBuilder<T> cu()
     {
-        target.upsert();
+        target.cu();
         return this;
     }
 
-    public IntentBuilder<T> upsert(Predicate<? super T> condition)
+    public IntentBuilder<T> cu(Predicate<? super T> condition)
     {
         sane(condition, "condition");
-        target.upsert(condition);
+        target.cu(condition);
         return this;
     }
 
-    public IntentBuilder<T> upsert(Predicate<? super T> condition, String description)
+    public IntentBuilder<T> cu(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.upsert(condition, description);
+        target.cu(condition, description);
         return this;
     }
 

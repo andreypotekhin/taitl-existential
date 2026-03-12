@@ -224,7 +224,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * @param description Description of invariant
      * @return This invariant for chaining
      */
-    public Invariant<T> upsert(Predicate<? super T> condition, String description)
+    public Invariant<T> cu(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
         return add(new OnCU<T>(condition, null, description));

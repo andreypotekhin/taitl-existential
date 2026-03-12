@@ -55,7 +55,7 @@ class IntentTest
             intent.create()
                     .read()
                     .update()
-                    .upsert()
+                    .cu()
                     .on();
 
             List<Ev<String>> evs = intent.list();

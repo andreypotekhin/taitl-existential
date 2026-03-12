@@ -237,10 +237,10 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      *            Human-friendly description of the rule
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> upsert(Predicate<? super T> condition, String description)
+    public InvariantBuilder<T> cu(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition", description, "description");
-        target.upsert(condition, description);
+        target.cu(condition, description);
         return this;
     }
 
