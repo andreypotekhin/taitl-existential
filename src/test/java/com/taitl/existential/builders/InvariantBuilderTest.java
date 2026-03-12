@@ -1,6 +1,8 @@
 package com.taitl.existential.builders;
 
+import com.taitl.existential.Existential;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.constants.Flags;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.quantifiers.*;
@@ -12,6 +14,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InvariantBuilderTest
 {
+    @Test
+    @DisplayName("Description-less rules are rejected when descriptions are required")
+    void rejectsDescriptionLessRulesWhenDescriptionsAreRequired()
+    {
+        Existential ex = new Existential();
+        ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> builder(ex).create(value -> !value.isBlank()));
+
+        assertTrue(exception.getMessage().contains("require descriptions"));
+        ex.close();
+    }
+
     @Nested
     class AllMethods
     {
@@ -195,7 +211,13 @@ class InvariantBuilderTest
 
     private InvariantBuilder<String> builder()
     {
-        ConfigBuilder configBuilder = new ConfigBuilder();
+        ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
+        return configBuilder.context("/app").invariant(String.class);
+    }
+
+    private InvariantBuilder<String> builder(Existential ex)
+    {
+        ConfigBuilder configBuilder = new ConfigBuilder(ex);
         return configBuilder.context("/app").invariant(String.class);
     }
 

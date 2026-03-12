@@ -32,7 +32,7 @@ public class CreateBuilders
 
     public ConfigBuilder createBuilder()
     {
-        ConfigBuilder o = new ConfigBuilder();
+        ConfigBuilder o = new ConfigBuilder(cl.ex());
         synchronized (this)
         {
             ConfigBuilder existing = cl.configBuilder();

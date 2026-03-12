@@ -5,7 +5,9 @@ import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.Ev;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.access_handlers.*;
+import com.taitl.existential.handlers.combined_event_handlers.OnCUD;
 import com.taitl.existential.handlers.combined_event_handlers.OnCU;
+import com.taitl.existential.handlers.combined_event_handlers.OnUD;
 import com.taitl.existential.keys.TypeKey;
 import org.junit.jupiter.api.*;
 
@@ -56,16 +58,20 @@ class IntentTest
                     .read()
                     .update()
                     .cu()
+                    .cud()
+                    .ud()
                     .on();
 
             List<Ev<String>> evs = intent.list();
 
-            assertThat(evs, hasSize(5));
+            assertThat(evs, hasSize(7));
             assertThat(evs.get(0), instanceOf(OnCreate.class));
             assertThat(evs.get(1), instanceOf(OnRead.class));
             assertThat(evs.get(2), instanceOf(OnUpdate.class));
             assertThat(evs.get(3), instanceOf(OnCU.class));
-            assertThat(evs.get(4), instanceOf(On.class));
+            assertThat(evs.get(4), instanceOf(OnCUD.class));
+            assertThat(evs.get(5), instanceOf(OnUD.class));
+            assertThat(evs.get(6), instanceOf(On.class));
         }
     }
 
@@ -103,6 +109,22 @@ class IntentTest
             OnRead<String> handler = (OnRead<String>) intent.list().get(0);
             assertThat(handler.condition, is(condition));
             assertThat(handler.description(), is("Read must start with R"));
+        }
+
+        @Test
+        @DisplayName("Transit and port overloads can omit descriptions")
+        void transitAndPortCanOmitDescriptions()
+        {
+            Intent<String> intent = new Intent<>(String.class);
+
+            intent.transit(value -> value.startsWith("R"))
+                    .port((before, after) -> after.startsWith("P"));
+
+            OnTransit<String> transit = (OnTransit<String>) intent.list().get(0);
+            OnPort<String> port = (OnPort<String>) intent.list().get(1);
+
+            assertThat(transit.description(), is(""));
+            assertThat(port.description(), is(""));
         }
     }
 }

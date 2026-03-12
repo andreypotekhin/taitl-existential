@@ -1,5 +1,6 @@
 package com.taitl.existential.constraints;
 
+import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.*;
@@ -10,7 +11,8 @@ import com.taitl.existential.keys.*;
 import com.taitl.existential.quantifiers.*;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
@@ -41,6 +43,7 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      * Entity event handlers.
      */
     List<Ev<T>> evs = new ArrayList<>();
+    boolean requireDescriptions;
 
     /**
      * Creates an invariant for the entity type inferred from an anonymous subclass.
@@ -74,6 +77,11 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
 
     /* Event handler methods */
 
+    public Invariant<T> on(Predicate<? super T> condition)
+    {
+        return on(condition, null);
+    }
+
     /**
      * Declares an invariant for On event (that is, any event).
      *
@@ -84,7 +92,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> on(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new On<T>(condition, null, description));
+    }
+
+    public Invariant<T> create(Predicate<? super T> condition)
+    {
+        return create(condition, null);
     }
 
     /**
@@ -96,8 +110,14 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public Invariant<T> create(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
+        validateDescription(description);
         return add(new OnCreate<T>(condition, null, description));
+    }
+
+    public Invariant<T> delete(Predicate<? super T> condition)
+    {
+        return delete(condition, null);
     }
 
     /**
@@ -110,7 +130,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> delete(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnDelete<T>(condition, null, description));
+    }
+
+    public Invariant<T> transit(Predicate<? super T> condition)
+    {
+        return transit(condition, null);
     }
 
     /**
@@ -123,7 +149,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> transit(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnTransit<T>(condition, null, description));
+    }
+
+    public Invariant<T> transit(BiPredicate<? super T, ? super T> condition)
+    {
+        return transit(condition, null);
     }
 
     /**
@@ -136,7 +168,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnTransit<T>(condition, null, description));
+    }
+
+    public Invariant<T> read(Predicate<? super T> condition)
+    {
+        return read(condition, null);
     }
 
     /**
@@ -149,7 +187,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> read(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnRead<T>(condition, null, description));
+    }
+
+    public Invariant<T> readAndLock(Predicate<? super T> condition)
+    {
+        return readAndLock(condition, null);
     }
 
     /**
@@ -162,7 +206,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> readAndLock(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnReadAndLock<T>(condition, null, description));
+    }
+
+    public Invariant<T> write(Predicate<? super T> condition)
+    {
+        return write(condition, null);
     }
 
     /**
@@ -175,7 +225,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> write(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnWrite<T>(condition, null, description));
+    }
+
+    public Invariant<T> port(Predicate<? super T> condition)
+    {
+        return port(condition, null);
     }
 
     /**
@@ -188,7 +244,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> port(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnPort<T>(condition, null, description));
+    }
+
+    public Invariant<T> port(BiPredicate<? super T, ? super T> condition)
+    {
+        return port(condition, null);
     }
 
     /**
@@ -201,7 +263,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> port(BiPredicate<? super T, ? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnPort<T>(condition, null, description));
+    }
+
+    public Invariant<T> update(Predicate<? super T> condition)
+    {
+        return update(condition, null);
     }
 
     /**
@@ -214,7 +282,13 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> update(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnUpdate<T>(condition, null, description));
+    }
+
+    public Invariant<T> cu(Predicate<? super T> condition)
+    {
+        return cu(condition, null);
     }
 
     /**
@@ -227,10 +301,42 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> cu(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
+        validateDescription(description);
         return add(new OnCU<T>(condition, null, description));
     }
 
+    public Invariant<T> cud(Predicate<? super T> condition)
+    {
+        return cud(condition, null);
+    }
+
+    public Invariant<T> cud(Predicate<? super T> condition, String description)
+    {
+        sane(condition, "condition");
+        validateDescription(description);
+        return add(new OnCUD<T>(condition, null, description));
+    }
+
+    public Invariant<T> ud(Predicate<? super T> condition)
+    {
+        return ud(condition, null);
+    }
+
+    public Invariant<T> ud(Predicate<? super T> condition, String description)
+    {
+        sane(condition, "condition");
+        validateDescription(description);
+        return add(new OnUD<T>(condition, null, description));
+    }
+
     /* Expression methods */
+
+    public Invariant<T> all(Predicate<? super T> predicate)
+    {
+        sane(predicate, "predicate");
+        add(new All<T>(predicate));
+        return this;
+    }
 
     /**
      * Adds an all-entities invariant evaluated against the current entity type.
@@ -242,7 +348,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> all(Predicate<? super T> predicate, String description)
     {
         sane(predicate, "predicate");
+        validateDescription(description);
         add(new All<T>(predicate, description));
+        return this;
+    }
+
+    public Invariant<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
+    {
+        sane(condition, "condition", predicate, "predicate");
+        add(new All<T>(condition, predicate));
         return this;
     }
 
@@ -256,9 +370,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public Invariant<T> all(Predicate<? super T> condition, Predicate<? super T> predicate, String description)
     {
-        sane(condition, "condition", predicate, "predicate", description, "description");
+        sane(condition, "condition", predicate, "predicate");
+        validateDescription(description);
         add(new All<T>(condition, predicate, description));
         return this;
+    }
+
+    public <D> Invariant<T> exists(Map<T, D> map)
+    {
+        return exists(map, (String) null);
     }
 
     /**
@@ -270,9 +390,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public <D> Invariant<T> exists(Map<T, D> map, String description)
     {
-        sane(map, "map", description, "description");
+        sane(map, "map");
+        validateDescription(description);
         add(new Exists<T>(map, description));
         return this;
+    }
+
+    public <D> Invariant<T> exists(Map<T, D> map, Predicate<T> predicate)
+    {
+        return exists(map, predicate, null);
     }
 
     /**
@@ -285,9 +411,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public <D> Invariant<T> exists(Map<T, D> map, Predicate<T> predicate, String description)
     {
-        sane(map, "map", predicate, "predicate", description, "description");
+        sane(map, "map", predicate, "predicate");
+        validateDescription(description);
         add(new Exists<T>(map, predicate, description));
         return this;
+    }
+
+    public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<T, D> bipredicate)
+    {
+        return exists(map, bipredicate, null);
     }
 
     /**
@@ -300,7 +432,8 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<T, D> bipredicate, String description)
     {
-        sane(map, "map", bipredicate, "bipredicate", description, "description");
+        sane(map, "map", bipredicate, "bipredicate");
+        validateDescription(description);
         add(new Exists<T>(map, bipredicate, description));
         return this;
     }
@@ -317,7 +450,8 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public <D> Invariant<T> exists(Map<T, D> map, Predicate<Collection<T>> predicate, int placeholder,
             String description)
     {
-        sane(map, "map", predicate, "predicate", description, "description");
+        sane(map, "map", predicate, "predicate");
+        validateDescription(description);
         add(new Exists<T>(map, predicate, placeholder, description));
         return this;
     }
@@ -334,9 +468,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder, String description)
     {
-        sane(map, "map", bipredicate, "bipredicate", description, "description");
+        sane(map, "map", bipredicate, "bipredicate");
+        validateDescription(description);
         add(new Exists<T>(map, bipredicate, placeholder, description));
         return this;
+    }
+
+    public Invariant<T> exists(Set<T> set)
+    {
+        return exists(set, (String) null);
     }
 
     /**
@@ -348,9 +488,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public Invariant<T> exists(Set<T> set, String description)
     {
-        sane(set, "set", description, "description");
+        sane(set, "set");
+        validateDescription(description);
         add(new Exists<T>(set, description));
         return this;
+    }
+
+    public Invariant<T> exists(Set<T> set, Predicate<T> predicate)
+    {
+        return exists(set, predicate, null);
     }
 
     /**
@@ -363,9 +509,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public Invariant<T> exists(Set<T> set, Predicate<T> predicate, String description)
     {
-        sane(set, "set", predicate, "predicate", description, "description");
+        sane(set, "set", predicate, "predicate");
+        validateDescription(description);
         add(new Exists<T>(set, predicate, description));
         return this;
+    }
+
+    public Invariant<T> exists(Set<T> set, BiPredicate<T, T> bipredicate)
+    {
+        return exists(set, bipredicate, null);
     }
 
     /**
@@ -378,7 +530,8 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public Invariant<T> exists(Set<T> set, BiPredicate<T, T> bipredicate, String description)
     {
-        sane(set, "set", bipredicate, "bipredicate", description, "description");
+        sane(set, "set", bipredicate, "bipredicate");
+        validateDescription(description);
         add(new Exists<T>(set, bipredicate, description));
         return this;
     }
@@ -395,7 +548,8 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> exists(Set<T> set, Predicate<Set<T>> predicate, String placeholder,
             String description)
     {
-        sane(set, "set", predicate, "predicate", placeholder, "placeholder", description, "description");
+        sane(set, "set", predicate, "predicate", placeholder, "placeholder");
+        validateDescription(description);
         add(new Exists<T>(set, predicate, placeholder, description));
         return this;
     }
@@ -412,9 +566,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> exists(Set<T> set, BiPredicate<T, Set<T>> bipredicate,
             String placeholder, String description)
     {
-        sane(set, "set", bipredicate, "bipredicate", placeholder, "placeholder", description, "description");
+        sane(set, "set", bipredicate, "bipredicate", placeholder, "placeholder");
+        validateDescription(description);
         add(new Exists<T>(set, bipredicate, placeholder, description));
         return this;
+    }
+
+    public Invariant<T> exists(Collection<T> coll)
+    {
+        return exists(coll, (String) null);
     }
 
     /**
@@ -426,9 +586,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public Invariant<T> exists(Collection<T> coll, String description)
     {
-        sane(coll, "coll", description, "description");
+        sane(coll, "coll");
+        validateDescription(description);
         add(new Exists<T>(coll, description));
         return this;
+    }
+
+    public Invariant<T> exists(Collection<T> coll, Predicate<T> predicate)
+    {
+        return exists(coll, predicate, null);
     }
 
     /**
@@ -441,9 +607,15 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public Invariant<T> exists(Collection<T> coll, Predicate<T> predicate, String description)
     {
-        sane(coll, "coll", predicate, "predicate", description, "description");
+        sane(coll, "coll", predicate, "predicate");
+        validateDescription(description);
         add(new Exists<T>(coll, predicate, description));
         return this;
+    }
+
+    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate)
+    {
+        return exists(coll, bipredicate, null);
     }
 
     /**
@@ -456,7 +628,8 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
      */
     public Invariant<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate, String description)
     {
-        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        sane(coll, "coll", bipredicate, "bipredicate");
+        validateDescription(description);
         add(new Exists<T>(coll, bipredicate, description));
         return this;
     }
@@ -473,7 +646,8 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder,
             String description)
     {
-        sane(coll, "coll", predicate, "predicate", description, "description");
+        sane(coll, "coll", predicate, "predicate");
+        validateDescription(description);
         add(new Exists<T>(coll, predicate, placeholder, description));
         return this;
     }
@@ -490,7 +664,8 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder, String description)
     {
-        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        sane(coll, "coll", bipredicate, "bipredicate");
+        validateDescription(description);
         add(new Exists<T>(coll, bipredicate, placeholder, description));
         return this;
     }
@@ -506,8 +681,23 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> add(Ev<T> evaluable)
     {
         sane(evaluable, "evaluable");
+        Descriptions.require(requireDescriptions, evaluable);
         evs.add(evaluable);
         return this;
+    }
+
+    public void requireDescriptions(boolean requireDescriptions)
+    {
+        this.requireDescriptions = requireDescriptions;
+        for (Ev<T> ev : evs)
+        {
+            Descriptions.require(requireDescriptions, ev);
+        }
+    }
+
+    void validateDescription(String description)
+    {
+        Descriptions.require(requireDescriptions, description);
     }
 
     /**

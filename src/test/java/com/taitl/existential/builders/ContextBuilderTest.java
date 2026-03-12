@@ -1,5 +1,6 @@
 package com.taitl.existential.builders;
 
+import com.taitl.existential.Existential;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -33,7 +34,7 @@ class ContextBuilderTest
             @DisplayName("Build attaches context to parent")
             void attachesToParent()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder();
+                ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
                 ContextBuilder contextBuilder = configBuilder.context("/app");
                 com.taitl.existential.configs.Context context = new com.taitl.existential.configs.Context("/app");
                 contextBuilder.contextFactory(() -> context);
@@ -49,7 +50,7 @@ class ContextBuilderTest
             @DisplayName("Build on one context builds all pending contexts")
             void buildsAllPendingContexts()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder();
+                ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
 
                 configBuilder.context("/app/one")
                         .invariant(String.class)
@@ -72,7 +73,7 @@ class ContextBuilderTest
             @DisplayName("Repeated internal build calls are idempotent")
             void repeatedCalls()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder();
+                ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
                 ContextBuilder contextBuilder = configBuilder.context("/app");
                 contextBuilder.invariant(String.class).create(v -> true, "rule");
 
@@ -94,7 +95,7 @@ class ContextBuilderTest
             @DisplayName("Parameterless sibling context delegates to parent config op")
             void parameterlessDelegatesToParentConfigOp()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder();
+                ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
                 ContextBuilder contextBuilder = configBuilder.context("/app");
 
                 ContextBuilder sibling = contextBuilder.context();
@@ -106,7 +107,7 @@ class ContextBuilderTest
             @DisplayName("Rule builders can short-circuit to sibling context")
             void ruleBuildersShortCircuitToSiblingContext()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder();
+                ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
 
                 configBuilder.context("/app")
                         .invariant(String.class)
@@ -137,7 +138,7 @@ class ContextBuilderTest
             @DisplayName("Preserves context rule order")
             void preserves()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder();
+                ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
                 ContextBuilder contextBuilder = configBuilder.context("/app");
                 Context context = new Context("/app");
                 contextBuilder.contextFactory(() -> context);
@@ -198,7 +199,7 @@ class ContextBuilderTest
             @DisplayName("Preserves transaction rule order")
             void preserves()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder();
+                ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
                 ContextBuilder contextBuilder = configBuilder.context("/app");
                 TransactionBuilder transactionBuilder =
                         contextBuilder.transaction(() -> new Transaction("/app", "test"));
@@ -259,7 +260,7 @@ class ContextBuilderTest
             @DisplayName("Context builder attaches type keys from class and type key overloads")
             void attachesFromClassAndTypeKeyOverloads()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder();
+                ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
                 ContextBuilder contextBuilder = configBuilder.context("/app");
                 Context context = new Context("/app");
                 contextBuilder.contextFactory(() -> context);
@@ -296,7 +297,7 @@ class ContextBuilderTest
             @DisplayName("Transaction lifecycle overloads assign type key to life")
             void assignsTypeKeyToLife()
             {
-                ConfigBuilder configBuilder = new ConfigBuilder();
+                ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
                 ContextBuilder contextBuilder = configBuilder.context("/app");
                 TransactionBuilder transactionBuilder = contextBuilder.transaction(CustomTransaction::new);
                 TypeKey<CustomTransaction> reflectionFullNameType = new TypeKey<CustomTransaction>(true) {
@@ -400,7 +401,7 @@ class ContextBuilderTest
         @DisplayName("Transaction lifecycle methods route cycles to lifecycle stages")
         void transactionLifecycleStageRouting()
         {
-            ConfigBuilder configBuilder = new ConfigBuilder();
+            ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
             TransactionBuilder builder = configBuilder.context("/app").transaction("tx");
 
             builder.begin((Transaction tr) -> {
@@ -420,7 +421,7 @@ class ContextBuilderTest
         @DisplayName("Lifecycle methods pin handlers to their stage despite stage cursor")
         void lifecycleMethodsPinStage()
         {
-            ConfigBuilder configBuilder = new ConfigBuilder();
+            ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
             TransactionBuilder builder = configBuilder.context("/app").transaction("tx");
 
             builder.validation().rollback((Transaction tr) -> {
@@ -434,7 +435,7 @@ class ContextBuilderTest
         @DisplayName("Empty cycle fails when stage cannot be inferred")
         void emptyCycleFailsWhenUnstaged()
         {
-            ConfigBuilder configBuilder = new ConfigBuilder();
+            ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
             TransactionBuilder builder = configBuilder.context("/app").transaction("tx");
 
             assertThrows(IllegalArgumentException.class, () -> builder.cycle(new Life<>(Transaction.class)));
@@ -444,7 +445,7 @@ class ContextBuilderTest
         @DisplayName("Cycle with multiple handlers is registered in matching lifecycle stages")
         void cycleWithMultipleHandlersStageRouting()
         {
-            ConfigBuilder configBuilder = new ConfigBuilder();
+            ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
             TransactionBuilder builder = configBuilder.context("/app").transaction("tx");
             Life<Transaction> life = new Life<>(Transaction.class);
             life.begin(tr -> {
@@ -466,7 +467,7 @@ class ContextBuilderTest
         @DisplayName("Builder stage selectors override default routing")
         void builderSelectorsOverrideDefaults()
         {
-            ConfigBuilder configBuilder = new ConfigBuilder();
+            ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
             ContextBuilder contextBuilder = configBuilder.context("/app");
             Context context = new Context("/app");
             contextBuilder.contextFactory(() -> context);
@@ -494,7 +495,7 @@ class ContextBuilderTest
         @DisplayName("Builder supports transaction-oriented stage selectors")
         void builderSupportsTransactionOrientedSelectors()
         {
-            ConfigBuilder configBuilder = new ConfigBuilder();
+            ConfigBuilder configBuilder = new ConfigBuilder(new Existential());
             ContextBuilder contextBuilder = configBuilder.context("/app");
             Context context = new Context("/app");
             contextBuilder.contextFactory(() -> context);

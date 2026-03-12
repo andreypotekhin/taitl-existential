@@ -1,10 +1,20 @@
 package com.taitl.ex.common.helper.strings;
 
+import com.taitl.existential.evaluables.Ev;
+import com.taitl.existential.expressions.Expression;
+import com.taitl.existential.interfaces.Describable;
+
+import static com.taitl.ex.common.helper.Args.check;
+import static com.taitl.ex.common.helper.Args.sane;
+
 /**
  * Utilities for optional human-friendly descriptions.
  */
 public class Descriptions
 {
+    private static final String REQUIRED_MESSAGE =
+            "Behavior rules require descriptions when Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS is enabled.";
+
     /**
      * Protected constructor for an utility class.
      */
@@ -30,5 +40,27 @@ public class Descriptions
             return base;
         }
         return base + ": " + description;
+    }
+
+    public static void require(boolean requireDescriptions, String description)
+    {
+        if (!requireDescriptions)
+        {
+            return;
+        }
+        check(description != null && !description.isEmpty(), REQUIRED_MESSAGE);
+    }
+
+    public static void require(boolean requireDescriptions, Ev<?> ev)
+    {
+        sane(ev, "ev");
+        if (ev instanceof Describable)
+        {
+            require(requireDescriptions, ((Describable) ev).description());
+        }
+        else if (ev instanceof Expression<?>)
+        {
+            require(requireDescriptions, ((Expression<?>) ev).description());
+        }
     }
 }

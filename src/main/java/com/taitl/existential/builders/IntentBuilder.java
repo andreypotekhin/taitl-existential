@@ -31,6 +31,7 @@ public class IntentBuilder<T> implements EvsBuilder<T>
         sane(parent, "parent", typeKey, "typeKey");
         this.parent = parent;
         this.target = new Intent<>(typeKey);
+        target.requireDescriptions(parent.parent.requireBehaviorDescriptions());
     }
 
     public IntentBuilder(TransactionBuilder parent2)
@@ -45,6 +46,7 @@ public class IntentBuilder<T> implements EvsBuilder<T>
         sane(parent2, "parent2", typeKey, "typeKey");
         this.parent2 = parent2;
         this.target = new Intent<>(typeKey);
+        target.requireDescriptions(parent2.parent.parent.requireBehaviorDescriptions());
     }
 
     public IntentBuilder<T> typeKey(TypeKey<T> typeKey)
@@ -69,7 +71,7 @@ public class IntentBuilder<T> implements EvsBuilder<T>
 
     public IntentBuilder<T> on(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.on(condition, description);
         return this;
     }
@@ -89,7 +91,7 @@ public class IntentBuilder<T> implements EvsBuilder<T>
 
     public IntentBuilder<T> create(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.create(condition, description);
         return this;
     }
@@ -109,21 +111,41 @@ public class IntentBuilder<T> implements EvsBuilder<T>
 
     public IntentBuilder<T> delete(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.delete(condition, description);
+        return this;
+    }
+
+    public IntentBuilder<T> transit()
+    {
+        target.transit();
+        return this;
+    }
+
+    public IntentBuilder<T> transit(Predicate<? super T> condition)
+    {
+        sane(condition, "condition");
+        target.transit(condition);
         return this;
     }
 
     public IntentBuilder<T> transit(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.transit(condition, description);
+        return this;
+    }
+
+    public IntentBuilder<T> transit(BiPredicate<? super T, ? super T> condition)
+    {
+        sane(condition, "condition");
+        target.transit(condition);
         return this;
     }
 
     public IntentBuilder<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.transit(condition, description);
         return this;
     }
@@ -143,7 +165,7 @@ public class IntentBuilder<T> implements EvsBuilder<T>
 
     public IntentBuilder<T> read(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.read(condition, description);
         return this;
     }
@@ -163,7 +185,7 @@ public class IntentBuilder<T> implements EvsBuilder<T>
 
     public IntentBuilder<T> readAndLock(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.readAndLock(condition, description);
         return this;
     }
@@ -183,21 +205,41 @@ public class IntentBuilder<T> implements EvsBuilder<T>
 
     public IntentBuilder<T> write(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.write(condition, description);
+        return this;
+    }
+
+    public IntentBuilder<T> port()
+    {
+        target.port();
+        return this;
+    }
+
+    public IntentBuilder<T> port(Predicate<? super T> condition)
+    {
+        sane(condition, "condition");
+        target.port(condition);
         return this;
     }
 
     public IntentBuilder<T> port(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.port(condition, description);
+        return this;
+    }
+
+    public IntentBuilder<T> port(BiPredicate<? super T, ? super T> condition)
+    {
+        sane(condition, "condition");
+        target.port(condition);
         return this;
     }
 
     public IntentBuilder<T> port(BiPredicate<? super T, ? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.port(condition, description);
         return this;
     }
@@ -217,7 +259,7 @@ public class IntentBuilder<T> implements EvsBuilder<T>
 
     public IntentBuilder<T> update(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.update(condition, description);
         return this;
     }
@@ -237,8 +279,48 @@ public class IntentBuilder<T> implements EvsBuilder<T>
 
     public IntentBuilder<T> cu(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.cu(condition, description);
+        return this;
+    }
+
+    public IntentBuilder<T> cud()
+    {
+        target.cud();
+        return this;
+    }
+
+    public IntentBuilder<T> cud(Predicate<? super T> condition)
+    {
+        sane(condition, "condition");
+        target.cud(condition);
+        return this;
+    }
+
+    public IntentBuilder<T> cud(Predicate<? super T> condition, String description)
+    {
+        sane(condition, "condition");
+        target.cud(condition, description);
+        return this;
+    }
+
+    public IntentBuilder<T> ud()
+    {
+        target.ud();
+        return this;
+    }
+
+    public IntentBuilder<T> ud(Predicate<? super T> condition)
+    {
+        sane(condition, "condition");
+        target.ud(condition);
+        return this;
+    }
+
+    public IntentBuilder<T> ud(Predicate<? super T> condition, String description)
+    {
+        sane(condition, "condition");
+        target.ud(condition, description);
         return this;
     }
 

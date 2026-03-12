@@ -2,6 +2,8 @@ package com.taitl.existential.constraints;
 
 import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.handlers.On;
+import com.taitl.existential.handlers.combined_event_handlers.OnCUD;
+import com.taitl.existential.handlers.combined_event_handlers.OnUD;
 import com.taitl.existential.keys.TypeKey;
 import org.junit.jupiter.api.*;
 
@@ -58,6 +60,23 @@ class EffectTest
             assertThat(handler.condition, is(condition));
             assertThat(handler.action, is(action));
             assertThat(handler.description(), is("Runs on a-values"));
+        }
+
+        @Test
+        @DisplayName("CUD and UD handlers are added")
+        void addsCombinedEventHandlers()
+        {
+            Effect<String> effect = new Effect<>(String.class);
+
+            effect.cud(value -> {
+            }, "CUD")
+                    .ud(value -> {
+                    }, "UD");
+
+            assertThat(effect.list().get(0).getClass(), is(OnCUD.class));
+            assertThat(effect.list().get(1).getClass(), is(OnUD.class));
+            assertThat(((OnCUD<String>) effect.list().get(0)).description(), is("CUD"));
+            assertThat(((OnUD<String>) effect.list().get(1)).description(), is("UD"));
         }
     }
 

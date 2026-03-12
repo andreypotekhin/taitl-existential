@@ -3,6 +3,7 @@ package com.taitl.existential.builders;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.rules.*;
+import com.taitl.existential.Existential;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.keys.*;
@@ -21,6 +22,8 @@ import static com.taitl.ex.common.helper.strings.Text.*;
  */
 public class ConfigBuilder
 {
+    protected boolean requireBehaviorDescriptions;
+
     /**
      * Contexts declared for this Existential instance.
      */
@@ -32,6 +35,12 @@ public class ConfigBuilder
      */
     protected Supplier<? extends Context> contextFactory = () -> Creator.create(Context.class);
     protected BiFunction<String, String, ? extends Transaction> transactionFactory = Transaction.FACTORY;
+
+    public ConfigBuilder(Existential ex)
+    {
+        sane(ex, "ex");
+        this.requireBehaviorDescriptions = ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+    }
 
     /**
      * Builds a custom Context for the specified business operation.
@@ -198,6 +207,11 @@ public class ConfigBuilder
     {
         sane(op, "op", name, "name");
         return transactionFactory.apply(op, name);
+    }
+
+    public boolean requireBehaviorDescriptions()
+    {
+        return requireBehaviorDescriptions;
     }
 
     /**

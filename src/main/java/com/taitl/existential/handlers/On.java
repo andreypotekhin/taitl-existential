@@ -41,7 +41,6 @@ public class On<T> implements EventHandler<T>
     public On(Consumer<? super T> action, String description)
     {
         this(null, action);
-        sane(description, "description");
         this.description = description;
     }
 
@@ -79,7 +78,6 @@ public class On<T> implements EventHandler<T>
     public On(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         this(condition, action);
-        sane(description, "description");
         this.description = description;
     }
 

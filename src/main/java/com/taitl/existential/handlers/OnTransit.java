@@ -48,7 +48,7 @@ public class OnTransit<T> implements BiEventHandler<T>
 
     public OnTransit(Predicate<? super T> condition, BiConsumer<? super T, ? super T> action, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         if (action != null)
         {
             sane(action, "action");
@@ -68,7 +68,7 @@ public class OnTransit<T> implements BiEventHandler<T>
     public OnTransit(BiPredicate<? super T, ? super T> bicondition, BiConsumer<? super T, ? super T> action,
             String description)
     {
-        sane(bicondition, "bicondition", description, "description");
+        sane(bicondition, "bicondition");
         if (action != null)
         {
             sane(action, "action");

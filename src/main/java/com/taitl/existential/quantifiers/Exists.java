@@ -46,7 +46,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public <D> Exists(Map<T, D> map, String description)
     {
-        sane(map, "map", description, "description");
+        sane(map, "map");
         concrete = this.<D> createBuilder()
                 .map(map)
                 .predicate(value -> true)
@@ -83,7 +83,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public <D> Exists(Map<T, D> map, Predicate<T> predicate, String description)
     {
-        sane(map, "map", predicate, "predicate", description, "description");
+        sane(map, "map", predicate, "predicate");
         concrete = this.<D> createBuilder()
                 .map(map)
                 .predicate(predicate)
@@ -120,7 +120,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public <D> Exists(Map<T, D> map, BiPredicate<T, D> bipredicate, String description)
     {
-        sane(map, "map", bipredicate, "bipredicate", description, "description");
+        sane(map, "map", bipredicate, "bipredicate");
         concrete = this.<D> createBuilder()
                 .map(map)
                 .mbipredicate(bipredicate)
@@ -163,7 +163,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public <D> Exists(Map<T, D> map, Predicate<Collection<T>> predicate, int placeholder, String description)
     {
-        sane(map, "map", predicate, "predicate", description, "description");
+        sane(map, "map", predicate, "predicate");
         concrete = this.<D> createBuilder()
                 .map(map)
                 .cpredicate(predicate)
@@ -207,7 +207,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     public <D> Exists(Map<T, D> map, BiPredicate<T, Collection<T>> bipredicate, int placeholder,
             String description)
     {
-        sane(map, "map", bipredicate, "bipredicate", description, "description");
+        sane(map, "map", bipredicate, "bipredicate");
         concrete = this.<D> createBuilder()
                 .map(map)
                 .cbipredicate(bipredicate)
@@ -240,7 +240,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public Exists(Set<T> set, String description)
     {
-        sane(set, "set", description, "description");
+        sane(set, "set");
         concrete = createBuilder()
                 .set(set)
                 .predicate(value -> true)
@@ -277,7 +277,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public Exists(Set<T> set, Predicate<T> predicate, String description)
     {
-        sane(set, "set", predicate, "predicate", description, "description");
+        sane(set, "set", predicate, "predicate");
         concrete = createBuilder()
                 .set(set)
                 .predicate(predicate)
@@ -314,7 +314,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public Exists(Set<T> set, BiPredicate<T, T> bipredicate, String description)
     {
-        sane(set, "set", bipredicate, "bipredicate", description, "description");
+        sane(set, "set", bipredicate, "bipredicate");
         concrete = createBuilder()
                 .set(set)
                 .bipredicate(bipredicate)
@@ -337,7 +337,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public Exists(Set<T> set, Predicate<Set<T>> predicate, String placeholder, String description)
     {
-        sane(set, "set", predicate, "predicate", placeholder, "placeholder", description, "description");
+        sane(set, "set", predicate, "predicate", placeholder, "placeholder");
         concrete = createBuilder()
                 .set(set)
                 .spredicate(predicate)
@@ -360,7 +360,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public Exists(Set<T> set, BiPredicate<T, Set<T>> bipredicate, String placeholder, String description)
     {
-        sane(set, "set", bipredicate, "bipredicate", placeholder, "placeholder", description, "description");
+        sane(set, "set", bipredicate, "bipredicate", placeholder, "placeholder");
         concrete = createBuilder()
                 .set(set)
                 .sbipredicate(bipredicate)
@@ -393,7 +393,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public Exists(Collection<T> coll, String description)
     {
-        sane(coll, "coll", description, "description");
+        sane(coll, "coll");
         concrete = createBuilder()
                 .coll(coll)
                 .predicate(value -> true)
@@ -430,7 +430,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public Exists(Collection<T> coll, Predicate<T> predicate, String description)
     {
-        sane(coll, "coll", predicate, "predicate", description, "description");
+        sane(coll, "coll", predicate, "predicate");
         concrete = createBuilder()
                 .coll(coll)
                 .predicate(predicate)
@@ -467,7 +467,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public Exists(Collection<T> coll, BiPredicate<T, T> bipredicate, String description)
     {
-        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        sane(coll, "coll", bipredicate, "bipredicate");
         concrete = createBuilder()
                 .coll(coll)
                 .bipredicate(bipredicate)
@@ -510,7 +510,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
      */
     public Exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder, String description)
     {
-        sane(coll, "coll", predicate, "predicate", description, "description");
+        sane(coll, "coll", predicate, "predicate");
         concrete = createBuilder()
                 .coll(coll)
                 .cpredicate(predicate)
@@ -554,7 +554,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     public Exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate, int placeholder,
             String description)
     {
-        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        sane(coll, "coll", bipredicate, "bipredicate");
         concrete = createBuilder()
                 .coll(coll)
                 .cbipredicate(bipredicate)

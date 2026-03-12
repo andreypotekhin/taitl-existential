@@ -316,28 +316,84 @@ public class EffectBuilder<T> implements EvsBuilder<T>
     public EffectBuilder<T> upsert(Consumer<? super T> action)
     {
         sane(action, "action");
-        target.upsert(action);
+        target.cu(action);
         return this;
     }
 
     public EffectBuilder<T> upsert(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
-        target.upsert(action, description);
+        target.cu(action, description);
         return this;
     }
 
     public EffectBuilder<T> upsert(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
-        target.upsert(condition, action);
+        target.cu(condition, action);
         return this;
     }
 
     public EffectBuilder<T> upsert(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        target.upsert(condition, action, description);
+        target.cu(condition, action, description);
+        return this;
+    }
+
+    public EffectBuilder<T> cud(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        target.cud(action);
+        return this;
+    }
+
+    public EffectBuilder<T> cud(Consumer<? super T> action, String description)
+    {
+        sane(action, "action", description, "description");
+        target.cud(action, description);
+        return this;
+    }
+
+    public EffectBuilder<T> cud(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        sane(condition, "condition", action, "action");
+        target.cud(condition, action);
+        return this;
+    }
+
+    public EffectBuilder<T> cud(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        sane(condition, "condition", action, "action", description, "description");
+        target.cud(condition, action, description);
+        return this;
+    }
+
+    public EffectBuilder<T> ud(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        target.ud(action);
+        return this;
+    }
+
+    public EffectBuilder<T> ud(Consumer<? super T> action, String description)
+    {
+        sane(action, "action", description, "description");
+        target.ud(action, description);
+        return this;
+    }
+
+    public EffectBuilder<T> ud(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        sane(condition, "condition", action, "action");
+        target.ud(condition, action);
+        return this;
+    }
+
+    public EffectBuilder<T> ud(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        sane(condition, "condition", action, "action", description, "description");
+        target.ud(condition, action, description);
         return this;
     }
 

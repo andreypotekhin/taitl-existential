@@ -30,7 +30,7 @@ public class All<T> implements Expression<T>
 
     public All(Predicate<? super T> predicate, String description)
     {
-        sane(predicate, "predicate", description, "description");
+        sane(predicate, "predicate");
         concrete = createBuilder()
                 .predicate(predicate)
                 .description(description)
@@ -48,7 +48,7 @@ public class All<T> implements Expression<T>
 
     public All(Predicate<? super T> condition, Predicate<? super T> predicate, String description)
     {
-        sane(condition, "condition", predicate, "predicate", description, "description");
+        sane(condition, "condition", predicate, "predicate");
         concrete = createBuilder()
                 .condition(condition)
                 .predicate(predicate)

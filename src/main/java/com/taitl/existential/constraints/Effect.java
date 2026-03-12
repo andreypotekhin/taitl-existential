@@ -613,7 +613,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
      * @param action Action to perform for the entities that received this event
      * @return This effect for chaining
      */
-    public Effect<T> upsert(Consumer<? super T> action)
+    public Effect<T> cu(Consumer<? super T> action)
     {
         sane(action, "action");
         return add(new OnCU<T>(null, action));
@@ -626,7 +626,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
      * @param description Description of effect
      * @return This effect for chaining
      */
-    public Effect<T> upsert(Consumer<? super T> action, String description)
+    public Effect<T> cu(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         return add(new OnCU<T>(action, description));
@@ -639,7 +639,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
      * @param action Action to perform for the entities that received this event
      * @return This effect for chaining
      */
-    public Effect<T> upsert(Predicate<? super T> condition, Consumer<? super T> action)
+    public Effect<T> cu(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         return add(new OnCU<T>(condition, action));
@@ -653,10 +653,58 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
      * @param description Description of effect
      * @return This effect for chaining
      */
-    public Effect<T> upsert(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    public Effect<T> cu(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         return add(new OnCU<T>(condition, action, description));
+    }
+
+    public Effect<T> cud(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        return add(new OnCUD<T>(null, action));
+    }
+
+    public Effect<T> cud(Consumer<? super T> action, String description)
+    {
+        sane(action, "action", description, "description");
+        return add(new OnCUD<T>(action, description));
+    }
+
+    public Effect<T> cud(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        sane(condition, "condition", action, "action");
+        return add(new OnCUD<T>(condition, action));
+    }
+
+    public Effect<T> cud(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        sane(condition, "condition", action, "action", description, "description");
+        return add(new OnCUD<T>(condition, action, description));
+    }
+
+    public Effect<T> ud(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        return add(new OnUD<T>(null, action));
+    }
+
+    public Effect<T> ud(Consumer<? super T> action, String description)
+    {
+        sane(action, "action", description, "description");
+        return add(new OnUD<T>(action, description));
+    }
+
+    public Effect<T> ud(Predicate<? super T> condition, Consumer<? super T> action)
+    {
+        sane(condition, "condition", action, "action");
+        return add(new OnUD<T>(condition, action));
+    }
+
+    public Effect<T> ud(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    {
+        sane(condition, "condition", action, "action", description, "description");
+        return add(new OnUD<T>(condition, action, description));
     }
 
     /* Evs implementation */

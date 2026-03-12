@@ -1,8 +1,11 @@
 package com.taitl.existential.constraints;
 
 import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.handlers.OnCreate;
 import com.taitl.existential.handlers.OnTransit;
+import com.taitl.existential.handlers.combined_event_handlers.OnCUD;
+import com.taitl.existential.handlers.combined_event_handlers.OnUD;
 import com.taitl.existential.keys.TypeKey;
 import org.junit.jupiter.api.*;
 
@@ -63,6 +66,39 @@ class InvariantTest
             assertThat(invariant.list().get(1), instanceOf(OnTransit.class));
             OnTransit<String> transit = (OnTransit<String>) invariant.list().get(1);
             assertThat(transit.description(), is("Length cannot shrink"));
+        }
+
+        @Test
+        @DisplayName("Description-less overloads keep empty descriptions")
+        void descriptionLessOverloadsKeepEmptyDescriptions()
+        {
+            Invariant<String> invariant = new Invariant<>(String.class);
+
+            invariant.create(value -> value.length() > 2)
+                    .transit((before, after) -> before.length() <= after.length())
+                    .all(value -> !value.isBlank());
+
+            OnCreate<String> create = (OnCreate<String>) invariant.list().get(0);
+            OnTransit<String> transit = (OnTransit<String>) invariant.list().get(1);
+
+            assertThat(create.description(), is(""));
+            assertThat(transit.description(), is(""));
+            assertThat(((Expression<?>) invariant.list().get(2)).description(), is(""));
+        }
+
+        @Test
+        @DisplayName("CUD and UD invariants preserve descriptions")
+        void combinedHandlersPreserveDescriptions()
+        {
+            Invariant<String> invariant = new Invariant<>(String.class);
+
+            invariant.cud(value -> value.length() > 2, "CUD")
+                    .ud(value -> value.length() > 1, "UD");
+
+            assertThat(invariant.list().get(0), instanceOf(OnCUD.class));
+            assertThat(invariant.list().get(1), instanceOf(OnUD.class));
+            assertThat(((OnCUD<String>) invariant.list().get(0)).description(), is("CUD"));
+            assertThat(((OnUD<String>) invariant.list().get(1)).description(), is("UD"));
         }
     }
 

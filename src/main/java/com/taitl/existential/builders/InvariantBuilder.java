@@ -38,6 +38,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
         sane(parent, "parent", typeKey, "typeKey");
         this.parent = parent;
         this.target = new Invariant<>(typeKey);
+        target.requireDescriptions(parent.parent.requireBehaviorDescriptions());
     }
 
     /**
@@ -59,12 +60,19 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
         sane(parent2, "parent2", typeKey, "typeKey");
         this.parent2 = parent2;
         this.target = new Invariant<>(typeKey);
+        target.requireDescriptions(parent2.parent.parent.requireBehaviorDescriptions());
     }
 
     public InvariantBuilder<T> typeKey(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
         target.typeKey(typeKey);
+        return this;
+    }
+
+    public InvariantBuilder<T> create(Predicate<? super T> condition)
+    {
+        target.create(condition);
         return this;
     }
 
@@ -79,8 +87,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> create(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.create(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> delete(Predicate<? super T> condition)
+    {
+        target.delete(condition);
         return this;
     }
 
@@ -95,8 +109,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> delete(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.delete(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> transit(Predicate<? super T> condition)
+    {
+        target.transit(condition);
         return this;
     }
 
@@ -111,8 +131,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> transit(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.transit(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> transit(BiPredicate<? super T, ? super T> condition)
+    {
+        target.transit(condition);
         return this;
     }
 
@@ -127,8 +153,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> transit(BiPredicate<? super T, ? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.transit(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> read(Predicate<? super T> condition)
+    {
+        target.read(condition);
         return this;
     }
 
@@ -143,8 +175,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> read(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.read(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> readAndLock(Predicate<? super T> condition)
+    {
+        target.readAndLock(condition);
         return this;
     }
 
@@ -159,8 +197,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> readAndLock(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.readAndLock(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> write(Predicate<? super T> condition)
+    {
+        target.write(condition);
         return this;
     }
 
@@ -175,8 +219,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> write(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.write(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> port(Predicate<? super T> condition)
+    {
+        target.port(condition);
         return this;
     }
 
@@ -191,8 +241,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> port(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.port(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> port(BiPredicate<? super T, ? super T> condition)
+    {
+        target.port(condition);
         return this;
     }
 
@@ -207,8 +263,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> port(BiPredicate<? super T, ? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.port(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> update(Predicate<? super T> condition)
+    {
+        target.update(condition);
         return this;
     }
 
@@ -223,8 +285,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> update(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.update(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> cu(Predicate<? super T> condition)
+    {
+        target.cu(condition);
         return this;
     }
 
@@ -239,8 +307,40 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> cu(Predicate<? super T> condition, String description)
     {
-        sane(condition, "condition", description, "description");
+        sane(condition, "condition");
         target.cu(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> cud(Predicate<? super T> condition)
+    {
+        target.cud(condition);
+        return this;
+    }
+
+    public InvariantBuilder<T> cud(Predicate<? super T> condition, String description)
+    {
+        sane(condition, "condition");
+        target.cud(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> ud(Predicate<? super T> condition)
+    {
+        target.ud(condition);
+        return this;
+    }
+
+    public InvariantBuilder<T> ud(Predicate<? super T> condition, String description)
+    {
+        sane(condition, "condition");
+        target.ud(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> all(Predicate<? super T> predicate)
+    {
+        target.all(predicate);
         return this;
     }
 
@@ -255,8 +355,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> all(Predicate<? super T> predicate, String description)
     {
-        sane(predicate, "predicate", description, "description");
+        sane(predicate, "predicate");
         target.all(predicate, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
+    {
+        target.all(condition, predicate);
         return this;
     }
 
@@ -273,7 +379,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> all(Predicate<? super T> condition, Predicate<? super T> predicate, String description)
     {
-        sane(condition, "condition", predicate, "predicate", description, "description");
+        sane(condition, "condition", predicate, "predicate");
         target.all(condition, predicate, description);
         return this;
     }
@@ -300,7 +406,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public <K> InvariantBuilder<T> exists(Map<T, K> map, String description)
     {
-        sane(map, "map", description, "description");
+        sane(map, "map");
         target.exists(map, description);
         return this;
     }
@@ -329,7 +435,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public <K> InvariantBuilder<T> exists(Map<T, K> map, Predicate<T> predicate, String description)
     {
-        sane(map, "map", predicate, "predicate", description, "description");
+        sane(map, "map", predicate, "predicate");
         target.exists(map, predicate, description);
         return this;
     }
@@ -358,7 +464,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<T, K> bipredicate, String description)
     {
-        sane(map, "map", bipredicate, "bipredicate", description, "description");
+        sane(map, "map", bipredicate, "bipredicate");
         target.exists(map, bipredicate, description);
         return this;
     }
@@ -390,7 +496,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     public <K> InvariantBuilder<T> exists(Map<T, K> map, Predicate<Collection<T>> predicate, int placeholder,
             String description)
     {
-        sane(map, "map", predicate, "predicate", description, "description");
+        sane(map, "map", predicate, "predicate");
         target.exists(map, predicate, placeholder, description);
         return this;
     }
@@ -423,7 +529,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     public <K> InvariantBuilder<T> exists(Map<T, K> map, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder, String description)
     {
-        sane(map, "map", bipredicate, "bipredicate", description, "description");
+        sane(map, "map", bipredicate, "bipredicate");
         target.exists(map, bipredicate, placeholder, description);
         return this;
     }
@@ -450,7 +556,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> exists(Set<T> set, String description)
     {
-        sane(set, "set", description, "description");
+        sane(set, "set");
         target.exists(set, description);
         return this;
     }
@@ -479,7 +585,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> exists(Set<T> set, Predicate<T> predicate, String description)
     {
-        sane(set, "set", predicate, "predicate", description, "description");
+        sane(set, "set", predicate, "predicate");
         target.exists(set, predicate, description);
         return this;
     }
@@ -508,7 +614,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> exists(Set<T> set, BiPredicate<T, T> bipredicate, String description)
     {
-        sane(set, "set", bipredicate, "bipredicate", description, "description");
+        sane(set, "set", bipredicate, "bipredicate");
         target.exists(set, bipredicate, description);
         return this;
     }
@@ -525,7 +631,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     public InvariantBuilder<T> exists(Set<T> set, Predicate<Set<T>> predicate, String placeholder,
             String description)
     {
-        sane(set, "set", predicate, "predicate", placeholder, "placeholder", description, "description");
+        sane(set, "set", predicate, "predicate", placeholder, "placeholder");
         target.exists(set, predicate, placeholder, description);
         return this;
     }
@@ -542,7 +648,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     public InvariantBuilder<T> exists(Set<T> set, BiPredicate<T, Set<T>> bipredicate,
             String placeholder, String description)
     {
-        sane(set, "set", bipredicate, "bipredicate", placeholder, "placeholder", description, "description");
+        sane(set, "set", bipredicate, "bipredicate", placeholder, "placeholder");
         target.exists(set, bipredicate, placeholder, description);
         return this;
     }
@@ -569,7 +675,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> exists(Collection<T> coll, String description)
     {
-        sane(coll, "coll", description, "description");
+        sane(coll, "coll");
         target.exists(coll, description);
         return this;
     }
@@ -598,7 +704,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> exists(Collection<T> coll, Predicate<T> predicate, String description)
     {
-        sane(coll, "coll", predicate, "predicate", description, "description");
+        sane(coll, "coll", predicate, "predicate");
         target.exists(coll, predicate, description);
         return this;
     }
@@ -627,7 +733,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      */
     public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate, String description)
     {
-        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        sane(coll, "coll", bipredicate, "bipredicate");
         target.exists(coll, bipredicate, description);
         return this;
     }
@@ -659,7 +765,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     public InvariantBuilder<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder,
             String description)
     {
-        sane(coll, "coll", predicate, "predicate", description, "description");
+        sane(coll, "coll", predicate, "predicate");
         target.exists(coll, predicate, placeholder, description);
         return this;
     }
@@ -692,7 +798,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
             int placeholder, String description)
     {
-        sane(coll, "coll", bipredicate, "bipredicate", description, "description");
+        sane(coll, "coll", bipredicate, "bipredicate");
         target.exists(coll, bipredicate, placeholder, description);
         return this;
     }
