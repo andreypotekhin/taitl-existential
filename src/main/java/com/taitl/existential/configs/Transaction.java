@@ -265,7 +265,7 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void begin(Consumer<? super T> action)
     {
-        addLifecycle(action, StageName.BEGIN, cycle -> cycle.begin(action));
+        life(action, StageName.BEGIN, cycle -> cycle.begin(action));
     }
 
     /**
@@ -276,7 +276,7 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void commit(Consumer<? super T> action)
     {
-        addLifecycle(action, StageName.COMMIT, cycle -> cycle.commit(action));
+        life(action, StageName.COMMIT, cycle -> cycle.commit(action));
     }
 
     /**
@@ -287,7 +287,7 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void rollback(Consumer<? super T> action)
     {
-        addLifecycle(action, StageName.ROLLBACK, cycle -> cycle.rollback(action));
+        life(action, StageName.ROLLBACK, cycle -> cycle.rollback(action));
     }
 
     /**
@@ -298,7 +298,7 @@ public class Transaction implements Configurable, Evaluable
      */
     public <T extends Transaction> void checkpoint(Consumer<? super T> action)
     {
-        addLifecycle(action, StageName.CHECKPOINT, cycle -> cycle.checkpoint(action));
+        life(action, StageName.CHECKPOINT, cycle -> cycle.checkpoint(action));
     }
 
     /*
@@ -496,7 +496,7 @@ public class Transaction implements Configurable, Evaluable
         return stages;
     }
 
-    protected <T extends Transaction> void addLifecycle(
+    protected <T extends Transaction> void life(
             Consumer<? super T> action,
             StageName stageName,
             Consumer<Life<T>> registrar)
