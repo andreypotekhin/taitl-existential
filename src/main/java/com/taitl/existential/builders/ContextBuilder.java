@@ -310,20 +310,23 @@ public class ContextBuilder
      * Example:
      *   Ex.configure()
      *     .context("/api/cats")
-     *         .intent(new Intent<Document<HTML>() {{
+     *         .intent(new Intent<Document<HTML>>() {{
      *             read();
      *             write();
-     *         }});
+     *         }}, new TypeKey<Document<HTML>>() {});
      *
      * @param intent
      *            Intent to register
+     * @param typeKey
+     *            Type key for the intent subject
      * @param <T>
      *            Subject type for the intent
      * @return This builder for chaining
      */
-    public <T> ContextBuilder intent(Intent<T> intent)
+    public <T> ContextBuilder intent(Intent<T> intent, TypeKey<T> typeKey)
     {
-        sane(intent, "intent");
+        sane(intent, "intent", typeKey, "typeKey");
+        intent.typeKey(typeKey);
         register(() -> intent, StageName.IMMEDIATE);
         return this;
     }

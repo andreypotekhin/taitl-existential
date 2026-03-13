@@ -244,15 +244,28 @@ public class TransactionBuilder
     /**
      * Registers an already-built intent with this transaction.
      *
+     * Example:
+     *   Ex.configure()
+     *     .context("/api/cats")
+     *         .transaction()
+     *             .intent(new Intent<Document<HTML>>() {{
+     *                 read();
+     *                 write();
+     *             }}, new TypeKey<Document<HTML>>() {})
+     *             .doneTran();
+     *
      * @param intent
      *            Intent to register
+     * @param typeKey
+     *            Type key for the intent subject
      * @param <T>
      *            Subject type for the intent
      * @return This builder for chaining
      */
-    public <T> TransactionBuilder intent(Intent<T> intent)
+    public <T> TransactionBuilder intent(Intent<T> intent, TypeKey<T> typeKey)
     {
-        sane(intent, "intent");
+        sane(intent, "intent", typeKey, "typeKey");
+        intent.typeKey(typeKey);
         register(() -> intent, StageName.IMMEDIATE);
         return this;
     }

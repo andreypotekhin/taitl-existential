@@ -159,7 +159,7 @@ class ContextBuilderTest
 
                 Intent<String> intent1 = new Intent<>(String.class);
                 intent1.read();
-                contextBuilder.intent(intent1);
+                contextBuilder.intent(intent1, TypeKey.valueOf(String.class, false));
 
                 // @formatter:off
                 contextBuilder.effect(String.class)
@@ -224,7 +224,7 @@ class ContextBuilderTest
 
                 Intent<String> intent1 = new Intent<>(String.class);
                 intent1.read();
-                transactionBuilder.intent(intent1);
+                transactionBuilder.intent(intent1, TypeKey.valueOf(String.class, false));
 
                 // @formatter:off
                 transactionBuilder.effect(String.class)

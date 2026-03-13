@@ -475,10 +475,21 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         return parent2.intent(typeKey);
     }
 
-    public <U> ContextBuilder intent(Intent<U> intent)
+    /**
+     * Registers an already-built intent on the parent context.
+     *
+     * @param intent
+     *            Intent to register
+     * @param typeKey
+     *            Type key for the intent subject
+     * @param <U>
+     *            Subject type for the intent
+     * @return Parent context builder for chaining
+     */
+    public <U> ContextBuilder intent(Intent<U> intent, TypeKey<U> typeKey)
     {
-        sane(intent, "intent");
-        return parentContext().intent(intent);
+        sane(intent, "intent", typeKey, "typeKey");
+        return parentContext().intent(intent, typeKey);
     }
 
     public ContextBuilder begin()
