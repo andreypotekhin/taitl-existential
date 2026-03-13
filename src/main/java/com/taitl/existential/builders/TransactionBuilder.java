@@ -1,5 +1,6 @@
 package com.taitl.existential.builders;
 
+import com.taitl.ex.common.creator.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -98,7 +99,7 @@ public class TransactionBuilder
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
     {
         sane(cls, "cls");
-        return invariant(new TypeKey<>(cls));
+        return invariant(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
     }
 
     /**
@@ -113,7 +114,10 @@ public class TransactionBuilder
     public <T> InvariantBuilder<T> invariant(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
-        InvariantBuilder<T> ib = new InvariantBuilder<>(this, typeKey);
+        InvariantBuilder<T> ib = Creator.create(InvariantBuilder.class,
+                new Class<?>[] { TransactionBuilder.class, TypeKey.class },
+                this,
+                typeKey);
         register(() -> ib.build(), StageName.VALIDATION);
         return ib;
     }
@@ -146,7 +150,7 @@ public class TransactionBuilder
     public <T> EffectBuilder<T> effect(Class<T> cls)
     {
         sane(cls, "cls");
-        return effect(new TypeKey<>(cls));
+        return effect(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
     }
 
     /**
@@ -161,7 +165,10 @@ public class TransactionBuilder
     public <T> EffectBuilder<T> effect(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
-        EffectBuilder<T> eb = new EffectBuilder<>(this, typeKey);
+        EffectBuilder<T> eb = Creator.create(EffectBuilder.class,
+                new Class<?>[] { TransactionBuilder.class, TypeKey.class },
+                this,
+                typeKey);
         register(() -> eb.build(), StageName.VALIDATION);
         return eb;
     }
@@ -211,7 +218,7 @@ public class TransactionBuilder
     public <T> IntentBuilder<T> intent(Class<T> cls)
     {
         sane(cls, "cls");
-        return intent(new TypeKey<>(cls));
+        return intent(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
     }
 
     /**
@@ -226,7 +233,10 @@ public class TransactionBuilder
     public <T> IntentBuilder<T> intent(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
-        IntentBuilder<T> ib = new IntentBuilder<>(this, typeKey);
+        IntentBuilder<T> ib = Creator.create(IntentBuilder.class,
+                new Class<?>[] { TransactionBuilder.class, TypeKey.class },
+                this,
+                typeKey);
         register(() -> ib.build(), StageName.IMMEDIATE);
         return ib;
     }
@@ -338,7 +348,7 @@ public class TransactionBuilder
     public <T extends Transaction> TransactionBuilder begin(Class<T> typeClass, Consumer<? super T> action)
     {
         sane(typeClass, "typeClass");
-        return begin(new TypeKey<>(typeClass), action);
+        return begin(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, typeClass), action);
     }
 
     /**
@@ -385,7 +395,7 @@ public class TransactionBuilder
     public <T extends Transaction> TransactionBuilder commit(Class<T> typeClass, Consumer<? super T> action)
     {
         sane(typeClass, "typeClass");
-        return commit(new TypeKey<>(typeClass), action);
+        return commit(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, typeClass), action);
     }
 
     /**
@@ -432,7 +442,7 @@ public class TransactionBuilder
     public <T extends Transaction> TransactionBuilder rollback(Class<T> typeClass, Consumer<? super T> action)
     {
         sane(typeClass, "typeClass");
-        return rollback(new TypeKey<>(typeClass), action);
+        return rollback(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, typeClass), action);
     }
 
     /**
@@ -479,7 +489,7 @@ public class TransactionBuilder
     public <T extends Transaction> TransactionBuilder checkpoint(Class<T> typeClass, Consumer<? super T> action)
     {
         sane(typeClass, "typeClass");
-        return checkpoint(new TypeKey<>(typeClass), action);
+        return checkpoint(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, typeClass), action);
     }
 
     /**
@@ -500,7 +510,7 @@ public class TransactionBuilder
             Consumer<Life<T>> registrar)
     {
         sane(typeKey, "typeKey", action, "action", stageName, "stageName");
-        Life<T> cycle = new Life<>(typeKey);
+        Life<T> cycle = Creator.create(Life.class, new Class<?>[] { TypeKey.class }, typeKey);
         registrar.accept(cycle);
         registerAtStage(() -> cycle, stageName);
         return this;
@@ -509,7 +519,7 @@ public class TransactionBuilder
     @SuppressWarnings("unchecked")
     protected static <T extends Transaction> TypeKey<T> transactionTypeKey()
     {
-        return (TypeKey<T>) new TypeKey<Transaction>(Transaction.class);
+        return (TypeKey<T>) Creator.create(TypeKey.class, new Class<?>[] { Class.class }, Transaction.class);
     }
 
     protected Transaction createInstance(String transactionOp, String transactionName)

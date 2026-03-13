@@ -1,5 +1,6 @@
 package com.taitl.existential.builders;
 
+import com.taitl.ex.common.creator.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
@@ -30,7 +31,7 @@ public class IntentBuilder<T> implements EvsBuilder<T>
     {
         sane(parent, "parent", typeKey, "typeKey");
         this.parent = parent;
-        this.target = new Intent<>(typeKey);
+        this.target = Creator.create(Intent.class, new Class<?>[] { TypeKey.class }, typeKey);
         target.requireDescriptions(parent.parent.requireBehaviorDescriptions());
     }
 
@@ -45,7 +46,7 @@ public class IntentBuilder<T> implements EvsBuilder<T>
     {
         sane(parent2, "parent2", typeKey, "typeKey");
         this.parent2 = parent2;
-        this.target = new Intent<>(typeKey);
+        this.target = Creator.create(Intent.class, new Class<?>[] { TypeKey.class }, typeKey);
         target.requireDescriptions(parent2.parent.parent.requireBehaviorDescriptions());
     }
 

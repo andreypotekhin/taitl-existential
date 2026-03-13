@@ -1,5 +1,6 @@
 package com.taitl.existential.builders;
 
+import com.taitl.ex.common.creator.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
@@ -30,7 +31,7 @@ public class EffectBuilder<T> implements EvsBuilder<T>
     {
         sane(parent, "parent", typeKey, "typeKey");
         this.parent = parent;
-        this.target = new Effect<>(typeKey);
+        this.target = Creator.create(Effect.class, new Class<?>[] { TypeKey.class }, typeKey);
     }
 
     public EffectBuilder(TransactionBuilder parent2)
@@ -44,7 +45,7 @@ public class EffectBuilder<T> implements EvsBuilder<T>
     {
         sane(parent2, "parent2", typeKey, "typeKey");
         this.parent2 = parent2;
-        this.target = new Effect<>(typeKey);
+        this.target = Creator.create(Effect.class, new Class<?>[] { TypeKey.class }, typeKey);
     }
 
     public EffectBuilder<T> typeKey(TypeKey<T> typeKey)

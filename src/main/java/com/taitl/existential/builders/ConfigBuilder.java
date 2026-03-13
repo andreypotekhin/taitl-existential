@@ -68,7 +68,10 @@ public class ConfigBuilder
      */
     public ContextBuilder context(String name)
     {
-        ContextBuilder contextBuilder = new ContextBuilder(this, contextName(name));
+        ContextBuilder contextBuilder = Creator.create(ContextBuilder.class,
+                new Class<?>[] { ConfigBuilder.class, String.class },
+                this,
+                contextName(name));
         contextBuilders.add(contextBuilder);
         return contextBuilder;
     }

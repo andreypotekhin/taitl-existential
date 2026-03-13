@@ -1,5 +1,6 @@
 package com.taitl.existential.builders;
 
+import com.taitl.ex.common.creator.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -58,7 +59,7 @@ public class ContextBuilder
     public <T> InvariantBuilder<T> invariant(Class<T> cls)
     {
         sane(cls, "cls");
-        return invariant(new TypeKey<>(cls));
+        return invariant(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
     }
 
     /**
@@ -73,7 +74,10 @@ public class ContextBuilder
     public <T> InvariantBuilder<T> invariant(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
-        InvariantBuilder<T> ib = new InvariantBuilder<>(this, typeKey);
+        InvariantBuilder<T> ib = Creator.create(InvariantBuilder.class,
+                new Class<?>[] { ContextBuilder.class, TypeKey.class },
+                this,
+                typeKey);
         register(() -> ib.build(), StageName.VALIDATION);
         return ib;
     }
@@ -106,7 +110,7 @@ public class ContextBuilder
     public <T> EffectBuilder<T> effect(Class<T> cls)
     {
         sane(cls, "cls");
-        return effect(new TypeKey<>(cls));
+        return effect(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
     }
 
     /**
@@ -121,7 +125,10 @@ public class ContextBuilder
     public <T> EffectBuilder<T> effect(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
-        EffectBuilder<T> eb = new EffectBuilder<>(this, typeKey);
+        EffectBuilder<T> eb = Creator.create(EffectBuilder.class,
+                new Class<?>[] { ContextBuilder.class, TypeKey.class },
+                this,
+                typeKey);
         register(() -> eb.build(), StageName.VALIDATION);
         return eb;
     }
@@ -176,7 +183,7 @@ public class ContextBuilder
     public <T> IntentBuilder<T> intent(Class<T> cls)
     {
         sane(cls, "cls");
-        return intent(new TypeKey<>(cls));
+        return intent(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
     }
 
     /**
@@ -191,7 +198,10 @@ public class ContextBuilder
     public <T> IntentBuilder<T> intent(TypeKey<T> typeKey)
     {
         sane(typeKey, "typeKey");
-        IntentBuilder<T> ib = new IntentBuilder<>(this, typeKey);
+        IntentBuilder<T> ib = Creator.create(IntentBuilder.class,
+                new Class<?>[] { ContextBuilder.class, TypeKey.class },
+                this,
+                typeKey);
         register(() -> ib.build(), StageName.IMMEDIATE);
         return ib;
     }
@@ -291,7 +301,10 @@ public class ContextBuilder
      */
     public TransactionBuilder transaction(String name)
     {
-        return new TransactionBuilder(this, name);
+        return Creator.create(TransactionBuilder.class,
+                new Class<?>[] { ContextBuilder.class, String.class },
+                this,
+                name);
     }
 
     /**
@@ -304,13 +317,19 @@ public class ContextBuilder
     public TransactionBuilder transaction(Supplier<? extends Transaction> supplier)
     {
         sane(supplier, "supplier");
-        return new TransactionBuilder(this, supplier);
+        return Creator.create(TransactionBuilder.class,
+                new Class<?>[] { ContextBuilder.class, Supplier.class },
+                this,
+                supplier);
     }
 
     public TransactionBuilder transaction(BiFunction<String, String, ? extends Transaction> factory)
     {
         sane(factory, "factory");
-        return new TransactionBuilder(this, factory);
+        return Creator.create(TransactionBuilder.class,
+                new Class<?>[] { ContextBuilder.class, BiFunction.class },
+                this,
+                factory);
     }
 
     Context createInstance()
