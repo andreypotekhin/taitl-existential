@@ -12,21 +12,21 @@ import static com.taitl.ex.common.helper.collections.Coll.*;
 import static com.taitl.ex.examples.night_city.data.CityTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SetIndexTest
+class MultiIndexTest
 {
-    SetIndex<String, Cat> cats_by_color;
-    SetIndex<Location, Cat> cats_by_location = new SetIndex<>(c -> c.location);
+    MultiIndex<String, Cat> cats_by_color;
+    MultiIndex<Location, Cat> cats_by_location = new MultiIndex<>(c -> c.location);
     Cat cat;
 
     @BeforeEach
     void setUp()
     {
-        cats_by_color = new SetIndex<>(c -> c.color);
+        cats_by_color = new MultiIndex<>(c -> c.color);
         cats_by_color.add(GREY_CAT);
         cats_by_color.add(YELLOW_CAT);
         cats_by_color.add(BLACK_CAT);
 
-        cats_by_location = new SetIndex<>(c -> c.location);
+        cats_by_location = new MultiIndex<>(c -> c.location);
         cats_by_location.add(GREY_CAT);
         cats_by_location.add(YELLOW_CAT);
         cats_by_location.add(BLACK_CAT);
@@ -41,16 +41,16 @@ class SetIndexTest
     @Test
     void testConstructor()
     {
-        cats_by_location = new SetIndex<>(cat -> cat.location);
+        cats_by_location = new MultiIndex<>(cat -> cat.location);
         assertTrue(cats_by_location instanceof Map);
         cats_by_location.add(GREY_CAT.location, GREY_CAT);
         assertTrue(cats_by_location.containsKey(LOCATION_PARK));
         cats_by_location.add(BLACK_CAT);
         assertTrue(cats_by_location.containsKey(LOCATION_GARDEN));
-        cats_by_color = new SetIndex<>(c -> c.location.toString());
+        cats_by_color = new MultiIndex<>(c -> c.location.toString());
         cats_by_color.add(CityTestData.ORANGE_CAT);
         assertTrue(cats_by_color.containsKey("Garden"));
-        assertThrows(IllegalArgumentException.class, () -> new SetIndex<>(null));
+        assertThrows(IllegalArgumentException.class, () -> new MultiIndex<>(null));
     }
 
     @Test
@@ -112,7 +112,7 @@ class SetIndexTest
         @DisplayName("Test rekey uses value equality")
         void rekeyUsesValueEquality()
         {
-            SetIndex<String, Cat> index = new SetIndex<>(cat -> new String(cat.color));
+            MultiIndex<String, Cat> index = new MultiIndex<>(cat -> new String(cat.color));
             Cat cat = CityTestData.BLACK_CAT;
             index.add("Black", cat);
             assertDoesNotThrow(() -> index.reindex("Black", new String("Black"), cat));
@@ -126,7 +126,7 @@ class SetIndexTest
     @Test
     void testAdd()
     {
-        cats_by_location = new SetIndex<>(cat -> cat.location);
+        cats_by_location = new MultiIndex<>(cat -> cat.location);
         cats_by_location.add(LOCATION_PARK, GREY_CAT);
         assertTrue(cats_by_location.containsKey(LOCATION_PARK), "Add using explicit key");
         cats_by_location.add(BLACK_CAT);
@@ -140,14 +140,14 @@ class SetIndexTest
     @Test
     void testGetKeyReturnsNull()
     {
-        SetIndex<String, Cat> index = new SetIndex<>(cat -> null);
+        MultiIndex<String, Cat> index = new MultiIndex<>(cat -> null);
         assertThrows(IllegalArgumentException.class, () -> index.add(CityTestData.ORANGE_CAT));
     }
 
     @Test
     void testAddAll()
     {
-        SetIndex<String, Cat> index = new SetIndex<>(c -> c.color);
+        MultiIndex<String, Cat> index = new MultiIndex<>(c -> c.color);
         index.addAll(List.of(GREY_CAT, BLACK_CAT));
 
         assertTrue(index.contains(GREY_CAT));

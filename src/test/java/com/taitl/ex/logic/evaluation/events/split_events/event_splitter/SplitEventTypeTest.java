@@ -148,7 +148,7 @@ class SplitEventTypeTest
         void splitReadAndLockNullEvents()
         {
             IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
-                    () -> splitter.splitReadAndLock(new ReadAndLock<>("value"), null));
+                    () -> splitter.splitRL(new RL<>("value"), null));
             assertEquals("Argument 'events' must not be null", error.getMessage());
         }
     }

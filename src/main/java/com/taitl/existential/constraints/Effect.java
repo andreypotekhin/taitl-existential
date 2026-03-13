@@ -371,55 +371,55 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     }
 
     /**
-     * Creates an effect for ReadAndLock event.
-     *
-     * @param action Action to perform for the entities that received this event
-     * @return This effect for chaining
-     */
-    public Effect<T> readAndLock(Consumer<? super T> action)
-    {
-        sane(action, "action");
-        return add(new OnReadAndLock<T>(null, action));
-    }
-
-    /**
-     * Creates an effect for ReadAndLock event.
+     * Creates an effect for read-and-lock event.
      *
      * @param action Action to perform for the entities that received this event
      * @param description Description of effect
      * @return This effect for chaining
      */
-    public Effect<T> readAndLock(Consumer<? super T> action, String description)
+    public Effect<T> rl(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
-        return add(new OnReadAndLock<T>(action, description));
+        return add(new OnRL<T>(action, description));
     }
 
     /**
-     * Creates an effect for ReadAndLock event.
+     * Creates an effect for read-and-lock event.
+     *
+     * @param action Action to perform for the entities that received this event
+     * @return This effect for chaining
+     */
+    public Effect<T> rl(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        return add(new OnRL<T>(null, action));
+    }
+
+    /**
+     * Creates an effect for read-and-lock event.
      *
      * @param condition Condition on the entities to which apply action
      * @param action Action to perform for the entities that received this event
      * @return This effect for chaining
      */
-    public Effect<T> readAndLock(Predicate<? super T> condition, Consumer<? super T> action)
+    public Effect<T> rl(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
-        return add(new OnReadAndLock<T>(condition, action));
+        return add(new OnRL<T>(condition, action));
     }
 
     /**
-     * Creates an effect for ReadAndLock event.
+     * Creates an effect for read-and-lock event.
      *
      * @param condition Condition on the entities to which apply action
      * @param action Action to perform for the entities that received this event
      * @param description Description of effect
      * @return This effect for chaining
      */
-    public Effect<T> readAndLock(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    public Effect<T> rl(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        return add(new OnReadAndLock<T>(condition, action, description));
+        return add(new OnRL<T>(condition, action, description));
     }
 
     /**

@@ -14,7 +14,8 @@ import static com.taitl.ex.common.helper.Args.*;
  * Internally, uses a Map<K, V> to store and map the values.
  * The key function K(V) is specified once at construction time.
  * The index is dynamic in the sense of allowing to change the
- * key of a value without need to reinsert.
+ * key of a value without need to reinsert (you still need to call
+ * index()/reindex()).
  * Note: null is not allowed either as a key or as a value.
  *
  * Usage:
@@ -26,11 +27,11 @@ import static com.taitl.ex.common.helper.Args.*;
  * @param <V>
  *            Value type
  */
-public class ValueIndex<K, V> implements Map<K, V>
+public class SingleIndex<K, V> implements Map<K, V>
 {
-    protected ConcreteValueIndex<K, V> concrete;
+    protected ConcreteSingleIndex<K, V> concrete;
 
-    public ValueIndex(Function<V, K> getKey)
+    public SingleIndex(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
         concrete = createConcrete(getKey);
@@ -152,9 +153,9 @@ public class ValueIndex<K, V> implements Map<K, V>
     }
 
     @SuppressWarnings("unchecked")
-    protected ConcreteValueIndex<K, V> createConcrete(Function<V, K> getKey)
+    protected ConcreteSingleIndex<K, V> createConcrete(Function<V, K> getKey)
     {
-        return Creator.create(ConcreteValueIndex.class,
+        return Creator.create(ConcreteSingleIndex.class,
                 new Class<?>[] { Function.class },
                 getKey);
     }

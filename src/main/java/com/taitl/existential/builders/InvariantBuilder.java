@@ -180,12 +180,6 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public InvariantBuilder<T> readAndLock(Predicate<? super T> condition)
-    {
-        target.readAndLock(condition);
-        return this;
-    }
-
     /**
      * Adds a read-and-lock invariant with a description.
      *
@@ -195,10 +189,16 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      *            Human-friendly description of the rule
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> readAndLock(Predicate<? super T> condition, String description)
+    public InvariantBuilder<T> rl(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
-        target.readAndLock(condition, description);
+        target.rl(condition, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> rl(Predicate<? super T> condition)
+    {
+        target.rl(condition);
         return this;
     }
 

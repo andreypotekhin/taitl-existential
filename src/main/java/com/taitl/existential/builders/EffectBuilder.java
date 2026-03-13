@@ -184,31 +184,31 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public EffectBuilder<T> readAndLock(Consumer<? super T> action)
-    {
-        sane(action, "action");
-        target.readAndLock(action);
-        return this;
-    }
-
-    public EffectBuilder<T> readAndLock(Consumer<? super T> action, String description)
+    public EffectBuilder<T> rl(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
-        target.readAndLock(action, description);
+        target.rl(action, description);
         return this;
     }
 
-    public EffectBuilder<T> readAndLock(Predicate<? super T> condition, Consumer<? super T> action)
+    public EffectBuilder<T> rl(Consumer<? super T> action)
+    {
+        sane(action, "action");
+        target.rl(action);
+        return this;
+    }
+
+    public EffectBuilder<T> rl(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
-        target.readAndLock(condition, action);
+        target.rl(condition, action);
         return this;
     }
 
-    public EffectBuilder<T> readAndLock(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    public EffectBuilder<T> rl(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
-        target.readAndLock(condition, action, description);
+        target.rl(condition, action, description);
         return this;
     }
 

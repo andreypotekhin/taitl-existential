@@ -18,13 +18,13 @@ class TransactionIndexesTest
     }
 
     @Nested
-    class SetIndexLookup
+    class MultiIndexLookup
     {
         @Test
         @DisplayName("Index creates on first access")
         void creates()
         {
-            SetIndex<String, String> index = tr.index("accounts", s -> s);
+            MultiIndex<String, String> index = tr.index("accounts", s -> s);
             assertThat(index, is(notNullValue()));
         }
 
@@ -32,8 +32,8 @@ class TransactionIndexesTest
         @DisplayName("Index returns same instance")
         void reuses()
         {
-            SetIndex<String, String> first = tr.index("accounts", s -> s);
-            SetIndex<String, String> second = tr.index("accounts", s -> s);
+            MultiIndex<String, String> first = tr.index("accounts", s -> s);
+            MultiIndex<String, String> second = tr.index("accounts", s -> s);
             assertThat(second, is(sameInstance(first)));
         }
     }

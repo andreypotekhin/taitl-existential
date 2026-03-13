@@ -7,7 +7,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ValueIndexTest
+class SingleIndexTest
 {
     static class User
     {
@@ -21,12 +21,12 @@ class ValueIndexTest
         }
     }
 
-    ValueIndex<String, User> usersByTeam;
+    SingleIndex<String, User> usersByTeam;
 
     @BeforeEach
     void setUp()
     {
-        usersByTeam = new ValueIndex<>(u -> u.team);
+        usersByTeam = new SingleIndex<>(u -> u.team);
     }
 
     @Test
@@ -70,7 +70,7 @@ class ValueIndexTest
     @Test
     void testGetKeyReturnsNull()
     {
-        ValueIndex<String, User> index = new ValueIndex<>(u -> null);
+        SingleIndex<String, User> index = new SingleIndex<>(u -> null);
         assertThrows(IllegalArgumentException.class, () -> index.add(new User("A", "Alice")));
     }
 

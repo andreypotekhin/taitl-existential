@@ -8,16 +8,16 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Backing implementation for {@link com.taitl.existential.indexes.SetIndex}.
+ * Backing implementation for {@link com.taitl.existential.indexes.MultiIndex}.
  */
-public class ConcreteSetIndex<K, V> implements Map<K, Set<V>>
+public class ConcreteMultiIndex<K, V> implements Map<K, Set<V>>
 {
     protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
 
     protected SetMap<K, V> storage = new SetMap<>();
     protected final Function<V, K> getKey;
 
-    public ConcreteSetIndex(Function<V, K> getKey)
+    public ConcreteMultiIndex(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
         this.getKey = getKey;

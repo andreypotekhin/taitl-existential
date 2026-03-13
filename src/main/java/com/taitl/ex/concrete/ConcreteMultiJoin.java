@@ -1,6 +1,6 @@
 package com.taitl.ex.concrete;
 
-import com.taitl.existential.indexes.*;
+import com.taitl.ex.common.helper.collections.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -8,24 +8,24 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Backing implementation for {@link ValueJoin}.
+ * Backing implementation for {@link com.taitl.existential.indexes.MultiJoin}.
  */
-public class ConcreteValueJoin<V, W, K>
+public class ConcreteMultiJoin<V, W, K>
 {
     protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
     protected static final String ARG_LEFT_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
             + " returned by left 'getKey' function. See " + TROUBLESHOOTING_SECTION;
     protected static final String ARG_RIGHT_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
             + " returned by right 'getKey' function. See " + TROUBLESHOOTING_SECTION;
-    protected Map<K, V> leftByKey = new LinkedHashMap<>();
-    protected Map<K, W> rightByKey = new LinkedHashMap<>();
-    protected Map<V, W> rightByLeft = new LinkedHashMap<>();
-    protected Map<W, V> leftByRight = new LinkedHashMap<>();
+    protected SetMap<K, V> leftByKey = new SetMap<>();
+    protected SetMap<K, W> rightByKey = new SetMap<>();
+    protected SetMap<V, W> rightByLeft = new SetMap<>();
+    protected SetMap<W, V> leftByRight = new SetMap<>();
 
     protected final Function<V, K> getLeftKey;
     protected final Function<W, K> getRightKey;
 
-    public ConcreteValueJoin(Function<V, K> getLeftKey, Function<W, K> getRightKey)
+    public ConcreteMultiJoin(Function<V, K> getLeftKey, Function<W, K> getRightKey)
     {
         sane(getLeftKey, "getLeftKey");
         sane(getRightKey, "getRightKey");
@@ -33,12 +33,12 @@ public class ConcreteValueJoin<V, W, K>
         this.getRightKey = getRightKey;
     }
 
-    public Map<V, W> left()
+    public Map<V, Set<W>> left()
     {
         return rightByLeft;
     }
 
-    public Map<W, V> right()
+    public Map<W, Set<V>> right()
     {
         return leftByRight;
     }
@@ -66,9 +66,8 @@ public class ConcreteValueJoin<V, W, K>
         K newKey = getLeftKey.apply(newValue);
         synchronized (this)
         {
-            removeLeftExact(oldKey, oldValue);
-            leftByKey.put(newKey, newValue);
-            rebuildViews();
+            removeLeft(oldKey, oldValue);
+            addLeft(newKey, newValue);
         }
     }
 
@@ -95,31 +94,30 @@ public class ConcreteValueJoin<V, W, K>
         K newKey = getRightKey.apply(newValue);
         synchronized (this)
         {
-            removeRightExact(oldKey, oldValue);
-            rightByKey.put(newKey, newValue);
-            rebuildViews();
+            removeRight(oldKey, oldValue);
+            addRight(newKey, newValue);
         }
     }
 
-    public V getLeft(K key)
+    public Set<V> getLeft(K key)
     {
         sane(key, "key");
         return leftByKey.get(key);
     }
 
-    public W getRight(K key)
+    public Set<W> getRight(K key)
     {
         sane(key, "key");
         return rightByKey.get(key);
     }
 
-    public W getRightByLeft(V left)
+    public Set<W> getRightByLeft(V left)
     {
         sane(left, "left");
         return rightByLeft.get(left);
     }
 
-    public V getLeftByRight(W right)
+    public Set<V> getLeftByRight(W right)
     {
         sane(right, "right");
         return leftByRight.get(right);
@@ -138,17 +136,17 @@ public class ConcreteValueJoin<V, W, K>
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T get(Object value)
+    public <T> Set<T> get(Object value)
     {
         sane(value, "value");
         try
         {
             V left = (V) value;
             K key = getLeftKey.apply(left);
-            V current = leftByKey.get(key);
-            if (current != null && current.equals(left))
+            Set<V> current = leftByKey.get(key);
+            if (current != null && current.contains(left))
             {
-                return (T) rightByKey.get(key);
+                return (Set<T>) rightByKey.get(key);
             }
         }
         catch (ClassCastException ignored)
@@ -159,10 +157,10 @@ public class ConcreteValueJoin<V, W, K>
         {
             W right = (W) value;
             K key = getRightKey.apply(right);
-            W current = rightByKey.get(key);
-            if (current != null && current.equals(right))
+            Set<W> current = rightByKey.get(key);
+            if (current != null && current.contains(right))
             {
-                return (T) leftByKey.get(key);
+                return (Set<T>) leftByKey.get(key);
             }
         }
         catch (ClassCastException ignored)
@@ -172,31 +170,31 @@ public class ConcreteValueJoin<V, W, K>
         return null;
     }
 
-    public V addLeft(K key, V value)
+    public Set<V> addLeft(K key, V value)
     {
         sane(key, "key");
         sane(value, "value");
         synchronized (this)
         {
-            V result = leftByKey.put(key, value);
+            Set<V> result = leftByKey.add(key, value);
             rebuildViews();
             return result;
         }
     }
 
-    public W addRight(K key, W value)
+    public Set<W> addRight(K key, W value)
     {
         sane(key, "key");
         sane(value, "value");
         synchronized (this)
         {
-            W result = rightByKey.put(key, value);
+            Set<W> result = rightByKey.add(key, value);
             rebuildViews();
             return result;
         }
     }
 
-    public V addLeft(V value)
+    public Set<V> addLeft(V value)
     {
         sane(value, "value");
         return addLeft(getLeftKey.apply(value), value);
@@ -211,7 +209,7 @@ public class ConcreteValueJoin<V, W, K>
         }
     }
 
-    public W addRight(W value)
+    public Set<W> addRight(W value)
     {
         sane(value, "value");
         return addRight(getRightKey.apply(value), value);
@@ -232,7 +230,7 @@ public class ConcreteValueJoin<V, W, K>
         sane(value, "value");
         synchronized (this)
         {
-            V removed = removeLeftExact(key, value);
+            V removed = leftByKey.removeValue(key, value);
             if (removed != null)
             {
                 rebuildViews();
@@ -253,7 +251,7 @@ public class ConcreteValueJoin<V, W, K>
         sane(value, "value");
         synchronized (this)
         {
-            W removed = removeRightExact(key, value);
+            W removed = rightByKey.removeValue(key, value);
             if (removed != null)
             {
                 rebuildViews();
@@ -280,10 +278,10 @@ public class ConcreteValueJoin<V, W, K>
         }
         synchronized (this)
         {
-            V removed = removeLeftExact(oldKey, value);
+            V removed = leftByKey.removeValue(oldKey, value);
             if (removed != null)
             {
-                leftByKey.put(newKey, value);
+                leftByKey.add(newKey, value);
             }
             rebuildViews();
         }
@@ -301,10 +299,10 @@ public class ConcreteValueJoin<V, W, K>
         }
         synchronized (this)
         {
-            W removed = removeRightExact(oldKey, value);
+            W removed = rightByKey.removeValue(oldKey, value);
             if (removed != null)
             {
-                rightByKey.put(newKey, value);
+                rightByKey.add(newKey, value);
             }
             rebuildViews();
         }
@@ -321,28 +319,6 @@ public class ConcreteValueJoin<V, W, K>
         }
     }
 
-    protected V removeLeftExact(K key, V value)
-    {
-        V current = leftByKey.get(key);
-        if (current == null || !current.equals(value))
-        {
-            return null;
-        }
-        leftByKey.remove(key);
-        return current;
-    }
-
-    protected W removeRightExact(K key, W value)
-    {
-        W current = rightByKey.get(key);
-        if (current == null || !current.equals(value))
-        {
-            return null;
-        }
-        rightByKey.remove(key);
-        return current;
-    }
-
     @SuppressWarnings("unchecked")
     protected boolean containsLeftValue(Object value)
     {
@@ -350,8 +326,8 @@ public class ConcreteValueJoin<V, W, K>
         {
             V left = (V) value;
             K key = getLeftKey.apply(left);
-            V current = leftByKey.get(key);
-            return current != null && current.equals(left);
+            Set<V> current = leftByKey.get(key);
+            return current != null && current.contains(left);
         }
         catch (ClassCastException ignored)
         {
@@ -366,8 +342,8 @@ public class ConcreteValueJoin<V, W, K>
         {
             W right = (W) value;
             K key = getRightKey.apply(right);
-            W current = rightByKey.get(key);
-            return current != null && current.equals(right);
+            Set<W> current = rightByKey.get(key);
+            return current != null && current.contains(right);
         }
         catch (ClassCastException ignored)
         {
@@ -380,17 +356,23 @@ public class ConcreteValueJoin<V, W, K>
         rightByLeft.clear();
         leftByRight.clear();
 
-        for (Map.Entry<K, V> entry : leftByKey.entrySet())
+        for (Map.Entry<K, Set<V>> entry : leftByKey.entrySet())
         {
             K key = entry.getKey();
-            W right = rightByKey.get(key);
-            if (right == null)
+            Set<W> right = rightByKey.get(key);
+            if (right == null || right.isEmpty())
             {
                 continue;
             }
-            V left = entry.getValue();
-            rightByLeft.put(left, right);
-            leftByRight.put(right, left);
+
+            for (V leftValue : entry.getValue())
+            {
+                for (W rightValue : right)
+                {
+                    rightByLeft.add(leftValue, rightValue);
+                    leftByRight.add(rightValue, leftValue);
+                }
+            }
         }
     }
 }

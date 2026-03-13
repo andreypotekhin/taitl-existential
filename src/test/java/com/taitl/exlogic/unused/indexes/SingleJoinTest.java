@@ -8,7 +8,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SetJoinTest
+class SingleJoinTest
 {
     static class User
     {
@@ -34,19 +34,19 @@ class SetJoinTest
         }
     }
 
-    SetJoin<User, Task, String> join;
+    SingleJoin<User, Task, String> join;
 
     @BeforeEach
     void setUp()
     {
-        join = new SetJoin<>(u -> u.team, t -> t.team);
+        join = new SingleJoin<>(u -> u.team, t -> t.team);
     }
 
     @Test
     void testJoinAndLookup()
     {
         User alice = new User("A", "Alice");
-        User bob = new User("A", "Bob");
+        User bob = new User("B", "Bob");
         Task bug = new Task("A", "Fix bug");
         Task deploy = new Task("B", "Deploy");
 
@@ -59,12 +59,28 @@ class SetJoinTest
         assertFalse(join.containsRight(alice));
         assertTrue(join.containsRight(bug));
         assertFalse(join.containsLeft(bug));
-        assertEquals(Set.of(alice, bob), join.getLeft("A"));
-        assertEquals(Set.of(bug), join.get(alice));
-        assertEquals(Set.of(alice, bob), join.get(bug));
-        assertEquals(Set.of(bug), join.getRightByLeft(alice));
-        assertEquals(Set.of(alice, bob), join.getLeftByRight(bug));
-        assertEquals(Set.of(deploy), join.getRight("B"));
+        assertEquals(alice, join.getLeft("A"));
+        assertEquals(bob, join.getLeft("B"));
+        assertEquals(bug, join.get(alice));
+        assertEquals(alice, join.get(bug));
+        assertEquals(bug, join.getRightByLeft(alice));
+        assertEquals(alice, join.getLeftByRight(bug));
+        assertEquals(deploy, join.getRight("B"));
+    }
+
+    @Test
+    void testSingleValueReplacementPerKey()
+    {
+        User alice = new User("A", "Alice");
+        User bob = new User("A", "Bob");
+        Task bug = new Task("A", "Fix bug");
+        join.addLeft(alice);
+        join.addRight(bug);
+        join.addLeft(bob);
+
+        assertEquals(bob, join.getLeft("A"));
+        assertNull(join.getRightByLeft(alice));
+        assertEquals(bug, join.getRightByLeft(bob));
     }
 
     @Test
@@ -78,14 +94,14 @@ class SetJoinTest
         alice.team = "B";
         join.reindexLeft("A", "B", alice);
 
-        assertTrue(join.getLeft("A") == null || join.getLeft("A").isEmpty());
-        assertEquals(Set.of(alice), join.getLeft("B"));
+        assertNull(join.getLeft("A"));
+        assertEquals(alice, join.getLeft("B"));
 
         bug.team = "B";
         join.reindexRight("A", "B", bug);
 
-        assertTrue(join.getRight("A") == null || join.getRight("A").isEmpty());
-        assertEquals(Set.of(bug), join.getRight("B"));
+        assertNull(join.getRight("A"));
+        assertEquals(bug, join.getRight("B"));
     }
 
     @Test
@@ -115,27 +131,23 @@ class SetJoinTest
         join.indexLeft(alice, null);
         join.indexRight(bug, null);
 
-        assertTrue(join.getLeft("A") == null || join.getLeft("A").isEmpty());
-        assertTrue(join.getRight("A") == null || join.getRight("A").isEmpty());
+        assertNull(join.getLeft("A"));
+        assertNull(join.getRight("A"));
     }
 
     @Test
     void testJoinViewsAndExistsOnLeftView()
     {
         User alice = new User("A", "Alice");
-        User bob = new User("A", "Bob");
         Task bug = new Task("A", "Fix bug");
-        Task feature = new Task("A", "Build feature");
         Task deploy = new Task("B", "Deploy");
 
         join.addLeft(alice);
-        join.addLeft(bob);
         join.addRight(bug);
-        join.addRight(feature);
         join.addRight(deploy);
 
-        assertEquals(Set.of(bug, feature), join.left().get(alice));
-        assertEquals(Set.of(alice, bob), join.right().get(bug));
+        assertEquals(bug, join.left().get(alice));
+        assertEquals(alice, join.right().get(bug));
         assertNull(join.left().get(new User("A", "Ghost")));
 
         Exists<User> exists = new Exists<>(join.left());
@@ -146,10 +158,10 @@ class SetJoinTest
     @Test
     void testGetKeysReturnNull()
     {
-        SetJoin<User, Task, String> nullLeft = new SetJoin<>(u -> null, t -> t.team);
+        SingleJoin<User, Task, String> nullLeft = new SingleJoin<>(u -> null, t -> t.team);
         assertThrows(IllegalArgumentException.class, () -> nullLeft.addLeft(new User("A", "Alice")));
 
-        SetJoin<User, Task, String> nullRight = new SetJoin<>(u -> u.team, t -> null);
+        SingleJoin<User, Task, String> nullRight = new SingleJoin<>(u -> u.team, t -> null);
         assertThrows(IllegalArgumentException.class, () -> nullRight.addRight(new Task("A", "Fix bug")));
     }
 
@@ -164,10 +176,10 @@ class SetJoinTest
         join.addAllLeft(List.of(alice, bob));
         join.addAllRight(List.of(bug, deploy));
 
-        assertEquals(Set.of(alice), join.getLeft("A"));
-        assertEquals(Set.of(bob), join.getLeft("B"));
-        assertEquals(Set.of(bug), join.getRight("A"));
-        assertEquals(Set.of(deploy), join.getRight("B"));
+        assertEquals(alice, join.getLeft("A"));
+        assertEquals(bob, join.getLeft("B"));
+        assertEquals(bug, join.getRight("A"));
+        assertEquals(deploy, join.getRight("B"));
         assertThrows(IllegalArgumentException.class, () -> join.addAllLeft(null));
         assertThrows(IllegalArgumentException.class, () -> join.addAllRight(null));
     }

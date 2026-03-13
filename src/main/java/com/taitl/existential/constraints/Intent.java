@@ -273,41 +273,41 @@ public class Intent<T> implements Evs<T>, Constraints<T>
 
     /**
      * Declares intent to read-and-lock entities of this type.
-     * (indicates that ReadAndLock event may be sent during transaction).
+     * (indicates that read-and-lock event may be sent during transaction).
      *
      * @return This intent for chaining
      */
-    public Intent<T> readAndLock()
+    public Intent<T> rl()
     {
-        return readAndLock(value -> true);
+        return rl(value -> true);
     }
 
     /**
      * Declares intent to read-and-lock entities of this type.
-     * (indicates that ReadAndLock event may be sent during transaction).
-     *
-     * @param condition Condition which the entities that receive this event must satisfy
-     * @return This intent for chaining
-     */
-    public Intent<T> readAndLock(Predicate<? super T> condition)
-    {
-        sane(condition, "condition");
-        return add(new OnReadAndLock<T>(condition, null));
-    }
-
-    /**
-     * Declares intent to read-and-lock entities of this type.
-     * (indicates that ReadAndLock event may be sent during transaction).
+     * (indicates that read-and-lock event may be sent during transaction).
      *
      * @param condition Condition which the entities that receive this event must satisfy
      * @param description Description of intent
      * @return This intent for chaining
      */
-    public Intent<T> readAndLock(Predicate<? super T> condition, String description)
+    public Intent<T> rl(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
         validateDescription(description);
-        return add(new OnReadAndLock<T>(condition, null, description));
+        return add(new OnRL<T>(condition, null, description));
+    }
+
+    /**
+     * Declares intent to read-and-lock entities of this type.
+     * (indicates that read-and-lock event may be sent during transaction).
+     *
+     * @param condition Condition which the entities that receive this event must satisfy
+     * @return This intent for chaining
+     */
+    public Intent<T> rl(Predicate<? super T> condition)
+    {
+        sane(condition, "condition");
+        return add(new OnRL<T>(condition, null));
     }
 
     /**

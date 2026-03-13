@@ -14,7 +14,7 @@ public class ConfiguredEventTypes
     // {
     // eventTypes.add(eventType.toString());
     // // TODO: add generic and elementary versions of the event key,
-    // // e.g. for "ReadAndLock<Doc<JSON>>" also add "ReadAndLock<Doc>", "ReadAndLock",
+    // // e.g. for "RL<Doc<JSON>>" also add "RL<Doc>", "RL",
     // // "Read<Doc<JSON>>", "Read<Doc>", "Update"
     // }
     // }

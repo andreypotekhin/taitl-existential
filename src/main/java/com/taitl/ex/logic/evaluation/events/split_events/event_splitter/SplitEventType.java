@@ -25,7 +25,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * UD -> UD, Update, Delete, Transit, Port
  * Transit -> Transit, Update
  * Port -> Port, Transit, Create, Update, Delete, CU, UD, CUD
- * ReadAndLock -> ReadAndLock, Read
+ * RL -> RL, Read
  *
  * 2. Elementary event to matching compound events if not already encountered in step 1
  * Create -> Create, CUD, CU, Port
@@ -64,9 +64,9 @@ public class SplitEventType
         {
             return splitTransit((Transit<T>) event, events);
         }
-        if (event instanceof ReadAndLock<?>)
+        if (event instanceof RL<?>)
         {
-            return splitReadAndLock((ReadAndLock<T>) event, events);
+            return splitRL((RL<T>) event, events);
         }
         if (event instanceof CUD<?>)
         {
@@ -210,7 +210,7 @@ public class SplitEventType
         return events;
     }
 
-    protected <T> Set<Event<T>> splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> events)
+    protected <T> Set<Event<T>> splitRL(RL<T> event, Set<Event<T>> events)
     {
         sane(event, "event", events, "events");
         events.add(new Read<>(event.t));

@@ -13,15 +13,16 @@ import static com.taitl.ex.common.helper.Args.*;
  * The event handlers are ordered in the order of rules declaration.
  *
  * Example:
- * Main event: ReadAndLock<Doc<JSON>>
+ * Main event: RL<Doc<JSON>>
  * Split results:
- * Event handlers: event handlers for these keys, retrieved
+ * Event: same as main event
+ * Evaluables: event handlers for these keys, retrieved
  * from the configuration index (EventField) of this business operation,
  * ordered in the order of rules' declaration.
  *
  * Note that the order of declaration may differ from the above order of the keys.
  * For instance, if a constraint for Read<Doc> is declared before a constraint
- * for ReadAndLock<Doc<JSON>> (e.g. in a parent context), it will be evaluated first.
+ * for Write<Doc<JSON>>, e.g. in a parent context, it will be evaluated first.
  */
 public class SplitResult<T>
 {

@@ -6,16 +6,16 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Backing implementation for {@link com.taitl.existential.indexes.ValueIndex}.
+ * Backing implementation for {@link com.taitl.existential.indexes.SingleIndex}.
  */
-public class ConcreteValueIndex<K, V> implements Map<K, V>
+public class ConcreteSingleIndex<K, V> implements Map<K, V>
 {
     protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
 
     protected Map<K, V> storage = new LinkedHashMap<>();
     protected final Function<V, K> getKey;
 
-    public ConcreteValueIndex(Function<V, K> getKey)
+    public ConcreteSingleIndex(Function<V, K> getKey)
     {
         sane(getKey, "getKey");
         this.getKey = getKey;

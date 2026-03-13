@@ -12,17 +12,17 @@ import static com.taitl.ex.common.helper.Args.*;
 public class TransactionIndexes
 {
     protected Transaction transaction;
-    protected Map<String, SetIndex<?, ?>> indexes = new ConcurrentHashMap<>();
+    protected Map<String, MultiIndex<?, ?>> indexes = new ConcurrentHashMap<>();
 
     public TransactionIndexes(Transaction tr)
     {
         this.transaction = tr;
     }
 
-    public <K, V> SetIndex<K, V> create(String name, Supplier<SetIndex<K, V>> createIndex, Function<V, K> getKey)
+    public <K, V> MultiIndex<K, V> create(String name, Supplier<MultiIndex<K, V>> createIndex, Function<V, K> getKey)
     {
         sane(name, "name", getKey, "getKey");
-        SetIndex<K, V> index = (createIndex != null) ? createIndex.get() : new SetIndex<>(getKey);
+        MultiIndex<K, V> index = (createIndex != null) ? createIndex.get() : new MultiIndex<>(getKey);
         sane(index, "index");
         if (indexes.putIfAbsent(name, index) != null)
         {
@@ -32,15 +32,15 @@ public class TransactionIndexes
     }
 
     @SuppressWarnings("unchecked")
-    public <K, V> SetIndex<K, V> get(String name)
+    public <K, V> MultiIndex<K, V> get(String name)
     {
-        return (SetIndex<K, V>) indexes.get(name);
+        return (MultiIndex<K, V>) indexes.get(name);
     }
 
     @SuppressWarnings("unchecked")
-    public <K, V> SetIndex<K, V> getOrCreate(String name, Function<V, K> getKey)
+    public <K, V> MultiIndex<K, V> getOrCreate(String name, Function<V, K> getKey)
     {
         sane(name, "name", getKey, "getKey");
-        return (SetIndex<K, V>) indexes.computeIfAbsent(name, ignored -> new SetIndex<>(getKey));
+        return (MultiIndex<K, V>) indexes.computeIfAbsent(name, ignored -> new MultiIndex<>(getKey));
     }
 }

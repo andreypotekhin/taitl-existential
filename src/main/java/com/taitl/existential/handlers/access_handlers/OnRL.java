@@ -7,12 +7,12 @@ import com.taitl.existential.handlers.*;
 import java.util.function.*;
 
 /**
- * Event handler for ReadAndLock events.
+ * Event handler for read-and-lock events.
  *
  * @param <T>
  *            Type of entity read and locked
  */
-public class OnReadAndLock<T> extends On<T>
+public class OnRL<T> extends On<T>
 {
     /**
      * Creates a read-and-lock handler with a description.
@@ -22,7 +22,7 @@ public class OnReadAndLock<T> extends On<T>
      * @param description
      *            Human-friendly description of the handler
      */
-    public OnReadAndLock(Consumer<? super T> action, String description)
+    public OnRL(Consumer<? super T> action, String description)
     {
         super(action, description);
     }
@@ -35,7 +35,7 @@ public class OnReadAndLock<T> extends On<T>
      * @param action
      *            Action to invoke when the read-and-lock occurs
      */
-    public OnReadAndLock(Predicate<? super T> condition, Consumer<? super T> action)
+    public OnRL(Predicate<? super T> condition, Consumer<? super T> action)
     {
         super(condition, action);
     }
@@ -50,13 +50,13 @@ public class OnReadAndLock<T> extends On<T>
      * @param description
      *            Human-friendly description of the handler
      */
-    public OnReadAndLock(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    public OnRL(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         super(condition, action, description);
     }
 
     public EventType eventType()
     {
-        return EventType.valueOf(ReadAndLock.class);
+        return EventType.valueOf(RL.class);
     }
 }

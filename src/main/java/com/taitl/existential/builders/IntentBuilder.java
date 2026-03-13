@@ -170,23 +170,23 @@ public class IntentBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public IntentBuilder<T> readAndLock()
+    public IntentBuilder<T> rl()
     {
-        target.readAndLock();
+        target.rl();
         return this;
     }
 
-    public IntentBuilder<T> readAndLock(Predicate<? super T> condition)
+    public IntentBuilder<T> rl(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
-        target.readAndLock(condition);
+        target.rl(condition, description);
         return this;
     }
 
-    public IntentBuilder<T> readAndLock(Predicate<? super T> condition, String description)
+    public IntentBuilder<T> rl(Predicate<? super T> condition)
     {
         sane(condition, "condition");
-        target.readAndLock(condition, description);
+        target.rl(condition);
         return this;
     }
 

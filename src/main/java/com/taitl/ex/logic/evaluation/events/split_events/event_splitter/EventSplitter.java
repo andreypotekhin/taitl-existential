@@ -101,8 +101,8 @@ public class EventSplitter
         return splitEventType.splitPort(port, events);
     }
 
-    protected <T> Set<Event<T>> splitReadAndLock(ReadAndLock<T> event, Set<Event<T>> events)
+    protected <T> Set<Event<T>> splitRL(RL<T> event, Set<Event<T>> events)
     {
-        return splitEventType.splitReadAndLock(event, events);
+        return splitEventType.splitRL(event, events);
     }
 }

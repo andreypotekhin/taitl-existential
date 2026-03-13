@@ -191,23 +191,23 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return add(new OnRead<T>(condition, null, description));
     }
 
-    public Invariant<T> readAndLock(Predicate<? super T> condition)
-    {
-        return readAndLock(condition, null);
-    }
-
     /**
-     * Declares an invariant for ReadAndLock event.
+     * Declares an invariant for read-and-lock event.
      *
      * @param condition Predicate to enforce for the entities that received the event
      * @param description Description of invariant
      * @return This invariant for chaining
      */
-    public Invariant<T> readAndLock(Predicate<? super T> condition, String description)
+    public Invariant<T> rl(Predicate<? super T> condition, String description)
     {
         sane(condition, "condition");
         validateDescription(description);
-        return add(new OnReadAndLock<T>(condition, null, description));
+        return add(new OnRL<T>(condition, null, description));
+    }
+
+    public Invariant<T> rl(Predicate<? super T> condition)
+    {
+        return rl(condition, null);
     }
 
     public Invariant<T> write(Predicate<? super T> condition)
