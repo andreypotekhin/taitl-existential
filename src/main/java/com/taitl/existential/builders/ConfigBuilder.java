@@ -50,12 +50,12 @@ public class ConfigBuilder
      * Example:
      *   Ex.configure()                 <-- ConfigBuilder (this)
      *     .context("/app/docs/update") <-- ContextBuilder
-     *        .intent()
+     *        .intent(new TypeKey<Intent<Document<?>>>(){})
      *             .read()
      *             .write()
-     *        .effect()
+     *        .effect(new TypeKey<Effect<Document<HTML>>>(){})
      *             .write(doc -> doc.spellCheck())
-     *        .effect(new TypeKey<Document<JSON>>())
+     *        .effect(new TypeKey<Document<JSON>>(){})
      *             .write(doc -> doc.validate())
      *        .invariant(Document.class)
      *             .all(doc -> doc.valid());
@@ -84,21 +84,16 @@ public class ConfigBuilder
      *
      * Example:
      *   Ex.configure()                              <-- ConfigBuilder
-     *     .context(new Context("/app/docs/update"){{ <-- Custom context
-     *        intent(new Intent<Document<?>>() {{
-     *             read();
-     *             write();
-     *        }});
-     *        effect(new Effect<Document<HTML>>() {{
-     *             write(doc -> doc.spellCheck());
-     *        }});
-     *        effect(new Effect<Document<JSON>>() {{
-     *             write(doc -> doc.validate());
-     *        }});
-     *        invariant(new Invariant<Document>() {{
-     *             all(doc -> doc.valid());
-     *        }});
-     *    }})
+     *     .context(new Context("/app/docs/update") <-- Custom context
+     *        .intent(new TypeKey<Intent<Document<?>>>(){})
+     *             .read()
+     *             .write()
+     *        .effect(new TypeKey<Effect<Document<HTML>>>(){})
+     *             .write(doc -> doc.spellCheck())
+     *        .effect(new TypeKey<Effect<Document<JSON>>>(){})
+     *             .write(doc -> doc.validate())
+     *        .invariant(new TypeKey<Invariant<Document>>(){})
+     *             .all(doc -> doc.valid());
      *
      *  This method is a multi-entry method that allows creating multiple
      *  context factories when called sequentially. The reason to have

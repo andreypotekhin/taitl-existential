@@ -105,7 +105,7 @@ public class EventMask
      *   // Declare custom event handler class
      *   class OnReceive<T> extends On<T>  ...
      *   // Use custom event in custom event handler
-     *   Ex.contexts().get("/myapp/mymodule")
+     *   Ex.configure().get("/myapp/mymodule")
      *     .handle(new OnReceive<Email>(e -> Slack.post(channel, e)));
      * }</pre>
      *

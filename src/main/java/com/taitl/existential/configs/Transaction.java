@@ -45,9 +45,9 @@ import static com.taitl.ex.common.helper.State.*;
  * {@code Context.transaction()}.
  * For example, for operation "/app/orders/update":
  * <pre>{@code
- * Ex.contexts().get("/app").transaction(() -> new AppTransaction());
- * Ex.contexts().get("/app/orders").transaction(() -> new OrdersTransaction());
- * Ex.contexts().get("/app/orders/update").transaction(() -> new OrdersUpdateTransaction());
+ * Ex.configure().get("/app").transaction(() -> new AppTransaction());
+ * Ex.configure().get("/app/orders").transaction(() -> new OrdersTransaction());
+ * Ex.configure().get("/app/orders/update").transaction(() -> new OrdersUpdateTransaction());
  * }</pre>
  * If a custom transaction class is not defined for a context, the class from
  * its parent context is used.
@@ -116,7 +116,7 @@ public class Transaction implements Configurable, Evaluable
      * Sets invariants (rules) enforced on this transaction's business operation (Context).
      *
      * <pre>{@code
-     * Ex.contexts().get("/app/flight_school")
+     * Ex.configure().get("/app/flight_school")
      *     .transaction(() -> new Transaction("/app/flight_school", "flight-school") {{
      *         invariant(new Invariant<Pilot>() {{
      *             all((p0, p1) -> p1.hours >= p0.hours, "Flight hours cannot go down");
@@ -251,7 +251,7 @@ public class Transaction implements Configurable, Evaluable
      * Example:
      * Declare transaction member (curPilot) and initialize it at the start of transaction.
      * <pre>{@code
-     * Ex.contexts().get("/app/flight_school/pilots/update")
+     * Ex.configure().get("/app/flight_school/pilots/update")
      *     .transaction(() -> new Transaction("/app/flight_school/pilots/update", "pilot-update") {
      *         Pilot curPilot;
      *         {

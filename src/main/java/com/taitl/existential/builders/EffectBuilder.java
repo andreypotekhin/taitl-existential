@@ -314,28 +314,28 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public EffectBuilder<T> upsert(Consumer<? super T> action)
+    public EffectBuilder<T> cu(Consumer<? super T> action)
     {
         sane(action, "action");
         target.cu(action);
         return this;
     }
 
-    public EffectBuilder<T> upsert(Consumer<? super T> action, String description)
+    public EffectBuilder<T> cu(Consumer<? super T> action, String description)
     {
         sane(action, "action", description, "description");
         target.cu(action, description);
         return this;
     }
 
-    public EffectBuilder<T> upsert(Predicate<? super T> condition, Consumer<? super T> action)
+    public EffectBuilder<T> cu(Predicate<? super T> condition, Consumer<? super T> action)
     {
         sane(condition, "condition", action, "action");
         target.cu(condition, action);
         return this;
     }
 
-    public EffectBuilder<T> upsert(Predicate<? super T> condition, Consumer<? super T> action, String description)
+    public EffectBuilder<T> cu(Predicate<? super T> condition, Consumer<? super T> action, String description)
     {
         sane(condition, "condition", action, "action", description, "description");
         target.cu(condition, action, description);

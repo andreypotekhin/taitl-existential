@@ -77,13 +77,11 @@ public class Context implements Configurable, Evaluable
      * Sets invariants (rules) enforced for the business operation defined by this context.
      *
      * <pre>{@code
-     * Ex.contexts("/app/flight_school")
-     *     .context(() -> new Context() {{
-     *         invariant(new Invariant<Pilot>() {{
-     *             all((p0, p1) -> p1.hours >= p0.hours, "Flight hours cannot go down");
-     *             transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     *         }});
-     *     }});
+     * Ex.configure("/app/flight_school")
+     *     .context()
+     *         .invariant(new TypeKey<Pilot>(){})
+     *             .all((p0, p1) -> p1.hours >= p0.hours, "Flight hours cannot go down")
+     *             .transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      * }</pre>
      *
      * @param <T>       Type parameter
@@ -99,12 +97,10 @@ public class Context implements Configurable, Evaluable
      * Sets effects for the business operation defined by this context.
      *
      * <pre>{@code
-     * Ex.contexts("/app/flight_school")
-     *     .context(() -> new Context() {{
-     *         effect(new Effect<Pilot>() {{
-     *             transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
-     *         }});
-     *     }});
+     * Ex.configure("/app/flight_school")
+     *     .context()
+     *         .effect(new TypeKey<Pilot>(){})
+     *             .transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      * }</pre>
      *
      * @param <T>       Type parameter
@@ -178,22 +174,17 @@ public class Context implements Configurable, Evaluable
      *
      * Example:
      * <pre>{@code
-     * Ex.contexts("/app/school")
-     *      .transaction(() -> new Transaction("/app/school", "school") {{
-     *          invariant(new Invariant<Student>() {{
-     *              all(student -> student.awake());
-     *          }});
-     *          invariant(new Invariant<Teacher>() {{
-     *              all(teacher -> teacher.notOnLeave());
-     *          }});
-     *          intent(new Intent<Student>() {{
-     *              read();
-     *              write();
-     *          }});
-     *          intent(new Intent<Teacher>() {{
-     *              read();
-     *          }});
-     *      }});
+     * Ex.configure("/app/school")
+     *      .transaction()
+     *          .invariant(new TypeKey<Student>(){})
+     *              .all(student -> student.awake())
+     *          .invariant(new TypeKey<Teacher>(){})
+     *              .all(teacher -> teacher.notOnLeave())
+     *          .intent(new TypeKey<Student>(){})
+     *              .read()
+     *              .write()
+     *          .intent(new TypeKey<Teacher>(){})
+     *              .read();
      * }</pre>
      */
     public Context transaction(Supplier<? extends Transaction> supplier)
