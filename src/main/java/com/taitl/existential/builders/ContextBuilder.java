@@ -48,22 +48,15 @@ public class ContextBuilder
     }
 
     /**
-     * Starts building an {@link Invariant} for the given subject type.
-     *
-     * @param cls
-     *            Subject type for the invariant
-     * @param <T>
-     *            Subject type for the invariant
-     * @return Invariant builder
-     */
-    public <T> InvariantBuilder<T> invariant(Class<T> cls)
-    {
-        sane(cls, "cls");
-        return invariant(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
-    }
-
-    /**
      * Starts building an {@link Invariant} for the given type key.
+     *
+     * Example:
+     *   Ex.configure()
+     *     .context("/app/docs/update")
+     *        .invariant(new TypeKey<Account<Seller<Car>>>(){})
+     *             .update(account -> account.valid());
+     *        .invariant(new TypeKey<Document<JSON>>(){})
+     *             .all(doc -> doc.valid());
      *
      * @param typeKey
      *            Type key for the invariant subject
@@ -83,7 +76,44 @@ public class ContextBuilder
     }
 
     /**
-     * Registers an already-built invariant with this context.
+     * Starts building an {@link Invariant} for the given subject type.
+     *
+     * Example:
+     *   Ex.configure()
+     *     .context("/app/docs/update")
+     *        .invariant(Account.class)
+     *             .update(account -> account.valid());
+     *        .invariant(Document<JSON>.class) <-- Poor choice. Use TypeKey - see the Note below.
+     *             .all(doc -> doc.valid());
+     *
+     * Note: This will not work well for generics - the underlying code
+     * will not know exact generics class definition due to Java type erasure.
+     * For generics, use the variant of this method which takes TypeKey anonymous
+     * subclass as a parameter.
+     * Example:
+     *   .invariant(new TypeKey<Account<Seller<Car>>>(){})
+     *
+     * @param cls
+     *            Subject type for the invariant
+     * @param <T>
+     *            Subject type for the invariant
+     * @return Invariant builder
+     */
+    public <T> InvariantBuilder<T> invariant(Class<T> cls)
+    {
+        sane(cls, "cls");
+        return invariant(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
+    }
+
+    /**
+     * Registers an already-built Invariant with this context.
+     *
+     * Example:
+     *   Ex.configure()
+     *     .context("/api/cats")
+     *         .invariant(new Invariant<Cat>() {{
+     *             create(c -> "Black".equals(c.color), "Cats are born black");
+     *         }});
      *
      * @param invariant
      *            Invariant to register
@@ -99,22 +129,17 @@ public class ContextBuilder
     }
 
     /**
-     * Starts building an {@link Effect} for the given subject type.
-     *
-     * @param cls
-     *            Subject type for the effect
-     * @param <T>
-     *            Subject type for the effect
-     * @return Effect builder
-     */
-    public <T> EffectBuilder<T> effect(Class<T> cls)
-    {
-        sane(cls, "cls");
-        return effect(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
-    }
-
-    /**
      * Starts building an {@link Effect} for the given type key.
+     *
+     * Example:
+     *   Ex.configure()
+     *     .context("/app/docs/update")
+     *        .effect(new TypeKey<Effect<Document<HTML>>>(){})
+     *             .write(doc -> doc.spellCheck())
+     *        .effect(new TypeKey<Document<JSON>>(){})
+     *             .write(doc -> doc.validate())
+     *        .effect(new TypeKey<Document>(){})
+     *             .write(doc -> doc.validate());
      *
      * @param typeKey
      *            Type key for the effect subject
@@ -134,7 +159,46 @@ public class ContextBuilder
     }
 
     /**
-     * Registers an already-built effect with this context.
+     * Starts building an {@link Effect} for the given subject type.
+     *
+     * Example:
+     *   Ex.configure()
+     *     .context("/app/docs/update")
+     *        .effect(Document.class)
+     *             .write(doc -> doc.spellCheck())
+     *        .effect(Document<JSON>>.class)          <-- Poor choice. Use TypeKey - see the Note below.
+     *             .write(doc -> doc.validate())
+     *        .effect(Document.class)
+     *             .write(doc -> doc.validate());
+     *
+     * Note: This will not work well for generics - the underlying code
+     * will not know exact generics class definition due to Java type erasure.
+     * For generics, use the variant of this method which takes TypeKey anonymous
+     * subclass as a parameter.
+     * Example:
+     *   .effect(new TypeKey<Account<Seller<Car>>>(){})
+     *
+     * @param cls
+     *            Subject type for the effect
+     * @param <T>
+     *            Subject type for the effect
+     * @return Effect builder
+     */
+    public <T> EffectBuilder<T> effect(Class<T> cls)
+    {
+        sane(cls, "cls");
+        return effect(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
+    }
+
+    /**
+     * Registers an already-built Effect with this context.
+     *
+     * Example:
+     *   Ex.configure()
+     *     .context("/api/cats")
+     *         .effect(new Effect<Cat>() {{
+     *             create(c -> c.location = new Location("Park"), "Set location for all new cats");
+     *         }});
      *
      * @param effect
      *            Effect to register
@@ -180,14 +244,17 @@ public class ContextBuilder
         return parent.context(op);
     }
 
-    public <T> IntentBuilder<T> intent(Class<T> cls)
-    {
-        sane(cls, "cls");
-        return intent(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
-    }
-
     /**
      * Starts building an {@link Intent} for the given type key.
+     *
+     * Example:
+     *   Ex.configure()
+     *     .context("/app/docs/update")
+     *        .intent(new TypeKey<Account<Seller<Car>>>(){})
+     *             .update()
+     *        .intent(new TypeKey<Intent<Document<?>>>(){})
+     *             .read()
+     *             .write();
      *
      * @param typeKey
      *            Type key for the intent subject
@@ -207,7 +274,46 @@ public class ContextBuilder
     }
 
     /**
-     * Registers an already-built intent with this context.
+     * Starts building an {@link Effect} for the given subject type.
+     *
+     * Example:
+     *   Ex.configure()
+     *     .context("/app/docs/update")
+     *        .intent(Account.class)
+     *             .update()
+     *        .intent(Document<?>.class)         <-- Poor choice. Use TypeKey - see the Note below.
+     *             .read()
+     *             .write();
+     *
+     * Note: This will not work well for generics - the underlying code
+     * will not know exact generics class definition due to Java type erasure.
+     * For generics, use the variant of this method which takes TypeKey anonymous
+     * subclass as a parameter.
+     * Example:
+     *   .intent(new TypeKey<Account<Seller<Car>>>(){})
+     *
+     * @param cls
+     *            Subject type for the effect
+     * @param <T>
+     *            Subject type for the effect
+     * @return Intent builder
+     */
+    public <T> IntentBuilder<T> intent(Class<T> cls)
+    {
+        sane(cls, "cls");
+        return intent(Creator.create(TypeKey.class, new Class<?>[] { Class.class }, cls));
+    }
+
+    /**
+     * Registers an already-built Intent with this context.
+     *
+     * Example:
+     *   Ex.configure()
+     *     .context("/api/cats")
+     *         .intent(new Intent<Document<HTML>() {{
+     *             read();
+     *             write();
+     *         }});
      *
      * @param intent
      *            Intent to register

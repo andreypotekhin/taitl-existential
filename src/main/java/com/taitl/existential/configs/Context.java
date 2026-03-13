@@ -77,8 +77,8 @@ public class Context implements Configurable, Evaluable
      * Sets invariants (rules) enforced for the business operation defined by this context.
      *
      * <pre>{@code
-     * Ex.configure("/app/flight_school")
-     *     .context()
+     * Ex.configure()
+     *     .context("/app/flight_school")
      *         .invariant(new TypeKey<Pilot>(){})
      *             .all((p0, p1) -> p1.hours >= p0.hours, "Flight hours cannot go down")
      *             .transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
@@ -97,8 +97,8 @@ public class Context implements Configurable, Evaluable
      * Sets effects for the business operation defined by this context.
      *
      * <pre>{@code
-     * Ex.configure("/app/flight_school")
-     *     .context()
+     * Ex.configure()
+     *     .context("/app/flight_school")
      *         .effect(new TypeKey<Pilot>(){})
      *             .transit((p0, p1) -> p0.flying && !p1.flying, p1.hours += p1.flight().hours);
      * }</pre>
@@ -174,7 +174,8 @@ public class Context implements Configurable, Evaluable
      *
      * Example:
      * <pre>{@code
-     * Ex.configure("/app/school")
+     * Ex.configure()
+     *    .context("/app/flight_school")
      *      .transaction()
      *          .invariant(new TypeKey<Student>(){})
      *              .all(student -> student.awake())
