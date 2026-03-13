@@ -681,7 +681,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public Invariant<T> add(Ev<T> evaluable)
     {
         sane(evaluable, "evaluable");
-        Descriptions.require(requireDescriptions, evaluable);
         evs.add(evaluable);
         return this;
     }
@@ -689,10 +688,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     public void requireDescriptions(boolean requireDescriptions)
     {
         this.requireDescriptions = requireDescriptions;
-        for (Ev<T> ev : evs)
-        {
-            Descriptions.require(requireDescriptions, ev);
-        }
     }
 
     void validateDescription(String description)

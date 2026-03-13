@@ -1,6 +1,7 @@
 package com.taitl.existential.constraints;
 
 import com.taitl.existential.configs.Transaction;
+import com.taitl.existential.evaluables.Ev;
 import com.taitl.existential.expressions.Expression;
 import com.taitl.existential.handlers.OnCreate;
 import com.taitl.existential.handlers.OnTransit;
@@ -14,6 +15,7 @@ import java.util.function.Predicate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -99,6 +101,51 @@ class InvariantTest
             assertThat(invariant.list().get(1), instanceOf(OnUD.class));
             assertThat(((OnCUD<String>) invariant.list().get(0)).description(), is("CUD"));
             assertThat(((OnUD<String>) invariant.list().get(1)).description(), is("UD"));
+        }
+
+        @Test
+        @DisplayName("Directly added events may omit descriptions when descriptions are required")
+        void directEventsMayOmitDescriptionsWhenDescriptionsAreRequired()
+        {
+            Invariant<String> invariant = new Invariant<>(String.class);
+            Ev<String> create = new OnCreate<>(value -> {
+            }, null);
+
+            invariant.requireDescriptions(true);
+            invariant.add(create);
+
+            assertThat(invariant.list().get(0), is(create));
+        }
+
+        @Test
+        @DisplayName("Requiring descriptions does not revalidate existing description-less events")
+        void requiringDescriptionsDoesNotRevalidateExistingDescriptionLessEvents()
+        {
+            Invariant<String> invariant = new Invariant<>(String.class);
+
+            invariant.add(new OnCreate<>(value -> {
+            }, null));
+
+            invariant.requireDescriptions(true);
+
+            assertThat(invariant.list(), hasSize(1));
+        }
+    }
+
+    @Nested
+    class DescriptionValidation
+    {
+        @Test
+        @DisplayName("Explicit description parameters are still required when enabled")
+        void explicitDescriptionParametersAreStillRequiredWhenEnabled()
+        {
+            Invariant<String> invariant = new Invariant<>(String.class);
+            invariant.requireDescriptions(true);
+
+            IllegalArgumentException exception =
+                    assertThrows(IllegalArgumentException.class, () -> invariant.create(value -> true, null));
+
+            assertThat(exception.getMessage(), containsString("require descriptions"));
         }
     }
 

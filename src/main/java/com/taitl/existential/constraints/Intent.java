@@ -515,7 +515,6 @@ public class Intent<T> implements Evs<T>, Constraints<T>
     public Intent<T> add(Ev<T> ev)
     {
         sane(ev, "ev");
-        Descriptions.require(requireDescriptions, ev);
         evs.add(ev);
         return this;
     }
@@ -523,10 +522,6 @@ public class Intent<T> implements Evs<T>, Constraints<T>
     public void requireDescriptions(boolean requireDescriptions)
     {
         this.requireDescriptions = requireDescriptions;
-        for (Ev<T> ev : evs)
-        {
-            Descriptions.require(requireDescriptions, ev);
-        }
     }
 
     void validateDescription(String description)

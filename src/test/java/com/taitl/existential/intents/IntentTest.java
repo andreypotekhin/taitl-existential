@@ -126,5 +126,50 @@ class IntentTest
             assertThat(transit.description(), is(""));
             assertThat(port.description(), is(""));
         }
+
+        @Test
+        @DisplayName("Directly added events may omit descriptions when descriptions are required")
+        void directEventsMayOmitDescriptionsWhenDescriptionsAreRequired()
+        {
+            Intent<String> intent = new Intent<>(String.class);
+            Ev<String> create = new OnCreate<>(value -> {
+            }, null);
+
+            intent.requireDescriptions(true);
+            intent.add(create);
+
+            assertThat(intent.list().get(0), is(create));
+        }
+
+        @Test
+        @DisplayName("Requiring descriptions does not revalidate existing description-less events")
+        void requiringDescriptionsDoesNotRevalidateExistingDescriptionLessEvents()
+        {
+            Intent<String> intent = new Intent<>(String.class);
+
+            intent.add(new OnCreate<>(value -> {
+            }, null));
+
+            intent.requireDescriptions(true);
+
+            assertThat(intent.list(), hasSize(1));
+        }
+    }
+
+    @Nested
+    class DescriptionValidation
+    {
+        @Test
+        @DisplayName("Explicit description parameters are still required when enabled")
+        void explicitDescriptionParametersAreStillRequiredWhenEnabled()
+        {
+            Intent<String> intent = new Intent<>(String.class);
+            intent.requireDescriptions(true);
+
+            IllegalArgumentException exception =
+                    assertThrows(IllegalArgumentException.class, () -> intent.create(value -> true, null));
+
+            assertThat(exception.getMessage(), containsString("require descriptions"));
+        }
     }
 }
