@@ -12,9 +12,6 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class ExistentialFlags implements Closeable
 {
-    private static final String ARG_FLAG_MIN = "Argument 'flag' must be greater than zero";
-    private static final String ARG_FLAG_MAX = "Argument 'flag' must be no greater than max flag";
-
     @Up
     protected Existential ex;
 
@@ -27,22 +24,22 @@ public class ExistentialFlags implements Closeable
 
     public void on(int flag)
     {
-        check(flag > 0, ARG_FLAG_MIN);
-        check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
+        check(flag > 0, "Argument 'flag' must be greater than zero");
+        check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
         flags |= flag;
     }
 
     public void off(int flag)
     {
-        check(flag > 0, ARG_FLAG_MIN);
-        check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
+        check(flag > 0, "Argument 'flag' must be greater than zero");
+        check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
         flags &= ~flag;
     }
 
     public boolean toggle(int flag)
     {
-        check(flag > 0, ARG_FLAG_MIN);
-        check(flag <= Flags.MAX_FLAG, ARG_FLAG_MAX);
+        check(flag > 0, "Argument 'flag' must be greater than zero");
+        check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
         if ((flags & flag) != 0)
         {
             off(flag);

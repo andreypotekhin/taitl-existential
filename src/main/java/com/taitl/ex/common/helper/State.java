@@ -9,8 +9,6 @@ package com.taitl.ex.common.helper;
  */
 public class State
 {
-    protected static final String FIELD_MUST_NOT_BE_NULL = "Field '%s' must not be null";
-
     /**
      * Protected constructor for an utility class.
      */
@@ -30,7 +28,7 @@ public class State
     {
         if (o == null)
         {
-            throw new IllegalStateException(String.format(FIELD_MUST_NOT_BE_NULL, objName));
+            throw new IllegalStateException(String.format("Field '%s' must not be null", objName));
         }
 
         return o;

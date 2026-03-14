@@ -11,9 +11,6 @@ public class Logger
 {
     protected PrintStream out = System.out;
     protected PrintStream err = System.err;
-    protected static final String NEWLINE_ESCAPED = "\\n";
-    protected static final String CARRIAGE_ESCAPED = "\\r";
-    protected static final String CONTROL_PREFIX = "\\u00";
     protected static final char[] HEX = "0123456789abcdef".toCharArray();
 
     /**
@@ -101,11 +98,11 @@ public class Logger
             String replacement = null;
             if (ch == '\r')
             {
-                replacement = CARRIAGE_ESCAPED;
+                replacement = "\\r";
             }
             else if (ch == '\n')
             {
-                replacement = NEWLINE_ESCAPED;
+                replacement = "\\n";
             }
             else if (ch < 0x20 || ch == 0x7f)
             {
@@ -130,6 +127,6 @@ public class Logger
 
     protected String toControlEscape(char ch)
     {
-        return CONTROL_PREFIX + HEX[(ch >> 4) & 0x0f] + HEX[ch & 0x0f];
+        return "\\u00" + HEX[(ch >> 4) & 0x0f] + HEX[ch & 0x0f];
     }
 }

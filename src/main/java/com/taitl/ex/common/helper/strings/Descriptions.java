@@ -12,9 +12,6 @@ import static com.taitl.ex.common.helper.Args.sane;
  */
 public class Descriptions
 {
-    private static final String REQUIRED_MESSAGE =
-            "Behavior rules require descriptions when Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS is enabled.";
-
     /**
      * Protected constructor for an utility class.
      */
@@ -48,7 +45,8 @@ public class Descriptions
         {
             return;
         }
-        check(description != null && !description.isEmpty(), REQUIRED_MESSAGE);
+        check(description != null && !description.isEmpty(),
+                "Behavior rules require descriptions when Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS is enabled.");
     }
 
     public static void require(boolean requireDescriptions, Ev<?> ev)

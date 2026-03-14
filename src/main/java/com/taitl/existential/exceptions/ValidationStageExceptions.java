@@ -5,8 +5,6 @@ package com.taitl.existential.exceptions;
  */
 public class ValidationStageExceptions extends ExistentialExceptions
 {
-    private static final String STAGE = "Validation";
-
     /**
      * Creates a validation-stage exception set.
      *
@@ -15,7 +13,7 @@ public class ValidationStageExceptions extends ExistentialExceptions
      */
     public ValidationStageExceptions(ExistentialException... multiple)
     {
-        super(STAGE, multiple);
+        super("Validation", multiple);
     }
 
     /**
@@ -28,6 +26,6 @@ public class ValidationStageExceptions extends ExistentialExceptions
      */
     public ValidationStageExceptions(String message, ExistentialException... multiple)
     {
-        super(STAGE, message, multiple);
+        super("Validation", message, multiple);
     }
 }

@@ -24,7 +24,6 @@ public class ConfigureLibrary
     public static final String TROUBLESHOOTING_SECTION =
             "/Troubleshooting.md#library-configuration-load-failure";
 
-    private static final String OPT_REQUIRE_DESCRIPTIONS = "behavior.rules.requireDescriptions";
     private static final long MAX_CONFIG_BYTES = 1024 * 1024;
 
     @Logic
@@ -145,7 +144,7 @@ public class ConfigureLibrary
         for (String key : props.stringPropertyNames())
         {
             String value = props.getProperty(key);
-            if (OPT_REQUIRE_DESCRIPTIONS.equals(key))
+            if ("behavior.rules.requireDescriptions".equals(key))
             {
                 boolean b = parseBoolean(key, value, source);
                 if (b)

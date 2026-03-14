@@ -13,10 +13,6 @@ import static com.taitl.ex.common.helper.Args.*;
 public class ConcreteMultiJoin<V, W, K>
 {
     protected static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#index-key-mismatch";
-    protected static final String ARG_LEFT_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
-            + " returned by left 'getKey' function. See " + TROUBLESHOOTING_SECTION;
-    protected static final String ARG_RIGHT_KEY_VALUE = "Argument 'newKey' value '%s' does not match key value '%s'"
-            + " returned by right 'getKey' function. See " + TROUBLESHOOTING_SECTION;
     protected SetMap<K, V> leftByKey = new SetMap<>();
     protected SetMap<K, W> rightByKey = new SetMap<>();
     protected SetMap<V, W> rightByLeft = new SetMap<>();
@@ -274,7 +270,10 @@ public class ConcreteMultiJoin<V, W, K>
         K key = getLeftKey.apply(value);
         if (!newKey.equals(key))
         {
-            throw new IllegalArgumentException(String.format(ARG_LEFT_KEY_VALUE, newKey, key));
+            throw new IllegalArgumentException(String.format(
+                    "Argument 'newKey' value '%s' does not match key value '%s' returned by left 'getKey'"
+                            + " function. See " + TROUBLESHOOTING_SECTION,
+                    newKey, key));
         }
         synchronized (this)
         {
@@ -295,7 +294,10 @@ public class ConcreteMultiJoin<V, W, K>
         K key = getRightKey.apply(value);
         if (!newKey.equals(key))
         {
-            throw new IllegalArgumentException(String.format(ARG_RIGHT_KEY_VALUE, newKey, key));
+            throw new IllegalArgumentException(String.format(
+                    "Argument 'newKey' value '%s' does not match key value '%s' returned by right 'getKey'"
+                            + " function. See " + TROUBLESHOOTING_SECTION,
+                    newKey, key));
         }
         synchronized (this)
         {
