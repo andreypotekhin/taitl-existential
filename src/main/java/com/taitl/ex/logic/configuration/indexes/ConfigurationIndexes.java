@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.configuration.indexes;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.actions.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.configuration.rules.*;
@@ -40,12 +41,16 @@ public class ConfigurationIndexes
 
     public ConfigurationIndexes()
     {
-        this.maintainGlobalOrder = new MaintainGlobalOrder();
-        this.configuredHandlers = new ConfiguredHandlers(this);
-        this.configuredIntents = new ConfiguredHandlers(this);
-        this.indexConfig = new IndexConfig(this);
-        this.eventField = new EventField(this, configuredHandlers);
-        this.intentField = new EventField(this, configuredIntents);
+        this.maintainGlobalOrder = Creator.create(MaintainGlobalOrder.class);
+        this.configuredHandlers =
+                Creator.create(ConfiguredHandlers.class, new Class[] { ConfigurationIndexes.class }, this);
+        this.configuredIntents =
+                Creator.create(ConfiguredHandlers.class, new Class[] { ConfigurationIndexes.class }, this);
+        this.indexConfig = Creator.create(IndexConfig.class, new Class[] { ConfigurationIndexes.class }, this);
+        this.eventField = Creator.create(EventField.class,
+                new Class[] { ConfigurationIndexes.class, ConfiguredHandlers.class }, this, configuredHandlers);
+        this.intentField = Creator.create(EventField.class,
+                new Class[] { ConfigurationIndexes.class, ConfiguredHandlers.class }, this, configuredIntents);
     }
 
     /**

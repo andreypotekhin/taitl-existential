@@ -43,8 +43,8 @@ public class EvaluateIntents
         sane(el, "el");
         this.el = el;
         this.eventSplitter = Creator.singleton(EventSplitter.class);
-        this.toSplitKeys = new ToSplitKeys();
-        this.evaluateSplitKeys = new EvaluateSplitKeys();
+        this.toSplitKeys = Creator.create(ToSplitKeys.class);
+        this.evaluateSplitKeys = Creator.create(EvaluateSplitKeys.class);
         this.requireMemoForBiRules = Creator.create(RequireMemoForBiRules.class);
     }
 

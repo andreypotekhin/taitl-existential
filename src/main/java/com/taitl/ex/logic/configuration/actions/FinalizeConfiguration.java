@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.configuration.actions;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
@@ -27,7 +28,7 @@ public class FinalizeConfiguration
         this.cl = cl;
         this.ec = cl.ec();
         this.ex = cl.ex();
-        this.buildConfig = new BuildConfig(cl);
+        this.buildConfig = Creator.create(BuildConfig.class, new Class[] { ConfigurationLogic.class }, cl);
     }
 
     /**

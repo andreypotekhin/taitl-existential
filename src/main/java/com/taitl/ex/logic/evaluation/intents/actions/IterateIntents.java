@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.intents.actions;
 
+import com.taitl.ex.common.creator.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.types.*;
@@ -14,7 +15,7 @@ public class IterateIntents
 
     public IterateIntents()
     {
-        this(new EvaluateIntent());
+        this(Creator.create(EvaluateIntent.class));
     }
 
     protected IterateIntents(EvaluateIntent evaluateIntent)

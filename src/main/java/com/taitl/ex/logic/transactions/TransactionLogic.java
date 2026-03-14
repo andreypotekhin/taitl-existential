@@ -72,13 +72,14 @@ public class TransactionLogic implements Closeable
     public TransactionLogic(ExistentialTransactions ee)
     {
         this.ee = ee;
-        this.createTran = new CreateTran(this);
-        this.registry = new TrRegistry(this, createTran);
-        this.beginTran = new BeginTran(this);
-        this.commitTran = new CommitTran(this);
-        this.checkpointTran = new CheckpointTran(this);
-        this.rollbackTran = new RollbackTran(this);
-        this.disposeTran = new DisposeTran(this);
+        this.createTran = Creator.create(CreateTran.class, new Class[] { TransactionLogic.class }, this);
+        this.registry = Creator.create(TrRegistry.class, new Class[] { TransactionLogic.class, CreateTran.class },
+                this, createTran);
+        this.beginTran = Creator.create(BeginTran.class, new Class[] { TransactionLogic.class }, this);
+        this.commitTran = Creator.create(CommitTran.class, new Class[] { TransactionLogic.class }, this);
+        this.checkpointTran = Creator.create(CheckpointTran.class, new Class[] { TransactionLogic.class }, this);
+        this.rollbackTran = Creator.create(RollbackTran.class, new Class[] { TransactionLogic.class }, this);
+        this.disposeTran = Creator.create(DisposeTran.class, new Class[] { TransactionLogic.class }, this);
         this.evaluationLogic = Creator.create(EvaluationLogic.class, new Class[] { TransactionLogic.class }, this);
         this.beginLogic = Creator.create(BeginLogic.class, new Class[] { TransactionLogic.class }, this);
         this.immediateLogic = Creator.create(ImmediateLogic.class, new Class[] { TransactionLogic.class }, this);

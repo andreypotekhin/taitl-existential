@@ -33,7 +33,7 @@ public class RequireMemoForBiRules
     {
         this.splitTypeKey = Creator.create(SplitTypeKey.class);
         this.resolveMemoBiEvent = Creator.create(ResolveMemoBiEvent.class);
-        this.intentTypeCandidates = new IntentTypeCandidates();
+        this.intentTypeCandidates = Creator.create(IntentTypeCandidates.class);
     }
 
     public <T> void forHandlers(RuntimeKey<T> runtimeKey, EventField eventField, boolean useFullEventNames, Tr tr)

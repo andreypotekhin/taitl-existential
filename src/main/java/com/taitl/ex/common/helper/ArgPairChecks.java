@@ -43,14 +43,6 @@ public class ArgPairChecks
     }
 
     /**
-     * Throws via provided thrower if any boolean condition in pairs is false.
-     */
-    public static void requireAllTrue(Thrower thrower, Object... args)
-    {
-        requireAllTrue(true, "", thrower, args);
-    }
-
-    /**
      * Throws via provided thrower if condition or any boolean pair is false.
      * Uses IllegalArgumentException for malformed pair inputs.
      */

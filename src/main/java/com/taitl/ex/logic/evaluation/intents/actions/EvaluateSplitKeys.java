@@ -28,7 +28,7 @@ public class EvaluateSplitKeys
 
     public EvaluateSplitKeys()
     {
-        this(new ToIntentHandlers(), new IterateIntents());
+        this(Creator.create(ToIntentHandlers.class), Creator.create(IterateIntents.class));
     }
 
     protected EvaluateSplitKeys(

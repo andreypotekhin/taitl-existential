@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.evaluation.intents.maps;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.evaluables.*;
@@ -16,7 +17,7 @@ import static com.taitl.ex.common.helper.Args.*;
 public class ToIntentHandlers
 {
     @Logic
-    protected final IntentTypeCandidates intentTypeCandidates = new IntentTypeCandidates();
+    protected final IntentTypeCandidates intentTypeCandidates = Creator.create(IntentTypeCandidates.class);
 
     public <T> List<EventHandler<?>> call(
             MultiKey<T> multiKey,

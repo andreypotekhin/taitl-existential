@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.configuration;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
@@ -39,10 +40,11 @@ public class ConfigurationLogic implements Closeable
     public ConfigurationLogic(ExistentialConfigs ec)
     {
         this.ec = ec;
-        this.registry = new ConfigRegistry(this);
-        this.createBuilders = new CreateBuilders(this);
-        this.buildContexts = new BuildContexts(this);
-        this.finalizeConfiguration = new FinalizeConfiguration(this);
+        this.registry = Creator.create(ConfigRegistry.class, new Class[] { ConfigurationLogic.class }, this);
+        this.createBuilders = Creator.create(CreateBuilders.class, new Class[] { ConfigurationLogic.class }, this);
+        this.buildContexts = Creator.create(BuildContexts.class, new Class[] { ConfigurationLogic.class }, this);
+        this.finalizeConfiguration =
+                Creator.create(FinalizeConfiguration.class, new Class[] { ConfigurationLogic.class }, this);
     }
 
     /**

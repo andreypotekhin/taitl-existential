@@ -5,6 +5,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.*;
 import java.util.function.*;
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.common.helper.security.FileSecurity;
 import com.taitl.ex.common.helper.io.LimitedInputStream;
 import com.taitl.ex.common.helper.Properties;
@@ -44,7 +45,8 @@ public class ConfigureLibrary
         this.ex = ex;
         this.env = env;
         this.classLoader = classLoader;
-        this.loadProperties = new LoadProperties(classLoader, MAX_CONFIG_BYTES);
+        this.loadProperties = Creator.create(LoadProperties.class,
+                new Class[] { ClassLoader.class, long.class }, classLoader, MAX_CONFIG_BYTES);
     }
 
     public void configure()
