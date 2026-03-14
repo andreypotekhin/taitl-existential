@@ -79,15 +79,16 @@ The rules from matching contexts execute before the rules of the context.
 
 ##### Configuring transactions
 
-User can configure invariants, effects and intents on a Transaction object.
-User can configure the rules (constraints) with custom transaction object per transaction run.
+User can configure the rules (constraints) such as invariants, effects and intents on a Transaction object.
+User can configure the rules (constraints) with custom Transaction object instance per transaction run.
 User can specify a custom factory for creation of transactions in a Context.
 Transaction factory from parent Context is used for child Contexts, unless overridden in the child Context.
 
 ##### Custom transaction instance
 
 User can specify an instance of Transaction class to use in a library transaction.
-  Rationale: so they can configure the rules based on dynamic information, such as web request parameters.
+  Rationale: so the users could configure rules based on dynamic information, such as web request parameters passed
+  into an API endpoint handler.
   Code: This is done by specifying Transaction instance as parameter to Ex.begin() method.
 
 ##### Configuring Constraints
