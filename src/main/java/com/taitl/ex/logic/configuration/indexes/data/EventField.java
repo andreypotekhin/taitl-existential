@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.evaluation.*;
@@ -35,8 +36,9 @@ import static com.taitl.ex.common.helper.State.*;
  */
 public class EventField
 {
-    protected ListMap<String, Ev<?>> map = new ListMap<>();
+    @Up
     protected ConfigurationIndexes ci;
+    protected ListMap<String, Ev<?>> map = new ListMap<>();
     protected ConfiguredHandlers configured;
 
     public EventField(ConfigurationIndexes ci)

@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.stages.commit;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.exceptions.*;
@@ -9,6 +10,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class CommitLogic
 {
+    @Up
     protected TransactionLogic tl;
 
     public CommitLogic(TransactionLogic tl)

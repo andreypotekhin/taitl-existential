@@ -1,5 +1,6 @@
 package com.taitl.ex.core.existential;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.cross.caching.*;
 import com.taitl.ex.logic.events.*;
@@ -18,6 +19,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ExistentialEvents implements Closeable
 {
+    @Up
     protected Existential ex;
     public EventLogic eventLogic;
     public IndexingLogic indexingLogic;

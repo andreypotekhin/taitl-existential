@@ -1,6 +1,7 @@
 package com.taitl.ex.core.existential;
 
 import java.io.*;
+import com.taitl.ex.common.annotations.*;
 import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
 
@@ -14,9 +15,10 @@ public class ExistentialFlags implements Closeable
     private static final String ARG_FLAG_MIN = "Argument 'flag' must be greater than zero";
     private static final String ARG_FLAG_MAX = "Argument 'flag' must be no greater than max flag";
 
-    private int flags;
-
+    @Up
     protected Existential ex;
+
+    private int flags;
 
     public ExistentialFlags(Existential ex)
     {

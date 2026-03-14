@@ -1,5 +1,6 @@
 package com.taitl.ex.core.existential;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.cross.caching.*;
 import com.taitl.ex.logic.events.*;
 import java.io.*;
@@ -13,6 +14,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ExistentialAccess implements Closeable
 {
+    @Up
     protected Existential ex;
     protected TypeKeyCache typeKeyCache;
 

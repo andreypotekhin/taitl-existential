@@ -1,5 +1,6 @@
 package com.taitl.ex.core.indexes;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.indexes.*;
 
@@ -11,6 +12,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class TransactionIndexes
 {
+    @Up
     protected Transaction transaction;
     protected Map<String, MultiIndex<?, ?>> indexes = new ConcurrentHashMap<>();
 

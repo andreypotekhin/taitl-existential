@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.events.*;
@@ -18,6 +19,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class EvaluationLogic implements Closeable
 {
+    @Up
     protected TransactionLogic tl;
     protected EvaluateEvents evaluateEvents;
     protected EvaluateIntents evaluateIntents;

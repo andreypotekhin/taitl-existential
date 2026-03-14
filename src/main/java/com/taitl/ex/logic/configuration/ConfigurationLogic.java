@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.configuration;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
@@ -17,10 +18,11 @@ import static com.taitl.ex.common.helper.State.*;
 
 public class ConfigurationLogic implements Closeable
 {
+    @Up
+    protected ExistentialConfigs ec;
+
     protected ConfigBuilder configBuilder;
     public SetMap<String, Context> contexts = new SetMap<>();
-
-    protected ExistentialConfigs ec;
 
     protected ConfigRegistry registry;
     protected CreateBuilders createBuilders;

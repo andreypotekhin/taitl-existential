@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.configuration.indexes.actions;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.rules.*;
 import com.taitl.existential.configs.*;
@@ -15,6 +16,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class IndexConfig
 {
+    @Up
     protected ConfigurationIndexes ci;
 
     public IndexConfig(ConfigurationIndexes ci)

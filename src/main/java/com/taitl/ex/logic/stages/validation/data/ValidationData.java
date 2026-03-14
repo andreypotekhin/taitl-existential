@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.stages.validation.data;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.existential.transactions.*;
 
@@ -12,6 +13,7 @@ import com.taitl.existential.transactions.*;
  */
 public class ValidationData
 {
+    @Up
     Tr tr;
     public IndexData indexData;
 

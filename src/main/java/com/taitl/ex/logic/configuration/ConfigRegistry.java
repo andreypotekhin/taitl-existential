@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.configuration;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.existential.configs.*;
 import com.taitl.ex.logic.configuration.rules.*;
 
@@ -11,8 +12,9 @@ import static com.taitl.ex.common.helper.Outcome.*;
  */
 public class ConfigRegistry
 {
-    protected Config config;
+    @Up
     protected ConfigurationLogic cl;
+    protected Config config;
 
     public ConfigRegistry(ConfigurationLogic cl)
     {

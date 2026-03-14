@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.events.actions;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.events.*;
 import com.taitl.ex.logic.indexing.*;
 import com.taitl.ex.logic.transactions.*;
@@ -13,6 +14,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ReceiveEvent
 {
+    @Up
     protected EventLogic el;
     protected IndexingLogic indexingLogic;
     protected TransactionLogic transactionLogic;

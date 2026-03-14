@@ -1,5 +1,6 @@
 package com.taitl.ex.core.existential;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
@@ -9,6 +10,7 @@ import java.io.*;
 
 public class ExistentialConfigs implements Closeable
 {
+    @Up
     protected Existential ex;
     protected ConfigurationLogic configLogic;
 

@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.stages.begin;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.constants.*;
@@ -11,6 +12,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class BeginLogic
 {
+    @Up
     protected TransactionLogic tl;
 
     public BeginLogic(TransactionLogic tl)

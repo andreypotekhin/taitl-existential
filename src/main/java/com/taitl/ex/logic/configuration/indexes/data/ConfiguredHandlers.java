@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.evaluables.*;
@@ -20,11 +21,12 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class ConfiguredHandlers
 {
+    @Up
+    protected ConfigurationIndexes ci;
+
     // EventKey to Set<EventHandler<>>
     protected SetMap<String, OrderlyEv<?>> handlers = new SetMap<>();
     protected boolean ready = false;
-
-    protected ConfigurationIndexes ci;
 
     public ConfiguredHandlers(ConfigurationIndexes ci)
     {

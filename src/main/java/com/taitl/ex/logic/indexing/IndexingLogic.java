@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.indexing;
 
 import java.io.*;
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.existential.*;
@@ -11,9 +12,10 @@ import com.taitl.existential.transactions.*;
 
 public class IndexingLogic implements Closeable
 {
+    @Up
+    protected ExistentialEvents ev;
     protected Existential ex;
     protected ExistentialConfigs ec;
-    protected ExistentialEvents ev;
 
     public IndexingLogic(ExistentialEvents ev)
     {

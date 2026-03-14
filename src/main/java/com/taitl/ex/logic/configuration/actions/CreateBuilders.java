@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.configuration.actions;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.builders.*;
 
@@ -8,6 +9,7 @@ import com.taitl.existential.builders.*;
  */
 public class CreateBuilders
 {
+    @Up
     protected ConfigurationLogic cl;
 
     public CreateBuilders(ConfigurationLogic cl)

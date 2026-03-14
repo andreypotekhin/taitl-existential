@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.configuration.actions;
 
 import java.util.*;
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.configs.*;
@@ -11,6 +12,7 @@ import static com.taitl.ex.common.helper.State.*;
 
 public class BuildContexts
 {
+    @Up
     protected ConfigurationLogic cl;
 
     public BuildContexts(ConfigurationLogic cl)

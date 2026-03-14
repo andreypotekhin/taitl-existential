@@ -1,5 +1,6 @@
 package com.taitl.ex.core.existential;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.*;
 import com.taitl.existential.configs.*;
@@ -13,6 +14,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ExistentialTransactions implements Closeable
 {
+    @Up
     protected Existential ex;
     protected TransactionLogic transactionLogic;
 

@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.intents;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.evaluation.*;
@@ -22,6 +23,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class EvaluateIntents
 {
+    @Up
     protected final EvaluationLogic el;
     protected final EventSplitter eventSplitter;
     protected final ToSplitKeys toSplitKeys;

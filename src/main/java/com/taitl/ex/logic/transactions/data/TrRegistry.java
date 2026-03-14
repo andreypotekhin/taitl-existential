@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.transactions.data;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.transactions.actions.*;
 import com.taitl.existential.configs.*;
@@ -21,6 +22,7 @@ public class TrRegistry
     public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#transaction-not-found";
     protected Map<String, Tr> reg = new ConcurrentHashMap<>();
     protected CreateTran createTran;
+    @Up
     protected TransactionLogic tl;
 
     public TrRegistry(TransactionLogic tl, CreateTran createTran)

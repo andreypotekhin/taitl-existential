@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.events;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.cross.caching.*;
@@ -19,8 +20,9 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class EventLogic implements Closeable
 {
-    protected Existential ex;
+    @Up
     protected ExistentialEvents ev;
+    protected Existential ex;
     protected ReceiveEvent receiveEvent;
     protected TypeKeyCache typeKeyCache;
 

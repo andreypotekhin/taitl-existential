@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.stages.validation;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.stages.validation.actions.*;
@@ -14,6 +15,7 @@ import com.taitl.existential.transactions.*;
  */
 public class ValidationLogic
 {
+    @Up
     TransactionLogic tl;
     EvaluationLogic el;
     ValidationReport report;

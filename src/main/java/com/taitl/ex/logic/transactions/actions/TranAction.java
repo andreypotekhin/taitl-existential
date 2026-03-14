@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.transactions.actions;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.transactions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
@@ -9,6 +10,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public abstract class TranAction
 {
+    @Up
     protected final TransactionLogic tl;
 
     protected TranAction(TransactionLogic tl)

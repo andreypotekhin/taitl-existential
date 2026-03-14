@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.stages.rollback;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.exceptions.*;
@@ -9,6 +10,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class RollbackLogic
 {
+    @Up
     protected TransactionLogic tl;
 
     public RollbackLogic(TransactionLogic tl)

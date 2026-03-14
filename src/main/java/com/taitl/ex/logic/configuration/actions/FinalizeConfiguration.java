@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.configuration.actions;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.*;
 import com.taitl.existential.*;
@@ -9,6 +10,7 @@ import static com.taitl.ex.common.helper.State.*;
 
 public class FinalizeConfiguration
 {
+    @Up
     protected ConfigurationLogic cl;
     protected ExistentialConfigs ec;
     protected Existential ex;

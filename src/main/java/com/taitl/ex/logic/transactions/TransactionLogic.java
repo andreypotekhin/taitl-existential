@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.transactions;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.evaluation.*;
@@ -23,6 +24,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class TransactionLogic implements Closeable
 {
+    @Up
     protected ExistentialTransactions ee;
     protected TrRegistry registry;
     protected CreateTran createTran;
