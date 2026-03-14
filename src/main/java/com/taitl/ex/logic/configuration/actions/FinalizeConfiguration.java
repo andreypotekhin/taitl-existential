@@ -62,7 +62,7 @@ public class FinalizeConfiguration
         }
     }
 
-    public void buildConfig()
+    protected void buildConfig()
     {
         ConfigBuilder configBuilder = cl.configBuilder();
         verify(configBuilder != null, "No config builder exists");

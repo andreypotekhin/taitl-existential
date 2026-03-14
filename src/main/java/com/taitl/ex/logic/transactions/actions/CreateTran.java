@@ -31,12 +31,12 @@ public class CreateTran extends TranAction
         return forConfig(op, config, custom, CreateTran::forContext);
     }
 
-    public Tr forContexts(String op, List<Context> contexts, Transaction custom)
+    protected Tr forContexts(String op, List<Context> contexts, Transaction custom)
     {
         return forContexts(op, contexts, custom, CreateTran::forContext);
     }
 
-    public Tr forConfig(
+    protected Tr forConfig(
             String op,
             Config config,
             Transaction custom,
@@ -87,7 +87,7 @@ public class CreateTran extends TranAction
         return UUID.randomUUID();
     }
 
-    public static Transaction forContext(Context context)
+    protected static Transaction forContext(Context context)
     {
         Transaction t = context.transactionFactory().apply(context.name(), context.name());
         requireTransactionOpMatchesContext(t, context);

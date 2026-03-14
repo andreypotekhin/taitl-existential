@@ -62,14 +62,14 @@ public class EvaluateIntents
         iterateSplitKeys(grouped, indexes, tr, stageName);
     }
 
-    public <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey, Tr tr)
+    protected <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey, Tr tr)
             throws ExistentialException
     {
         return toSplitKeys
                 .call(eventSplitter.split(runtimeKey, el.useFullClassNames(), el.shouldSplitElementary(), tr));
     }
 
-    public <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey)
+    protected <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey)
     {
         try
         {
@@ -82,7 +82,7 @@ public class EvaluateIntents
         }
     }
 
-    public <T> void iterateSplitKeys(
+    protected <T> void iterateSplitKeys(
             Map<EventType, List<RuntimeKey<T>>> grouped,
             ConfigurationIndexes indexes,
             Tr tr,

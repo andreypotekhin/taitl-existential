@@ -138,7 +138,7 @@ public class IntentLogic
         return false;
     }
 
-    public IntentHandlerKey intentKey(EventType eventType, String typeKey)
+    protected IntentHandlerKey intentKey(EventType eventType, String typeKey)
     {
         sane(eventType, "eventType", typeKey, "typeKey");
         return new IntentHandlerKey(eventType, typeKey);
