@@ -110,6 +110,7 @@ public class ConfigurationLogic implements Closeable
 
     /**
      * Add all configured rules to the indexes.
+     * Called from FinalizeConfiguration.onFinishConfiguration()
      */
     public void indexConfig(String op)
     {

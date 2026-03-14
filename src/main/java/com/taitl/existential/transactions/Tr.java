@@ -1,27 +1,18 @@
 package com.taitl.existential.transactions;
 
-import com.taitl.ex.common.helper.*;
-import com.taitl.ex.common.helper.collections.*;
+import com.taitl.ex.concrete.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.events.*;
-import com.taitl.ex.logic.evaluation.events.actions.*;
 import com.taitl.ex.logic.indexing.data.*;
-import com.taitl.ex.logic.stages.validation.data.*;
 import com.taitl.ex.logic.transactions.*;
-import com.taitl.ex.logic.transactions.data.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
-import com.taitl.existential.constraints.*;
-import com.taitl.existential.evaluables.*;
-import com.taitl.existential.events.transaction_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
-
-import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Defines an existential transaction, the backbone of the library transaction model.
@@ -34,587 +25,237 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class Tr
 {
-    public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#transaction-closed";
+    public static final String TROUBLESHOOTING_SECTION = ConcreteTr.TROUBLESHOOTING_SECTION;
+
     public final UUID id;
     public String op;
-    protected TransactionLogic tl;
-    protected EventLogic el;
-    protected List<Transaction> transactions = new ArrayList<>();
-    protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
-    protected IndexData runtimeIndexes;
-    protected ValidationData validationData;
-    protected TrMemos memos;
-    protected Map<StageName, StageData> stageData = new EnumMap<>(StageName.class);
-    protected Set<String> beginEncounteredEventKeys = new LinkedHashSet<>();
-    protected boolean beginActive;
-    protected boolean immediateActive;
-    protected boolean closed;
+    protected final ConcreteTr concrete;
 
-    /**
-     * Creates a transaction instance for the given operation and id.
-     *
-     * @param op
-     *            Operation name
-     * @param id
-     *            Transaction identifier
-     */
     public Tr(String op, UUID id, TransactionLogic tl, EventLogic el)
     {
-        sane(op, "op", id, "id", tl, "tl", el, "el");
-        OpKey.validate(op);
-        this.op = op;
         this.id = id;
-        this.tl = tl;
-        this.el = el;
-        runtimeIndexes = new IndexData();
-        validationData = new ValidationData(this);
-        memos = new TrMemos();
-        for (StageName stageName : StageName.values())
-        {
-            stageData.put(stageName, new StageData());
-        }
+        this.op = op;
+        this.concrete = createBuilder()
+                .tr(this)
+                .op(op)
+                .id(id)
+                .tl(tl)
+                .el(el)
+                .build();
     }
 
-    /**
-     * Registers a transaction configuration instance for this operation.
-     *
-     * @param tr
-     *            Transaction configuration to add
-     */
     public void addTransaction(Transaction tr)
     {
-        sane(tr, "tr");
-        State.verify(already.add(tr), "This transaction is already added");
-        tr.op = op;
-        transactions.add(tr);
-        indexIntents(tr);
-        if (tr.context != null)
-        {
-            indexContextIntents(tr.context);
-        }
+        concrete.addTransaction(tr);
     }
 
-    /**
-     * Creates a checkpoint in the transaction lifecycle.
-     * Performs validation of the rules configured for the transaction's business operation.
-     * After commit, transaction object is still usable: more events can be sent.
-     *
-     * @throws ExistentialException when checkpoint fails
-     */
     public void checkpoint() throws ExistentialException
     {
-        requireOpen("checkpoint");
-        tl.checkpoint(this);
+        concrete.checkpoint();
     }
 
-    /**
-     * Commits a transaction.
-     * Performs validation of the rules configured for the transaction's business operation.
-     * After commit, transaction object becomes unusable, tranID becomes invalid.
-     *
-     * @throws ExistentialException when validation or commit fails
-     */
     public void commit() throws ExistentialException
     {
-        requireOpen("commit");
-        tl.commit(this);
+        concrete.commit();
     }
 
-    /**
-     * Rolls back transaction.
-     * Rule validation is not performed.
-     * After commit, transaction object becomes unusable, tranID becomes invalid.
-     *
-     * @throws ExistentialException when rollback fails
-     */
     public void rollback() throws ExistentialException
     {
-        requireOpen("rollback");
-        tl.rollback(this);
+        concrete.rollback();
     }
-
-    /* Event methods */
 
     public <T> void event(Event<T> event, T t, TypeKey<T> type) throws ExistentialException
     {
-        requireOpen("send events");
-        el.event(event, t, type, this);
+        concrete.event(event, t, type);
     }
 
     public <T> void event(BiEvent<T> event, TypeKey<T> type) throws ExistentialException
     {
-        requireOpen("send events");
-        el.event(event, type, this);
+        concrete.event(event, type);
     }
-
-    /* Event methods: convenience / shortcut methods */
 
     public <T> void create(T t, TypeKey<T> type) throws ExistentialException
     {
-        requireOpen("send events");
-        el.create(t, type, this);
+        concrete.create(t, type);
     }
 
     public <T> void create(T t) throws ExistentialException
     {
-        requireOpen("send events");
-        el.create(t, this);
+        concrete.create(t);
     }
 
     public <T> void delete(T t, TypeKey<T> type) throws ExistentialException
     {
-        requireOpen("send events");
-        el.delete(t, type, this);
+        concrete.delete(t, type);
     }
 
     public <T> void delete(T t) throws ExistentialException
     {
-        requireOpen("send events");
-        el.delete(t, this);
+        concrete.delete(t);
     }
 
     public <T> void update(T t, TypeKey<T> type) throws ExistentialException
     {
-        requireOpen("send events");
-        el.update(t, type, this);
+        concrete.update(t, type);
     }
 
     public <T> void update(T t) throws ExistentialException
     {
-        requireOpen("send events");
-        el.update(t, this);
+        concrete.update(t);
     }
 
     public <T> void transit(T t0, T t1, TypeKey<T> type) throws ExistentialException
     {
-        requireOpen("send events");
-        el.transit(t0, t1, type, this);
+        concrete.transit(t0, t1, type);
     }
 
     public <T> void transit(T t0, T t1) throws ExistentialException
     {
-        requireOpen("send events");
-        el.transit(t0, t1, this);
+        concrete.transit(t0, t1);
     }
 
     public <T> void port(T t0, T t1, TypeKey<T> type) throws ExistentialException
     {
-        requireOpen("send events");
-        el.port(t0, t1, type, this);
+        concrete.port(t0, t1, type);
     }
 
     public <T> void port(T t0, T t1) throws ExistentialException
     {
-        requireOpen("send events");
-        el.port(t0, t1, this);
+        concrete.port(t0, t1);
     }
-
-    /* Access event methods */
 
     public <T> void read(T entity, TypeKey<T> type) throws ExistentialException
     {
-        requireOpen("send events");
-        el.read(entity, type, this);
+        concrete.read(entity, type);
     }
 
     public <T> void read(T entity) throws ExistentialException
     {
-        requireOpen("send events");
-        el.read(entity, this);
+        concrete.read(entity);
     }
 
     public <T> void memo(T before, T live, TypeKey<T> typeKey) throws ExistentialException
     {
-        requireOpen("register memo state");
-        memos.put(live, before, typeKey);
+        concrete.memo(before, live, typeKey);
     }
 
     public <T> void memo(T before, T live, Class<T> cls) throws ExistentialException
     {
-        sane(cls, "cls");
-        memo(before, live, TypeKey.valueOf(cls, false));
+        concrete.memo(before, live, cls);
     }
 
     public <T> T beforeState(T live, TypeKey<T> typeKey)
     {
-        requireMemoState();
-        return memos.get(live, typeKey);
+        return concrete.beforeState(live, typeKey);
     }
 
     public <T> boolean hasMemo(T live, TypeKey<T> typeKey)
     {
-        requireMemoState();
-        return memos.contains(live, typeKey);
+        return concrete.hasMemo(live, typeKey);
     }
 
     public <T> void write(T entity, TypeKey<T> type) throws ExistentialException
     {
-        requireOpen("send events");
-        el.write(entity, type, this);
+        concrete.write(entity, type);
     }
 
     public <T> void write(T entity) throws ExistentialException
     {
-        requireOpen("send events");
-        el.write(entity, this);
+        concrete.write(entity);
     }
 
-    /* Lifecycle events */
-
-    /**
-     * Called when a transaction begins.
-     * Invoked by BeginTr.
-     */
     public void onBegin() throws ExistentialException
     {
-        beginActive = true;
-        immediateActive = true;
-        executeLifecycle(Begin.class, StageName.BEGIN);
+        concrete.onBegin();
     }
 
-    /**
-     * Called when a transaction checkpoint is reached.
-     * Invoked by CheckpointTr.
-     */
     public void onCheckpoint() throws ExistentialException
     {
-        beginActive = false;
-        immediateActive = false;
-        executeLifecycle(Checkpoint.class, StageName.CHECKPOINT);
+        concrete.onCheckpoint();
     }
 
-    /**
-     * Called when a transaction is committed.
-     * Invoked by CommitTr.
-     */
     public void onCommit() throws ExistentialException
     {
-        beginActive = false;
-        immediateActive = false;
-        executeLifecycle(Commit.class, StageName.COMMIT);
+        concrete.onCommit();
     }
 
-    /**
-     * Called when a transaction is rolled back.
-     * Invoked by RollbackTr.
-     */
     public void onRollback() throws ExistentialException
     {
-        beginActive = false;
-        immediateActive = false;
-        executeLifecycle(Rollback.class, StageName.ROLLBACK);
+        concrete.onRollback();
     }
 
-    /* Attributes */
-
-    /**
-     * Returns the transaction identifier as a UUID string.
-     * @return Transaction id string
-     */
     public String id()
     {
-        return id.toString();
+        return concrete.id();
     }
 
-    /**
-     * Returns the list of Transaction objects associated with this transaction,
-     * in the order of their Context declaration.
-     *
-     * @return List of Transaction configurations
-     */
     public List<Transaction> transactions()
     {
-        return transactions;
+        return concrete.transactions();
     }
 
-    /**
-     * Returns runtime indexes used for fast evaluation of expressions.
-     *
-     * @return Runtime index data
-     */
     public IndexData runtimeIndexes()
     {
-        return runtimeIndexes;
+        return concrete.runtimeIndexes();
     }
 
     public boolean hasIntents()
     {
-        for (StageName stageName : StageName.values())
-        {
-            if (hasIntents(stageName))
-            {
-                return true;
-            }
-        }
-        return false;
+        return concrete.hasIntents();
     }
 
     public boolean hasIntentEventType(EventType eventType)
     {
-        for (StageName stageName : StageName.values())
-        {
-            if (hasIntentEventType(stageName, eventType))
-            {
-                return true;
-            }
-        }
-        return false;
+        return concrete.hasIntentEventType(eventType);
     }
 
     public boolean hasIntents(StageName stageName)
     {
-        sane(stageName, "stageName");
-        StageData data = stageData.get(stageName);
-        return data != null && !data.intentEventTypes.isEmpty();
+        return concrete.hasIntents(stageName);
     }
 
     public boolean hasIntentEventType(StageName stageName, EventType eventType)
     {
-        sane(stageName, "stageName");
-        sane(eventType, "eventType");
-        StageData data = stageData.get(stageName);
-        return data != null && data.intentEventTypes.contains(eventType);
+        return concrete.hasIntentEventType(stageName, eventType);
     }
 
     public boolean hasBiIntentHandler(StageName stageName, EventType eventType, String typeKey)
     {
-        sane(stageName, "stageName", eventType, "eventType", typeKey, "typeKey");
-        StageData data = stageData.get(stageName);
-        return data != null && data.biIntentKeys.contains(intentKey(eventType, typeKey));
+        return concrete.hasBiIntentHandler(stageName, eventType, typeKey);
     }
 
     public List<EventHandler<?>> intentHandlers(EventType eventType, String typeKey)
     {
-        return intentHandlers(StageName.IMMEDIATE, eventType, typeKey);
+        return concrete.intentHandlers(eventType, typeKey);
     }
 
     public List<EventHandler<?>> intentHandlers(StageName stageName, EventType eventType, String typeKey)
     {
-        sane(stageName, "stageName");
-        sane(eventType, "eventType", typeKey, "typeKey");
-        StageData data = stageData.get(stageName);
-        return data != null ? data.intentHandlers.get(intentKey(eventType, typeKey)) : null;
-    }
-
-    protected void indexIntents(Transaction tr)
-    {
-        sane(tr, "tr");
-        for (StageName stageName : StageName.values())
-        {
-            for (Evs<?> evs : tr.stage().at(stageName))
-            {
-                if (!(evs instanceof Intent<?>))
-                {
-                    continue;
-                }
-                indexIntent(stageName, (Intent<?>) evs);
-            }
-        }
-    }
-
-    protected void indexIntent(StageName stageName, Intent<?> intent)
-    {
-        sane(stageName, "stageName", intent, "intent");
-        StageData data = stageData.get(stageName);
-        sane(data, "data");
-        String typeKey = intent.typeKey().toString();
-        for (Ev<?> ev : intent.list())
-        {
-            if (!(ev instanceof EventHandler<?>))
-            {
-                continue;
-            }
-            EventHandler<?> handler = (EventHandler<?>) ev;
-            EventType eventType = handler.eventType();
-            data.intentEventTypes.add(eventType);
-            data.intentHandlers.add(intentKey(eventType, typeKey), handler);
-            if (eventType.biEvent())
-            {
-                data.biIntentKeys.add(intentKey(eventType, typeKey));
-            }
-        }
-    }
-
-    protected static IntentHandlerKey intentKey(EventType eventType, String typeKey)
-    {
-        sane(eventType, "eventType", typeKey, "typeKey");
-        return new IntentHandlerKey(eventType, typeKey);
-    }
-
-    protected void indexContextIntents(Context context)
-    {
-        sane(context, "context");
-        for (StageName stageName : StageName.values())
-        {
-            for (Evs<?> evs : context.stage().at(stageName))
-            {
-                if (!(evs instanceof Intent<?>))
-                {
-                    continue;
-                }
-                indexIntent(stageName, (Intent<?>) evs);
-            }
-        }
+        return concrete.intentHandlers(stageName, eventType, typeKey);
     }
 
     public boolean beginActive()
     {
-        return beginActive;
+        return concrete.beginActive();
     }
 
     public boolean immediateActive()
     {
-        return immediateActive;
+        return concrete.immediateActive();
     }
 
     public <T> boolean shouldEvaluateBegin(RuntimeKey<T> runtimeKey)
     {
-        sane(runtimeKey, "runtimeKey");
-        String key = runtimeKey.key().toString();
-        return beginEncounteredEventKeys.add(key);
+        return concrete.shouldEvaluateBegin(runtimeKey);
     }
 
-    protected void executeLifecycle(Class<?> eventClass, StageName stageName) throws ExistentialException
-    {
-        sane(eventClass, "eventClass", stageName, "stageName");
-        for (Transaction transaction : transactions)
-        {
-            executeLifecycle(eventClass, stageName, transaction);
-        }
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected void executeLifecycle(Class<?> eventClass, StageName stageName, Transaction transaction)
-            throws ExistentialException
-    {
-        sane(eventClass, "eventClass", stageName, "stageName", transaction, "transaction");
-        for (Evs<?> evs : transaction.stage().at(stageName))
-        {
-            if (!(evs instanceof Life<?>))
-            {
-                continue;
-            }
-            Life<?> life = (Life<?>) evs;
-            if (!matchesType(life.typeKey(), transaction))
-            {
-                continue;
-            }
-            for (Ev<?> ev : life.list())
-            {
-                if (!(ev instanceof EventHandler<?>))
-                {
-                    continue;
-                }
-                EventHandler<?> eventHandler = (EventHandler<?>) ev;
-                if (!eventClass.equals(eventHandler.eventType().eventClass()))
-                {
-                    continue;
-                }
-                if (!(eventHandler instanceof On<?>))
-                {
-                    throw new IllegalStateException("Lifecycle handler must extend On, got "
-                            + eventHandler.getClass().getName());
-                }
-                ExecuteHandler.handle((On) eventHandler, transaction);
-            }
-        }
-    }
-
-    protected boolean matchesType(TypeKey<?> configuredType, Transaction transaction)
-    {
-        sane(configuredType, "configuredType", transaction, "transaction");
-        Class<?> type = transaction.getClass();
-        while (type != null && Transaction.class.isAssignableFrom(type))
-        {
-            TypeKey<?> shortName = TypeKey.valueOf(type, false);
-            TypeKey<?> fullName = TypeKey.valueOf(type, true);
-            if (configuredType.equals(shortName) || configuredType.equals(fullName))
-            {
-                return true;
-            }
-            type = type.getSuperclass();
-        }
-        return false;
-    }
-
-    protected static class IntentHandlerKey
-    {
-        protected final EventType eventType;
-        protected final String typeKey;
-
-        protected IntentHandlerKey(EventType eventType, String typeKey)
-        {
-            sane(eventType, "eventType", typeKey, "typeKey");
-            this.eventType = eventType;
-            this.typeKey = typeKey;
-        }
-
-        public int hashCode()
-        {
-            return Objects.hash(eventType, typeKey);
-        }
-
-        public boolean equals(Object other)
-        {
-            if (other == this)
-            {
-                return true;
-            }
-            if (!(other instanceof IntentHandlerKey))
-            {
-                return false;
-            }
-            IntentHandlerKey key = (IntentHandlerKey) other;
-            return eventType.equals(key.eventType) && typeKey.equals(key.typeKey);
-        }
-    }
-
-    protected static class StageData
-    {
-        protected final Set<EventType> intentEventTypes = new LinkedHashSet<>();
-        protected final Set<IntentHandlerKey> biIntentKeys = new LinkedHashSet<>();
-        protected final ListMap<IntentHandlerKey, EventHandler<?>> intentHandlers = new ListMap<>();
-    }
-
-    /**
-     * Releases transaction resources and clears internal collections.
-     */
     public void close()
     {
-        if (closed)
-        {
-            return;
-        }
-        closed = true;
-        validationData.close();
-        validationData = null;
-        memos.clear();
-        memos = null;
-        transactions = null;
-        tl = null;
-        el = null;
-        already = null;
-        stageData = null;
-        beginEncounteredEventKeys = null;
-        beginActive = false;
-        immediateActive = false;
+        concrete.close();
     }
 
-    protected void requireOpen(String action) throws ExistentialException
+    ConcreteTrBuilder createBuilder()
     {
-        if (!closed)
-        {
-            return;
-        }
-        String verb = action != null ? action : "perform this operation";
-        throw new ExistentialException(String.format(
-                "Cannot %s because the transaction is closed. Begin a new transaction for additional work. See %s",
-                verb,
-                TROUBLESHOOTING_SECTION));
-    }
-
-    protected void requireMemoState()
-    {
-        State.verify(memos != null, "Transaction memo state is not available");
+        return Creator.create(ConcreteTrBuilder.class);
     }
 }

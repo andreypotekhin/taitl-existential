@@ -8,7 +8,7 @@ import java.util.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Stores transaction-local before-state snapshots keyed by live object identity and type key.
+ * Transaction-local before-state snapshots keyed by object identity and type key.
  */
 public class TrMemos
 {
