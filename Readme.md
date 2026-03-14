@@ -59,6 +59,9 @@ For any object of type X that has been changed in the course of a business trans
     Transit describes a change where both states are non-null.
     x0 is the entity's initial state at the start of the transaction,
     x1 is its final state at the end of the transaction.
+    If you mutate an entity in place and later emit `update(...)` or another single-entity event,
+    call `memo(snapshot, live, ...)` before the mutation so split `Transit` rules can still observe
+    the correct `x0` snapshot.
 
 For any object of type X that has been created, changed, or deleted in the course of a business transaction,
 predicate holds true (use Porting when one side may be null):

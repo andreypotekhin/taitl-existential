@@ -3,8 +3,12 @@ package com.taitl.ex.logic.evaluation.events.split_events;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
+import com.taitl.ex.logic.evaluation.events.split_events.rules.*;
 import com.taitl.existential.evaluables.*;
+import com.taitl.existential.events.types.*;
+import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
 import java.util.*;
 import java.util.stream.*;
@@ -30,41 +34,28 @@ public class SplitEvent
 {
     // TODO: source from ExistentialEvents instead of singleton
     protected EventSplitter eventSplitter = Creator.singleton(EventSplitter.class);
-
-    public <T> SplitResult<T> call(RuntimeKey<T> runtimeKey, EventField eventField, boolean useFullEventNames)
-    {
-        return call(runtimeKey, eventField, useFullEventNames, true);
-    }
+    protected RequireMemoForBiRules requireMemoForBiRules = Creator.create(RequireMemoForBiRules.class);
+    protected ResolveMemoBiEvent resolveMemoBiEvent = Creator.create(ResolveMemoBiEvent.class);
 
     public <T> SplitResult<T> call(
             RuntimeKey<T> runtimeKey,
             EventField eventField,
             boolean useFullEventNames,
-            boolean splitElementaryToCompound)
+            boolean splitElementaryToCompound,
+            Tr tr)
+            throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField");
-        Set<RuntimeKey<T>> splitKeys = split(runtimeKey, useFullEventNames, splitElementaryToCompound);
+        if (tr != null)
+        {
+            requireMemoForBiRules.forHandlers(runtimeKey, eventField, useFullEventNames, tr);
+        }
+        Set<RuntimeKey<T>> splitKeys =
+                eventSplitter.split(runtimeKey, useFullEventNames, splitElementaryToCompound, tr);
         MultiKey<T> multiKey = multiKey(splitKeys);
         List<Ev<T>> evaluables = eventField.get(multiKey);
-        return new SplitResult<T>(evaluables, runtimeKey.event());
-    }
-
-    protected <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey)
-    {
-        return split(runtimeKey, false);
-    }
-
-    protected <T> Set<RuntimeKey<T>> split(RuntimeKey<T> runtimeKey, boolean useFullEventNames)
-    {
-        return split(runtimeKey, useFullEventNames, true);
-    }
-
-    protected <T> Set<RuntimeKey<T>> split(
-            RuntimeKey<T> runtimeKey,
-            boolean useFullEventNames,
-            boolean splitElementaryToCompound)
-    {
-        return eventSplitter.split(runtimeKey, useFullEventNames, splitElementaryToCompound);
+        Event<T> event = tr != null ? resolveMemoBiEvent.forExecution(runtimeKey, evaluables, tr) : runtimeKey.event();
+        return new SplitResult<T>(evaluables, event);
     }
 
     protected <T> MultiKey<T> multiKey(Set<RuntimeKey<T>> splitKeys)

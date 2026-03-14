@@ -7,6 +7,7 @@ import com.taitl.ex.logic.evaluation.events.actions.*;
 import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.ex.logic.stages.validation.data.*;
 import com.taitl.ex.logic.transactions.*;
+import com.taitl.ex.logic.transactions.data.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -42,6 +43,7 @@ public class Tr
     protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
     protected IndexData runtimeIndexes;
     protected ValidationData validationData;
+    protected TrMemos memos;
     protected Map<StageName, StageData> stageData = new EnumMap<>(StageName.class);
     protected Set<String> beginEncounteredEventKeys = new LinkedHashSet<>();
     protected boolean beginActive;
@@ -66,6 +68,7 @@ public class Tr
         this.el = el;
         runtimeIndexes = new IndexData();
         validationData = new ValidationData(this);
+        memos = new TrMemos();
         for (StageName stageName : StageName.values())
         {
             stageData.put(stageName, new StageData());
@@ -220,6 +223,30 @@ public class Tr
         el.read(entity, this);
     }
 
+    public <T> void memo(T before, T live, TypeKey<T> typeKey) throws ExistentialException
+    {
+        requireOpen("register memo state");
+        memos.put(live, before, typeKey);
+    }
+
+    public <T> void memo(T before, T live, Class<T> cls) throws ExistentialException
+    {
+        sane(cls, "cls");
+        memo(before, live, TypeKey.valueOf(cls, false));
+    }
+
+    public <T> T beforeState(T live, TypeKey<T> typeKey)
+    {
+        requireMemoState();
+        return memos.get(live, typeKey);
+    }
+
+    public <T> boolean hasMemo(T live, TypeKey<T> typeKey)
+    {
+        requireMemoState();
+        return memos.contains(live, typeKey);
+    }
+
     public <T> void write(T entity, TypeKey<T> type) throws ExistentialException
     {
         requireOpen("send events");
@@ -349,6 +376,13 @@ public class Tr
         return data != null && data.intentEventTypes.contains(eventType);
     }
 
+    public boolean hasBiIntentHandler(StageName stageName, EventType eventType, String typeKey)
+    {
+        sane(stageName, "stageName", eventType, "eventType", typeKey, "typeKey");
+        StageData data = stageData.get(stageName);
+        return data != null && data.biIntentKeys.contains(intentKey(eventType, typeKey));
+    }
+
     public List<EventHandler<?>> intentHandlers(EventType eventType, String typeKey)
     {
         return intentHandlers(StageName.IMMEDIATE, eventType, typeKey);
@@ -394,6 +428,10 @@ public class Tr
             EventType eventType = handler.eventType();
             data.intentEventTypes.add(eventType);
             data.intentHandlers.add(intentKey(eventType, typeKey), handler);
+            if (eventType.biEvent())
+            {
+                data.biIntentKeys.add(intentKey(eventType, typeKey));
+            }
         }
     }
 
@@ -534,6 +572,7 @@ public class Tr
     protected static class StageData
     {
         protected final Set<EventType> intentEventTypes = new LinkedHashSet<>();
+        protected final Set<IntentHandlerKey> biIntentKeys = new LinkedHashSet<>();
         protected final ListMap<IntentHandlerKey, EventHandler<?>> intentHandlers = new ListMap<>();
     }
 
@@ -549,6 +588,8 @@ public class Tr
         closed = true;
         validationData.close();
         validationData = null;
+        memos.clear();
+        memos = null;
         transactions = null;
         tl = null;
         el = null;
@@ -570,5 +611,10 @@ public class Tr
                 "Cannot %s because the transaction is closed. Begin a new transaction for additional work. See %s",
                 verb,
                 TROUBLESHOOTING_SECTION));
+    }
+
+    protected void requireMemoState()
+    {
+        State.verify(memos != null, "Transaction memo state is not available");
     }
 }

@@ -68,6 +68,30 @@ Fix:
 2. Review intent predicates and make sure they match the entity state at event time.
 3. If no gating is needed for an event type, remove intents for that event type.
 
+## Memo state missing
+
+**Problem: Event evaluation fails with `MemoException` stating memo state is missing or invalid**
+
+Typical error messages:
+- `Memo state not present for event 'Update<...>'`
+- `Argument 'before' must be a detached snapshot, not the same instance as 'live'`
+- `Memo state is already registered for this entity and type key`
+
+Common causes include:
+- A transaction mutates an entity in place and then relies on `Transit` or `Port` rules without calling `memo(...)`
+  first.
+- The same live object instance was passed as both `live` and `before`, so no detached snapshot exists.
+- The code tried to register a second before-state for the same live object and type key after the first snapshot was
+  already stored.
+
+Fix:
+1. Before mutating a tracked entity in place, call `memo(snapshot, live, ...)` with a detached snapshot created by
+   `clone()`, a copy constructor, or another copy strategy.
+2. Do not pass the same object reference as both `live` and `before`.
+3. Register memo state once per live object and type key, as early in the transaction as possible.
+4. If your flow only needs single-entity rules, remove the `Transit`/`Port` handlers or intents that force bi-state
+   evaluation.
+
 ## Transaction not found
 
 **Problem: A call fails with `NotFoundException` stating `Transaction not found`**

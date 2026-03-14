@@ -1,9 +1,11 @@
 package com.taitl.ex.logic.evaluation.events.split_events.event_splitter;
 
+import com.taitl.existential.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
+import com.taitl.existential.transactions.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;
 
@@ -13,6 +15,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EventSplitterTest
 {
+    protected Existential ex;
+
+    @BeforeEach
+    void setup()
+    {
+        ex = new Existential();
+        ex.configure().context("/memo").effect(String.class).create(value -> {
+        }, "noop");
+    }
+
+    @AfterEach
+    void cleanup()
+    {
+        ex.close();
+    }
+
     private static final class TestEventSplitter extends EventSplitter
     {
         private <T> Set<Event<T>> splitTransitPublic(Port<T> port, Set<Event<T>> set)
@@ -116,7 +134,7 @@ class EventSplitterTest
         {
             @Test
             @DisplayName("Split runtime key splits by underlying event and keeps type key")
-            void byUnderlyingEvent()
+            void byUnderlyingEvent() throws Exception
             {
                 EventSplitter splitter = new EventSplitter();
                 String oldValue = new String("old");
@@ -125,7 +143,7 @@ class EventSplitterTest
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Port<>(oldValue, newValue), typeKey, newValue,
                         false);
 
-                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true);
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true, null);
 
                 assertTrue(splitKeys.stream().anyMatch(key -> key.toString().startsWith("Transit<String>+")));
                 assertTrue(splitKeys.stream().allMatch(key -> key.typeKey().toString().equals("String")));
@@ -133,7 +151,7 @@ class EventSplitterTest
 
             @Test
             @DisplayName("Split runtime key also splits type key by generics dimension")
-            void byGenerics()
+            void byGenerics() throws Exception
             {
                 EventSplitter splitter = new EventSplitter();
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(
@@ -142,7 +160,7 @@ class EventSplitterTest
                         "value",
                         false);
 
-                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true);
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true, null);
                 Set<String> keys =
                         splitKeys.stream().map(Object::toString).collect(java.util.stream.Collectors.toSet());
 
@@ -160,7 +178,7 @@ class EventSplitterTest
 
             @Test
             @DisplayName("Split runtime key preserves full event names")
-            void preservesFullEventNames()
+            void preservesFullEventNames() throws Exception
             {
                 EventSplitter splitter = new EventSplitter();
                 String oldValue = new String("old");
@@ -169,7 +187,7 @@ class EventSplitterTest
                 TypeKey<String> typeKey = TypeKey.valueOf(String.class, true);
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(port, typeKey, newValue, true);
 
-                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, true, true);
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, true, true, null);
 
                 assertTrue(splitKeys.stream()
                         .allMatch(key -> key.toString().startsWith("com.taitl.existential.events")));
@@ -177,17 +195,59 @@ class EventSplitterTest
 
             @Test
             @DisplayName("Split runtime key for create can disable elementary to compound mapping")
-            void createWithoutCompound()
+            void createWithoutCompound() throws Exception
             {
                 EventSplitter splitter = new EventSplitter();
                 String entity = new String("new");
                 TypeKey<String> typeKey = new TypeKey<>(String.class);
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Create<>(entity), typeKey, entity, false);
 
-                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, false);
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, false, null);
 
                 assertEquals(1, splitKeys.size());
                 assertTrue(splitKeys.stream().allMatch(key -> key.key().toString().startsWith("Create<")));
+            }
+
+            @Test
+            @DisplayName("Runtime split uses memo-backed transit payload for update")
+            void usesMemoBackedTransitPayload() throws Exception
+            {
+                EventSplitter splitter = new EventSplitter();
+                String live = new String("after");
+                String before = new String("before");
+                TypeKey<String> typeKey = new TypeKey<>(String.class);
+                Tr tr = ex.begin("/memo");
+                tr.memo(before, live, typeKey);
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Update<>(live), typeKey, live, false);
+
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true, tr);
+
+                Transit<String> transit = splitKeys.stream()
+                        .map(RuntimeKey::event)
+                        .filter(Transit.class::isInstance)
+                        .map(event -> (Transit<String>) event)
+                        .findFirst()
+                        .orElseThrow(() -> new AssertionError("Transit event not found"));
+
+                assertSame(before, transit.t0);
+                assertSame(live, transit.t1);
+                tr.rollback();
+            }
+
+            @Test
+            @DisplayName("Runtime split skips memo-sensitive bi-event path when memo is absent")
+            void skipsBiEventPathWithoutMemo() throws Exception
+            {
+                EventSplitter splitter = new EventSplitter();
+                String live = new String("after");
+                TypeKey<String> typeKey = new TypeKey<>(String.class);
+                Tr tr = ex.begin("/memo");
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Update<>(live), typeKey, live, false);
+
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true, tr);
+
+                assertFalse(splitKeys.stream().anyMatch(key -> key.event() instanceof Transit<?>));
+                tr.rollback();
             }
         }
 
@@ -202,7 +262,8 @@ class EventSplitterTest
                 RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(String.class, "String", "value", false);
 
                 IllegalArgumentException error =
-                        assertThrows(IllegalArgumentException.class, () -> splitter.split(runtimeKey, true, true));
+                        assertThrows(IllegalArgumentException.class,
+                                () -> splitter.split(runtimeKey, true, true, null));
 
                 assertEquals("Argument 'event' must not be null", error.getMessage());
             }

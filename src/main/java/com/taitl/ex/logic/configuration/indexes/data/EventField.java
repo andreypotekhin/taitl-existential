@@ -12,7 +12,7 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Maps event key/event keys (a MultiKey) to a set of configured event handlers.
+ * Maps event key/event keys (a MultiKey) to a list of configured event handlers.
  * For a MultiKey (e.g. "Create<Doc<JSON>>,Create<Doc<?>>,Create<Doc>")
  * returns a list of event handlers in the order of their declaration.
  * This class scope is a single business operation.
@@ -93,5 +93,11 @@ public class EventField
             map.putList(key, cached);
         }
         return (List<Ev<T>>) (List<?>) cached;
+    }
+
+    public <T> boolean hasBiEventKey(EventKey<T> eventKey)
+    {
+        sane(eventKey, "eventKey");
+        return ci.hasBiKey(eventKey);
     }
 }

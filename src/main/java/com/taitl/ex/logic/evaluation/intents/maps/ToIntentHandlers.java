@@ -14,6 +14,8 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ToIntentHandlers
 {
+    protected final IntentTypeCandidates intentTypeCandidates = new IntentTypeCandidates();
+
     public <T> List<EventHandler<?>> call(
             MultiKey<T> multiKey,
             List<RuntimeKey<T>> runtimeKeys,
@@ -51,14 +53,6 @@ public class ToIntentHandlers
     protected <T> List<String> intentTypeCandidates(RuntimeKey<T> runtimeKey)
     {
         sane(runtimeKey, "runtimeKey");
-        List<String> result = new ArrayList<>();
-        result.add(runtimeKey.typeKey().toString());
-        T entity = runtimeKey.entity();
-        if (entity != null)
-        {
-            result.add(entity.getClass().getSimpleName());
-            result.add(entity.getClass().getName());
-        }
-        return result;
+        return intentTypeCandidates.call(runtimeKey);
     }
 }

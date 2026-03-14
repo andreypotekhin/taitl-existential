@@ -152,6 +152,18 @@ public final class Existential implements Closeable
         transactions.rollback(tr);
     }
 
+    public <T> void memo(T before, T live, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        sane(before, "before", live, "live", type, "type", tranID, "tranID");
+        transactions.tr(tranID).memo(before, live, type);
+    }
+
+    public <T> void memo(T before, T live, Class<T> cls, String tranID) throws ExistentialException
+    {
+        sane(before, "before", live, "live", cls, "cls", tranID, "tranID");
+        transactions.tr(tranID).memo(before, live, cls);
+    }
+
     /* Event methods */
 
     /**

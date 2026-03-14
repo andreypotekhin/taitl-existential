@@ -81,7 +81,7 @@ public class EvaluationLogic implements Closeable
     {
         sane(runtimeKey, "runtimeKey", tr, "tr", stageName, "stageName", report, "report");
         EventField eventField = eventField(tr, stageName);
-        evaluateEvents.call(runtimeKey, eventField, report, useFullClassNames(), shouldSplitElementary());
+        evaluateEvents.call(runtimeKey, tr, eventField, report, useFullClassNames(), shouldSplitElementary());
     }
 
     protected void evaluateEncountered(Tr tr, StageName stageName) throws ExistentialException

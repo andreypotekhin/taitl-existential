@@ -22,6 +22,7 @@ public class ConfigurationIndexes
     protected IndexConfig indexConfig;
     protected boolean useFullClassNames;
     public MaintainGlobalOrder maintainGlobalOrder;
+    protected Set<String> biKeys = new LinkedHashSet<>();
     protected Set<EventType> intentEventTypes = new LinkedHashSet<>();
 
     public ConfigurationIndexes()
@@ -64,6 +65,12 @@ public class ConfigurationIndexes
         intentEventTypes.add(eventType);
     }
 
+    public <T> void addBiKey(EventKey<T> eventKey)
+    {
+        sane(eventKey, "eventKey");
+        biKeys.add(eventKey.toString());
+    }
+
     public boolean hasIntentEventType(EventType eventType)
     {
         sane(eventType, "eventType");
@@ -73,6 +80,12 @@ public class ConfigurationIndexes
     public boolean hasIntents()
     {
         return !intentEventTypes.isEmpty();
+    }
+
+    public <T> boolean hasBiKey(EventKey<T> eventKey)
+    {
+        sane(eventKey, "eventKey");
+        return biKeys.contains(eventKey.toString());
     }
 
     /**
@@ -111,6 +124,7 @@ public class ConfigurationIndexes
     {
         configuredHandlers.clear();
         configuredIntents.clear();
+        biKeys.clear();
         intentEventTypes.clear();
     }
 

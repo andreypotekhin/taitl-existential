@@ -96,9 +96,17 @@ public class IndexConfig
             {
                 ci.addIntent(eventKey, ev);
                 ci.addIntentEventType(eventType(ev));
+                if (biEventType(ev))
+                {
+                    ci.addBiKey(eventKey);
+                }
                 return;
             }
             ci.addHandler(eventKey, ev);
+            if (biEventType(ev))
+            {
+                ci.addBiKey(eventKey);
+            }
         }
 
         protected <T> EventKey<T> eventKey(Ev<T> ev)
@@ -150,6 +158,15 @@ public class IndexConfig
         protected boolean useFullEventNames()
         {
             return !currentIntent && ci.useFullClassNames();
+        }
+
+        protected <T> boolean biEventType(Ev<T> ev)
+        {
+            if (!(ev instanceof EventHandler<?>))
+            {
+                return false;
+            }
+            return eventType(ev).biEvent();
         }
     }
 }

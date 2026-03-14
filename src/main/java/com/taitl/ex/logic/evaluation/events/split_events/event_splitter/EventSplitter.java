@@ -3,8 +3,10 @@ package com.taitl.ex.logic.evaluation.events.split_events.event_splitter;
 import com.taitl.ex.common.creator.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
+import com.taitl.existential.exceptions.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -45,11 +47,13 @@ public class EventSplitter
     public static Supplier<? extends EventSplitter> FACTORY = () -> Creator.create(EventSplitter.class);
     protected SplitEventType splitEventType = Creator.create(SplitEventType.class);
     protected SplitTypeKey splitTypeKey = Creator.create(SplitTypeKey.class);
+    protected ResolveMemoBiEvent resolveMemoBiEvent = Creator.create(ResolveMemoBiEvent.class);
 
     public <T> Set<RuntimeKey<T>> split(
             RuntimeKey<T> runtimeKey,
             boolean useFullEventNames,
-            boolean splitElementaryToCompound)
+            boolean splitElementaryToCompound,
+            Tr tr) throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();
@@ -59,9 +63,14 @@ public class EventSplitter
         Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
         for (Event<T> splitEvent : events)
         {
+            Event<T> resolved = tr != null ? resolveMemoBiEvent.forSplit(splitEvent, runtimeKey, tr) : splitEvent;
+            if (resolved == null)
+            {
+                continue;
+            }
             for (TypeKey<T> typeKey : typeKeys)
             {
-                runtimeKeys.add(new RuntimeKey<>(splitEvent, typeKey, runtimeEntity(splitEvent, runtimeKey),
+                runtimeKeys.add(new RuntimeKey<>(resolved, typeKey, runtimeEntity(resolved, runtimeKey),
                         useFullEventNames));
             }
         }

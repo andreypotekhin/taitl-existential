@@ -4,6 +4,7 @@ import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
+import com.taitl.ex.logic.evaluation.events.split_events.rules.*;
 import com.taitl.ex.logic.evaluation.intents.actions.*;
 import com.taitl.ex.logic.evaluation.intents.maps.*;
 import com.taitl.existential.constants.*;
@@ -25,6 +26,7 @@ public class EvaluateIntents
     protected final EventSplitter eventSplitter;
     protected final ToSplitKeys toSplitKeys;
     protected final EvaluateSplitKeys evaluateSplitKeys;
+    protected final RequireMemoForBiRules requireMemoForBiRules;
 
     public EvaluateIntents(EvaluationLogic el)
     {
@@ -33,6 +35,7 @@ public class EvaluateIntents
         this.eventSplitter = Creator.singleton(EventSplitter.class);
         this.toSplitKeys = new ToSplitKeys();
         this.evaluateSplitKeys = new EvaluateSplitKeys();
+        this.requireMemoForBiRules = Creator.create(RequireMemoForBiRules.class);
     }
 
     public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException
@@ -44,14 +47,29 @@ public class EvaluateIntents
             return;
         }
 
-        Map<EventType, List<RuntimeKey<T>>> grouped = splitAndGroupByEventType(runtimeKey);
+        requireMemoForBiRules.forIntents(runtimeKey, indexes, tr, stageName);
+        Map<EventType, List<RuntimeKey<T>>> grouped = splitAndGroupByEventType(runtimeKey, tr);
         iterateSplitKeys(grouped, indexes, tr, stageName);
+    }
+
+    public <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey, Tr tr)
+            throws ExistentialException
+    {
+        return toSplitKeys
+                .call(eventSplitter.split(runtimeKey, el.useFullClassNames(), el.shouldSplitElementary(), tr));
     }
 
     public <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey)
     {
-        return toSplitKeys
-                .call(eventSplitter.split(runtimeKey, el.useFullClassNames(), el.shouldSplitElementary()));
+        try
+        {
+            return toSplitKeys
+                    .call(eventSplitter.split(runtimeKey, el.useFullClassNames(), el.shouldSplitElementary(), null));
+        }
+        catch (ExistentialException ex)
+        {
+            throw new IllegalStateException("Split without transaction should not require memo resolution", ex);
+        }
     }
 
     public <T> void iterateSplitKeys(

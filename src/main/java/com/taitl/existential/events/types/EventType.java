@@ -45,6 +45,12 @@ public class EventType
         return eventClass;
     }
 
+    public boolean biEvent()
+    {
+        return eventClass.equals(com.taitl.existential.events.Transit.class)
+                || eventClass.equals(com.taitl.existential.events.Port.class);
+    }
+
     public int hashCode()
     {
         return eventClass.hashCode();

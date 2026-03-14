@@ -161,6 +161,16 @@ public final class Ex
         instance().rollback(tr);
     }
 
+    public static <T> void memo(T before, T live, TypeKey<T> type, String tranID) throws ExistentialException
+    {
+        instance().memo(before, live, type, tranID);
+    }
+
+    public static <T> void memo(T before, T live, Class<T> cls, String tranID) throws ExistentialException
+    {
+        instance().memo(before, live, cls, tranID);
+    }
+
     /* Event methods */
 
     /**

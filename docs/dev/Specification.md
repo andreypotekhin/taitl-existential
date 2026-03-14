@@ -316,6 +316,7 @@ User can specify configuration rules per context using Context, ContextBuilder.
 User can specify configuration rules per business method invocation using Transaction, TransactionBuilder.
 User can interact with the business transaction using Ex, Existential and Tr classes.
 User can send messages to library using Ex, Existential and Tr classes.
++User can register memo state for a transaction entity so bi-event rules receive before-state snapshots.
 
 ##### Internal indexing
 System automatically finalizes configuration for op upon start of a transaction.
