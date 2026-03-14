@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.events.split_events;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
@@ -33,8 +34,13 @@ import static com.taitl.ex.common.helper.Args.*;
 public class SplitEvent
 {
     // TODO: source from ExistentialEvents instead of singleton
+    @Logic
     protected EventSplitter eventSplitter = Creator.singleton(EventSplitter.class);
+
+    @Logic
     protected RequireMemoForBiRules requireMemoForBiRules = Creator.create(RequireMemoForBiRules.class);
+
+    @Logic
     protected ResolveMemoBiEvent resolveMemoBiEvent = Creator.create(ResolveMemoBiEvent.class);
 
     public <T> SplitResult<T> call(

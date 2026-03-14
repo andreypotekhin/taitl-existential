@@ -14,7 +14,11 @@ public class IndexingLogic implements Closeable
 {
     @Up
     protected ExistentialEvents ev;
+
+    @Up
     protected Existential ex;
+
+    @Up
     protected ExistentialConfigs ec;
 
     public IndexingLogic(ExistentialEvents ev)

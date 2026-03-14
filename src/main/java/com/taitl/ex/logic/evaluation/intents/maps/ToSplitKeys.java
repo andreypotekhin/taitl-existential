@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.intents.maps;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
 import com.taitl.existential.events.types.*;
@@ -11,6 +12,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ToSplitKeys
 {
+    @Logic
     protected SplitTypeKey splitTypeKey;
 
     public ToSplitKeys()

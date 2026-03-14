@@ -38,8 +38,11 @@ public class EventField
 {
     @Up
     protected ConfigurationIndexes ci;
-    protected ListMap<String, Ev<?>> map = new ListMap<>();
+
+    @Logic
     protected ConfiguredHandlers configured;
+
+    protected ListMap<String, Ev<?>> map = new ListMap<>();
 
     public EventField(ConfigurationIndexes ci)
     {

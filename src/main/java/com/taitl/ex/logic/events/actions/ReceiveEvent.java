@@ -16,8 +16,15 @@ public class ReceiveEvent
 {
     @Up
     protected EventLogic el;
+
+    @Up
+    @Logic
     protected IndexingLogic indexingLogic;
+
+    @Up
+    @Logic
     protected TransactionLogic transactionLogic;
+
     protected boolean useFullClassNames;
 
     public ReceiveEvent(EventLogic el)

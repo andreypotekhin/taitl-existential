@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.events.split_events.event_splitter;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
@@ -45,8 +46,14 @@ import static com.taitl.ex.common.helper.Args.*;
 public class EventSplitter
 {
     public static Supplier<? extends EventSplitter> FACTORY = () -> Creator.create(EventSplitter.class);
+
+    @Logic
     protected SplitEventType splitEventType = Creator.create(SplitEventType.class);
+
+    @Logic
     protected SplitTypeKey splitTypeKey = Creator.create(SplitTypeKey.class);
+
+    @Logic
     protected ResolveMemoBiEvent resolveMemoBiEvent = Creator.create(ResolveMemoBiEvent.class);
 
     public <T> Set<RuntimeKey<T>> split(

@@ -9,6 +9,9 @@ import com.taitl.existential.keys.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Builds Config from ConfigBuilder and adds it to ConfigRegistry.
+ */
 public class BuildConfig
 {
     @Up
@@ -19,9 +22,6 @@ public class BuildConfig
         this.cl = cl;
     }
 
-    /**
-     * Builds Config from ConfigBuilder and adds it to ConfigRegistry.
-     */
     public void call(ConfigBuilder configBuilder)
     {
         sane(configBuilder, "configBuilder");

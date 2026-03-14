@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.*;
 import java.util.function.*;
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.helper.security.FileSecurity;
 import com.taitl.ex.common.helper.io.LimitedInputStream;
 import com.taitl.ex.common.helper.Properties;
@@ -25,10 +26,12 @@ public class ConfigureLibrary
     private static final String OPT_REQUIRE_DESCRIPTIONS = "behavior.rules.requireDescriptions";
     private static final long MAX_CONFIG_BYTES = 1024 * 1024;
 
+    @Logic
+    protected LoadProperties loadProperties;
+
     protected Existential ex;
     protected Function<String, String> env;
     protected ClassLoader classLoader;
-    protected LoadProperties loadProperties;
 
     public ConfigureLibrary(Existential ex)
     {

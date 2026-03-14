@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.events.split_events.rules;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
@@ -19,8 +20,13 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class RequireMemoForBiRules
 {
+    @Logic
     protected final SplitTypeKey splitTypeKey;
+
+    @Logic
     protected final ResolveMemoBiEvent resolveMemoBiEvent;
+
+    @Logic
     protected final IntentTypeCandidates intentTypeCandidates;
 
     public RequireMemoForBiRules()

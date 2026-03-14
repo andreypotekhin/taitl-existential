@@ -17,10 +17,18 @@ public class ValidationLogic
 {
     @Up
     TransactionLogic tl;
+
+    @Logic
+    @Up
     EvaluationLogic el;
-    ValidationReport report;
+
+    @Logic
     PrepareTransaction prepareTransaction;
+
+    @Logic
     ValidateTransaction validateTransaction;
+
+    ValidationReport report;
 
     public ValidationLogic(TransactionLogic transactionLogic)
     {

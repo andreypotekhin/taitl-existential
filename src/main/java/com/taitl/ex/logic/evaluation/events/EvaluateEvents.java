@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.events;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.events.actions.*;
@@ -13,7 +14,10 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class EvaluateEvents
 {
+    @Logic
     protected SplitEvent splitEvent = Creator.singleton(SplitEvent.class);
+
+    @Logic
     protected ExecuteHandlers executeHandlers = Creator.singleton(ExecuteHandlers.class);
 
     public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, EventField eventField, ValidationReport report,

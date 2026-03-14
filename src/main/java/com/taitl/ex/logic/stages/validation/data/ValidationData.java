@@ -15,6 +15,8 @@ public class ValidationData
 {
     @Up
     Tr tr;
+
+    @Up
     public IndexData indexData;
 
     public ValidationData(Tr tr)

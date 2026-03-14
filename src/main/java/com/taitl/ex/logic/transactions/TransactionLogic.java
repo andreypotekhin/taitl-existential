@@ -26,19 +26,47 @@ public class TransactionLogic implements Closeable
 {
     @Up
     protected ExistentialTransactions ee;
+
+    @Logic
     protected TrRegistry registry;
+
+    @Logic
     protected CreateTran createTran;
+
+    @Logic
     protected BeginTran beginTran;
+
+    @Logic
     protected CommitTran commitTran;
+
+    @Logic
     protected CheckpointTran checkpointTran;
+
+    @Logic
     protected RollbackTran rollbackTran;
+
+    @Logic
     protected DisposeTran disposeTran;
+
+    @Logic
     public EvaluationLogic evaluationLogic;
+
+    @Logic
     public BeginLogic beginLogic;
+
+    @Logic
     public ImmediateLogic immediateLogic;
+
+    @Logic
     public CommitLogic commitLogic;
+
+    @Logic
     public CheckpointLogic checkpointLogic;
+
+    @Logic
     public RollbackLogic rollbackLogic;
+
+    @Logic
     public ValidationLogic validationLogic;
 
     public TransactionLogic(ExistentialTransactions ee)

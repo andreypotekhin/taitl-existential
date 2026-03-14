@@ -12,6 +12,8 @@ public class ExistentialConfigs implements Closeable
 {
     @Up
     protected Existential ex;
+
+    @Logic
     protected ConfigurationLogic configLogic;
 
     public ExistentialConfigs(Existential ex)

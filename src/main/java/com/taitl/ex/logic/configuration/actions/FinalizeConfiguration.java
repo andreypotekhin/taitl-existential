@@ -12,8 +12,14 @@ public class FinalizeConfiguration
 {
     @Up
     protected ConfigurationLogic cl;
+
+    @Up
     protected ExistentialConfigs ec;
+
+    @Up
     protected Existential ex;
+
+    @Logic
     protected BuildConfig buildConfig;
 
     public FinalizeConfiguration(ConfigurationLogic cl)

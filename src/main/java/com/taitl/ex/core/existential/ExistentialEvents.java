@@ -21,8 +21,13 @@ public class ExistentialEvents implements Closeable
 {
     @Up
     protected Existential ex;
+
+    @Logic
     public EventLogic eventLogic;
+
+    @Logic
     public IndexingLogic indexingLogic;
+
     protected TypeKeyCache typeKeyCache;
 
     public ExistentialEvents(Existential ex)

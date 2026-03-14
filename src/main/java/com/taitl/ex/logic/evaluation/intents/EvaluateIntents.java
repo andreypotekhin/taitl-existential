@@ -25,9 +25,17 @@ public class EvaluateIntents
 {
     @Up
     protected final EvaluationLogic el;
+
+    @Logic
     protected final EventSplitter eventSplitter;
+
+    @Logic
     protected final ToSplitKeys toSplitKeys;
+
+    @Logic
     protected final EvaluateSplitKeys evaluateSplitKeys;
+
+    @Logic
     protected final RequireMemoForBiRules requireMemoForBiRules;
 
     public EvaluateIntents(EvaluationLogic el)

@@ -21,13 +21,20 @@ public class ConfigurationLogic implements Closeable
     @Up
     protected ExistentialConfigs ec;
 
+    @Logic
+    protected ConfigRegistry registry;
+
+    @Logic
+    protected CreateBuilders createBuilders;
+
+    @Logic
+    protected BuildContexts buildContexts;
+
+    @Logic
+    protected FinalizeConfiguration finalizeConfiguration;
+
     protected ConfigBuilder configBuilder;
     public SetMap<String, Context> contexts = new SetMap<>();
-
-    protected ConfigRegistry registry;
-    protected CreateBuilders createBuilders;
-    protected BuildContexts buildContexts;
-    protected FinalizeConfiguration finalizeConfiguration;
 
     public ConfigurationLogic(ExistentialConfigs ec)
     {

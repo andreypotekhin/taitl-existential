@@ -20,10 +20,14 @@ import static com.taitl.ex.common.helper.Args.*;
 public class TrRegistry
 {
     public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#transaction-not-found";
-    protected Map<String, Tr> reg = new ConcurrentHashMap<>();
-    protected CreateTran createTran;
+
     @Up
     protected TransactionLogic tl;
+
+    @Logic
+    protected CreateTran createTran;
+
+    protected Map<String, Tr> reg = new ConcurrentHashMap<>();
 
     public TrRegistry(TransactionLogic tl, CreateTran createTran)
     {

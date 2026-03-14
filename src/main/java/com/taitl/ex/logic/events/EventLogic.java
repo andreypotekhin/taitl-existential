@@ -22,7 +22,11 @@ public class EventLogic implements Closeable
 {
     @Up
     protected ExistentialEvents ev;
+
+    @Up
     protected Existential ex;
+
+    @Logic
     protected ReceiveEvent receiveEvent;
     protected TypeKeyCache typeKeyCache;
 

@@ -16,6 +16,8 @@ public class ExistentialTransactions implements Closeable
 {
     @Up
     protected Existential ex;
+
+    @Logic
     protected TransactionLogic transactionLogic;
 
     public ExistentialTransactions(Existential ex)

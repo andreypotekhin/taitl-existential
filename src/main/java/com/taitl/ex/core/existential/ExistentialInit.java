@@ -13,6 +13,8 @@ public class ExistentialInit implements Closeable
 {
     @Up
     protected Existential ex;
+
+    @Logic
     protected ConfigureLibrary configureLibrary;
 
     static

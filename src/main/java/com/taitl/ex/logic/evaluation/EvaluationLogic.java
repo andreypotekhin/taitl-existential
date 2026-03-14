@@ -21,7 +21,11 @@ public class EvaluationLogic implements Closeable
 {
     @Up
     protected TransactionLogic tl;
+
+    @Logic
     protected EvaluateEvents evaluateEvents;
+
+    @Logic
     protected EvaluateIntents evaluateIntents;
 
     public EvaluationLogic(TransactionLogic tl)

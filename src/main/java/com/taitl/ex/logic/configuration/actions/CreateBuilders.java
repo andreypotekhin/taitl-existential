@@ -23,16 +23,7 @@ public class CreateBuilders
         return (o != null) ? o : createBuilder();
     }
 
-    /**
-     * @deprecated Use {@link #getCreateBuilder()} instead.
-     */
-    @Deprecated
-    public ConfigBuilder getcreateBuilder()
-    {
-        return getCreateBuilder();
-    }
-
-    public ConfigBuilder createBuilder()
+    protected ConfigBuilder createBuilder()
     {
         ConfigBuilder o = new ConfigBuilder(cl.ex());
         synchronized (this)

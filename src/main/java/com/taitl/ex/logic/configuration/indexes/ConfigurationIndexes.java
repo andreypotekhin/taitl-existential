@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.configuration.indexes;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.configuration.indexes.actions.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.configuration.rules.*;
@@ -15,13 +16,25 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ConfigurationIndexes
 {
+    @Logic
     public ConfiguredHandlers configuredHandlers;
+
+    @Logic
     public ConfiguredHandlers configuredIntents;
+
+    @Logic
     protected EventField eventField;
+
+    @Logic
     protected EventField intentField;
+
+    @Logic
     protected IndexConfig indexConfig;
-    protected boolean useFullClassNames;
+
+    @Logic
     public MaintainGlobalOrder maintainGlobalOrder;
+
+    protected boolean useFullClassNames;
     protected Set<String> biKeys = new LinkedHashSet<>();
     protected Set<EventType> intentEventTypes = new LinkedHashSet<>();
 

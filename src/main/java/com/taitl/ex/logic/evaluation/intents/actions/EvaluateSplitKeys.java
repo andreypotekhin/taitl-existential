@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.intents.actions;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.constants.*;
@@ -16,8 +17,13 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class EvaluateSplitKeys
 {
+    @Logic
     protected final ToIntentHandlers toIntentHandlers;
+
+    @Logic
     protected final IterateIntents iterateIntents;
+
+    @Logic
     protected final CheckEventType checkEventType;
 
     public EvaluateSplitKeys()
