@@ -1,7 +1,7 @@
 package com.taitl.existential.keys;
 
+import com.taitl.ex.common.paths.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.paths.*;
 
 /**
  * A path-like representation of a business operation, serving as a key for
@@ -16,7 +16,7 @@ import com.taitl.existential.paths.*;
  * A context key cannot end with a slash.
  * The wildcard character (*) is allowed in a context key.
  *
- * @see AbstractPath
+ * @see com.taitl.ex.common.paths.AbstractPath
  * @see Context
  * @see Transaction
  */

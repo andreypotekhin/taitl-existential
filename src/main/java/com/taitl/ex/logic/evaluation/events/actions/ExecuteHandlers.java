@@ -6,7 +6,6 @@ import com.taitl.existential.events.*;
 import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 

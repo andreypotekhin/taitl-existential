@@ -14,6 +14,7 @@ public class TransactionIndexes
 {
     @Up
     protected Transaction transaction;
+
     protected Map<String, MultiIndex<?, ?>> indexes = new ConcurrentHashMap<>();
 
     public TransactionIndexes(Transaction tr)

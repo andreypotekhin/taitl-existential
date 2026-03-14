@@ -1,4 +1,4 @@
-package com.taitl.existential.paths;
+package com.taitl.ex.common.paths;
 
 import org.junit.jupiter.api.*;
 

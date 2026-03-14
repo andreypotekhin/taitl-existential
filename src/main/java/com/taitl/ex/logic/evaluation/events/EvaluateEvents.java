@@ -5,6 +5,7 @@ import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.events.actions.*;
 import com.taitl.ex.logic.evaluation.events.split_events.*;
+import com.taitl.ex.logic.evaluation.events.split_events.data.*;
 import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;

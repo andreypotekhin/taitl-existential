@@ -1,7 +1,7 @@
 package com.taitl.ex.common.helper.strings;
 
 import com.taitl.existential.evaluables.Ev;
-import com.taitl.existential.expressions.Expression;
+import com.taitl.existential.evaluables.Expression;
 import com.taitl.existential.interfaces.Describable;
 
 import static com.taitl.ex.common.helper.Args.check;

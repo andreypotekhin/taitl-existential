@@ -6,11 +6,6 @@ package com.taitl.existential.constants;
  */
 public class Flags
 {
-    public static final int FLAG_1 = 1;
-    public static final int FLAG_2 = 2;
-    public static final int FLAG_3 = 4;
-    public static final int FLAG_4 = 8;
-
     /**
      * Enforces non-empty descriptions for behavior rules to improve diagnostics.
      */

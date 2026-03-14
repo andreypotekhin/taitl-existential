@@ -24,7 +24,7 @@ public class ConfiguredHandlers
     @Up
     protected ConfigurationIndexes ci;
 
-    // EventKey to Set<EventHandler<>>
+    /** EventKey to Set<OrderlyEv<>> **/
     protected SetMap<String, OrderlyEv<?>> handlers = new SetMap<>();
     protected boolean ready = false;
 

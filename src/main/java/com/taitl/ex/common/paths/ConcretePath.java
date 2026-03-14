@@ -1,4 +1,4 @@
-package com.taitl.existential.paths;
+package com.taitl.ex.common.paths;
 
 import com.taitl.existential.configs.*;
 import com.taitl.existential.keys.*;

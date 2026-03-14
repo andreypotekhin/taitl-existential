@@ -1,7 +1,8 @@
 package com.taitl.existential.events;
 
-import com.taitl.ex.common.helper.*;
 import com.taitl.existential.events.types.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Signals a change to an application entity during the current transaction.
@@ -26,7 +27,7 @@ public class Transit<T> extends BiEvent<T>
     public Transit(T before, T after)
     {
         super(before, after);
-        PairArgs.requireBothNonNull(before, after, "Argument 'before' should not be null",
+        requireBothNonNull(before, after, "Argument 'before' should not be null",
                 "Argument 'after' should not be null");
     }
 }

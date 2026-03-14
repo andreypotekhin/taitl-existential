@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.evaluation.events.split_events;
+package com.taitl.ex.logic.evaluation.events.split_events.data;
 
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;

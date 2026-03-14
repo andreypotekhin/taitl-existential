@@ -2,8 +2,8 @@ package com.taitl.ex.concrete;
 
 import java.util.function.*;
 import com.taitl.ex.common.helper.strings.*;
+import com.taitl.existential.evaluables.*;
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.expressions.*;
 
 public class ConcreteAll<T> implements Expression<T>
 {

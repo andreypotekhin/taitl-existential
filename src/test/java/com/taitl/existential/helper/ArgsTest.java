@@ -65,4 +65,24 @@ class ArgsTest
             Args.check(true, "msg1", (Object[]) null);
         }).getMessage(), containsString("must not be null"));
     }
+
+    @Test
+    void pair()
+    {
+        assertDoesNotThrow(() -> {
+            Args.requireBothNonNull(o, o, "msg1", "msg2");
+        });
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            Args.requireBothNonNull(null, o, "msg1", "msg2");
+        }).getMessage(), is("msg1"));
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            Args.requireBothNonNull(o, null, "msg1", "msg2");
+        }).getMessage(), is("msg2"));
+        assertDoesNotThrow(() -> {
+            Args.requireNotBothNull(null, o, "message");
+        });
+        assertThat(assertThrows(IllegalArgumentException.class, () -> {
+            Args.requireNotBothNull(null, null, "message");
+        }).getMessage(), is("message"));
+    }
 }

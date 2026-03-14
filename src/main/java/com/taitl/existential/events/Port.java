@@ -1,7 +1,8 @@
 package com.taitl.existential.events;
 
-import com.taitl.ex.common.helper.*;
 import com.taitl.existential.events.types.*;
+
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Signals that an entity was created, updated, or deleted during the current transaction.
@@ -27,6 +28,6 @@ public class Port<T> extends BiEvent<T>
     public Port(T before, T after)
     {
         super(before, after);
-        PairArgs.requireNotBothNull(before, after, "Arguments 'before' and 'after' should not be both null");
+        requireNotBothNull(before, after, "Arguments 'before' and 'after' should not be both null");
     }
 }

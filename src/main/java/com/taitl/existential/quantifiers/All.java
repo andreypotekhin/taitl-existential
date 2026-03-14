@@ -3,8 +3,8 @@ package com.taitl.existential.quantifiers;
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.concrete.*;
+import com.taitl.existential.evaluables.*;
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.expressions.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 

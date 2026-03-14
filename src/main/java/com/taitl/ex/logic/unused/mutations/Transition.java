@@ -1,6 +1,6 @@
-package com.taitl.existential.mutations;
+package com.taitl.ex.logic.unused.mutations;
 
-import com.taitl.ex.common.helper.*;
+import static com.taitl.ex.common.helper.Args.*;
 
 /**
  * Represents an object mutation that, unlike Porting<T>, does not allow either 'from' nor 'to' state to be null.
@@ -11,6 +11,7 @@ import com.taitl.ex.common.helper.*;
  * @param <T>
  *            Type of mutating object
  */
+@Deprecated
 public final class Transition<T>
 {
     public T t0;
@@ -18,7 +19,7 @@ public final class Transition<T>
 
     public Transition(T t0, T t1)
     {
-        PairArgs.requireBothNonNull(t0, t1, "Argument 't0' should not be null", "Argument 't1' should not be null");
+        requireBothNonNull(t0, t1, "Argument 't0' should not be null", "Argument 't1' should not be null");
         this.t0 = t0;
         this.t1 = t1;
     }

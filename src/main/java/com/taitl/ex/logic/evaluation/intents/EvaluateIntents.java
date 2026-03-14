@@ -36,7 +36,7 @@ public class EvaluateIntents
     protected final EvaluateSplitKeys evaluateSplitKeys;
 
     @Logic
-    protected final RequireMemoForBiRules requireMemoForBiRules;
+    protected final RequireMemoForBiEvents requireMemoForBiEvents;
 
     public EvaluateIntents(EvaluationLogic el)
     {
@@ -45,7 +45,7 @@ public class EvaluateIntents
         this.eventSplitter = Creator.singleton(EventSplitter.class);
         this.toSplitKeys = Creator.create(ToSplitKeys.class);
         this.evaluateSplitKeys = Creator.create(EvaluateSplitKeys.class);
-        this.requireMemoForBiRules = Creator.create(RequireMemoForBiRules.class);
+        this.requireMemoForBiEvents = Creator.create(RequireMemoForBiEvents.class);
     }
 
     public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException
@@ -57,7 +57,7 @@ public class EvaluateIntents
             return;
         }
 
-        requireMemoForBiRules.forIntents(runtimeKey, indexes, tr, stageName);
+        requireMemoForBiEvents.forIntents(runtimeKey, indexes, tr, stageName);
         Map<EventType, List<RuntimeKey<T>>> grouped = splitAndGroupByEventType(runtimeKey, tr);
         iterateSplitKeys(grouped, indexes, tr, stageName);
     }

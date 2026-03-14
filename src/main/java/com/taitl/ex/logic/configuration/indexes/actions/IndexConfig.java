@@ -7,7 +7,6 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
-import com.taitl.existential.expressions.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.events.types.*;

@@ -18,8 +18,8 @@ public class ValidationLogic
     @Up
     TransactionLogic tl;
 
-    @Logic
     @Up
+    @Logic
     EvaluationLogic el;
 
     @Logic

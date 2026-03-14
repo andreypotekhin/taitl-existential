@@ -1,6 +1,6 @@
 package com.taitl.ex.logic.unused.instructions;
 
-import com.taitl.existential.expressions.*;
+import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.types.*;
 
 import static com.taitl.ex.common.helper.Args.*;

@@ -16,6 +16,7 @@ public class ExistentialAccess implements Closeable
 {
     @Up
     protected Existential ex;
+
     protected TypeKeyCache typeKeyCache;
 
     public ExistentialAccess(Existential ex)

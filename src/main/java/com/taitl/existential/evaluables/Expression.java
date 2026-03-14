@@ -1,4 +1,4 @@
-package com.taitl.existential.expressions;
+package com.taitl.existential.evaluables;
 
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.exceptions.*;

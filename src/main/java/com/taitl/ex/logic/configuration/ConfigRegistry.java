@@ -14,6 +14,7 @@ public class ConfigRegistry
 {
     @Up
     protected ConfigurationLogic cl;
+
     protected Config config;
 
     public ConfigRegistry(ConfigurationLogic cl)

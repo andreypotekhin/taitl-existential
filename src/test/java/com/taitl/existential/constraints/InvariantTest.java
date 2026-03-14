@@ -2,7 +2,7 @@ package com.taitl.existential.constraints;
 
 import com.taitl.existential.configs.Transaction;
 import com.taitl.existential.evaluables.Ev;
-import com.taitl.existential.expressions.Expression;
+import com.taitl.existential.evaluables.Expression;
 import com.taitl.existential.handlers.OnCreate;
 import com.taitl.existential.handlers.OnTransit;
 import com.taitl.existential.handlers.combined_event_handlers.OnCUD;

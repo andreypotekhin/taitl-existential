@@ -13,7 +13,7 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class ResolveMemoBiEvent
+public class ResolveMemo
 {
     public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#memo-state-missing";
 

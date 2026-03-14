@@ -39,7 +39,7 @@ public class Outcome
      */
     public static void cool(Object o, String objName, Object... args)
     {
-        ArgPairChecks.requireNonNullPairs(o,
+        Args.requireNonNullPairs(o,
                 objName,
                 "Value '%s' must not be null",
                 "Value '%s' must not be null",
@@ -65,7 +65,7 @@ public class Outcome
      */
     public static void verify(boolean condition, String message, Object... args)
     {
-        ArgPairChecks.requireAllTrue(condition, message, messageArg -> {
+        Args.requireAllTrue(condition, message, messageArg -> {
             throw new RuntimeException(messageArg);
         }, args);
     }

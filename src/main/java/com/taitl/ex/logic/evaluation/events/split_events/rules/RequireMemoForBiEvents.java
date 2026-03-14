@@ -18,21 +18,21 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class RequireMemoForBiRules
+public class RequireMemoForBiEvents
 {
     @Logic
     protected final SplitTypeKey splitTypeKey;
 
     @Logic
-    protected final ResolveMemoBiEvent resolveMemoBiEvent;
+    protected final ResolveMemo resolveMemo;
 
     @Logic
     protected final IntentTypeCandidates intentTypeCandidates;
 
-    public RequireMemoForBiRules()
+    public RequireMemoForBiEvents()
     {
         this.splitTypeKey = Creator.create(SplitTypeKey.class);
-        this.resolveMemoBiEvent = Creator.create(ResolveMemoBiEvent.class);
+        this.resolveMemo = Creator.create(ResolveMemo.class);
         this.intentTypeCandidates = Creator.create(IntentTypeCandidates.class);
     }
 
@@ -40,7 +40,7 @@ public class RequireMemoForBiRules
             throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField", tr, "tr");
-        if (!resolveMemoBiEvent.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))
+        if (!resolveMemo.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))
         {
             return;
         }
@@ -48,7 +48,7 @@ public class RequireMemoForBiRules
         {
             if (requiresHandlerMemo(typeKey, eventField, useFullEventNames, runtimeKey.event()))
             {
-                resolveMemoBiEvent.forSplit(
+                resolveMemo.forSplit(
                         newEvent(candidateBiEventClasses(runtimeKey.event())[0], runtimeKey.entity()),
                         runtimeKey, tr);
                 return;
@@ -60,7 +60,7 @@ public class RequireMemoForBiRules
             throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", indexes, "indexes", tr, "tr", stageName, "stageName");
-        if (!resolveMemoBiEvent.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))
+        if (!resolveMemo.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))
         {
             return;
         }
@@ -74,7 +74,7 @@ public class RequireMemoForBiRules
                 {
                     if (requiresIntentMemo(indexes, tr, stageName, eventType, candidate))
                     {
-                        resolveMemoBiEvent.forSplit(newEvent(eventClass, runtimeKey.entity()), runtimeKey, tr);
+                        resolveMemo.forSplit(newEvent(eventClass, runtimeKey.entity()), runtimeKey, tr);
                         return;
                     }
                 }

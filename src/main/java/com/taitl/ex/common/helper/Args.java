@@ -9,6 +9,12 @@ package com.taitl.ex.common.helper;
  */
 public class Args
 {
+    @FunctionalInterface
+    interface Thrower
+    {
+        void raise(String message);
+    }
+
     /**
      * Protected constructor for an utility class.
      */
@@ -32,7 +38,7 @@ public class Args
      */
     public static void sane(Object o, String argName, Object... args)
     {
-        ArgPairChecks.requireNonNullPairs(o,
+        requireNonNullPairs(o,
                 argName,
                 "Argument '%s' must not be null",
                 "Argument '%s' must not be null",
@@ -55,9 +61,35 @@ public class Args
 
     public static void check(boolean condition, String message, Object... args)
     {
-        ArgPairChecks.requireAllTrue(condition, message, messageArg -> {
+        requireAllTrue(condition, message, messageArg -> {
             throw new IllegalArgumentException(messageArg);
         }, args);
+    }
+
+    /**
+     * Throws IllegalArgumentException if either argument is null.
+     */
+    public static void requireBothNonNull(Object first, Object second, String firstMessage, String secondMessage)
+    {
+        if (first == null)
+        {
+            throw new IllegalArgumentException(firstMessage);
+        }
+        if (second == null)
+        {
+            throw new IllegalArgumentException(secondMessage);
+        }
+    }
+
+    /**
+     * Throws IllegalArgumentException if both arguments are null.
+     */
+    public static void requireNotBothNull(Object first, Object second, String message)
+    {
+        if (first == null && second == null)
+        {
+            throw new IllegalArgumentException(message);
+        }
     }
 
     /**
@@ -87,6 +119,47 @@ public class Args
             if (!(args[i] instanceof Boolean))
             {
                 throw new IllegalArgumentException(String.format("Argument '%s' must be boolean", i));
+            }
+        }
+    }
+
+    static void requireNonNullPairs(Object first,
+            String firstName,
+            String firstMessage,
+            String pairMessage,
+            Thrower thrower,
+            Object... args)
+    {
+        requireEvenArgs(args);
+        if (first == null)
+        {
+            thrower.raise(String.format(firstMessage, firstName));
+        }
+        for (int i = 0; i < args.length; i += 2)
+        {
+            if (args[i] == null)
+            {
+                thrower.raise(String.format(pairMessage, args[i + 1]));
+            }
+        }
+    }
+
+    static void requireAllTrue(boolean condition, String message, Thrower thrower, Object... args)
+    {
+        requireEvenArgs(args);
+        if (!condition)
+        {
+            thrower.raise(message);
+        }
+        for (int i = 0; i < args.length; i += 2)
+        {
+            if (!(args[i] instanceof Boolean))
+            {
+                throw new IllegalArgumentException(String.format("Argument '%s' must be boolean", i));
+            }
+            if (!((Boolean) args[i]))
+            {
+                thrower.raise(String.valueOf(args[i + 1]));
             }
         }
     }

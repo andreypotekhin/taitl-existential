@@ -1,6 +1,5 @@
 package com.taitl.existential.handlers;
 
-import com.taitl.ex.common.helper.*;
 import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.types.*;
@@ -91,7 +90,7 @@ public class OnPort<T> implements BiEventHandler<T>
      */
     public void handle(T t0, T t1) throws ExistentialException
     {
-        PairArgs.requireNotBothNull(t0, t1, "Arguments 't0' and 't1' should not be both null");
+        requireNotBothNull(t0, t1, "Arguments 't0' and 't1' should not be both null");
 
         boolean conditionMet = true;
 

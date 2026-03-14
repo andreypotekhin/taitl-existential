@@ -41,7 +41,7 @@ public class State
      */
     public static void cool(Object o, String objName, Object... args)
     {
-        ArgPairChecks.requireNonNullPairs(o,
+        Args.requireNonNullPairs(o,
                 objName,
                 "Argument '%s' must not be null",
                 "Argument '%s' must not be null",
@@ -67,7 +67,7 @@ public class State
      */
     public static void verify(boolean condition, String message, Object... args)
     {
-        ArgPairChecks.requireAllTrue(condition, message, messageArg -> {
+        Args.requireAllTrue(condition, message, messageArg -> {
             throw new IllegalStateException(messageArg);
         }, args);
     }

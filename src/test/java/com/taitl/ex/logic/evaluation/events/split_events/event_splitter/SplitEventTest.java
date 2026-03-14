@@ -2,6 +2,7 @@ package com.taitl.ex.logic.evaluation.events.split_events.event_splitter;
 
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.evaluation.events.split_events.*;
+import com.taitl.ex.logic.evaluation.events.split_events.data.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.keys.*;
 import org.junit.jupiter.api.*;

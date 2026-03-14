@@ -54,7 +54,7 @@ public class EventSplitter
     protected SplitTypeKey splitTypeKey = Creator.create(SplitTypeKey.class);
 
     @Logic
-    protected ResolveMemoBiEvent resolveMemoBiEvent = Creator.create(ResolveMemoBiEvent.class);
+    protected ResolveMemo resolveMemo = Creator.create(ResolveMemo.class);
 
     public <T> Set<RuntimeKey<T>> split(
             RuntimeKey<T> runtimeKey,
@@ -70,7 +70,7 @@ public class EventSplitter
         Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
         for (Event<T> splitEvent : events)
         {
-            Event<T> resolved = tr != null ? resolveMemoBiEvent.forSplit(splitEvent, runtimeKey, tr) : splitEvent;
+            Event<T> resolved = tr != null ? resolveMemo.forSplit(splitEvent, runtimeKey, tr) : splitEvent;
             if (resolved == null)
             {
                 continue;
