@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.evaluation.events.split_events.event_splitter;
+package com.taitl.ex.logic.evaluation.events.split_events.maps;
 
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.combined_events.*;
@@ -13,7 +13,7 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-public class ResolveMemo
+public class ToMemo
 {
     public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#memo-state-missing";
 

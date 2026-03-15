@@ -1,6 +1,7 @@
-package com.taitl.ex.logic.tr;
+package com.taitl.ex.logic.tr.data;
 
 import com.taitl.ex.common.helper.collections.*;
+import com.taitl.ex.logic.tr.keys.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.handlers.types.*;
 

@@ -1,5 +1,7 @@
 package com.taitl.ex.logic.evaluation.events.actions;
 
+import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.*;
@@ -15,7 +17,8 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ExecuteHandlers
 {
-    protected OnException onException = new OnException();
+    @Logic
+    protected OnException onException = Creator.create(OnException.class);
 
     public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report)
             throws ExistentialException

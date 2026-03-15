@@ -10,12 +10,12 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * Caches a merged view of static and transaction-local event handlers.
  */
-public class OverlayEventField extends EventField
+public class EventFieldOverlay extends EventField
 {
     protected final EventField base;
     protected final EventField overlay;
 
-    public OverlayEventField(EventField base, EventField overlay)
+    public EventFieldOverlay(EventField base, EventField overlay)
     {
         super(base.ci, base.source());
         sane(base, "base", overlay, "overlay");

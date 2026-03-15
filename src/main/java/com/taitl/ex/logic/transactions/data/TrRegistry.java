@@ -27,6 +27,7 @@ public class TrRegistry
     @Logic
     protected CreateTran createTran;
 
+    /** Tr ID (UUID String) -> Tr */
     protected Map<String, Tr> reg = new ConcurrentHashMap<>();
 
     public TrRegistry(TransactionLogic tl, CreateTran createTran)

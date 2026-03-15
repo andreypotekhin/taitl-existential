@@ -28,6 +28,7 @@ public class EventLogic implements Closeable
 
     @Logic
     protected ReceiveEvent receiveEvent;
+
     protected TypeKeyCache typeKeyCache;
 
     public EventLogic(ExistentialEvents ev)

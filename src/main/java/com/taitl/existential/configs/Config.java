@@ -48,8 +48,7 @@ public class Config
     }
 
     /**
-     * Adds a {@link Context} instance to the operation.
-     * Called by {@code ConfigRegistry.create(op)}.
+     * Adds a {@link Context} instance to this config.
      *
      * @param cont Context to add
      */

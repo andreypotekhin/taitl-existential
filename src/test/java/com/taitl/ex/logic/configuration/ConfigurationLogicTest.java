@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.configuration;
 
 import com.taitl.existential.*;
+import com.taitl.existential.configs.*;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.atomic.*;
@@ -12,11 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfigurationLogicTest
 {
     private Existential ex;
+    private ConfigurationLogic logic;
 
     @BeforeEach
     void setup()
     {
         ex = new Existential();
+        logic = new ConfigurationLogic(ex.configs());
     }
 
     @AfterEach
@@ -34,6 +37,27 @@ class ConfigurationLogicTest
         {
             RuntimeException error = assertThrows(RuntimeException.class, () -> ex.configs().config("/app/orders"));
             assertThat(error.getMessage(), is("Config not found for op '/app/orders'"));
+        }
+
+        @Test
+        @DisplayName("Remove rejects missing config with op key message")
+        void removeRejectsMissingConfig()
+        {
+            RuntimeException error = assertThrows(RuntimeException.class, () -> logic.removeConfig("/app/orders"));
+            assertThat(error.getMessage(), is("Config not found for op '/app/orders'"));
+        }
+
+        @Test
+        @DisplayName("Lookup matches wildcard context")
+        void matchesWildcardContext()
+        {
+            Config config = new Config();
+            config.addContext(new Context("/api/*/update"));
+
+            logic.setConfig(config);
+
+            assertTrue(logic.hasConfig("/api/cats/update"));
+            assertThat(logic.getConfig("/api/cats/update"), is(sameInstance(config)));
         }
     }
 

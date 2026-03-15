@@ -6,6 +6,7 @@ import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
 import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.ex.logic.configuration.rules.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
@@ -23,9 +24,6 @@ public class ConfigurationLogic implements Closeable
     protected ExistentialConfigs ec;
 
     @Logic
-    protected ConfigRegistry registry;
-
-    @Logic
     protected CreateBuilders createBuilders;
 
     @Logic
@@ -35,12 +33,12 @@ public class ConfigurationLogic implements Closeable
     protected FinalizeConfiguration finalizeConfiguration;
 
     protected ConfigBuilder configBuilder;
+    protected Config config;
     public SetMap<String, Context> contexts = new SetMap<>();
 
     public ConfigurationLogic(ExistentialConfigs ec)
     {
         this.ec = ec;
-        this.registry = Creator.create(ConfigRegistry.class, new Class[] { ConfigurationLogic.class }, this);
         this.createBuilders = Creator.create(CreateBuilders.class, new Class[] { ConfigurationLogic.class }, this);
         this.buildContexts = Creator.create(BuildContexts.class, new Class[] { ConfigurationLogic.class }, this);
         this.finalizeConfiguration =
@@ -105,6 +103,7 @@ public class ConfigurationLogic implements Closeable
     public void close()
     {
         configBuilder = null;
+        config = null;
         contexts.clear();
     }
 
@@ -115,7 +114,7 @@ public class ConfigurationLogic implements Closeable
     public void indexConfig(String op)
     {
         sane(op, "op");
-        Config config = registry.get(op);
+        Config config = getConfig(op);
         synchronized (config)
         {
             ConfigurationIndexes validationIndexes = config.indexes(op, StageName.VALIDATION);
@@ -134,7 +133,7 @@ public class ConfigurationLogic implements Closeable
 
     public boolean isEmpty()
     {
-        return registry.isEmpty();
+        return config == null;
     }
 
     public Existential ex()
@@ -147,9 +146,37 @@ public class ConfigurationLogic implements Closeable
         return ec;
     }
 
-    public ConfigRegistry registry()
+    public boolean hasConfig(String op)
     {
-        return registry;
+        return config != null && hasMatchingContext(op);
+    }
+
+    public Config getConfig(String op)
+    {
+        sane(op, "op");
+        verify(config != null, String.format("Config not found for op '%s'", op));
+        verify(hasMatchingContext(op), String.format("Config not found for op '%s'", op));
+        return config;
+    }
+
+    public Config removeConfig(String op)
+    {
+        sane(op, "op");
+        verify(config != null, String.format("Config not found for op '%s'", op));
+        verify(hasMatchingContext(op), String.format("Config not found for op '%s'", op));
+        synchronized (this)
+        {
+            Config prev = config;
+            config = null;
+            return prev;
+        }
+    }
+
+    public void setConfig(Config config)
+    {
+        sane(config, "config");
+        verify(this.config == null, "Cannot add Config - config already exists");
+        this.config = config;
     }
 
     public ConfigBuilder configBuilder()
@@ -165,8 +192,21 @@ public class ConfigurationLogic implements Closeable
     public Config config(String op)
     {
         sane(op, "op");
-        Config config = registry.get(op);
+        Config config = getConfig(op);
         indexConfig(op);
         return config;
+    }
+
+    protected boolean hasMatchingContext(String op)
+    {
+        sane(op, "op");
+        for (Context context : config.contexts())
+        {
+            if (MatchParentName.matches(op, context.name()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

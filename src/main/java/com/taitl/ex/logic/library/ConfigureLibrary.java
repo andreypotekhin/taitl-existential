@@ -26,10 +26,12 @@ public class ConfigureLibrary
 
     private static final long MAX_CONFIG_BYTES = 1024 * 1024;
 
+    @Up
+    protected Existential ex;
+
     @Logic
     protected LoadProperties loadProperties;
 
-    protected Existential ex;
     protected Function<String, String> env;
     protected ClassLoader classLoader;
 

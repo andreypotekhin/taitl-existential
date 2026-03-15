@@ -42,6 +42,7 @@ public class EventField
     @Logic
     protected ConfiguredHandlers configured;
 
+    /** MultiKey -> List<Ev<T>> */
     protected ListMap<String, Ev<?>> map = new ListMap<>();
 
     public EventField(ConfigurationIndexes ci)

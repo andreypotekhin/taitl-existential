@@ -2,6 +2,7 @@ package com.taitl.ex.concrete;
 
 import com.taitl.ex.logic.events.*;
 import com.taitl.ex.logic.transactions.*;
+import com.taitl.existential.transactions.*;
 
 import java.util.*;
 
@@ -9,7 +10,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class ConcreteTrBuilder
 {
-    com.taitl.existential.transactions.Tr tr;
+    Tr tr;
     String op;
     UUID id;
     TransactionLogic tl;
@@ -21,7 +22,7 @@ public class ConcreteTrBuilder
         return new ConcreteTr(tr, op, id, tl, el);
     }
 
-    public ConcreteTrBuilder tr(com.taitl.existential.transactions.Tr tr)
+    public ConcreteTrBuilder tr(Tr tr)
     {
         sane(tr, "tr");
         this.tr = tr;

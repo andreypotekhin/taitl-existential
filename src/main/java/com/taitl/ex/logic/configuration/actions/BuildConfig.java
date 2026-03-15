@@ -10,7 +10,7 @@ import com.taitl.existential.keys.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Builds Config from ConfigBuilder and adds it to ConfigRegistry.
+ * Builds Config from ConfigBuilder and stores it in ConfigurationLogic.
  */
 public class BuildConfig
 {
@@ -26,7 +26,7 @@ public class BuildConfig
     {
         sane(configBuilder, "configBuilder");
         Config config = configBuilder.build(cl.ec());
-        cl.registry().addConfig(config);
+        cl.setConfig(config);
 
         Set<String> ops = new LinkedHashSet<>();
         for (Context context : config.contexts())

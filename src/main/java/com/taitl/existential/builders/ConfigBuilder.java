@@ -121,8 +121,8 @@ public class ConfigBuilder
      * Builds configured Contexts.
      * Creates intermediates for consumption by subsequent stages.
      *
-     * Do not call this method directly - it is called by ConfigRegistry when
-     * the first transaction begins.
+     * Do not call this method directly. It is called from the configuration
+     * finalization flow when the first transaction begins.
      * This method is called from ExistentialConfigs.finalizeConfiguration().
      */
     public Config build(ExistentialConfigs ec)
@@ -213,8 +213,7 @@ public class ConfigBuilder
     }
 
     /**
-     * Adds Context instance to Op.
-     * Called by ConfigRegistry.create(op).
+     * Adds Context instance to this builder.
      *
      * @param cont Context to add
      */

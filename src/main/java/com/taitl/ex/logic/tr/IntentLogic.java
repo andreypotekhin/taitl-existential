@@ -2,6 +2,8 @@ package com.taitl.ex.logic.tr;
 
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.concrete.*;
+import com.taitl.ex.logic.tr.data.*;
+import com.taitl.ex.logic.tr.keys.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;

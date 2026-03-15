@@ -18,13 +18,8 @@ import com.taitl.existential.transactions.*;
  */
 public class IndexData
 {
-    @Logic
     public EncounteredEventKeys encounteredEventKeys;
-
-    @Logic
     public EncounteredTypeKeys encounteredTypeKeys;
-
-    @Logic
     public EncounteredUniqueEvents encounteredUniqueEvents;
 
     public IndexData()

@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.tr;
+package com.taitl.ex.logic.tr.data;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
@@ -12,7 +12,7 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * Holds transaction-local handler overlays keyed by execution stage.
  */
-public class PreparedEventFields
+public class EventFields
 {
     protected Map<StageName, ConfigurationIndexes> indexes = new EnumMap<>(StageName.class);
     protected Map<StageName, EventField> overlays = new EnumMap<>(StageName.class);
@@ -45,7 +45,7 @@ public class PreparedEventFields
             return overlay;
         }
 
-        overlay = Creator.create(OverlayEventField.class,
+        overlay = Creator.create(EventFieldOverlay.class,
                 new Class[] { EventField.class, EventField.class },
                 base,
                 prepared.eventField());

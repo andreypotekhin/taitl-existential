@@ -17,7 +17,7 @@ import static com.taitl.ex.common.helper.Args.*;
 public class ToIntentHandlers
 {
     @Logic
-    protected final IntentTypeCandidates intentTypeCandidates = Creator.create(IntentTypeCandidates.class);
+    protected IntentTypeCandidates intentTypeCandidates = Creator.create(IntentTypeCandidates.class);
 
     public <T> List<EventHandler<?>> call(
             MultiKey<T> multiKey,

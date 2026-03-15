@@ -10,9 +10,11 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * Transaction-local before-state snapshots keyed by object identity and type key.
  */
-public class TrMemos
+public class MemoData
 {
     public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#memo-state-missing";
+
+    /** TypeLey -> entity ID (object identity) -> entity before-state snapshot */
     protected Map<TypeKey<?>, Map<Object, Object>> memos = new LinkedHashMap<>();
 
     public <T> void put(T live, T before, TypeKey<T> typeKey) throws MemoException

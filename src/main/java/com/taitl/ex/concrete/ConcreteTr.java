@@ -9,6 +9,7 @@ import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.ex.logic.stages.validation.data.*;
 import com.taitl.ex.logic.tr.*;
 import com.taitl.ex.logic.tr.actions.*;
+import com.taitl.ex.logic.tr.data.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.transactions.data.*;
 import com.taitl.existential.configs.*;
@@ -42,18 +43,6 @@ public class ConcreteTr
     protected EventLogic el;
 
     @Logic
-    protected IndexData runtimeIndexes;
-
-    @Logic
-    protected ValidationData validationData;
-
-    @Logic
-    protected TrMemos memos;
-
-    @Logic
-    protected Map<StageName, StageData> stageData = new EnumMap<>(StageName.class);
-
-    @Logic
     protected IntentLogic intentLogic;
 
     @Logic
@@ -62,11 +51,13 @@ public class ConcreteTr
     @Logic
     protected ExecuteLifecycle executeLifecycle;
 
-    @Logic
-    protected PreparedEventFields preparedEventFields;
-
     public final UUID id;
     public String op;
+    protected IndexData runtimeIndexes;
+    protected ValidationData validationData;
+    protected MemoData memoData;
+    protected Map<StageName, StageData> stageData = new EnumMap<>(StageName.class);
+    protected EventFields eventFields;
     protected List<Transaction> transactions = new ArrayList<>();
     protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
     protected Set<String> beginEncounteredEventKeys = new LinkedHashSet<>();
@@ -86,7 +77,7 @@ public class ConcreteTr
         this.el = el;
         runtimeIndexes = Creator.create(IndexData.class);
         validationData = Creator.create(ValidationData.class, new Class[] { ConcreteTr.class }, this);
-        memos = Creator.create(TrMemos.class);
+        memoData = Creator.create(MemoData.class);
         for (StageName stageName : StageName.values())
         {
             stageData.put(stageName, Creator.create(StageData.class));
@@ -96,7 +87,7 @@ public class ConcreteTr
                 this, intentLogic);
         executeLifecycle = Creator.create(ExecuteLifecycle.class, new Class[] { ConcreteTr.class, IntentLogic.class },
                 this, intentLogic);
-        preparedEventFields = Creator.create(PreparedEventFields.class);
+        eventFields = Creator.create(EventFields.class);
     }
 
     public void addTransaction(Transaction tr)
@@ -217,7 +208,7 @@ public class ConcreteTr
     public <T> void memo(T before, T live, TypeKey<T> typeKey) throws ExistentialException
     {
         requireOpen("register memo state");
-        memos.put(live, before, typeKey);
+        memoData.put(live, before, typeKey);
     }
 
     public <T> void memo(T before, T live, Class<T> cls) throws ExistentialException
@@ -229,13 +220,13 @@ public class ConcreteTr
     public <T> T beforeState(T live, TypeKey<T> typeKey)
     {
         requireMemos();
-        return memos.get(live, typeKey);
+        return memoData.get(live, typeKey);
     }
 
     public <T> boolean hasMemo(T live, TypeKey<T> typeKey)
     {
         requireMemos();
-        return memos.contains(live, typeKey);
+        return memoData.contains(live, typeKey);
     }
 
     public <T> void write(T entity, TypeKey<T> type) throws ExistentialException
@@ -321,13 +312,13 @@ public class ConcreteTr
     public void preparedIndexes(StageName stageName, ConfigurationIndexes indexes)
     {
         sane(stageName, "stageName", indexes, "indexes");
-        preparedEventFields.put(stageName, indexes);
+        eventFields.put(stageName, indexes);
     }
 
     public EventField eventField(StageName stageName, EventField base)
     {
         sane(stageName, "stageName", base, "base");
-        return preparedEventFields.eventField(stageName, base);
+        return eventFields.eventField(stageName, base);
     }
 
     public List<EventHandler<?>> intentHandlers(EventType eventType, String typeKey)
@@ -371,10 +362,10 @@ public class ConcreteTr
         closed = true;
         validationData.close();
         validationData = null;
-        preparedEventFields.close();
-        preparedEventFields = null;
-        memos.clear();
-        memos = null;
+        eventFields.close();
+        eventFields = null;
+        memoData.clear();
+        memoData = null;
         transactions = null;
         tr = null;
         tl = null;
@@ -401,6 +392,6 @@ public class ConcreteTr
 
     protected void requireMemos()
     {
-        verify(memos != null, "Transaction memo state is not available");
+        verify(memoData != null, "Transaction memo state is not available");
     }
 }

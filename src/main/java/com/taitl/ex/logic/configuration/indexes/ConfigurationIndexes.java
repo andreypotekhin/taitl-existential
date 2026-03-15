@@ -24,7 +24,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * - PreparedEventFields class: indexes map, per processing stage, for the rules configured for Transaction
  *
  * @see com.taitl.existential.configs.Config
- * @see com.taitl.ex.logic.tr.PreparedEventFields
+ * @see com.taitl.ex.logic.tr.data.EventFields
  * @see com.taitl.existential.configs.Transaction
  */
 public class ConfigurationIndexes
@@ -36,20 +36,16 @@ public class ConfigurationIndexes
     public ConfiguredHandlers configuredIntents;
 
     @Logic
-    protected EventField eventField;
-
-    @Logic
-    protected EventField intentField;
-
-    @Logic
     protected IndexConfig indexConfig;
 
     @Logic
     public MaintainGlobalOrder maintainGlobalOrder;
 
-    protected boolean useFullClassNames;
+    protected EventField eventField;
+    protected EventField intentField;
     protected Set<String> biKeys = new LinkedHashSet<>();
     protected Set<EventType> intentEventTypes = new LinkedHashSet<>();
+    protected boolean useFullClassNames;
 
     public ConfigurationIndexes()
     {

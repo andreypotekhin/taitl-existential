@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.evaluation.intents.actions;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
@@ -11,7 +12,8 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class IterateIntents
 {
-    protected final EvaluateIntent evaluateIntent;
+    @Logic
+    protected EvaluateIntent evaluateIntent;
 
     public IterateIntents()
     {

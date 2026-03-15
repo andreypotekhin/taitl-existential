@@ -5,6 +5,7 @@ import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.events.split_events.data.*;
 import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
+import com.taitl.ex.logic.evaluation.events.split_events.maps.*;
 import com.taitl.ex.logic.evaluation.events.split_events.rules.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;
@@ -42,7 +43,7 @@ public class SplitEvent
     protected RequireMemoForBiEvents requireMemoForBiEvents = Creator.create(RequireMemoForBiEvents.class);
 
     @Logic
-    protected ResolveMemo resolveMemo = Creator.create(ResolveMemo.class);
+    protected ToMemo toMemo = Creator.create(ToMemo.class);
 
     public <T> SplitResult<T> call(
             RuntimeKey<T> runtimeKey,
@@ -61,7 +62,7 @@ public class SplitEvent
                 eventSplitter.split(runtimeKey, useFullEventNames, splitElementaryToCompound, tr);
         MultiKey<T> multiKey = multiKey(splitKeys);
         List<Ev<T>> evaluables = eventField.get(multiKey);
-        Event<T> event = tr != null ? resolveMemo.forExecution(runtimeKey, evaluables, tr) : runtimeKey.event();
+        Event<T> event = tr != null ? toMemo.forExecution(runtimeKey, evaluables, tr) : runtimeKey.event();
         return new SplitResult<T>(evaluables, event);
     }
 

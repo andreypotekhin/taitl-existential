@@ -26,6 +26,8 @@ public class ConfiguredHandlers
 
     /** EventKey to Set<OrderlyEv<>> **/
     protected SetMap<String, OrderlyEv<?>> handlers = new SetMap<>();
+
+    /** Is indexing done? */
     protected boolean ready = false;
 
     public ConfiguredHandlers(ConfigurationIndexes ci)

@@ -2,6 +2,7 @@ package com.taitl.ex.logic.evaluation.events.split_events.event_splitter;
 
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.evaluation.events.split_events.maps.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.events.access_events.*;
 import com.taitl.existential.exceptions.*;
@@ -54,7 +55,7 @@ public class EventSplitter
     protected SplitTypeKey splitTypeKey = Creator.create(SplitTypeKey.class);
 
     @Logic
-    protected ResolveMemo resolveMemo = Creator.create(ResolveMemo.class);
+    protected ToMemo toMemo = Creator.create(ToMemo.class);
 
     public <T> Set<RuntimeKey<T>> split(
             RuntimeKey<T> runtimeKey,
@@ -70,7 +71,7 @@ public class EventSplitter
         Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
         for (Event<T> splitEvent : events)
         {
-            Event<T> resolved = tr != null ? resolveMemo.forSplit(splitEvent, runtimeKey, tr) : splitEvent;
+            Event<T> resolved = tr != null ? toMemo.forSplit(splitEvent, runtimeKey, tr) : splitEvent;
             if (resolved == null)
             {
                 continue;

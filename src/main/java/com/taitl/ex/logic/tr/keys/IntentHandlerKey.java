@@ -1,4 +1,4 @@
-package com.taitl.ex.logic.tr;
+package com.taitl.ex.logic.tr.keys;
 
 import com.taitl.existential.events.types.*;
 

@@ -5,6 +5,7 @@ import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
+import com.taitl.ex.logic.evaluation.events.split_events.maps.*;
 import com.taitl.ex.logic.evaluation.intents.maps.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.events.*;
@@ -24,7 +25,7 @@ public class RequireMemoForBiEvents
     protected final SplitTypeKey splitTypeKey;
 
     @Logic
-    protected final ResolveMemo resolveMemo;
+    protected final ToMemo toMemo;
 
     @Logic
     protected final IntentTypeCandidates intentTypeCandidates;
@@ -32,7 +33,7 @@ public class RequireMemoForBiEvents
     public RequireMemoForBiEvents()
     {
         this.splitTypeKey = Creator.create(SplitTypeKey.class);
-        this.resolveMemo = Creator.create(ResolveMemo.class);
+        this.toMemo = Creator.create(ToMemo.class);
         this.intentTypeCandidates = Creator.create(IntentTypeCandidates.class);
     }
 
@@ -40,7 +41,7 @@ public class RequireMemoForBiEvents
             throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField", tr, "tr");
-        if (!resolveMemo.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))
+        if (!toMemo.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))
         {
             return;
         }
@@ -48,7 +49,7 @@ public class RequireMemoForBiEvents
         {
             if (requiresHandlerMemo(typeKey, eventField, useFullEventNames, runtimeKey.event()))
             {
-                resolveMemo.forSplit(
+                toMemo.forSplit(
                         newEvent(candidateBiEventClasses(runtimeKey.event())[0], runtimeKey.entity()),
                         runtimeKey, tr);
                 return;
@@ -60,7 +61,7 @@ public class RequireMemoForBiEvents
             throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", indexes, "indexes", tr, "tr", stageName, "stageName");
-        if (!resolveMemo.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))
+        if (!toMemo.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))
         {
             return;
         }
@@ -74,7 +75,7 @@ public class RequireMemoForBiEvents
                 {
                     if (requiresIntentMemo(indexes, tr, stageName, eventType, candidate))
                     {
-                        resolveMemo.forSplit(newEvent(eventClass, runtimeKey.entity()), runtimeKey, tr);
+                        toMemo.forSplit(newEvent(eventClass, runtimeKey.entity()), runtimeKey, tr);
                         return;
                     }
                 }
