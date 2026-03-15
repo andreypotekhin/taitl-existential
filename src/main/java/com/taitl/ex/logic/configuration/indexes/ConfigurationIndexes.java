@@ -21,10 +21,10 @@ import static com.taitl.ex.common.helper.Args.*;
  *
  * Instances of this class are owned by:
  * - Config class: stageIndexes map, per processing stage, for the rules configured for Contexts
- * - PreparedEventFields class: indexes map, per processing stage, for the rules configured for Transaction
+ * - StageData class: preparedIndexes field, per processing stage, for the rules configured for Transaction
  *
  * @see com.taitl.existential.configs.Config
- * @see com.taitl.ex.logic.tr.data.EventFields
+ * @see com.taitl.ex.logic.tr.data.StageData
  * @see com.taitl.existential.configs.Transaction
  */
 public class ConfigurationIndexes

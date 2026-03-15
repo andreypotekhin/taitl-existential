@@ -57,7 +57,6 @@ public class ConcreteTr
     protected ValidationData validationData;
     protected MemoData memoData;
     protected Map<StageName, StageData> stageData = new EnumMap<>(StageName.class);
-    protected EventFields eventFields;
     protected List<Transaction> transactions = new ArrayList<>();
     protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
     protected Set<String> beginEncounteredEventKeys = new LinkedHashSet<>();
@@ -87,7 +86,6 @@ public class ConcreteTr
                 this, intentLogic);
         executeLifecycle = Creator.create(ExecuteLifecycle.class, new Class[] { ConcreteTr.class, IntentLogic.class },
                 this, intentLogic);
-        eventFields = Creator.create(EventFields.class);
     }
 
     public void addTransaction(Transaction tr)
@@ -312,13 +310,13 @@ public class ConcreteTr
     public void preparedIndexes(StageName stageName, ConfigurationIndexes indexes)
     {
         sane(stageName, "stageName", indexes, "indexes");
-        eventFields.put(stageName, indexes);
+        stageData(stageName).preparedIndexes(indexes);
     }
 
     public EventField eventField(StageName stageName, EventField base)
     {
         sane(stageName, "stageName", base, "base");
-        return eventFields.eventField(stageName, base);
+        return stageData(stageName).eventField(base);
     }
 
     public List<EventHandler<?>> intentHandlers(EventType eventType, String typeKey)
@@ -362,8 +360,10 @@ public class ConcreteTr
         closed = true;
         validationData.close();
         validationData = null;
-        eventFields.close();
-        eventFields = null;
+        for (StageData data : stageData.values())
+        {
+            data.close();
+        }
         memoData.clear();
         memoData = null;
         transactions = null;
@@ -393,5 +393,13 @@ public class ConcreteTr
     protected void requireMemos()
     {
         verify(memoData != null, "Transaction memo state is not available");
+    }
+
+    protected StageData stageData(StageName stageName)
+    {
+        sane(stageName, "stageName");
+        StageData data = stageData.get(stageName);
+        verify(data != null, String.format("No stage data registered for %s", stageName));
+        return data;
     }
 }
