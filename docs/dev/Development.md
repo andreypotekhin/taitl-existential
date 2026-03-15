@@ -45,6 +45,14 @@ The library emphasizes performance for the parts that run as part of a business 
 - Sending events to the library
 - Evaluating the rules (typically at transaction end)
 
+#### Benchmarking
+Use the benchmark harness to anchor transaction-path performance:
+
+    mvn -q -Pbenchmarks test
+    mvn -q -Pbenchmarks -Dbenchmark.warmup.iterations=5000 -Dbenchmark.measure.iterations=50000 test
+
+Benchmark classes live in `/src/test/java/com/taitl/existential/benchmarks`.
+
 ### Source code
 Main doc: /docs/dev/Source.md
 

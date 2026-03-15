@@ -3,6 +3,8 @@ package com.taitl.ex.concrete;
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.events.*;
+import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.ex.logic.stages.validation.data.*;
 import com.taitl.ex.logic.tr.*;
@@ -60,6 +62,9 @@ public class ConcreteTr
     @Logic
     protected ExecuteLifecycle executeLifecycle;
 
+    @Logic
+    protected PreparedEventFields preparedEventFields;
+
     public final UUID id;
     public String op;
     protected List<Transaction> transactions = new ArrayList<>();
@@ -91,6 +96,7 @@ public class ConcreteTr
                 this, intentLogic);
         executeLifecycle = Creator.create(ExecuteLifecycle.class, new Class[] { ConcreteTr.class, IntentLogic.class },
                 this, intentLogic);
+        preparedEventFields = Creator.create(PreparedEventFields.class);
     }
 
     public void addTransaction(Transaction tr)
@@ -312,6 +318,18 @@ public class ConcreteTr
         return intentLogic.hasBiIntentHandler(stageName, eventType, typeKey);
     }
 
+    public void preparedIndexes(StageName stageName, ConfigurationIndexes indexes)
+    {
+        sane(stageName, "stageName", indexes, "indexes");
+        preparedEventFields.put(stageName, indexes);
+    }
+
+    public EventField eventField(StageName stageName, EventField base)
+    {
+        sane(stageName, "stageName", base, "base");
+        return preparedEventFields.eventField(stageName, base);
+    }
+
     public List<EventHandler<?>> intentHandlers(EventType eventType, String typeKey)
     {
         return intentLogic.intentHandlers(eventType, typeKey);
@@ -353,6 +371,8 @@ public class ConcreteTr
         closed = true;
         validationData.close();
         validationData = null;
+        preparedEventFields.close();
+        preparedEventFields = null;
         memos.clear();
         memos = null;
         transactions = null;

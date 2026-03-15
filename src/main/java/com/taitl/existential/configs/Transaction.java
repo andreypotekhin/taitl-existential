@@ -16,52 +16,51 @@ import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Implements constraints and effects at the transaction level.
+ * Implements constraints and effects at transaction level.
  *
- * "Transactions" in this library are not database transactions. When integrating
- * with a database, they typically align with it, but they are markers of the
- * beginning and end of a business operation (web request, batch job, etc.).
+ * "Transactions" in this library are not database transactions, but rather
+ * they are markers of the beginning and end of business operations
+ * (a web request, batch job, etc.).
  *
- * The transaction end (a commit) is where expressions such as All and Exists,
- * defined in the current Context and its parent Contexts, are evaluated.
+ * At transaction end (a commit), rules such as All and Exists expressions,
+ * defined for the current Context and its parent Contexts, are evaluated.
  *
  * A Transaction instance can store data to pass between event handlers.
- *
- * TransactionIndexes
- * When we encounter events such as object creation or mutation, we may need to
- * store derived data. For example, an index can be created so that an Exists<>
+ * When we encounter events such as object creation or mutation, we may want to
+ * store some data. For example, an index can be created so that an Exists<>
  * expression evaluates efficiently:
- * {@code On<Cat>((c, tr) -> tr.index("location_to_cats", cat -> cat.location).add(c))}
- *
- * TransactionEvents
- * Different contexts may be interested in different event types. To speed up
- * the "which events should be emitted for this context?" lookup, the set of
- * relevant event types (from the context and all parents) is created at
- * transaction start and stored in the Transaction.
+ * {@code On<Cat>((cat, tr) -> tr.locationIndex.add(cat, cat.location)}
+ * Here, an instance of Transaction is passed in to event handler (as tr variable),
+ * allowing to store the data and retrieve it in another rule/handler down the line.
+ * To allow custom Transaction classes and instances, wee can specify a custom Transaction
+ * factory or instance as shown below.
  *
  * Customizing
+ * 1. Custom Transaction factory
  * To use a custom Transaction class, define them at different context levels
- * and ask the system to provide the appropriate instance using
- * {@code Context.transaction()}.
+ * and ask the system to provide the appropriate instance by calling transaction() method.
  * For example, for operation "/app/orders/update":
  * <pre>{@code
- * Ex.configure().get("/app").transaction(() -> new AppTransaction());
- * Ex.configure().get("/app/orders").transaction(() -> new OrdersTransaction());
- * Ex.configure().get("/app/orders/update").transaction(() -> new OrdersUpdateTransaction());
+ *   Ex.configure().context("/app").transaction(() -> new AppTransaction());
+ *   Ex.configure().context("/app/orders").transaction(() -> new OrdersTransaction());
+ *   Ex.configure().context("/app/orders/update").transaction(() -> new OrdersUpdateTransaction());
  * }</pre>
  * If a custom transaction class is not defined for a context, the class from
  * its parent context is used.
  *
- * Custom Transaction instance
- * When initiating a business transaction (e.g. with Ex.begin()), you can
- * specify a custom Transaction instance. This is helpful when you need to
- * parameterize rules and expressions based on immediate circumstances such as
- * enclosing method arguments or other dynamic data.
+ * 2. Custom Transaction instance
+ * You can pass an instance of a custom Transaction. This is helpful when you need to
+ * parameterize the configured rules to take into account the immediate circumstances
+ * around transaction, such as incorporating your business method's arguments
+ * (such as an API endpoint request parameters) or other dynamic data into the rules.
  * To do so, instead of calling Ex.begin(opName), call Ex.begin(opName, transaction)
- * with the custom Transaction instance.
+ * with an instance of your custom Transaction with additional rules.
+ * (Can also take advantage of TransactionBuilder to build Transaction instance
+ * with fluent api.)
  *
  * @see Context
  * @see TransactionIndexes
+ * @see com.taitl.existential.builders.TransactionBuilder
  */
 // TODO: Delegate to ConcreteTransaction
 public class Transaction implements Configurable, Evaluable

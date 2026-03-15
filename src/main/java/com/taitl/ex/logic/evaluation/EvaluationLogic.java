@@ -135,11 +135,10 @@ public class EvaluationLogic implements Closeable
     protected EventField eventField(Tr tr, StageName stageName)
     {
         sane(stageName, "stageName");
-        if (stageName == StageName.VALIDATION)
-        {
-            return eventField(tr);
-        }
-        return config(tr).indexes(tr.op, stageName).eventField();
+        EventField base = stageName == StageName.VALIDATION
+                ? eventField(tr)
+                : config(tr).indexes(tr.op, stageName).eventField();
+        return tr.eventField(base, stageName);
     }
 
     public boolean useFullClassNames()

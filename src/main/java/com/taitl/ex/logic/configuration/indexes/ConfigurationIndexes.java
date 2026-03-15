@@ -15,6 +15,18 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Indexes supporting fast retrieval and processing of rules configured per
+ * event type during processing stages such as immediate, validation.
+ *
+ * Instances of this class are owned by:
+ * - Config class: stageIndexes map, per processing stage, for the rules configured for Contexts
+ * - PreparedEventFields class: indexes map, per processing stage, for the rules configured for Transaction
+ *
+ * @see com.taitl.existential.configs.Config
+ * @see com.taitl.ex.logic.tr.PreparedEventFields
+ * @see com.taitl.existential.configs.Transaction
+ */
 public class ConfigurationIndexes
 {
     @Logic

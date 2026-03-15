@@ -3,6 +3,8 @@ package com.taitl.existential.transactions;
 import com.taitl.ex.concrete.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.events.*;
+import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.indexing.data.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.configs.*;
@@ -182,6 +184,16 @@ public class Tr
     public void onRollback() throws ExistentialException
     {
         concrete.onRollback();
+    }
+
+    public void preparedIndexes(StageName stageName, ConfigurationIndexes indexes)
+    {
+        concrete.preparedIndexes(stageName, indexes);
+    }
+
+    public EventField eventField(EventField base, StageName stageName)
+    {
+        return concrete.eventField(stageName, base);
     }
 
     public String id()

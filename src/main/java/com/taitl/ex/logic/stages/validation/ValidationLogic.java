@@ -44,7 +44,7 @@ public class ValidationLogic
      */
     public void prepareForValidation(Tr tr)
     {
-        prepareTransaction.call(tr, this);
+        prepareTransaction.call(tr, el);
     }
 
     /**
