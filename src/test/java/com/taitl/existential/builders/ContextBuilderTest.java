@@ -352,7 +352,7 @@ class ContextBuilderTest
     }
 
     @Nested
-    class Stages
+    class RuleData
     {
         @Test
         @DisplayName("Context defaults route rules to validation and immediate stages")

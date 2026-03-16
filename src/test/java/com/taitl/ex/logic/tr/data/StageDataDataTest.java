@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StagesDataTest
+class RuleDataDataTest
 {
     @Test
     @DisplayName("Caches overlay per prepared indexes and resets it when indexes change")

@@ -15,7 +15,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class ConcreteContext
 {
-    protected Stages stages;
+    protected RuleData ruleData;
     protected StageName stageCursor;
     protected BiFunction<String, String, ? extends Transaction> transactionFactory;
 
@@ -88,23 +88,23 @@ public class ConcreteContext
     public <T> void add(Evs<T> evs, StageName stageName)
     {
         sane(evs, "evs", stageName, "stageName");
-        stages.add(stageName, evs);
+        ruleData.add(stageName, evs);
     }
 
     public void addAll(Context other)
     {
         sane(other, "other");
-        stages.addAll(other.stage());
+        ruleData.addAll(other.stage());
     }
 
     public List<Evs<?>> evs()
     {
-        return stages.all();
+        return ruleData.all();
     }
 
-    public Stages stage()
+    public RuleData stage()
     {
-        return stages;
+        return ruleData;
     }
 
     public BiFunction<String, String, ? extends Transaction> transactionFactory(Context context)

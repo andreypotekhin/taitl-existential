@@ -11,7 +11,7 @@ public class ConcreteTransactionBuilder
     public ConcreteTransaction build()
     {
         ConcreteTransaction result = new ConcreteTransaction();
-        result.stages = Creator.create(Stages.class);
+        result.ruleData = Creator.create(RuleData.class);
         result.indexes = Creator.create(TransactionIndexes.class, new Class[] { Transaction.class }, transaction);
         return result;
     }

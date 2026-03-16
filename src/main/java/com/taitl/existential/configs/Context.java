@@ -131,7 +131,7 @@ public class Context implements Configurable, Evaluable
         return concrete.evs();
     }
 
-    public Stages stage()
+    public RuleData stage()
     {
         return concrete.stage();
     }

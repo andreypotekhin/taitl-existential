@@ -11,11 +11,11 @@ import static com.taitl.ex.common.helper.Args.*;
  * Configured rules partitioned by execution stage.
  * Owned by Context, Transaction.
  */
-public class Stages
+public class RuleData
 {
     protected Map<StageName, List<Evs<?>>> byName = new EnumMap<>(StageName.class);
 
-    public Stages()
+    public RuleData()
     {
         for (StageName stageName : StageName.values())
         {
@@ -29,7 +29,7 @@ public class Stages
         byName.get(stageName).add(evs);
     }
 
-    public void addAll(Stages other)
+    public void addAll(RuleData other)
     {
         sane(other, "other");
         for (StageName stageName : StageName.values())

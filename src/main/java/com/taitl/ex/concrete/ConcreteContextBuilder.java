@@ -2,7 +2,6 @@ package com.taitl.ex.concrete;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.constants.*;
 
 import java.util.function.*;
 
@@ -13,7 +12,7 @@ public class ConcreteContextBuilder
     public ConcreteContext build()
     {
         ConcreteContext result = new ConcreteContext();
-        result.stages = Creator.create(Stages.class);
+        result.ruleData = Creator.create(RuleData.class);
         result.transactionFactory = transactionFactory;
         return result;
     }

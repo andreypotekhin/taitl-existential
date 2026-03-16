@@ -20,7 +20,7 @@ import static com.taitl.ex.common.helper.State.*;
  */
 public class ConcreteTransaction
 {
-    protected Stages stages;
+    protected RuleData ruleData;
     protected StageName stageCursor;
     protected TransactionIndexes indexes;
 
@@ -155,7 +155,7 @@ public class ConcreteTransaction
     public <T> void add(Evs<T> evs, StageName stageName)
     {
         sane(evs, "evs", stageName, "stageName");
-        stages.add(stageName, evs);
+        ruleData.add(stageName, evs);
     }
 
     public void begin()
@@ -190,12 +190,12 @@ public class ConcreteTransaction
 
     public List<Evs<?>> evs()
     {
-        return stages.all();
+        return ruleData.all();
     }
 
-    public Stages stage()
+    public RuleData stage()
     {
-        return stages;
+        return ruleData;
     }
 
     public void validate(Transaction transaction)
