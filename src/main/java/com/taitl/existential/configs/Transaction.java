@@ -1,5 +1,6 @@
 package com.taitl.existential.configs;
 
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.indexes.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -76,10 +77,9 @@ public class Transaction implements Configurable, Evaluable
     /**
      * Configured rules partitioned by execution stage.
      */
-    protected Stage stage = new Stage();
+    protected Stages stages;
     protected StageName stageCursor;
-
-    TransactionIndexes indexes = new TransactionIndexes(this);
+    protected TransactionIndexes indexes;
 
     /**
      * Creates a transaction for the specified operation and name.
@@ -93,6 +93,8 @@ public class Transaction implements Configurable, Evaluable
         this.op = op;
         this.name = name;
         this.id = generateId();
+        this.stages = Creator.create(Stages.class);
+        this.indexes = Creator.create(TransactionIndexes.class, new Class[]{ Transaction.class }, this);
     }
 
     /**
@@ -318,7 +320,7 @@ public class Transaction implements Configurable, Evaluable
     public <T> void add(Evs<T> evs, StageName stageName)
     {
         sane(evs, "evs", stageName, "stageName");
-        stage.add(stageName, evs);
+        stages.add(stageName, evs);
     }
 
     public Transaction begin()
@@ -371,12 +373,12 @@ public class Transaction implements Configurable, Evaluable
      */
     public List<Evs<?>> evs()
     {
-        return stage.all();
+        return stages.all();
     }
 
-    public Stage stage()
+    public Stages stage()
     {
-        return stage;
+        return stages;
     }
 
     /*

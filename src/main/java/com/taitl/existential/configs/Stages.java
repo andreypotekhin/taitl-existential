@@ -8,13 +8,14 @@ import java.util.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Stores configured rule sets partitioned by execution stage.
+ * Configured rules partitioned by execution stage.
+ * Owned by Context, Transaction.
  */
-public class Stage
+public class Stages
 {
     protected Map<StageName, List<Evs<?>>> byName = new EnumMap<>(StageName.class);
 
-    public Stage()
+    public Stages()
     {
         for (StageName stageName : StageName.values())
         {
@@ -28,7 +29,7 @@ public class Stage
         byName.get(stageName).add(evs);
     }
 
-    public void addAll(Stage other)
+    public void addAll(Stages other)
     {
         sane(other, "other");
         for (StageName stageName : StageName.values())

@@ -21,6 +21,7 @@ import static com.taitl.ex.common.helper.Args.*;
  * @see Config
  * @see Transaction
  */
+// TODO: Delegate to ConcreteContext
 public class Context implements Configurable, Evaluable
 {
     public static Supplier<? extends Context> FACTORY = () -> Creator.create(Context.class);
@@ -38,7 +39,7 @@ public class Context implements Configurable, Evaluable
     /**
      * Configured rules partitioned by execution stage.
      */
-    protected Stage stage = new Stage();
+    protected Stages stages;
     protected StageName stageCursor;
 
     /** Transaction factory */
@@ -53,6 +54,7 @@ public class Context implements Configurable, Evaluable
     {
         sane(name, "name");
         this.name = name;
+        this.stages = Creator.create(Stages.class);
     }
 
     /**
@@ -67,6 +69,7 @@ public class Context implements Configurable, Evaluable
         this.name = name;
         this.parent = parent;
         this.transactionFactory = null;
+        this.stages = Creator.create(Stages.class);
     }
 
     /*
@@ -226,7 +229,7 @@ public class Context implements Configurable, Evaluable
     public <T> void add(Evs<T> evs, StageName stageName)
     {
         sane(evs, "evs", stageName, "stageName");
-        stage.add(stageName, evs);
+        stages.add(stageName, evs);
     }
 
     /**
@@ -238,18 +241,18 @@ public class Context implements Configurable, Evaluable
     public Context addAll(Context other)
     {
         sane(other, "other");
-        stage.addAll(other.stage);
+        stages.addAll(other.stages);
         return this;
     }
 
     public List<Evs<?>> evs()
     {
-        return stage.all();
+        return stages.all();
     }
 
-    public Stage stage()
+    public Stages stage()
     {
-        return stage;
+        return stages;
     }
 
     /*

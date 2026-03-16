@@ -20,6 +20,7 @@ import static com.taitl.ex.common.helper.State.*;
  *
  * @see Context
  */
+// TODO: Delegate to ConcreteConfig
 public class Config
 {
     /**
