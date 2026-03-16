@@ -59,6 +59,7 @@ class ConfigurationLogicTest
             assertTrue(logic.hasConfig("/api/cats/update"));
             assertThat(logic.getConfig("/api/cats/update"), is(sameInstance(config)));
         }
+
     }
 
     @Nested

@@ -247,6 +247,7 @@ class ContextBuilderTest
                 assertTrue(((Intent<?>) suppliers.get(6).get()).list()
                         .get(0) instanceof com.taitl.existential.handlers.access_handlers.OnWrite);
             }
+
         }
     }
 
