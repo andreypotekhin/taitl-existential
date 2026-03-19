@@ -8,8 +8,7 @@ expressions about application entities (elements of the business domain) and to 
 expressions hold. For instance, the library lets you constrain a single field, multiple fields,
 multiple objects, or how an object may change over time.
 Performance comes from evaluating expressions only at transaction boundaries, collapsing repeated changes
-between those points into a single change. Memory efficiency comes from reusing singleton expression instances
-when possible.
+between those points into a single change.
 
 ## Limitations
 
