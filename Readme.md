@@ -6,7 +6,7 @@ It provides a small set of math-inspired notations for describing application lo
 implements two logic quantifiers, ∀ ("for any") and ∃ ("exists"), allowing you to create logical
 expressions about application entities (elements of the business domain) and to guarantee those
 expressions hold. For instance, the library lets you constrain a single field, multiple fields,
-or how an object may change over time.
+multiple objects, or how an object may change over time.
 Performance comes from evaluating expressions only at transaction boundaries, collapsing repeated changes
 between those points into a single change. Memory efficiency comes from reusing singleton expression instances
 when possible.
