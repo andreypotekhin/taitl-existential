@@ -47,31 +47,28 @@ For any object of type X, a predicate holds true:
 
     Here, predicate() is any boolean function.
 
-For any object of type X which satisfies a condition, a predicate holds true:
+For any object of a subset of X, a predicate holds true:
 
     ∀ x ∈ X | condition(x) ⊤(x)      all(x -> condition(x), x -> predicate(x))
 
-For any object of type X that has been changed in the course of a business transaction, predicate holds true:
+For any object of X that has been changed in the course of a business transaction, predicate holds true:
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      transit((x0, x1) -> predicate(x0, x1))
     
-    Transit describes a change where both states are non-null.
+    Transit describes a change of an object where both before- and after- states are non-null.
     x0 is the entity's initial state at the start of the transaction,
     x1 is its final state at the end of the transaction.
-    If you mutate an entity in place and later emit `update(...)` or another single-entity event,
-    call `memo(snapshot, live, ...)` before the mutation so split `Transit` rules can still observe
-    the correct `x0` snapshot.
 
-For any object of type X that has been created, changed, or deleted in the course of a business transaction,
-predicate holds true (use Porting when one side may be null):
+For any object of X that has been created, changed, or deleted in the course of a business transaction,
+predicate holds true:
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      port((x0, x1) -> predicate(x0, x1))
 
-    Port describes a change where one of x0 or x1 may be null (but not both).
+    Port describes a change of an object where one ofbefore- or after- states may be null (but not both).
     If x0 is null, the entity considered being created during the transaction.
     If x1 is null, the entity considered being deleted during the transaction.
 
-Same as above when x0, x1 must also satisfy some condition:
+Similarly, for an object of a subset of X:
 
     ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      transit((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
     ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      port((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
@@ -80,39 +77,49 @@ Same as above when x0, x1 must also satisfy some condition:
 
 An object of type X exists for which a predicate holds:
 
-    ∃ x ∈ X ⊤(x)      exists(coll, predicate(x))
+    ∃ x ∈ X ⊤(x)      exists(coll, x -> predicate(x))
     
-    This guarantees that at least one element in the collection satisfies the predicate.
-    Since this evaluation may be slow (a linear scan), we'll show a more performant approach next.
+    Establishes that at least one element in the collection should satisfy the predicate.
 
-For more efficiency, use an *index* to determine the existence:
+An object of a subset of X exists for which a predicate holds:
 
-    ∃ x ∈ X, ⊤(x)      exists(index, predicate(x))
+    ∃ x ∈ X | condition(x) ⊤(x)      exists(coll, x -> condition(x), x -> predicate(x))
     
-    Here, index is a data structure (which we provide) allowing fast 
-    (constant) access time to the underlying collection. 
-    Using an index can greatly improve performance.
+    Establishes that at least one element in the collection should satisfy the predicate.
+    Since iterating over a collection may be slow, we provide an option for more performant indexed approach next.
 
-For any object of type X, an object of type Y exists such that the predicate holds:
+For performance, one can use an *index* instead of a collection to determine the existence:
 
-    ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      exists(index, predicate(x, y)))
+    ∃ x ∈ X | condition(x) ⊤(x)      exists(index, x -> predicate(x))
     
-    This guarantees that for each x, there is at least one object y that satisfies the predicate.
-    Here, index is a data structure (which we provide) mapping X to Y with fast (constant) access time.
+    The index is a Set-like structure (a Set or a dynamically updated index class which we provide) allowing fast 
+    iteration over collection elements that satisfy the condition. 
 
-For any object of type X that satisfies a condition, an object of type Y exists for which the predicate holds:
+For any object of type X, an object of type Y exists for which that the predicate holds:
 
-    ∀ x ∈ X | condition(x) ∃ y ∈ Y ⊤(x, y)      all(x -> condition(x), exists(index, predicate(x, y)))
+    ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      exists(collX, collY, (x, y) -> predicate(x, y)))
+    Establishes that for each x, there should be at least one object y that satisfies the predicate.
+
+For performance, one can use an *index* instead of collections to determine the existence:
+
+    ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      exists(index, (x, y) -> predicate(x, y)))
+
+    The index is a Map-like structure (a Map or a dynamically updated 'join' class which we provide) allowing fast 
+    iteration over collections of X and Y on a 'join' field. 
+
+For any object of a subset of X, an object of type Y exists for which the predicate holds:
+
+    ∀ x ∈ X | condition(x) ∃ y ∈ Y ⊤(x, y)      all(x -> condition(x), exists(index, (x, y) -> predicate(x, y)))
 
 For any object of type X that has been changed, an object of type Y exists for which a predicate holds:
 
-    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      transit((x0, x1) -> exists(index, predicate(x0, x1, y))) 
-    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      port((x0, x1) -> exists(index, predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      transit((x0, x1) -> exists(index, (x0, x1, y) -> predicate(x0, x1, y))) 
+    ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      port((x0, x1) -> exists(index, (x0, x1, y) -> predicate(x0, x1, y)))
 
 Same when x0, x1 must also satisfy some condition:
 
-    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      transit((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, predicate(x0, x1, y)))
-    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      port((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      transit((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, (x0, x1, y) -> predicate(x0, x1, y)))
+    ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      port((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, (x0, x1, y) -> predicate(x0, x1, y)))
 
 ## Other Constraints
 The library also allows to create constraints on application entities:

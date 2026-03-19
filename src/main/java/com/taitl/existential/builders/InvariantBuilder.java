@@ -339,12 +339,6 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public InvariantBuilder<T> all(Predicate<? super T> predicate)
-    {
-        target.all(predicate);
-        return this;
-    }
-
     /**
      * Adds an all-entities invariant evaluated against the current entity type.
      *
@@ -361,9 +355,9 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
         return this;
     }
 
-    public InvariantBuilder<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
+    public InvariantBuilder<T> all(Predicate<? super T> predicate)
     {
-        target.all(condition, predicate);
+        target.all(predicate);
         return this;
     }
 
@@ -382,6 +376,12 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     {
         sane(condition, "condition", predicate, "predicate");
         target.all(condition, predicate, description);
+        return this;
+    }
+
+    public InvariantBuilder<T> all(Predicate<? super T> condition, Predicate<? super T> predicate)
+    {
+        target.all(condition, predicate);
         return this;
     }
 
@@ -658,19 +658,6 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @return This builder for chaining
-     */
-    public InvariantBuilder<T> exists(Collection<T> coll)
-    {
-        sane(coll, "coll");
-        target.exists(coll, "");
-        return this;
-    }
-
-    /**
-     * Creates an existential quantifier over a collection.
-     *
-     * @param coll Collection to evaluate
      * @param description Description of invariant
      * @return This builder for chaining
      */
@@ -685,13 +672,12 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param predicate Predicate to evaluate against each value
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> exists(Collection<T> coll, Predicate<T> predicate)
+    public InvariantBuilder<T> exists(Collection<T> coll)
     {
-        sane(coll, "coll", predicate, "predicate");
-        target.exists(coll, predicate, "");
+        sane(coll, "coll");
+        target.exists(coll, "");
         return this;
     }
 
@@ -714,13 +700,13 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param bipredicate Predicate evaluated against evaluated entity and matching collection value
+     * @param predicate Predicate to evaluate against each value
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate)
+    public InvariantBuilder<T> exists(Collection<T> coll, Predicate<T> predicate)
     {
-        sane(coll, "coll", bipredicate, "bipredicate");
-        target.exists(coll, bipredicate, "");
+        sane(coll, "coll", predicate, "predicate");
+        target.exists(coll, predicate, "");
         return this;
     }
 
@@ -743,14 +729,13 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param predicate Predicate evaluated against the matching collection entries
-     * @param placeholder Overload disambiguator
+     * @param bipredicate Predicate evaluated against evaluated entity and matching collection value
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder)
+    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate)
     {
-        sane(coll, "coll", predicate, "predicate");
-        target.exists(coll, predicate, placeholder, "");
+        sane(coll, "coll", bipredicate, "bipredicate");
+        target.exists(coll, bipredicate, "");
         return this;
     }
 
@@ -775,15 +760,14 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * Creates an existential quantifier over a collection.
      *
      * @param coll Collection to evaluate
-     * @param bipredicate Predicate evaluated against evaluated entity and matching collection entries
+     * @param predicate Predicate evaluated against the matching collection entries
      * @param placeholder Overload disambiguator
      * @return This builder for chaining
      */
-    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
-            int placeholder)
+    public InvariantBuilder<T> exists(Collection<T> coll, Predicate<Collection<T>> predicate, int placeholder)
     {
-        sane(coll, "coll", bipredicate, "bipredicate");
-        target.exists(coll, bipredicate, placeholder, "");
+        sane(coll, "coll", predicate, "predicate");
+        target.exists(coll, predicate, placeholder, "");
         return this;
     }
 
@@ -801,6 +785,22 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     {
         sane(coll, "coll", bipredicate, "bipredicate");
         target.exists(coll, bipredicate, placeholder, description);
+        return this;
+    }
+
+    /**
+     * Creates an existential quantifier over a collection.
+     *
+     * @param coll Collection to evaluate
+     * @param bipredicate Predicate evaluated against evaluated entity and matching collection entries
+     * @param placeholder Overload disambiguator
+     * @return This builder for chaining
+     */
+    public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
+                                      int placeholder)
+    {
+        sane(coll, "coll", bipredicate, "bipredicate");
+        target.exists(coll, bipredicate, placeholder, "");
         return this;
     }
 
