@@ -80,13 +80,13 @@ An object of type X exists for which a predicate holds:
 
     ∃ x ∈ X ⊤(x)      exists(coll, x -> predicate(x))
     
-    Establishes that at least one element in the collection should satisfy the predicate.
+    At least one element in the collection should satisfy the predicate.
 
 An object of a subset of X exists for which a predicate holds:
 
     ∃ x ∈ X | condition(x) ⊤(x)      exists(coll, x -> condition(x), x -> predicate(x))
     
-    Establishes that at least one element in the collection should satisfy the predicate.
+    At least one element in the collection should satisfy the predicate.
     Since iterating over a collection may be slow, we provide an option for more performant indexed approach next.
 
 For performance, one can use an *index* instead of a collection to determine existence:
@@ -99,14 +99,15 @@ For performance, one can use an *index* instead of a collection to determine exi
 For any object of type X, an object of type Y exists for which that the predicate holds:
 
     ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      exists(collX, collY, (x, y) -> predicate(x, y)))
-    Establishes that for each x, there should be at least one object y that satisfies the predicate.
 
-For performance, one can use an *index* instead of collections to determine the existence:
+    For each x, there should be at least one object y that satisfies the predicate.
+
+For performance, one can use an *join* of collections to determine the existence:
 
     ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      exists(index, (x, y) -> predicate(x, y)))
 
-    The index is a Map-like structure (a Map or a dynamically updated 'join' class which we provide) 
-    for fast matching and between collections of X and Y on a 'join' field. 
+    The join is a Map-like structure (a Map or a dynamically updated join class which we provide) 
+    for fast matching between collections of X and Y on some 'join' field. 
 
 For any object of a subset of X, an object of type Y exists for which the predicate holds:
 
@@ -117,20 +118,20 @@ For any object of type X that has been changed, an object of type Y exists for w
     ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      transit((x0, x1) -> exists(index, (x0, x1, y) -> predicate(x0, x1, y))) 
     ∀ x0, x1 ∈ X ∃ y ∈ Y ⊤(x0, x1, y)      port((x0, x1) -> exists(index, (x0, x1, y) -> predicate(x0, x1, y)))
 
-Same when x0, x1 must also satisfy some condition:
+Same for only those x0, x1 which satisfy a condition:
 
     ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      transit((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, (x0, x1, y) -> predicate(x0, x1, y)))
     ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      port((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, (x0, x1, y) -> predicate(x0, x1, y)))
 
 ## Other Constraints
-The library also allows to define constraints based on entity lifecycle and access events:
+The library also allows defining constraints based on entity lifecycle and access events:
 
     create(x -> predicate(x)) # holds for any created object
     update(x -> predicate(x)) # holds for any updated object
     delete(x -> predicate(x)) # holds for any deleted object
     read(x -> predicate(x))  # holds for any read/loaded object
     write(x -> predicate(x)) # holds for any written/saved object
-    (as well as variants with condition() predicates)
+    (as well as variants with condition())
 
 ## Performance
 
@@ -138,14 +139,14 @@ Since evaluating the constrains on each object change can degrade performance,
 the library by default postpones evaluating to the end of business transaction.
 
 To facilitate performance, the library:
-- By default, evaluates rules at the end of a business transaction, such as
-  before committing the changed data to persistent storage, rather than immediately on object change
-  (the user can override this behaviour).
+- By default, evaluates rules at the end of a business transaction - such as
+  before committing to persistent storage - rather than immediately on object change.
+  The user can override this behaviour.
 - During a transaction, the user sends 'events' into the library, notifying on object changes. 
   Only those objects participate in evaluation for which events have been issued.  
-- Multiple events of same type for same object are folded into a single event, reducing the number of evaluations.
+- Multiple events of same type issued for same object are 'folded' into a single event, reducing the number of evaluations.
 - User can configure the rules globally or within the context of a specific business operation (for example, an API endpoint),
-  thus reducing the number of rules that apply.
+  thus reducing the number of rules to apply.
 
 ## Documentation
 
