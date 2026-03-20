@@ -5,10 +5,10 @@ Existential is a constraint library for expressing and enforcing invariants betw
 It provides a small set of math-inspired notations for describing application logic. Existential
 implements two logic quantifiers, ∀ ("for any") and ∃ ("exists"), allowing you to create logical
 expressions about application entities (elements of the business domain) and to guarantee those
-expressions hold. For instance, the library lets you constrain a single field, multiple fields,
-multiple objects, or how an object may change over time.
-Performance comes from evaluating expressions only at transaction boundaries, collapsing repeated changes
-between those points into a single change.
+expressions hold. For instance, the library lets you define constraints on a single field, multiple fields,
+multiple objects, and how an object may and may not change over time.
+Performance comes from validating the constraints only at transaction boundaries, treating repeated changes
+to an entity during a transaction as single change.
 
 ## Limitations
 
@@ -37,7 +37,6 @@ P == logical predicate (a boolean-valued function)
 
 In the examples below:
 - Math notation is on the left, and corresponding Java notation is on the right.
-- The '.invariant(X.class).' part is omitted in front of all() and exists() method calls, for brevity.
 
 ## Establishing Truth
 
@@ -55,20 +54,22 @@ For any object of X that has been changed in the course of a business transactio
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      transit((x0, x1) -> predicate(x0, x1))
     
-    Transit describes a change of an object where both before- and after- states are non-null.
-    x0 is the entity's initial state at the start of the transaction,
-    x1 is its final state at the end of the transaction.
+    'Transit' describes a change of an object with before- and after- states x0, x1. 
+    x0 is the object state at the start of business transaction,
+    x1 is the object state state at the end of business transaction.
+    Both states are non-null.
 
-For any object of X that has been created, changed, or deleted in the course of a business transaction,
+For any object of X that has been created, changed or deleted in the course of a business transaction,
 predicate holds true:
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      port((x0, x1) -> predicate(x0, x1))
 
-    Port describes a change of an object where one ofbefore- or after- states may be null (but not both).
-    If x0 is null, the entity considered being created during the transaction.
-    If x1 is null, the entity considered being deleted during the transaction.
+    'Port' describes a change of an object with before- and after- states x0, x1,
+    where one of before- or after- states may be null (but not both).
+    If x0 is null, the object is considered being created during the transaction.
+    If x1 is null, the object is considered being deleted during the transaction.
 
-Similarly, for an object of a subset of X:
+Similarly, for an object from a subset of X:
 
     ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      transit((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
     ∀ x0, x1 ∈ X | condition(x0, x1) ⊤(x0, x1)      port((x0, x1) -> condition(x0, x1), (x0, x1) -> predicate(x0, x1))
@@ -88,12 +89,12 @@ An object of a subset of X exists for which a predicate holds:
     Establishes that at least one element in the collection should satisfy the predicate.
     Since iterating over a collection may be slow, we provide an option for more performant indexed approach next.
 
-For performance, one can use an *index* instead of a collection to determine the existence:
+For performance, one can use an *index* instead of a collection to determine existence:
 
     ∃ x ∈ X | condition(x) ⊤(x)      exists(index, x -> predicate(x))
     
-    The index is a Set-like structure (a Set or a dynamically updated index class which we provide) allowing fast 
-    iteration over collection elements that satisfy the condition. 
+    The index is a Set-like structure (a Set or a dynamically updated index class which we provide)
+    for fast iteration over collection elements that satisfy the condition. 
 
 For any object of type X, an object of type Y exists for which that the predicate holds:
 
@@ -104,8 +105,8 @@ For performance, one can use an *index* instead of collections to determine the 
 
     ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      exists(index, (x, y) -> predicate(x, y)))
 
-    The index is a Map-like structure (a Map or a dynamically updated 'join' class which we provide) allowing fast 
-    iteration over collections of X and Y on a 'join' field. 
+    The index is a Map-like structure (a Map or a dynamically updated 'join' class which we provide) 
+    for fast matching and between collections of X and Y on a 'join' field. 
 
 For any object of a subset of X, an object of type Y exists for which the predicate holds:
 
@@ -122,28 +123,29 @@ Same when x0, x1 must also satisfy some condition:
     ∀ x0, x1 ∈ X | condition(x0, x1) ∃ y ∈ Y ⊤(y, x0, x1)      port((x0, x1) -> condition(x0, x1), (x0, x1) -> exists(index, (x0, x1, y) -> predicate(x0, x1, y)))
 
 ## Other Constraints
-The library also allows to create constraints on application entities:
+The library also allows to define constraints based on entity lifecycle and access events:
 
     create(x -> predicate(x)) # holds for any created object
     update(x -> predicate(x)) # holds for any updated object
     delete(x -> predicate(x)) # holds for any deleted object
     read(x -> predicate(x))  # holds for any read/loaded object
     write(x -> predicate(x)) # holds for any written/saved object
-    (and variants with added conditions)
+    (as well as variants with condition() predicates)
 
 ## Performance
 
-Evaluating the rules on a bigger collection can take time, especially if evaluations 
-happen on any element change.
+Since evaluating the constrains on each object change can degrade performance,
+the library by default postpones evaluating to the end of business transaction.
 
 To facilitate performance, the library:
-- Avoids immediate rule evaluation and instead evaluates rules at the end of a business transaction, such as
-  before committing the changed data to persistent storage.
-- During a transaction, the user sends 'events' into the library, notifying on object changes. Only those objects
-participate in evaluation.  
-- Multiple events of same type for same object are folded into a single event, reducing the number of performed validations.
+- By default, evaluates rules at the end of a business transaction, such as
+  before committing the changed data to persistent storage, rather than immediately on object change
+  (the user can override this behaviour).
+- During a transaction, the user sends 'events' into the library, notifying on object changes. 
+  Only those objects participate in evaluation for which events have been issued.  
+- Multiple events of same type for same object are folded into a single event, reducing the number of evaluations.
 - User can configure the rules globally or within the context of a specific business operation (for example, an API endpoint),
-reducing the number of evaluated rules.
+  thus reducing the number of rules that apply.
 
 ## Documentation
 
