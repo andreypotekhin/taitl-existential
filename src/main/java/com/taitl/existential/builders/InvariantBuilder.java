@@ -797,7 +797,7 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
      * @return This builder for chaining
      */
     public InvariantBuilder<T> exists(Collection<T> coll, BiPredicate<T, Collection<T>> bipredicate,
-                                      int placeholder)
+            int placeholder)
     {
         sane(coll, "coll", bipredicate, "bipredicate");
         target.exists(coll, bipredicate, placeholder, "");

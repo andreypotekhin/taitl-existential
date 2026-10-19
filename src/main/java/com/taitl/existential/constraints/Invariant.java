@@ -376,11 +376,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public <D> Invariant<T> exists(Map<T, D> map)
-    {
-        return exists(map, (String) null);
-    }
-
     /**
      * Creates an existential quantifier over a map.
      *
@@ -396,9 +391,9 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public <D> Invariant<T> exists(Map<T, D> map, Predicate<T> predicate)
+    public <D> Invariant<T> exists(Map<T, D> map)
     {
-        return exists(map, predicate, null);
+        return exists(map, (String) null);
     }
 
     /**
@@ -417,9 +412,9 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<T, D> bipredicate)
+    public <D> Invariant<T> exists(Map<T, D> map, Predicate<T> predicate)
     {
-        return exists(map, bipredicate, null);
+        return exists(map, predicate, null);
     }
 
     /**
@@ -436,6 +431,11 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         validateDescription(description);
         add(new Exists<T>(map, bipredicate, description));
         return this;
+    }
+
+    public <D> Invariant<T> exists(Map<T, D> map, BiPredicate<T, D> bipredicate)
+    {
+        return exists(map, bipredicate, null);
     }
 
     /**
@@ -474,11 +474,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public Invariant<T> exists(Set<T> set)
-    {
-        return exists(set, (String) null);
-    }
-
     /**
      * Creates an existential quantifier over a set.
      *
@@ -494,9 +489,9 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public Invariant<T> exists(Set<T> set, Predicate<T> predicate)
+    public Invariant<T> exists(Set<T> set)
     {
-        return exists(set, predicate, null);
+        return exists(set, (String) null);
     }
 
     /**
@@ -515,9 +510,9 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public Invariant<T> exists(Set<T> set, BiPredicate<T, T> bipredicate)
+    public Invariant<T> exists(Set<T> set, Predicate<T> predicate)
     {
-        return exists(set, bipredicate, null);
+        return exists(set, predicate, null);
     }
 
     /**
@@ -534,6 +529,11 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         validateDescription(description);
         add(new Exists<T>(set, bipredicate, description));
         return this;
+    }
+
+    public Invariant<T> exists(Set<T> set, BiPredicate<T, T> bipredicate)
+    {
+        return exists(set, bipredicate, null);
     }
 
     /**
@@ -572,11 +572,6 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public Invariant<T> exists(Collection<T> coll)
-    {
-        return exists(coll, (String) null);
-    }
-
     /**
      * Creates an existential quantifier over a collection.
      *
@@ -592,9 +587,9 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public Invariant<T> exists(Collection<T> coll, Predicate<T> predicate)
+    public Invariant<T> exists(Collection<T> coll)
     {
-        return exists(coll, predicate, null);
+        return exists(coll, (String) null);
     }
 
     /**
@@ -613,9 +608,9 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         return this;
     }
 
-    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate)
+    public Invariant<T> exists(Collection<T> coll, Predicate<T> predicate)
     {
-        return exists(coll, bipredicate, null);
+        return exists(coll, predicate, null);
     }
 
     /**
@@ -632,6 +627,11 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
         validateDescription(description);
         add(new Exists<T>(coll, bipredicate, description));
         return this;
+    }
+
+    public Invariant<T> exists(Collection<T> coll, BiPredicate<T, T> bipredicate)
+    {
+        return exists(coll, bipredicate, null);
     }
 
     /**

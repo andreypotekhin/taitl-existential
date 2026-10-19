@@ -104,7 +104,7 @@ For any object of type X, an object of type Y exists for which that the predicat
 
 For performance, one can use an *join* of collections to determine the existence:
 
-    ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      exists(index, (x, y) -> predicate(x, y)))
+    ∀ x ∈ X ∃ y ∈ Y ⊤(x, y)      exists(join, (x, y) -> predicate(x, y)))
 
     The join is a Map-like structure (a Map or a dynamically updated join class which we provide) 
     for fast matching between collections of X and Y on some 'join' field. 
