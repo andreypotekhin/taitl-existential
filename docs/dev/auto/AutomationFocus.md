@@ -12,7 +12,7 @@ TODO items
 Suggestions
 - Suggestion items docs/dev/suggestions/approved
 
-Specification.md
+- [Specification.md](../Specification.md)
 - Address items in 'Library' section
 
 Bug discovery

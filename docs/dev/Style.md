@@ -103,11 +103,12 @@ The goal of our way of object decomposition is to maximize 'graspability' - the 
 
 #### Testing
 Test cases for code units live in src/test/java.
-Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/specs.
+Test cases backing specifications (from [Specification.md](Specification.md)) are in
+src/test/java/com/taitl/specs.
 
 ##### Testing Standards
-For each implemented specification from /docs/dev/Specification.md, create a test case in the corresponding
-subpackage of com.taitl.specs (src/test/java/com/taitl/specs).
+For each implemented specification from [Specification.md](Specification.md), create a test case in the matching
+subpackage of `com.taitl.specs` (`src/test/java/com/taitl/specs`).
 
 ##### Testing Guidelines
 Some rules around testing we adopt:
@@ -138,12 +139,14 @@ Use modern test frameworks capabilities to the maximum for structuring the tests
 
 ### Documenting
 #### End-User documentation
-The end-user documentation consists of /Readme.md, /Troubleshooting.md, and /docs/ directory.
+The end-user documentation consists of [Readme.md](../../Readme.md),
+[Troubleshooting.md](../../Troubleshooting.md), and the [docs directory](../).
 It is characterized as being concise and all-encompassing, clearly conveying the meaning, 
 being complete without overwhelming the reader.
 Content style:
-- /Readme.md is the main entry point for end-users, a more formal compared to other documents.
-- /Troubleshooting.md tracks common issues and remedies, prioritizes conciseness and clarity.
+- [Readme.md](../../Readme.md) is the main entry point for end-users, more formal than other documents.
+- [Troubleshooting.md](../../Troubleshooting.md) tracks common issues and remedies, prioritizing conciseness and
+  clarity.
 - Other documents: prioritize focus and practicality. 
 
 #### Developer documentation
@@ -154,16 +157,17 @@ Content style:
 - Less formal compared to end-user documentation, err on the side of expressiveness and sounding less bureaucratic/official. 
 
 #### Documenting issues and remedies
-Document issues and remedies (fixes) in Troubleshooting.md documents and deep-link to them from error messages.
-Separate end-user troubleshooting items (/Troubleshooting.md) from development troubleshooting items
-(/docs/dev/Troubleshooting.md)
+Document issues and remedies (fixes) in [Troubleshooting.md](Troubleshooting.md) documents and deep-link to them
+from error messages.
+Separate end-user troubleshooting items ([Troubleshooting.md](../../Troubleshooting.md)) from development troubleshooting
+items ([Troubleshooting.md](Troubleshooting.md)).
 
 #### Documenting the suggestions
 As you assume team roles as described in 'Team roles' section below, come up with suggestions for improvements.
 Add suggestion items as [action id].[action title].md file to docs/dev/suggestions/.
 Suggestions are reviewed by the manager and mastermind role.
 The approved suggestions get moved to docs/dev/suggestions/approved.
-Implemented suggestions get moved to docs/dev/suggestions/done.
+Implemented suggestions get moved to [docs/dev/past/suggestions](past/suggestions/).
 
 #### Documentation formatting
 Because we often read documentation as plain-text Markdown, we want it to look good in plain text editor.
@@ -189,9 +193,10 @@ Focus each suggestion on a specific topic, so it may be implemented in parallel 
 
 #### TODO items
 Keep track of the TODO items in [action id].[action title].md files similar to how it is done with suggestions.
-TODO items have similar directory structure and purposes (docs/dev/todo/, docs/dev/todo/approved, docs/dev/todo/done)
-Copy the approved suggestions (docs/dev/suggestions/approved) into corresponding todo files for implementation.
-Upon completion, move TODO items to docs/dev/todo/done upon completion, and move corresponding suggestions to docs/dev/suggestions/done.
+TODO items have a similar directory structure to suggestions; see the [TODO directory](todo/).
+Copy the [approved suggestions](suggestions/approved/) into corresponding TODO files for implementation.
+Upon completion, move TODO items and corresponding suggestions to [past/todo](past/todo/) and
+[past/suggestions](past/suggestions/).
 
 ### Various
 - Use 'brief' notation for getters and setters (x() instead of getX())

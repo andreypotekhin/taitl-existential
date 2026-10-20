@@ -151,11 +151,11 @@ To facilitate performance, the library:
 ## Documentation
 
 See /docs directory for further documentation.  
-See /docs/Usage.md for quick-start and usage patterns.
+See [Usage.md](docs/Usage.md) for quick-start and usage patterns.
 
 ## Troubleshooting
 
-See /Troubleshooting.md for solutions for common issues.
+See [Troubleshooting.md](Troubleshooting.md) for solutions for common issues.
 
 ## License
 

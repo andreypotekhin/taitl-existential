@@ -2,8 +2,8 @@
 
 ## Documentation first
 
-- Start with /Readme.md for usage and examples.
-- Review /Troubleshooting.md for common setup and runtime issues.
+- Start with [Readme.md](Readme.md) for usage and examples.
+- Review [Troubleshooting.md](Troubleshooting.md) for common setup and runtime issues.
 - Check /docs dir for deeper technical details.
 
 ## Bugs

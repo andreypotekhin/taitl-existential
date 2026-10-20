@@ -49,4 +49,4 @@ Porting: a Transition that can have a null in the before or after state (but not
   - The null in 'after' state indicates deletion of an entity
   - Both 'before' and 'after' states being non-null indicate a change (transition) of an entity
 
-For additional documentation, see /Readme.md, /docs and /docs/dev.
+For additional documentation, see [Readme.md](../../Readme.md), [docs](../), and [developer docs](./).

@@ -1,10 +1,10 @@
 # Existential Library Usage
 
 ## Overview
-See /Readme.md for library overview.
+See [Readme.md](../Readme.md) for library overview.
 
 ## Getting started
-This page is the quick-start. The formal overview is in /Readme.md.
+This page is the quick-start. The formal overview is in [Readme.md](../Readme.md).
 
 ### Adding the library to your project
 If you build and install the library locally, use the Maven coordinates below.
@@ -126,14 +126,14 @@ Workflow:
 
 ## Troubleshooting
 Troubleshooting:
-- See `/Troubleshooting.md`
+- See [Troubleshooting.md](../Troubleshooting.md).
 
 
 ## Advanced Topics
 
 ### Terminology
-See Concepts.md for concepts and terminology.
-See /docs/dev/Terminology.md for developer terminology.
+See [Concepts.md](Concepts.md) for concepts and terminology.
+See [Terminology.md](dev/Terminology.md) for developer terminology.
 
 ### Customizing the library
 Regular use of the library does not require custom classes; the stock classes should work for most cases.
@@ -199,5 +199,4 @@ features or features that are not guaranteed to survive multiple versions.
 
 ### Development
 See /docs/dev/ for development documentation.  
-/docs/dev/Development.md is starting point.
-
+[Development.md](dev/Development.md) is the starting point.

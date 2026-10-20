@@ -16,7 +16,7 @@ This plan is maintained according to `/docs/dev/auto/Plans.md`.
 - [x] (2026-02-26 20:40Z) Added `EvaluationLogicTest` coverage for effect execution + violation collection and partial-report preservation on propagated handler failure.
 - [x] (2026-02-26 20:41Z) Ran `mvn -q -Dtest=EvaluationLogicTest test` successfully.
 - [x] (2026-02-26 20:41Z) Ran `mvn -q test`; suite is blocked by unrelated existing failures in `EventKeyTest` and `RuntimeKeyTest` (details recorded below).
-- [ ] Move completed plan/TODO/suggestion artifacts to their `done` directories.
+- [ ] Move completed plan/TODO/suggestion artifacts to their corresponding directories under [docs/dev/past](../).
 
 ## Surprises & Discoveries
 
@@ -76,7 +76,7 @@ Add tests (integration-style against a real `Existential` instance) to verify: (
 
    Result in this run: command executed, but failed due to unrelated pre-existing key test failures (`EventKeyTest`, `RuntimeKeyTest`).
 
-5. Update this plan with final progress, discoveries, and outcomes; move it to `/docs/dev/planning/done/` and move the matching TODO/suggestion files to their `done` directories.
+5. Update this plan with final progress, discoveries, and outcomes; move it to [docs/dev/past/planning/](./) and move the matching TODO/suggestion files to their corresponding directories under [docs/dev/past](../).
 
 ## Validation and Acceptance
 

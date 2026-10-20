@@ -13,7 +13,7 @@ To apply the rules, the library:
   circumstances.
 
 For performance, the library:
-- Avoids immediate rule evaluation and instead evaluates rules at the end of a business transaction, such as
+- Postpones immediate rule evaluation and evaluates the rules at the end of a business transaction, such as
   before committing the changed data to persistent storage.
 - Multiple events of the same type are folded into a single event, reducing the number of validations performed.
 
@@ -23,10 +23,10 @@ To do so, the library allows end users to:
    allowing different sets of rules to apply to different circumstances.
 
 ### User stories and use cases
-See Specification.md for a detailed description of library behavior.
+See [Specification.md](Specification.md) for a detailed description of library behavior.
 
 ### Terminology
-See Terminology.md for terminology.
+See [Terminology.md](Terminology.md) for terminology.
 
 ### Architecture
 
@@ -54,7 +54,7 @@ Use the benchmark harness to anchor transaction-path performance:
 Benchmark classes live in `/src/test/java/com/taitl/existential/benchmarks`.
 
 ### Source code
-Main doc: /docs/dev/Source.md
+Main doc: [Source.md](Source.md)
 
 #### Code structure
 Package structure:
@@ -79,7 +79,7 @@ For the rare cases where you want to significantly affect library behavior, we p
 See the section "Extending the library with custom classes" below.
 
 ### Setup
-See /docs/dev/Setup.md for setup and prerequisites.
+See [Setup.md](Setup.md) for setup and prerequisites.
 
 ### Building
 Use regular Maven commands to build the project:
@@ -88,5 +88,5 @@ Use regular Maven commands to build the project:
     mvn -T 2C install -am --offline # speed build (offline)
 
 ### Troubleshooting
-Refer to /docs/dev/Troubleshooting.md.
+Refer to [Troubleshooting.md](Troubleshooting.md).
 If using custom classes, remove them and verify whether the library works without them.

@@ -9,7 +9,7 @@ Claims are backed by test cases in src/test/java/com/taitl/specs.
 A leading (+) marks items already completed and covered by tests.
 
 ### Terminology
-See Terminology.md for terms and concepts.
+See [Terminology.md](Terminology.md) for terms and concepts.
 
 ### Library
 
@@ -20,7 +20,7 @@ Within an Existential instance, the user can configure multiple business operati
 Within a business operation configuration, the user can configure multiple operation contexts.
 Within an operation context, the user can configure multiple rules such as invariants, effects, and intents.
 
-#### Library configuration.
+#### Library configuration
 
 +User can change library configuration options programmatically.
 +User can affect library behavior by setting behavioral flags.
@@ -87,20 +87,20 @@ The rules from matching contexts execute before the rules of the context.
   into an API endpoint handler.
   Code: This is done by specifying Transaction instance as parameter to Ex.begin() method.
 
-##### Configuring Constraints
+##### Configuring constraints
 
 User can specify an invariant (predicate) for a class event.
 User can specify an invariant (predicate) for transaction lifecycle event (begin, commit, rollback).
 +User can specify an invariant for generic types using a TypeKey.
 
-##### Configuring Effects
+##### Configuring effects
 
 User can specify side effect (event handler) for a class event.
 User can specify side effect for transaction lifecycle event (begin, commit, rollback).
 +User can specify side effect for generic types using a TypeKey.
 +User can specify transaction lifecycle side effect for custom transaction type using a TypeKey.
 
-##### Configuring Intents
+##### Configuring intents
 
 +User can configure intents for event types and entity classes.
 +User can configure intents using builders and rule instances in Context and Transaction.
@@ -178,7 +178,7 @@ When emitting a port event without an explicit type key, library infers the type
 value (preferring t1 when present, otherwise t0). Both t0 and t1 can't be null.
 When emitting a transit event without an explicit type key, both t0 and t1 must be non-null.
 
-### Constraints.
+### Constraints
 (Below, the terms 'constraints' and 'invariants' are used interchangeably)
 
 ##### Constraint on a single entity

@@ -4,7 +4,7 @@
 The Existential package (com.taitl.existential) defines end-user interfaces and classes for Existential library.
 
 ### Claims
-See /docs/dev/Specification.md for the list of library claims.
+See [Specification.md](../../../../../../docs/dev/Specification.md) for the list of library claims.
 
 ### Goals
 These interfaces and classes serve as a DSL for:

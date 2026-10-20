@@ -1,10 +1,10 @@
 # Concepts and Terminology
 
 ## Main
-See /Readme.md for library overview.
+See [Readme.md](../Readme.md) for library overview.
 
 ## Getting started
-See Usage.md for the quick-start. 
+See [Usage.md](Usage.md) for the quick-start.
 
 ### Concepts
 #### Operation keys
