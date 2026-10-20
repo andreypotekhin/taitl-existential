@@ -1,8 +1,8 @@
-package com.taitl.existential.specs.library_configuration;
+package com.taitl.specs.library_configuration;
 
 import com.taitl.ex.logic.library.*;
 import com.taitl.existential.constants.*;
-import com.taitl.existential.specs.*;
+import com.taitl.specs.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;

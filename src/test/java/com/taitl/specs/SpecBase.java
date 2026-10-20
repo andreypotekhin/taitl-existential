@@ -1,4 +1,4 @@
-package com.taitl.existential.specs;
+package com.taitl.specs;
 
 import com.taitl.ex.examples.night_city.data.*;
 import com.taitl.ex.examples.night_city.model.*;

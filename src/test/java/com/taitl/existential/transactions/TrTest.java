@@ -83,5 +83,17 @@ class TrTest
 
             assertTrue(tr.hasMemo(live, new TypeKey<>(String.class)));
         }
+
+        @Test
+        @DisplayName("Clears memo state when transaction closes")
+        void clearsOnClose() throws Exception
+        {
+            String live = new String("live");
+            tr.memo(new String("before"), live, String.class);
+
+            tr.close();
+
+            assertThrows(IllegalStateException.class, () -> tr.hasMemo(live, new TypeKey<>(String.class)));
+        }
     }
 }

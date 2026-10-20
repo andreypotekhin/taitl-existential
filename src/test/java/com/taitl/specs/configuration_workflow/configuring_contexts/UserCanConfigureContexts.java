@@ -1,10 +1,10 @@
-package com.taitl.existential.specs.configuration_workflow.configuring_contexts;
+package com.taitl.specs.configuration_workflow.configuring_contexts;
 
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.specs.*;
+import com.taitl.specs.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;

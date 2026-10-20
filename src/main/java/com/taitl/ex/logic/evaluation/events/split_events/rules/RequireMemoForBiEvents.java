@@ -49,9 +49,7 @@ public class RequireMemoForBiEvents
         {
             if (requiresHandlerMemo(typeKey, eventField, useFullEventNames, runtimeKey.event()))
             {
-                toMemo.forSplit(
-                        newEvent(candidateBiEventClasses(runtimeKey.event())[0], runtimeKey.entity()),
-                        runtimeKey, tr);
+                toMemo.requireMemo(runtimeKey, tr);
                 return;
             }
         }
@@ -75,7 +73,7 @@ public class RequireMemoForBiEvents
                 {
                     if (requiresIntentMemo(indexes, tr, stageName, eventType, candidate))
                     {
-                        toMemo.forSplit(newEvent(eventClass, runtimeKey.entity()), runtimeKey, tr);
+                        toMemo.requireMemo(runtimeKey, tr);
                         return;
                     }
                 }
@@ -132,13 +130,4 @@ public class RequireMemoForBiEvents
         return new Class[] {};
     }
 
-    @SuppressWarnings("unchecked")
-    protected <T> Event<T> newEvent(Class<?> eventClass, T entity)
-    {
-        if (eventClass.equals(Transit.class))
-        {
-            return (Event<T>) new Transit<>(entity, entity);
-        }
-        return (Event<T>) new Port<>(entity, entity);
-    }
 }

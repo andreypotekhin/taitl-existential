@@ -161,6 +161,18 @@ See /Troubleshooting.md for solutions for common issues.
 
 See /License.md
 
+## Compatibility
+
+Breaking changes may randomply happen before version 1.0.0, require a version update after 1.0.0.
+
+## Support and Contributions
+
+Existential is built for engineers. For a code-related support request, open an issue with a minimal, runnable example
+and the complete output it produces, including the error and traceback where applicable. Explain the expected result
+as well. Descriptions without a reproducible example cannot be diagnosed reliably.
+
+Code-related issues also need an accompanying pull request that contains the proposed fix and a regression test.
+
 ## Community
 
 - Contributing: /Contributing.md

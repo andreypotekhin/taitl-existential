@@ -7,7 +7,7 @@ import java.nio.file.attribute.*;
 import java.util.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.existential.*;
-import com.taitl.existential.specs.*;
+import com.taitl.specs.*;
 import org.junit.jupiter.api.*;
 
 import static org.hamcrest.CoreMatchers.containsString;

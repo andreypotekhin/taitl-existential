@@ -1,7 +1,7 @@
-package com.taitl.existential.specs.library_usage;
+package com.taitl.specs.library_usage;
 
 import com.taitl.existential.keys.*;
-import com.taitl.existential.specs.*;
+import com.taitl.specs.*;
 import org.junit.jupiter.api.*;
 
 import java.util.*;

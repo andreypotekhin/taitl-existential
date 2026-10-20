@@ -145,6 +145,11 @@ public class ToMemo
                 + TROUBLESHOOTING_SECTION);
     }
 
+    public <T> void requireMemo(RuntimeKey<T> runtimeKey, Tr tr) throws MemoException
+    {
+        memo(runtimeKey, tr);
+    }
+
     @SuppressWarnings("unchecked")
     protected <T> BiEvent<T> biEvent(Event<T> event)
     {

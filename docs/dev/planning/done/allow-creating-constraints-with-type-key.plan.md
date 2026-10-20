@@ -39,7 +39,7 @@ The feature intent is now validated by specification tests without changing libr
 
 The core rule types live in `/src/main/java/com/taitl/existential/constraints/Invariant.java`, `/src/main/java/com/taitl/existential/constraints/Effect.java`, and `/src/main/java/com/taitl/existential/constraints/Life.java`. These classes are responsible for rule configuration and currently expose constructors for `Class<T>` and, in some places, `TypeKey<T>`. The `TypeKey` type itself is in `/src/main/java/com/taitl/existential/keys/TypeKey.java` and is used throughout the library to represent generic or fully qualified types. Builders for fluent configuration are in `/src/main/java/com/taitl/existential/builders/ContextBuilder.java`, `/src/main/java/com/taitl/existential/builders/TransactionBuilder.java`, `/src/main/java/com/taitl/existential/builders/InvariantBuilder.java`, and `/src/main/java/com/taitl/existential/builders/EffectBuilder.java`. These builders are the primary end-user entry points for configuring constraints and effects, and are where missing `TypeKey` overloads would be most user-visible.
 
-Specification claims live in `/docs/dev/Specification.md` and tests that back those claims live in `/src/test/java/com/taitl/existential/specs`. The existing specs already include a test for configuring class rules with a `TypeKey`, but there is no explicit coverage for `TypeKey`-based invariants or transaction lifecycle rules for custom transaction types. The plan below closes that gap and ensures the spec’s “+” status corresponds to real tests.
+Specification claims live in `/docs/dev/Specification.md` and tests that back those claims live in `/src/test/java/com/taitl/specs`. The existing specs already include a test for configuring class rules with a `TypeKey`, but there is no explicit coverage for `TypeKey`-based invariants or transaction lifecycle rules for custom transaction types. The plan below closes that gap and ensures the spec’s “+” status corresponds to real tests.
 
 ## Plan of Work
 
@@ -47,7 +47,7 @@ First, review the current API surface in `Invariant`, `Effect`, and `Life` and i
 
 Next, update builder code so that `TypeKey` variants are accepted in fluent chains and are retained through to the constructed `Invariant`, `Effect`, or `Life` instances. This may require adjusting builder constructors or helper methods, or adding new builder entry points if a class currently only supports `Class<T>` for a particular rule type. Pay special attention to transaction lifecycle methods in `TransactionBuilder` to ensure `TypeKey<T>` overloads exist and are wired to `Life<T>` with the correct `typeKey`.
 
-Then, add specification tests that demonstrate end-to-end behavior. The tests should be placed under `/src/test/java/com/taitl/existential/specs` and should cover:
+Then, add specification tests that demonstrate end-to-end behavior. The tests should be placed under `/src/test/java/com/taitl/specs` and should cover:
 
 A context-level invariant configured with `TypeKey<List<String>>` that validates during commit when an event with that `TypeKey` is emitted. A context-level effect configured with a `TypeKey` should be used as a reference if needed, but ensure there is explicit invariant coverage. A transaction lifecycle handler (begin/commit/rollback/checkpoint) configured with `TypeKey<CustomTransaction>` that runs for a transaction instance of that custom type. Use a small custom `Transaction` subclass inside the test to keep scope tight.
 
@@ -59,7 +59,7 @@ Work from the repository root `/Users/chaos/.codex/worktrees/c9e2/taitl-existent
 
 1. Inspect rule classes and builders for `TypeKey` support. Use `rg -n "TypeKey"` in the constraint and builder packages and confirm which overloads already exist.
 2. Implement any missing `TypeKey` overloads in `ContextBuilder`, `TransactionBuilder`, `InvariantBuilder`, `EffectBuilder`, or `Life` wiring so that users can construct rules with `TypeKey` without downcasting or manual field setting.
-3. Add or update tests in `/src/test/java/com/taitl/existential/specs` to cover:
+3. Add or update tests in `/src/test/java/com/taitl/specs` to cover:
    - Invariant configuration for a generic type using `TypeKey<List<String>>` and event emission with that same `TypeKey`.
    - Transaction lifecycle handler configuration using `TypeKey<CustomTransaction>` and confirmation that the handler runs for that transaction type.
 4. Update `/docs/dev/Specification.md` to ensure the `TypeKey`-related claims are prefixed with `+` only when the tests exist and pass. If a new claim is needed for lifecycle rules, add it and back it with a test.

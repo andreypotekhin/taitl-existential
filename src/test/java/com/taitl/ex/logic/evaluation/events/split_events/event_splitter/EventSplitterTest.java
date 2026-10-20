@@ -235,6 +235,32 @@ class EventSplitterTest
             }
 
             @Test
+            @DisplayName("Runtime split uses memo-backed port payload for delete")
+            void usesMemoBackedDeletePortPayload() throws Exception
+            {
+                EventSplitter splitter = new EventSplitter();
+                String live = new String("deleted");
+                String before = new String("before");
+                TypeKey<String> typeKey = new TypeKey<>(String.class);
+                Tr tr = ex.begin("/memo");
+                tr.memo(before, live, typeKey);
+                RuntimeKey<String> runtimeKey = RuntimeKey.valueOf(new Delete<>(live), typeKey, live, false);
+
+                Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true, tr);
+
+                Port<String> port = splitKeys.stream()
+                        .map(RuntimeKey::event)
+                        .filter(Port.class::isInstance)
+                        .map(event -> (Port<String>) event)
+                        .findFirst()
+                        .orElseThrow(() -> new AssertionError("Port event not found"));
+
+                assertSame(before, port.t0);
+                assertNull(port.t1);
+                tr.rollback();
+            }
+
+            @Test
             @DisplayName("Runtime split skips memo-sensitive bi-event path when memo is absent")
             void skipsBiEventPathWithoutMemo() throws Exception
             {

@@ -103,11 +103,11 @@ The goal of our way of object decomposition is to maximize 'graspability' - the 
 
 #### Testing
 Test cases for code units live in src/test/java.
-Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/existential/specs.
+Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/specs.
 
 ##### Testing Standards
 For each implemented specification from /docs/dev/Specification.md, create a test case in the corresponding
-subpackage of com.taitl.existential.specs (src/test/java/com/taitl/existential/specs).
+subpackage of com.taitl.specs (src/test/java/com/taitl/specs).
 
 ##### Testing Guidelines
 Some rules around testing we adopt:

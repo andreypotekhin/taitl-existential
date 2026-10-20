@@ -1,8 +1,8 @@
-package com.taitl.existential.specs.library_usage;
+package com.taitl.specs.library_usage;
 
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.existential.keys.TypeKey;
-import com.taitl.existential.specs.SpecBase;
+import com.taitl.specs.SpecBase;
 import com.taitl.existential.transactions.Tr;
 import org.junit.jupiter.api.*;
 

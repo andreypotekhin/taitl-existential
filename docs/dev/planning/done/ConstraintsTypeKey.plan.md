@@ -54,7 +54,7 @@ Rules are configured through builder classes under `/src/main/java/com/taitl/exi
 
 Configuration indexing happens in `/src/main/java/com/taitl/ex/logic/configuration/indexes/actions/IndexConfig.java`, which traverses all configured `Evs` and constructs `EventKey` entries for lookup. Runtime events are keyed via `EventKey.valueOf(event, typeKey)` in `/src/main/java/com/taitl/ex/logic/indexing/IndexingLogic.java`, so the configuration path must use the same event type + `TypeKey` combination to match. `TypeKey` lives in `/src/main/java/com/taitl/existential/keys/TypeKey.java` and supports representing generic types.
 
-The user story and specification additions belong in `/docs/dev/Specification.md`, and specification-backed tests live under `/src/test/java/com/taitl/existential/specs/`. Builder behavior can be verified in `/src/test/java/com/taitl/existential/builders/` and indexing behavior in `/src/test/java/com/taitl/ex/logic/`.
+The user story and specification additions belong in `/docs/dev/Specification.md`, and specification-backed tests live under `/src/test/java/com/taitl/specs/`. Builder behavior can be verified in `/src/test/java/com/taitl/existential/builders/` and indexing behavior in `/src/test/java/com/taitl/ex/logic/`.
 
 ## Plan of Work
 
@@ -66,7 +66,7 @@ Then, fix configuration indexing to use the new type key. In `IndexConfig.Traver
 
 In parallel with the above, refactor key classes under `/src/main/java/com/taitl/existential/keys/` to declare `key` fields `final` where possible, especially `EventKey` and `RuntimeKey`, and evaluate `TypeKey` feasibility. If `TypeKey` cannot be made `final` without disproportionate constructor churn, document the blocker in `Surprises & Discoveries` and keep the change scoped to the classes that can be safely hardened.
 
-After code changes, update documentation and specifications. Add a new user story to `/docs/dev/Specification.md` under configuration workflows stating that users can configure constraints/effects/lives using a `TypeKey` for generic types. Add a spec test under `/src/test/java/com/taitl/existential/specs/` that configures an invariant or effect using a `TypeKey` and asserts that the handler fires for a matching runtime event. Add or extend builder tests in `/src/test/java/com/taitl/existential/builders/` to ensure the new overloads set the type key correctly, and add an indexing test (likely under `/src/test/java/com/taitl/ex/logic/`) to assert that `IndexConfig` creates `EventKey` values that match runtime keys when `TypeKey` is provided. The `TypeKey` tests added or updated for this work must exercise both reflection-based constructors (anonymous subclass variants, including the `boolean useFullName` variant where relevant) and class-/string-based constructors to confirm consistent behavior across construction styles.
+After code changes, update documentation and specifications. Add a new user story to `/docs/dev/Specification.md` under configuration workflows stating that users can configure constraints/effects/lives using a `TypeKey` for generic types. Add a spec test under `/src/test/java/com/taitl/specs/` that configures an invariant or effect using a `TypeKey` and asserts that the handler fires for a matching runtime event. Add or extend builder tests in `/src/test/java/com/taitl/existential/builders/` to ensure the new overloads set the type key correctly, and add an indexing test (likely under `/src/test/java/com/taitl/ex/logic/`) to assert that `IndexConfig` creates `EventKey` values that match runtime keys when `TypeKey` is provided. The `TypeKey` tests added or updated for this work must exercise both reflection-based constructors (anonymous subclass variants, including the `boolean useFullName` variant where relevant) and class-/string-based constructors to confirm consistent behavior across construction styles.
 
 Finally, run the full test suite with Maven from the repository root and record the results in this plan. Any failures should be triaged and fixed before marking the plan complete.
 
@@ -80,7 +80,7 @@ Finally, run the full test suite with Maven from the repository root and record 
 
 4. Refactor `/src/main/java/com/taitl/existential/keys/` classes to declare `key` fields `final` where safe, preserving behavior and constructor coverage.
 
-5. Add or update tests in `/src/test/java/com/taitl/existential/builders/`, `/src/test/java/com/taitl/ex/logic/`, and `/src/test/java/com/taitl/existential/specs/` to validate `TypeKey`-based configuration behavior and to cover reflection-based plus class/string `TypeKey` constructors.
+5. Add or update tests in `/src/test/java/com/taitl/existential/builders/`, `/src/test/java/com/taitl/ex/logic/`, and `/src/test/java/com/taitl/specs/` to validate `TypeKey`-based configuration behavior and to cover reflection-based plus class/string `TypeKey` constructors.
 
 6. Update `/docs/dev/Specification.md` to include the new user story about configuring constraints/effects/lives with `TypeKey` and mark the story as completed once tests pass.
 

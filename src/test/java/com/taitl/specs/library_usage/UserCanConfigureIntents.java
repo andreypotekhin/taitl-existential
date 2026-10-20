@@ -1,8 +1,8 @@
-package com.taitl.existential.specs.library_usage;
+package com.taitl.specs.library_usage;
 
 import com.taitl.existential.constants.*;
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.specs.*;
+import com.taitl.specs.*;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.atomic.*;

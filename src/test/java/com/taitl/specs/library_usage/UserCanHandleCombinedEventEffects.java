@@ -1,10 +1,10 @@
-package com.taitl.existential.specs.library_usage;
+package com.taitl.specs.library_usage;
 
 import com.taitl.ex.examples.night_city.data.*;
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.handlers.combined_event_handlers.*;
-import com.taitl.existential.specs.*;
+import com.taitl.specs.*;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.atomic.*;

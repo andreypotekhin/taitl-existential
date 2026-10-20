@@ -1,8 +1,8 @@
-package com.taitl.existential.specs.library_usage;
+package com.taitl.specs.library_usage;
 
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.exceptions.*;
-import com.taitl.existential.specs.*;
+import com.taitl.specs.*;
 import com.taitl.existential.transactions.*;
 import org.junit.jupiter.api.*;
 
@@ -59,6 +59,36 @@ class UserCanUseMemoForBiEvents extends SpecBase
 
             assertEquals("Black", beforeColor.get());
             assertEquals("White", afterColor.get());
+            tr.commit();
+        }
+
+        @Test
+        @DisplayName("User can memo before-state so delete port handlers see the before-state")
+        void memoSupportsDeletePortHandlers() throws Exception
+        {
+            AtomicReference<String> beforeColor = new AtomicReference<>();
+            AtomicReference<String> afterColor = new AtomicReference<>("not-null");
+
+            // @formatter:off
+            ex.configure()
+                    .context(op)
+                    .immediate()
+                        .effect(cat.getClass())
+                            .port((before, after) -> {
+                                beforeColor.set(before.color);
+                                afterColor.set(after == null ? null : after.color);
+                            }, "track memo-backed delete port");
+            // @formatter:on
+
+            Tr tr = ex.begin(op);
+            Cat live = new Cat("White", cat.location());
+            Cat before = new Cat("Black", live.location());
+            tr.memo(before, live, Cat.class);
+
+            ex.delete(live, tr.id());
+
+            assertEquals("Black", beforeColor.get());
+            assertNull(afterColor.get());
             tr.commit();
         }
 

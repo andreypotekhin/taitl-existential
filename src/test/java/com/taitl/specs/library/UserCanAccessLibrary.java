@@ -1,7 +1,7 @@
-package com.taitl.existential.specs.library;
+package com.taitl.specs.library;
 
 import com.taitl.existential.Ex;
-import com.taitl.existential.specs.SpecBase;
+import com.taitl.specs.SpecBase;
 import org.junit.jupiter.api.*;
 
 class UserCanAccessLibrary extends SpecBase

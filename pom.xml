@@ -208,6 +208,13 @@
                     <!-- Exclude integration and end-to-end tests from 'validate', 'compile'
                         and 'test' goals - they are part of 'integration-test' and 'verify' goals
                         defined later for Failsafe plugin -->
+                    <includes>
+                        <include>**/Test*.java</include>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                        <include>**/*TestCase.java</include>
+                        <include>**/UserCanUseMemoForBiEvents.java</include>
+                    </includes>
                     <excludes>
                         <exclude>**/integration/*.*</exclude>
                         <exclude>**/it/*.*</exclude>

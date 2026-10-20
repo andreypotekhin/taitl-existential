@@ -5,7 +5,7 @@
 Prioritise 'top-to-bottom', 'working backwards from customer' order of implementation,
 putting effort into end-user facing artifacts first (source code, documentation),
 then proceeding with implementing library interfaces and user stories (specifications)
-(/docs/dev/Specification.md) and their backing test cases (com.taitl.existential.specs subpackages)
+(/docs/dev/Specification.md) and their backing test cases (com.taitl.specs subpackages)
 and unit tests.
 
 See these documents on various levels of the code tree for what to focus on:
@@ -330,6 +330,5 @@ See 'Round-robin role' section in 'Team roles' of Agents.md
 Automation instructions
 
 - For each role as described in 'Round-robin role', assume the role and perform tasks following instructions for that role.
-
 
 

@@ -5,7 +5,7 @@ None of these claims are legal statements or contracts.
 They only describe library features and behavior for implementation.
 
 As user stories, claims may be prefixed with 'The user can...' (or 'The user can't...').
-Claims are backed by test cases in src/test/java/com/taitl/existential/specs.
+Claims are backed by test cases in src/test/java/com/taitl/specs.
 A leading (+) marks items already completed and covered by tests.
 
 ### Terminology

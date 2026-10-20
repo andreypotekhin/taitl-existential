@@ -1,11 +1,11 @@
-package com.taitl.existential.specs.library_usage;
+package com.taitl.specs.library_usage;
 
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.events.*;
 import com.taitl.existential.Ex;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.exceptions.ExistentialException;
-import com.taitl.existential.specs.*;
+import com.taitl.specs.*;
 import com.taitl.existential.transactions.Tr;
 import org.junit.jupiter.api.*;
 

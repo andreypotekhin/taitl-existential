@@ -57,7 +57,7 @@ Relevant files:
 - `src/main/java/com/taitl/ex/logic/library/ConfigureLibrary.java`
 - `src/main/java/com/taitl/existential/Existential.java`
 - `src/main/resources/existential.properties`
-- `src/test/java/com/taitl/existential/specs/library_configuration/UserCanConfigureLibrary.java`
+- `src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java`
 - `src/test/java/com/taitl/ex/logic/library/ConfigureLibraryTest.java`
 - `docs/Usage.md`
 - `Troubleshooting.md`
@@ -77,7 +77,7 @@ Working directory:
 
 Commands:
 
-    mvn -Dtest=com.taitl.existential.specs.library_configuration.UserCanConfigureLibrary test
+    mvn -Dtest=com.taitl.specs.library_configuration.UserCanConfigureLibrary test
     mvn -Dtest=com.taitl.ex.logic.library.ConfigureLibraryTest test
     mvn -q test
     mvn clean install

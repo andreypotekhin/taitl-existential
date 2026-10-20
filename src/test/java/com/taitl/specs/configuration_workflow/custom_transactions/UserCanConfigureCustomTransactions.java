@@ -1,11 +1,11 @@
-package com.taitl.existential.specs.configuration_workflow.custom_transactions;
+package com.taitl.specs.configuration_workflow.custom_transactions;
 
 import com.taitl.existential.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
-import com.taitl.existential.specs.*;
+import com.taitl.specs.*;
 import com.taitl.ex.examples.night_city.model.*;
 import org.junit.jupiter.api.*;
 

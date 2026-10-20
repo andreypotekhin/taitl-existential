@@ -82,7 +82,7 @@ Example: ConfigureClassRules.configure()
 
 ## Testing
 Test cases for code units live in /src/test/java.
-Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/existential/specs/.
+Test cases backing specifications (from /docs/dev/Specification.md) are in src/test/java/com/taitl/specs/.
 Testing standards, guidelines, structure are coverage limits: see style guide (/docs/dev/Style.md).
 Pay attention to test name shortening techniques described in style guide.
 
@@ -299,7 +299,7 @@ TODO items
 - Upon completion, move TODO items to docs/dev/todo/done.
 
 Specifications (Specification.md)
-- Back completed user stories with test cases in /src/test/java/com/taitl/existential/specs
+- Back completed user stories with test cases in /src/test/java/com/taitl/specs
 - In Specification.md, prefix the completed user stories with + sign
 
 Troubleshooting documentation
