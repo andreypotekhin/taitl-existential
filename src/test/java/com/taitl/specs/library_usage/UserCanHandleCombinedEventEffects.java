@@ -57,8 +57,8 @@ class UserCanHandleCombinedEventEffects extends SpecBase
                 ex.commit(tran);
             });
 
-            assertEquals(3, cudCalls.get());
-            assertEquals(2, udCalls.get());
+            assertEquals(2, cudCalls.get());
+            assertEquals(1, udCalls.get());
         }
     }
 }

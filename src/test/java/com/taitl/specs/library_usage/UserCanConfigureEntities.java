@@ -78,7 +78,7 @@ class UserCanConfigureEntities extends SpecBase
         void configureMixingFluentAndBuilders()
         {
             assertDoesNotThrow(() -> {
-                configureMixingFluentAndBuilders();
+                UserCanConfigureEntities.this.configureMixingFluentAndBuilders();
                 String tran = ex.begin(op).id();
                 ex.update(cat, tran);
             });

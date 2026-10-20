@@ -35,7 +35,8 @@ class UserCanSendEntityEvents extends SpecBase
         void sendEntityEvent() throws Exception
         {
             String tran = ex.begin(op).id();
-            ex.transit(null, cat, tran);
+            Cat updated = new Cat(cat.color(), "library");
+            ex.transit(cat, updated, tran);
             ex.commit(tran);
         }
 

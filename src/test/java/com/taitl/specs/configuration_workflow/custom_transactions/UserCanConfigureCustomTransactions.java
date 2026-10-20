@@ -113,12 +113,13 @@ class UserCanConfigureCustomTransactions extends SpecBase
         {
             RequestTransaction custom = new RequestTransaction(op, "White").requireColorOnUpdate();
 
+            configure();
             String tran = ex.begin(op, custom).id();
             ex.update(cat, tran);
 
             ValidationStageExceptions thrown = assertThrows(ValidationStageExceptions.class,
                     () -> UserCanConfigureCustomTransactions.this.ex.commit(tran));
-            assertTrue(thrown.getMessage().contains("Cat color must match request scope"));
+            assertTrue(thrown.getCause().getMessage().contains("Cat color must match request scope"));
         }
 
         @Test
@@ -128,6 +129,7 @@ class UserCanConfigureCustomTransactions extends SpecBase
             AtomicInteger updates = new AtomicInteger();
             RequestTransaction custom = new RequestTransaction(op, cat.color()).countUpdates(updates);
 
+            configure();
             assertDoesNotThrow(() -> {
                 String tran = ex.begin(op, custom).id();
                 ex.update(cat, tran);

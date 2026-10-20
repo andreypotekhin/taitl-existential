@@ -38,7 +38,7 @@ class UserCanConfigureTransaction extends SpecBase
             ex.configure()
                 .context(op)
                     .transaction(() -> {
-                        Transaction tr = new Transaction("undefined", "undefined");
+                        Transaction tr = new Transaction(op, "transaction");
                         Intent<Cat> writeIntent = new Intent<>(Cat.class);
                         writeIntent.write();
                         tr.intent(writeIntent);

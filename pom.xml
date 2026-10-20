@@ -214,6 +214,7 @@
                         <include>**/*Tests.java</include>
                         <include>**/*TestCase.java</include>
                         <include>**/UserCanUseMemoForBiEvents.java</include>
+                        <include>**/com/taitl/specs/**/*.java</include>
                     </includes>
                     <excludes>
                         <exclude>**/integration/*.*</exclude>
