@@ -1,76 +1,50 @@
 # Sprint Planning Guide
 
-## Sprint Length
+Sprints are ordered, undated delivery increments. Assign dates and capacity when known; the current plan does not
+invent either. One- or two-week timeboxes can be used when scheduling begins. See [Backlog](Backlog.md) and the
+[sprint template](templates/SprintTemplate.md).
 
-Use one- or two-week iterations. The early work benefits from short feedback cycles and demonstrable vertical slices.
+## Inputs and readiness
 
-## Sprint Planning Inputs
+Each sprint has an epic, release, user-facing outcome, governing designs/specifications, existing evidence, concrete
+remaining work, dependencies, acceptance cases, demonstration commands, risks, and explicit non-goals.
+Agents use [Process](../auto/Process.md), including both exploratory design discussion and work-item selection.
+Human contributors need not follow a strict discussion sequence. Finalize behavioral decisions and implementation
+acceptance before feature coding; do not treat a draft execution plan as a finalized specification.
 
-Each sprint should include:
+## Small deliveries and spikes
 
-- Sprint goal.
-- User-facing outcome.
-- Implementation tasks.
-- Relevant specification items.
-- Acceptance criteria.
-- Risks.
-- Explicit non-goals.
+Prefer tasks such as a specified lifecycle case, a passing specification test, a documented failure/recovery scenario,
+or a measured dispatch improvement. Avoid broad tasks such as "implement evaluation" without an observable result.
+Reuse existing behavior and strengthen evidence rather than assuming every unmarked claim needs reimplementation.
 
-Template: [SprintTemplate.md](templates%2FSprintTemplate.md)
+A spike answers a concrete question through the smallest executable proof. Record the decision or unresolved risk,
+retained fixture/test, and follow-up backlog link. A spike is not silent feature implementation or release evidence.
 
-## Estimation Guidance
+## Demos and evidence
 
-Prefer small tasks that produce visible progress:
+Use Night City-backed specifications where they fit, with exact Maven selectors, input scenarios, and expected
+assertions. Unit-test-only topics may use focused unit scenarios. Run `mvn clean install` before closing a coding task,
+and inspect actual reports rather than relying on the command's exit code alone.
 
-- Specification item implemented
-- Source fixture added
-- Execution test added
-- Structured error implemented
+Record runtime/tool versions, actual passed/skipped totals, missing evidence, and relevant artifact checks. A planned
+sprint has no completion claims or invented review history. Use the [review template](templates/SprintReview.md).
 
-Avoid broad tasks such as “implement compiler.” Split them by focused deliverables with defined output.
+## Performance
 
-## Spikes
+Grow topic-specific `*Benchmark` classes in `src/test/java/com/taitl/existential/benchmarks/` as features are
+implemented.
+Use the existing `benchmarks` profile; store run metadata, samples, medians/ranges, and conclusions under
+[performance](../performance/Readme.md). Link records from sprints and plans instead of duplicating measurements.
+Benchmark changed hot paths and release baselines; document why measurement is inapplicable for other changes.
+Retain early attention to algorithmic complexity without promoting speculative optimizations into release scope.
 
-Spikes must include short, written outcomes before implementation work proceeds. Each spike should produce:
+## Hardening and closeout
 
-- the smallest executable proof;
-- the design decision or remaining risk;
-- links to follow-up backlog items when the proof changes scope;
-- any fixture or test worth keeping.
+Every release ends with a dedicated hardening sprint, planned after all its feature sprints. Admit no new features.
+Close release blockers and verify the public behavior, retained regression suite, diagnostics, resource hygiene,
+examples, artifact contents, applicable consumer/runtime compatibility, coverage collection, and performance baselines.
 
-Do not let a spike become implementation by stealth. It is complete when it proves or disproves the design assumption
-clearly enough to plan the vertical slice.
-
-## Performance Tracking
-
-Each sprint should track performance time and its improvements/regressions.
-
-- Benchmarks are maintained in taitl/existential/benchmarks/ 
-- New benchmarks are created as part of feature implementation.
-- Performance is measured as part of execution plans and sprints.
-- Performance reports are accumulated, per-topic and aggregate.
-- Performance regressions are avoided.
-
-Example: see section 'Artifacts and Notes' in [P03142601.Custom-transaction-instance.plan.md](..%2Fpast%2Fplanning%2FP03142601.Custom-transaction-instance.plan.md)
-
-Optimize early; prevent obviously non-linear algorithms from entering core paths.
-
-## Demo Expectations
-
-Every sprint after groundwork should be demoable using test cases such as using example night_city app.
-
-## Version Hardening Sprint
-
-Every version (`vN`) must end with a dedicated hardening sprint. Schedule it when the version is planned and place it
-after every feature-delivery sprint in that version; do not treat release evidence and documentation closure as a
-substitute for the sprint.
-
-The hardening sprint admits no new features. It closes release-blocking defects and verifies the version's public
-contract through regression, online/generated parity, supported-target compatibility, generated-artifact freshness,
-documentation, diagnostics, and performance-baseline checks. Its charter must name the version exit criteria, the
-release evidence to collect, and deferred follow-up work discovered during hardening.
-
-Keep release evidence lightweight. The hardening ExecPlan's `Outcomes & Retrospective` records the exact commands,
-backend versions, passed/skipped totals, and links to explicit deferrals. It does not require an approval workflow or a
-separate scorecard. `make build` is necessary but insufficient: release closure also runs the relevant classic Compose
-lanes and Spark Connect lanes only where support is claimed. A skipped live lane is not release evidence.
+Keep evidence lightweight in the release charter and hardening plan's Outcomes & Retrospective. Record exact commands,
+versions, totals/skips, benchmark links, blockers, and approved deferrals. `mvn clean install` is necessary but does not
+replace missing acceptance tests, actual coverage data, independent consumer evidence, or claimed remote publication.

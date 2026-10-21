@@ -7,6 +7,12 @@ follow to deliver a working feature or system change. Treat the reader as a comp
 have only the current working tree and the single ExecPlan file you provide. There is no memory of prior plans and no
 external context.
 
+## Relationship to the agent process
+
+Follow [Process](Process.md) for entry paths and readiness. An initial draft organizes investigation; finalize it
+against the topic design and normative specification before implementing behavior. Human contributors need not
+follow a prescribed conversation sequence. Small corrections may update existing documents without a new plan.
+
 ## How to use ExecPlans and PLANS.md
 
 When authoring an executable specification (ExecPlan), follow PLANS.md _to the letter_. If it is not in your context,

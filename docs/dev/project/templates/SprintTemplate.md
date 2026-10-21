@@ -1,32 +1,36 @@
-# Sprint Template
+# Sprint NN: Release and Topic
 
-Status: planned; target: 2028-03-05.
+Status: planned. Epic: link. Release: link. Dates/capacity: unassigned until scheduled.
 
-## Sprint goal
+## Goal and user-facing outcome
 
-Reconcile all V1 ledgers and publish release evidence without admitting unresolved scope.
+Describe what a caller or contributor can demonstrate after this sprint.
 
-## User-facing outcome
+## Entry conditions and dependencies
 
-The XXX specification item is reproducible, documented, and safe to adopt; every non-supported case explains its
-boundary and remedy.
+Link previous sprint/release evidence, known blockers, and the relevant design decisions.
 
-## Implementation tasks
+## Specification and design
 
-- [x] Reconcile the supported pinned API delta, target-only inventory, and transformation coverage for query operations, 
-observations, profile capability guards pass.
-- Reconcile remaining API Catalog, API Reference, compatibility docs and runtime evidence.
-...
+Link authoritative topic documents and requirement IDs. Identify existing implementation/evidence separately from gaps.
 
-## Specification Items Completed
+## Remaining work
 
-- [ ]
+List focused tasks and acceptance cases; do not paste an implementation transcript here.
 
-## Acceptance
+## Acceptance and demo
 
-Every supported case has positive evidence and every non-supported case has a reason and remedy; the full
-build passes; and the V1 retrospective is complete.
+State observable success/failure behavior and exact Maven commands from the repository root.
 
-## Governing plan
+## Risks and non-goals
 
-`docs/dev/past/planning/P03142601.Custom-transaction-instance.plan.md`.
+Name relevant uncertainties and exclusions without inventing scope or future support claims.
+
+## Performance
+
+Link the applicable topic record or explain why measurement does not apply.
+
+## Execution plan and review
+
+Link the governing execution plan when finalized. Review pending: record actual completed IDs, commands, versions,
+passed/skipped totals, required checks, demo output, performance links, blockers, and deferrals at completion.

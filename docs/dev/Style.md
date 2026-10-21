@@ -102,6 +102,10 @@ The goal of our way of object decomposition is to maximize 'graspability' - the 
   - Integrate with other 'apps' using their corresponding data model structures 
 
 #### Testing
+
+[Specification.md](Specification.md) indexes the authoritative topic requirements. Preserve their stable IDs and
+reference them in new acceptance cases. Agent sequencing is defined in [Process](auto/Process.md), not imposed on
+human contributors. Record relevant measurements using the [performance guide](performance/Readme.md).
 Test cases for code units live in src/test/java.
 Test cases backing specifications (from [Specification.md](Specification.md)) are in
 src/test/java/com/taitl/specs.

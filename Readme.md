@@ -53,7 +53,7 @@ For any object of a subset of X, a predicate holds true:
 For any object of X that has been changed in the course of a business transaction, predicate holds true:
 
     ∀ x0, x1 ∈ X, ⊤(x0, x1)      transit((x0, x1) -> predicate(x0, x1))
-    
+
     'Transit' describes a change of an object with before- and after- states x0, x1. 
     x0 is the object state at the start of business transaction,
     x1 is the object state state at the end of business transaction.
@@ -79,20 +79,20 @@ Similarly, for an object from a subset of X:
 An object of type X exists for which a predicate holds:
 
     ∃ x ∈ X ⊤(x)      exists(coll, x -> predicate(x))
-    
+
     At least one element in the collection should satisfy the predicate.
 
 An object of a subset of X exists for which a predicate holds:
 
     ∃ x ∈ X | condition(x) ⊤(x)      exists(coll, x -> condition(x), x -> predicate(x))
-    
+
     At least one element in the collection should satisfy the predicate.
     Since iterating over a collection may be slow, we provide an option for more performant indexed approach next.
 
 For performance, one can use an *index* instead of a collection to determine existence:
 
     ∃ x ∈ X | condition(x) ⊤(x)      exists(index, x -> predicate(x))
-    
+
     The index is a Set-like structure (a Set or a dynamically updated index class which we provide)
     for fast iteration over collection elements that satisfy the condition. 
 
@@ -152,6 +152,8 @@ To facilitate performance, the library:
 
 See /docs directory for further documentation.  
 See [Usage.md](docs/Usage.md) for quick-start and usage patterns.
+See [Night City](examples/night_city/Readme.md) for the example sources and specification-backed scenarios.
+Contributors can start with the [project documentation](docs/dev/project/Readme.md).
 
 ## Troubleshooting
 

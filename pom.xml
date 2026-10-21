@@ -81,6 +81,26 @@
         </resources>
         <plugins>
             <plugin>
+                <!-- Examples are shared test fixtures, not library classes. -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <id>night-city-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/examples/night_city/src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin-version}</version>
@@ -98,6 +118,11 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <directories>
+                        <directory>${project.basedir}/src/main/java</directory>
+                        <directory>${project.basedir}/src/test/java</directory>
+                        <directory>${project.basedir}/examples/night_city/src/main/java</directory>
+                    </directories>
                     <configFile>${project.basedir}/src/tools/configs/java-code-formatter/java-code-formatter.xml
                     </configFile>
                     <compilerSource>${maven.compiler.release}</compilerSource>
@@ -124,7 +149,10 @@
                             <configLocation>src/tools/configs/checkstyle/checkstyle-java.xml</configLocation>
                             <encoding>UTF-8</encoding>
                             <consoleOutput>true</consoleOutput>
-                            <sourceDirectory>${project.build.sourceDirectories}</sourceDirectory>
+                            <sourceDirectories>
+                                <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                                <sourceDirectory>${project.basedir}/examples/night_city/src/main/java</sourceDirectory>
+                            </sourceDirectories>
                             <violationSeverity>warning</violationSeverity>
                             <failsOnError>true</failsOnError>
                             <!-- Exclude Proof of Concept/Sandbox classes, Test Cases -->
@@ -160,6 +188,10 @@
                     </rulesets>
                     <printFailingErrors>true</printFailingErrors>
                     <sourceEncoding>utf-8</sourceEncoding>
+                    <compileSourceRoots>
+                        <compileSourceRoot>${project.build.sourceDirectory}</compileSourceRoot>
+                        <compileSourceRoot>${project.basedir}/examples/night_city/src/main/java</compileSourceRoot>
+                    </compileSourceRoots>
                     <minimumTokens>100</minimumTokens>
                     <targetJdk>11</targetJdk>
                     <excludes>

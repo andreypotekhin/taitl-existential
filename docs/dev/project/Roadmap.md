@@ -6,16 +6,23 @@
 ## Specification
 Main: [Specification.md](..%2FSpecification.md)
 The Specification defines library's expected behavior.
-Scope items below often correspond to Specification sections.  
+Scope items below often correspond to Specification sections.
 
 ## Versioning
-V# versions stand for minor version, e.g. V1 stands for 0.0.1
+V# labels identify project releases: V1 is 0.0.1 and V2 is 0.0.2. They are not semantic-version major numbers.
+
+## Delivery records
+
+[V1](V1.md) and [V2](V2.md) define outcomes, ordered undated sprints, prerequisites, and hardening exit criteria.
+[Backlog](Backlog.md) contains epics; [Traceability](TraceabilityMatrix.md) maps every item below to evidence and work.
+Release assignments below are unchanged. Existing V2 functionality required to exercise V1 is an explicit prerequisite,
+not an automatic reassignment of the broader feature. See [Assessment](Assessment.md) for the current state.
 
 ## Scope
 ## V1 Scope
 
 - Library
-- Library configuration 
+- Library configuration
 - Library usage
 - Lifecycle phases
 - Configure rules
@@ -52,4 +59,4 @@ V# versions stand for minor version, e.g. V1 stands for 0.0.1
 - Constraint enforcement
 - Side effect execution
 - Custom Event Types
-- Maven dependency 
+- Maven dependency

@@ -1,10 +1,14 @@
 ## Summary
-Explain the change and its motivation.
 
-## Testing
-Describe tests run and results.
+Describe the problem and resulting behavior. Link relevant epic/sprint, design/specification requirement IDs,
+and execution plan when applicable. Note public API, compatibility, and artifact-content changes.
 
-## Checklist
-- Tests added or updated (if applicable)
-- Documentation updated (if applicable)
-- No public API changes without notes
+## Validation
+
+Record exact commands and results, including `mvn clean install` for coding changes. Account for skipped tests,
+missing coverage/check evidence, and remaining blockers. Link performance records for relevant hot-path changes.
+
+## Documentation
+
+Identify updated specifications, designs, examples, diagnostics, and planning evidence where relevant.
+Human contributors need not follow the agent conversation sequence; observable acceptance evidence is what matters.

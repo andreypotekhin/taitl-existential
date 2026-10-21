@@ -31,7 +31,9 @@ Configure rules:
     Ex.configure()
       .context("/app/orders/submit")
           .invariant(Order.class)
-              .create(o -> o.total() > 0, "Total must be positive");
+              .create(o -> o.total() > 0, "Total must be positive");// <-- (1)
+
+    (1) The rule will apply to any Order created as part of a transaction    
 
 Create transaction, send events:
 
@@ -80,7 +82,7 @@ This is done by sending an event to the library.
     try
     {
         // ...update Account...
-        Ex.update(account, tr.id());
+        Ex.update(account, tr.id()); // <-- (1)
         Ex.commit(tr);
     }
     catch (Exception e)
@@ -88,6 +90,8 @@ This is done by sending an event to the library.
         Ex.rollback(tr);
         throw e;
     }
+
+    (1) Send an Update<Account> event to the library    
 
 This can be simplified using @Op annotation:
 

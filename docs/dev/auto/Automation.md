@@ -2,11 +2,10 @@
 
 ## Automation Contract
 
-Prioritise 'top-to-bottom', 'working backwards from customer' order of development,
-putting effort into end-user facing artifacts first (source code, documentation),
-then proceeding with implementing library interfaces and user stories (specifications)
-([Specification.md](../Specification.md)), their backing specification tests (com.taitl.specs subpackages
-in src/test/java/com/taitl/specs) and unit tests.
+Follow [Process](Process.md). Exploratory design may start with a vague topic; when selecting the next work item,
+derive its user scenario and documentation example. Resolve the design/specification and finalize the execution plan
+before implementation. Topic specifications are normative; plans and conversation do not override their behavior.
+Use [release traceability](../project/TraceabilityMatrix.md) to distinguish existing evidence from remaining work.
 
 See these documents for what to focus on:
 
@@ -18,7 +17,8 @@ PR titles and Git branch naming for PRs: use 'auto' followed by role name and br
 Example: auto/compress/file-extentions, auto/document/configurables
 
 Ensure any code changes adhere to the style guide ([Style.md](../Style.md)).
-Fully build and test the project at the end of each task that touches code.
+Run `mvn clean install` at the end of each coding task; inspect required checks, actual coverage data, and disabled
+tests. Link relevant [performance records](../performance/Readme.md) and update sprint/release evidence.
 
 Output suggestions to /docs/dev/suggestions/.
 Focus each suggestion on a specific topic, so it may be implemented in parallel with other tasks.

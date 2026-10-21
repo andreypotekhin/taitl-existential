@@ -23,7 +23,9 @@ To do so, the library allows end users to:
    allowing different sets of rules to apply to different circumstances.
 
 ### User stories and use cases
-See [Specification.md](Specification.md) for a detailed description of library behavior.
+See the [specification index](Specification.md) for normative topic claims and their paired designs.
+The [project index](project/Readme.md) links release plans, epics, sprints, milestones, and current evidence.
+Agents follow [Process](auto/Process.md); human contributors may use it as a reference without following its sequence.
 
 ### Terminology
 See [Terminology.md](Terminology.md) for terminology.
@@ -51,7 +53,14 @@ Use the benchmark harness to anchor transaction-path performance:
     mvn -q -Pbenchmarks test
     mvn -q -Pbenchmarks -Dbenchmark.warmup.iterations=5000 -Dbenchmark.measure.iterations=50000 test
 
-Benchmark classes live in `/src/test/java/com/taitl/existential/benchmarks`.
+Benchmark classes live in `src/test/java/com/taitl/existential/benchmarks/`.
+Use the [performance guide](performance/Readme.md) to retain reproducible run records and topic summaries.
+Add benchmarks as features create measurable questions; the benchmark profile does not replace correctness tests.
+
+### Examples
+
+[Night City](../../examples/night_city/Readme.md) lives outside production sources and compiles as a shared test
+fixture. Its classes are absent from library artifacts.
 
 ### Source code
 Main doc: [Source.md](Source.md)

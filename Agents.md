@@ -29,6 +29,7 @@ Agentic and automation documentation: /docs/dev/auto/
 
 - [Automation.md](docs/dev/auto/Automation.md): for automation contract and details on agents' parallel work.
 - [AutomationFocus.md](docs/dev/auto/AutomationFocus.md): document for automation focus and priorities.
+- [Process.md](docs/dev/auto/Process.md): agent workflow, exploratory entry, and implementation readiness.
 - [Plans.md](docs/dev/auto/Plans.md): guidance for multi-step task planning, such as implementing a feature.
 
 ## Engineering
@@ -105,7 +106,9 @@ Upon completion, move TODO items and corresponding suggestions to [past/todo](do
 ## Project management
 Polaris: [Polaris.md](docs%2Fdev%2Fproject%2FPolaris.md)
 Roadmap: [Roadmap.md](docs%2Fdev%2Fproject%2FRoadmap.md)
-Releases, epics, sprints, etc.: [docs/dev/project/](docs/dev/project/)
+Releases, epics, sprints, and evidence: [project index](docs/dev/project/Readme.md).
+Examples: [Night City](examples/night_city/Readme.md), compiled as shared test sources, excluded from library JARs.
+Performance: [guide and records](docs/dev/performance/Readme.md).
 
 ## Team roles
 Main: [Roles.md](docs%2Fdev%2Fauto%2FRoles.md)
@@ -113,7 +116,8 @@ All roles: see 'Task completion' section below for task completion requirements.
 Consult the style guide ([Style.md](docs%2Fdev%2FStyle.md)) when writing or refactoring code.
 
 ## Task completion
-Ensure the project fully builds with tests at the end of each coding task.
+Ensure `mvn clean install` passes at the end of each coding task. Inspect disabled tests and required checks; missing
+coverage data is a verification gap even when the build exits successfully. Link relevant topic performance records.
 Resolve any build or test issues revealed before completing the task.
 
 TODO items
@@ -121,7 +125,8 @@ TODO items
 
 Specifications ([Specification.md](docs/dev/Specification.md))
 - Back completed user stories with test cases in /src/test/java/com/taitl/specs
-- In [Specification.md](docs/dev/Specification.md), prefix the completed user stories with + sign
+- In the authoritative topic specification under docs/dev/specifications/, prefix completed test-backed claims with +.
+- Preserve stable requirement IDs and update release traceability; Specification.md remains the navigation index.
 
 Troubleshooting documentation
 - Output encountered issues and remedies into the end-user [Troubleshooting.md](Troubleshooting.md) or the
@@ -130,5 +135,5 @@ Troubleshooting documentation
 - Development issues go to /docs/dev/Troubleshooting.md
 
 ## Automation Contract
-See /docs/dev/auto/Automation.md document for automation contract and details on agents' parallel work.  
+See /docs/dev/auto/Automation.md document for automation contract and details on agents' parallel work.
 See /docs/dev/auto/AutomationFocus.md document for automation focus.

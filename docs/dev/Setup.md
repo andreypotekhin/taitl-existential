@@ -1,12 +1,14 @@
 ## Setup
 
 ### Prerequisites
-- JDK 17 or higher
+- JDK 17 for the currently verified build; compiler release is 11, not proof of Java 11 runtime support.
 - Maven
 
 ### Obtaining and building
 - Clone the repository from GitHub.
-- Build with Maven: `mvn test`.
+- Run tests with `mvn test`; complete a clean build with `mvn clean install`.
+- Maven downloads pinned plugins/dependencies and installs artifacts into the local Maven repository.
+- Night City is added as a test source automatically; reimport Maven in the IDE after source-layout changes.
 
 ### IDE
 #### IntelliJ IDEA
