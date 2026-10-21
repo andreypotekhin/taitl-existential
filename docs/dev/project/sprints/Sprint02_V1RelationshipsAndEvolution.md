@@ -1,6 +1,7 @@
 # Sprint 02: V1 Relationships and Evolution
 
-Status: planned. Dates/capacity: unassigned. Epic: [V1-E02](../Backlog.md#v1-e02). Release: [V1](../V1.md).
+Status: planned. Dates/capacity: unassigned. Epic:
+[Relationships and Evolution](../Backlog.md#relationships-and-evolution). Release: [V1](../V1.md).
 Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
 this charter does not promote inherited completion marks.
 
@@ -10,16 +11,17 @@ Validate a representative relationship with basic All/Exists and reject an inval
 
 ## Dependencies and readiness
 
-Review [Sprint 01](Sprint01_V1NightCityCoreWorkflow.md) for actual dependencies and evidence.
-Allow independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral
-and technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
+Review [Sprint 01](Sprint01_V1NightCityCoreWorkflow.md) for actual dependencies and evidence. Allow independent
+investigation and design ahead of later sprints. Implementation waits only for its actual behavioral and technical
+dependencies. Select a ready capability using [Process](../../auto/Process.md).
 
 ## Governing designs and specifications
 
-- [QuantifiersAndIndexes][QI] and [design][QI-design].
-- [EventsAndConstraints][EC] and [design][EC-design].
+- [QuantifiersAndIndexes.spec.md] and [QuantifiersAndIndexes.design.md].
+- [EventsAndConstraints.spec.md] and [EventsAndConstraints.design.md].
 
-Record exact requirement IDs and acceptance evidence for the selected slice in the existing plan/traceability entry.
+Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
+entry.
 
 ## Remaining work
 
@@ -38,8 +40,8 @@ Record exact requirement IDs and acceptance evidence for the selected slice in t
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Link decisions and proof obligations for each concern, or justify inapplicability; quality is required in every release.
-Measure collection cardinalities and evolution checks, including duplicate-event behavior on the admitted path.
-Use [performance records](../../performance/Readme.md), naming workloads and comparable evidence.
+Measure collection cardinalities and evolution checks, including duplicate-event behavior on the admitted path. Use
+[performance records](../../performance/Readme.md), naming workloads and comparable evidence.
 
 ## Demo and validation
 
@@ -57,12 +59,12 @@ Full generic/subclass combinations, maintained joins/indexes, and additional eve
 ## Plan and review
 
 No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed IDs, actual commands/versions, passed/skipped totals, five quality obligations,
-consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template][wrap-01].
+Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
+obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
 
-[QI]: ../../specifications/QuantifiersAndIndexes.spec.md
-[QI-design]: ../../design/QuantifiersAndIndexes.design.md
-[EC]: ../../specifications/EventsAndConstraints.spec.md
-[EC-design]: ../../design/EventsAndConstraints.design.md
+[QuantifiersAndIndexes.spec.md]: ../../specifications/QuantifiersAndIndexes.spec.md
+[QuantifiersAndIndexes.design.md]: ../../design/QuantifiersAndIndexes.design.md
+[EventsAndConstraints.spec.md]: ../../specifications/EventsAndConstraints.spec.md
+[EventsAndConstraints.design.md]: ../../design/EventsAndConstraints.design.md
 
-[wrap-01]: ../templates/SprintReview.md
+[review template]: ../templates/SprintReview.md

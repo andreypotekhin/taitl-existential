@@ -12,18 +12,18 @@ The [specification](../specifications/TransactionsAndEvaluation.spec.md) defines
 ## Current implementation
 
 TransactionLogic constructs and registers transactions, runs lifecycle actions, and disposes successful completions.
-Evaluation combines shared context handlers with prepared transaction rule overlays. The actual StageName values
-are BEGIN, IMMEDIATE, COMMIT, CHECKPOINT, ROLLBACK, and VALIDATION; the migrated text still uses Early/Precondition.
+Evaluation combines shared context handlers with prepared transaction rule overlays. The actual StageName values are
+BEGIN, IMMEDIATE, COMMIT, CHECKPOINT, ROLLBACK, and VALIDATION; the migrated text still uses Early/Precondition.
 
 - [transaction orchestration](../../../src/main/java/com/taitl/ex/logic/transactions/TransactionLogic.java)
 - [stage evaluation](../../../src/main/java/com/taitl/ex/logic/evaluation/EvaluationLogic.java)
 - [implemented stage names](../../../src/main/java/com/taitl/existential/constants/StageName.java)
-- [transaction rule preparation][link-01]
+- [transaction rule preparation]
 
 ## Approach and tradeoffs
 
-Retain transaction-local prepared overlays to avoid repeated handler-list merging on dispatch. Keep library
-transactions distinct from caller-owned persistence transactions; validation does not make side effects atomic.
+Retain transaction-local prepared overlays to avoid repeated handler-list merging on dispatch. Keep library transactions
+distinct from caller-owned persistence transactions; validation does not make side effects atomic.
 
 These observations retain the existing architecture. They do not approve new public interfaces or resolve the open
 choices below. Record future decisions here, update the normative specification, and reconcile the execution plan.
@@ -41,9 +41,11 @@ choices below. Record future decisions here, update the normative specification,
 - [custom transaction specifications](../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions)
 - [disabled report tests](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java)
 
-V1-E01/E03 own core validation/recovery; V2-E03/E04 own broader stages, transactions, and checkpoint/nesting.
-Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
-not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+[Night City Core Workflow] and [Failure Recovery and Resource Hygiene] own core validation/recovery. Broader stages,
+transactions, and checkpoint/nesting belong to [Stages, Intents, and Transaction Customization] and
+[Indexes and Operational Coverage]. Add user-facing positive and negative acceptance cases for each unresolved
+behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion marks until a
+requirement-level review changes them.
 
 ## Required quality analysis
 
@@ -59,7 +61,13 @@ establish passing evidence. See [Process](../auto/Process.md#required-design-ana
 
 ## Performance
 
-The existing CustomTransactionBenchmark compares static-context, factory-transaction, and caller-supplied rules.
-Use the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+The existing CustomTransactionBenchmark compares static-context, factory-transaction, and caller-supplied rules. Use the
+[performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
 
-[link-01]: ../../../src/main/java/com/taitl/ex/logic/stages/validation/actions/PrepareTransaction.java
+[transaction rule preparation]:
+  ../../../src/main/java/com/taitl/ex/logic/stages/validation/actions/PrepareTransaction.java
+
+[Night City Core Workflow]: ../project/Backlog.md#night-city-core-workflow
+[Failure Recovery and Resource Hygiene]: ../project/Backlog.md#failure-recovery-and-resource-hygiene
+[Indexes and Operational Coverage]: ../project/Backlog.md#indexes-and-operational-coverage
+[Stages, Intents, and Transaction Customization]: ../project/Backlog.md#stages-intents-and-transaction-customization

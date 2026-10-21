@@ -1,6 +1,7 @@
 # Sprint 01: V1 Night City Core Workflow
 
-Status: planned. Dates/capacity: unassigned. Epic: [V1-E01](../Backlog.md#v1-e01). Release: [V1](../V1.md).
+Status: planned. Dates/capacity: unassigned. Epic: [Night City Core Workflow](../Backlog.md#night-city-core-workflow).
+Release: [V1](../V1.md).
 Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
 this charter does not promote inherited completion marks.
 
@@ -10,17 +11,18 @@ Follow a documented Night City operation from rule configuration through events 
 
 ## Dependencies and readiness
 
-The planning foundation is available; no feature sprint is complete.
-Allow independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral
-and technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
+The planning foundation is available; no feature sprint is complete. Allow independent investigation and design ahead of
+later sprints. Implementation waits only for its actual behavioral and technical dependencies. Select a ready capability
+using [Process](../../auto/Process.md).
 
 ## Governing designs and specifications
 
-- [LibraryAndConfiguration][LC] and [design][LC-design].
-- [TransactionsAndEvaluation][TE] and [design][TE-design].
-- [EventsAndConstraints][EC] and [design][EC-design].
+- [LibraryAndConfiguration.spec.md] and [LibraryAndConfiguration.design.md].
+- [TransactionsAndEvaluation.spec.md] and [TransactionsAndEvaluation.design.md].
+- [EventsAndConstraints.spec.md] and [EventsAndConstraints.design.md].
 
-Record exact requirement IDs and acceptance evidence for the selected slice in the existing plan/traceability entry.
+Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
+entry.
 
 ## Remaining work
 
@@ -32,7 +34,7 @@ Record exact requirement IDs and acceptance evidence for the selected slice in t
 
 ## Acceptance
 
-- An explicit walkthrough maps proposed behavior to requirement IDs and executable acceptance cases.
+- An explicit walkthrough maps proposed behavior to named requirement sections and executable acceptance cases.
 - Basic valid and invalid operations demonstrate the promised validation timing and useful error context.
 - Unresolved decisions affect only their dependent slices; no claim is promoted using the old completion marks.
 
@@ -40,8 +42,8 @@ Record exact requirement IDs and acceptance evidence for the selected slice in t
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Link decisions and proof obligations for each concern, or justify inapplicability; quality is required in every release.
-Measure the selected begin/event/commit path and state workload/cardinality; retain comparable run records.
-Use [performance records](../../performance/Readme.md), naming workloads and comparable evidence.
+Measure the selected begin/event/commit path and state workload/cardinality; retain comparable run records. Use
+[performance records](../../performance/Readme.md), naming workloads and comparable evidence.
 
 ## Demo and validation
 
@@ -58,14 +60,14 @@ Independent-instance isolation, wildcard precedence, custom events, and general 
 ## Plan and review
 
 No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed IDs, actual commands/versions, passed/skipped totals, five quality obligations,
-consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template][wrap-01].
+Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
+obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
 
-[LC]: ../../specifications/LibraryAndConfiguration.spec.md
-[LC-design]: ../../design/LibraryAndConfiguration.design.md
-[TE]: ../../specifications/TransactionsAndEvaluation.spec.md
-[TE-design]: ../../design/TransactionsAndEvaluation.design.md
-[EC]: ../../specifications/EventsAndConstraints.spec.md
-[EC-design]: ../../design/EventsAndConstraints.design.md
+[LibraryAndConfiguration.spec.md]: ../../specifications/LibraryAndConfiguration.spec.md
+[LibraryAndConfiguration.design.md]: ../../design/LibraryAndConfiguration.design.md
+[TransactionsAndEvaluation.spec.md]: ../../specifications/TransactionsAndEvaluation.spec.md
+[TransactionsAndEvaluation.design.md]: ../../design/TransactionsAndEvaluation.design.md
+[EventsAndConstraints.spec.md]: ../../specifications/EventsAndConstraints.spec.md
+[EventsAndConstraints.design.md]: ../../design/EventsAndConstraints.design.md
 
-[wrap-01]: ../templates/SprintReview.md
+[review template]: ../templates/SprintReview.md

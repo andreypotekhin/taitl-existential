@@ -25,7 +25,8 @@ Avoid abbreviations in single-word identifiers.
 In math-like contexts, e.g. around looping, use single-character identifiers for brevity.
 
 ###### Naming - Classes
-Use action-oriented name (verb+noun) for logic classes focused on a single action (BuildConfigs instead of ConfigBuilder)
+Use action-oriented name (verb+noun) for logic classes focused on a single action (BuildConfigs instead of
+ConfigBuilder)
 
 ###### Naming - Spank
 Prefer 'spankier' names, when applicable, for variables/fields: shorter names that immediately convey purpose.  
@@ -47,16 +48,16 @@ In compound identifiers, do not convert all-capital abbreviations (HTML) to came
 
 ##### Comments
 Javadoc comments
-- Avoid HTML formatting tags in Javadocs, such as <p>, <br>, inline {@code}, but do use <pre> for multiline code examples. 
+- Avoid HTML formatting tags in Javadocs, such as <p>, <br>, inline {@code}, but do use <pre> for multiline code
+  examples.
 - In user-facing code packages, use Javadoc comments with parameter, return and throws tags 
 - Add Javadoc comments on non-trivival private methods
 - In implementation (non end-user-facing) code packages, avoid parameter, return and throws tags
 - In implementation code packages, Javadoc comments are more free-form, used to explain the rationale,
 not required on class level, used mostly on essential or non-trivial methods.
 
-We discourage non-Javadoc comments: the meaning should stem from code itself.
-Example: instead of creating a comment on a method call, we can
-create more context by extracting the method into a well-named method or lightweight component 
+We discourage non-Javadoc comments: the meaning should stem from code itself. Example: instead of creating a comment on
+a method call, we can create more context by extracting the method into a well-named method or lightweight component
 
 ##### Code Formatting
 Code formatting is taken care of automatic build step (with Maven plugin).
@@ -83,7 +84,8 @@ that implementation.
 - We do not use 'final' or 'locked'  
 
 ##### Object decomposition
-The goal of our way of object decomposition is to maximize 'graspability' - the ability for a reader to quickly understand code logic.
+The goal of our way of object decomposition is to maximize 'graspability' - the ability for a reader to quickly
+understand code logic.
 - We divide the classes into 'public', 'orchestration' and 'logic' classes
 - The 'public' classes are the end-user facing classes from our 'public' packages (com.taitl.existential)
 - The 'orchestration' classes are top-level classes to which the public classes delegate. Example: ConfigBuilder 
@@ -103,11 +105,10 @@ The goal of our way of object decomposition is to maximize 'graspability' - the 
 
 #### Testing
 
-[Specification.md](Specification.md) indexes the authoritative topic requirements. Preserve their stable IDs and
-reference them in new acceptance cases. Agent sequencing is defined in [Process](auto/Process.md), not imposed on
-human contributors. Record relevant measurements using the [performance guide](performance/Readme.md).
-Test cases for code units live in src/test/java.
-Test cases backing specifications (from [Specification.md](Specification.md)) are in
+[Specification.md](Specification.md) indexes the authoritative topic requirements. Link their descriptive headings from
+new acceptance cases. Agent sequencing is defined in [Process](auto/Process.md), not imposed on human contributors.
+Record relevant measurements using the [performance guide](performance/Readme.md). Test cases for code units live in
+src/test/java. Test cases backing specifications (from [Specification.md](Specification.md) ) are in
 src/test/java/com/taitl/specs.
 
 ##### Testing Standards
@@ -139,7 +140,8 @@ Use modern test frameworks capabilities to the maximum for structuring the tests
 - Regression tests refer to issue number in test method name and issue title in display name
 
 ##### Testing - various
-- Prefer entities to primitives/stock classes when testing events/rules (e.g. OnCreate<Cat> rather than OnCreate<String>)
+- Prefer entities to primitives/stock classes when testing events/rules (e.g. OnCreate<Cat> rather than
+  OnCreate<String>)
 
 ### Documenting
 #### End-User documentation
@@ -158,12 +160,14 @@ The developer documentation is in the /docs/dev/ directory.
 It is characterized as being detailed and comprehensive, not shy of technical details, 
 and focused on the development process and codebase.
 Content style:
-- Less formal compared to end-user documentation, err on the side of expressiveness and sounding less bureaucratic/official. 
+- Less formal compared to end-user documentation, err on the side of expressiveness and sounding less
+  bureaucratic/official.
 
 #### Documenting issues and remedies
 Document issues and remedies (fixes) in [Troubleshooting.md](Troubleshooting.md) documents and deep-link to them
 from error messages.
-Separate end-user troubleshooting items ([Troubleshooting.md](../../Troubleshooting.md)) from development troubleshooting
+Separate end-user troubleshooting items ([Troubleshooting.md](../../Troubleshooting.md)) from development
+troubleshooting
 items ([Troubleshooting.md](Troubleshooting.md)).
 
 #### Documenting the suggestions
@@ -179,7 +183,8 @@ In particular, we maintain line limit of 120 characters per line.
 
 #### Action id
 Include an action id for each action (suggestion, TODO item, etc.), the form of XMMDDYYNN, where X is action code
-(S for suggestions, T for TODO items, M for migrations, P for planning documents), YY is year, MM is month (01-12), DD is day (01-31), NN is
+(S for suggestions, T for TODO items, M for migrations, P for planning documents), YY is year, MM is month (01-12), DD
+is day (01-31), NN is
 a sequence number. For instance, S07142501 is the first suggestion on July 14, 2025.
 The action file (md file that conains the action) is named [action id].[action title].md
 and placed to the appropriate directory (docs/dev/suggestions/, docs/dev/todo/ and the like).
@@ -205,21 +210,14 @@ Upon completion, move TODO items and corresponding suggestions to [past/todo](pa
 ### Various
 - Use 'brief' notation for getters and setters (x() instead of getX())
 - Prefer varargs instead of array[] method parameter, if applicable
-- In non-end-user facing code, instead of 'new' keyword for bigger components, we often prefer use Creator.create()/Creator.singleton() to facilitate extensibility.
+- In non-end-user facing code, instead of 'new' keyword for bigger components, we often prefer use
+  Creator.create()/Creator.singleton() to facilitate extensibility.
 
 ### What to avoid
 Being a principled team, we fight a few dogmas.
 
-We generally avoid, unless there is a valid reason:
-- non-wildcard imports 
-- 'final' keyword
-- 'private' access modifier (prefer default or protected)
-- reference syntax in lambdas 
-- Optionals
-- @Override annotation 
-- reflection
-- overuse of streams
-- Camel-case abbreviations (e.g. HTML -> Html)
-- HTML formatting tags in Javadocs, such as <p> and <br> 
-- non-Javadoc comments (the meaning should stem from code)
-- testing a class in total isolation (we test coherent clusters of classes instead of mocking around) 
+We generally avoid, unless there is a valid reason: - non-wildcard imports - 'final' keyword - 'private' access modifier
+(prefer default or protected) - reference syntax in lambdas - Optionals - @Override annotation - reflection - overuse of
+streams - Camel-case abbreviations (e.g. HTML -> Html) - HTML formatting tags in Javadocs, such as <p> and <br> -
+non-Javadoc comments (the meaning should stem from code) - testing a class in total isolation (we test coherent clusters
+of classes instead of mocking around)

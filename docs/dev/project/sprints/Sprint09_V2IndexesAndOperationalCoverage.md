@@ -1,6 +1,7 @@
 # Sprint 09: V2 Indexes and Operational Coverage
 
-Status: planned. Dates/capacity: unassigned. Epic: [V2-E04](../Backlog.md#v2-e04). Release: [V2](../V2.md).
+Status: planned. Dates/capacity: unassigned. Epic:
+[Indexes and Operational Coverage](../Backlog.md#indexes-and-operational-coverage). Release: [V2](../V2.md).
 Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
 this charter does not promote inherited completion marks.
 
@@ -10,19 +11,20 @@ Use maintained relationships and broader lifecycle/reporting/resource behavior w
 
 ## Dependencies and readiness
 
-Review [Sprint 08](Sprint08_V2StagesIntentsAndCustomTransactions.md) for actual dependencies and evidence.
-Allow independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral
-and technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
+Review [Sprint 08](Sprint08_V2StagesIntentsAndCustomTransactions.md) for actual dependencies and evidence. Allow
+independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral and
+technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
 
 ## Governing designs and specifications
 
-- [QuantifiersAndIndexes][QI] and [design][QI-design].
-- [TransactionsAndEvaluation][TE] and [design][TE-design].
-- [EventsAndConstraints][EC] and [design][EC-design].
-- [Housekeeping][HK] and [design][HK-design].
-- [Distribution][DIST] and [design][DIST-design].
+- [QuantifiersAndIndexes.spec.md] and [QuantifiersAndIndexes.design.md].
+- [TransactionsAndEvaluation.spec.md] and [TransactionsAndEvaluation.design.md].
+- [EventsAndConstraints.spec.md] and [EventsAndConstraints.design.md].
+- [Housekeeping.spec.md] and [Housekeeping.design.md].
+- [Distribution.spec.md] and [Distribution.design.md].
 
-Record exact requirement IDs and acceptance evidence for the selected slice in the existing plan/traceability entry.
+Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
+entry.
 
 ## Remaining work
 
@@ -42,8 +44,8 @@ Record exact requirement IDs and acceptance evidence for the selected slice in t
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Link decisions and proof obligations for each concern, or justify inapplicability; quality is required in every release.
-Measure maintenance, matching, callback, and retained-state costs under the broader workloads.
-Use [performance records](../../performance/Readme.md), naming workloads and comparable evidence.
+Measure maintenance, matching, callback, and retained-state costs under the broader workloads. Use
+[performance records](../../performance/Readme.md), naming workloads and comparable evidence.
 
 ## Demo and validation
 
@@ -61,18 +63,18 @@ Unapproved dashboard, hot-reload, or specialized optimization features; actual r
 ## Plan and review
 
 No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed IDs, actual commands/versions, passed/skipped totals, five quality obligations,
-consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template][wrap-01].
+Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
+obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
 
-[QI]: ../../specifications/QuantifiersAndIndexes.spec.md
-[QI-design]: ../../design/QuantifiersAndIndexes.design.md
-[TE]: ../../specifications/TransactionsAndEvaluation.spec.md
-[TE-design]: ../../design/TransactionsAndEvaluation.design.md
-[EC]: ../../specifications/EventsAndConstraints.spec.md
-[EC-design]: ../../design/EventsAndConstraints.design.md
-[HK]: ../../specifications/Housekeeping.spec.md
-[HK-design]: ../../design/Housekeeping.design.md
-[DIST]: ../../specifications/Distribution.spec.md
-[DIST-design]: ../../design/Distribution.design.md
+[QuantifiersAndIndexes.spec.md]: ../../specifications/QuantifiersAndIndexes.spec.md
+[QuantifiersAndIndexes.design.md]: ../../design/QuantifiersAndIndexes.design.md
+[TransactionsAndEvaluation.spec.md]: ../../specifications/TransactionsAndEvaluation.spec.md
+[TransactionsAndEvaluation.design.md]: ../../design/TransactionsAndEvaluation.design.md
+[EventsAndConstraints.spec.md]: ../../specifications/EventsAndConstraints.spec.md
+[EventsAndConstraints.design.md]: ../../design/EventsAndConstraints.design.md
+[Housekeeping.spec.md]: ../../specifications/Housekeeping.spec.md
+[Housekeeping.design.md]: ../../design/Housekeeping.design.md
+[Distribution.spec.md]: ../../specifications/Distribution.spec.md
+[Distribution.design.md]: ../../design/Distribution.design.md
 
-[wrap-01]: ../templates/SprintReview.md
+[review template]: ../templates/SprintReview.md

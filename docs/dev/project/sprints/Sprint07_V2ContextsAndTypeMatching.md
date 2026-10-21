@@ -1,6 +1,7 @@
 # Sprint 07: V2 Contexts and Type Matching
 
-Status: planned. Dates/capacity: unassigned. Epic: [V2-E02](../Backlog.md#v2-e02). Release: [V2](../V2.md).
+Status: planned. Dates/capacity: unassigned. Epic:
+[Contexts and Type Matching](../Backlog.md#contexts-and-type-matching). Release: [V2](../V2.md).
 Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
 this charter does not promote inherited completion marks.
 
@@ -10,16 +11,17 @@ Apply parent/wildcard rules and broader generic/subclass matching with determini
 
 ## Dependencies and readiness
 
-Review [Sprint 06](Sprint06_V2InstanceIsolationAndConfiguration.md) for actual dependencies and evidence.
-Allow independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral
-and technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
+Review [Sprint 06](Sprint06_V2InstanceIsolationAndConfiguration.md) for actual dependencies and evidence. Allow
+independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral and
+technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
 
 ## Governing designs and specifications
 
-- [LibraryAndConfiguration][LC] and [design][LC-design].
-- [EventsAndConstraints][EC] and [design][EC-design].
+- [LibraryAndConfiguration.spec.md] and [LibraryAndConfiguration.design.md].
+- [EventsAndConstraints.spec.md] and [EventsAndConstraints.design.md].
 
-Record exact requirement IDs and acceptance evidence for the selected slice in the existing plan/traceability entry.
+Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
+entry.
 
 ## Remaining work
 
@@ -38,8 +40,8 @@ Record exact requirement IDs and acceptance evidence for the selected slice in t
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Link decisions and proof obligations for each concern, or justify inapplicability; quality is required in every release.
-Measure context count, wildcard overlap, and hierarchy lookup; justify any cache/index tradeoffs.
-Use [performance records](../../performance/Readme.md), naming workloads and comparable evidence.
+Measure context count, wildcard overlap, and hierarchy lookup; justify any cache/index tradeoffs. Use
+[performance records](../../performance/Readme.md), naming workloads and comparable evidence.
 
 ## Demo and validation
 
@@ -56,12 +58,12 @@ Custom event registration, speculative trie/strategy APIs, and theorem-solving b
 ## Plan and review
 
 No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed IDs, actual commands/versions, passed/skipped totals, five quality obligations,
-consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template][wrap-01].
+Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
+obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
 
-[LC]: ../../specifications/LibraryAndConfiguration.spec.md
-[LC-design]: ../../design/LibraryAndConfiguration.design.md
-[EC]: ../../specifications/EventsAndConstraints.spec.md
-[EC-design]: ../../design/EventsAndConstraints.design.md
+[LibraryAndConfiguration.spec.md]: ../../specifications/LibraryAndConfiguration.spec.md
+[LibraryAndConfiguration.design.md]: ../../design/LibraryAndConfiguration.design.md
+[EventsAndConstraints.spec.md]: ../../specifications/EventsAndConstraints.spec.md
+[EventsAndConstraints.design.md]: ../../design/EventsAndConstraints.design.md
 
-[wrap-01]: ../templates/SprintReview.md
+[review template]: ../templates/SprintReview.md

@@ -4,7 +4,7 @@ Sprint/epic/release: links. Review date: actual date. Revision and dirty state: 
 
 ## Outcome and acceptance evidence
 
-Record demonstrated behavior and completed requirement IDs, linking specification tests and the execution plan.
+Record demonstrated behavior and completed requirement sections, linking specification tests and the execution plan.
 Distinguish implemented, verified, incomplete, and blocked work.
 
 ## Commands and environment
@@ -25,8 +25,8 @@ For distribution work, link the separate consumer result and distinguish local i
 
 ## Design obligations
 
-Record how correctness, actionable errors, failure recovery, resource hygiene, and performance were verified against
-the selected capability's design. Link missing evidence and blockers; do not infer one concern from another.
+Record how correctness, actionable errors, failure recovery, resource hygiene, and performance were verified against the
+selected capability's design. Link missing evidence and blockers; do not infer one concern from another.
 
 ## Performance and resources
 
@@ -36,5 +36,4 @@ Explain why measurement is inapplicable when it is not needed; do not fabricate 
 ## Remaining work and decisions
 
 Name release blockers, missing evidence, approved deferrals, follow-up epic/sprint links, and design/specification
-changes.
-Record lessons learned and reconcile backlog, traceability, milestones, and execution-plan outcomes.
+changes. Record lessons learned and reconcile backlog, traceability, milestones, and execution-plan outcomes.

@@ -1,17 +1,15 @@
-<a id="library-specification"></a>
-
 # Library Specification Index
 
 The normative claims now live in focused [specifications](specifications/). Each claim has one authoritative location
-and a stable identifier. Existing `+` marks were preserved; they do not replace current test and release evidence.
-The [traceability matrix](project/TraceabilityMatrix.md) records scope, evidence, gaps, and delivery order.
+and a descriptive heading. Existing `+` marks were preserved; they do not replace current test and release evidence. The
+[traceability matrix](project/TraceabilityMatrix.md) records scope, evidence, gaps, and delivery order.
 
 ## Topic documents
 
-- [Library and Configuration][link-01] · [Design][link-02]
-- [Transactions and Evaluation][link-03] · [Design][link-04]
-- [Events and Constraints][link-05] · [Design][link-06]
-- [Quantifiers and Indexes][link-07] · [Design][link-08]
+- [Library and Configuration] · [Design][LibraryAndConfiguration.design.md]
+- [Transactions and Evaluation] · [Design][TransactionsAndEvaluation.design.md]
+- [Events and Constraints] · [Design][EventsAndConstraints.design.md]
+- [Quantifiers and Indexes] · [Design][QuantifiersAndIndexes.design.md]
 - [Intents and Effects](specifications/IntentsAndEffects.spec.md) · [Design](design/IntentsAndEffects.design.md)
 - [Housekeeping](specifications/Housekeeping.spec.md) · [Design](design/Housekeeping.design.md)
 - [Distribution](specifications/Distribution.spec.md) · [Design](design/Distribution.design.md)
@@ -128,7 +126,7 @@ See [Constraints on entity evolution](specifications/EventsAndConstraints.spec.m
 
 ##### Constraints on evolution of multiple entities
 
-See [Constraints on evolution of multiple entities][link-09].
+See [Constraints on evolution of multiple entities].
 
 ##### Constraints on subclasses
 
@@ -210,12 +208,13 @@ No additional claims were defined here in the original specification.
 
 No additional claims were defined here in the original specification.
 
-[link-01]: specifications/LibraryAndConfiguration.spec.md
-[link-02]: design/LibraryAndConfiguration.design.md
-[link-03]: specifications/TransactionsAndEvaluation.spec.md
-[link-04]: design/TransactionsAndEvaluation.design.md
-[link-05]: specifications/EventsAndConstraints.spec.md
-[link-06]: design/EventsAndConstraints.design.md
-[link-07]: specifications/QuantifiersAndIndexes.spec.md
-[link-08]: design/QuantifiersAndIndexes.design.md
-[link-09]: specifications/EventsAndConstraints.spec.md#constraints-on-evolution-of-multiple-entities
+[Library and Configuration]: specifications/LibraryAndConfiguration.spec.md
+[LibraryAndConfiguration.design.md]: design/LibraryAndConfiguration.design.md
+[Transactions and Evaluation]: specifications/TransactionsAndEvaluation.spec.md
+[TransactionsAndEvaluation.design.md]: design/TransactionsAndEvaluation.design.md
+[Events and Constraints]: specifications/EventsAndConstraints.spec.md
+[EventsAndConstraints.design.md]: design/EventsAndConstraints.design.md
+[Quantifiers and Indexes]: specifications/QuantifiersAndIndexes.spec.md
+[QuantifiersAndIndexes.design.md]: design/QuantifiersAndIndexes.design.md
+[Constraints on evolution of multiple entities]:
+  specifications/EventsAndConstraints.spec.md#constraints-on-evolution-of-multiple-entities

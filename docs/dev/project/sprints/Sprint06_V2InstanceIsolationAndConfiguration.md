@@ -1,6 +1,7 @@
 # Sprint 06: V2 Instance Isolation and Configuration
 
-Status: planned. Dates/capacity: unassigned. Epic: [V2-E01](../Backlog.md#v2-e01). Release: [V2](../V2.md).
+Status: planned. Dates/capacity: unassigned. Epic:
+[Instance Isolation and Configuration](../Backlog.md#instance-isolation-and-configuration). Release: [V2](../V2.md).
 Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
 this charter does not promote inherited completion marks.
 
@@ -10,15 +11,16 @@ Use independent instances and the broader documented configuration options witho
 
 ## Dependencies and readiness
 
-V1 meets its release exit criteria before this release delivers new claims.
-Allow independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral
-and technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
+V1 meets its release exit criteria before this release delivers new claims. Allow independent investigation and design
+ahead of later sprints. Implementation waits only for its actual behavioral and technical dependencies. Select a ready
+capability using [Process](../../auto/Process.md).
 
 ## Governing designs and specifications
 
-- [LibraryAndConfiguration][LC] and [design][LC-design].
+- [LibraryAndConfiguration.spec.md] and [LibraryAndConfiguration.design.md].
 
-Record exact requirement IDs and acceptance evidence for the selected slice in the existing plan/traceability entry.
+Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
+entry.
 
 ## Remaining work
 
@@ -37,8 +39,8 @@ Record exact requirement IDs and acceptance evidence for the selected slice in t
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Link decisions and proof obligations for each concern, or justify inapplicability; quality is required in every release.
-Measure setup and instance contention where admitted, without adding avoidable transaction-path work.
-Use [performance records](../../performance/Readme.md), naming workloads and comparable evidence.
+Measure setup and instance contention where admitted, without adding avoidable transaction-path work. Use
+[performance records](../../performance/Readme.md), naming workloads and comparable evidence.
 
 ## Demo and validation
 
@@ -55,10 +57,10 @@ Hot reload, new configuration strategy APIs, and untested runtime support promis
 ## Plan and review
 
 No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed IDs, actual commands/versions, passed/skipped totals, five quality obligations,
-consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template][wrap-01].
+Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
+obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
 
-[LC]: ../../specifications/LibraryAndConfiguration.spec.md
-[LC-design]: ../../design/LibraryAndConfiguration.design.md
+[LibraryAndConfiguration.spec.md]: ../../specifications/LibraryAndConfiguration.spec.md
+[LibraryAndConfiguration.design.md]: ../../design/LibraryAndConfiguration.design.md
 
-[wrap-01]: ../templates/SprintReview.md
+[review template]: ../templates/SprintReview.md

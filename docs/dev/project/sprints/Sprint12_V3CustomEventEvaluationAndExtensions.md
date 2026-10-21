@@ -1,6 +1,7 @@
 # Sprint 12: V3 Custom Event Evaluation and Extensions
 
-Status: planned. Dates/capacity: unassigned. Epic: [V3-E02](../Backlog.md#v3-e02). Release: [V3](../V3.md).
+Status: planned. Dates/capacity: unassigned. Epic:
+[Custom Event Evaluation and Extensions](../Backlog.md#custom-event-evaluation-and-extensions). Release: [V3](../V3.md).
 Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
 this charter does not promote inherited completion marks.
 
@@ -10,18 +11,19 @@ Run admitted custom events through transaction evaluation, splitting, intents, a
 
 ## Dependencies and readiness
 
-Review [Sprint 11](Sprint11_V3CustomEventContractsAndRegistration.md) for actual dependencies and evidence.
-Allow independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral
-and technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
+Review [Sprint 11](Sprint11_V3CustomEventContractsAndRegistration.md) for actual dependencies and evidence. Allow
+independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral and
+technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
 
 ## Governing designs and specifications
 
-- [EventsAndConstraints][EC] and [design][EC-design].
-- [IntentsAndEffects][IE] and [design][IE-design].
-- [TransactionsAndEvaluation][TE] and [design][TE-design].
-- [Housekeeping][HK] and [design][HK-design].
+- [EventsAndConstraints.spec.md] and [EventsAndConstraints.design.md].
+- [IntentsAndEffects.spec.md] and [IntentsAndEffects.design.md].
+- [TransactionsAndEvaluation.spec.md] and [TransactionsAndEvaluation.design.md].
+- [Housekeeping.spec.md] and [Housekeeping.design.md].
 
-Record exact requirement IDs and acceptance evidence for the selected slice in the existing plan/traceability entry.
+Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
+entry.
 
 ## Remaining work
 
@@ -40,11 +42,10 @@ Record exact requirement IDs and acceptance evidence for the selected slice in t
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Link decisions and proof obligations for each concern, or justify inapplicability; quality is required in every release.
-Measure split expansion, callback dispatch, stage evaluation, and retained extension state.
-Use [performance records](../../performance/Readme.md), naming workloads and comparable evidence.
+Measure split expansion, callback dispatch, stage evaluation, and retained extension state. Use
+[performance records](../../performance/Readme.md), naming workloads and comparable evidence.
 
 ## Demo and validation
-
 
 Coding-task closure requires `mvn clean install` and inspection of actual test/coverage/check outputs.
 
@@ -55,16 +56,16 @@ Automatic distributed effects or additional extension frameworks without separat
 ## Plan and review
 
 No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed IDs, actual commands/versions, passed/skipped totals, five quality obligations,
-consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template][wrap-01].
+Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
+obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
 
-[EC]: ../../specifications/EventsAndConstraints.spec.md
-[EC-design]: ../../design/EventsAndConstraints.design.md
-[IE]: ../../specifications/IntentsAndEffects.spec.md
-[IE-design]: ../../design/IntentsAndEffects.design.md
-[TE]: ../../specifications/TransactionsAndEvaluation.spec.md
-[TE-design]: ../../design/TransactionsAndEvaluation.design.md
-[HK]: ../../specifications/Housekeeping.spec.md
-[HK-design]: ../../design/Housekeeping.design.md
+[EventsAndConstraints.spec.md]: ../../specifications/EventsAndConstraints.spec.md
+[EventsAndConstraints.design.md]: ../../design/EventsAndConstraints.design.md
+[IntentsAndEffects.spec.md]: ../../specifications/IntentsAndEffects.spec.md
+[IntentsAndEffects.design.md]: ../../design/IntentsAndEffects.design.md
+[TransactionsAndEvaluation.spec.md]: ../../specifications/TransactionsAndEvaluation.spec.md
+[TransactionsAndEvaluation.design.md]: ../../design/TransactionsAndEvaluation.design.md
+[Housekeeping.spec.md]: ../../specifications/Housekeeping.spec.md
+[Housekeeping.design.md]: ../../design/Housekeeping.design.md
 
-[wrap-01]: ../templates/SprintReview.md
+[review template]: ../templates/SprintReview.md

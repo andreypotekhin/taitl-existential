@@ -11,9 +11,9 @@ The [specification](../specifications/QuantifiersAndIndexes.spec.md) defines int
 
 ## Current implementation
 
-All delegates to a predicate-based expression. Exists selects one collection, set, or map source and one predicate
-form. Public SingleIndex/MultiIndex and SingleJoin/MultiJoin serve entity relationships; configuration/runtime
-indexes instead select handlers and retain encountered events. Some index tests live under a package named unused.
+All delegates to a predicate-based expression. Exists selects one collection, set, or map source and one predicate form.
+Public SingleIndex/MultiIndex and SingleJoin/MultiJoin serve entity relationships; configuration/runtime indexes instead
+select handlers and retain encountered events. Some index tests live under a package named unused.
 
 - [universal expression evaluation](../../../src/main/java/com/taitl/ex/concrete/ConcreteAll.java)
 - [collection/set/map existence evaluation](../../../src/main/java/com/taitl/ex/concrete/ConcreteExists.java)
@@ -41,9 +41,10 @@ choices below. Record future decisions here, update the normative specification,
 - [existing relationship-index tests](../../../src/test/java/com/taitl/exlogic/unused/indexes)
 - [runtime index tests](../../../src/test/java/com/taitl/ex/core/transactions/TransactionIndexesTest.java)
 
-V1-E02 owns representative collection relationships; V2-E04 owns maintained indexes and broader combinations.
-Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
-not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+[Relationships and Evolution] owns representative collection relationships; [Indexes and Operational Coverage] owns
+maintained indexes and broader combinations. Add user-facing positive and negative acceptance cases for each unresolved
+behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion marks until a
+requirement-level review changes them.
 
 ## Required quality analysis
 
@@ -59,5 +60,8 @@ establish passing evidence. See [Process](../auto/Process.md#required-design-ana
 
 ## Performance
 
-Compare collection and index paths at stated cardinalities, including index maintenance rather than lookup alone.
-Use the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+Compare collection and index paths at stated cardinalities, including index maintenance rather than lookup alone. Use
+the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+
+[Relationships and Evolution]: ../project/Backlog.md#relationships-and-evolution
+[Indexes and Operational Coverage]: ../project/Backlog.md#indexes-and-operational-coverage

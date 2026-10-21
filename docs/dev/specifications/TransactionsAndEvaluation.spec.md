@@ -3,125 +3,125 @@
 These are the intended behavior claims migrated from the original library specification.
 Implementation and evidence are tracked separately in the [traceability matrix](../project/TraceabilityMatrix.md).
 A leading `+` preserves an existing completion mark; this migration does not add new completion assertions.
-Requirement identifiers are stable. The claims describe library behavior, not legal commitments.
+Reference requirements by their descriptive headings. The claims describe library behavior, not legal commitments.
 
 See the paired [design](../design/TransactionsAndEvaluation.design.md) and [specification index](../Specification.md).
 
 ## Library usage
 
-<a id="te-001"></a>
+### Class rule configuration
 
-+**TE-001** User can configure class rules.
++ User can configure class rules.
 
-<a id="te-002"></a>
+### Access rule configuration
 
-+**TE-002** User can configure access rules for a class.
++ User can configure access rules for a class.
 
-<a id="te-003"></a>
+### Transaction lifecycle rule configuration
 
-**TE-003** User can configure transaction lifecycle rules for a class.
+User can configure transaction lifecycle rules for a class.
 
-<a id="te-004"></a>
+### Starting a transaction
 
-+**TE-004** User can start a transaction.
++ User can start a transaction.
 
-<a id="te-005"></a>
+### Committing a transaction
 
-+**TE-005** User can commit a transaction.
++ User can commit a transaction.
 
-<a id="te-006"></a>
+### Rolling back a transaction
 
-+**TE-006** User can roll back a transaction.
++ User can roll back a transaction.
 
-<a id="te-007"></a>
+### Transaction checkpoints
 
-+**TE-007** User can initiate transaction checkpoint.
++ User can initiate transaction checkpoint.
 
-<a id="te-008"></a>
+### Reporting entity modifications
 
-+**TE-008** User can send events to record entity modification.
++ User can send events to record entity modification.
 
-<a id="te-009"></a>
+### Reporting entity access
 
-+**TE-009** User can send events to record entity access.
++ User can send events to record entity access.
 
-<a id="te-010"></a>
+### Reporting through transaction objects
 
-+**TE-010** User can send entity and access events directly through a transaction object.
++ User can send entity and access events directly through a transaction object.
 
-<a id="te-011"></a>
+### Events require a transaction
 
-+**TE-011** User can't send events outside a transaction.
++ User can't send events outside a transaction.
 
-<a id="te-012"></a>
+### Events require configured rules
 
-+**TE-012** User can't send events if no rules have been configured.
++ User can't send events if no rules have been configured.
 
 ## Library lifecycle phases
 
-<a id="te-013"></a>
+### Library usage phases
 
-**TE-013** Library usage falls into configuration, execution, and validation phases.
+Library usage falls into configuration, execution, and validation phases.
 
-<a id="te-014"></a>
+### Configuration phase
 
-**TE-014** In the configuration phase, the user defines rules - constraints and effects - using contexts and
+In the configuration phase, the user defines rules - constraints and effects - using contexts and
 transactions.
 
-<a id="te-015"></a>
+### Execution phase
 
-**TE-015** In the execution phase, the user begins and ends transactions and sends events to the library.
+In the execution phase, the user begins and ends transactions and sends events to the library.
 
-<a id="te-016"></a>
+### Execution-time effects
 
-**TE-016** In the execution phase, the library executes execution-time side effects.
+In the execution phase, the library executes execution-time side effects.
 
-<a id="te-017"></a>
+### Validation phase triggers
 
-**TE-017** The validation phase triggers upon transaction commit, or at a checkpoint.
+The validation phase triggers upon transaction commit, or at a checkpoint.
 
-<a id="te-018"></a>
+### Constraint validation and reporting
 
-**TE-018** In the validation phase, the library evaluates all applicable constraints and reports violations.
+In the validation phase, the library evaluates all applicable constraints and reports violations.
 
-<a id="te-019"></a>
+### Validation-time effects
 
-**TE-019** In the validation phase, the library executes validation-time side effects.
+In the validation phase, the library executes validation-time side effects.
 
 ## Configuring transactions
 
-<a id="te-020"></a>
+### Rules on transaction objects
 
-+**TE-020** User can configure the rules (constraints) such as invariants, effects and intents on a Transaction object.
++ User can configure the rules (constraints) such as invariants, effects and intents on a Transaction object.
 
-<a id="te-021"></a>
+### Custom transaction factories
 
-+**TE-021** User can specify a custom factory for creation of Transaction objects in a Context.
++ User can specify a custom factory for creation of Transaction objects in a Context.
 
-<a id="te-022"></a>
+### Transaction factory inheritance
 
-+**TE-022** Transaction factory from parent Context is used for child Contexts, unless overridden in the child Context.
++ Transaction factory from parent Context is used for child Contexts, unless overridden in the child Context.
 
-<a id="te-023"></a>
+### Caller-supplied transactions
 
-+**TE-023** User can specify an instance of Transaction class to use in a library transaction.
++ User can specify an instance of Transaction class to use in a library transaction.
   Rationale: so the users could configure rules based on dynamic information, such as web request parameters passed
   into an API endpoint handler.
   Code: This is done by specifying Transaction instance as parameter to Ex.begin() method.
 
 ## Execution stages
 
-<a id="te-024"></a>
+### Assigning execution stages
 
-+**TE-024** User can assign rules to different stages of transaction execution.
++ User can assign rules to different stages of transaction execution.
 
-<a id="te-025"></a>
+### Built-in execution stages
 
-+**TE-025** The execution stages include: Precondition (Early), Immediate (Middle) and Validation (Late).
++ The execution stages include: Precondition (Early), Immediate (Middle) and Validation (Late).
 
-<a id="te-026"></a>
+### Default validation stage
 
-+**TE-026** By default, the rules are assigned to Validation stage.
++ By default, the rules are assigned to Validation stage.
 - Precondition stage rules execute once per trigger event.
   They may be used to initialize itermediate data structures, such as indexes, and the like.
   Subsequent trigger events of same type are ignored for precondition rules.
@@ -137,92 +137,92 @@ Each existential transaction is associated with a business operation key, and th
 context, its parent contexts,
 matching wildcard contexts, any configured Transaction factory and any passed-in Transaction instance.
 
-<a id="te-027"></a>
+### Participating evaluation rules
 
-**TE-027** The rules configured in these contexts and transactions participate in evaluations.
+The rules configured in these contexts and transactions participate in evaluations.
 
-<a id="te-028"></a>
+### Parent rule precedence
 
-**TE-028** The rules defined in parent contexts/transactions are considered to be defined 'earlier' than the rules in
+The rules defined in parent contexts/transactions are considered to be defined 'earlier' than the rules in
 children contexts/transactions.
 
-<a id="te-029"></a>
+### Rule execution order
 
-**TE-029** The order of execution of rules follows the order of their definition.
+The order of execution of rules follows the order of their definition.
 
-<a id="te-030"></a>
+### Event handler order
 
-**TE-030** For each event, the order of invocations of its event handlers, if multiple handlers are defined, follows the
+For each event, the order of invocations of its event handlers, if multiple handlers are defined, follows the
 order of their definition
 
-<a id="te-031"></a>
+### Separate stage evaluations
 
-+**TE-031** There is a separate evaluation per execution stage: Precondition, Immediate and Validation.
++ There is a separate evaluation per execution stage: Precondition, Immediate and Validation.
 
-<a id="te-032"></a>
+### Preconditions evaluation naming
 
-+**TE-032** Evaluation of Precondition stage rules is called Preconditions evaluation.
++ Evaluation of Precondition stage rules is called Preconditions evaluation.
 
-<a id="te-033"></a>
+### Immediate evaluation naming
 
-+**TE-033** Evaluation of Immediate stage rules is called Immediate evaluation.
++ Evaluation of Immediate stage rules is called Immediate evaluation.
 
-<a id="te-034"></a>
+### Validation evaluation naming
 
-+**TE-034** Evaluation of Validation stage rules is called Validation evaluation.
++ Evaluation of Validation stage rules is called Validation evaluation.
 
-<a id="te-035"></a>
+### Independent transaction evaluations
 
-**TE-035** Evaluations of separate transactions are independent, even if these transactions are nested.
+Evaluations of separate transactions are independent, even if these transactions are nested.
 
-<a id="te-036"></a>
+### Transaction event scope
 
-**TE-036** Only the events reported during a transaction participate in its evaluations.
+Only the events reported during a transaction participate in its evaluations.
 
 ## Preconditions evaluation
 
-<a id="te-037"></a>
+### Assigning precondition rules
 
-+**TE-037** User can assign any rule to Precondition stage.
++ User can assign any rule to Precondition stage.
 
-<a id="te-038"></a>
+### Preconditions evaluation lifetime
 
-+**TE-038** Preconditions evaluation becomes active (ready to accept trigger events) on transaction start, and lasts
++ Preconditions evaluation becomes active (ready to accept trigger events) on transaction start, and lasts
 until commit/checkpoint/rollback.
 
-<a id="te-039"></a>
+### Precondition event frequency
 
-+**TE-039** Precondition stage rules are evaluated once per trigger event, as soon as event has been received, at any
++ Precondition stage rules are evaluated once per trigger event, as soon as event has been received, at any
 time during transaction.
 
 ## Immediate evaluation
 
-<a id="te-040"></a>
+### Immediate evaluation lifetime
 
-+**TE-040** Immediate evaluation becomes active (ready to accept trigger events) on transaction start, and lasts until
++ Immediate evaluation becomes active (ready to accept trigger events) on transaction start, and lasts until
 commit/checkpoint/rollback.
 
-<a id="te-041"></a>
+### Immediate event frequency
 
-+**TE-041** Immediate stage rules are evaluated each time per trigger event, as soon as event has been received, at any
++ Immediate stage rules are evaluated each time per trigger event, as soon as event has been received, at any
 time during transaction.
 Since this may affect performance, using Immediate stage is considered an advanced technique. Normally, if you don't use
 side effects, you should be fine with precondition and validation (default) stages.
 
 ## Validation evaluation
 
-<a id="te-042"></a>
+### Commit and checkpoint validation
 
-+**TE-042** Validation evaluation is triggered on a commit or checkpoint of an existential transaction, ignored on
++ Validation evaluation is triggered on a commit or checkpoint of an existential transaction, ignored on
 rollback.
 
-<a id="te-043"></a>
+### Validation effect dispatch
 
-+**TE-043** The Effects are evaluated by applying event handlers for each event reported during a transaction to the
++ The Effects are evaluated by applying event handlers for each event reported during a transaction to the
 corresponding entity.
 
-<a id="te-044"></a>
+### Validation event deduplication
 
-+**TE-044** Validation stage rules are evaluated once per trigger event, from an in-memory index of such events (a
++ Validation stage rules are evaluated once per trigger event, from an in-memory index of such events (a
 runtime index),
 that folds duplicate events of same type into single event.

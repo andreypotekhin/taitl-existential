@@ -11,8 +11,8 @@ The [specification](../specifications/Housekeeping.spec.md) defines intended beh
 
 ## Current implementation
 
-DisposeTran closes a transaction and removes its registry entry after normal completion. TransactionLogic.close
-clears the registry. Type-key and event-field caching exist, but CacheHandlers operations deliberately throw
+DisposeTran closes a transaction and removes its registry entry after normal completion. TransactionLogic.close clears
+the registry. Type-key and event-field caching exist, but CacheHandlers operations deliberately throw
 UnsupportedOperationException. Those stubs are not evidence of implemented cross-transaction handler caching.
 
 - [transaction disposal](../../../src/main/java/com/taitl/ex/logic/transactions/actions/DisposeTran.java)
@@ -40,9 +40,10 @@ choices below. Record future decisions here, update the normative specification,
 - [registry tests](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java)
 - [type cache tests](../../../src/test/java/com/taitl/ex/logic/events/TypeKeyCacheTest.java)
 
-V1-E03 owns admitted success/failure cleanup; V2-E04 broadens global/cache behavior; V3 covers extension resources.
-Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
-not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+[Failure Recovery and Resource Hygiene] owns admitted success/failure cleanup; [Indexes and Operational Coverage]
+broadens global/cache behavior; V3 covers extension resources. Add user-facing positive and negative acceptance cases
+for each unresolved behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion
+marks until a requirement-level review changes them.
 
 ## Required quality analysis
 
@@ -59,5 +60,8 @@ establish passing evidence. See [Process](../auto/Process.md#required-design-ana
 
 ## Performance
 
-Use bounded repeated-transaction workloads and retained-state counts; timing alone cannot establish no memory leak.
-Use the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+Use bounded repeated-transaction workloads and retained-state counts; timing alone cannot establish no memory leak. Use
+the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+
+[Failure Recovery and Resource Hygiene]: ../project/Backlog.md#failure-recovery-and-resource-hygiene
+[Indexes and Operational Coverage]: ../project/Backlog.md#indexes-and-operational-coverage

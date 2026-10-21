@@ -12,12 +12,13 @@ Link previous sprint/release evidence, known blockers, and the relevant design d
 
 ## Specification and design
 
-Link authoritative topic documents and requirement IDs. Identify existing implementation/evidence separately from gaps.
+Link authoritative topic documents and requirement sections. Identify existing implementation/evidence separately from
+gaps.
 
 ## Required design analysis
 
-Link concrete decisions and acceptance/evidence for correctness, actionable errors, failure recovery, resource
-hygiene, and performance; explain any inapplicable concern. Record design readiness and verification independently.
+Link concrete decisions and acceptance/evidence for correctness, actionable errors, failure recovery, resource hygiene,
+and performance; explain any inapplicable concern. Record design readiness and verification independently.
 
 ## Remaining work
 
@@ -37,5 +38,5 @@ Link the applicable topic record or explain why measurement does not apply.
 
 ## Execution plan and review
 
-Link the governing execution plan when finalized. Review pending: record actual completed IDs, commands, versions,
-passed/skipped totals, required checks, demo output, performance links, blockers, and deferrals at completion.
+Link the governing execution plan when finalized. Review pending: record actual completed requirements, commands,
+versions, passed/skipped totals, required checks, demo output, performance links, blockers, and deferrals at completion.

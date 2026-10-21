@@ -11,9 +11,9 @@ The [specification](../specifications/IntentsAndEffects.spec.md) defines intende
 
 ## Current implementation
 
-Intent declarations restrict corresponding event types for entities; immediate intent evaluation is the default.
-Effects use event handlers and can be configured in contexts or transaction rules. Existing specifications test
-combined CU/UD/CUD effects and stage-assigned intents, including validation-stage rejection.
+Intent declarations restrict corresponding event types for entities; immediate intent evaluation is the default. Effects
+use event handlers and can be configured in contexts or transaction rules. Existing specifications test combined
+CU/UD/CUD effects and stage-assigned intents, including validation-stage rejection.
 
 - [intent enforcement](../../../src/main/java/com/taitl/ex/logic/evaluation/intents/EvaluateIntents.java)
 - [handler execution](../../../src/main/java/com/taitl/ex/logic/evaluation/events/actions/ExecuteHandlers.java)
@@ -41,9 +41,10 @@ choices below. Record future decisions here, update the normative specification,
 - [combined effects](../../../src/test/java/com/taitl/specs/library_usage/UserCanHandleCombinedEventEffects.java)
 - [execution unit tests](../../../src/test/java/com/taitl/ex/logic/evaluation/actions/ExecuteHandlersTest.java)
 
-V2-E03 owns standard intents/effects/stages; V3-E02 owns their integration with custom events.
-Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
-not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+[Stages, Intents, and Transaction Customization] owns standard intents/effects/stages; Custom Event Evaluation and
+Extensions owns their integration with custom events. Add user-facing positive and negative acceptance cases for each
+unresolved behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion marks
+until a requirement-level review changes them.
 
 ## Required quality analysis
 
@@ -59,5 +60,7 @@ establish passing evidence. See [Process](../auto/Process.md#required-design-ana
 
 ## Performance
 
-Separate predicate/handler cost from dispatch overhead and include denied intents and repeated events.
-Use the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+Separate predicate/handler cost from dispatch overhead and include denied intents and repeated events. Use the
+[performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+
+[Stages, Intents, and Transaction Customization]: ../project/Backlog.md#stages-intents-and-transaction-customization

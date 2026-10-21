@@ -11,9 +11,9 @@ The [specification](../specifications/LibraryAndConfiguration.spec.md) defines i
 
 ## Current implementation
 
-Public facades delegate to per-library configuration, event, and transaction components. Context rules are indexed
-for operation keys. Global handler ordinals retain declaration order, while parent/wildcard resolution composes
-several sources of rules. Existing tests cover context factories, parent rules, wildcards, and TypeKey configuration.
+Public facades delegate to per-library configuration, event, and transaction components. Context rules are indexed for
+operation keys. Global handler ordinals retain declaration order, while parent/wildcard resolution composes several
+sources of rules. Existing tests cover context factories, parent rules, wildcards, and TypeKey configuration.
 
 - [library entry point](../../../src/main/java/com/taitl/existential/Existential.java)
 - [configuration loading](../../../src/main/java/com/taitl/ex/logic/library/ConfigureLibrary.java)
@@ -30,8 +30,8 @@ choices below. Record future decisions here, update the normative specification,
 
 ## Open decisions
 
-- Specify ties among overlapping wildcards, parents, exact contexts, and transaction rules; existing suggestions
-  propose different orders. Do not silently turn an implementation detail into a new precedence guarantee.
+- Specify ties among overlapping wildcards, parents, exact contexts, and transaction rules; existing suggestions propose
+  different orders. Do not silently turn an implementation detail into a new precedence guarantee.
 - Define configuration freezing and concurrency guarantees, including global Creator injection.
 - Distinguish build-time JDK requirements, compiler release 11, and actually tested runtime compatibility.
 
@@ -41,9 +41,10 @@ choices below. Record future decisions here, update the normative specification,
 - [loading tests](../../../src/test/java/com/taitl/specs/library_configuration)
 - [context tests](../../../src/test/java/com/taitl/specs/configuration_workflow/configuring_contexts)
 
-V1-E01 owns ordinary exact-context configuration; V2-E01/E02 own isolation, options, and broader matching.
-Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
-not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+[Night City Core Workflow] owns ordinary exact-context configuration; [Instance Isolation and Configuration] and
+Contexts and Type Matching own isolation, options, and broader matching. Add user-facing positive and negative
+acceptance cases for each unresolved behavior; passing adjacent unit tests do not establish the full claim. Preserve
+inherited completion marks until a requirement-level review changes them.
 
 ## Required quality analysis
 
@@ -60,5 +61,7 @@ establish passing evidence. See [Process](../auto/Process.md#required-design-ana
 ## Performance
 
 Measure context resolution/configuration separately from dispatch; do not optimize unmeasured alternatives such as
-tries.
-Use the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+tries. Use the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+
+[Night City Core Workflow]: ../project/Backlog.md#night-city-core-workflow
+[Instance Isolation and Configuration]: ../project/Backlog.md#instance-isolation-and-configuration

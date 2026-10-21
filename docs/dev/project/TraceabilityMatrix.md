@@ -1,251 +1,514 @@
 # Capability Traceability
 
 The [roadmap](Roadmap.md) plans outcomes across three releases. The [rebaseline](ReleaseRebaseline.md) maps all 36
-original scope items here. Topic requirement IDs and inherited completion marks are preserved; no entry below
+original scope items here. Topic requirements and inherited completion marks are preserved; no entry below
 claims that newly planned acceptance has passed.
 
 Design readiness and implementation verification are separate. `open` means the remaining selected-capability
 decisions/acceptance are not finalized; `partial` means relevant existing tests/implementation exist; `missing` means
 the required evidence is absent. Narrower reviewed slices can become ready without settling the entire topic.
 Historical evidence is in [Assessment](Assessment.md). Tests linked below are starting evidence, not proof of every
-listed requirement. The concrete selected requirement IDs and test methods must be reconciled when work is admitted.
+listed requirement. The concrete selected requirement sections and test methods must be reconciled when work is
+admitted.
 
-## V1-C01: Ordinary configuration and class rules
+## Ordinary configuration and class rules
 
-Epic: [V1-E01](Backlog.md#v1-e01); [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
+Epic: [Night City Core Workflow](Backlog.md#night-city-core-workflow);
+[Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
 Design readiness: open. Verification: partial.
 
-Requirements: LC-001–002, LC-004, LC-006, LC-015, LC-020, LC-026, LC-029–031; TE-001; EC-009–013 (selected class-rule
-cases).
-Topics: [LC], [TE].
-Evidence to review: [UserCanConfigureEntities.java][wrap-01].
+Requirements: Selected ordinary configuration and class-rule cases.
+
+- [LibraryAndConfiguration.spec.md]: [Static facade access], [Singleton access], [Multiple business operations],
+  [Multiple context rules], [Operation keys], [Nonempty contexts], [Class event invariants], [Library facade classes],
+  [Operation configuration builders], [Context configuration classes].
+- [TransactionsAndEvaluation.spec.md]: [Class rule configuration].
+- [EventsAndConstraints.spec.md]: [Internal field constraints], [External field constraints],
+  [Third-party field constraints], [Two-field constraints], [Multiple-field constraints].
+
+Evidence to review: [UserCanConfigureEntities.java].
 Remaining work: Finalize the exact-context Night City walkthrough, defaults, rule timing, and acceptance cases.
 
-## V1-C02: Reported events and commit validation
+## Reported events and commit validation
 
-Epic: [V1-E01](Backlog.md#v1-e01); [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
+Epic: [Night City Core Workflow](Backlog.md#night-city-core-workflow);
+[Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
 Design readiness: open. Verification: partial.
 
-Requirements: TE-004–006, TE-008, TE-010–015, TE-017–018, TE-026, TE-029–030, TE-034, TE-036, TE-042, TE-044;
-EC-001–006 and QI-013–015 (selected entity/commit paths).
-Topics: [TE], [EC], [QI].
-Evidence to review: [UserCanSendEntityEvents.java][wrap-02].
+Requirements: Selected entity/commit paths; broader stage behavior remains in V2.
+
+- [TransactionsAndEvaluation.spec.md]: [Starting a transaction], [Committing a transaction],
+  [Rolling back a transaction], [Reporting entity modifications], [Reporting through transaction objects],
+  [Events require a transaction], [Events require configured rules], [Library usage phases], [Configuration phase],
+  [Execution phase], [Validation phase triggers], [Constraint validation and reporting], [Default validation stage],
+  [Rule execution order], [Event handler order], [Validation evaluation naming], [Transaction event scope],
+  [Commit and checkpoint validation], [Validation event deduplication].
+- [EventsAndConstraints.spec.md]: [Reporting class events], [Equal event deduplication],
+  [Events require library configuration], [Events require a started transaction], [Events after transaction completion],
+  [Configuration after the first event].
+- [QuantifiersAndIndexes.spec.md]: [Configuration finalization], [Configuration rule indexing],
+  [Runtime event indexing].
+
+Evidence to review: [UserCanSendEntityEvents.java].
 Remaining work: Verify the selected event/deduplication/validation path without assuming the full advanced-stage
 contract.
 
-## V1-C03: Basic All/Exists relationship
+## Basic All/Exists relationship
 
-Epic: [V1-E02](Backlog.md#v1-e02); [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
+Epic: [Relationships and Evolution](Backlog.md#relationships-and-evolution);
+[Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
 Design readiness: open. Verification: partial.
 
-Requirements: QI-001–003, QI-005–009; EC-016–019 (representative collection-backed relationship).
-Topics: [QI], [EC].
+Requirements: A representative collection-backed relationship.
+
+- [QuantifiersAndIndexes.spec.md]: [All entity invariants], [Conditional All invariants], [All on entity classes],
+  [Exists entity invariants], [Conditional same-class existence], [Conditional cross-class existence],
+  [All-Exists composition], [Exists on collections].
+- [EventsAndConstraints.spec.md]: [Same-class entity relationships], [Cross-class entity relationships],
+  [Same-class existence constraints], [Cross-class existence constraints].
+
 Evidence to review: [quantifiers](../../../src/test/java/com/taitl/existential/quantifiers/).
 Remaining work: Add commit-level success, missing relationship, and selected empty/conditional cases.
 
-## V1-C04: Explicit entity evolution
+## Explicit entity evolution
 
-Epic: [V1-E02](Backlog.md#v1-e02); [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
+Epic: [Relationships and Evolution](Backlog.md#relationships-and-evolution);
+[Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
 Design readiness: open. Verification: partial.
 
-Requirements: EC-007–008, EC-020–021 (explicit before/after values).
-Topics: [EC].
-Evidence to review: [UserCanUseMemoForBiEvents.java][wrap-03].
+Requirements: Explicit before/after values; broader memo/type/subclass combinations remain in V2.
+
+- [EventsAndConstraints.spec.md]: [Port event type inference], [Transit event endpoints],
+  [Entity transition invariants], [Entity porting invariants].
+
+Evidence to review: [UserCanUseMemoForBiEvents.java].
 Remaining work: Define and verify an allowed and rejected change; memo/type/subclass breadth belongs to V2.
 
-## V1-C05: Useful violations and errors
+## Useful violations and errors
 
-Epic: [V1-E03](Backlog.md#v1-e03); [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
+Epic: [Failure Recovery and Resource Hygiene](Backlog.md#failure-recovery-and-resource-hygiene);
+[Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
 Design readiness: open. Verification: partial.
 
-Requirements: EC-024–025, EC-027; V1 validation-report requirements.
-Topics: [EC], [TE].
-Evidence to review: [EvaluationLogicTest.java][wrap-04].
+Requirements: Selected violation paths and the V1 validation-report requirements.
+
+- [EventsAndConstraints.spec.md]: [Constraint violation exceptions], [Constraint descriptions], [Violation details].
+- [TransactionsAndEvaluation.spec.md]: V1 validation-report requirements.
+
+Evidence to review: [EvaluationLogicTest.java].
 Remaining work: Repair disabled report cases and prove rule/operation details and remedies on selected failure paths.
 
-## V1-C06: Recovery and resource release
+## Recovery and resource release
 
-Epic: [V1-E03](Backlog.md#v1-e03); [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
+Epic: [Failure Recovery and Resource Hygiene](Backlog.md#failure-recovery-and-resource-hygiene);
+[Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
 Design readiness: open. Verification: partial.
 
-Requirements: TE-004–006, TE-011; HK-003–006 (admitted transaction/library exits).
-Topics: [TE], [HK].
-Evidence to review: [TrRegistryTest.java][wrap-05].
+Requirements: Admitted transaction/library exits; cleanup does not imply undoing caller objects.
+
+- [TransactionsAndEvaluation.spec.md]: [Starting a transaction], [Committing a transaction],
+  [Rolling back a transaction], [Events require a transaction].
+- [Housekeeping.spec.md]: [Transaction resource release], [Reported event resource release], [Transaction recycling],
+  [Rule recycling].
+
+Evidence to review: [TrRegistryTest.java].
 Remaining work: Specify post-failure state, recovery, retained references, and cleanup without implying caller-object
 undo.
 
-## V1-C07: Night City as an artifact consumer
+## Night City as an artifact consumer
 
-Epic: [V1-E04](Backlog.md#v1-e04); [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
+Epic: [Night City Artifact Consumption and Performance](Backlog.md#night-city-artifact-consumption-and-performance);
+[Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
 Design readiness: open. Verification: missing.
 
-Requirements: DIST-001 (local Maven dependency consumption).
-Topics: [DIST].
+Requirements: Local Maven dependency consumption.
+
+- [Distribution.spec.md]: [Maven dependency consumption].
+
 Evidence to review: not yet available.
 Remaining work: Create Night City POM/demo; verify against the installed JAR without root source/test class directories.
 
-## V1-C08: Representative performance and hardening
+## Representative performance and hardening
 
-Epic: [V1-E04](Backlog.md#v1-e04); [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
+Epic: [Night City Artifact Consumption and Performance](Backlog.md#night-city-artifact-consumption-and-performance);
+[Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
 Design readiness: open. Verification: partial.
 
-Requirements: All V1 capabilities and their five quality design obligations; final gate V1-E05.
-Topics: [LC], [TE], [QI], [HK], [DIST].
-Evidence to review: [CustomTransactionBenchmark.java][wrap-06].
+Requirements: All V1 capabilities and their five quality design obligations; final gate V1 Hardening and Closeout.
+Topics: [LibraryAndConfiguration.spec.md], [TransactionsAndEvaluation.spec.md], [QuantifiersAndIndexes.spec.md],
+[Housekeeping.spec.md], [Distribution.spec.md].
+Evidence to review: [CustomTransactionBenchmark.java].
 Remaining work: Add representative workload/cardinality and resource evidence; historical timings are not full workflow
 proof.
 
-## V2-C01: Independent library instances
+## Independent library instances
 
-Epic: [V2-E01](Backlog.md#v2-e01); [Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
+Epic: [Instance Isolation and Configuration](Backlog.md#instance-isolation-and-configuration);
+[Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
 Design readiness: open. Verification: partial.
 
-Requirements: LC-003–006 (independent-instance and broader operation/context combinations).
-Topics: [LC].
-Evidence to review: [UserCanAccessLibrary.java][wrap-07].
+Requirements: Independent-instance and broader operation/context combinations.
+
+- [LibraryAndConfiguration.spec.md]: [Independent library instances], [Multiple business operations],
+  [Multiple operation contexts], [Multiple context rules].
+
+Evidence to review: [UserCanAccessLibrary.java].
 Remaining work: Define per-instance versus global facilities and replace the existing isolation TODOs with direct
 acceptance.
 
-## V2-C02: Configuration options and guarantees
+## Configuration options and guarantees
 
-Epic: [V2-E01](Backlog.md#v2-e01); [Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
+Epic: [Instance Isolation and Configuration](Backlog.md#instance-isolation-and-configuration);
+[Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
 Design readiness: open. Verification: partial.
 
-Requirements: LC-007–013; configuration/injection concurrency and freeze decisions.
-Topics: [LC].
-Evidence to review: [UserCanConfigureLibrary.java][wrap-08].
+Requirements: Configuration sources/options, plus configuration/injection concurrency and freeze decisions.
+
+- [LibraryAndConfiguration.spec.md]: [Programmatic library options], [Behavioral flags], [Configuration before use],
+  [Configuration files], [Classpath configuration], [Configuration environment variable], [Initial configuration file].
+
+Evidence to review: [UserCanConfigureLibrary.java].
 Remaining work: Retain existing cases and finalize sources/precedence/flags, failed initialization, and supported
 concurrency.
 
-## V2-C03: Contexts, factories, and ordering
+## Contexts, factories, and ordering
 
-Epic: [V2-E02](Backlog.md#v2-e02); [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
+Epic: [Contexts and Type Matching](Backlog.md#contexts-and-type-matching);
+[Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
 Design readiness: open. Verification: partial.
 
-Requirements: LC-014, LC-016–019, LC-021–025, LC-030–031 (broader combinations).
-Topics: [LC].
-Evidence to review: [configuring_contexts][wrap-09].
+Requirements: Broader parent/wildcard/factory and ordering combinations.
+
+- [LibraryAndConfiguration.spec.md]: [Custom context rules], [Parent context rules], [Parent context ordering],
+  [Default context factory], [Operation context factory], [Wildcard operation keys], [Wildcard operation matching],
+  [Wildcard context matching], [Matching context rules], [Matching context ordering],
+  [Operation configuration builders], [Context configuration classes].
+
+Evidence to review: [configuring_contexts].
 Remaining work: Resolve overlapping wildcard/parent/exact precedence and factory/builder edge cases.
 
-## V2-C04: Generic/subclass and constraint breadth
+## Generic/subclass and constraint breadth
 
-Epic: [V2-E02](Backlog.md#v2-e02); [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
+Epic: [Contexts and Type Matching](Backlog.md#contexts-and-type-matching);
+[Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
 Design readiness: open. Verification: partial.
 
-Requirements: LC-028; EC-009–015 (remaining combinations), EC-023.
-Topics: [LC], [EC].
+Requirements: Remaining class/field/collection/generic/subclass combinations beyond V1.
+
+- [LibraryAndConfiguration.spec.md]: [Generic type invariants].
+- [EventsAndConstraints.spec.md]: [Internal field constraints], [External field constraints],
+  [Third-party field constraints], [Two-field constraints], [Multiple-field constraints], [Collection size constraints],
+  [Collection contents constraints], [Inherited class constraints].
+
 Evidence to review: [TypeKeyTest.java](../../../src/test/java/com/taitl/existential/keys/TypeKeyTest.java).
 Remaining work: Specify hierarchy/generic matching and third-party/collection/field combinations beyond the V1 example.
 
-## V2-C05: Custom transactions and access patterns
+## Custom transactions and access patterns
 
-Epic: [V2-E03](Backlog.md#v2-e03); [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
+Epic: [Stages, Intents, and Transaction Customization](Backlog.md#stages-intents-and-transaction-customization);
+[Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
 Design readiness: open. Verification: partial.
 
-Requirements: LC-027, LC-032–035; TE-002–003, TE-009–010, TE-020–023; EC-022.
-Topics: [LC], [TE], [EC].
-Evidence to review: [custom_transactions][wrap-10].
+Requirements: Factories, supplied instances, access rules, memo behavior, and per-call values.
+
+- [LibraryAndConfiguration.spec.md]: [Transaction lifecycle invariants], [Invocation configuration classes],
+  [Transaction interaction classes], [Event reporting classes], [Transaction memo registration].
+- [TransactionsAndEvaluation.spec.md]: [Access rule configuration], [Transaction lifecycle rule configuration],
+  [Reporting entity access], [Reporting through transaction objects], [Rules on transaction objects],
+  [Custom transaction factories], [Transaction factory inheritance], [Caller-supplied transactions].
+- [EventsAndConstraints.spec.md]: [Additional event values].
+
+Evidence to review: [custom_transactions].
 Remaining work: Verify factories, supplied instances, access rules, memo behavior, and per-call values under the full
 contract.
 
-## V2-C06: Built-in stages, intents, and effects
+## Built-in stages, intents, and effects
 
-Epic: [V2-E03](Backlog.md#v2-e03); [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
+Epic: [Stages, Intents, and Transaction Customization](Backlog.md#stages-intents-and-transaction-customization);
+[Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
 Design readiness: open. Verification: partial.
 
-Requirements: TE-016, TE-019, TE-024–025, TE-027–033, TE-037–044 (broader timing); all IE requirements for built-in
-paths.
-Topics: [TE], [IE].
-Evidence to review: [UserCanConfigureIntents.java][wrap-11].
+Requirements: Broader stage timing and all IntentsAndEffects.spec.md requirements for built-in paths.
+
+- [TransactionsAndEvaluation.spec.md]: [Execution-time effects], [Validation-time effects],
+  [Assigning execution stages], [Built-in execution stages], [Participating evaluation rules], [Parent rule precedence],
+  [Rule execution order], [Event handler order], [Separate stage evaluations], [Preconditions evaluation naming],
+  [Immediate evaluation naming], [Assigning precondition rules], [Preconditions evaluation lifetime],
+  [Precondition event frequency], [Immediate evaluation lifetime], [Immediate event frequency],
+  [Commit and checkpoint validation], [Validation effect dispatch], [Validation event deduplication].
+- [IntentsAndEffects.spec.md]: all built-in intent/effect paths.
+
+Evidence to review: [UserCanConfigureIntents.java].
 Remaining work: Reconcile stage terminology and cover order, partial effects, authorization failures, and recovery.
 
-## V2-C07: Maintained relationships and indexing
+## Maintained relationships and indexing
 
-Epic: [V2-E04](Backlog.md#v2-e04); [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
+[Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
 Design readiness: open. Verification: partial.
 
-Requirements: QI-004, QI-010–015 and remaining All/Exists combinations; retain internal indexing needed by V1.
-Topics: [QI].
+Requirements: Maintained indexes and remaining All/Exists combinations; retain internal indexing needed by V1.
+
+- [QuantifiersAndIndexes.spec.md]: [All on entity transitions], [Exists on maps], [Indexed existence lookup],
+  [Indexes between rules], [Configuration finalization], [Configuration rule indexing], [Runtime event indexing].
+
 Evidence to review: [indexes](../../../src/test/java/com/taitl/exlogic/unused/indexes/).
 Remaining work: Reconcile public index names and verify maintenance plus lookup/scaling and transaction-level results.
 
-## V2-C08: Broader lifecycle and event combinations
+## Broader lifecycle and event combinations
 
-Epic: [V2-E04](Backlog.md#v2-e04); [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
+[Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
 Design readiness: open. Verification: partial.
 
-Requirements: TE-007, TE-017, TE-035, TE-042 and remaining lifecycle combinations; EC-001–008, EC-020–022 beyond the V1
-slice.
-Topics: [TE], [EC].
-Evidence to review: [UserCanInitiateTransactions.java][wrap-12].
+Requirements: Remaining lifecycle/event combinations beyond the V1 slice.
+
+- [TransactionsAndEvaluation.spec.md]: [Transaction checkpoints], [Validation phase triggers],
+  [Independent transaction evaluations], [Commit and checkpoint validation].
+- [EventsAndConstraints.spec.md]: [Reporting class events], [Equal event deduplication],
+  [Events require library configuration], [Events require a started transaction], [Events after transaction completion],
+  [Configuration after the first event], [Port event type inference], [Transit event endpoints],
+  [Entity transition invariants], [Entity porting invariants], [Additional event values].
+
+Evidence to review: [UserCanInitiateTransactions.java].
 Remaining work: Specify checkpoint reset/continuation, nested independence, additional values, and broad event
 combinations.
 
-## V2-C09: Richer reports, caching, and global hygiene
+## Richer reports, caching, and global hygiene
 
-Epic: [V2-E04](Backlog.md#v2-e04); [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
+[Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
 Design readiness: open. Verification: partial.
 
-Requirements: EC-026, EC-028; HK-001–007 (broader resource/cache/global/leak-reporting guarantees).
-Topics: [EC], [HK].
+Requirements: Broader reporting, cache, global cleanup, and leak-reporting guarantees.
+
+- [EventsAndConstraints.spec.md]: [Constraint error numbers], [Required constraint descriptions].
+- [Housekeeping.spec.md]: [Caching between transactions], [Caching between contexts], [Transaction resource release],
+  [Reported event resource release], [Transaction recycling], [Rule recycling], [Memory leak reporting].
+
 Evidence to review: [TypeKeyCacheTest.java](../../../src/test/java/com/taitl/ex/logic/events/TypeKeyCacheTest.java).
 Remaining work: Verify metadata, description options, invalidation, boundedness, global close, and admitted leak
 reporting.
 
-## V2-C10: Publication readiness
+## Publication readiness
 
-Epic: [V2-E04](Backlog.md#v2-e04); [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
+[Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
 Design readiness: open. Verification: missing.
 
-Requirements: DIST-001 remote distribution prerequisites; remote availability requires its own evidence.
-Topics: [DIST].
+Requirements: Remote distribution prerequisites; remote availability requires its own evidence.
+
+- [Distribution.spec.md]: [Maven dependency consumption].
+
 Evidence to review: not yet available.
 Remaining work: Record artifacts/destination/account/signing prerequisites; do not block an unclaimed local-only channel
 on publication.
 
-## V3-C01: Custom event contracts and registration
+## Custom event contracts and registration
 
-Epic: [V3-E01](Backlog.md#v3-e01); [Sprint 11](sprints/Sprint11_V3CustomEventContractsAndRegistration.md).
+Epic: [Custom Event Contracts and Registration](Backlog.md#custom-event-contracts-and-registration);
+[Sprint 11](sprints/Sprint11_V3CustomEventContractsAndRegistration.md).
 Design readiness: open. Verification: missing.
 
-Requirements: EC-029–032, EC-034 and custom registration/matching guarantees.
-Topics: [EC].
+Requirements: Custom event declaration, registration, matching, and invalid-registration guarantees.
+
+- [EventsAndConstraints.spec.md]: [Defining custom event types], [Custom event handlers],
+  [Custom event context constraints], [Custom event transaction constraints], [Reporting custom events].
+
 Evidence to review: not yet available.
 Remaining work: Define registration identity, collisions, ownership, invalid inputs, and relevant concurrency.
 
-## V3-C02: Custom event evaluation and extensions
+## Custom event evaluation and extensions
 
-Epic: [V3-E02](Backlog.md#v3-e02); [Sprint 12](sprints/Sprint12_V3CustomEventEvaluationAndExtensions.md).
+Epic: [Custom Event Evaluation and Extensions](Backlog.md#custom-event-evaluation-and-extensions);
+[Sprint 12](sprints/Sprint12_V3CustomEventEvaluationAndExtensions.md).
 Design readiness: open. Verification: missing.
 
-Requirements: EC-033–034 and the remaining custom-event invocation claim; custom paths through IE/TE/HK.
-Topics: [EC], [IE], [TE], [HK].
+Requirements: Custom invocation and paths through intents, effects, transaction evaluation, and housekeeping.
+
+- [EventsAndConstraints.spec.md]: [Custom event splitting], [Reporting custom events].
+- [IntentsAndEffects.spec.md], [TransactionsAndEvaluation.spec.md], and [Housekeeping.spec.md]: custom-event integration
+  and cleanup.
+
 Evidence to review: not yet available.
 Remaining work: Specify splitting, matching, authorization, callbacks, failure recovery, expansion costs, and cleanup.
 
 ## Release hardening gates
 
-[V1-E05](Backlog.md#v1-e05), [V2-E05](Backlog.md#v2-e05), and [V3-E03](Backlog.md#v3-e03) verify their complete admitted
+[V1 Hardening and Closeout](Backlog.md#v1-hardening-and-closeout),
+[V2 Hardening and Closeout](Backlog.md#v2-hardening-and-closeout), and
+[V3 Hardening and Closeout](Backlog.md#v3-hardening-and-closeout) verify their complete admitted
 capabilities and retained regressions. Actual coverage, required tests, five design obligations, performance/resource
 records, consumer results, and artifact checks must agree before closure. These gates do not add feature scope.
 
-[LC]: ../specifications/LibraryAndConfiguration.spec.md
-[TE]: ../specifications/TransactionsAndEvaluation.spec.md
-[EC]: ../specifications/EventsAndConstraints.spec.md
-[QI]: ../specifications/QuantifiersAndIndexes.spec.md
-[IE]: ../specifications/IntentsAndEffects.spec.md
-[HK]: ../specifications/Housekeeping.spec.md
-[DIST]: ../specifications/Distribution.spec.md
+[LibraryAndConfiguration.spec.md]: ../specifications/LibraryAndConfiguration.spec.md
+[TransactionsAndEvaluation.spec.md]: ../specifications/TransactionsAndEvaluation.spec.md
+[EventsAndConstraints.spec.md]: ../specifications/EventsAndConstraints.spec.md
+[QuantifiersAndIndexes.spec.md]: ../specifications/QuantifiersAndIndexes.spec.md
+[IntentsAndEffects.spec.md]: ../specifications/IntentsAndEffects.spec.md
+[Housekeeping.spec.md]: ../specifications/Housekeeping.spec.md
+[Distribution.spec.md]: ../specifications/Distribution.spec.md
 
-[wrap-01]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java
-[wrap-02]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanSendEntityEvents.java
-[wrap-03]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java
-[wrap-04]: ../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java
-[wrap-05]: ../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java
-[wrap-06]: ../../../src/test/java/com/taitl/existential/benchmarks/CustomTransactionBenchmark.java
-[wrap-07]: ../../../src/test/java/com/taitl/specs/library/UserCanAccessLibrary.java
-[wrap-08]: ../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java
-[wrap-09]: ../../../src/test/java/com/taitl/specs/configuration_workflow/configuring_contexts/
-[wrap-10]: ../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions/
-[wrap-11]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureIntents.java
-[wrap-12]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java
+[UserCanConfigureEntities.java]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java
+[UserCanSendEntityEvents.java]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanSendEntityEvents.java
+[UserCanUseMemoForBiEvents.java]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java
+[EvaluationLogicTest.java]: ../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java
+[TrRegistryTest.java]: ../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java
+[CustomTransactionBenchmark.java]:
+  ../../../src/test/java/com/taitl/existential/benchmarks/CustomTransactionBenchmark.java
+[UserCanAccessLibrary.java]: ../../../src/test/java/com/taitl/specs/library/UserCanAccessLibrary.java
+[UserCanConfigureLibrary.java]:
+  ../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java
+[configuring_contexts]: ../../../src/test/java/com/taitl/specs/configuration_workflow/configuring_contexts/
+[custom_transactions]: ../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions/
+[UserCanConfigureIntents.java]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureIntents.java
+[UserCanInitiateTransactions.java]:
+  ../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java
+
+[Static facade access]: ../specifications/LibraryAndConfiguration.spec.md#static-facade-access
+[Singleton access]: ../specifications/LibraryAndConfiguration.spec.md#singleton-access
+[Multiple business operations]: ../specifications/LibraryAndConfiguration.spec.md#multiple-business-operations
+[Multiple context rules]: ../specifications/LibraryAndConfiguration.spec.md#multiple-context-rules
+[Operation keys]: ../specifications/LibraryAndConfiguration.spec.md#operation-keys
+[Nonempty contexts]: ../specifications/LibraryAndConfiguration.spec.md#nonempty-contexts
+[Class event invariants]: ../specifications/LibraryAndConfiguration.spec.md#class-event-invariants
+[Library facade classes]: ../specifications/LibraryAndConfiguration.spec.md#library-facade-classes
+[Operation configuration builders]: ../specifications/LibraryAndConfiguration.spec.md#operation-configuration-builders
+[Context configuration classes]: ../specifications/LibraryAndConfiguration.spec.md#context-configuration-classes
+[Class rule configuration]: ../specifications/TransactionsAndEvaluation.spec.md#class-rule-configuration
+[Internal field constraints]: ../specifications/EventsAndConstraints.spec.md#internal-field-constraints
+[External field constraints]: ../specifications/EventsAndConstraints.spec.md#external-field-constraints
+[Third-party field constraints]: ../specifications/EventsAndConstraints.spec.md#third-party-field-constraints
+[Two-field constraints]: ../specifications/EventsAndConstraints.spec.md#two-field-constraints
+[Multiple-field constraints]: ../specifications/EventsAndConstraints.spec.md#multiple-field-constraints
+[Starting a transaction]: ../specifications/TransactionsAndEvaluation.spec.md#starting-a-transaction
+[Committing a transaction]: ../specifications/TransactionsAndEvaluation.spec.md#committing-a-transaction
+[Rolling back a transaction]: ../specifications/TransactionsAndEvaluation.spec.md#rolling-back-a-transaction
+[Reporting entity modifications]: ../specifications/TransactionsAndEvaluation.spec.md#reporting-entity-modifications
+[Reporting through transaction objects]:
+  ../specifications/TransactionsAndEvaluation.spec.md#reporting-through-transaction-objects
+[Events require a transaction]: ../specifications/TransactionsAndEvaluation.spec.md#events-require-a-transaction
+[Events require configured rules]: ../specifications/TransactionsAndEvaluation.spec.md#events-require-configured-rules
+[Library usage phases]: ../specifications/TransactionsAndEvaluation.spec.md#library-usage-phases
+[Configuration phase]: ../specifications/TransactionsAndEvaluation.spec.md#configuration-phase
+[Execution phase]: ../specifications/TransactionsAndEvaluation.spec.md#execution-phase
+[Validation phase triggers]: ../specifications/TransactionsAndEvaluation.spec.md#validation-phase-triggers
+[Constraint validation and reporting]:
+  ../specifications/TransactionsAndEvaluation.spec.md#constraint-validation-and-reporting
+[Default validation stage]: ../specifications/TransactionsAndEvaluation.spec.md#default-validation-stage
+[Rule execution order]: ../specifications/TransactionsAndEvaluation.spec.md#rule-execution-order
+[Event handler order]: ../specifications/TransactionsAndEvaluation.spec.md#event-handler-order
+[Validation evaluation naming]: ../specifications/TransactionsAndEvaluation.spec.md#validation-evaluation-naming
+[Transaction event scope]: ../specifications/TransactionsAndEvaluation.spec.md#transaction-event-scope
+[Commit and checkpoint validation]: ../specifications/TransactionsAndEvaluation.spec.md#commit-and-checkpoint-validation
+[Validation event deduplication]: ../specifications/TransactionsAndEvaluation.spec.md#validation-event-deduplication
+[Reporting class events]: ../specifications/EventsAndConstraints.spec.md#reporting-class-events
+[Equal event deduplication]: ../specifications/EventsAndConstraints.spec.md#equal-event-deduplication
+[Events require library configuration]:
+  ../specifications/EventsAndConstraints.spec.md#events-require-library-configuration
+[Events require a started transaction]:
+  ../specifications/EventsAndConstraints.spec.md#events-require-a-started-transaction
+[Events after transaction completion]:
+  ../specifications/EventsAndConstraints.spec.md#events-after-transaction-completion
+[Configuration after the first event]:
+  ../specifications/EventsAndConstraints.spec.md#configuration-after-the-first-event
+[Configuration finalization]: ../specifications/QuantifiersAndIndexes.spec.md#configuration-finalization
+[Configuration rule indexing]: ../specifications/QuantifiersAndIndexes.spec.md#configuration-rule-indexing
+[Runtime event indexing]: ../specifications/QuantifiersAndIndexes.spec.md#runtime-event-indexing
+[All entity invariants]: ../specifications/QuantifiersAndIndexes.spec.md#all-entity-invariants
+[Conditional All invariants]: ../specifications/QuantifiersAndIndexes.spec.md#conditional-all-invariants
+[All on entity classes]: ../specifications/QuantifiersAndIndexes.spec.md#all-on-entity-classes
+[Exists entity invariants]: ../specifications/QuantifiersAndIndexes.spec.md#exists-entity-invariants
+[Conditional same-class existence]: ../specifications/QuantifiersAndIndexes.spec.md#conditional-same-class-existence
+[Conditional cross-class existence]: ../specifications/QuantifiersAndIndexes.spec.md#conditional-cross-class-existence
+[All-Exists composition]: ../specifications/QuantifiersAndIndexes.spec.md#all-exists-composition
+[Exists on collections]: ../specifications/QuantifiersAndIndexes.spec.md#exists-on-collections
+[Same-class entity relationships]: ../specifications/EventsAndConstraints.spec.md#same-class-entity-relationships
+[Cross-class entity relationships]: ../specifications/EventsAndConstraints.spec.md#cross-class-entity-relationships
+[Same-class existence constraints]: ../specifications/EventsAndConstraints.spec.md#same-class-existence-constraints
+[Cross-class existence constraints]: ../specifications/EventsAndConstraints.spec.md#cross-class-existence-constraints
+[Port event type inference]: ../specifications/EventsAndConstraints.spec.md#port-event-type-inference
+[Transit event endpoints]: ../specifications/EventsAndConstraints.spec.md#transit-event-endpoints
+[Entity transition invariants]: ../specifications/EventsAndConstraints.spec.md#entity-transition-invariants
+[Entity porting invariants]: ../specifications/EventsAndConstraints.spec.md#entity-porting-invariants
+[Constraint violation exceptions]: ../specifications/EventsAndConstraints.spec.md#constraint-violation-exceptions
+[Constraint descriptions]: ../specifications/EventsAndConstraints.spec.md#constraint-descriptions
+[Violation details]: ../specifications/EventsAndConstraints.spec.md#violation-details
+[Transaction resource release]: ../specifications/Housekeeping.spec.md#transaction-resource-release
+[Reported event resource release]: ../specifications/Housekeeping.spec.md#reported-event-resource-release
+[Transaction recycling]: ../specifications/Housekeeping.spec.md#transaction-recycling
+[Rule recycling]: ../specifications/Housekeeping.spec.md#rule-recycling
+[Maven dependency consumption]: ../specifications/Distribution.spec.md#maven-dependency-consumption
+[Independent library instances]: ../specifications/LibraryAndConfiguration.spec.md#independent-library-instances
+[Multiple operation contexts]: ../specifications/LibraryAndConfiguration.spec.md#multiple-operation-contexts
+[Programmatic library options]: ../specifications/LibraryAndConfiguration.spec.md#programmatic-library-options
+[Behavioral flags]: ../specifications/LibraryAndConfiguration.spec.md#behavioral-flags
+[Configuration before use]: ../specifications/LibraryAndConfiguration.spec.md#configuration-before-use
+[Configuration files]: ../specifications/LibraryAndConfiguration.spec.md#configuration-files
+[Classpath configuration]: ../specifications/LibraryAndConfiguration.spec.md#classpath-configuration
+[Configuration environment variable]:
+  ../specifications/LibraryAndConfiguration.spec.md#configuration-environment-variable
+[Initial configuration file]: ../specifications/LibraryAndConfiguration.spec.md#initial-configuration-file
+[Custom context rules]: ../specifications/LibraryAndConfiguration.spec.md#custom-context-rules
+[Parent context rules]: ../specifications/LibraryAndConfiguration.spec.md#parent-context-rules
+[Parent context ordering]: ../specifications/LibraryAndConfiguration.spec.md#parent-context-ordering
+[Default context factory]: ../specifications/LibraryAndConfiguration.spec.md#default-context-factory
+[Operation context factory]: ../specifications/LibraryAndConfiguration.spec.md#operation-context-factory
+[Wildcard operation keys]: ../specifications/LibraryAndConfiguration.spec.md#wildcard-operation-keys
+[Wildcard operation matching]: ../specifications/LibraryAndConfiguration.spec.md#wildcard-operation-matching
+[Wildcard context matching]: ../specifications/LibraryAndConfiguration.spec.md#wildcard-context-matching
+[Matching context rules]: ../specifications/LibraryAndConfiguration.spec.md#matching-context-rules
+[Matching context ordering]: ../specifications/LibraryAndConfiguration.spec.md#matching-context-ordering
+[Generic type invariants]: ../specifications/LibraryAndConfiguration.spec.md#generic-type-invariants
+[Collection size constraints]: ../specifications/EventsAndConstraints.spec.md#collection-size-constraints
+[Collection contents constraints]: ../specifications/EventsAndConstraints.spec.md#collection-contents-constraints
+[Inherited class constraints]: ../specifications/EventsAndConstraints.spec.md#inherited-class-constraints
+[Transaction lifecycle invariants]: ../specifications/LibraryAndConfiguration.spec.md#transaction-lifecycle-invariants
+[Invocation configuration classes]: ../specifications/LibraryAndConfiguration.spec.md#invocation-configuration-classes
+[Transaction interaction classes]: ../specifications/LibraryAndConfiguration.spec.md#transaction-interaction-classes
+[Event reporting classes]: ../specifications/LibraryAndConfiguration.spec.md#event-reporting-classes
+[Transaction memo registration]: ../specifications/LibraryAndConfiguration.spec.md#transaction-memo-registration
+[Access rule configuration]: ../specifications/TransactionsAndEvaluation.spec.md#access-rule-configuration
+[Transaction lifecycle rule configuration]:
+  ../specifications/TransactionsAndEvaluation.spec.md#transaction-lifecycle-rule-configuration
+[Reporting entity access]: ../specifications/TransactionsAndEvaluation.spec.md#reporting-entity-access
+[Rules on transaction objects]: ../specifications/TransactionsAndEvaluation.spec.md#rules-on-transaction-objects
+[Custom transaction factories]: ../specifications/TransactionsAndEvaluation.spec.md#custom-transaction-factories
+[Transaction factory inheritance]: ../specifications/TransactionsAndEvaluation.spec.md#transaction-factory-inheritance
+[Caller-supplied transactions]: ../specifications/TransactionsAndEvaluation.spec.md#caller-supplied-transactions
+[Additional event values]: ../specifications/EventsAndConstraints.spec.md#additional-event-values
+[Execution-time effects]: ../specifications/TransactionsAndEvaluation.spec.md#execution-time-effects
+[Validation-time effects]: ../specifications/TransactionsAndEvaluation.spec.md#validation-time-effects
+[Assigning execution stages]: ../specifications/TransactionsAndEvaluation.spec.md#assigning-execution-stages
+[Built-in execution stages]: ../specifications/TransactionsAndEvaluation.spec.md#built-in-execution-stages
+[Participating evaluation rules]: ../specifications/TransactionsAndEvaluation.spec.md#participating-evaluation-rules
+[Parent rule precedence]: ../specifications/TransactionsAndEvaluation.spec.md#parent-rule-precedence
+[Separate stage evaluations]: ../specifications/TransactionsAndEvaluation.spec.md#separate-stage-evaluations
+[Preconditions evaluation naming]: ../specifications/TransactionsAndEvaluation.spec.md#preconditions-evaluation-naming
+[Immediate evaluation naming]: ../specifications/TransactionsAndEvaluation.spec.md#immediate-evaluation-naming
+[Assigning precondition rules]: ../specifications/TransactionsAndEvaluation.spec.md#assigning-precondition-rules
+[Preconditions evaluation lifetime]:
+  ../specifications/TransactionsAndEvaluation.spec.md#preconditions-evaluation-lifetime
+[Precondition event frequency]: ../specifications/TransactionsAndEvaluation.spec.md#precondition-event-frequency
+[Immediate evaluation lifetime]: ../specifications/TransactionsAndEvaluation.spec.md#immediate-evaluation-lifetime
+[Immediate event frequency]: ../specifications/TransactionsAndEvaluation.spec.md#immediate-event-frequency
+[Validation effect dispatch]: ../specifications/TransactionsAndEvaluation.spec.md#validation-effect-dispatch
+[All on entity transitions]: ../specifications/QuantifiersAndIndexes.spec.md#all-on-entity-transitions
+[Exists on maps]: ../specifications/QuantifiersAndIndexes.spec.md#exists-on-maps
+[Indexed existence lookup]: ../specifications/QuantifiersAndIndexes.spec.md#indexed-existence-lookup
+[Indexes between rules]: ../specifications/QuantifiersAndIndexes.spec.md#indexes-between-rules
+[Transaction checkpoints]: ../specifications/TransactionsAndEvaluation.spec.md#transaction-checkpoints
+[Independent transaction evaluations]:
+  ../specifications/TransactionsAndEvaluation.spec.md#independent-transaction-evaluations
+[Constraint error numbers]: ../specifications/EventsAndConstraints.spec.md#constraint-error-numbers
+[Required constraint descriptions]: ../specifications/EventsAndConstraints.spec.md#required-constraint-descriptions
+[Caching between transactions]: ../specifications/Housekeeping.spec.md#caching-between-transactions
+[Caching between contexts]: ../specifications/Housekeeping.spec.md#caching-between-contexts
+[Memory leak reporting]: ../specifications/Housekeeping.spec.md#memory-leak-reporting
+[Defining custom event types]: ../specifications/EventsAndConstraints.spec.md#defining-custom-event-types
+[Custom event handlers]: ../specifications/EventsAndConstraints.spec.md#custom-event-handlers
+[Custom event context constraints]: ../specifications/EventsAndConstraints.spec.md#custom-event-context-constraints
+[Custom event transaction constraints]:
+  ../specifications/EventsAndConstraints.spec.md#custom-event-transaction-constraints
+[Reporting custom events]: ../specifications/EventsAndConstraints.spec.md#reporting-custom-events
+[Custom event splitting]: ../specifications/EventsAndConstraints.spec.md#custom-event-splitting

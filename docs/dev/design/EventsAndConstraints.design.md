@@ -11,12 +11,12 @@ The [specification](../specifications/EventsAndConstraints.spec.md) defines inte
 
 ## Current implementation
 
-Entity and access events are explicitly reported. Port permits one missing endpoint; Transit requires both states.
-The splitter derives elementary/combined events and memo state supplies before-values for bi-event handlers.
-Constraint evaluation and handler invocation use the configured entity/type keys rather than scanning all rules.
+Entity and access events are explicitly reported. Port permits one missing endpoint; Transit requires both states. The
+splitter derives elementary/combined events and memo state supplies before-values for bi-event handlers. Constraint
+evaluation and handler invocation use the configured entity/type keys rather than scanning all rules.
 
 - [public dispatch delegation](../../../src/main/java/com/taitl/ex/core/existential/ExistentialEvents.java)
-- [derived events][link-01]
+- [derived events]
 - [before-state memo storage](../../../src/main/java/com/taitl/ex/logic/transactions/data/MemoData.java)
 - [public exception types](../../../src/main/java/com/taitl/existential/exceptions)
 
@@ -41,9 +41,11 @@ choices below. Record future decisions here, update the normative specification,
 - [memo behavior](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java)
 - [event input/equality tests](../../../src/test/java/com/taitl/existential/events)
 
-V1-E01/E02/E03 own representative events/evolution/errors; V2 broadens them; V3-E01/E02 own custom events.
-Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
-not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+[Night City Core Workflow], [Relationships and Evolution], and [Failure Recovery and Resource Hygiene] own
+representative events/evolution/errors; V2 broadens them; [Custom Event Contracts and Registration] and Custom Event
+Evaluation and Extensions own custom events. Add user-facing positive and negative acceptance cases for each unresolved
+behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion marks until a
+requirement-level review changes them.
 
 ## Required quality analysis
 
@@ -59,7 +61,13 @@ establish passing evidence. See [Process](../auto/Process.md#required-design-ana
 
 ## Performance
 
-Measure repeated versus unique events and memo/split overhead with explicit entity counts and rule counts.
-Use the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+Measure repeated versus unique events and memo/split overhead with explicit entity counts and rule counts. Use the
+[performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
 
-[link-01]: ../../../src/main/java/com/taitl/ex/logic/evaluation/events/split_events/event_splitter/EventSplitter.java
+[derived events]:
+  ../../../src/main/java/com/taitl/ex/logic/evaluation/events/split_events/event_splitter/EventSplitter.java
+
+[Night City Core Workflow]: ../project/Backlog.md#night-city-core-workflow
+[Relationships and Evolution]: ../project/Backlog.md#relationships-and-evolution
+[Failure Recovery and Resource Hygiene]: ../project/Backlog.md#failure-recovery-and-resource-hygiene
+[Custom Event Contracts and Registration]: ../project/Backlog.md#custom-event-contracts-and-registration
