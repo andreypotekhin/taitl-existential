@@ -1,5 +1,6 @@
 package com.taitl.specs.library_usage;
 
+import com.taitl.existential.transactions.Tr;
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
@@ -46,12 +47,13 @@ class UserCanConfigureTransaction extends SpecBase
                     });
             // @formatter:on
 
-            String tran = ex.begin(op).id();
+            Tr tranTr = ex.begin(op);
+            String tran = tranTr.id();
             ex.write(cat, tran);
             IntentViolation ex = assertThrows(IntentViolation.class,
                     () -> UserCanConfigureTransaction.this.ex.write("other", tran));
             assertTrue(ex.getMessage().contains("No intent is configured"));
-            UserCanConfigureTransaction.this.ex.rollback(tran);
+            tranTr.rollback();
         }
     }
 }

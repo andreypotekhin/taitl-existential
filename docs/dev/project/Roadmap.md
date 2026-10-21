@@ -29,7 +29,7 @@ consumption. Scope, epics, and hardening evidence: [V1](V1.md).
 
 Complete independent-instance/configuration behavior, parent/wildcard contexts, generic/subclass matching, built-in
 stages/intents/effects, transaction factories and caller-supplied transactions, maintained relationships/indexes,
-checkpoint/nested behavior, richer diagnostics, cache/global resource behavior, and their admitted combinations. Measure
+checkpoint behavior, richer diagnostics, cache/global resource behavior, and their admitted combinations. Measure
 broader workload scaling while retaining the V1 consumer and workflow. See [V2](V2.md).
 
 ## V3: Extensibility

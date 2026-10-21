@@ -63,6 +63,7 @@ public class ConcreteTr
     protected boolean beginActive;
     protected boolean immediateActive;
     protected boolean closed;
+    protected boolean rollbackOnly;
 
     protected ConcreteTr(Tr tr, String op, UUID id, TransactionLogic tl,
             EventLogic el)
@@ -110,7 +111,15 @@ public class ConcreteTr
     public void commit() throws ExistentialException
     {
         requireOpen("commit");
-        tl.commit(tr);
+        try
+        {
+            tl.commit(tr);
+        }
+        catch (ExistentialException | RuntimeException | Error failure)
+        {
+            rollbackOnly = true;
+            throw failure;
+        }
     }
 
     public void rollback() throws ExistentialException
@@ -381,7 +390,13 @@ public class ConcreteTr
     {
         if (!closed)
         {
-            return;
+            if (!rollbackOnly || "rollback".equals(action))
+            {
+                return;
+            }
+            throw new ExistentialException(String.format(
+                    "Cannot %s because commit failed. Roll back this transaction or abandon it. See %s",
+                    action, TROUBLESHOOTING_SECTION));
         }
         String verb = action != null ? action : "perform this operation";
         throw new ExistentialException(String.format(

@@ -1,5 +1,6 @@
 package com.taitl.specs.library_usage;
 
+import com.taitl.existential.transactions.Tr;
 import com.taitl.ex.examples.night_city.data.*;
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.constraints.*;
@@ -48,13 +49,14 @@ class UserCanHandleCombinedEventEffects extends SpecBase
                         .context(op)
                             .effect(effect);
                 // @formatter:on
-                String tran = ex.begin(op).id();
+                Tr tranTr = ex.begin(op);
+                String tran = tranTr.id();
                 Cat created = new Cat(CityTestData.BLACK_CAT.color(), CityTestData.BLACK_CAT.location());
                 Cat updated = new Cat(CityTestData.BLACK_CAT.color(), "library");
                 ex.port(null, created, tran);
                 ex.port(created, updated, tran);
                 ex.port(updated, null, tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
 
             assertEquals(2, cudCalls.get());

@@ -28,15 +28,12 @@ public class ValidationLogic
     @Logic
     ValidateTransaction validateTransaction;
 
-    ValidationReport report;
-
     public ValidationLogic(TransactionLogic transactionLogic)
     {
         this.tl = transactionLogic;
         this.el = transactionLogic.evaluationLogic;
         prepareTransaction = Creator.singleton(PrepareTransaction.class);
         validateTransaction = Creator.singleton(ValidateTransaction.class);
-        this.report = Creator.create(ValidationReport.class);
     }
 
     /**
@@ -56,6 +53,6 @@ public class ValidationLogic
         {
             el = tl.evaluationLogic;
         }
-        validateTransaction.call(tr, el, report);
+        validateTransaction.call(tr, el, Creator.create(ValidationReport.class));
     }
 }

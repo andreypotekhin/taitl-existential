@@ -29,7 +29,7 @@ entry.
 ## Remaining work
 
 - Reconcile public index names and complete map/set/join maintenance and composed quantifier cases.
-- Specify checkpoint continuation/reset, nested independence, access events, and broader entity/event combinations.
+- Specify checkpoint continuation/reset, access events, and broader entity/event combinations.
 - Complete richer violation metadata, description options, cache ownership/invalidation, and global close behavior.
 - Define and verify admitted leak reporting; avoid relying on deterministic garbage collection.
 - Record optional remote-publication readiness separately; remote availability is claimed only after actual evidence.

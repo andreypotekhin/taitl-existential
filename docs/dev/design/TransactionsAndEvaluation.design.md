@@ -1,73 +1,47 @@
 # Transactions and Evaluation Design
 
-Status: current-state design with open decisions; not a declaration that all specified behavior is implemented.
+The [specification](../specifications/TransactionsAndEvaluation.spec.md) defines the required behavior. This document
+records the transaction ownership and evaluation design. Release evidence and delivery stages belong in the project
+records and execution plans.
 
 ## User outcome
 
-Collect entity events during a business operation, evaluate at checkpoints or commit, and handle rollback explicitly.
+Callers collect entity events during a business operation, validate those events at checkpoints or commit, and explicitly
+run rollback behavior when they abandon a failed operation.
 
-The [specification](../specifications/TransactionsAndEvaluation.spec.md) defines intended behavior. See the
-[assessment](../project/Assessment.md) for release evidence and [agent process](../auto/Process.md) for the next steps.
+## Architecture
 
-## Current implementation
+`TransactionLogic` creates a transaction handle, dispatches lifecycle actions, and releases transaction state.
+`EvaluationLogic` combines context handlers with transaction-local prepared rules. The transaction handle contains
+reported events, memo values, prepared indexes, and per-stage data. Validation does not make application side effects
+atomic and does not undo caller-owned entity changes.
 
-TransactionLogic constructs and registers transactions, runs lifecycle actions, and disposes successful completions.
-Evaluation combines shared context handlers with prepared transaction rule overlays. The actual StageName values are
-BEGIN, IMMEDIATE, COMMIT, CHECKPOINT, ROLLBACK, and VALIDATION; the migrated text still uses Early/Precondition.
+The implementation uses the stage names BEGIN, IMMEDIATE, COMMIT, CHECKPOINT, ROLLBACK, and VALIDATION. The historical
+Precondition/Early and Middle terminology remains in parts of the public specification; the requirement text is the
+normative description of those behaviors.
 
-- [transaction orchestration](../../../src/main/java/com/taitl/ex/logic/transactions/TransactionLogic.java)
-- [stage evaluation](../../../src/main/java/com/taitl/ex/logic/evaluation/EvaluationLogic.java)
-- [implemented stage names](../../../src/main/java/com/taitl/existential/constants/StageName.java)
-- [transaction rule preparation]
+## Lifecycle ownership
 
-## Approach and tradeoffs
+`begin` returns a `Tr`. Callers use that handle for commit, checkpoint, and rollback. Event, access, and memo APIs may
+continue to use the handle's string ID so application helpers can report events without owning lifecycle control.
+Operation keys remain strings.
 
-Retain transaction-local prepared overlays to avoid repeated handler-list merging on dispatch. Keep library transactions
-distinct from caller-owned persistence transactions; validation does not make side effects atomic.
+Successful commit and explicit rollback close the handle and remove its active registry entry. If commit fails, the
+library removes the entry so string-ID event lookup cannot continue. The caller-held handle remains available for an
+explicit rollback; rollback callbacks run only when that rollback is called. If the caller abandons the handle, the
+registry no longer retains it, so the handle and its transaction-local data can be reclaimed with the handle. No
+secondary registry retains failed transactions.
 
-These observations retain the existing architecture. They do not approve new public interfaces or resolve the open
-choices below. Record future decisions here, update the normative specification, and reconcile the execution plan.
+Each execution of an `Op`-annotated method owns the `Tr` returned for that invocation in a local variable. Normal return
+commits it and preserves the method result. A method or commit failure attempts explicit rollback on that same handle,
+then rethrows the original throwable; a rollback failure is attached as suppressed. The aspect does not share mutable
+transaction state between invocations. AspectJ weaving must be enabled for the advice to run.
 
-## Open decisions
-
-- Reconcile Precondition/Early terminology with BEGIN and specify all lifecycle stage timing.
-- Specify deduplication identity, checkpoint continuation/reset behavior, and nested transaction independence.
-- Specify behavior after validation or lifecycle handler failure, including disposal and rollback failure.
-- Three disabled EvaluationLogicTest methods leave report collection and partial-report propagation unverified.
-
-## Evidence and acceptance work
-
-- [lifecycle specifications](../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java)
-- [custom transaction specifications](../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions)
-- [disabled report tests](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java)
-
-[Night City Core Workflow] and [Failure Recovery and Resource Hygiene] own core validation/recovery. Broader stages,
-transactions, and checkpoint/nesting belong to [Stages, Intents, and Transaction Customization] and
-[Indexes and Operational Coverage]. Add user-facing positive and negative acceptance cases for each unresolved
-behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion marks until a
-requirement-level review changes them.
-
-## Required quality analysis
-
-These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
-and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
-establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
-
-- Correctness: specify lifecycle/stage timing, event identity/deduplication, and the accepted state transitions.
-- Actionable errors: identify operation, stage, violated rule, and relevant original cause with a usable remedy.
-- Failure recovery: define post-commit/validation/callback failure state, follow-up actions, and dual-failure handling.
-- Resource hygiene: prove registry, event, memo, report, and overlay lifetimes across normal and failed exits.
-- Performance: measure begin/event/commit/cleanup separately where useful, with rule/event counts and scaling.
+Validation reports are created for each validation attempt, so violations from a failed attempt do not contaminate a
+later attempt. A single `Tr` remains caller-owned and is not safe for concurrent mutation.
 
 ## Performance
 
-The existing CustomTransactionBenchmark compares static-context, factory-transaction, and caller-supplied rules. Use the
-[performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
-
-[transaction rule preparation]:
-  ../../../src/main/java/com/taitl/ex/logic/stages/validation/actions/PrepareTransaction.java
-
-[Night City Core Workflow]: ../project/Backlog.md#night-city-core-workflow
-[Failure Recovery and Resource Hygiene]: ../project/Backlog.md#failure-recovery-and-resource-hygiene
-[Indexes and Operational Coverage]: ../project/Backlog.md#indexes-and-operational-coverage
-[Stages, Intents, and Transaction Customization]: ../project/Backlog.md#stages-intents-and-transaction-customization
+Prepared transaction overlays avoid repeatedly merging handler lists during dispatch. The transaction-handle change
+adds no lookup structure: the active registry remains necessary for string-ID event reporting. The benchmark guide and
+measured records live under [performance](../performance/Readme.md).

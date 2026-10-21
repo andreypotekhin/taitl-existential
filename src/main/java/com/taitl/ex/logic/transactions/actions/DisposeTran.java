@@ -1,7 +1,6 @@
 package com.taitl.ex.logic.transactions.actions;
 
 import com.taitl.ex.logic.transactions.*;
-import com.taitl.existential.exceptions.*;
 import com.taitl.existential.transactions.*;
 
 /**
@@ -17,9 +16,9 @@ public class DisposeTran extends TranAction
     /**
      * Close transaction, remove from registry
      */
-    public void call(Tr tr) throws NotFoundException
+    public void call(Tr tr)
     {
+        tl.registry().removeIfPresent(tr.id.toString());
         tr.close();
-        tl.registry().remove(tr.id.toString());
     }
 }

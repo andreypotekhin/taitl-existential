@@ -27,20 +27,22 @@ class UserCanSendAccessEvents extends SpecBase
         @DisplayName("User can record access to entity")
         void recordEntityAccess() throws Exception
         {
-            String tran = ex.begin(op).id();
+            Tr tranTr = ex.begin(op);
+            String tran = tranTr.id();
             ex.read(cat, tran);
             ex.write(cat, tran);
-            ex.commit(tran);
+            tranTr.commit();
         }
 
         @Test
         @DisplayName("User can record access to entity using type key")
         void recordEntityAccessWithTypeKey() throws Exception
         {
-            String tran = ex.begin(op).id();
+            Tr tranTr = ex.begin(op);
+            String tran = tranTr.id();
             ex.read(cat, new TypeKey<Cat>(Cat.class), tran);
             ex.write(cat, tran);
-            ex.commit(tran);
+            tranTr.commit();
         }
 
         @Test

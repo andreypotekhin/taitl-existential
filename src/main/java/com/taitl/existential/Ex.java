@@ -90,20 +90,7 @@ public final class Ex
     /**
      * Commits an existential transaction.
      * Performs validation of the rules configured for the transaction's business operation.
-     * After commit, tranID becomes invalid.
-     *
-     * @param tranID transaction identifier
-     * @throws ExistentialException when validation or commit fails
-     */
-    public static void commit(String tranID) throws ExistentialException
-    {
-        instance().commit(tranID);
-    }
-
-    /**
-     * Commits an existential transaction.
-     * Performs validation of the rules configured for the transaction's business operation.
-     * After commit, tranID becomes invalid.
+     * A successful commit closes the handle. If validation fails, the caller may explicitly roll back the same handle.
      *
      * @param tr transaction object
      * @throws ExistentialException when validation or commit fails
@@ -111,17 +98,6 @@ public final class Ex
     public static void commit(Tr tr) throws ExistentialException
     {
         instance().commit(tr);
-    }
-
-    /**
-     * Creates a checkpoint in the transaction lifecycle.
-     *
-     * @param tranID transaction identifier
-     * @throws ExistentialException when checkpoint fails
-     */
-    public static void checkpoint(String tranID) throws ExistentialException
-    {
-        instance().checkpoint(tranID);
     }
 
     /**
@@ -138,20 +114,7 @@ public final class Ex
     /**
      * Rolls back an existential transaction.
      * Rule validation is not performed.
-     * After rollback, tranID becomes invalid.
-     *
-     * @param tranID transaction identifier
-     * @throws ExistentialException when rollback fails
-     */
-    public static void rollback(String tranID) throws ExistentialException
-    {
-        instance().rollback(tranID);
-    }
-
-    /**
-     * Rolls back an existential transaction.
-     * Rule validation is not performed.
-     * After rollback, tranID becomes invalid.
+     * Rollback callbacks run when this method is explicitly called, and the handle closes even if a callback fails.
      *
      * @param tr transaction object
      * @throws ExistentialException when rollback fails

@@ -1,6 +1,9 @@
 package com.taitl.specs.library_usage;
 
+import com.taitl.existential.transactions.Tr;
+import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
+import com.taitl.ex.examples.night_city.data.*;
 import com.taitl.specs.*;
 import org.junit.jupiter.api.*;
 
@@ -46,7 +49,8 @@ class UserCanConfigureEntities extends SpecBase
         {
             assertDoesNotThrow(() -> {
                 configure();
-                String tran = ex.begin(op).id();
+                Tr tranTr = ex.begin(op);
+                String tran = tranTr.id();
                 ex.update(cat, tran);
             });
         }
@@ -57,7 +61,8 @@ class UserCanConfigureEntities extends SpecBase
         {
             assertDoesNotThrow(() -> {
                 configureWithInstances();
-                String tran = ex.begin(op).id();
+                Tr tranTr = ex.begin(op);
+                String tran = tranTr.id();
                 ex.update(cat, tran);
             });
         }
@@ -68,7 +73,8 @@ class UserCanConfigureEntities extends SpecBase
         {
             assertDoesNotThrow(() -> {
                 configure();
-                String tran = ex.begin(op).id();
+                Tr tranTr = ex.begin(op);
+                String tran = tranTr.id();
                 ex.update(cat, tran);
             });
         }
@@ -79,7 +85,8 @@ class UserCanConfigureEntities extends SpecBase
         {
             assertDoesNotThrow(() -> {
                 UserCanConfigureEntities.this.configureMixingFluentAndBuilders();
-                String tran = ex.begin(op).id();
+                Tr tranTr = ex.begin(op);
+                String tran = tranTr.id();
                 ex.update(cat, tran);
             });
         }
@@ -103,10 +110,11 @@ class UserCanConfigureEntities extends SpecBase
                         }, "require at least one value")
                         .effect(typeKey)
                         .create(v -> effectCalls.incrementAndGet(), "track list creates");
-                String tran = ex.begin(op).id();
+                Tr tranTr = ex.begin(op);
+                String tran = tranTr.id();
                 List<String> values = new ArrayList<>(List.of("ok"));
                 ex.port(null, values, typeKey, tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
 
             assertEquals(1, effectCalls.get());
@@ -135,10 +143,11 @@ class UserCanConfigureEntities extends SpecBase
                             .create(c -> validationCalls.incrementAndGet(), "validation create");
             // @formatter:on
 
-            String tran = ex.begin(op).id();
+            Tr tranTr = ex.begin(op);
+            String tran = tranTr.id();
             ex.create(cat, tran);
             ex.create(cat, tran);
-            ex.commit(tran);
+            tranTr.commit();
 
             assertEquals(1, beginCalls.get());
             assertEquals(2, immediateCalls.get());
@@ -162,9 +171,10 @@ class UserCanConfigureEntities extends SpecBase
                             .create(c -> commitDone.get(), "commit should run before validation");
             // @formatter:on
 
-            String tran = ex.begin(op).id();
+            Tr tranTr = ex.begin(op);
+            String tran = tranTr.id();
             ex.create(cat, tran);
-            assertDoesNotThrow(() -> ex.commit(tran));
+            assertDoesNotThrow(() -> tranTr.commit());
             assertTrue(commitDone.get());
         }
 
@@ -182,12 +192,13 @@ class UserCanConfigureEntities extends SpecBase
                             .create(c -> checkpointCalls.incrementAndGet(), "checkpoint effect");
             // @formatter:on
 
-            String tran = ex.begin(op).id();
+            Tr tranTr = ex.begin(op);
+            String tran = tranTr.id();
             ex.create(cat, tran);
-            ex.checkpoint(tran);
+            tranTr.checkpoint();
             assertEquals(1, checkpointCalls.get());
 
-            ex.commit(tran);
+            tranTr.commit();
             assertEquals(1, checkpointCalls.get());
         }
 
@@ -205,15 +216,72 @@ class UserCanConfigureEntities extends SpecBase
                             .create(c -> rollbackCalls.incrementAndGet(), "rollback effect");
             // @formatter:on
 
-            String committed = ex.begin(op).id();
+            Tr committedTr = ex.begin(op);
+            String committed = committedTr.id();
             ex.create(cat, committed);
-            ex.commit(committed);
+            committedTr.commit();
             assertEquals(0, rollbackCalls.get());
 
-            String rolledBack = ex.begin(op).id();
+            Tr rolledBackTr = ex.begin(op);
+            String rolledBack = rolledBackTr.id();
             ex.create(cat, rolledBack);
-            ex.rollback(rolledBack);
+            rolledBackTr.rollback();
             assertEquals(1, rollbackCalls.get());
+        }
+
+        @Test
+        @DisplayName("A rejected commit can be explicitly rolled back by its transaction handle")
+        void rejectedCommitCanBeRolledBack() throws Exception
+        {
+            AtomicInteger rollbackCalls = new AtomicInteger();
+            // @formatter:off
+            ex.configure()
+                    .context(op)
+                    .invariant(cat.getClass())
+                        .create(c -> "Black".equals(c.color), "Cats are born black")
+                    .rollback()
+                        .effect(cat.getClass())
+                            .create(c -> rollbackCalls.incrementAndGet(), "rollback effect");
+            // @formatter:on
+
+            Tr tr = ex.begin(op);
+            ex.create(CityTestData.GREY_CAT, tr.id());
+            assertThrows(ValidationStageExceptions.class, () -> ex.commit(tr));
+            assertEquals(0, rollbackCalls.get(), "rollback effects run only after explicit rollback");
+            assertThrows(ExistentialException.class, () -> tr.create(cat),
+                    "failed commit prevents additional work on the handle");
+
+            assertThrows(NotFoundException.class, () -> ex.create(cat, tr.id()),
+                    "failed commit detaches the ID from event lookup");
+            ex.rollback(tr);
+            assertEquals(1, rollbackCalls.get());
+            assertThrows(ExistentialException.class, tr::rollback,
+                    "rollback disposes the transaction handle");
+
+            Tr next = ex.begin(op);
+            ex.create(cat, next.id());
+            assertDoesNotThrow(next::commit, "a rejected report must not contaminate a later validation");
+        }
+
+        @Test
+        @DisplayName("A failing rollback callback still releases transaction state")
+        void rollbackFailureStillDisposesTransaction() throws Exception
+        {
+            // @formatter:off
+            ex.configure()
+                    .context(op)
+                    .rollback()
+                        .effect(cat.getClass())
+                            .create(c -> {
+                                throw new IllegalStateException("rollback callback failed");
+                            }, "failing rollback effect");
+            // @formatter:on
+
+            Tr tr = ex.begin(op);
+            ex.create(cat, tr.id());
+            assertThrows(EventHandlerException.class, tr::rollback);
+            assertThrows(NotFoundException.class, () -> ex.create(cat, tr.id()));
+            assertThrows(ExistentialException.class, tr::rollback);
         }
     }
 }

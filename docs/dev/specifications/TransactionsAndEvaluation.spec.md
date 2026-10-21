@@ -37,6 +37,42 @@ User can configure transaction lifecycle rules for a class.
 
 + User can initiate transaction checkpoint.
 
+### Transaction lifecycle handles
+
++ Commit, rollback, and checkpoint use the Tr returned by begin, directly or through the facade's Tr overloads. The public
+Ex and Existential facades do not accept transaction IDs for these lifecycle operations. A completed transaction cannot
+be reused for another attempt; operation keys passed to begin remain strings.
+
++ If commit fails, the active string-ID entry is removed while the caller-held Tr remains available for explicit rollback.
+Rollback callbacks run only when rollback is explicitly called; abandoning the handle does not run those callbacks.
+Rollback releases the handle's transaction-local data even if a rollback callback fails. A failed commit does not retain
+the handle in a second registry.
+
+Acceptance: [lifecycle and failure recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
+and [public lifecycle API](../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java).
+
+### Explicit event transaction IDs
+
+Entity/access events and memo registration can still identify an active transaction by its string ID. Callers may pass
+that ID through application code without passing Tr.
+
+### Annotated operation ownership
+
++ With AspectJ weaving enabled, each execution of an Op-annotated method owns a fresh transaction for its operation key.
+Normal return commits that transaction and preserves the method result. Method or commit failure invokes rollback on
+that same transaction and rethrows the original throwable; a rollback failure is attached as a suppressed exception.
+Overlapping invocations do not overwrite one another's transaction handles.
+
+Acceptance: [woven annotated operations](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseAnnotatedOperations.java).
+
+### Night City creation and relocation
+
++ The representative cat-creation operation accepts only black new cats and requires a caller-supplied dwelling at each
+created or relocated cat's destination. Relocation carries explicit before and after values and preserves the cat's
+color. A missing destination dwelling or changed color rejects commit.
+
+Acceptance: [creating and relocating cats](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java).
+
 ### Reporting entity modifications
 
 + User can send events to record entity modification.

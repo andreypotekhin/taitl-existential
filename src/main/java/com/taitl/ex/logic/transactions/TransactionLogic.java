@@ -109,42 +109,38 @@ public class TransactionLogic implements Closeable
         return tr;
     }
 
-    public void checkpoint(String tranID) throws ExistentialException
-    {
-        sane(tranID, "tranID");
-        checkpoint(tr(tranID));
-    }
-
     public void checkpoint(Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
         checkpointTran.call(tr);
     }
 
-    public void commit(String tranID) throws ExistentialException
-    {
-        sane(tranID, "tranID");
-        commit(tr(tranID));
-    }
-
     public void commit(Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
-        commitTran.call(tr);
-        disposeTran.call(tr);
-    }
-
-    public void rollback(String tranID) throws ExistentialException
-    {
-        sane(tranID, "tranID");
-        rollback(tr(tranID));
+        try
+        {
+            commitTran.call(tr);
+            disposeTran.call(tr);
+        }
+        catch (ExistentialException | RuntimeException | Error failure)
+        {
+            registry.removeIfPresent(tr.id.toString());
+            throw failure;
+        }
     }
 
     public void rollback(Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
-        rollbackTran.call(tr);
-        disposeTran.call(tr);
+        try
+        {
+            rollbackTran.call(tr);
+        }
+        finally
+        {
+            disposeTran.call(tr);
+        }
     }
 
     public Existential ex()

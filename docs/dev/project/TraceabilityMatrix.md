@@ -1,21 +1,20 @@
 # Capability Traceability
 
 The [roadmap](Roadmap.md) plans outcomes across three releases. The [rebaseline](ReleaseRebaseline.md) maps all 36
-original scope items here. Topic requirements and inherited completion marks are preserved; no entry below
-claims that newly planned acceptance has passed.
+original scope items here. Topic requirements and historical completion marks are preserved; new `+` marks refer to the
+directly tested Sprint 01 slice only.
 
 Design readiness and implementation verification are separate. `open` means the remaining selected-capability
 decisions/acceptance are not finalized; `partial` means relevant existing tests/implementation exist; `missing` means
 the required evidence is absent. Narrower reviewed slices can become ready without settling the entire topic.
-Historical evidence is in [Assessment](Assessment.md). Tests linked below are starting evidence, not proof of every
-listed requirement. The concrete selected requirement sections and test methods must be reconciled when work is
-admitted.
+Historical evidence is in [Assessment](Assessment.md). Evidence links identify the acceptance tests for each completed
+slice; broader behavior retains its existing readiness and verification status.
 
 ## Ordinary configuration and class rules
 
 Epic: [Night City Core Workflow](Backlog.md#night-city-core-workflow);
 [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
-Design readiness: open. Verification: partial.
+Design readiness: ready for selected scope. Verification: partial for the wider capability.
 
 Requirements: Selected ordinary configuration and class-rule cases.
 
@@ -26,14 +25,15 @@ Requirements: Selected ordinary configuration and class-rule cases.
 - [EventsAndConstraints.spec.md]: [Internal field constraints], [External field constraints],
   [Third-party field constraints], [Two-field constraints], [Multiple-field constraints].
 
-Evidence to review: [UserCanConfigureEntities.java].
-Remaining work: Finalize the exact-context Night City walkthrough, defaults, rule timing, and acceptance cases.
+Evidence: [UserCanConfigureEntities.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
+and [creating and relocating cats](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java).
+Remaining work: broader configuration options remain in their later V1/V2 scope.
 
 ## Reported events and commit validation
 
 Epic: [Night City Core Workflow](Backlog.md#night-city-core-workflow);
 [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
-Design readiness: open. Verification: partial.
+Design readiness: ready for selected scope. Verification: verified for Sprint 01 paths; broader stage behavior remains partial.
 
 Requirements: Selected entity/commit paths; broader stage behavior remains in V2.
 
@@ -49,15 +49,17 @@ Requirements: Selected entity/commit paths; broader stage behavior remains in V2
 - [QuantifiersAndIndexes.spec.md]: [Configuration finalization], [Configuration rule indexing],
   [Runtime event indexing].
 
-Evidence to review: [UserCanSendEntityEvents.java].
-Remaining work: Verify the selected event/deduplication/validation path without assuming the full advanced-stage
-contract.
+Evidence: [UserCanInitiateTransactions.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java),
+[UserCanSendEntityEvents.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanSendEntityEvents.java),
+[UserCanConfigureEntities.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java),
+and [UserCanUseAnnotatedOperations.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseAnnotatedOperations.java).
+Remaining work: advanced stage and broader event/deduplication claims remain outside Sprint 01.
 
 ## Basic All/Exists relationship
 
 Epic: [Relationships and Evolution](Backlog.md#relationships-and-evolution);
 [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
-Design readiness: open. Verification: partial.
+Design readiness: ready for the representative cat/dwelling slice. Verification: verified for that slice; broader V1 relationship coverage remains partial.
 
 Requirements: A representative collection-backed relationship.
 
@@ -67,42 +69,48 @@ Requirements: A representative collection-backed relationship.
 - [EventsAndConstraints.spec.md]: [Same-class entity relationships], [Cross-class entity relationships],
   [Same-class existence constraints], [Cross-class existence constraints].
 
-Evidence to review: [quantifiers](../../../src/test/java/com/taitl/existential/quantifiers/).
-Remaining work: Add commit-level success, missing relationship, and selected empty/conditional cases.
+Evidence: [cat and dwelling relationship acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java)
+and [quantifier unit cases](../../../src/test/java/com/taitl/existential/quantifiers/).
+Remaining work: broader empty, conditional, and collection-composition cases remain for Sprint 02.
 
 ## Explicit entity evolution
 
 Epic: [Relationships and Evolution](Backlog.md#relationships-and-evolution);
 [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
-Design readiness: open. Verification: partial.
+Design readiness: ready for the explicit Cat transit slice. Verification: verified for allowed and rejected color changes;
+broader type and memo combinations remain partial.
 
 Requirements: Explicit before/after values; broader memo/type/subclass combinations remain in V2.
 
 - [EventsAndConstraints.spec.md]: [Port event type inference], [Transit event endpoints],
   [Entity transition invariants], [Entity porting invariants].
 
-Evidence to review: [UserCanUseMemoForBiEvents.java].
-Remaining work: Define and verify an allowed and rejected change; memo/type/subclass breadth belongs to V2.
+Evidence: [cat relocation acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java)
+and [memo-based bi-events](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java).
+Remaining work: memo/type/subclass breadth belongs to V2.
 
 ## Useful violations and errors
 
 Epic: [Failure Recovery and Resource Hygiene](Backlog.md#failure-recovery-and-resource-hygiene);
 [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
-Design readiness: open. Verification: partial.
+Design readiness: ready for the selected validation failures. Verification: verified for the Night City rule violations;
+broader report presentation remains partial.
 
 Requirements: Selected violation paths and the V1 validation-report requirements.
 
 - [EventsAndConstraints.spec.md]: [Constraint violation exceptions], [Constraint descriptions], [Violation details].
 - [TransactionsAndEvaluation.spec.md]: V1 validation-report requirements.
 
-Evidence to review: [EvaluationLogicTest.java].
-Remaining work: Repair disabled report cases and prove rule/operation details and remedies on selected failure paths.
+Evidence: [cat workflow](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java).
+Remaining work: three disabled report cases in [EvaluationLogicTest.java](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java)
+remain for Sprint 03.
 
 ## Recovery and resource release
 
 Epic: [Failure Recovery and Resource Hygiene](Backlog.md#failure-recovery-and-resource-hygiene);
 [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
-Design readiness: open. Verification: partial.
+Design readiness: ready for failed-commit explicit recovery and rollback disposal. Verification: verified for that lifecycle
+path; broader library-close and leak guarantees remain partial.
 
 Requirements: Admitted transaction/library exits; cleanup does not imply undoing caller objects.
 
@@ -111,9 +119,9 @@ Requirements: Admitted transaction/library exits; cleanup does not imply undoing
 - [Housekeeping.spec.md]: [Transaction resource release], [Reported event resource release], [Transaction recycling],
   [Rule recycling].
 
-Evidence to review: [TrRegistryTest.java].
-Remaining work: Specify post-failure state, recovery, retained references, and cleanup without implying caller-object
-undo.
+Evidence: [transaction recovery tests](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
+and [registry test](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java).
+Remaining work: broader library-close and resource-release claims remain in Sprint 03.
 
 ## Night City as an artifact consumer
 
@@ -271,7 +279,7 @@ Requirements: Remaining lifecycle/event combinations beyond the V1 slice.
   [Entity transition invariants], [Entity porting invariants], [Additional event values].
 
 Evidence to review: [UserCanInitiateTransactions.java].
-Remaining work: Specify checkpoint reset/continuation, nested independence, additional values, and broad event
+Remaining work: Specify checkpoint reset/continuation, additional values, and broad event
 combinations.
 
 ## Richer reports, caching, and global hygiene

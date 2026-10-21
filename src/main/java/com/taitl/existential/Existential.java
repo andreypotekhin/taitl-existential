@@ -57,7 +57,7 @@ public final class Existential implements Closeable
      * Begins a transaction for the specified operation.
      *
      * @param op operation name
-     * @return transaction identifier
+     * @return transaction handle
      * @throws ExistentialException when transaction start fails
      */
     public Tr begin(String op) throws ExistentialException
@@ -70,7 +70,7 @@ public final class Existential implements Closeable
      *
      * @param op operation name
      * @param custom transaction instance to use
-     * @return transaction identifier
+     * @return transaction handle
      * @throws ExistentialException when transaction start fails
      */
     public Tr begin(String op, Transaction custom) throws ExistentialException
@@ -81,20 +81,7 @@ public final class Existential implements Closeable
     /**
      * Commits an existential transaction.
      * Validates rules configured for the transaction's business operation.
-     * After commit, tranID becomes invalid.
-     *
-     * @param tranID transaction id
-     * @throws ExistentialException when validation or commit fails
-     */
-    public void commit(String tranID) throws ExistentialException
-    {
-        transactions.commit(tranID);
-    }
-
-    /**
-     * Commits an existential transaction.
-     * Validates rules configured for the transaction's business operation.
-     * After commit, tranID becomes invalid.
+     * A successful commit closes the handle. If validation fails, the caller may explicitly roll back the same handle.
      *
      * @param tr transaction object
      * @throws ExistentialException when validation or commit fails
@@ -102,17 +89,6 @@ public final class Existential implements Closeable
     public void commit(Tr tr) throws ExistentialException
     {
         transactions.commit(tr);
-    }
-
-    /**
-     * Creates a checkpoint in the transaction lifecycle.
-     *
-     * @param tranID transaction identifier
-     * @throws ExistentialException when checkpoint fails
-     */
-    public void checkpoint(String tranID) throws ExistentialException
-    {
-        transactions.checkpoint(tranID);
     }
 
     /**
@@ -129,20 +105,7 @@ public final class Existential implements Closeable
     /**
      * Rolls back an existential transaction.
      * Rule validation is not performed.
-     * After rollback, tranID becomes invalid.
-     *
-     * @param tranID transaction id
-     * @throws ExistentialException when rollback fails
-     */
-    public void rollback(String tranID) throws ExistentialException
-    {
-        transactions.rollback(tranID);
-    }
-
-    /**
-     * Rolls back an existential transaction.
-     * Rule validation is not performed.
-     * After rollback, tranID becomes invalid.
+     * Rollback callbacks run when this method is explicitly called, and the handle closes even if a callback fails.
      *
      * @param tr transaction object
      * @throws ExistentialException when rollback fails

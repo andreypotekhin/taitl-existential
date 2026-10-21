@@ -1,5 +1,6 @@
 package com.taitl.specs.library_usage;
 
+import com.taitl.existential.transactions.Tr;
 import com.taitl.specs.*;
 import org.junit.jupiter.api.*;
 
@@ -33,7 +34,8 @@ class UserCantUseUnconfiguredLibrary extends SpecBase
         void sendingEventsToUnconfiguredLibrary()
         {
             assertThat(assertThrows(IllegalStateException.class, () -> {
-                String tran = ex.begin(op).id();
+                Tr tranTr = ex.begin(op);
+                String tran = tranTr.id();
                 ex.update(cat, tran);
             }).getMessage(), containsString("You need to configure at least one context"));
         }

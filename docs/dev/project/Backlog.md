@@ -14,7 +14,8 @@ the current plan; archived charters were superseded before implementation, not c
 
 ### Night City Core Workflow
 
-Status: planned. Delivery: [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
+Status: complete for the selected Sprint 01 slice; remaining V1 core hardening is tracked separately. Delivery:
+[Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
 
 Follow a documented Night City operation from rule configuration through events to successful or rejected commit.
 

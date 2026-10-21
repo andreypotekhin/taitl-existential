@@ -91,11 +91,10 @@ public class ConfigureEntities
 
     public void configure()
     {
+        new ConfigureCats().configureBirth("/api/cats");
         // @formatter:off
         Ex.configure()
             .context("/api/cats")
-                .invariant(Cat.class)
-                    .create(c -> "Black".equals(c.color), "Cats are born black")
                 .effect(Cat.class)
                     .create(c -> c.location = new Location("Park"),
                             "Auto-set location for new cats");

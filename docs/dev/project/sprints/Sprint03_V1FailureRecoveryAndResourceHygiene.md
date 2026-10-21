@@ -56,7 +56,7 @@ Coding-task closure requires `mvn clean install` and inspection of actual test/c
 
 ## Non-goals
 
-A global leak dashboard, arbitrary effect compensation, and comprehensive nested/checkpoint semantics.
+A global leak dashboard and arbitrary effect compensation.
 
 ## Plan and review
 

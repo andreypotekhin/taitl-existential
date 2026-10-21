@@ -1,5 +1,6 @@
 package com.taitl.specs.configuration_workflow.configuring_contexts;
 
+import com.taitl.existential.transactions.Tr;
 import com.taitl.ex.examples.night_city.model.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
@@ -64,9 +65,10 @@ class UserCanConfigureContexts extends SpecBase
                         .create(v -> true, "ok");
                 // @formatter:on
 
-                String tran = ex.begin("/api/cats/create").id();
+                Tr tranTr = ex.begin("/api/cats/create");
+                String tran = tranTr.id();
                 ex.update("ok", tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
         }
 
@@ -87,9 +89,10 @@ class UserCanConfigureContexts extends SpecBase
             // @formatter:on
 
             assertDoesNotThrow(() -> {
-                String tran = ex.begin("/api/cats/create").id();
+                Tr tranTr = ex.begin("/api/cats/create");
+                String tran = tranTr.id();
                 ex.create(cat, tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
 
             assertEquals(List.of("parent", "child"), effectOrder);
@@ -126,9 +129,10 @@ class UserCanConfigureContexts extends SpecBase
                     ;
                 // @formatter:on
 
-                String tran = ex.begin("/api/cats/create").id();
+                Tr tranTr = ex.begin("/api/cats/create");
+                String tran = tranTr.id();
                 ex.update("ok", tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
 
             assertEquals(GlobalContext.class, rootType.get());
@@ -152,9 +156,10 @@ class UserCanConfigureContexts extends SpecBase
             // @formatter:on
 
             assertDoesNotThrow(() -> {
-                String tran = ex.begin("/api/cats/create").id();
+                Tr tranTr = ex.begin("/api/cats/create");
+                String tran = tranTr.id();
                 ex.create(cat, tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
             assertEquals(List.of("wildcard", "concrete"), effectOrder);
         }

@@ -58,16 +58,10 @@ public class TrRegistry
         return o;
     }
 
-    public Tr remove(String id) throws NotFoundException
+    public void removeIfPresent(String id)
     {
         sane(id, "id");
-        Tr o = reg.remove(id);
-        if (o == null)
-        {
-            throw new NotFoundException(String.format("Transaction not found, id=%s. See %s",
-                    id, TROUBLESHOOTING_SECTION));
-        }
-        return o;
+        reg.remove(id);
     }
 
     public void clear()

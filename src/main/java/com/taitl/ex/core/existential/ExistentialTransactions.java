@@ -40,40 +40,22 @@ public class ExistentialTransactions implements Closeable
         return transactionLogic.begin(op, custom);
     }
 
-    public void commit(String tranID) throws ExistentialException
-    {
-        sane(tranID, "tranID");
-        transactionLogic.commit(tranID);
-    }
-
     public void commit(Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
-        transactionLogic.commit(tr);
-    }
-
-    public void checkpoint(String tranID) throws ExistentialException
-    {
-        sane(tranID, "tranID");
-        transactionLogic.checkpoint(tranID);
+        tr.commit();
     }
 
     public void checkpoint(Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
-        transactionLogic.checkpoint(tr);
-    }
-
-    public void rollback(String tranID) throws ExistentialException
-    {
-        sane(tranID, "tranID");
-        transactionLogic.rollback(tranID);
+        tr.checkpoint();
     }
 
     public void rollback(Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
-        transactionLogic.rollback(tr);
+        tr.rollback();
     }
 
     public Tr tr(String tranID) throws ExistentialException

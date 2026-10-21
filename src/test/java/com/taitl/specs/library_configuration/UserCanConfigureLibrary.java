@@ -1,5 +1,6 @@
 package com.taitl.specs.library_configuration;
 
+import com.taitl.existential.transactions.Tr;
 import com.taitl.ex.logic.library.*;
 import com.taitl.existential.constants.*;
 import com.taitl.specs.*;
@@ -58,7 +59,8 @@ class UserCanConfigureLibrary extends SpecBase
         void sendEventsToUnconfiguredLibrary()
         {
             assertThat(assertThrows(IllegalStateException.class, () -> {
-                String tran = ex.begin(op).id();
+                Tr tranTr = ex.begin(op);
+                String tran = tranTr.id();
                 ex.update(cat, tran);
             }).getMessage(), containsString("You need to configure at least one context"));
         }

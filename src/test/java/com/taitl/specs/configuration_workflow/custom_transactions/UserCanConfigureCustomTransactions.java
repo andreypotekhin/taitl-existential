@@ -1,5 +1,6 @@
 package com.taitl.specs.configuration_workflow.custom_transactions;
 
+import com.taitl.existential.transactions.Tr;
 import com.taitl.existential.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
@@ -99,9 +100,10 @@ class UserCanConfigureCustomTransactions extends SpecBase
             // @formatter:on
 
             assertDoesNotThrow(() -> {
-                String tran = ex.begin(op).id();
+                Tr tranTr = ex.begin(op);
+                String tran = tranTr.id();
                 ex.update(cat, tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
 
             assertEquals(1, configuredUpdates.get());
@@ -114,11 +116,12 @@ class UserCanConfigureCustomTransactions extends SpecBase
             RequestTransaction custom = new RequestTransaction(op, "White").requireColorOnUpdate();
 
             configure();
-            String tran = ex.begin(op, custom).id();
+            Tr tranTr = ex.begin(op, custom);
+            String tran = tranTr.id();
             ex.update(cat, tran);
 
             ValidationStageExceptions thrown = assertThrows(ValidationStageExceptions.class,
-                    () -> UserCanConfigureCustomTransactions.this.ex.commit(tran));
+                    () -> tranTr.commit());
             assertTrue(thrown.getCause().getMessage().contains("Cat color must match request scope"));
         }
 
@@ -131,9 +134,10 @@ class UserCanConfigureCustomTransactions extends SpecBase
 
             configure();
             assertDoesNotThrow(() -> {
-                String tran = ex.begin(op, custom).id();
+                Tr tranTr = ex.begin(op, custom);
+                String tran = tranTr.id();
                 ex.update(cat, tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
 
             assertEquals(1, updates.get());
@@ -158,9 +162,10 @@ class UserCanConfigureCustomTransactions extends SpecBase
             // @formatter:on
 
             assertDoesNotThrow(() -> {
-                String tran = ex.begin("/api/cats/create").id();
+                Tr tranTr = ex.begin("/api/cats/create");
+                String tran = tranTr.id();
                 ex.update(cat, tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
 
             assertEquals(1, created.get());
@@ -185,9 +190,10 @@ class UserCanConfigureCustomTransactions extends SpecBase
             // @formatter:on
 
             assertDoesNotThrow(() -> {
-                String tran = ex.begin("/api/cats/create").id();
+                Tr tranTr = ex.begin("/api/cats/create");
+                String tran = tranTr.id();
                 ex.update(cat, tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
 
             assertEquals(
@@ -212,9 +218,10 @@ class UserCanConfigureCustomTransactions extends SpecBase
             // @formatter:on
 
             assertDoesNotThrow(() -> {
-                String tran = ex.begin("/api/cats/create").id();
+                Tr tranTr = ex.begin("/api/cats/create");
+                String tran = tranTr.id();
                 ex.update(cat, tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
 
             assertEquals(1, childBeginCalls.get());

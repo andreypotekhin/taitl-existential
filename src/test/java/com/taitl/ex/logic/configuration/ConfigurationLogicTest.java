@@ -1,5 +1,6 @@
 package com.taitl.ex.logic.configuration;
 
+import com.taitl.existential.transactions.Tr;
 import com.taitl.existential.*;
 import com.taitl.existential.configs.*;
 import org.junit.jupiter.api.*;
@@ -78,9 +79,10 @@ class ConfigurationLogicTest
                         .update(v -> updateCalls.incrementAndGet(), "wildcard update");
             // @formatter:on
 
-            String tran = ex.begin("/api/cats/update").id();
+            Tr tranTr = ex.begin("/api/cats/update");
+            String tran = tranTr.id();
             ex.update("ok", tran);
-            ex.commit(tran);
+            tranTr.commit();
 
             assertEquals(1, updateCalls.get());
         }
@@ -100,9 +102,10 @@ class ConfigurationLogicTest
                     }, "update");
 
             assertDoesNotThrow(() -> {
-                String tran = ex.begin("/api/cats/update").id();
+                Tr tranTr = ex.begin("/api/cats/update");
+                String tran = tranTr.id();
                 ex.update("ok", tran);
-                ex.commit(tran);
+                tranTr.commit();
             });
         }
     }

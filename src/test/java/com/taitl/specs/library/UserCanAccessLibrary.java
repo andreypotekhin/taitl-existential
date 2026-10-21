@@ -1,5 +1,6 @@
 package com.taitl.specs.library;
 
+import com.taitl.existential.transactions.Tr;
 import com.taitl.existential.Ex;
 import com.taitl.specs.SpecBase;
 import org.junit.jupiter.api.*;
@@ -25,16 +26,18 @@ class UserCanAccessLibrary extends SpecBase
         @DisplayName("User can access library using static facade")
         void accessWithStaticFacade() throws Exception
         {
-            String tran = Ex.begin(op).id();
-            Ex.commit(tran);
+            Tr tranTr = Ex.begin(op);
+            String tran = tranTr.id();
+            tranTr.commit();
         }
 
         @Test
         @DisplayName("User can access library using a singleton")
         void accessWithSingleton() throws Exception
         {
-            String tran = ex.begin(op).id();
-            ex.commit(tran);
+            Tr tranTr = ex.begin(op);
+            String tran = tranTr.id();
+            tranTr.commit();
         }
     }
 
