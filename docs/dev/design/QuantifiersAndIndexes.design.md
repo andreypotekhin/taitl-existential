@@ -41,9 +41,21 @@ choices below. Record future decisions here, update the normative specification,
 - [existing relationship-index tests](../../../src/test/java/com/taitl/exlogic/unused/indexes)
 - [runtime index tests](../../../src/test/java/com/taitl/ex/core/transactions/TransactionIndexesTest.java)
 
-V1-E03 owns existing index capabilities and internal indexing; V2-E02 owns complete quantifier/relationship cases.
+V1-E02 owns representative collection relationships; V2-E04 owns maintained indexes and broader combinations.
 Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
 not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+
+## Required quality analysis
+
+These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
+and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
+establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
+
+- Correctness: specify empty/missing/multiple matches, conditional/composed quantifiers, and index consistency.
+- Actionable errors: identify the failed relationship or invalid index operation with type/key/context and remedy.
+- Failure recovery: define handling of partially maintained indexes and caller-owned state without implying undo.
+- Resource hygiene: define collection/index ownership, retained entity references, mutation limits, and cleanup.
+- Performance: measure collection traversal and index maintenance plus lookup, stating cardinalities and complexity.
 
 ## Performance
 

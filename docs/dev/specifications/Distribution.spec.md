@@ -12,4 +12,7 @@ See the paired [design](../design/Distribution.design.md) and [specification ind
 <a id="dist-001"></a>
 
 **DIST-001** User can add the Library as a dependency to their project using Maven-based dependency resolution.
-  - Requirements: Maven Central account
+
+Local consumption can resolve an installed artifact without a Maven Central account. Remote publication requires
+separate destination/account/signing prerequisites and evidence of availability; local installation is not remote
+publication. V1 acceptance uses Night City as an independent Maven project depending on the installed library.

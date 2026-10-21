@@ -42,19 +42,50 @@ Each requirement has one authoritative topic location and a stable identifier. T
 [specification index](../Specification.md) routes readers there. A leading `+` preserves the project's convention
 for implemented, test-backed claims; do not add it without evidence.
 
-The execution plan explains how to deliver and verify the change, including concrete steps and dependencies.
-Embed the context needed to execute it, identify the governing requirements, and reconcile it when they change.
-Plans and chat history do not supersede the normative specification.
+The execution plan explains how to deliver and verify the change, including context, concrete steps, dependencies,
+and validation commands. Reference the governing specification requirement IDs and reconcile the plan when they change.
+Self-containment means providing enough context to execute the work without prior conversation. A plan may summarize
+accepted behavior for context, but it does not become a second authoritative specification. Specifications remain
+authoritative for behavior; designs retain rationale and tradeoffs. Plans and chat history do not supersede either.
 
 The backlog and sprints explain what remains and in what order. Link to designs, specifications, plans, tests, and
 [performance records](../performance/Readme.md) rather than copying their contents into each planning document.
 
+## Required design analysis
+
+For every selected capability, the design must explicitly address the following concerns. State the decisions,
+constraints, tradeoffs, and acceptance/evidence needed, or explain why a concern is inapplicable to that capability.
+These are design inputs in every release; they are not deferred to hardening or to a later quality release.
+
+- Correctness: define valid/invalid inputs, invariants, evaluation timing, supported scope, and expected outcomes.
+- Actionable errors: identify the rule/operation/context needed to diagnose a failure and the caller's remedy.
+- Failure recovery: define state after failure, permitted retry/rollback/close actions, and caller responsibilities.
+- Resource hygiene: define ownership and release on success/failure, retained references, cache bounds, and relevant
+  concurrency restrictions. Distinguish library cleanup from undoing caller objects or external side effects.
+- Performance: identify hot paths, workload/cardinality assumptions, algorithmic and maintenance costs, and the evidence
+  needed to evaluate tradeoffs. Distinguish setup from transaction costs; justify budgets with measurements rather
+  than inventing thresholds or deferring obviously inefficient algorithms.
+
+Reflect observable guarantees and acceptance cases in the normative specification, and implementation/measurement
+steps in the execution plan. Keep readiness separate from actual verification. A throughput sample alone establishes
+neither correctness nor resource safety. Robustness and performance take priority over minimizing release boundaries
+or hardening cycles.
+
 ## Readiness for implementation
 
-Before implementation, establish a clear user outcome, documentation example where useful, resolved behavioral
-decisions, requirement references, acceptance cases, dependencies, and relevant performance considerations.
-Unresolved choices that affect behavior keep that portion of implementation blocked; independent ready work can proceed.
-Document unavailable evidence explicitly. A partial test run or an inherited completion mark is not release evidence.
+Assess readiness for each selected capability rather than requiring an entire topic to be settled. For that
+capability, establish a clear user outcome, documentation example where useful, resolved behavioral decisions,
+requirement references, acceptance cases, dependencies, and the required design analysis above.
+
+Track design readiness and implementation verification independently in existing planning records. Design readiness
+means the capability's behavioral decisions and acceptance cases are settled. Verification means its implementation
+has direct passing evidence for those cases. Record both in the existing execution plan, sprint, or traceability entry;
+do not create another tracker. Inherited completion marks establish neither current readiness nor current verification.
+Document unavailable evidence explicitly. A partial test run is not release evidence.
+
+A well-defined capability may proceed while unrelated questions in its topic remain open. Unresolved decisions block
+only work that depends on them; independent ready implementation can proceed. Preserve ordered delivery and actual
+dependencies while allowing independent investigation and design for later sprints before earlier sprints close.
 
 Small corrections can update the existing topic documents and tests directly. Do not create a new plan or design
 file for every typo, straightforward bug fix, or mechanical change. Use an execution plan when there are several

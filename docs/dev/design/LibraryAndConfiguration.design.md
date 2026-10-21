@@ -31,7 +31,7 @@ choices below. Record future decisions here, update the normative specification,
 ## Open decisions
 
 - Specify ties among overlapping wildcards, parents, exact contexts, and transaction rules; existing suggestions
-- propose different orders. Do not silently turn an implementation detail into a new precedence guarantee.
+  propose different orders. Do not silently turn an implementation detail into a new precedence guarantee.
 - Define configuration freezing and concurrency guarantees, including global Creator injection.
 - Distinguish build-time JDK requirements, compiler release 11, and actually tested runtime compatibility.
 
@@ -41,9 +41,21 @@ choices below. Record future decisions here, update the normative specification,
 - [loading tests](../../../src/test/java/com/taitl/specs/library_configuration)
 - [context tests](../../../src/test/java/com/taitl/specs/configuration_workflow/configuring_contexts)
 
-V1-E01 and V1-E02. Cover independent instances, overlapping contexts, registration order, and frozen configuration.
+V1-E01 owns ordinary exact-context configuration; V2-E01/E02 own isolation, options, and broader matching.
 Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
 not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+
+## Required quality analysis
+
+These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
+and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
+establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
+
+- Correctness: specify instance/global state, source precedence, freeze timing, and deterministic context resolution.
+- Actionable errors: identify invalid keys/options/context and correction without exposing sensitive configuration.
+- Failure recovery: define state after loading/building fails and whether retry, replacement, or close is permitted.
+- Resource hygiene: define stream/configuration/factory ownership and release plus shared-state concurrency limits.
+- Performance: separate startup/context construction from event dispatch; state operation/context counts and scaling.
 
 ## Performance
 

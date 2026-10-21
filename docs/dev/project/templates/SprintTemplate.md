@@ -14,6 +14,11 @@ Link previous sprint/release evidence, known blockers, and the relevant design d
 
 Link authoritative topic documents and requirement IDs. Identify existing implementation/evidence separately from gaps.
 
+## Required design analysis
+
+Link concrete decisions and acceptance/evidence for correctness, actionable errors, failure recovery, resource
+hygiene, and performance; explain any inapplicable concern. Record design readiness and verification independently.
+
 ## Remaining work
 
 List focused tasks and acceptance cases; do not paste an implementation transcript here.

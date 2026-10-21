@@ -41,9 +41,21 @@ choices below. Record future decisions here, update the normative specification,
 - [custom transaction specifications](../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions)
 - [disabled report tests](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java)
 
-V1-E03 and V1-E04; Sprint 05 must account for every disabled validation case before release.
+V1-E01/E03 own core validation/recovery; V2-E03/E04 own broader stages, transactions, and checkpoint/nesting.
 Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
 not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+
+## Required quality analysis
+
+These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
+and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
+establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
+
+- Correctness: specify lifecycle/stage timing, event identity/deduplication, and the accepted state transitions.
+- Actionable errors: identify operation, stage, violated rule, and relevant original cause with a usable remedy.
+- Failure recovery: define post-commit/validation/callback failure state, follow-up actions, and dual-failure handling.
+- Resource hygiene: prove registry, event, memo, report, and overlay lifetimes across normal and failed exits.
+- Performance: measure begin/event/commit/cleanup separately where useful, with rule/event counts and scaling.
 
 ## Performance
 

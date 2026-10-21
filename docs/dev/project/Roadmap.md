@@ -1,62 +1,52 @@
 # Roadmap
 
-## North star
-[Polaris.md](Polaris.md)
+[Polaris](Polaris.md) describes the library's purpose. [Specification index](../Specification.md) routes to the intended
+behavior; [traceability](TraceabilityMatrix.md) distinguishes design readiness from implementation verification.
+The [rebaseline record](ReleaseRebaseline.md) explains the approved pivot and maps every former scope item.
 
-## Specification
-Main: [Specification.md](..%2FSpecification.md)
-The Specification defines library's expected behavior.
-Scope items below often correspond to Specification sections.
+## Release labels and priorities
 
-## Versioning
-V# labels identify project releases: V1 is 0.0.1 and V2 is 0.0.2. They are not semantic-version major numbers.
+V1, V2, and V3 identify project releases 0.0.1, 0.0.2, and 0.0.3, not semantic-version major versions.
+Sprints are ordered and undated. Existing implementation/regression tests are retained even where broader verification
+moves to a later release. No feature is declared complete by changing its release assignment.
 
-## Delivery records
+Correctness, actionable errors, failure recovery, resource hygiene, and performance must be addressed in each
+capability design and its acceptance evidence. Robustness and performance take priority over minimizing release
+boundaries or hardening cycles. These obligations apply to all three releases, not a late quality/performance phase.
 
-[V1](V1.md) and [V2](V2.md) define outcomes, ordered undated sprints, prerequisites, and hardening exit criteria.
-[Backlog](Backlog.md) contains epics; [Traceability](TraceabilityMatrix.md) maps every item below to evidence and work.
-Release assignments below are unchanged. Existing V2 functionality required to exercise V1 is an explicit prerequisite,
-not an automatic reassignment of the broader feature. See [Assessment](Assessment.md) for the current state.
+## V1: Representative core
 
-## Scope
-## V1 Scope
+Deliver a complete documented Night City workflow: configure ordinary rules in an exact operation context, report
+entity changes, validate at commit, demonstrate success and useful rejection, recover and release resources, verify a
+basic All/Exists relationship, and enforce an entity-evolution rule. Use explicit before/after values for the selected
+evolution scenario; broader customization and combinations remain later work.
 
-- Library
-- Library configuration
-- Library usage
-- Lifecycle phases
-- Configure rules
-- Workflows: Configuration workflow, Configuring transactions, Configuring Constraints
-- Wildcard contexts
-- Configure transactions
-- Configure constraints
-- Configure effects
-- Configure intents
-- Execution stages
-- Evaluation workflow
-- Preconditions evaluation, Immediate evaluation, Validation evaluation
-- Intents
-- Indexes
-- Internal indexing
-- Transaction lifecycle
-- Public classes
+Night City becomes a separate Maven project consuming the locally installed library artifact. The consumer verifies
+the documented public workflow without root production/test class directories. Maven Central is not required for
+local consumption. Scope, epics, and hardening evidence: [V1](V1.md).
 
-## V2 Scope
+## V2: Broader standard usage
 
-- Events
-- Constraint on a single entity
-- Constraints on multiple entities
-- Constraints on entity evolution
-- Constraints on evolution of multiple entities
-- Constraints on subclasses
-- Constraint violation reporting
-- Universal Quantifier
-- Existence Quantifier
-- Effects
-- Housekeeping
-- Transaction Cleanup
-- Global Cleanup
-- Constraint enforcement
-- Side effect execution
-- Custom Event Types
-- Maven dependency
+Complete independent-instance/configuration behavior, parent/wildcard contexts, generic/subclass matching, built-in
+stages/intents/effects, transaction factories and caller-supplied transactions, maintained relationships/indexes,
+checkpoint/nested behavior, richer diagnostics, cache/global resource behavior, and their admitted combinations.
+Measure broader workload scaling while retaining the V1 consumer and workflow. See [V2](V2.md).
+
+## V3: Extensibility
+
+Complete custom event registration, identity/matching, derived-event splitting, context/transaction binding,
+intent/stage integration, and extension failure/resource behavior. Expose only mechanisms justified by those use cases.
+Existing optional strategy, hot-reload, dashboard, and plugin suggestions are not automatically admitted. See
+[V3][wrap-01].
+
+## Distribution and hardening
+
+Local artifact consumption is V1 acceptance. Publication readiness is tracked separately in V2; remote availability
+is claimed only after the destination and required artifacts are actually verified. External publication needs its
+own authorized action. No functional release waits solely for an unclaimed distribution channel.
+
+Every release ends with a dedicated feature-free hardening sprint. Delivery follows actual dependencies; independent
+investigation/design for later capabilities may begin earlier. [Backlog](Backlog.md) contains current epics and
+[Milestones](Milestones.md) records evidenced completion.
+
+[wrap-01]: V3.md

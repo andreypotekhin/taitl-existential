@@ -23,6 +23,11 @@ Typical commands from the repository root, selected for the work:
 Record relevant Night City assertions and verify that example/test classes are absent from published library artifacts.
 For distribution work, link the separate consumer result and distinguish local install from remote availability.
 
+## Design obligations
+
+Record how correctness, actionable errors, failure recovery, resource hygiene, and performance were verified against
+the selected capability's design. Link missing evidence and blockers; do not infer one concern from another.
+
 ## Performance and resources
 
 Link dated [performance records](../../performance/Readme.md), their baseline comparisons, and any resource checks.

@@ -14,6 +14,13 @@ Maven compiles this tree as additional test sources for the root project. Existi
 and benchmarks use the same examples. The source packages are unchanged; examples are excluded from library JARs.
 This directory is not a separate Maven module and has no standalone application entry point.
 
+## Planned independent Maven project
+
+[V1-E04](../../docs/dev/project/Backlog.md#v1-e04) will give Night City its own `pom.xml`, depending on the installed
+Existential artifact. Build/install the library first, then verify the example project against that dependency, using
+its own sources and public library APIs. Root library tests can retain the current shared-fixture source arrangement.
+The independent POM/demo is planned, not yet present; no Maven Central publication is needed for local consumption.
+
 ## Run the demonstrated scenarios
 
 From the repository root, run the existing context and custom-transaction specifications:

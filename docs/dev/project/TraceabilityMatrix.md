@@ -1,73 +1,233 @@
-# Release Traceability
+# Capability Traceability
 
-Scope row numbers preserve the order and release assignment in [Roadmap.md](Roadmap.md). Topic specifications contain
-stable requirement IDs; each sprint must add requirement-level acceptance links as its work is completed.
-This assessment was made on 2026-10-20 against revision `a1c9abd` plus the documented infrastructure changes.
+The [roadmap](Roadmap.md) plans outcomes across three releases. The [rebaseline](ReleaseRebaseline.md) maps all 36
+original scope items here. Topic requirement IDs and inherited completion marks are preserved; no entry below
+claims that newly planned acceptance has passed.
 
-## Status and evidence
+Design readiness and implementation verification are separate. `open` means the remaining selected-capability
+decisions/acceptance are not finalized; `partial` means relevant existing tests/implementation exist; `missing` means
+the required evidence is absent. Narrower reviewed slices can become ready without settling the entire topic.
+Historical evidence is in [Assessment](Assessment.md). Tests linked below are starting evidence, not proof of every
+listed requirement. The concrete selected requirement IDs and test methods must be reconciled when work is admitted.
 
-`verified` means the listed scope has matching passing specification evidence. `partial` means adjacent behavior
-passes but requirements or cases remain. `unverified` means the full claim lacks direct evidence. `planned` means
-the required evidence/interface is not established. `blocked` is used when a named prerequisite prevents progress.
-Inherited `+` marks are preserved in topic specifications and are not automatic status promotions.
-Evidence links identify existing tests, not promises that each listed file covers the whole scope row.
+## V1-C01: Ordinary configuration and class rules
 
-## V1
+Epic: [V1-E01](Backlog.md#v1-e01); [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
+Design readiness: open. Verification: partial.
 
-| Row | Roadmap scope | Spec | Epic | Sprint | Status | Evidence |
-| --- | --- | --- | --- | --- | --- | --- |
-| V1-01 | Library | [LC] | V1-E01 | [S01] | partial | [TL] |
-| V1-02 | Library configuration | [LC] | V1-E01 | [S01] | verified | [TC] |
-| V1-03 | Library usage | [TE] | V1-E04 | [S04] | partial | [TT] |
-| V1-04 | Lifecycle phases | [TE] | V1-E03 | [S03] | partial | [TS] |
-| V1-05 | Configure rules | [LC] | V1-E02 | [S02] | partial | [TX] |
-| V1-06 | Configuration workflows | [LC] | V1-E02 | [S02] | partial | [TX] |
-| V1-07 | Wildcard contexts | [LC] | V1-E02 | [S02] | partial | [TX] |
-| V1-08 | Configure transactions | [TE] | V1-E02 | [S02] | partial | [TX] |
-| V1-09 | Configure constraints | [LC] | V1-E02 | [S02] | partial | [TX] |
-| V1-10 | Configure effects | [IE] | V1-E02 | [S02] | partial | [TI] |
-| V1-11 | Configure intents | [IE] | V1-E03 | [S03] | partial | [TI] |
-| V1-12 | Execution stages | [TE] | V1-E03 | [S03] | partial | [TS] |
-| V1-13 | Evaluation workflow | [TE] | V1-E03 | [S03] | partial | [TS] |
-| V1-14 | Stage-specific evaluations | [TE] | V1-E03 | [S03] | partial | [TS] |
-| V1-15 | Intents | [IE] | V1-E03 | [S03] | partial | [TI] |
-| V1-16 | Indexes | [QI] | V1-E03 | [S03] | partial | [TIDX] |
-| V1-17 | Internal indexing | [QI] | V1-E03 | [S03] | partial | [TR] |
-| V1-18 | Transaction lifecycle | [TE] | V1-E04 | [S04] | partial | [TT] |
-| V1-19 | Public classes | [LC] | V1-E01 | [S01] | partial | [TL] |
+Requirements: LC-001–002, LC-004, LC-006, LC-015, LC-020, LC-026, LC-029–031; TE-001; EC-009–013 (selected class-rule
+cases).
+Topics: [LC], [TE].
+Evidence to review: [UserCanConfigureEntities.java][wrap-01].
+Remaining work: Finalize the exact-context Night City walkthrough, defaults, rule timing, and acceptance cases.
 
-## V2
+## V1-C02: Reported events and commit validation
 
-| Row | Roadmap scope | Spec | Epic | Sprint | Status | Evidence |
-| --- | --- | --- | --- | --- | --- | --- |
-| V2-01 | Events | [EC] | V2-E01 | [S06] | partial | [TEV] |
-| V2-02 | Single-entity constraints | [EC] | V2-E01 | [S06] | partial | [TQ] |
-| V2-03 | Multi-entity constraints | [EC] | V2-E02 | [S07] | partial | [TQ] |
-| V2-04 | Constraints on entity evolution | [EC] | V2-E01 | [S06] | partial | [TM] |
-| V2-05 | Multi-entity evolution | [EC] | V2-E01 | [S06] | unverified | [TEV] |
-| V2-06 | Constraints on subclasses | [EC] | V2-E01 | [S06] | unverified | [TEV] |
-| V2-07 | Constraint violation reporting | [EC] | V2-E04 | [S09] | partial | [TD] |
-| V2-08 | Universal Quantifier | [QI] | V2-E02 | [S07] | partial | [TQ] |
-| V2-09 | Existence Quantifier | [QI] | V2-E02 | [S07] | partial | [TQ] |
-| V2-10 | Effects | [IE] | V2-E03 | [S08] | partial | [TI] |
-| V2-11 | Housekeeping | [HK] | V2-E04 | [S09] | partial | [TH] |
-| V2-12 | Transaction Cleanup | [HK] | V2-E04 | [S09] | partial | [TH] |
-| V2-13 | Global Cleanup | [HK] | V2-E04 | [S09] | unverified | [TH] |
-| V2-14 | Constraint enforcement | [EC] | V2-E01 | [S06] | partial | [TQ] |
-| V2-15 | Side effect execution | [IE] | V2-E03 | [S08] | partial | [TI] |
-| V2-16 | Custom Event Types | [EC] | V2-E03 | [S08] | planned | Missing |
-| V2-17 | Maven dependency | [DIST] | V2-E05 | [S10] | planned | Missing |
+Epic: [V1-E01](Backlog.md#v1-e01); [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
+Design readiness: open. Verification: partial.
 
-## Prerequisites and verification gaps
+Requirements: TE-004–006, TE-008, TE-010–015, TE-017–018, TE-026, TE-029–030, TE-034, TE-036, TE-042, TE-044;
+EC-001–006 and QI-013–015 (selected entity/commit paths).
+Topics: [TE], [EC], [QI].
+Evidence to review: [UserCanSendEntityEvents.java][wrap-02].
+Remaining work: Verify the selected event/deduplication/validation path without assuming the full advanced-stage
+contract.
 
-V1 already uses events, basic constraints/effects, exception handling, and transaction disposal. Retain and test those
-prerequisites in V1; their comprehensive V2 scope remains assigned to V2. V1 index support precedes V2 composed
-quantifier/relationship completion. A failing prerequisite blocks the affected V1 claim and cannot be hidden by its
-V2 feature assignment.
+## V1-C03: Basic All/Exists relationship
 
-Sprint 03 owns the three disabled validation-report cases; Sprint 05 verifies their closure and actual coverage
-collection. Cross-wildcard ordering, deduplication identity, failure recovery, and concurrency require design
-decisions before related implementation. Maven Central availability and global leak reporting remain unverified.
+Epic: [V1-E02](Backlog.md#v1-e02); [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
+Design readiness: open. Verification: partial.
+
+Requirements: QI-001–003, QI-005–009; EC-016–019 (representative collection-backed relationship).
+Topics: [QI], [EC].
+Evidence to review: [quantifiers](../../../src/test/java/com/taitl/existential/quantifiers/).
+Remaining work: Add commit-level success, missing relationship, and selected empty/conditional cases.
+
+## V1-C04: Explicit entity evolution
+
+Epic: [V1-E02](Backlog.md#v1-e02); [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
+Design readiness: open. Verification: partial.
+
+Requirements: EC-007–008, EC-020–021 (explicit before/after values).
+Topics: [EC].
+Evidence to review: [UserCanUseMemoForBiEvents.java][wrap-03].
+Remaining work: Define and verify an allowed and rejected change; memo/type/subclass breadth belongs to V2.
+
+## V1-C05: Useful violations and errors
+
+Epic: [V1-E03](Backlog.md#v1-e03); [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
+Design readiness: open. Verification: partial.
+
+Requirements: EC-024–025, EC-027; V1 validation-report requirements.
+Topics: [EC], [TE].
+Evidence to review: [EvaluationLogicTest.java][wrap-04].
+Remaining work: Repair disabled report cases and prove rule/operation details and remedies on selected failure paths.
+
+## V1-C06: Recovery and resource release
+
+Epic: [V1-E03](Backlog.md#v1-e03); [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
+Design readiness: open. Verification: partial.
+
+Requirements: TE-004–006, TE-011; HK-003–006 (admitted transaction/library exits).
+Topics: [TE], [HK].
+Evidence to review: [TrRegistryTest.java][wrap-05].
+Remaining work: Specify post-failure state, recovery, retained references, and cleanup without implying caller-object
+undo.
+
+## V1-C07: Night City as an artifact consumer
+
+Epic: [V1-E04](Backlog.md#v1-e04); [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
+Design readiness: open. Verification: missing.
+
+Requirements: DIST-001 (local Maven dependency consumption).
+Topics: [DIST].
+Evidence to review: not yet available.
+Remaining work: Create Night City POM/demo; verify against the installed JAR without root source/test class directories.
+
+## V1-C08: Representative performance and hardening
+
+Epic: [V1-E04](Backlog.md#v1-e04); [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
+Design readiness: open. Verification: partial.
+
+Requirements: All V1 capabilities and their five quality design obligations; final gate V1-E05.
+Topics: [LC], [TE], [QI], [HK], [DIST].
+Evidence to review: [CustomTransactionBenchmark.java][wrap-06].
+Remaining work: Add representative workload/cardinality and resource evidence; historical timings are not full workflow
+proof.
+
+## V2-C01: Independent library instances
+
+Epic: [V2-E01](Backlog.md#v2-e01); [Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
+Design readiness: open. Verification: partial.
+
+Requirements: LC-003–006 (independent-instance and broader operation/context combinations).
+Topics: [LC].
+Evidence to review: [UserCanAccessLibrary.java][wrap-07].
+Remaining work: Define per-instance versus global facilities and replace the existing isolation TODOs with direct
+acceptance.
+
+## V2-C02: Configuration options and guarantees
+
+Epic: [V2-E01](Backlog.md#v2-e01); [Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
+Design readiness: open. Verification: partial.
+
+Requirements: LC-007–013; configuration/injection concurrency and freeze decisions.
+Topics: [LC].
+Evidence to review: [UserCanConfigureLibrary.java][wrap-08].
+Remaining work: Retain existing cases and finalize sources/precedence/flags, failed initialization, and supported
+concurrency.
+
+## V2-C03: Contexts, factories, and ordering
+
+Epic: [V2-E02](Backlog.md#v2-e02); [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
+Design readiness: open. Verification: partial.
+
+Requirements: LC-014, LC-016–019, LC-021–025, LC-030–031 (broader combinations).
+Topics: [LC].
+Evidence to review: [configuring_contexts][wrap-09].
+Remaining work: Resolve overlapping wildcard/parent/exact precedence and factory/builder edge cases.
+
+## V2-C04: Generic/subclass and constraint breadth
+
+Epic: [V2-E02](Backlog.md#v2-e02); [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
+Design readiness: open. Verification: partial.
+
+Requirements: LC-028; EC-009–015 (remaining combinations), EC-023.
+Topics: [LC], [EC].
+Evidence to review: [TypeKeyTest.java](../../../src/test/java/com/taitl/existential/keys/TypeKeyTest.java).
+Remaining work: Specify hierarchy/generic matching and third-party/collection/field combinations beyond the V1 example.
+
+## V2-C05: Custom transactions and access patterns
+
+Epic: [V2-E03](Backlog.md#v2-e03); [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
+Design readiness: open. Verification: partial.
+
+Requirements: LC-027, LC-032–035; TE-002–003, TE-009–010, TE-020–023; EC-022.
+Topics: [LC], [TE], [EC].
+Evidence to review: [custom_transactions][wrap-10].
+Remaining work: Verify factories, supplied instances, access rules, memo behavior, and per-call values under the full
+contract.
+
+## V2-C06: Built-in stages, intents, and effects
+
+Epic: [V2-E03](Backlog.md#v2-e03); [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
+Design readiness: open. Verification: partial.
+
+Requirements: TE-016, TE-019, TE-024–025, TE-027–033, TE-037–044 (broader timing); all IE requirements for built-in
+paths.
+Topics: [TE], [IE].
+Evidence to review: [UserCanConfigureIntents.java][wrap-11].
+Remaining work: Reconcile stage terminology and cover order, partial effects, authorization failures, and recovery.
+
+## V2-C07: Maintained relationships and indexing
+
+Epic: [V2-E04](Backlog.md#v2-e04); [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Design readiness: open. Verification: partial.
+
+Requirements: QI-004, QI-010–015 and remaining All/Exists combinations; retain internal indexing needed by V1.
+Topics: [QI].
+Evidence to review: [indexes](../../../src/test/java/com/taitl/exlogic/unused/indexes/).
+Remaining work: Reconcile public index names and verify maintenance plus lookup/scaling and transaction-level results.
+
+## V2-C08: Broader lifecycle and event combinations
+
+Epic: [V2-E04](Backlog.md#v2-e04); [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Design readiness: open. Verification: partial.
+
+Requirements: TE-007, TE-017, TE-035, TE-042 and remaining lifecycle combinations; EC-001–008, EC-020–022 beyond the V1
+slice.
+Topics: [TE], [EC].
+Evidence to review: [UserCanInitiateTransactions.java][wrap-12].
+Remaining work: Specify checkpoint reset/continuation, nested independence, additional values, and broad event
+combinations.
+
+## V2-C09: Richer reports, caching, and global hygiene
+
+Epic: [V2-E04](Backlog.md#v2-e04); [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Design readiness: open. Verification: partial.
+
+Requirements: EC-026, EC-028; HK-001–007 (broader resource/cache/global/leak-reporting guarantees).
+Topics: [EC], [HK].
+Evidence to review: [TypeKeyCacheTest.java](../../../src/test/java/com/taitl/ex/logic/events/TypeKeyCacheTest.java).
+Remaining work: Verify metadata, description options, invalidation, boundedness, global close, and admitted leak
+reporting.
+
+## V2-C10: Publication readiness
+
+Epic: [V2-E04](Backlog.md#v2-e04); [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Design readiness: open. Verification: missing.
+
+Requirements: DIST-001 remote distribution prerequisites; remote availability requires its own evidence.
+Topics: [DIST].
+Evidence to review: not yet available.
+Remaining work: Record artifacts/destination/account/signing prerequisites; do not block an unclaimed local-only channel
+on publication.
+
+## V3-C01: Custom event contracts and registration
+
+Epic: [V3-E01](Backlog.md#v3-e01); [Sprint 11](sprints/Sprint11_V3CustomEventContractsAndRegistration.md).
+Design readiness: open. Verification: missing.
+
+Requirements: EC-029–032, EC-034 and custom registration/matching guarantees.
+Topics: [EC].
+Evidence to review: not yet available.
+Remaining work: Define registration identity, collisions, ownership, invalid inputs, and relevant concurrency.
+
+## V3-C02: Custom event evaluation and extensions
+
+Epic: [V3-E02](Backlog.md#v3-e02); [Sprint 12](sprints/Sprint12_V3CustomEventEvaluationAndExtensions.md).
+Design readiness: open. Verification: missing.
+
+Requirements: EC-033–034 and the remaining custom-event invocation claim; custom paths through IE/TE/HK.
+Topics: [EC], [IE], [TE], [HK].
+Evidence to review: not yet available.
+Remaining work: Specify splitting, matching, authorization, callbacks, failure recovery, expansion costs, and cleanup.
+
+## Release hardening gates
+
+[V1-E05](Backlog.md#v1-e05), [V2-E05](Backlog.md#v2-e05), and [V3-E03](Backlog.md#v3-e03) verify their complete admitted
+capabilities and retained regressions. Actual coverage, required tests, five design obligations, performance/resource
+records, consumer results, and artifact checks must agree before closure. These gates do not add feature scope.
 
 [LC]: ../specifications/LibraryAndConfiguration.spec.md
 [TE]: ../specifications/TransactionsAndEvaluation.spec.md
@@ -76,28 +236,16 @@ decisions before related implementation. Maven Central availability and global l
 [IE]: ../specifications/IntentsAndEffects.spec.md
 [HK]: ../specifications/Housekeeping.spec.md
 [DIST]: ../specifications/Distribution.spec.md
-[S01]: sprints/Sprint01_V1LibraryAccessAndConfiguration.md
-[S02]: sprints/Sprint02_V1ContextsAndRuleConfiguration.md
-[S03]: sprints/Sprint03_V1EvaluationIntentsAndIndexes.md
-[S04]: sprints/Sprint04_V1TransactionLifecycle.md
-[S05]: sprints/Sprint05_V1HardeningAndCloseout.md
-[S06]: sprints/Sprint06_V2EventsAndEntityConstraints.md
-[S07]: sprints/Sprint07_V2QuantifiersAndRelationships.md
-[S08]: sprints/Sprint08_V2EffectsAndCustomEvents.md
-[S09]: sprints/Sprint09_V2ReportingAndHousekeeping.md
-[S10]: sprints/Sprint10_V2MavenConsumptionAndDistribution.md
-[S11]: sprints/Sprint11_V2HardeningAndCloseout.md
-[TL]: ../../../src/test/java/com/taitl/specs/library/UserCanAccessLibrary.java
-[TC]: ../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java
-[TT]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java
-[TX]: ../../../src/test/java/com/taitl/specs/configuration_workflow/
-[TS]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java
-[TI]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureIntents.java
-[TQ]: ../../../src/test/java/com/taitl/existential/quantifiers/
-[TR]: ../../../src/test/java/com/taitl/ex/core/transactions/TransactionIndexesTest.java
-[TEV]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanSendEntityEvents.java
-[TM]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java
-[TD]: ../../../src/test/java/com/taitl/existential/exceptions/
-[TH]: ../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java
 
-[TIDX]: ../../../src/test/java/com/taitl/exlogic/unused/indexes/
+[wrap-01]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java
+[wrap-02]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanSendEntityEvents.java
+[wrap-03]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java
+[wrap-04]: ../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java
+[wrap-05]: ../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java
+[wrap-06]: ../../../src/test/java/com/taitl/existential/benchmarks/CustomTransactionBenchmark.java
+[wrap-07]: ../../../src/test/java/com/taitl/specs/library/UserCanAccessLibrary.java
+[wrap-08]: ../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java
+[wrap-09]: ../../../src/test/java/com/taitl/specs/configuration_workflow/configuring_contexts/
+[wrap-10]: ../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions/
+[wrap-11]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureIntents.java
+[wrap-12]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java

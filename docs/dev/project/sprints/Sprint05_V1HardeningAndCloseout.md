@@ -1,65 +1,80 @@
 # Sprint 05: V1 Hardening and Closeout
 
-Status: planned. Dates and capacity: not assigned. Epic: [V1-E05](../Backlog.md#v1-e05).
-Release: [V1](../V1.md). No implementation completion is implied by this charter.
+Status: planned. Dates/capacity: unassigned. Epic: [V1-E05](../Backlog.md#v1-e05). Release: [V1](../V1.md).
+Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
+this charter does not promote inherited completion marks.
 
-## Sprint goal and user-facing outcome
+## Goal and user outcome
 
-Make every V1 release claim reproducible and reconcile documentation with actual release evidence.
+Close V1 with a robust, documented, independently consumed representative workflow and performance evidence.
 
-## Entry conditions and dependencies
+## Dependencies and readiness
 
-[Sprint 04](Sprint04_V1TransactionLifecycle.md) is complete with its evidence and unresolved blockers reviewed.
-Use the [agent process](../../auto/Process.md) to resolve design/specification decisions before implementing them.
+Review [Sprint 04](Sprint04_V1NightCityArtifactAndPerformance.md) for actual dependencies and evidence.
+Allow independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral
+and technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
 
-## Specification and design
+## Governing designs and specifications
 
-Primary: [TransactionsAndEvaluation specification](../../specifications/TransactionsAndEvaluation.spec.md) and
-[design](../../design/TransactionsAndEvaluation.design.md). The
-[traceability matrix](../TraceabilityMatrix.md) supplies the other topic requirements assigned to this epic.
-Record exact requirement identifiers in the delivery plan and tests as work is admitted.
+- [LibraryAndConfiguration][LC] and [design][LC-design].
+- [TransactionsAndEvaluation][TE] and [design][TE-design].
+- [EventsAndConstraints][EC] and [design][EC-design].
+- [QuantifiersAndIndexes][QI] and [design][QI-design].
+- [Housekeeping][HK] and [design][HK-design].
+- [Distribution][DIST] and [design][DIST-design].
+
+Record exact requirement IDs and acceptance evidence for the selected slice in the existing plan/traceability entry.
 
 ## Remaining work
 
-- Run the full clean build and V1 acceptance cases; resolve release-blocking defects without adding features.
-- Verify all disabled tests have been repaired or retain a named release blocker; skipped cases are not proof.
-- Restore and verify actual coverage collection/checking, rather than accepting a skipped JaCoCo execution.
-- Review baseline-compatible performance, examples, diagnostics, artifact contents, and retained V2 prerequisites.
-- Reconcile specifications, traceability, milestone/backlog progress, deferrals, and the V1 release review.
+- Run complete regression and representative acceptance suites; admit no new features.
+- Verify correctness, actionable errors, failure recovery, resource hygiene, and performance against the designs.
+- Check that coverage data/checks execute, required tests are enabled, and both library artifact contents are correct.
+- Rebuild the independent Night City consumer and collect current comparable benchmark/resource evidence.
+- Reconcile V1 requirements, docs, traceability, blockers, deferrals, and the release retrospective.
 
 ## Acceptance
 
-- All V1 scope rows have sufficient current evidence and no unresolved release blockers.
-- Coverage evidence actually exists and full Maven verification passes without silently skipped required checks.
-- V1 release review records commands, JDK/Maven versions, totals/skips, artifact checks, and benchmark links.
+- Every V1 capability meets its specified acceptance and five quality obligations with current evidence.
+- No required disabled/skipped check is represented as passing; no release blocker remains.
+- Local dependency consumption and V1 evidence are reproducible without remote publication.
+
+## Quality and performance
+
+The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
+Link decisions and proof obligations for each concern, or justify inapplicability; quality is required in every release.
+Recheck workload/complexity assumptions and baseline comparisons; explain material changes before closure.
+Use [performance records](../../performance/Readme.md), naming workloads and comparable evidence.
 
 ## Demo and validation
 
-From the repository root:
 
-    mvn clean install
-
-Before completion run `mvn clean install`; record actual executed/skipped totals and inspection of required checks.
-Also run `mvn -Pbenchmarks test`, inspect both library JARs, and link the release-specific evidence.
-
-## Performance
-
-Repeat comparable transaction-path measurements and explain material changes rather than adding a noisy threshold.
-Store comparable samples under [performance](../../performance/Readme.md), linking the relevant record here.
-
-## Risks
-
-A successful build can conceal disabled cases and skipped coverage; inspect report contents and plugin output.
+Coding-task closure requires `mvn clean install` and inspection of actual test/coverage/check outputs.
+The independent consumer command is planned as `mvn -f examples/night_city/pom.xml verify` after library installation.
+It becomes runnable when Sprint 04 creates Night City's POM and its executable acceptance demonstration.
+Run relevant benchmark/resource scenarios and record retained-regression, artifact, and consumer evidence.
 
 ## Non-goals
 
-All new features, external publication, and optional optimizations.
+All new feature scope and opportunistic API expansion.
 
-## Execution plan and review
+## Plan and review
 
-No feature-delivery execution plan is finalized yet. Create one under `docs/dev/planning/` when the work is selected;
-use [Plans.md](../../auto/Plans.md). Update this charter with its link and any admitted scope changes.
+No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
+Review pending: record completed IDs, actual commands/versions, passed/skipped totals, five quality obligations,
+consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template][wrap-01].
 
-Review pending. Record completed requirement IDs, exact commands, tool/runtime versions, executed/passed/skipped totals,
-demo output, performance record links, remaining blockers, and explicit deferrals. Use the
-[review template](../templates/SprintReview.md). A planned charter is not a completed sprint.
+[LC]: ../../specifications/LibraryAndConfiguration.spec.md
+[LC-design]: ../../design/LibraryAndConfiguration.design.md
+[TE]: ../../specifications/TransactionsAndEvaluation.spec.md
+[TE-design]: ../../design/TransactionsAndEvaluation.design.md
+[EC]: ../../specifications/EventsAndConstraints.spec.md
+[EC-design]: ../../design/EventsAndConstraints.design.md
+[QI]: ../../specifications/QuantifiersAndIndexes.spec.md
+[QI-design]: ../../design/QuantifiersAndIndexes.design.md
+[HK]: ../../specifications/Housekeeping.spec.md
+[HK-design]: ../../design/Housekeeping.design.md
+[DIST]: ../../specifications/Distribution.spec.md
+[DIST-design]: ../../design/Distribution.design.md
+
+[wrap-01]: ../templates/SprintReview.md

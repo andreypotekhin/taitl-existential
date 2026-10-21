@@ -24,7 +24,9 @@ To do so, the library allows end users to:
 
 ### User stories and use cases
 See the [specification index](Specification.md) for normative topic claims and their paired designs.
-The [project index](project/Readme.md) links release plans, epics, sprints, milestones, and current evidence.
+The [project index](project/Readme.md) links V1 representative core, V2 broader standard usage, V3 extensibility,
+epics, sprints, milestones, and current evidence. Designs address correctness, actionable errors, failure recovery,
+resource hygiene, and performance explicitly.
 Agents follow [Process](auto/Process.md); human contributors may use it as a reference without following its sequence.
 
 ### Terminology

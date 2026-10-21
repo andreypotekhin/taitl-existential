@@ -40,9 +40,22 @@ choices below. Record future decisions here, update the normative specification,
 - [registry tests](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java)
 - [type cache tests](../../../src/test/java/com/taitl/ex/logic/events/TypeKeyCacheTest.java)
 
-V2-E04 owns comprehensive cleanup/caching claims. Existing basic disposal remains a V1 lifecycle prerequisite.
+V1-E03 owns admitted success/failure cleanup; V2-E04 broadens global/cache behavior; V3 covers extension resources.
 Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
 not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+
+## Required quality analysis
+
+These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
+and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
+establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
+
+- Correctness: define retained/released state for every admitted exit and the exact observable leak-reporting claim.
+- Actionable errors: identify invalid/stale lifecycle use or retained ownership and the caller cleanup remedy.
+- Failure recovery: define cleanup retry/idempotence, partial close behavior, and preservation of original failures.
+- Resource hygiene: specify registry, memo, overlay, stream, callback, and cache ownership/bounds/invalidation.
+- Performance: inspect retained-state growth alongside repeated success/failure workloads; timing does not establish
+  resource safety.
 
 ## Performance
 

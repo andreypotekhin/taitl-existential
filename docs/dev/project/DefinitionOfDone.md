@@ -24,6 +24,8 @@ maintenance does not require new Java tests. Release completion also requires th
 - Error messages explain the relevant context and remedy; troubleshooting links point to the appropriate document.
 - User documentation describes supported behavior; proposed behavior is identified as such.
 - Paired designs/specifications, requirement references, and examples match implemented decisions.
+- The design addresses correctness, actionable errors, failure recovery, resource hygiene, and performance with
+  concrete decisions/evidence or justified inapplicability for the selected capability.
 - The epic, sprint, traceability, and execution-plan evidence reflect actual completion and remaining gaps.
 - Archive completed plans and implemented suggestion/TODO items under the existing project conventions.
 
@@ -34,5 +36,6 @@ maintenance does not require new Java tests. Release completion also requires th
 - Record exact commands, runtime/tool versions, passed/skipped totals, required-check results, artifact/consumer
   evidence, performance links, and explicit blockers or approved deferrals in the release review.
 - Local installation does not establish remote Maven availability or compatibility with untested runtime versions.
+- For V1, Night City must verify the public workflow as an independent Maven consumer of the installed artifact.
 
 Agent sequencing is described in [Process](../auto/Process.md); human contributors may use it as a reference.

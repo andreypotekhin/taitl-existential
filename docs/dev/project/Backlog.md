@@ -1,65 +1,60 @@
 # Backlog
 
-Release scope is set by the [roadmap](Roadmap.md). The [traceability matrix](TraceabilityMatrix.md) maps every scope
-item to its specification, evidence/gap, epic, and sprint. Sprints are ordered and undated; their charters describe
-remaining work, including verification of existing implementation. No new library feature is approved by this inventory.
+The [roadmap](Roadmap.md) now plans V1 representative core, V2 broader standard usage, and V3 extensibility.
+Robustness and performance are priorities in every release. The [rebaseline](ReleaseRebaseline.md) maps the original
+scope/epics to the current plan; archived charters were superseded before implementation, not completed.
+[Traceability](TraceabilityMatrix.md) records capability scope, design readiness, and verification independently.
 
 ## Completed planning foundation
 
-+ PM-00: assess current state, establish topic designs/specifications, agent process, release plans, and sprint
-charters.
-This completes the former "Assess Current State" planning item, not any release feature or hardening criterion.
-See [Assessment][link-01] and the [completed task plan][link-02].
++ PM-00: initial documentation-first foundation established; see the [assessment](Assessment.md).
++ PM-01: three-release workflow planning established; feature-delivery sprints remain planned.
 
 ## V1
 
 <a id="v1-e01"></a>
 
-### V1-E01: Library Access and Configuration
+### V1-E01: Night City Core Workflow
 
-Status: planned. Delivery: [Sprint 01](sprints/Sprint01_V1LibraryAccessAndConfiguration.md).
+Status: planned. Delivery: [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
 
-Configure independent library instances and use predictable configuration sources without cross-instance state.
+Follow a documented Night City operation from rule configuration through events to successful or rejected commit.
 
-Governing topic: [LibraryAndConfiguration](../specifications/LibraryAndConfiguration.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 <a id="v1-e02"></a>
 
-### V1-E02: Contexts and Rule Configuration
+### V1-E02: Relationships and Evolution
 
-Status: planned. Delivery: [Sprint 02](sprints/Sprint02_V1ContextsAndRuleConfiguration.md).
+Status: planned. Delivery: [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
 
-Configure parent, wildcard, generic, and custom-transaction rules with deterministic resolution and ordering.
+Validate a representative relationship with basic All/Exists and reject an invalid before/after entity change.
 
-Governing topic: [LibraryAndConfiguration](../specifications/LibraryAndConfiguration.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 <a id="v1-e03"></a>
 
-### V1-E03: Evaluation, Intents, and Indexes
+### V1-E03: Failure Recovery and Resource Hygiene
 
-Status: planned. Delivery: [Sprint 03](sprints/Sprint03_V1EvaluationIntentsAndIndexes.md).
+Status: planned. Delivery: [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
 
-Evaluate applicable rules at documented stages while maintaining predictable intent checks and event indexes.
+Recover predictably from rejected or failed operations and release the representative workflow resources.
 
-Governing topic: [TransactionsAndEvaluation](../specifications/TransactionsAndEvaluation.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 <a id="v1-e04"></a>
 
-### V1-E04: Transaction Lifecycle
+### V1-E04: Night City Artifact Consumption and Performance
 
-Status: planned. Delivery: [Sprint 04](sprints/Sprint04_V1TransactionLifecycle.md).
+Status: planned. Delivery: [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
 
-Begin, checkpoint, commit, and roll back independent transactions with defined invalid-operation behavior.
+Build and exercise Night City as a Maven project consuming the installed Existential artifact.
 
-Governing topic: [TransactionsAndEvaluation](../specifications/TransactionsAndEvaluation.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 <a id="v1-e05"></a>
 
@@ -67,85 +62,102 @@ closing the documented gaps; do not reimplement a feature merely because its cla
 
 Status: planned. Delivery: [Sprint 05](sprints/Sprint05_V1HardeningAndCloseout.md).
 
-Make every V1 release claim reproducible and reconcile documentation with actual release evidence.
+Close V1 with a robust, documented, independently consumed representative workflow and performance evidence.
 
-Governing topic: [TransactionsAndEvaluation](../specifications/TransactionsAndEvaluation.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 ## V2
 
 <a id="v2-e01"></a>
 
-### V2-E01: Events and Entity Constraints
+### V2-E01: Instance Isolation and Configuration
 
-Status: planned. Delivery: [Sprint 06](sprints/Sprint06_V2EventsAndEntityConstraints.md).
+Status: planned. Delivery: [Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
 
-Express and enforce entity, evolution, cross-entity, and subclass constraints through documented events.
+Use independent instances and the broader documented configuration options without unintended shared state.
 
-Governing topic: [EventsAndConstraints](../specifications/EventsAndConstraints.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 <a id="v2-e02"></a>
 
-### V2-E02: Quantifiers and Relationships
+### V2-E02: Contexts and Type Matching
 
-Status: planned. Delivery: [Sprint 07](sprints/Sprint07_V2QuantifiersAndRelationships.md).
+Status: planned. Delivery: [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
 
-Use All/Exists, collections, and maintained indexes to express relationships between in-memory entities.
+Apply parent/wildcard rules and broader generic/subclass matching with deterministic documented semantics.
 
-Governing topic: [QuantifiersAndIndexes](../specifications/QuantifiersAndIndexes.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 <a id="v2-e03"></a>
 
-### V2-E03: Effects and Custom Events
+### V2-E03: Stages, Intents, and Transaction Customization
 
-Status: planned. Delivery: [Sprint 08](sprints/Sprint08_V2EffectsAndCustomEvents.md).
+Status: planned. Delivery: [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
 
-Attach effects and custom events with explicit timing, ordering, intent interactions, and failure behavior.
+Use built-in execution stages, intents/effects, and customized transactions with predictable timing and failures.
 
-Governing topic: [IntentsAndEffects](../specifications/IntentsAndEffects.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 <a id="v2-e04"></a>
 
-### V2-E04: Reporting and Housekeeping
+### V2-E04: Indexes and Operational Coverage
 
-Status: planned. Delivery: [Sprint 09](sprints/Sprint09_V2ReportingAndHousekeeping.md).
+Status: planned. Delivery: [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
 
-Receive useful violation details and release transaction/global resources under documented ownership rules.
+Use maintained relationships and broader lifecycle/reporting/resource behavior with measured scaling.
 
-Governing topic: [Housekeeping](../specifications/Housekeeping.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 <a id="v2-e05"></a>
 
-### V2-E05: Maven Consumption and Distribution
+### V2-E05: Hardening and Closeout
 
-Status: planned. Delivery: [Sprint 10](sprints/Sprint10_V2MavenConsumptionAndDistribution.md).
+Status: planned. Delivery: [Sprint 10](sprints/Sprint10_V2HardeningAndCloseout.md).
 
-Consume the correct artifact from a separate Maven project using documented coordinates and prerequisites.
+Close broader standard usage while retaining the V1 workflow, consumption, and quality evidence.
 
-Governing topic: [Distribution](../specifications/Distribution.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
-<a id="v2-e06"></a>
+## V3
 
-### V2-E06: Hardening and Closeout
+<a id="v3-e01"></a>
 
-Status: planned. Delivery: [Sprint 11](sprints/Sprint11_V2HardeningAndCloseout.md).
+### V3-E01: Custom Event Contracts and Registration
 
-Close V2 with reproducible feature, retained-V1, resource, performance, and independent-consumer evidence.
+Status: planned. Delivery: [Sprint 11](sprints/Sprint11_V3CustomEventContractsAndRegistration.md).
 
-Governing topic: [Distribution](../specifications/Distribution.spec.md).
-The sprint defines concrete remaining work, dependencies, and acceptance. Preserve existing passing behavior while
-closing the documented gaps; do not reimplement a feature merely because its claim lacks a completion mark.
+Declare and register custom events with clear identity, matching, ownership, and invalid-registration behavior.
+
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
+
+<a id="v3-e02"></a>
+
+### V3-E02: Custom Event Evaluation and Extensions
+
+Status: planned. Delivery: [Sprint 12](sprints/Sprint12_V3CustomEventEvaluationAndExtensions.md).
+
+Run admitted custom events through transaction evaluation, splitting, intents, and resource management.
+
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
+
+<a id="v3-e03"></a>
+
+### V3-E03: Hardening and Closeout
+
+Status: planned. Delivery: [Sprint 13](sprints/Sprint13_V3HardeningAndCloseout.md).
+
+Close extensibility with robust custom-event behavior, bounded costs, and retained standard-library evidence.
+
+The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
+regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
 
 ## Existing suggestion and TODO intake
 
@@ -153,64 +165,68 @@ The following records retain their existing approval state. Epic assignment is t
 API or algorithm. Related proposals are grouped by epic; resolve duplicate/contradictory proposals in design first.
 Several action IDs collide, so links use full filenames. Do not renumber historical records.
 
-- [S02182601 Log redaction][intake-01]: proposal; V2-E04; design/evidence review required.
+- [S02182601 Log redaction][intake-01]: proposal; V1-E03; design/evidence review required.
 - [S02182602 Validation Report + Trace Surface][intake-02]: proposal; V2-E04; design/evidence review required.
-- [-S02182603 Context Matching Strategy Registry][intake-03]: proposal; V1-E02; design/evidence review required.
+- [-S02182603 Context Matching Strategy Registry][intake-03]: proposal; V2-E02; design/evidence review required.
 - [-S02182604 Fail-Fast Stubs for Unimplemented Actions][intake-04]: proposal; V1-E05; design/evidence review required.
-- [S02182605 Transaction Membership Index][intake-05]: proposal; V1-E03; design/evidence review required.
-- [S02182607 Event Queue Deque Backing][intake-06]: proposal; V1-E03; design/evidence review required.
-- [S02182610 Immutable Rule Snapshot + Hot Reload][intake-07]: proposal; V1-E05; design/evidence review required.
-- [+S02192604 Publish License and Source Availability][intake-08]: proposal; V2-E05; review current evidence before
-  archive.
-- [S02202601 Encapsulate Handler State][intake-09]: proposal; V1-E03; design/evidence review required.
-- [S02202602 Stable Rule Identity + Digest][intake-10]: proposal; V1-E03; design/evidence review required.
-- [S02202603 Add Security Static Analysis][intake-11]: proposal; V2-E05; design/evidence review required.
-- [S02202604 Prefer HashMap for TransactionIndexes][intake-12]: proposal; V1-E03; design/evidence review required.
-- [S02202605 Dependency Vulnerability Scans][intake-13]: proposal; V2-E05; design/evidence review required.
-- [S02212601 Public Lifecycle Status Dashboard][intake-14]: proposal; V1-E04; design/evidence review required.
-- [S02212602 Enforce Secure Config File Permissions][intake-15]: proposal; V1-E01; design/evidence review required.
-- [S02212603 Context Path Index (Trie) for Matching][intake-16]: proposal; V1-E02; design/evidence review required.
-- [S02222602 Specify context matching precedence and event identity][intake-17]: proposal; V1-E05; design/evidence
-  review required.
-- [S02222603 Document thread-safety and locking model][intake-18]: proposal; V1-E05; design/evidence review required.
-- [S02222612 Introduce immutable configuration snapshots][intake-19]: proposal; V1-E03; design/evidence review required.
-- [S02222613 Define event identity and de-dup semantics in specification][intake-20]: proposal; V1-E05; design/evidence
-  review required.
-- [S02222615 Document concurrency guarantees for configuration and injection][intake-21]: proposal; V1-E05;
+- [S02182605 Transaction Membership Index][intake-05]: proposal; V1-E04; design/evidence review required.
+- [S02182607 Event Queue Deque Backing][intake-06]: proposal; V1-E04; design/evidence review required.
+- [S02182610 Immutable Rule Snapshot + Hot Reload][intake-07]: proposal; No release assignment (optional hot reload);
   design/evidence review required.
-- [S02222616 LimitedInputStream boundary validation][intake-22]: proposal; V1-E05; design/evidence review required.
-- [S02222617 Cross-platform secure config permission checks][intake-23]: proposal; V1-E05; design/evidence review
+- [+S02192604 Publish License and Source Availability][intake-08]: proposal; V1-E04; review current evidence before
+  archive.
+- [S02202601 Encapsulate Handler State][intake-09]: proposal; V2-E03; design/evidence review required.
+- [S02202602 Stable Rule Identity + Digest][intake-10]: proposal; V2-E04; design/evidence review required.
+- [S02202603 Add Security Static Analysis][intake-11]: proposal; V1-E05; design/evidence review required.
+- [S02202604 Prefer HashMap for TransactionIndexes][intake-12]: proposal; V1-E04; design/evidence review required.
+- [S02202605 Dependency Vulnerability Scans][intake-13]: proposal; V1-E05; design/evidence review required.
+- [S02212601 Public Lifecycle Status Dashboard][intake-14]: proposal; No release assignment (optional dashboard);
+  design/evidence review required.
+- [S02212602 Enforce Secure Config File Permissions][intake-15]: proposal; V2-E01; design/evidence review required.
+- [S02212603 Context Path Index (Trie) for Matching][intake-16]: proposal; V2-E02; design/evidence review required.
+- [S02222602 Specify context matching precedence and event identity][intake-17]: proposal; V1-E01 / V2-E02;
+  design/evidence
+  review required.
+- [S02222603 Document thread-safety and locking model][intake-18]: proposal; V1-E01 / V2-E01; design/evidence review
   required.
-- [S02242601 Bi-handler constraint consistency][intake-24]: proposal; V2-E01; design/evidence review required.
-- [S02242601 Troubleshooting links helper][intake-25]: proposal; V2-E04; design/evidence review required.
-- [S02242601 Unify port handler logic][intake-26]: proposal; V2-E03; design/evidence review required.
-- [S02242602 Specify intent semantics and access decision flow][intake-27]: proposal; V1-E05; design/evidence review
+- [S02222612 Introduce immutable configuration snapshots][intake-19]: proposal; V2-E01; design/evidence review required.
+- [S02222613 Define event identity and de-dup semantics in specification][intake-20]: proposal; V1-E01; design/evidence
+  review required.
+- [S02222615 Document concurrency guarantees for configuration and injection][intake-21]: proposal; V2-E01;
+  design/evidence review required.
+- [S02222616 LimitedInputStream boundary validation][intake-22]: proposal; V2-E01; design/evidence review required.
+- [S02222617 Cross-platform secure config permission checks][intake-23]: proposal; V2-E01; design/evidence review
   required.
-- [S02252601 Configuration integrity verification][intake-28]: proposal; V1-E01; design/evidence review required.
-- [S02272601 Event Input Validation Troubleshooting Links][intake-29]: proposal; V2-E04; design/evidence review
+- [S02242601 Bi-handler constraint consistency][intake-24]: proposal; V1-E02; design/evidence review required.
+- [S02242601 Troubleshooting links helper][intake-25]: proposal; V1-E03; design/evidence review required.
+- [S02242601 Unify port handler logic][intake-26]: proposal; V1-E02; design/evidence review required.
+- [S02242602 Specify intent semantics and access decision flow][intake-27]: proposal; V2-E03; design/evidence review
   required.
-- [S02282601 Context identity index in ConfigBuilder][intake-30]: proposal; V1-E02; design/evidence review required.
-- [S02282601 Event handler hierarchy matching][intake-31]: proposal; V2-E01; design/evidence review required.
-- [S02282601 Getting Started Guide][intake-32]: proposal; V1-E05; design/evidence review required.
-- [S02282602 Specify custom event registration and semantics][intake-33]: proposal; V2-E03; design/evidence review
+- [S02252601 Configuration integrity verification][intake-28]: proposal; V2-E01; design/evidence review required.
+- [S02272601 Event Input Validation Troubleshooting Links][intake-29]: proposal; V1-E03; design/evidence review
+  required.
+- [S02282601 Context identity index in ConfigBuilder][intake-30]: proposal; V2-E02; design/evidence review required.
+- [S02282601 Event handler hierarchy matching][intake-31]: proposal; V2-E02; design/evidence review required.
+- [S02282601 Getting Started Guide][intake-32]: proposal; V1-E01; design/evidence review required.
+- [S02282602 Specify custom event registration and semantics][intake-33]: proposal; V3-E01; design/evidence review
   required.
 - [S03012601 Avoid merge-conflict artifacts][intake-34]: proposal; V1-E05; design/evidence review required.
-- [S03012601 Split-event validation consistency][intake-35]: proposal; V2-E01; design/evidence review required.
-- [S03012601 Transaction helper for safe commit/rollback][intake-36]: proposal; V1-E04; design/evidence review required.
-- [S03102601 Centralize argument validation messages][intake-37]: proposal; V2-E04; design/evidence review required.
-- [S03102601 Context resolution and ordering pipeline][intake-38]: proposal; V1-E02; design/evidence review required.
-- [S03102601 Transaction lifecycle state][intake-39]: proposal; V1-E04; design/evidence review required.
-- [S03102602 Specify context matching and rule ordering semantics][intake-40]: proposal; V1-E02; design/evidence review
+- [S03012601 Split-event validation consistency][intake-35]: proposal; V1-E02; design/evidence review required.
+- [S03012601 Transaction helper for safe commit/rollback][intake-36]: proposal; V1-E03; design/evidence review required.
+- [S03102601 Centralize argument validation messages][intake-37]: proposal; V1-E03; design/evidence review required.
+- [S03102601 Context resolution and ordering pipeline][intake-38]: proposal; V2-E02; design/evidence review required.
+- [S03102601 Transaction lifecycle state][intake-39]: proposal; V1-E03; design/evidence review required.
+- [S03102602 Specify context matching and rule ordering semantics][intake-40]: proposal; V2-E02; design/evidence review
   required.
 - [S02222601 Error metadata for public exceptions][intake-41]: approved; V2-E04; design/evidence review required.
-- [S02222605 Key Naming Strategy Injection][intake-42]: approved; V1-E05; design/evidence review required.
-- [S02222614 Child context builder support][intake-43]: approved; V1-E05; design/evidence review required.
-- [S02242601 Argument wording consistency][intake-44]: approved; V2-E04; design/evidence review required.
-- [S03121601 Ex.memo][intake-45]: approved; V1-E04; review current evidence before archive.
-- [S02242601 Allow creating constraints with type key][intake-46]: planned record; V1-E02; review current evidence
+- [S02222605 Key Naming Strategy Injection][intake-42]: approved; V2-E02; design/evidence review required.
+- [S02222614 Child context builder support][intake-43]: approved; V2-E02; design/evidence review required.
+- [S02242601 Argument wording consistency][intake-44]: approved; V1-E03; design/evidence review required.
+- [S03121601 Ex.memo][intake-45]: approved; V2-E03; review current evidence before archive.
+- [S02242601 Allow creating constraints with type key][intake-46]: planned record; V2-E02; review current evidence
   before archive.
-- [T02182601 Separate Handler Execution Flow in On][intake-47]: TODO intake; V1-E03; design/evidence review required.
-- [T02202602 Define Non-Null Handler Action Defaults][intake-48]: TODO intake; V1-E03; design/evidence review required.
+- [T02182601 Separate Handler Execution Flow in On][intake-47]: TODO intake; V2-E03; design/evidence review required.
+- [T02202602 Define Non-Null Handler Action Defaults][intake-48]: TODO intake; V1-E01; design/evidence review required.
 
 Completed plans and historical suggestions remain in [past](../past/); do not treat their old timings or claims
 as current release evidence. New optional enhancements require their usual suggestion review.
@@ -264,7 +280,6 @@ as current release evidence. New optional enhancements require their usual sugge
 [intake-47]: ../todo/T02182601.Separate-Handler-Execution-Flow-in-On.md
 [intake-48]: ../todo/T02202602.Define-Non-Null-Handler-Action-Defaults.md
 
-- [Restore coverage evidence](../suggestions/S10202601.Restore-coverage-evidence.md): proposal; V1-E05.
+- [Restore coverage evidence][wrap-01]: proposal; V1-E01, rechecked at V1-E05.
 
-[link-01]: Assessment.md
-[link-02]: ../past/planning/P10202601.Documentation-first-development.plan.md
+[wrap-01]: ../suggestions/S10202601.Restore-coverage-evidence.md

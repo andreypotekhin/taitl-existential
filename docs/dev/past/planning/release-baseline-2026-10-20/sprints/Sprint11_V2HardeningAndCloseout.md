@@ -1,5 +1,7 @@
 # Sprint 11: V2 Hardening and Closeout
 
+Superseded before implementation on 2026-10-20; this is not completed release work. See [rebaseline][wrap-01].
+
 Status: planned. Dates and capacity: not assigned. Epic: [V2-E06](../Backlog.md#v2-e06).
 Release: [V2](../V2.md). No implementation completion is implied by this charter.
 
@@ -10,12 +12,12 @@ Close V2 with reproducible feature, retained-V1, resource, performance, and inde
 ## Entry conditions and dependencies
 
 [Sprint 10][link-01] is complete with its evidence and unresolved blockers reviewed.
-Use the [agent process](../../auto/Process.md) to resolve design/specification decisions before implementing them.
+Use the [agent process](../../../../auto/Process.md) to resolve design/specification decisions before implementing them.
 
 ## Specification and design
 
-Primary: [Distribution specification](../../specifications/Distribution.spec.md) and
-[design](../../design/Distribution.design.md). The
+Primary: [Distribution specification](../../../../specifications/Distribution.spec.md) and
+[design](../../../../design/Distribution.design.md). The
 [traceability matrix](../TraceabilityMatrix.md) supplies the other topic requirements assigned to this epic.
 Record exact requirement identifiers in the delivery plan and tests as work is admitted.
 
@@ -44,7 +46,7 @@ Also run `mvn -Pbenchmarks test`, inspect both library JARs, and link the releas
 ## Performance
 
 Review comparable topic baselines, explain material changes, and record missing measurements as incomplete evidence.
-Store comparable samples under [performance](../../performance/Readme.md), linking the relevant record here.
+Store comparable samples under [performance](../../../../performance/Readme.md), linking the relevant record here.
 
 ## Risks
 
@@ -57,10 +59,12 @@ All new features and opportunistic API expansion.
 ## Execution plan and review
 
 No feature-delivery execution plan is finalized yet. Create one under `docs/dev/planning/` when the work is selected;
-use [Plans.md](../../auto/Plans.md). Update this charter with its link and any admitted scope changes.
+use [Plans.md](../../../../auto/Plans.md). Update this charter with its link and any admitted scope changes.
 
 Review pending. Record completed requirement IDs, exact commands, tool/runtime versions, executed/passed/skipped totals,
 demo output, performance record links, remaining blockers, and explicit deferrals. Use the
-[review template](../templates/SprintReview.md). A planned charter is not a completed sprint.
+[review template](../../../../project/templates/SprintReview.md). A planned charter is not a completed sprint.
 
 [link-01]: Sprint10_V2MavenConsumptionAndDistribution.md
+
+[wrap-01]: ../../../../project/ReleaseRebaseline.md

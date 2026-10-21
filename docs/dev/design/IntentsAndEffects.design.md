@@ -41,9 +41,21 @@ choices below. Record future decisions here, update the normative specification,
 - [combined effects](../../../src/test/java/com/taitl/specs/library_usage/UserCanHandleCombinedEventEffects.java)
 - [execution unit tests](../../../src/test/java/com/taitl/ex/logic/evaluation/actions/ExecuteHandlersTest.java)
 
-V1-E02/V1-E03 cover configuration and intent/stage prerequisites; V2-E03 completes effects and custom events.
+V2-E03 owns standard intents/effects/stages; V3-E02 owns their integration with custom events.
 Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
 not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+
+## Required quality analysis
+
+These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
+and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
+establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
+
+- Correctness: specify authorization scope, stage timing, callback order/count, and context/transaction composition.
+- Actionable errors: distinguish authorization denial from callback failure and identify operation/stage/rule/cause.
+- Failure recovery: define partial effects and permitted follow-up actions; caller side effects are not auto-reverted.
+- Resource hygiene: define handler/captured-state and transaction lifetimes, registration scope, and concurrency limits.
+- Performance: isolate dispatch/authorization overhead from callback work and measure stage/event cardinality.
 
 ## Performance
 

@@ -41,9 +41,21 @@ choices below. Record future decisions here, update the normative specification,
 - [memo behavior](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java)
 - [event input/equality tests](../../../src/test/java/com/taitl/existential/events)
 
-V2-E01, V2-E03, and V2-E04. Existing event functionality is a V1 evaluation prerequisite, not a scope reassignment.
+V1-E01/E02/E03 own representative events/evolution/errors; V2 broadens them; V3-E01/E02 own custom events.
 Add user-facing positive and negative acceptance cases for each unresolved behavior; passing adjacent unit tests do
 not establish the full claim. Preserve inherited completion marks until a requirement-level review changes them.
+
+## Required quality analysis
+
+These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
+and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
+establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
+
+- Correctness: specify entity/type matching, null endpoints, before/after semantics, and derived-event behavior.
+- Actionable errors: identify invalid input or violated rule and operation/type context, avoiding ambiguous failures.
+- Failure recovery: define state and caller actions after rejected events, violations, and splitter/handler failure.
+- Resource hygiene: define entity/snapshot/payload ownership and release, including custom registration when admitted.
+- Performance: state unique/repeated event and split-expansion costs under representative entity/rule counts.
 
 ## Performance
 
