@@ -1,10 +1,10 @@
 # Sprint 04: V1 Night City Artifact Consumption and Performance
 
-Status: planned. Dates/capacity: unassigned. Epic:
+Status: complete. Dates/capacity: unassigned. Epic:
 [Night City Artifact Consumption and Performance](../Backlog.md#night-city-artifact-consumption-and-performance).
 Release: [V1](../V1.md).
-Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
-this charter does not promote inherited completion marks.
+Design readiness: ready for the selected local consumer/reactor scope. Verification: complete for this sprint's
+acceptance.
 
 ## Goal and user outcome
 
@@ -12,9 +12,8 @@ Build and exercise Night City as a Maven project consuming the installed Existen
 
 ## Dependencies and readiness
 
-Review [Sprint 03](Sprint03_V1FailureRecoveryAndResourceHygiene.md) for actual dependencies and evidence. Allow
-independent investigation and design ahead of later sprints. Implementation waits only for its actual behavioral and
-technical dependencies. Select a ready capability using [Process](../../auto/Process.md).
+Review [Sprint 03](Sprint03_V1FailureRecoveryAndResourceHygiene.md) for the transaction recovery and shutdown behavior
+used by the story. The consumer/reactor work can be verified independently of remaining V1 closeout items.
 
 ## Governing designs and specifications
 
@@ -25,18 +24,18 @@ technical dependencies. Select a ready capability using [Process](../../auto/Pro
 Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
 entry.
 
-## Remaining work
+## Completed implementation
 
-- Give examples/night_city its own pom.xml with the library dependency, not a source/test classpath dependency.
-- Build the library first, then verify the independent Night City project; retain shared source fixtures for root tests.
-- Use public library APIs in the demonstrated workflow and remove incidental dependence on implementation annotations.
-- Run the complete representative scenario, including success, violation, recovery, relationships, and evolution.
-- Record artifact contents, dependency hygiene, transaction performance, and workload-size evidence.
+The standalone POM, separate reactor POM, runnable story, and consumer acceptance test are present. The story uses the
+existing cat configuration, reports an expected rule rejection with explicit rollback, makes a fresh successful
+attempt, and relocates a cat under dwelling and color-preservation rules. Night City remains a shared root test fixture;
+application wiring no longer depends on incidental internal logic annotations.
 
 ## Acceptance
 
 - Night City compiles/runs from the documented dependency without root source, test-classes, or target/classes inputs.
 - Normal library artifacts exclude Night City, tests, and build-only dependencies.
+- The independent consumer acceptance test executes, and the separate reactor runs in library-before-consumer order.
 - Representative workflow measurements and resource evidence are reproducible and reviewed.
 
 ## Quality and performance
@@ -46,21 +45,26 @@ Link decisions and proof obligations for each concern, or justify inapplicabilit
 Measure representative transaction throughput and scaling; record environment, samples, and material tradeoffs. Use
 [performance records](../../performance/Readme.md), naming workloads and comparable evidence.
 
-## Demo and validation
+## Execution plan and validation
 
-Coding-task closure requires `mvn clean install` and inspection of actual test/coverage/check outputs. The independent
-consumer command is planned as `mvn -f examples/night_city/pom.xml verify` after library installation. It becomes
-runnable when Sprint 04 creates Night City's POM and its executable acceptance demonstration.
+Current execution plan: [P10222604](../../planning/P10222604.Sprint04-runnable-night-city-and-maven-reactor.plan.md).
+
+Observed initial evidence: root `mvn clean install` passes 445 tests with JaCoCo checks; standalone consumer
+`mvn -f examples/night_city/pom.xml clean verify` executes its story test; `mvn -f reactor/pom.xml clean install`
+builds all three projects in order. Full final builds and artifact/dependency review remain after the last changes.
 
 ## Non-goals
 
-Maven Central publication, a root reactor restructure, and new benchmark frameworks.
+Maven Central publication, changing the root library into an aggregator/parent, and new benchmark frameworks.
 
-## Plan and review
+## Review
 
-No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
-obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
+Completed. The independent consumer uses only the installed library artifact and Night City sources. `mvn clean install`
+passes 454 tests, Checkstyle, PMD, and JaCoCo checks. Standalone consumer verification runs 1 acceptance test, the story
+prints all expected outcomes, and the reactor builds/installs all 3 projects in dependency order. Normal and assembled
+library JARs exclude example/test classes and test libraries; the consumer dependency tree keeps JUnit in test scope.
+Three independent success/rejection/recovery/repeated-event performance samples are recorded. No numeric threshold was
+introduced. Broader runtime support and external publication remain deferred to their own release decisions.
 
 [Distribution.spec.md]: ../../specifications/Distribution.spec.md
 [Distribution.design.md]: ../../design/Distribution.design.md

@@ -26,6 +26,7 @@ class TrTest
     @AfterEach
     void cleanup()
     {
+        tr.close();
         Ex.instance(prev);
         ex.close();
     }

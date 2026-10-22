@@ -23,6 +23,6 @@ public class MaintainGlobalOrder
 
     public <T> void sort(List<OrderlyEv<?>> handlers)
     {
-        handlers.sort(Comparator.comparingLong(OrderlyEv::ordinal));
+        handlers.sort(Comparator.comparingLong(ev -> ev.ordinal()));
     }
 }

@@ -7,20 +7,33 @@ operation, begin a transaction, report entity events, and commit to evaluate the
 
 Java sources live in `src/main/java/com/taitl/ex/examples/night_city/`. `model/` defines the entities, `configure/`
 shows fluent and instance-based rules, `commands/` and `access/` illustrate application operations, and `data/` provides
-shared sample data. `tests/CityTests` is a configuration fixture, not a JUnit test suite. Some examples still contain
+shared sample data. `app/CityApp` exposes configuration examples as an application entry point. Some examples still contain
 unfinished illustrations; their presence does not establish supported library behavior.
 
 Maven compiles this tree as additional test sources for the root project. Existing unit tests, specification tests, and
-benchmarks use the same examples. The source packages are unchanged; examples are excluded from library JARs. This
-directory is not a separate Maven module and has no standalone application entry point.
+benchmarks use the same examples. The source packages are unchanged; examples are excluded from library JARs. The
+independent consumer also provides runnable application entry points.
 
-## Planned independent Maven project
+## Independent Maven consumer and runnable story
 
-[Night City Artifact Consumption and Performance] will give Night City its own `pom.xml`, depending on the installed
-Existential artifact. Build/install the library first, then verify the example project against that dependency, using
-its own sources and public library APIs. Root
-library tests can retain the current shared-fixture source arrangement. The independent POM/demo is planned, not yet
-present; no Maven Central publication is needed for local consumption.
+Night City has its own `pom.xml` and depends on the installed `com.taitl:existential` artifact. Its sources compile in
+the consumer module; the root project separately keeps them as shared test fixtures. The consumer does not inherit the
+root POM or use root source/test output.
+
+From the repository root, build and install the library, verify the consumer, and run its noninteractive story:
+
+    mvn clean install
+    mvn -f examples/night_city/pom.xml clean verify
+    mvn -f examples/night_city/pom.xml exec:java
+
+The story reports an expected rule rejection, explicitly rolls it back, completes a fresh valid creation, and relocates
+a cat while preserving its color and destination-dwelling rule. Every transaction and the library instance are closed.
+The consumer acceptance test runs the same story. A separate reactor build is available with
+`mvn -f reactor/pom.xml clean install`; Maven Central publication is not part of local consumption.
+
+Run the consumer-side workflow measurement with setup excluded from the timed section:
+
+    mvn -f examples/night_city/pom.xml -Dbenchmark.warmup.iterations=50 -Dbenchmark.measure.iterations=250 -Dexec.mainClass=com.taitl.ex.examples.night_city.app.NightCityWorkflowBenchmark compile exec:java
 
 ## Caller-supplied relationships and evolution
 
@@ -68,6 +81,3 @@ complete clean build is `mvn clean install`.
 
 See [usage](../../docs/Usage.md), the [specification index](../../docs/dev/Specification.md), and
 [performance guidance](../../docs/dev/performance/Readme.md) for the supported workflow and measurement details.
-
-[Night City Artifact Consumption and Performance]:
-  ../../docs/dev/project/Backlog.md#night-city-artifact-consumption-and-performance

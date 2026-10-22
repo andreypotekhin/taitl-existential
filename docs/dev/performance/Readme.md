@@ -50,4 +50,8 @@ before/after dispatch measurements.
 The [relationships and evolution topic](topics/RelationshipsAndEvolution.md) records source-cardinality and repeated
 report measurements plus the membership-only lookup improvement.
 
+The [Night City consumer workflow topic](topics/NightCityConsumerWorkflows.md) measures complete workflows against the
+installed library artifact, with configuration/source setup excluded and success, recovery, cardinality, and repeated
+event cases separated.
+
 [Custom transactions]: topics/CustomTransactions.md

@@ -1,9 +1,8 @@
 # Sprint 03: V1 Failure Recovery and Resource Hygiene
 
-Status: in progress. Dates/capacity: unassigned. Epic:
+Status: complete. Dates/capacity: unassigned. Epic:
 [Failure Recovery and Resource Hygiene](../Backlog.md#failure-recovery-and-resource-hygiene). Release: [V1](../V1.md).
-Design readiness: selected failure and shutdown contracts are settled. Verification: partial; main sources compile,
-but focused tests, complete build evidence, and performance records remain outstanding.
+Design readiness: selected failure and shutdown contracts are settled. Verification: complete for the selected V1 scope.
 
 ## Goal and user outcome
 
@@ -26,14 +25,12 @@ entry.
 
 Current execution plan: [P10212603](../../planning/P10212603.Sprint03-failure-recovery-and-shutdown.plan.md).
 
-## Remaining work
+## Completed scope
 
-- Add focused tests for state and permitted recovery after validation, callback, commit, rollback, and begin failures.
-- Verify library transaction cleanup independently from caller-owned object/storage changes and side effects.
-- Repair the three disabled validation-report tests and add direct failure/recovery assertions for the workflow.
-- Verify shutdown timeout, interruption, retry, concurrent close, callback rejection, and direct transaction close.
-- Verify normal/failed exits release transaction registry entries, event references, memo data, and prepared overlays.
-- Make diagnostics actionable and link remedies; preserve the original failure if cleanup also fails as specified.
+Failed begin, rejected commit, checkpoint retry, rollback failure aggregation, transaction state release, shutdown
+timeout/interruption/retry, callback-close rejection, and concurrent draining have direct acceptance evidence. The
+three report tests are active and pass. Runtime-index, memo, and prepared-overlay cleanup have focused retained-state
+tests. Troubleshooting links identify the recovery actions.
 
 Sprint 02 already corrected deterministic runtime event/type index clearing on successful completion and explicit
 rollback, including retained closed handles, and added operation-aware validation/endpoint diagnostics. Extend that
@@ -56,22 +53,22 @@ Measure failure/cleanup paths separately and inspect retained-state counts; timi
 
 ## Demo and validation
 
-Existing tests are starting evidence, not proof of all new acceptance cases. From the repository root:
+Final root build from the repository root:
 
-    mvn -Dtest=UserCanInitiateTransactions,EvaluationLogicTest test
-    mvn -Dtest=TrRegistryTest test
+    mvn clean install
 
-Coding-task closure requires `mvn clean install` and inspection of actual test/coverage/check outputs.
+Observed: 454 tests, 0 failures/errors/skips; Checkstyle and PMD pass; JaCoCo analyzes 234 classes and passes the
+configured coverage checks. Rejected-commit rollback and fresh-transaction recovery timing are recorded with the
+[Night City workflow samples](../../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md).
 
 ## Non-goals
 
 A global leak dashboard and arbitrary effect compensation.
 
-## Plan and review
+## Review
 
-No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
-obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
+Completed for the selected V1 failure-recovery and shutdown behavior. Broader global cache bounds, GC/leak detection,
+and a leak dashboard remain outside this sprint.
 
 [TransactionsAndEvaluation.spec.md]: ../../specifications/TransactionsAndEvaluation.spec.md
 [TransactionsAndEvaluation.design.md]: ../../design/TransactionsAndEvaluation.design.md

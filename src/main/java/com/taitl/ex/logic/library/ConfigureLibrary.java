@@ -38,7 +38,7 @@ public class ConfigureLibrary
 
     public ConfigureLibrary(Existential ex)
     {
-        this(ex, System::getenv, ConfigureLibrary.class.getClassLoader());
+        this(ex, name -> System.getenv(name), ConfigureLibrary.class.getClassLoader());
     }
 
     public ConfigureLibrary(Existential ex, Function<String, String> env, ClassLoader classLoader)

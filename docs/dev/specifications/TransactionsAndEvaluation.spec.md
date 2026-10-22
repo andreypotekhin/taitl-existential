@@ -49,28 +49,42 @@ Rollback releases the handle's transaction-local data even if a rollback callbac
 the handle in a second registry.
 
 Acceptance: [lifecycle and failure recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
-and [public lifecycle API](../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java).
+and [public lifecycle API](../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java), plus
+[failed begin recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterBeginFailure.java).
 
 ### Checkpoint failure recovery
 
-A checkpoint failure leaves the transaction handle available for further application work or explicit rollback. The
++ A checkpoint failure leaves the transaction handle available for further application work or explicit rollback. The
 library does not automatically mark it rollback-only. Callers are responsible for effects already performed and for
 callbacks that may run again on a later attempt.
 
+Acceptance: [checkpoint recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java).
+
 ### Rollback callback failure recovery
 
-Explicit rollback attempts every rollback lifecycle callback and rollback-stage handler in declaration order, even if
++ Explicit rollback attempts every rollback lifecycle callback and rollback-stage handler in declaration order, even if
 an earlier callback fails. It reports the first failure and attaches later failures as suppressed exceptions. The
 transaction's library-owned state is released in all cases. Rollback callbacks run only after an explicit rollback call.
 
+Acceptance: [rollback callback recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java).
+
 ### Library shutdown
 
-Library shutdown stops admission of new transactions and waits for registered active handles and in-flight transaction
++ Library shutdown stops admission of new transactions and waits for registered active handles and in-flight transaction
 calls to finish before releasing library resources. Existing transactions may complete or explicitly roll back while
 shutdown is waiting. A finite timeout or thread interruption reports failure and leaves the library draining so the
 caller can finish transactions and retry close. A zero timeout waits without a time limit. Shutdown does not force
 rollback or undo caller-owned effects. Calling close from a transaction callback fails immediately to avoid waiting
-for that same callback to return.
+for that same callback to return, including when another thread has already started library shutdown.
+
+Acceptance: [shutdown policy and concurrency](../../../src/test/java/com/taitl/specs/library_usage/UserCanShutdownLibrary.java).
+
+### Closing a transaction from its callback
+
++ A callback cannot close the transaction handle whose callback is executing. Direct close fails promptly so the
+transaction lifecycle can finish before its resources are disposed.
+
+Acceptance: [transaction callback shutdown cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanShutdownLibrary.java).
 
 ### Explicit event transaction IDs
 

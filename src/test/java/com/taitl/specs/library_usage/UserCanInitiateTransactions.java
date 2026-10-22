@@ -32,6 +32,7 @@ class UserCanInitiateTransactions extends SpecBase
         Tr tranTr = ex.begin(op);
         String tran = tranTr.id();
         assertThat(tran, is(not(emptyString())));
+        tranTr.close();
     }
 
     @Test
@@ -74,5 +75,6 @@ class UserCanInitiateTransactions extends SpecBase
         String tran = tranTr.id();
         ex.update(cat, tran);
         tranTr.checkpoint();
+        tranTr.close();
     }
 }

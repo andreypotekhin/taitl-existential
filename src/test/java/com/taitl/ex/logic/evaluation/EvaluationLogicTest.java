@@ -37,17 +37,20 @@ class EvaluationLogicTest
 
     private Existential ex;
     private TypeKey<String> typeKey;
+    private List<Tr> transactions;
 
     @BeforeEach
     void setup()
     {
         ex = new Existential();
         typeKey = new TypeKey<>(String.class);
+        transactions = new ArrayList<>();
     }
 
     @AfterEach
     void cleanup()
     {
+        transactions.forEach(Tr::close);
         ex.close();
     }
 
@@ -64,7 +67,6 @@ class EvaluationLogicTest
     @Nested
     class EvaluateValidation
     {
-        @Disabled("Config not found for op: /api/eval/collect")
         @Test
         @DisplayName("Executes effects and collects constraint violations")
         void executesEffectsAndCollectsViolations() throws Exception
@@ -86,7 +88,6 @@ class EvaluationLogicTest
             assertInstanceOf(ConditionNotMetException.class, report.exceptions().get(0));
         }
 
-        @Disabled("Config not found for op: /api/eval/partial")
         @Test
         @DisplayName("Rethrows non violation handler exception and keeps partial report")
         void rethrowsAndKeepsPartialReport() throws Exception
@@ -113,7 +114,6 @@ class EvaluationLogicTest
             assertInstanceOf(ConditionNotMetException.class, report.exceptions().get(0));
         }
 
-        @Disabled("Config not found for op '/api/eval/predicate-failure'")
         @Test
         @DisplayName("Collects predicate failure from invariant all")
         void collectsPredicateFailure() throws Exception
@@ -139,7 +139,13 @@ class EvaluationLogicTest
 
     private <T> Tr transitTr(String op, TypeKey<T> typeKey, T t0, T t1)
     {
+        ex.configure()
+                .context(op)
+                .invariant(String.class)
+                .all(value -> true, "evaluation test context");
+        ex.configs().done();
         Tr tr = new Tr(op, UUID.randomUUID(), ex.transactions().logic(), ex.events().eventLogic);
+        transactions.add(tr);
         tr.runtimeIndexes().encounteredUniqueEvents.add(RuntimeKey.valueOf(new Port<>(t0, t1), typeKey, t1, false));
         return tr;
     }

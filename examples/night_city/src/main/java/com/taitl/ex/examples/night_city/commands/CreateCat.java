@@ -10,9 +10,9 @@ public class CreateCat
     public void call()
             throws ExistentialException
     {
-        Tr tranIDTr = Ex.begin("/api/cats/create");
-        String tranID = tranIDTr.id();
-        Ex.transit(null, CityTestData.GREY_CAT, tranID);
-        tranIDTr.commit();
+        Tr tr = Ex.begin("/api/cats/create");
+        String id = tr.id();
+        Ex.transit(null, CityTestData.GREY_CAT, id);
+        tr.commit();
     }
 }

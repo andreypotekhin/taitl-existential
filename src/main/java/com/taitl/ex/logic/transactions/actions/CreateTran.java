@@ -28,12 +28,12 @@ public class CreateTran extends TranAction
 
     public Tr forConfig(String op, Config config, Transaction custom)
     {
-        return forConfig(op, config, custom, CreateTran::forContext);
+        return forConfig(op, config, custom, context -> forContext(context));
     }
 
     protected Tr forContexts(String op, List<Context> contexts, Transaction custom)
     {
-        return forContexts(op, contexts, custom, CreateTran::forContext);
+        return forContexts(op, contexts, custom, context -> forContext(context));
     }
 
     protected Tr forConfig(

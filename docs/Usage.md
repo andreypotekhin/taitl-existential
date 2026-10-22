@@ -23,6 +23,16 @@ Gradle:
         implementation "com.taitl:existential:0.0.1-SNAPSHOT"
     }
 
+Night City is an independent consumer example. From a checkout, install the library and run its acceptance build and
+interactive-free workflow:
+
+    mvn clean install
+    mvn -f examples/night_city/pom.xml clean verify
+    mvn -f examples/night_city/pom.xml exec:java
+
+The example POM depends on the installed library artifact; it does not compile against the root project output. See
+[Night City](../examples/night_city/Readme.md) for the scenarios and combined reactor command.
+
 ### Minimal workflow
 Minimal workflow: configure rules, initiate transaction, send events. 
 

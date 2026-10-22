@@ -216,8 +216,8 @@ Upon completion, move TODO items and corresponding suggestions to [past/todo](pa
 ### What to avoid
 Being a principled team, we fight a few dogmas.
 
-We generally avoid, unless there is a valid reason: - non-wildcard imports - 'final' keyword - 'private' access modifier
-(prefer default or protected) - reference syntax in lambdas - Optionals - @Override annotation - reflection - overuse of
+We avoid, unless there is a valid reason: - non-wildcard imports - 'final' keyword - 'private' access modifier
+(prefer default or protected) - reference syntax (method references) in lambdas - Optionals - @Override annotation - reflection - overuse of
 streams - Camel-case abbreviations (e.g. HTML -> Html) - HTML formatting tags in Javadocs, such as <p> and <br> -
 non-Javadoc comments (the meaning should stem from code) - testing a class in total isolation (we test coherent clusters
 of classes instead of mocking around)

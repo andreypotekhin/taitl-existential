@@ -11,8 +11,8 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class ListMap<K, V> implements Map<K, List<V>>
 {
-    public final Supplier<Map<K, List<V>>> DEFAULT_MAP_FACTORY = LinkedHashMap::new;
-    public final Supplier<List<V>> DEFAULT_LIST_FACTORY = LinkedList::new;
+    public final Supplier<Map<K, List<V>>> DEFAULT_MAP_FACTORY = () -> new LinkedHashMap<>();
+    public final Supplier<List<V>> DEFAULT_LIST_FACTORY = () -> new LinkedList<>();
 
     protected Supplier<Map<K, List<V>>> mapFactory = DEFAULT_MAP_FACTORY;
     protected Supplier<List<V>> listFactory = DEFAULT_LIST_FACTORY;

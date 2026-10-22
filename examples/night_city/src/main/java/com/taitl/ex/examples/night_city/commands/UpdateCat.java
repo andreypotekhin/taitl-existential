@@ -10,9 +10,9 @@ public class UpdateCat
     public void call()
             throws ExistentialException
     {
-        Tr tranIDTr = Ex.begin("/api/cats/update");
-        String tranID = tranIDTr.id();
-        Ex.update(CityTestData.GREY_CAT, tranID);
-        tranIDTr.commit();
+        Tr tr = Ex.begin("/api/cats/update");
+        String id = tr.id();
+        Ex.update(CityTestData.GREY_CAT, id);
+        tr.commit();
     }
 }

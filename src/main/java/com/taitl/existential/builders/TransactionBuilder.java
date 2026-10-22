@@ -43,7 +43,8 @@ public class TransactionBuilder
         this.op = op;
         this.evsSuppliers = new ArrayList<>();
         this.evsStages = new ArrayList<>();
-        this.transactionFactory = parent::createTransactionInstance;
+        this.transactionFactory =
+                (transactionOp, transactionName) -> parent.createTransactionInstance(transactionOp, transactionName);
         installParentTransactionFactory();
     }
 

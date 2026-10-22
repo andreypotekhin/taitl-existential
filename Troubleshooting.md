@@ -32,8 +32,8 @@ Cause: Graceful shutdown stops new begins and waits for each registered handle t
 Fix: Finish the transaction, or close its `Tr` handle explicitly if rollback callbacks should not run, then retry
 library close. Set `shutdown.timeoutMillis` or call `shutdownPolicy(ShutdownPolicy.graceful(duration))` to bound the
 wait. Zero means unlimited waiting. A timeout or interruption leaves the library draining so you can finish active
-work and retry close. Close the library after transaction callbacks return; calling close from a callback fails to
-prevent it waiting on itself.
+work and retry close. Close the library after transaction callbacks return. Calling close inside a callback fails
+promptly, including while another thread is already closing the library, so the callback cannot deadlock that shutdown.
 
 ## Condition Not Met
 

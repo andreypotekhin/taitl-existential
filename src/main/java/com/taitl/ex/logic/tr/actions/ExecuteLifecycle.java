@@ -97,7 +97,15 @@ public class ExecuteLifecycle
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void execute(On handler, Transaction transaction) throws ExistentialException
     {
-        ExecuteHandler.handle(handler, transaction);
+        tr.callbackStarted();
+        try
+        {
+            ExecuteHandler.handle(handler, transaction);
+        }
+        finally
+        {
+            tr.callbackFinished();
+        }
     }
 
     protected Throwable append(Throwable failure, Throwable next)
@@ -165,7 +173,7 @@ public class ExecuteLifecycle
                     throw new IllegalStateException("Lifecycle handler must extend On, got "
                             + eventHandler.getClass().getName());
                 }
-                ExecuteHandler.handle((On) eventHandler, transaction);
+                execute((On) eventHandler, transaction);
             }
         }
     }

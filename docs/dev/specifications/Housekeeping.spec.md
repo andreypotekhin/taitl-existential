@@ -43,10 +43,13 @@ remain owned by their existing configuration or application owners.
 
 ### Graceful library shutdown
 
-Library close waits for active transactions to finish, then releases library resources. The timeout is configurable
++ Library close waits for active transactions to finish, then releases library resources. The timeout is configurable
 through `ShutdownPolicy` or the `shutdown.timeoutMillis` properties key; zero means unlimited waiting. Timeout and
 interruption leave the library draining and allow a later close attempt. Shutdown never invokes rollback callbacks or
-forces caller-owned effects to be undone.
+forces caller-owned effects to be undone. A close call from a transaction callback fails promptly, even when another
+thread has already started shutdown, so the callback can return and allow that shutdown to proceed.
+
+Acceptance: [shutdown policy and concurrency](../../../src/test/java/com/taitl/specs/library_usage/UserCanShutdownLibrary.java).
 
 ## Global Cleanup
 

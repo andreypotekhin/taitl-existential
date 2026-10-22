@@ -52,6 +52,7 @@ class UserCanConfigureEntities extends SpecBase
                 Tr tranTr = ex.begin(op);
                 String tran = tranTr.id();
                 ex.update(cat, tran);
+                tranTr.close();
             });
         }
 
@@ -64,6 +65,7 @@ class UserCanConfigureEntities extends SpecBase
                 Tr tranTr = ex.begin(op);
                 String tran = tranTr.id();
                 ex.update(cat, tran);
+                tranTr.close();
             });
         }
 
@@ -76,6 +78,7 @@ class UserCanConfigureEntities extends SpecBase
                 Tr tranTr = ex.begin(op);
                 String tran = tranTr.id();
                 ex.update(cat, tran);
+                tranTr.close();
             });
         }
 
@@ -88,6 +91,7 @@ class UserCanConfigureEntities extends SpecBase
                 Tr tranTr = ex.begin(op);
                 String tran = tranTr.id();
                 ex.update(cat, tran);
+                tranTr.close();
             });
         }
 
@@ -282,6 +286,38 @@ class UserCanConfigureEntities extends SpecBase
             assertThrows(EventHandlerException.class, tr::rollback);
             assertThrows(NotFoundException.class, () -> ex.create(cat, tr.id()));
             assertThrows(ExistentialException.class, tr::rollback);
+        }
+
+        @Test
+        @DisplayName("Rollback tries later callbacks and suppresses their failures")
+        void rollbackAggregatesCallbackFailures() throws Exception
+        {
+            AtomicInteger callbacks = new AtomicInteger();
+            // @formatter:off
+            ex.configure()
+                    .context(op)
+                    .rollback()
+                        .effect(cat.getClass())
+                            .create(c -> {
+                                callbacks.incrementAndGet();
+                                throw new IllegalStateException("first rollback callback failed");
+                            }, "first rollback callback")
+                    .rollback()
+                        .effect(cat.getClass())
+                            .create(c -> {
+                                callbacks.incrementAndGet();
+                                throw new IllegalArgumentException("second rollback callback failed");
+                            }, "second rollback callback");
+            // @formatter:on
+
+            Tr tr = ex.begin(op);
+            tr.create(cat);
+            EventHandlerException failure = assertThrows(EventHandlerException.class, tr::rollback);
+
+            assertEquals(2, callbacks.get(), "later rollback callbacks still run after a failure");
+            assertEquals(1, failure.getSuppressed().length, "later failure is suppressed on the primary failure");
+            assertThrows(NotFoundException.class, () -> ex.create(cat, tr.id()),
+                    "callback failures do not prevent transaction disposal");
         }
     }
 }

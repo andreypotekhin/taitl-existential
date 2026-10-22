@@ -9,8 +9,8 @@ import java.util.function.*;
  */
 public class SetMap<K, V> implements Map<K, Set<V>>
 {
-    public final Supplier<Map<K, Set<V>>> DEFAULT_MAP_FACTORY = LinkedHashMap::new;
-    public final Supplier<Set<V>> DEFAULT_SET_FACTORY = LinkedHashSet::new;
+    public final Supplier<Map<K, Set<V>>> DEFAULT_MAP_FACTORY = () -> new LinkedHashMap<>();
+    public final Supplier<Set<V>> DEFAULT_SET_FACTORY = () -> new LinkedHashSet<>();
 
     protected Supplier<Map<K, Set<V>>> mapFactory = DEFAULT_MAP_FACTORY;
     protected Supplier<Set<V>> setFactory = DEFAULT_SET_FACTORY;

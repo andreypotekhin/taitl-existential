@@ -127,42 +127,53 @@ path; broader library-close and leak guarantees remain partial.
 Requirements: Admitted transaction/library exits; cleanup does not imply undoing caller objects.
 
 - [TransactionsAndEvaluation.spec.md]: [Starting a transaction], [Committing a transaction],
-  [Rolling back a transaction], [Checkpoint failure recovery], [Rollback callback failure recovery], [Library shutdown].
+  [Rolling back a transaction], [Checkpoint failure recovery], [Rollback callback failure recovery], [Library shutdown],
+  [Closing a transaction from its callback].
 - [Housekeeping.spec.md]: [Transaction resource release], [Reported event resource release],
   [Transaction-local state release], [Graceful library shutdown], [Transaction recycling], [Rule recycling].
 
 Evidence: [transaction recovery tests](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
-and [registry test](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java).
+and [registry test](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java), plus
+[failed begin](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterBeginFailure.java),
+[checkpoint retry](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java), and
+[shutdown concurrency](../../../src/test/java/com/taitl/specs/library_usage/UserCanShutdownLibrary.java).
 The [Sprint 02 relationship cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
 also verify all three runtime index collections clear through retained closed handles after commit/explicit rollback.
-Implementation underway: graceful shutdown, configurable wait timeout, explicit callback recovery, and transaction-local
-cache cleanup are in code. Verification remains partial; focused tests and full build evidence are still required.
+Verification: the selected recovery and shutdown behaviors pass direct acceptance tests. The final root build runs all
+454 tests with zero failures/errors/skips and its JaCoCo checks pass. The [consumer workflow performance record](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md)
+provides separate rejected-commit/rollback and fresh-recovery timing. Broader cache bounds and observable leak reporting
+remain in V2/global scope.
 
 ## Night City as an artifact consumer
 
 Epic: [Night City Artifact Consumption and Performance](Backlog.md#night-city-artifact-consumption-and-performance);
 [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
-Design readiness: open. Verification: missing.
+Design readiness: ready for local independent consumption. Verification: verified for the selected consumer and reactor
+workflow.
 
 Requirements: Local Maven dependency consumption.
 
 - [Distribution.spec.md]: [Maven dependency consumption].
 
-Evidence to review: not yet available.
-Remaining work: Create Night City POM/demo; verify against the installed JAR without root source/test class directories.
+Evidence: [independent consumer acceptance](../../../examples/night_city/src/test/java/com/taitl/ex/examples/night_city/NightCityStoryTest.java),
+[runnable story](../../../examples/night_city/src/main/java/com/taitl/ex/examples/night_city/app/NightCityStory.java),
+and [consumer performance record](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md). Root install,
+standalone consumer verification, reactor installation, artifact inspection, and dependency-tree checks passed.
 
 ## Representative performance and hardening
 
 Epic: [Night City Artifact Consumption and Performance](Backlog.md#night-city-artifact-consumption-and-performance);
 [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
-Design readiness: open. Verification: partial.
+Design readiness: ready for selected V1 workflows. Verification: partial across full V1 capability scope; selected Sprint 04
+performance evidence is complete.
 
 Requirements: All V1 capabilities and their five quality design obligations; final gate V1 Hardening and Closeout.
 Topics: [LibraryAndConfiguration.spec.md], [TransactionsAndEvaluation.spec.md], [QuantifiersAndIndexes.spec.md],
 [Housekeeping.spec.md], [Distribution.spec.md].
-Evidence to review: [CustomTransactionBenchmark.java].
-Remaining work: Add representative workload/cardinality and resource evidence; historical timings are not full workflow
-proof.
+Evidence: [consumer workflow benchmark](../../../examples/night_city/src/main/java/com/taitl/ex/examples/night_city/app/NightCityWorkflowBenchmark.java),
+[three-sample record](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md), and earlier [relationship
+cardinality record](../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md). There is no numerical gate or
+comparable prior full-workflow baseline.
 
 ## Independent library instances
 

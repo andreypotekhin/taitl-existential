@@ -23,7 +23,7 @@ public class ConfigureCats
     {
         configureState(context);
         MultiJoin<Cat, Dwelling<Cat, ?>, String> catDwelling =
-                new MultiJoin<>(Cat::location, Dwelling::location);
+                new MultiJoin<>((cat) -> cat.location(), (dwelling) -> dwelling.location());
         dwellings.forEach((cat, available) -> {
             catDwelling.addLeft(cat);
             catDwelling.addAllRight(available);

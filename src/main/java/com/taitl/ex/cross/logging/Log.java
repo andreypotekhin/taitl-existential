@@ -14,7 +14,7 @@ public final class Log
         LEVEL_TRACE, LEVEL_DEBUG, LEVEL_INFO, LEVEL_WARNING, LEVEL_ERROR
     }
 
-    private static final Supplier<Logger> FACTORY = Logger::new;
+    private static final Supplier<Logger> FACTORY = () -> new Logger();
     private static Supplier<Logger> factory = FACTORY;
     private static LogLevel logLevel = LogLevel.LEVEL_WARNING;
     private static volatile boolean loggerInitialized;

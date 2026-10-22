@@ -31,7 +31,7 @@ import static com.taitl.ex.common.helper.Args.*;
  */
 public class Transaction implements Configurable, Evaluable
 {
-    public static BiFunction<String, String, ? extends Transaction> FACTORY = Transaction::new;
+    public static BiFunction<String, String, ? extends Transaction> FACTORY = (op, name) -> new Transaction(op, name);
 
     protected final ConcreteTransaction concrete;
     public final UUID id;

@@ -15,4 +15,11 @@ User can add the Library as a dependency to their project using Maven-based depe
 
 Local consumption can resolve an installed artifact without a Maven Central account. Remote publication requires
 separate destination/account/signing prerequisites and evidence of availability; local installation is not remote
-publication. V1 acceptance uses Night City as an independent Maven project depending on the installed library.
+publication.
+
++ V1 acceptance builds Night City as an independent Maven consumer of the installed library, runs its documented
+workflow, and verifies that the consumer has no dependency on root source or test output. The normal and assembled
+library artifacts exclude Night City and test classes, and the consumer dependency tree contains only runtime library
+dependencies plus consumer-scoped test dependencies.
+
+Acceptance: [Night City consumer workflow](../../../examples/night_city/src/test/java/com/taitl/ex/examples/night_city/NightCityStoryTest.java).

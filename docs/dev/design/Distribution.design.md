@@ -24,8 +24,13 @@ publication is established by a successful local install or by the existing Usag
 Keep build plugins and test fixtures outside the consumer dependency surface. Prove consumption from a separate Night
 City Maven project, rather than relying on the library test classpath. Use the V1/V2/V3 release outcomes.
 
-These observations retain the existing architecture. They do not approve new public interfaces or resolve the open
-choices below. Record future decisions here, update the normative specification, and reconcile the execution plan.
+The root POM remains the library build and keeps Night City as shared test fixtures. A separate consumer POM proves
+artifact use independently; a separate reactor POM provides one-command ordering without making the library depend on
+the example artifact. This preserves the root build commands and existing library coordinates while avoiding a
+source/test classpath dependency in the consumer. These are build-structure choices, not new public library APIs.
+
+Remote publication and the broader runtime matrix remain open and are not implied by local installation or reactor
+success.
 
 ## Open decisions
 
@@ -34,27 +39,21 @@ choices below. Record future decisions here, update the normative specification,
 - Verify normal versus assembled artifact expectations and consumer dependency hygiene.
 - Actual external publication needs its own authorized release action and verified destination availability.
 
-## Evidence and acceptance work
+## Verification evidence
 
-- [existing facade tests; not independent consumption evidence](../../../src/test/java/com/taitl/specs/library)
+The consumer story and its independent acceptance test are the evidence for the documented workflow. Artifact contents,
+standalone compilation, and the dependency tree establish the local consumer boundary. See the [distribution
+specification](../specifications/Distribution.spec.md) for the user-visible requirement.
 
-[Night City Artifact Consumption and Performance] makes Night City the independent Maven consumer; V2 tracks publication
-readiness separately. Add user-facing positive and negative acceptance cases for each unresolved behavior; passing
-adjacent unit tests do not establish the full claim. Preserve inherited completion marks until a requirement-level
-review changes them.
+## Local consumer and reactor
 
-## Independent Night City consumption
+Night City is an independent Maven consumer of the installed library artifact. It owns its application and acceptance
+sources, while the library may continue compiling the shared example sources as test fixtures. A distinct reactor POM
+orders the root library before Night City. The consumer does not inherit from that reactor and never consumes root
+sources or class directories. This avoids a dependency cycle while allowing both the independent and combined builds.
 
-Night City will have its own POM under `examples/night_city/`, depending on the installed Existential artifact.
-Build/install the root library first, then verify Night City through that dependency. Its consumer build must not add
-root `src/main/java`, `src/test/java`, `target/classes`, or `target/test-classes` to its source/classpath. It owns its
-own example classes and must use public library APIs for the demonstrated workflow. The root library can continue using
-Night City sources as shared test fixtures; this does not create a consumer dependency on root test output.
-
-This is a separate Maven project; a reactor module is optional future build orchestration. Avoid a reactor cycle in
-which library tests depend on an example artifact that itself requires the library. The POM/demo is Night City Artifact
-Consumption and Performance work and is not implemented by this planning update. A locally installed artifact suffices.
-Publishing to Maven Central is a separate distribution action, not a prerequisite for proving the public workflow.
+A local consumer build proves the documented public workflow and dependency surface. Local installation and reactor
+execution do not establish remote publication; destination, signing, and publication remain separate decisions.
 
 ## Required quality analysis
 
