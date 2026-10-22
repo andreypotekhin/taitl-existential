@@ -367,6 +367,7 @@ public class ConcreteTr
             return;
         }
         closed = true;
+        runtimeIndexes.close();
         validationData.close();
         validationData = null;
         for (StageData data : stageData.values())

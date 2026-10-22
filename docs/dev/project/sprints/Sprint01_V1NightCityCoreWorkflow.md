@@ -27,12 +27,12 @@ remains assigned to later work.
 Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
 entry.
 
-## Remaining work
+## Delivered scope
 
-- Complete the executable cat creation and relocation walkthrough at one operation context, including a successful
+- Completed the executable cat creation and relocation walkthrough at one operation context, including a successful
   create, black-at-birth rejection, missing-dwelling rejection, allowed relocation, and color-change rejection.
-- Cover explicit rollback after failed commit, event-ID detachment, report isolation, and concurrent `@Op` execution.
-- Restore JaCoCo collection, run the full installation checks, inspect disabled tests, and record comparable performance
+- Covered explicit rollback after failed commit, event-ID detachment, report isolation, and concurrent `@Op` execution.
+- Restored JaCoCo collection, ran the full installation checks, inspected disabled tests, and recorded comparable performance
   samples.
 
 ## Acceptance

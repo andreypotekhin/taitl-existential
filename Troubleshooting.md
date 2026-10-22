@@ -196,3 +196,18 @@ caller-maintained source collections/indexes: these expressions were previously 
 before validation, correct the reported entity, or use an event-specific predicate if the rule should apply only to
 creation or another selected event. Conditional All can exclude entities that do not require the constraint.
 After a rejected commit, explicitly roll back the caller-held transaction handle for configured rollback callbacks.
+
+## Validation failure
+
+`ValidationStageExceptions` identifies the operation and contains the individual rule failures through its cause,
+suppressed exceptions, and `multiple()` accessor. Inspect those descriptions to correct the reported entity or its
+caller-owned relationship source. An All/Exists source is read during validation; the library does not fill it or undo
+caller changes. After a rejected commit, use the original transaction handle for explicit rollback, then begin a fresh
+transaction for another attempt. Retaining the closed handle does not retain its cleared runtime event indexes.
+
+## Event endpoints
+
+Transit requires both before and after values. Use `tr.transit(before, after)` for relocation or another change with
+explicit snapshots. Use `tr.port(null, after)` for creation and `tr.port(before, null)` for deletion. Port rejects two
+null endpoints. Endpoint errors occur before the event is indexed; correct the values and report the intended event
+on the same transaction, or explicitly roll back. Keep snapshots and hash-source keys stable until validation ends.

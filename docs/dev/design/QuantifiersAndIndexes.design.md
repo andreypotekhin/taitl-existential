@@ -56,6 +56,20 @@ objects and broader index maintenance semantics require their own design; they a
 Direct collection/index tests and end-to-end expression dispatch tests establish different claims. Passing adjacent
 unit tests does not establish complete transaction validation or maintained-index semantics.
 
+## Caller-supplied relationships and composition
+
+All can wrap an Exists predicate directly, including a conditional All selecting subjects that require a relationship.
+List/set sources express same-class membership; a map from subject to a selected related entity expresses a cross-class
+relationship using the map bipredicate. The predicate receives the matched source key and mapped value. It can verify
+that a non-null dwelling has the cat's location without stream traversal or an explicit predicate test call.
+
+Default Exists performs membership through the source collection/set/map API. This avoids scanning indexed sources
+when the stored key/value is not needed. Predicate-bearing Exists retains matched-source object semantics; recovering
+that original object may require iteration through a set or map. Collection predicates retain source duplicates.
+Maps/sets must obey their equality/hash or comparator contracts. Source contents are caller-owned and read at
+evaluation time; mutation during evaluation requires application synchronization. Hash keys must remain stable while
+stored. No automatic index maintenance, snapshotting, or source rollback is implied.
+
 ## Diagnostics, recovery, and concurrency
 
 Exists requires a matching key/entity in its source; empty sources and missing keys reject the evaluated entity.

@@ -58,8 +58,17 @@ code).
 
 ### All-Exists composition
 
-User can specify 'Exists' quantifier as a parameter to the 'All' quantifier, thus creating an All-Exists
++ User can specify 'Exists' quantifier as a parameter to the 'All' quantifier, thus creating an All-Exists
 invariant.
+
+All(new Exists(source)) validates the reported subject's membership. Conditional All evaluates the relationship only
+for selected subjects. A caller-supplied cat-to-dwelling map can express a relationship with a key/value predicate:
+the matching source key and its mapped value must satisfy that predicate. A missing subject, empty source, null mapped
+dwelling, or mismatched dwelling location rejects the representative relationship. Source contents remain caller-owned.
+Predicates inspecting a matching source object receive that stored object, including for an equal reported snapshot.
+Membership-only Exists uses the collection/set/map membership operation without retrieving stored objects by scanning.
+
+Acceptance: [caller-supplied entity relationships](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
 
 ### Exists on collections
 

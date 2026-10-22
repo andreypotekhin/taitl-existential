@@ -72,3 +72,9 @@ Cause: The prepared JaCoCo agent is assigned to `argLine`, while Surefire's expl
 Remedy: Treat coverage evidence as unavailable, inspect the actual test JVM options, and track the
 [coverage repair](suggestions/S10202601.Restore-coverage-evidence.md). The repair must compose agent and JVM options,
 then verify that data, a report, and the check are actually produced. Do not infer coverage from passing test totals.
+
+### Problem (Tests): Exact Surefire class filter executes zero nested tests
+
+When using `mvn -Dtest=ExistsTest test`, Surefire 2.22.2 may select no tests when the class's tests are all nested.
+Use `mvn '-Dtest=ExistsTest*' test` and inspect the actual count (13 cases at the Sprint 02 baseline). Full-suite discovery
+includes these nested cases. Do not set `failIfNoTests=false` to present an empty focused run as passing evidence.

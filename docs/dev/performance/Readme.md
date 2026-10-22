@@ -47,4 +47,7 @@ establish resource safety. Adopt JMH when fork/warmup/statistical control or aut
 The [quantifier dispatch topic](topics/QuantifierDispatch.md) records the shared expression-route repair and its
 before/after dispatch measurements.
 
+The [relationships and evolution topic](topics/RelationshipsAndEvolution.md) records source-cardinality and repeated
+report measurements plus the membership-only lookup improvement.
+
 [Custom transactions]: topics/CustomTransactions.md

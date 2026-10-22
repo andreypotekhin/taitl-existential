@@ -8,7 +8,7 @@ the current plan; archived charters were superseded before implementation, not c
 ## Completed planning foundation
 
 + Initial documentation-first foundation established; see the [assessment](Assessment.md).
-+ Three-release workflow planning established; feature-delivery sprints remain planned.
++ Three-release workflow planning established; Sprint 01/02 evidence is recorded in their reviews.
 
 ## V1
 
@@ -24,7 +24,8 @@ regressions; the new scope changes delivery/evidence priorities, not availabilit
 
 ### Relationships and Evolution
 
-Status: planned. Delivery: [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
+Status: complete for the selected V1 caller-owned relationship/evolution scope. Delivery:
+[Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md). Broader maintained-index/type behavior remains in V2.
 
 Validate a representative relationship with basic All/Exists and reject an invalid before/after entity change.
 

@@ -17,6 +17,8 @@ public class ValidateTransaction
         if (!report.isEmpty())
         {
             throw new ValidationStageExceptions(
+                    "Validation stage failed for operation '" + tr.op + "' with " + report.exceptions().size()
+                            + " error(s). See /Troubleshooting.md#validation-failure",
                     report.exceptions().toArray(new ExistentialException[] {}));
         }
     }

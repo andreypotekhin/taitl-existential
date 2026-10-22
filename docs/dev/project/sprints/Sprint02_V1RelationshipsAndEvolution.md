@@ -1,9 +1,9 @@
 # Sprint 02: V1 Relationships and Evolution
 
-Status: planned. Dates/capacity: unassigned. Epic:
+Status: complete. Dates/capacity: unassigned. Epic:
 [Relationships and Evolution](../Backlog.md#relationships-and-evolution). Release: [V1](../V1.md).
-Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
-this charter does not promote inherited completion marks.
+Design readiness: the selected V1 collection/map composition and explicit evolution contract is recorded.
+Verification: all selected acceptance and required build checks passed; V1 remains unreleased.
 
 ## Goal and user outcome
 
@@ -23,12 +23,17 @@ dependencies. Select a ready capability using [Process](../../auto/Process.md).
 Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
 entry.
 
-## Remaining work
+## Delivered scope
 
-- Specify a focused Night City relationship using caller-supplied in-memory collections.
-- Cover a satisfied and missing relationship, empty collections, and the selected universal/existence combination.
-- Specify a before/after transition or port rule, its valid/invalid changes, and null endpoint handling.
-- Verify selected rules through transaction commit, rather than relying on quantifier-only unit tests.
+Caller-owned collection membership and cat-to-selected-dwelling maps use All-Exists composition, including conditional
+membership, equal snapshots, matching source object identity, empty/missing/null/wrong-location rejection, caller
+source repair, and explicit rollback. Shared ConfigureCats fixtures apply the same birth/state/evolution rules.
+Explicit Transit/Port endpoints cover relocation/create/delete and fail-early corrected-input recovery.
+
+Default set/map membership now delegates to source lookup without a redundant stored-key scan. Predicate-bearing
+sources retain original matched-object semantics. Night City value equality now includes class/color/location and
+handles null values consistently. Closed transaction handles clear their runtime event/type indexes; operation-aware
+validation errors and endpoint remedies are documented. These targeted corrections were exposed by selected tests.
 
 ## Acceptance
 
@@ -45,12 +50,16 @@ Measure collection cardinalities and evolution checks, including duplicate-event
 
 ## Demo and validation
 
-Existing tests are starting evidence, not proof of all new acceptance cases. From the repository root:
+From the repository root:
 
-    mvn -Dtest=AllTest,ExistsTest test
-    mvn -Dtest=UserCanUseMemoForBiEvents test
+    mvn -Dtest=UserCanConstrainEntityRelationships,UserCanCreateAndRelocateCats,UserCanValidateEntityQuantifiers test
+    mvn '-Dtest=ExistsTest*' test
+    mvn -q -Pbenchmarks -Dtest=RelationshipBenchmark -Dbenchmark.warmup.iterations=2000 -Dbenchmark.measure.iterations=10000 test
+    mvn clean install
 
-Coding-task closure requires `mvn clean install` and inspection of actual test/coverage/check outputs.
+The [Night City guide](../../../../examples/night_city/Readme.md#caller-supplied-relationships-and-evolution) gives the
+caller-supplied map walkthrough. The [execution plan](../../past/planning/P10212602.Sprint02-relationships-and-evolution.plan.md)
+records regression evidence, discoveries, exact commands, and limits.
 
 ## Non-goals
 
@@ -58,17 +67,27 @@ Full generic/subclass combinations, maintained joins/indexes, and additional eve
 
 ## Plan and review
 
-The foundational [quantifier dispatch repair](../../past/planning/P10212601.Quantifier-dispatch.plan.md) is complete.
-Its [acceptance](../../../../src/test/java/com/taitl/specs/library_usage/UserCanValidateEntityQuantifiers.java) verifies
-event scope/endpoints, conditional All, collection/set/map matching, checkpoint/commit, declaration order, type names,
-generic variants, cache reuse, and transaction-local expressions. ConfigureCats now uses fluent All/Exists, including
-negative relocation/location tests. This does not complete Sprint 02's wider relationship/index scope.
-See [performance evidence](../../performance/runs/20261021T223641Z.QuantifierDispatch.md): three before/after samples
-are noisy and do not establish a consistent speed change. Final clean installation ran 423 tests with zero
-failures/errors and three existing disabled report tests; Checkstyle, PMD, Failsafe, and JaCoCo checks passed.
-Follow [Plans](../../auto/Plans.md) when the remaining work is selected.
-Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
-obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
+Review completed 2026-10-21 at revision `9a4dab73628b99fc09b446dc9427b14b0db8e928` with a dirty working tree.
+Amazon Corretto 17.0.15; Maven 3.9.10; macOS 15.6.1 arm64. Final `mvn clean install` ran 445 tests, zero failures/errors,
+three existing disabled EvaluationLogicTest report cases. Checkstyle reported zero violations; PMD/Failsafe completed;
+JaCoCo analyzed 231 executable classes with actual data/report and passed checks. Local installation passed. Both
+ordinary and assembled library JARs exclude example/spec-test classes; standalone consumer verification remains Sprint 04.
+
+Correctness: [15 relationship/evolution cases](../../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java),
+[existing create/relocation rejection](../../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java),
+and 26 quantifier-dispatch cases. Diagnostics identify operation/rules and link remedies. Recovery verifies rejected
+input stays unindexed, rejected commit detaches lookup, and explicit rollback releases runtime references without
+undoing source maps. Resource assertions inspect all three runtime index collections through retained closed handles.
+These claims do not establish arbitrary callback/library-close/global-cache behavior.
+
+[Cardinality performance evidence](../../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md) records three
+fresh-JVM baseline and after samples at 16/256/4,096 entries, source hashes, ranges, algorithmic evidence, and limits.
+Membership-only set/map scans are eliminated; general key/value predicates retain the source-object recovery scan.
+Four deterministic tests verify no stored-key iteration. Timing does not establish allocation or global resource bounds.
+
+Sprint 02 is complete for its admitted V1 scope. Broader multiplicity, maintained indexes, type/transition-object
+breadth, and global caches remain later capabilities. [Sprint 03](Sprint03_V1FailureRecoveryAndResourceHygiene.md)
+next resolves the three disabled reports and broader failure/close/resource obligations. V1 is not released.
 
 [QuantifiersAndIndexes.spec.md]: ../../specifications/QuantifiersAndIndexes.spec.md
 [QuantifiersAndIndexes.design.md]: ../../design/QuantifiersAndIndexes.design.md

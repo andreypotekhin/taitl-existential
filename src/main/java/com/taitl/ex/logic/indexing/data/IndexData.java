@@ -31,5 +31,8 @@ public class IndexData
 
     public void close()
     {
+        encounteredEventKeys.eventKeys.clear();
+        encounteredTypeKeys.typeKeys.clear();
+        encounteredUniqueEvents.runtimeKeys.clear();
     }
 }

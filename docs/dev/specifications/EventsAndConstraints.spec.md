@@ -22,6 +22,10 @@ User can emit (record) a class event, such as accessing or modifying entity.
 Multiple equal events (e.g. same entity + event type) (successive or not) are considered to be (have same
 effect) as a single such event.
 
+On the representative entity path, event equality uses the same event/type key and the same entity instance.
+Repeated reports on that instance fold; distinct equal snapshots remain distinct reported entities. Source membership
+uses its collection equality/comparator contract instead of runtime entity identity.
+
 ### Events require library configuration
 
 User can't send any events before the library is configured.
@@ -41,12 +45,12 @@ User can't modify configurations (e.g. create invariants) after sending first ev
 
 ### Port event type inference
 
-When emitting a port event without an explicit type key, library infers the type from the non-null entity
++ When emitting a port event without an explicit type key, library infers the type from the non-null entity
 value (preferring t1 when present, otherwise t0). Both t0 and t1 can't be null.
 
 ### Transit event endpoints
 
-When emitting a transit event without an explicit type key, both t0 and t1 must be non-null.
++ When emitting a transit event without an explicit type key, both t0 and t1 must be non-null.
 
 ## Constraints
 
@@ -104,11 +108,22 @@ Require another entity to exist when entity exists, (different classes, outside 
 
 ### Entity transition invariants
 
-User can declare an invariant on entity transition.
++ User can declare an invariant on entity transition.
 
 ### Entity porting invariants
 
 User can declare an invariant on entity porting.
+
+### Explicit evolution and endpoint validation
+
++ The representative cat evolution rule preserves color and requires a dwelling at the selected destination.
+Transit reports explicit non-null before/after values. Port permits one null endpoint for creation or deletion;
+both endpoints null are rejected immediately. An invalid event does not enter validation and leaves the transaction
+available for a corrected event. Failed commit identifies the operation and violated rule descriptions, detaches
+active transaction lookup, and permits explicit rollback. Source collections and caller-owned snapshots are not undone.
+
+Acceptance: [relationships and endpoint validation](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
+and [cat relocation](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java).
 
 ## Constraints on evolution of multiple entities
 

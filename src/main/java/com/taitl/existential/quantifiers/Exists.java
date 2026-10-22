@@ -13,6 +13,8 @@ import static com.taitl.ex.common.helper.Args.*;
 /**
  * Existential quantifier over a collection or set, evaluated in the scope of a transaction.
  * Used within invariants to assert that a predicate holds for at least one value.
+ * Membership-only forms delegate to the source membership lookup. Predicate-bearing forms retain the
+ * actual matching source objects for predicates that inspect them.
  *
  * @param <T>
  *            Element type in the examined source
@@ -22,7 +24,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     ConcreteExists<T, ?> concrete;
 
     /**
-     * Builds a map-based exists predicate that matches by identity.
+     * Builds a map-based exists predicate that uses source membership.
      *
      * @param map
      *            Map to scan
@@ -32,12 +34,12 @@ public class Exists<T> implements Expression<T>, Predicate<T>
         sane(map, "map");
         concrete = this.<D> createBuilder()
                 .map(map)
-                .predicate(value -> true)
+                .membership()
                 .build();
     }
 
     /**
-     * Builds a map-based exists predicate that matches by identity.
+     * Builds a map-based exists predicate that uses source membership.
      *
      * @param map
      *            Map to scan
@@ -49,7 +51,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
         sane(map, "map");
         concrete = this.<D> createBuilder()
                 .map(map)
-                .predicate(value -> true)
+                .membership()
                 .description(description)
                 .build();
     }
@@ -216,7 +218,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     }
 
     /**
-     * Builds a set-based exists predicate that matches by identity.
+     * Builds a set-based exists predicate that uses source membership.
      *
      * @param set
      *            Set to scan
@@ -226,12 +228,12 @@ public class Exists<T> implements Expression<T>, Predicate<T>
         sane(set, "set");
         concrete = createBuilder()
                 .set(set)
-                .predicate(value -> true)
+                .membership()
                 .build();
     }
 
     /**
-     * Builds a set-based exists predicate that matches by identity.
+     * Builds a set-based exists predicate that uses source membership.
      *
      * @param set
      *            Set to scan
@@ -243,7 +245,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
         sane(set, "set");
         concrete = createBuilder()
                 .set(set)
-                .predicate(value -> true)
+                .membership()
                 .description(description)
                 .build();
     }
@@ -369,7 +371,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
     }
 
     /**
-     * Builds a collection-based exists predicate that matches by identity.
+     * Builds a collection-based exists predicate that uses source membership.
      *
      * @param coll
      *            Collection to scan
@@ -379,12 +381,12 @@ public class Exists<T> implements Expression<T>, Predicate<T>
         sane(coll, "coll");
         concrete = createBuilder()
                 .coll(coll)
-                .predicate(value -> true)
+                .membership()
                 .build();
     }
 
     /**
-     * Builds a collection-based exists predicate that matches by identity.
+     * Builds a collection-based exists predicate that uses source membership.
      *
      * @param coll
      *            Collection to scan
@@ -396,7 +398,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
         sane(coll, "coll");
         concrete = createBuilder()
                 .coll(coll)
-                .predicate(value -> true)
+                .membership()
                 .description(description)
                 .build();
     }

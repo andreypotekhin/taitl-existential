@@ -73,11 +73,14 @@ Requirements: A representative collection-backed relationship.
 Evidence: [cat and dwelling relationship acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java)
 and [entity quantifier acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanValidateEntityQuantifiers.java),
 plus [quantifier unit cases](../../../src/test/java/com/taitl/existential/quantifiers/).
+The [Sprint 02 collection/map composition cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
+verify caller sources, conditional membership, missing/empty/null/mismatched relations, and source-object semantics.
 The [dispatch defect](../past/todo/T10212601.Quantifier-rules-skipped-by-event-dispatch.md) is repaired; the cat workflow
 uses fluent rules with direct missing-destination and missing-location rejection tests.
 See [dispatch performance evidence](../performance/runs/20261021T223641Z.QuantifierDispatch.md).
-Remaining work: broader relationship composition, maintained-index behavior, and transition-object quantification
-remain for their owning Sprint 02/V2 scope.
+See [Sprint 02 cardinality evidence](../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md) for pure membership
+scan elimination and the retained predicate-source scan. Sprint 02's selected V1 relationship scope is complete.
+Remaining work: broader multiplicity, maintained-index behavior, and transition-object quantification remain in V2.
 
 ## Explicit entity evolution
 
@@ -93,6 +96,8 @@ Requirements: Explicit before/after values; broader memo/type/subclass combinati
 
 Evidence: [cat relocation acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java)
 and [memo-based bi-events](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java).
+Explicit create/delete/relocation and invalid-null endpoint recovery are verified by
+[relationship evolution acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
 Remaining work: memo/type/subclass breadth belongs to V2.
 
 ## Useful violations and errors
@@ -107,7 +112,8 @@ Requirements: Selected violation paths and the V1 validation-report requirements
 - [EventsAndConstraints.spec.md]: [Constraint violation exceptions], [Constraint descriptions], [Violation details].
 - [TransactionsAndEvaluation.spec.md]: V1 validation-report requirements.
 
-Evidence: [cat workflow](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java).
+Evidence: [cat workflow](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java) and
+[operation/rule diagnostics](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
 Remaining work: three disabled report cases in [EvaluationLogicTest.java](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java)
 remain for Sprint 03.
 
@@ -127,6 +133,8 @@ Requirements: Admitted transaction/library exits; cleanup does not imply undoing
 
 Evidence: [transaction recovery tests](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
 and [registry test](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java).
+The [Sprint 02 relationship cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
+also verify all three runtime index collections clear through retained closed handles after commit/explicit rollback.
 Remaining work: broader library-close and resource-release claims remain in Sprint 03.
 
 ## Night City as an artifact consumer

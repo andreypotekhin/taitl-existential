@@ -27,6 +27,14 @@ Resources taken during a transaction are released upon its completion (commit or
 
 The above applies to the transaction resources as well as all reported events.
 
+### Runtime event index release
+
++ Successful completion or explicit rollback clears the transaction's runtime event, event-key, and type-key
+collections, including when a caller retains the closed handle or index reference. Failed commit vacates active ID
+lookup and leaves explicit rollback available through the handle. This does not undo caller-owned relationship sources.
+
+Acceptance: [relationship lifecycle cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
+
 ## Global Cleanup
 
 ### Transaction recycling

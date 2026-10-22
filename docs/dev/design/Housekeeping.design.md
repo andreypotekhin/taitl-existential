@@ -1,6 +1,6 @@
 # Housekeeping Design
 
-Status: current-state design with open decisions; not a declaration that all specified behavior is implemented.
+Status: selected transaction-index release design; broader cleanup/cache capabilities retain their recorded limits.
 
 ## User outcome
 
@@ -25,43 +25,37 @@ UnsupportedOperationException. Those stubs are not evidence of implemented cross
 Tie resources to their owners and fail explicitly for unavailable operations. Prefer deterministic release of
 transaction state over garbage-collection timing; separate useful shared caches from entity-retaining state.
 
-These observations retain the existing architecture. They do not approve new public interfaces or resolve the open
-choices below. Record future decisions here, update the normative specification, and reconcile the execution plan.
+## Runtime event indexes
 
-## Open decisions
+ConcreteTr owns IndexData. Closing the transaction invokes IndexData.close, clearing its encountered event keys, type
+keys, and unique runtime events in place. Clearing in place releases references even if a caller retains the closed
+handle or an alias to its runtime indexes. Release is deterministic and repeatable; it does not depend on garbage
+collection. Caller-owned relationship sources remain referenced by their configuration owner as intended.
 
-- Specify cleanup after commit, rollback, failed validation, failed handlers, and library close.
-- Define cache scope, invalidation, boundedness, and concurrency before implementing additional caching.
-- Define what leak detection can observe and when reporting occurs; do not promise deterministic GC.
-- Verify that memo state and prepared transaction overlays release references on each supported exit path.
+Failed commit detaches active registry lookup; explicit rollback then closes transaction-local state. Abandoning a
+failed handle permits normal reachability-based reclamation, but does not run rollback callbacks. This is distinct
+from clearing every live transaction on library close or proving arbitrary callbacks/global caches safe.
 
 ## Evidence and acceptance work
 
 - [registry tests](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java)
 - [type cache tests](../../../src/test/java/com/taitl/ex/logic/events/TypeKeyCacheTest.java)
 
-[Failure Recovery and Resource Hygiene] owns admitted success/failure cleanup; [Indexes and Operational Coverage]
-broadens global/cache behavior; V3 covers extension resources. Add user-facing positive and negative acceptance cases
-for each unresolved behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion
-marks until a requirement-level review changes them.
+The [relationship lifecycle cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
+retain closed handles and inspect runtime state after commit/rollback. This evidence is limited to the selected
+transaction paths; it does not establish global cache bounds, leak reporting, or all library-close behavior.
 
-## Required quality analysis
+## Ownership boundaries
 
-These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
-and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
-establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
-
-- Correctness: define retained/released state for every admitted exit and the exact observable leak-reporting claim.
-- Actionable errors: identify invalid/stale lifecycle use or retained ownership and the caller cleanup remedy.
-- Failure recovery: define cleanup retry/idempotence, partial close behavior, and preservation of original failures.
-- Resource hygiene: specify registry, memo, overlay, stream, callback, and cache ownership/bounds/invalidation.
-- Performance: inspect retained-state growth alongside repeated success/failure workloads; timing does not establish
-  resource safety.
+Runtime event/type metadata is transaction-owned; source maps and rule references belong to their configuration or
+application owners. Clearing the former does not mutate the latter. State guards reject use of closed handles and
+link to lifecycle remedies. The selected clear operation empties in-memory collections and is idempotent. It adds no
+global state or cross-transaction synchronization. Configuration caches retain their existing ownership and contracts;
+this targeted release does not establish their boundedness or a general leak-reporting mechanism.
 
 ## Performance
 
-Use bounded repeated-transaction workloads and retained-state counts; timing alone cannot establish no memory leak. Use
-the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
-
-[Failure Recovery and Resource Hygiene]: ../project/Backlog.md#failure-recovery-and-resource-hygiene
-[Indexes and Operational Coverage]: ../project/Backlog.md#indexes-and-operational-coverage
+Runtime-index clearing is proportional to the recorded event/key/type collections. Retained-state assertions establish
+the selected reference-release contract; throughput cannot prove absence of memory leaks. The
+[relationship measurement record](../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md) separates timing
+from deterministic runtime-state checks and states the limits of both.

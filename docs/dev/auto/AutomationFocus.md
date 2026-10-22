@@ -6,10 +6,11 @@ subsystem-first split with V1 representative core, V2 broader standard usage, an
 
 ## Current priority
 
-Begin [Night City Core Workflow] in Sprint 01: develop the documented Night City workflow covering success, useful
-rejection, recovery, a basic All/Exists relationship, and entity evolution. Resolve the selected design/specification
-decisions and acceptance before coding. Deliver the core success/violation slice first and retain existing passing
-behavior.
+Continue V1 with [Failure Recovery and Resource Hygiene] in Sprint 03. Sprint 01's core workflow and Sprint 02's
+caller-supplied All/Exists relationship/evolution slice are complete with passing acceptance and build evidence.
+Resolve the remaining failure/close contract, repair the three disabled validation-report tests, and verify bounded
+transaction state across repeated successful and failed operations. Use the Sprint 03 charter and current traceability
+to distinguish these remaining obligations from the completed dispatch/composition/runtime-index corrections.
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Restore useful verification feedback early and link evidence for each concern. Do not treat inherited marks or

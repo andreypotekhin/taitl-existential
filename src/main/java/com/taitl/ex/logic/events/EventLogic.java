@@ -104,7 +104,8 @@ public class EventLogic implements Closeable
 
     public <T> void transit(T t0, T t1, TypeKey<T> type, Tr tr) throws ExistentialException
     {
-        sane(t0, "t0", t1, "t1", type, "type", tr, "tr");
+        sane(type, "type", tr, "tr");
+        requireTransitEndpoints(t0, t1);
         event(new Transit<>(t0, t1), type, tr);
     }
 
@@ -115,14 +116,15 @@ public class EventLogic implements Closeable
     public <T> void transit(T t0, T t1, Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
-        check(t0 != null && t1 != null, "Both t0 and t1 should not be null.");
+        requireTransitEndpoints(t0, t1);
         transit(t0, t1, typeKey(t1), tr);
     }
 
     public <T> void port(T t0, T t1, TypeKey<T> type, Tr tr) throws ExistentialException
     {
         sane(type, "type", tr, "tr");
-        check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
+        check(t0 != null || t1 != null,
+                "Port requires at least one non-null endpoint. See /Troubleshooting.md#event-endpoints");
         boolean haveNull = t0 == null || t1 == null;
         BiEvent<T> event = haveNull ? new Port<>(t0, t1) : new Transit<>(t0, t1);
         event(event, type, tr);
@@ -135,9 +137,17 @@ public class EventLogic implements Closeable
     public <T> void port(T t0, T t1, Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
-        check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
+        check(t0 != null || t1 != null,
+                "Port requires at least one non-null endpoint. See /Troubleshooting.md#event-endpoints");
         T entity = (t1 != null) ? t1 : t0;
         port(t0, t1, typeKey(entity), tr);
+    }
+
+    protected void requireTransitEndpoints(Object before, Object after)
+    {
+        check(before != null && after != null,
+                "Transit requires non-null before and after values; use port() for creation or deletion."
+                        + " See /Troubleshooting.md#event-endpoints");
     }
 
     public <T> void read(T entity, TypeKey<T> type, Tr tr) throws ExistentialException

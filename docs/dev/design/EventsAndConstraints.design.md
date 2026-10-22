@@ -1,6 +1,6 @@
 # Events and Constraints Design
 
-Status: current-state design with open decisions; not a declaration that all specified behavior is implemented.
+Status: representative explicit event/evolution design; broader event capabilities retain their recorded limits.
 
 ## User outcome
 
@@ -25,15 +25,21 @@ evaluation and handler invocation use the configured entity/type keys rather tha
 Keep event reporting explicit and limited to in-memory entities. Preserve fail-early input validation and keep
 before-state ownership visible to callers; do not imply automatic observation of arbitrary object mutation.
 
-These observations retain the existing architecture. They do not approve new public interfaces or resolve the open
-choices below. Record future decisions here, update the normative specification, and reconcile the execution plan.
+## Explicit evolution
 
-## Open decisions
+Transit takes non-null before/after snapshots. Port takes at least one non-null endpoint: null before denotes creation,
+null after denotes deletion. Input errors fail before indexing and permit a corrected event on the same transaction.
+Diagnostics explain the endpoint requirements and link to the appropriate remedy. A cat's evolution preserves color;
+the relationship rule validates the after-value's selected dwelling, or the before-value for deletion.
 
-- Specify event identity when equal/mutable entities and repeated events interact with runtime indexing.
-- Specify superclass/interface/generic matching and the exact guarantees for subclass constraints.
-- Define custom event registration, collision handling, splitting, dispatch, and intent interactions before coding.
-- Clarify additional event values and stable violation metadata without assuming an unimplemented public API.
+Runtime event folding uses entity instance identity and event/type keys. Repeated reports of the same event on the same
+instance fold; distinct equal snapshots remain separate reported entities. Source collection membership instead uses
+its equality/comparator contract. Example value classes compare their actual class, color, and location consistently
+with hashing. Callers must keep source keys stable and use explicit snapshots rather than mutating a stored hash key.
+
+Validation reports preserve rule descriptions and identify the operation. Rejected commit detaches active lookup;
+explicit rollback runs callbacks and clears transaction runtime event/type indexes, even when the caller retains the
+closed handle or an index reference. This release does not undo caller-owned objects or relationship source contents.
 
 ## Evidence and acceptance work
 
@@ -41,33 +47,23 @@ choices below. Record future decisions here, update the normative specification,
 - [memo behavior](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java)
 - [event input/equality tests](../../../src/test/java/com/taitl/existential/events)
 
-[Night City Core Workflow], [Relationships and Evolution], and [Failure Recovery and Resource Hygiene] own
-representative events/evolution/errors; V2 broadens them; [Custom Event Contracts and Registration] and Custom Event
-Evaluation and Extensions own custom events. Add user-facing positive and negative acceptance cases for each unresolved
-behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion marks until a
-requirement-level review changes them.
+The [relationship acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
+backs the selected input/evolution/recovery contract. Broader inherited/generic/custom event dispatch and diagnostic
+metadata require their own designs. Passing adjacent unit tests does not establish those capabilities.
 
-## Required quality analysis
+## Ownership and diagnostics
 
-These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
-and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
-establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
-
-- Correctness: specify entity/type matching, null endpoints, before/after semantics, and derived-event behavior.
-- Actionable errors: identify invalid input or violated rule and operation/type context, avoiding ambiguous failures.
-- Failure recovery: define state and caller actions after rejected events, violations, and splitter/handler failure.
-- Resource hygiene: define entity/snapshot/payload ownership and release, including custom registration when admitted.
-- Performance: state unique/repeated event and split-expansion costs under representative entity/rule counts.
+The caller supplies stable explicit snapshots and synchronizes mutable relationship sources. The library reports
+endpoint mistakes before event indexing, validates the selected entity at the configured stage, and retains individual
+rule exceptions under an operation-naming ValidationStageExceptions. A rejected input can be corrected on the current
+transaction; a rejected commit requires a fresh transaction for retry. Explicit rollback releases runtime indexes but
+does not compensate caller-side object/storage changes. Configuration source references remain owned by configuration.
 
 ## Performance
 
-Measure repeated versus unique events and memo/split overhead with explicit entity counts and rule counts. Use the
-[performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+One report creates an event/type lookup whose expansion depends on the declared generic type. Repeating an equal event
+on the same instance folds the validation work, while repeated reporting still costs event creation/indexing and
+immediate-stage lookup. Source cardinality and matched-source recovery cost are independent of this event-folding cost.
 
 [derived events]:
   ../../../src/main/java/com/taitl/ex/logic/evaluation/events/split_events/event_splitter/EventSplitter.java
-
-[Night City Core Workflow]: ../project/Backlog.md#night-city-core-workflow
-[Relationships and Evolution]: ../project/Backlog.md#relationships-and-evolution
-[Failure Recovery and Resource Hygiene]: ../project/Backlog.md#failure-recovery-and-resource-hygiene
-[Custom Event Contracts and Registration]: ../project/Backlog.md#custom-event-contracts-and-registration

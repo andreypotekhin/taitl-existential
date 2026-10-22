@@ -32,6 +32,12 @@ entry.
 - Verify normal/failed exits release transaction registry entries, event references, and selected before-state data.
 - Make diagnostics actionable and link remedies; preserve the original failure if cleanup also fails as specified.
 
+Sprint 02 already corrected deterministic runtime event/type index clearing on successful completion and explicit
+rollback, including retained closed handles, and added operation-aware validation/endpoint diagnostics. Extend that
+evidence rather than treating it as a complete library-close guarantee. Specify remaining memo/prepared-overlay
+release and cleanup retry/idempotence on failure. Broader cache bounds/concurrency and observable leak reporting
+remain in their V2/global owners; neither timings nor GC expectations establish those guarantees.
+
 ## Acceptance
 
 - Success, violation, failure recovery, explicit rollback, and close paths have reproducible expected outcomes.

@@ -1,6 +1,9 @@
 package com.taitl.existential.quantifiers;
 
+import com.taitl.ex.examples.night_city.model.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 
 import java.util.*;
 
@@ -8,6 +11,44 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ExistsTest
 {
+    @Nested
+    class Membership
+    {
+        @ParameterizedTest
+        @ValueSource(booleans = { false, true })
+        @DisplayName("Map membership uses its key lookup without iterating stored keys")
+        void mapDoesNotScan(boolean described)
+        {
+            Map<Cat, Object> map = new LinkedHashMap<>() {
+                public Set<Cat> keySet()
+                {
+                    throw new AssertionError("Membership must not scan keys");
+                }
+            };
+            map.put(new Cat("Black", "Park"), null);
+            Exists<Cat> exists = described ? new Exists<>(map, "Map membership") : new Exists<>(map);
+            assertTrue(exists.test(new Cat("Black", "Park")));
+            assertFalse(exists.test(new Cat("Grey", "Garden")));
+        }
+
+        @ParameterizedTest
+        @ValueSource(booleans = { false, true })
+        @DisplayName("Set membership uses contains without iterating stored values")
+        void setDoesNotScan(boolean described)
+        {
+            Set<Cat> set = new LinkedHashSet<>() {
+                public Iterator<Cat> iterator()
+                {
+                    throw new AssertionError("Membership must not scan values");
+                }
+            };
+            set.add(new Cat("Black", "Park"));
+            Exists<Cat> exists = described ? new Exists<>(set, "Set membership") : new Exists<>(set);
+            assertTrue(exists.test(new Cat("Black", "Park")));
+            assertFalse(exists.test(new Cat("Grey", "Garden")));
+        }
+    }
+
     @Nested
     class Constructors
     {

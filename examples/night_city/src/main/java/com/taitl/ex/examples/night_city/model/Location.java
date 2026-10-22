@@ -1,5 +1,7 @@
 package com.taitl.ex.examples.night_city.model;
 
+import java.util.*;
+
 public class Location
 {
     public String loc;
@@ -16,7 +18,7 @@ public class Location
 
     public int hashCode()
     {
-        return loc.hashCode();
+        return Objects.hashCode(loc);
     }
 
     public boolean equals(Object other)
@@ -25,16 +27,12 @@ public class Location
         {
             return true;
         }
-        if (other == null)
+        if (other == null || other.getClass() != getClass())
         {
             return false;
         }
         Location o = (Location) other;
-        if (o.loc == null)
-        {
-            return (this.loc == null);
-        }
-        return o.loc.equals(this.loc);
+        return Objects.equals(loc, o.loc);
     }
 
     public String toString()

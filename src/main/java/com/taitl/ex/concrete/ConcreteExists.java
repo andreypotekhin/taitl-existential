@@ -25,6 +25,7 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
     BiPredicate<T, K> mbipredicate;
     Transaction tran;
     String description;
+    boolean membershipOnly;
 
     void validate()
     {
@@ -35,6 +36,7 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
         verify(sources == 1, "Exactly one source (coll, set, or map) must be provided.");
 
         int predicates = 0;
+        predicates += membershipOnly ? 1 : 0;
         predicates += cpredicate == null ? 0 : 1;
         predicates += cbipredicate == null ? 0 : 1;
         predicates += spredicate == null ? 0 : 1;
@@ -65,17 +67,18 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
 
     public boolean test(T entity)
     {
+        sane(entity, "entity");
         if (coll != null)
         {
-            return testOnCollection(entity);
+            return membershipOnly ? coll.contains(entity) : testOnCollection(entity);
         }
         if (set != null)
         {
-            return testOnSet(entity);
+            return membershipOnly ? set.contains(entity) : testOnSet(entity);
         }
         if (map != null)
         {
-            return testOnMap(entity);
+            return membershipOnly ? map.containsKey(entity) : testOnMap(entity);
         }
         throw new IllegalStateException("Neither coll, set nor map is defined");
     }

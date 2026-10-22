@@ -36,13 +36,11 @@ public class Being<T extends Family>
         {
             return true;
         }
-        if (other == null)
+        if (other == null || other.getClass() != getClass())
         {
             return false;
         }
-        Being<T> o = (Being<T>) other;
-        boolean sameColor = (o.color == null && this.color == null) || o.color.equals(this.color);
-        boolean sameLocation = (o.location == null && this.location == null) || o.color.equals(this.color);
-        return sameColor && sameLocation;
+        Being<?> o = (Being<?>) other;
+        return Objects.equals(color, o.color) && Objects.equals(location, o.location);
     }
 }

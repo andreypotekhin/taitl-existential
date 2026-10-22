@@ -22,6 +22,7 @@ public class ConcreteExistsBuilder<V, K>
     BiPredicate<V, K> mbipredicate;
     Transaction transaction;
     String description;
+    boolean membershipOnly;
 
     public ConcreteExists<V, K> build()
     {
@@ -39,6 +40,7 @@ public class ConcreteExistsBuilder<V, K>
         result.mbipredicate = mbipredicate;
         result.tran = transaction;
         result.description = description;
+        result.membershipOnly = membershipOnly;
         result.validate();
         return result;
     }
@@ -52,6 +54,7 @@ public class ConcreteExistsBuilder<V, K>
         verify(sources == 1, "Exactly one source (coll, set, or map) must be provided.");
 
         int predicates = 0;
+        predicates += membershipOnly ? 1 : 0;
         predicates += cpredicate == null ? 0 : 1;
         predicates += cbipredicate == null ? 0 : 1;
         predicates += spredicate == null ? 0 : 1;
@@ -101,6 +104,12 @@ public class ConcreteExistsBuilder<V, K>
     {
         sane(predicate, "predicate");
         this.vpredicate = predicate;
+        return this;
+    }
+
+    public ConcreteExistsBuilder<V, K> membership()
+    {
+        membershipOnly = true;
         return this;
     }
 
