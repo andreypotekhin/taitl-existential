@@ -148,6 +148,8 @@ public class ConfigurationIndexes
 
     public void close()
     {
+        eventField.close();
+        intentField.close();
         configuredHandlers.clear();
         configuredIntents.clear();
         biKeys.clear();

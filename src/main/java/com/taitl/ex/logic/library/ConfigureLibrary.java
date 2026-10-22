@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.*;
 import java.util.function.*;
+import java.time.Duration;
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.common.helper.security.FileSecurity;
@@ -158,12 +159,37 @@ public class ConfigureLibrary
                     ex.off(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
                 }
             }
+            else if ("shutdown.timeoutMillis".equals(key))
+            {
+                ex.shutdownPolicy(parseShutdownPolicy(key, value, source));
+            }
             else
             {
                 throw new IllegalStateException(
                         String.format("Invalid configuration key '%s' in '%s'. See %s",
                                 key, source, TROUBLESHOOTING_SECTION));
             }
+        }
+    }
+
+    protected ShutdownPolicy parseShutdownPolicy(String key, String value, String source)
+    {
+        verify(value != null,
+                String.format("Configuration key '%s' has no value in '%s'. See %s",
+                        key, source, TROUBLESHOOTING_SECTION));
+        try
+        {
+            long millis = Long.parseLong(value.trim());
+            verify(millis >= 0, String.format("Configuration key '%s' must be nonnegative in '%s'. See %s",
+                    key, source, TROUBLESHOOTING_SECTION));
+            return ShutdownPolicy.graceful(Duration.ofMillis(millis));
+        }
+        catch (NumberFormatException e)
+        {
+            throw new IllegalStateException(
+                    String.format("Invalid millisecond value '%s' for key '%s' in '%s'. See %s",
+                            value, key, source, TROUBLESHOOTING_SECTION),
+                    e);
         }
     }
 

@@ -35,6 +35,19 @@ lookup and leaves explicit rollback available through the handle. This does not 
 
 Acceptance: [relationship lifecycle cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
 
+### Transaction-local state release
+
+Closing a transaction clears transaction-owned memo values, prepared indexes, prepared event overlays, and cached
+event handlers in addition to runtime event indexes. Shared configured rules and caller-owned relationship sources
+remain owned by their existing configuration or application owners.
+
+### Graceful library shutdown
+
+Library close waits for active transactions to finish, then releases library resources. The timeout is configurable
+through `ShutdownPolicy` or the `shutdown.timeoutMillis` properties key; zero means unlimited waiting. Timeout and
+interruption leave the library draining and allow a later close attempt. Shutdown never invokes rollback callbacks or
+forces caller-owned effects to be undone.
+
 ## Global Cleanup
 
 ### Transaction recycling

@@ -64,6 +64,13 @@ public class StageData
             preparedIndexes.close();
             preparedIndexes = null;
         }
+        if (overlay != null)
+        {
+            overlay.close();
+        }
         overlay = null;
+        intentEventTypes.clear();
+        biIntentKeys.clear();
+        intentHandlers.clear();
     }
 }

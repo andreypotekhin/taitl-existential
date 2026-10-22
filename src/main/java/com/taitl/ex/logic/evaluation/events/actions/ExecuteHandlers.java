@@ -41,6 +41,52 @@ public class ExecuteHandlers
         }
     }
 
+    public <T> void callAll(List<Ev<T>> evs, Event<T> event, ValidationReport report)
+            throws ExistentialException
+    {
+        sane(evs, "evs", event, "event", report, "report");
+        Throwable failure = null;
+        for (Ev<T> ev : evs)
+        {
+            try
+            {
+                call(Collections.singletonList(ev), event, report);
+            }
+            catch (Throwable caught)
+            {
+                if (failure == null)
+                {
+                    failure = caught;
+                }
+                else if (failure != caught)
+                {
+                    failure.addSuppressed(caught);
+                }
+            }
+        }
+        rethrow(failure);
+    }
+
+    protected void rethrow(Throwable failure) throws ExistentialException
+    {
+        if (failure instanceof ExistentialException)
+        {
+            throw (ExistentialException) failure;
+        }
+        if (failure instanceof RuntimeException)
+        {
+            throw (RuntimeException) failure;
+        }
+        if (failure instanceof Error)
+        {
+            throw (Error) failure;
+        }
+        if (failure != null)
+        {
+            throw new ExistentialException("Event handler failed", failure);
+        }
+    }
+
     protected <T> void executeHandler(EventHandler<T> handler, Event<T> event, ValidationReport report)
             throws ExistentialException
     {

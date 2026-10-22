@@ -2,6 +2,7 @@ package com.taitl.existential;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.core.existential.*;
+import com.taitl.ex.logic.library.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.events.types.*;
@@ -28,9 +29,10 @@ public final class Existential implements Closeable
     private ExistentialTransactions transactions;
     private ExistentialEvents events;
     private ExistentialFlags flags;
+    private ShutdownLogic shutdownLogic;
 
     private boolean configured = false;
-    private boolean closed = false;
+    private volatile ShutdownPolicy shutdownPolicy = ShutdownPolicy.graceful();
 
     public Existential()
     {
@@ -40,6 +42,10 @@ public final class Existential implements Closeable
         flags = Creator.create(ExistentialFlags.class, new Class[] { Existential.class }, this);
         access = Creator.create(ExistentialAccess.class, new Class[] { Existential.class }, this);
         events = Creator.create(ExistentialEvents.class, new Class[] { Existential.class }, this);
+        shutdownLogic = Creator.create(ShutdownLogic.class,
+                new Class[] { Existential.class, ExistentialEvents.class, ExistentialFlags.class,
+                        ExistentialConfigs.class, ExistentialAccess.class, ExistentialInit.class },
+                this, events, flags, configs, access, init);
         init.startup();
     }
 
@@ -392,16 +398,20 @@ public final class Existential implements Closeable
      */
     public void close()
     {
-        if (!closed)
-        {
-            transactions.close();
-            events.close();
-            flags.close();
-            configs.close();
-            access.close();
-            init.close();
-            closed = true;
-        }
+        shutdownLogic.close(shutdownPolicy);
+    }
+
+    /** Returns the policy used by the next library shutdown attempt. */
+    public ShutdownPolicy shutdownPolicy()
+    {
+        return shutdownPolicy;
+    }
+
+    /** Sets the policy used by the next library shutdown attempt. */
+    public void shutdownPolicy(ShutdownPolicy policy)
+    {
+        sane(policy, "policy");
+        shutdownPolicy = policy;
     }
 
     /**

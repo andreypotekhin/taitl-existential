@@ -21,8 +21,19 @@ Fix:
    (for example, `chmod 700 /path/to`).
 5. Keep only supported keys:
    - `behavior.rules.requireDescriptions`
+   - `shutdown.timeoutMillis` (nonnegative milliseconds; `0` waits without a time limit)
 6. Use only `true` or `false` for boolean values.
 7. Unset `EXISTENTIAL_CONFIG_FILE` to fall back to classpath `existential.properties`.
+
+### Library shutdown waits for an active transaction
+
+When: `Existential.close()` or `Ex.close()` is called while a transaction is still active.
+Cause: Graceful shutdown stops new begins and waits for each registered handle to commit, roll back, or close.
+Fix: Finish the transaction, or close its `Tr` handle explicitly if rollback callbacks should not run, then retry
+library close. Set `shutdown.timeoutMillis` or call `shutdownPolicy(ShutdownPolicy.graceful(duration))` to bound the
+wait. Zero means unlimited waiting. A timeout or interruption leaves the library draining so you can finish active
+work and retry close. Close the library after transaction callbacks return; calling close from a callback fails to
+prevent it waiting on itself.
 
 ## Condition Not Met
 

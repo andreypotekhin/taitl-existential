@@ -53,6 +53,16 @@ link to lifecycle remedies. The selected clear operation empties in-memory colle
 global state or cross-transaction synchronization. Configuration caches retain their existing ownership and contracts;
 this targeted release does not establish their boundedness or a general leak-reporting mechanism.
 
+Transaction close also clears memo values, per-stage event types and handlers, prepared configuration indexes, and
+transaction-owned event-field caches. A prepared overlay owns its merged-result cache; closing it must not clear the
+base event field shared with configured rules.
+
+Library shutdown drains registered transactions and in-flight calls before closing shared library components. The
+immutable `ShutdownPolicy` configures the drain timeout, with zero meaning unlimited wait. Timeouts and interruption
+leave the library draining so the caller can finish work and retry. The coordinator never runs rollback callbacks or
+forces application effects to be undone. Detailed observable behavior is in the
+[transactions specification](../specifications/TransactionsAndEvaluation.spec.md#library-shutdown).
+
 ## Performance
 
 Runtime-index clearing is proportional to the recorded event/key/type collections. Retained-state assertions establish

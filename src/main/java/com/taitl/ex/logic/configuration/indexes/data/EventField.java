@@ -106,4 +106,9 @@ public class EventField
         sane(eventKey, "eventKey");
         return ci.hasBiKey(eventKey);
     }
+
+    public void close()
+    {
+        map.clear();
+    }
 }

@@ -9,6 +9,7 @@ import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.exceptions.*;
+import com.taitl.existential.events.transaction_events.Rollback;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
 
@@ -35,6 +36,100 @@ public class ExecuteLifecycle
         for (Transaction transaction : tr.transactions())
         {
             call(eventClass, stageName, transaction);
+        }
+    }
+
+    public void callRollback() throws ExistentialException
+    {
+        Throwable failure = null;
+        for (Transaction transaction : tr.transactions())
+        {
+            for (Evs<?> evs : transaction.stage().at(StageName.ROLLBACK))
+            {
+                if (!(evs instanceof Life<?>))
+                {
+                    continue;
+                }
+                Life<?> life = (Life<?>) evs;
+                try
+                {
+                    if (!intentLogic.matchesType(life.typeKey(), transaction))
+                    {
+                        continue;
+                    }
+                }
+                catch (Throwable caught)
+                {
+                    failure = append(failure, caught);
+                    continue;
+                }
+                for (Ev<?> ev : life.list())
+                {
+                    if (!(ev instanceof EventHandler<?>))
+                    {
+                        continue;
+                    }
+                    EventHandler<?> handler = (EventHandler<?>) ev;
+                    if (!Rollback.class.equals(handler.eventType().eventClass()))
+                    {
+                        continue;
+                    }
+                    if (!(handler instanceof On<?>))
+                    {
+                        failure = append(failure, new IllegalStateException("Lifecycle handler must extend On, got "
+                                + handler.getClass().getName()));
+                        continue;
+                    }
+                    try
+                    {
+                        execute((On<?>) handler, transaction);
+                    }
+                    catch (Throwable caught)
+                    {
+                        failure = append(failure, caught);
+                    }
+                }
+            }
+        }
+        rethrow(failure);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected void execute(On handler, Transaction transaction) throws ExistentialException
+    {
+        ExecuteHandler.handle(handler, transaction);
+    }
+
+    protected Throwable append(Throwable failure, Throwable next)
+    {
+        if (failure == null)
+        {
+            return next;
+        }
+        if (failure != next)
+        {
+            failure.addSuppressed(next);
+        }
+        return failure;
+    }
+
+    protected void rethrow(Throwable failure) throws ExistentialException
+    {
+        if (failure instanceof ExistentialException)
+        {
+            throw (ExistentialException) failure;
+        }
+        if (failure instanceof RuntimeException)
+        {
+            throw (RuntimeException) failure;
+        }
+        if (failure instanceof Error)
+        {
+            throw (Error) failure;
+        }
+        if (failure != null)
+        {
+            throw new ExistentialException("Rollback callback failed", failure);
         }
     }
 

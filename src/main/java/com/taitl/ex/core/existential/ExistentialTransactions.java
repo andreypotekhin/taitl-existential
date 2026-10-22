@@ -79,6 +79,6 @@ public class ExistentialTransactions implements Closeable
 
     public void close()
     {
-        transactionLogic.close();
+        ex.close();
     }
 }

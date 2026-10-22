@@ -127,15 +127,16 @@ path; broader library-close and leak guarantees remain partial.
 Requirements: Admitted transaction/library exits; cleanup does not imply undoing caller objects.
 
 - [TransactionsAndEvaluation.spec.md]: [Starting a transaction], [Committing a transaction],
-  [Rolling back a transaction], [Events require a transaction].
-- [Housekeeping.spec.md]: [Transaction resource release], [Reported event resource release], [Transaction recycling],
-  [Rule recycling].
+  [Rolling back a transaction], [Checkpoint failure recovery], [Rollback callback failure recovery], [Library shutdown].
+- [Housekeeping.spec.md]: [Transaction resource release], [Reported event resource release],
+  [Transaction-local state release], [Graceful library shutdown], [Transaction recycling], [Rule recycling].
 
 Evidence: [transaction recovery tests](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
 and [registry test](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java).
 The [Sprint 02 relationship cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
 also verify all three runtime index collections clear through retained closed handles after commit/explicit rollback.
-Remaining work: broader library-close and resource-release claims remain in Sprint 03.
+Implementation underway: graceful shutdown, configurable wait timeout, explicit callback recovery, and transaction-local
+cache cleanup are in code. Verification remains partial; focused tests and full build evidence are still required.
 
 ## Night City as an artifact consumer
 

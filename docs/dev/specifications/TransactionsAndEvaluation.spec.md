@@ -51,6 +51,27 @@ the handle in a second registry.
 Acceptance: [lifecycle and failure recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
 and [public lifecycle API](../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java).
 
+### Checkpoint failure recovery
+
+A checkpoint failure leaves the transaction handle available for further application work or explicit rollback. The
+library does not automatically mark it rollback-only. Callers are responsible for effects already performed and for
+callbacks that may run again on a later attempt.
+
+### Rollback callback failure recovery
+
+Explicit rollback attempts every rollback lifecycle callback and rollback-stage handler in declaration order, even if
+an earlier callback fails. It reports the first failure and attaches later failures as suppressed exceptions. The
+transaction's library-owned state is released in all cases. Rollback callbacks run only after an explicit rollback call.
+
+### Library shutdown
+
+Library shutdown stops admission of new transactions and waits for registered active handles and in-flight transaction
+calls to finish before releasing library resources. Existing transactions may complete or explicitly roll back while
+shutdown is waiting. A finite timeout or thread interruption reports failure and leaves the library draining so the
+caller can finish transactions and retry close. A zero timeout waits without a time limit. Shutdown does not force
+rollback or undo caller-owned effects. Calling close from a transaction callback fails immediately to avoid waiting
+for that same callback to return.
+
 ### Explicit event transaction IDs
 
 Entity/access events and memo registration can still identify an active transaction by its string ID. Callers may pass

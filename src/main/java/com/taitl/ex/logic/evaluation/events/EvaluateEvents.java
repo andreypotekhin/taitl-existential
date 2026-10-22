@@ -28,6 +28,32 @@ public class EvaluateEvents
         sane(runtimeKey, "runtimeKey", tr, "tr", eventField, "eventField", report, "report");
         SplitResult<T> splitResult =
                 splitEvent.call(runtimeKey, eventField, useFullEventNames, splitElementaryToCompound, tr);
-        executeHandlers.call(splitResult.evaluables(), splitResult.event(), report);
+        tr.callbackStarted();
+        try
+        {
+            executeHandlers.call(splitResult.evaluables(), splitResult.event(), report);
+        }
+        finally
+        {
+            tr.callbackFinished();
+        }
+    }
+
+    public <T> void callAll(RuntimeKey<T> runtimeKey, Tr tr, EventField eventField, ValidationReport report,
+            boolean useFullEventNames, boolean splitElementaryToCompound)
+            throws ExistentialException
+    {
+        sane(runtimeKey, "runtimeKey", tr, "tr", eventField, "eventField", report, "report");
+        SplitResult<T> splitResult =
+                splitEvent.call(runtimeKey, eventField, useFullEventNames, splitElementaryToCompound, tr);
+        tr.callbackStarted();
+        try
+        {
+            executeHandlers.callAll(splitResult.evaluables(), splitResult.event(), report);
+        }
+        finally
+        {
+            tr.callbackFinished();
+        }
     }
 }

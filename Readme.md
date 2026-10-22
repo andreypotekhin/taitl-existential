@@ -133,6 +133,22 @@ The library also allows defining constraints based on entity lifecycle and acces
     write(x -> predicate(x)) # holds for any written/saved object
     (as well as variants with condition())
 
+## Library shutdown
+
+`close()` stops new transactions, waits for active transactions to complete, and releases library resources. The default
+wait has no time limit. Configure a finite timeout in code:
+
+    ex.shutdownPolicy(ShutdownPolicy.graceful(Duration.ofSeconds(30)));
+    ex.close();
+
+or in `existential.properties`:
+
+    shutdown.timeoutMillis=30000
+
+Zero means unlimited waiting. If the wait times out or is interrupted, finish active transactions and call `close()`
+again. Shutdown does not run rollback callbacks for abandoned transactions. Do not call `close()` from a transaction
+callback; close the library after that transaction call returns.
+
 ## Performance
 
 Since evaluating the constrains on each object change can degrade performance,

@@ -273,7 +273,7 @@ public class ConcreteTr
     {
         beginActive = false;
         immediateActive = false;
-        executeLifecycle.call(Rollback.class, StageName.ROLLBACK);
+        executeLifecycle.callRollback();
     }
 
     public String id()
@@ -360,31 +360,53 @@ public class ConcreteTr
         return stageData;
     }
 
-    public void close()
+    public synchronized void close()
     {
         if (closed)
         {
             return;
         }
+        TransactionLogic owner = tl;
+        boolean trackedClose = owner != null && owner.transactionCloseStarted(tr);
         closed = true;
-        runtimeIndexes.close();
-        validationData.close();
-        validationData = null;
-        for (StageData data : stageData.values())
+        try
         {
-            data.close();
+            runtimeIndexes.close();
+            validationData.close();
+            validationData = null;
+            for (StageData data : stageData.values())
+            {
+                data.close();
+            }
+            memoData.clear();
+            memoData = null;
+            transactions = null;
+            tr = null;
+            tl = null;
+            el = null;
+            already = null;
+            stageData = null;
+            beginEncounteredEventKeys = null;
+            beginActive = false;
+            immediateActive = false;
         }
-        memoData.clear();
-        memoData = null;
-        transactions = null;
-        tr = null;
-        tl = null;
-        el = null;
-        already = null;
-        stageData = null;
-        beginEncounteredEventKeys = null;
-        beginActive = false;
-        immediateActive = false;
+        finally
+        {
+            if (trackedClose)
+            {
+                owner.transactionCloseFinished();
+            }
+        }
+    }
+
+    public void callbackStarted()
+    {
+        tl.callbackStarted();
+    }
+
+    public void callbackFinished()
+    {
+        tl.callbackFinished();
     }
 
     protected void requireOpen(String action) throws ExistentialException

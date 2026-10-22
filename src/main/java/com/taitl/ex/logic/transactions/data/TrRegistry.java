@@ -68,4 +68,9 @@ public class TrRegistry
     {
         reg.clear();
     }
+
+    public int size()
+    {
+        return reg.size();
+    }
 }

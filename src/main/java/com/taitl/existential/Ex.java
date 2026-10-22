@@ -74,6 +74,16 @@ public final class Ex
         return instance().begin(op);
     }
 
+    public static ShutdownPolicy shutdownPolicy()
+    {
+        return instance().shutdownPolicy();
+    }
+
+    public static void shutdownPolicy(ShutdownPolicy policy)
+    {
+        instance().shutdownPolicy(policy);
+    }
+
     /**
      * Begins a transaction for the specified operation using a custom Transaction instance.
      *

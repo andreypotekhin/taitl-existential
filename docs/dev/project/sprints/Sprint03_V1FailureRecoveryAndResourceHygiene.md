@@ -1,9 +1,9 @@
 # Sprint 03: V1 Failure Recovery and Resource Hygiene
 
-Status: planned. Dates/capacity: unassigned. Epic:
+Status: in progress. Dates/capacity: unassigned. Epic:
 [Failure Recovery and Resource Hygiene](../Backlog.md#failure-recovery-and-resource-hygiene). Release: [V1](../V1.md).
-Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
-this charter does not promote inherited completion marks.
+Design readiness: selected failure and shutdown contracts are settled. Verification: partial; main sources compile,
+but focused tests, complete build evidence, and performance records remain outstanding.
 
 ## Goal and user outcome
 
@@ -24,12 +24,15 @@ dependencies. Select a ready capability using [Process](../../auto/Process.md).
 Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
 entry.
 
+Current execution plan: [P10212603](../../planning/P10212603.Sprint03-failure-recovery-and-shutdown.plan.md).
+
 ## Remaining work
 
-- Specify state and permitted recovery after validation, callback, commit, and rollback failure on admitted paths.
-- Distinguish library transaction cleanup from caller-owned object/storage changes; avoid implying automatic undo.
+- Add focused tests for state and permitted recovery after validation, callback, commit, rollback, and begin failures.
+- Verify library transaction cleanup independently from caller-owned object/storage changes and side effects.
 - Repair the three disabled validation-report tests and add direct failure/recovery assertions for the workflow.
-- Verify normal/failed exits release transaction registry entries, event references, and selected before-state data.
+- Verify shutdown timeout, interruption, retry, concurrent close, callback rejection, and direct transaction close.
+- Verify normal/failed exits release transaction registry entries, event references, memo data, and prepared overlays.
 - Make diagnostics actionable and link remedies; preserve the original failure if cleanup also fails as specified.
 
 Sprint 02 already corrected deterministic runtime event/type index clearing on successful completion and explicit

@@ -63,7 +63,40 @@ public class EvaluationLogic implements Closeable
 
     public void evaluateRollback(Tr tr) throws ExistentialException
     {
-        evaluateEncountered(tr, StageName.ROLLBACK);
+        sane(tr, "tr");
+        ValidationReport report = Creator.create(ValidationReport.class);
+        Throwable failure = null;
+        for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
+        {
+            try
+            {
+                if (hasIntents(tr, StageName.ROLLBACK))
+                {
+                    evaluateIntents(runtimeKey, tr, StageName.ROLLBACK);
+                }
+            }
+            catch (Throwable caught)
+            {
+                failure = append(failure, caught);
+            }
+            try
+            {
+                evaluateRollbackEvents(runtimeKey, tr, report);
+            }
+            catch (Throwable caught)
+            {
+                failure = append(failure, caught);
+            }
+        }
+        try
+        {
+            throwIfStageFailed(StageName.ROLLBACK, report);
+        }
+        catch (Throwable caught)
+        {
+            failure = append(failure, caught);
+        }
+        rethrow(failure);
     }
 
     public void evaluateValidation(Tr tr, ValidationReport report) throws ExistentialException
@@ -105,11 +138,60 @@ public class EvaluationLogic implements Closeable
         throwIfStageFailed(stageName, report);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected void evaluateRollbackEvents(RuntimeKey runtimeKey, Tr tr, ValidationReport report)
+            throws ExistentialException
+    {
+        EventField field = eventField(tr, StageName.ROLLBACK);
+        evaluateEvents.callAll(runtimeKey, tr, field, report, useFullClassNames(), shouldSplitElementary());
+    }
+
+    protected Throwable append(Throwable failure, Throwable next)
+    {
+        if (failure == null)
+        {
+            return next;
+        }
+        if (failure != next)
+        {
+            failure.addSuppressed(next);
+        }
+        return failure;
+    }
+
+    protected void rethrow(Throwable failure) throws ExistentialException
+    {
+        if (failure instanceof ExistentialException)
+        {
+            throw (ExistentialException) failure;
+        }
+        if (failure instanceof RuntimeException)
+        {
+            throw (RuntimeException) failure;
+        }
+        if (failure instanceof Error)
+        {
+            throw (Error) failure;
+        }
+        if (failure != null)
+        {
+            throw new ExistentialException("Rollback evaluation failed", failure);
+        }
+    }
+
     public <T> void evaluateIntents(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException
     {
         sane(stageName, "stageName");
         sane(tr, "tr", runtimeKey, "runtimeKey");
-        evaluateIntents.call(runtimeKey, tr, stageName);
+        tr.callbackStarted();
+        try
+        {
+            evaluateIntents.call(runtimeKey, tr, stageName);
+        }
+        finally
+        {
+            tr.callbackFinished();
+        }
     }
 
     public void close()

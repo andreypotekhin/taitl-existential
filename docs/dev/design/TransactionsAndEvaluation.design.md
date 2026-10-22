@@ -40,6 +40,26 @@ transaction state between invocations. AspectJ weaving must be enabled for the a
 Validation reports are created for each validation attempt, so violations from a failed attempt do not contaminate a
 later attempt. A single `Tr` remains caller-owned and is not safe for concurrent mutation.
 
+## Failure and shutdown behavior
+
+Commit callbacks retain their existing position before validation because they are part of the commit attempt and can
+prepare required state. A failed commit removes active ID lookup; the caller may roll back its handle explicitly.
+Checkpoint failures leave the handle usable. Rollback runs lifecycle callbacks before rollback-stage handlers, and
+each phase continues after callback failures. The first thrown failure remains primary and later failures are
+suppressed. Disposal runs regardless of callback outcome.
+
+Library shutdown uses an immutable `ShutdownPolicy` that currently configures a graceful wait timeout. Transaction
+logic atomically stops new begins, counts active handles and in-flight transaction work, and waits without holding
+locks across callbacks. Existing calls can finish during the drain. A timeout or interruption leaves shutdown
+resumable; resources are not force-cleared. Direct transaction close deregisters the handle without invoking
+callbacks. Close from a callback fails immediately because waiting there would wait on itself. Failed-commit handles
+are detached and do not delay shutdown; if shutdown completes before their explicit rollback, local state can be
+disposed but rollback callbacks can no longer run.
+
+The existing properties loader accepts `shutdown.timeoutMillis`; classpath defaults are overridden by the selected
+environment file, and a later call to `Existential.shutdownPolicy` or `Ex.shutdownPolicy` takes precedence. This keeps
+shutdown configuration at the library boundary rather than mixing it into operation rule builders.
+
 ## Performance
 
 Prepared transaction overlays avoid repeatedly merging handler lists during dispatch. The transaction-handle change

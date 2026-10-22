@@ -266,6 +266,16 @@ public class Tr
         concrete.close();
     }
 
+    public void callbackStarted()
+    {
+        concrete.callbackStarted();
+    }
+
+    public void callbackFinished()
+    {
+        concrete.callbackFinished();
+    }
+
     ConcreteTrBuilder createBuilder()
     {
         return Creator.create(ConcreteTrBuilder.class);
