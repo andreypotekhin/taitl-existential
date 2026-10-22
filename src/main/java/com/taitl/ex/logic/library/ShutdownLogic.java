@@ -24,39 +24,43 @@ public class ShutdownLogic
         components = Arrays.asList(events, flags, configs, access, init);
     }
 
-    public synchronized void close(ShutdownPolicy policy)
+    public void close(ShutdownPolicy policy)
     {
         sane(policy, "policy");
-        if (closed)
+        ex.transactions().logic().ensureShutdownAllowed();
+        synchronized (this)
         {
-            return;
-        }
+            if (closed)
+            {
+                return;
+            }
 
-        ex.transactions().logic().close(policy);
-        Throwable failure = null;
-        for (Closeable component : components)
-        {
-            try
+            ex.transactions().logic().close(policy);
+            Throwable failure = null;
+            for (Closeable component : components)
             {
-                component.close();
+                try
+                {
+                    component.close();
+                }
+                catch (Throwable caught)
+                {
+                    if (failure == null)
+                    {
+                        failure = caught;
+                    }
+                    else if (failure != caught)
+                    {
+                        failure.addSuppressed(caught);
+                    }
+                }
             }
-            catch (Throwable caught)
+            if (failure != null)
             {
-                if (failure == null)
-                {
-                    failure = caught;
-                }
-                else if (failure != caught)
-                {
-                    failure.addSuppressed(caught);
-                }
+                rethrow(failure);
             }
+            closed = true;
         }
-        if (failure != null)
-        {
-            rethrow(failure);
-        }
-        closed = true;
     }
 
     protected void rethrow(Throwable failure)

@@ -257,12 +257,7 @@ public class TransactionLogic implements Closeable
     public void close(ShutdownPolicy policy)
     {
         sane(policy, "policy");
-        if (callbackDepth.get() > 0)
-        {
-            throw new IllegalStateException("Cannot close the library from a transaction callback. "
-                    + "Close it after the transaction call returns. See "
-                    + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
-        }
+        ensureShutdownAllowed();
         long timeoutNanos = durationNanos(policy.timeout());
         long start = System.nanoTime();
         synchronized (lifecycle)
@@ -310,6 +305,17 @@ public class TransactionLogic implements Closeable
     public void close()
     {
         close(ShutdownPolicy.graceful());
+    }
+
+    /** Reject shutdown before a caller acquires any shutdown-coordination lock. */
+    public void ensureShutdownAllowed()
+    {
+        if (callbackDepth.get() > 0)
+        {
+            throw new IllegalStateException("Cannot close the library from a transaction callback. "
+                    + "Close it after the transaction call returns. See "
+                    + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
+        }
     }
 
     public boolean transactionCloseStarted(Tr tr)
