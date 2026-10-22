@@ -6,11 +6,9 @@ subsystem-first split with V1 representative core, V2 broader standard usage, an
 
 ## Current priority
 
-Continue V1 with [Failure Recovery and Resource Hygiene] in Sprint 03. Sprint 01's core workflow and Sprint 02's
-caller-supplied All/Exists relationship/evolution slice are complete with passing acceptance and build evidence.
-Resolve the remaining failure/close contract, repair the three disabled validation-report tests, and verify bounded
-transaction state across repeated successful and failed operations. Use the Sprint 03 charter and current traceability
-to distinguish these remaining obligations from the completed dispatch/composition/runtime-index corrections.
+V1 is complete as a locally installed `0.0.1` artifact. Sprints 01–05 have current acceptance/build evidence; the
+release remains unpublished remotely. Sprint 06 is the next planned capability and will be discussed separately before
+implementation. Use the [V1 charter](../project/V1.md) and current traceability for release evidence and deferrals.
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Restore useful verification feedback early and link evidence for each concern. Do not treat inherited marks or
@@ -18,12 +16,9 @@ neighboring tests as proof of the representative workflow.
 
 ## Subsequent work
 
-The [Relationships and Evolution] and [Failure Recovery and Resource Hygiene] epics complete the selected
-relationships/evolution and failure/resource cases. [Night City Artifact Consumption and Performance] makes Night City
-an independent Maven project consuming the installed library and collects representative performance evidence.
-[V1 Hardening and Closeout] hardens the complete admitted workflow. Instance isolation/configuration breadth belongs
-to V2; custom events to V3. Independent investigation/design may proceed ahead, but implementation follows actual
-dependencies.
+The V1 epics now have direct evidence for the selected relationships/evolution, recovery/resource, and independent
+consumer slices. [V1 Hardening and Closeout] completed the local release and closeout checks. Instance
+isolation/configuration breadth belongs to V2; custom events to V3. Sprint 06 design discussion remains separate.
 
 ## Intake
 

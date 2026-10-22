@@ -47,11 +47,10 @@ Measure representative transaction throughput and scaling; record environment, s
 
 ## Execution plan and validation
 
-Current execution plan: [P10222604](../../planning/P10222604.Sprint04-runnable-night-city-and-maven-reactor.plan.md).
+Completed execution plan: [P10222604](../../past/planning/P10222604.Sprint04-runnable-night-city-and-maven-reactor.plan.md).
 
-Observed initial evidence: root `mvn clean install` passes 445 tests with JaCoCo checks; standalone consumer
-`mvn -f examples/night_city/pom.xml clean verify` executes its story test; `mvn -f reactor/pom.xml clean install`
-builds all three projects in order. Full final builds and artifact/dependency review remain after the last changes.
+Initial evidence was recorded during Sprint 04. Final local-release verification and the updated test total are recorded
+in [Sprint 05](Sprint05_V1HardeningAndCloseout.md) and its execution plan.
 
 ## Non-goals
 

@@ -11,7 +11,7 @@ The [specification](../specifications/Distribution.spec.md) defines intended beh
 
 ## Current implementation
 
-The current coordinate is com.taitl:existential:0.0.1-SNAPSHOT. Maven creates a normal artifact and an assembled root
+The local V1 release coordinate is com.taitl:existential:0.0.1. Maven creates a normal artifact and an assembled root
 existential.jar. Night City is now a shared test source and must be absent from both outputs. No Maven Central
 publication is established by a successful local install or by the existing Usage instructions.
 
@@ -36,7 +36,6 @@ success.
 
 - Confirm publication account/namespace, signing, source/Javadoc artifacts, metadata, and destination prerequisites.
 - Define the supported runtime/dependency policy from actual evidence; compiler release is not a runtime matrix.
-- Verify normal versus assembled artifact expectations and consumer dependency hygiene.
 - Actual external publication needs its own authorized release action and verified destination availability.
 
 ## Verification evidence

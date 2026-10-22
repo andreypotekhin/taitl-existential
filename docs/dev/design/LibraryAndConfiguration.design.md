@@ -28,6 +28,10 @@ configuration outside repeated event dispatch; independently verify instance iso
 These observations retain the existing architecture. They do not approve new public interfaces or resolve the open
 choices below. Record future decisions here, update the normative specification, and reconcile the execution plan.
 
+Configuration becomes finalized only after context and rule construction completes. A failed build leaves the
+configuration builder available so the caller can retry; the synchronized finalization step rechecks the configured
+state so concurrent first transactions do not build the same configuration twice.
+
 ## Open decisions
 
 - Specify ties among overlapping wildcards, parents, exact contexts, and transaction rules; existing suggestions propose

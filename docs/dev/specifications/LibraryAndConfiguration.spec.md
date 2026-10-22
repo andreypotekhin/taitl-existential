@@ -2,7 +2,8 @@
 
 These are the intended behavior claims migrated from the original library specification.
 Implementation and evidence are tracked separately in the [traceability matrix](../project/TraceabilityMatrix.md).
-A leading `+` preserves an existing completion mark; this migration does not add new completion assertions.
+Legacy `+` marks are preserved. Add `+` to a requirement only when its current acceptance evidence passes; see the
+traceability matrix.
 Reference requirements by their descriptive headings. The claims describe library behavior, not legal commitments.
 
 See the paired [design](../design/LibraryAndConfiguration.design.md) and [specification index](../Specification.md).
@@ -46,6 +47,11 @@ Within an operation context, the user can configure multiple rules such as invar
 ### Configuration before use
 
 + User must configure the library before use.
+
+### Configuration build failure recovery
+
++ If configuration finalization fails while constructing contexts or rules, the library remains unconfigured and the
+  caller can retry by starting another transaction after correcting or recovering the failing factory.
 
 ### Configuration files
 

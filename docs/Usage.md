@@ -14,13 +14,13 @@ Maven:
     <dependency>
         <groupId>com.taitl</groupId>
         <artifactId>existential</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </dependency>
 
 Gradle:
 
     dependencies {
-        implementation "com.taitl:existential:0.0.1-SNAPSHOT"
+        implementation "com.taitl:existential:0.0.1"
     }
 
 Night City is an independent consumer example. From a checkout, install the library and run its acceptance build and

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.taitl</groupId>
     <artifactId>existential</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>taitl-existential</name>
     <description>Simple validation framework based on expressions analogous to notations of first-order logic.
     </description>

@@ -14,7 +14,7 @@ the current plan; archived charters were superseded before implementation, not c
 
 ### Night City Core Workflow
 
-Status: complete for the selected Sprint 01 slice; remaining V1 core hardening is tracked separately. Delivery:
+Status: complete for the selected Sprint 01 slice; V1 closeout is complete in Sprint 05. Delivery:
 [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
 
 Follow a documented Night City operation from rule configuration through events to successful or rejected commit.
@@ -34,7 +34,7 @@ regressions; the new scope changes delivery/evidence priorities, not availabilit
 
 ### Failure Recovery and Resource Hygiene
 
-Status: planned. Delivery: [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
+Status: complete. Delivery: [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
 
 Recover predictably from rejected or failed operations and release the representative workflow resources.
 
@@ -43,7 +43,7 @@ regressions; the new scope changes delivery/evidence priorities, not availabilit
 
 ### Night City Artifact Consumption and Performance
 
-Status: planned. Delivery: [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
+Status: complete. Delivery: [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
 
 Build and exercise Night City as a Maven project consuming the installed Existential artifact.
 
@@ -52,7 +52,7 @@ regressions; the new scope changes delivery/evidence priorities, not availabilit
 
 ### V1 Hardening and Closeout
 
-Status: planned. Delivery: [Sprint 05](sprints/Sprint05_V1HardeningAndCloseout.md).
+Status: complete. Delivery: [Sprint 05](sprints/Sprint05_V1HardeningAndCloseout.md).
 
 Close V1 with a robust, documented, independently consumed representative workflow and performance evidence.
 

@@ -181,7 +181,7 @@ See /License.md
 
 ## Compatibility
 
-Breaking changes may randomply happen before version 1.0.0, require a version update after 1.0.0.
+Breaking changes may happen before version 1.0.0; after 1.0.0 they require a version update.
 
 ## Support and Contributions
 

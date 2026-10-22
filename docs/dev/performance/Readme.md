@@ -52,6 +52,7 @@ report measurements plus the membership-only lookup improvement.
 
 The [Night City consumer workflow topic](topics/NightCityConsumerWorkflows.md) measures complete workflows against the
 installed library artifact, with configuration/source setup excluded and success, recovery, cardinality, and repeated
-event cases separated.
+event cases separated. V1's local `0.0.1` closeout samples are recorded in
+[NightCityV1Closeout](runs/20261022T205600Z.NightCityV1Closeout.md).
 
 [Custom transactions]: topics/CustomTransactions.md

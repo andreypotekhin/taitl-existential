@@ -3,7 +3,8 @@
 Status: complete. Dates/capacity: unassigned. Epic:
 [Relationships and Evolution](../Backlog.md#relationships-and-evolution). Release: [V1](../V1.md).
 Design readiness: the selected V1 collection/map composition and explicit evolution contract is recorded.
-Verification: all selected acceptance and required build checks passed; V1 remains unreleased.
+Verification: all selected acceptance and required build checks passed; V1 closeout was still pending at this sprint's
+completion and finished in Sprint 05.
 
 ## Goal and user outcome
 
@@ -86,8 +87,8 @@ Membership-only set/map scans are eliminated; general key/value predicates retai
 Four deterministic tests verify no stored-key iteration. Timing does not establish allocation or global resource bounds.
 
 Sprint 02 is complete for its admitted V1 scope. Broader multiplicity, maintained indexes, type/transition-object
-breadth, and global caches remain later capabilities. [Sprint 03](Sprint03_V1FailureRecoveryAndResourceHygiene.md)
-next resolves the three disabled reports and broader failure/close/resource obligations. V1 is not released.
+breadth, and global caches remain later capabilities. At Sprint 02 close, Sprint 03 was the next planned step for
+disabled reports and broader failure/close/resource obligations; Sprint 05 later completed V1 closeout.
 
 [QuantifiersAndIndexes.spec.md]: ../../specifications/QuantifiersAndIndexes.spec.md
 [QuantifiersAndIndexes.design.md]: ../../design/QuantifiersAndIndexes.design.md

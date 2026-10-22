@@ -23,7 +23,7 @@ dependencies. Select a ready capability using [Process](../../auto/Process.md).
 Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
 entry.
 
-Current execution plan: [P10212603](../../planning/P10212603.Sprint03-failure-recovery-and-shutdown.plan.md).
+Completed execution plan: [P10212603](../../past/planning/P10212603.Sprint03-failure-recovery-and-shutdown.plan.md).
 
 ## Completed scope
 

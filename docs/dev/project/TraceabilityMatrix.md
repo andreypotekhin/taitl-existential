@@ -1,8 +1,8 @@
 # Capability Traceability
 
 The [roadmap](Roadmap.md) plans outcomes across three releases. The [rebaseline](ReleaseRebaseline.md) maps all 36
-original scope items here. Topic requirements and historical completion marks are preserved; new `+` marks refer to the
-directly tested Sprint 01 slice only.
+original scope items here. Topic requirements and historical completion marks are preserved; completion claims are
+backed by the direct acceptance evidence linked in each selected V1 section.
 
 Design readiness and implementation verification are separate. `open` means the remaining selected-capability
 decisions/acceptance are not finalized; `partial` means relevant existing tests/implementation exist; `missing` means
@@ -104,25 +104,25 @@ Remaining work: memo/type/subclass breadth belongs to V2.
 
 Epic: [Failure Recovery and Resource Hygiene](Backlog.md#failure-recovery-and-resource-hygiene);
 [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
-Design readiness: ready for the selected validation failures. Verification: verified for the Night City rule violations;
-broader report presentation remains partial.
+Design readiness: ready for selected V1 validation/report behavior. Verification: verified for the required V1 paths;
+broader report metadata remains partial.
 
 Requirements: Selected violation paths and the V1 validation-report requirements.
 
 - [EventsAndConstraints.spec.md]: [Constraint violation exceptions], [Constraint descriptions], [Violation details].
 - [TransactionsAndEvaluation.spec.md]: V1 validation-report requirements.
 
-Evidence: [cat workflow](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java) and
-[operation/rule diagnostics](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
-Remaining work: three disabled report cases in [EvaluationLogicTest.java](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java)
-remain for Sprint 03.
+Evidence: [cat workflow](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java),
+[operation/rule diagnostics](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java),
+and enabled report cases in [EvaluationLogicTest.java](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java).
+The three report cases pass in the full V1 build.
 
 ## Recovery and resource release
 
 Epic: [Failure Recovery and Resource Hygiene](Backlog.md#failure-recovery-and-resource-hygiene);
 [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
-Design readiness: ready for failed-commit explicit recovery and rollback disposal. Verification: verified for that lifecycle
-path; broader library-close and leak guarantees remain partial.
+Design readiness: ready for the selected recovery/shutdown contract. Verification: verified for the selected V1 paths;
+global leak reporting remains in V2.
 
 Requirements: Admitted transaction/library exits; cleanup does not imply undoing caller objects.
 
@@ -139,10 +139,12 @@ and [registry test](../../../src/test/java/com/taitl/ex/logic/transactions/data/
 [shutdown concurrency](../../../src/test/java/com/taitl/specs/library_usage/UserCanShutdownLibrary.java).
 The [Sprint 02 relationship cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
 also verify all three runtime index collections clear through retained closed handles after commit/explicit rollback.
-Verification: the selected recovery and shutdown behaviors pass direct acceptance tests. The final root build runs all
-454 tests with zero failures/errors/skips and its JaCoCo checks pass. The [consumer workflow performance record](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md)
-provides separate rejected-commit/rollback and fresh-recovery timing. Broader cache bounds and observable leak reporting
-remain in V2/global scope.
+Verification: the selected recovery and shutdown behaviors pass direct acceptance tests. Configuration finalization is
+retryable when a context factory fails; see [configuration recovery acceptance](../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java).
+The final root build runs all 455 tests with zero failures/errors/skips and its JaCoCo checks pass. Rejected-commit,
+rollback, and fresh-recovery timings appear in the [Sprint 04 measurement](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md)
+and [V1 closeout measurement](../performance/runs/20261022T205600Z.NightCityV1Closeout.md). Broader cache bounds and
+observable leak reporting remain in V2/global scope.
 
 ## Night City as an artifact consumer
 
@@ -157,23 +159,25 @@ Requirements: Local Maven dependency consumption.
 
 Evidence: [independent consumer acceptance](../../../examples/night_city/src/test/java/com/taitl/ex/examples/night_city/NightCityStoryTest.java),
 [runnable story](../../../examples/night_city/src/main/java/com/taitl/ex/examples/night_city/app/NightCityStory.java),
-and [consumer performance record](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md). Root install,
-standalone consumer verification, reactor installation, artifact inspection, and dependency-tree checks passed.
+and [consumer performance record](../performance/runs/20261022T205600Z.NightCityV1Closeout.md). Root install,
+standalone consumer verification, reactor installation, artifact inspection, and dependency-tree checks passed for the
+local 0.0.1 coordinate.
 
 ## Representative performance and hardening
 
 Epic: [Night City Artifact Consumption and Performance](Backlog.md#night-city-artifact-consumption-and-performance);
 [Sprint 04](sprints/Sprint04_V1NightCityArtifactAndPerformance.md).
-Design readiness: ready for selected V1 workflows. Verification: partial across full V1 capability scope; selected Sprint 04
-performance evidence is complete.
+Design readiness: ready for selected V1 workflows. Verification: complete for V1; broader capabilities remain in later
+releases.
 
 Requirements: All V1 capabilities and their five quality design obligations; final gate V1 Hardening and Closeout.
 Topics: [LibraryAndConfiguration.spec.md], [TransactionsAndEvaluation.spec.md], [QuantifiersAndIndexes.spec.md],
 [Housekeeping.spec.md], [Distribution.spec.md].
 Evidence: [consumer workflow benchmark](../../../examples/night_city/src/main/java/com/taitl/ex/examples/night_city/app/NightCityWorkflowBenchmark.java),
-[three-sample record](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md), and earlier [relationship
-cardinality record](../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md). There is no numerical gate or
-comparable prior full-workflow baseline.
+[Sprint 04 three-sample record](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md), the [V1 closeout
+record](../performance/runs/20261022T205600Z.NightCityV1Closeout.md), and earlier [relationship cardinality
+record](../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md). The two full-workflow sessions have
+different source/build identities and are not a direct comparison. There is no numerical gate.
 
 ## Independent library instances
 
@@ -199,11 +203,12 @@ Design readiness: open. Verification: partial.
 Requirements: Configuration sources/options, plus configuration/injection concurrency and freeze decisions.
 
 - [LibraryAndConfiguration.spec.md]: [Programmatic library options], [Behavioral flags], [Configuration before use],
-  [Configuration files], [Classpath configuration], [Configuration environment variable], [Initial configuration file].
+  [Configuration build failure recovery], [Configuration files], [Classpath configuration],
+  [Configuration environment variable], [Initial configuration file].
 
-Evidence to review: [UserCanConfigureLibrary.java].
-Remaining work: Retain existing cases and finalize sources/precedence/flags, failed initialization, and supported
-concurrency.
+Evidence: [UserCanConfigureLibrary.java](../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java)
+verifies a transient context-factory failure leaves configuration retryable. Broader sources/flags, initialization failures,
+and supported concurrency remain for V2.
 
 ## Contexts, factories, and ordering
 

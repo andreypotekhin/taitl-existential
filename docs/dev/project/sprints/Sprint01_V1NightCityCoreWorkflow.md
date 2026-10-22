@@ -3,7 +3,8 @@
 Status: complete. Dates/capacity: unassigned. Epic: [Night City Core Workflow](../Backlog.md#night-city-core-workflow).
 Release: [V1](../V1.md).
 Design readiness: selected transaction, event, recovery, and annotated-operation behavior is recorded in the governing
-design/specification. Verification: selected acceptance and required build checks passed; broader V1 closeout remains.
+design/specification. Verification: selected acceptance and required build checks passed; broader V1 closeout was
+still outstanding at Sprint 01 close and finished in Sprint 05.
 
 ## Goal and user outcome
 
@@ -15,7 +16,7 @@ executions each own their transaction handle.
 ## Dependencies and readiness
 
 The planning foundation and selected slice decisions are available. Implementation follows
-[the Sprint 01 execution plan](../../planning/P10202603.Transaction-handles-and-Op.plan.md). Broader stage behavior
+[the Sprint 01 execution plan](../../past/planning/P10202603.Transaction-handles-and-Op.plan.md). Broader stage behavior
 remains assigned to later work.
 
 ## Governing designs and specifications
@@ -62,7 +63,7 @@ Independent-instance isolation, wildcard precedence, custom events, and general 
 
 ## Plan and review
 
-The [execution plan](../../planning/P10202603.Transaction-handles-and-Op.plan.md) records implementation progress and
+The [execution plan](../../past/planning/P10202603.Transaction-handles-and-Op.plan.md) records implementation progress and
 verification commands. Review completed 2026-10-21 at base revision `735e465001f165582b81bd2b308f0f05ac915b6d` with a
 dirty working tree. `mvn clean install` passed on Amazon Corretto 17.0.15 and Maven 3.9.10: 395 tests, 0
 failures/errors, and 3 disabled report tests skipped; Checkstyle reported 0 violations; JaCoCo generated execution

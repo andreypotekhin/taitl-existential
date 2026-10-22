@@ -1,8 +1,9 @@
-# Current-State Assessment
+# Historical Assessment
 
-Assessed 2026-10-20 at revision `a1c9abd` plus this task's documentation and example/build changes. V1/V2 were the
-initial planned releases. The [approved rebaseline] now plans V1/V2/V3; no release is complete. See [traceability] for
-every roadmap item and [backlog](Backlog.md) for canonical epics and existing suggestion/TODO intake.
+This snapshot was assessed 2026-10-20 at revision `a1c9abd` plus the documentation and example/build changes then
+available. Its release status is historical; V1 was completed locally on 2026-10-22. See [V1](V1.md) and
+[traceability](TraceabilityMatrix.md) for current release evidence, and [backlog](Backlog.md) for canonical epics and
+existing suggestion/TODO intake.
 
 ## Findings and changes
 

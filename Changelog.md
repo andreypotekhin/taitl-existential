@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 This project follows Semantic Versioning. See [Readme.md](Readme.md) for the release policy summary.
 
 ## Unreleased
+
+## 0.0.1 - 2026-10-22
+- Completed the V1 representative workflow with relationship/evolution rules and retryable recovery after transaction or configuration failure.
+- Released the library as a locally installed Maven artifact and verified Night City as an independent consumer and reactor module.
+- Recorded V1 hardening, artifact hygiene, shutdown/resource checks, and three-sample consumer workflow measurements.
 - Moved Night City to `examples/night_city/` as shared test sources; example classes no longer ship in library JARs.
 - Established topic designs/specifications, an agent documentation-first process, and V1/V2 epics and sprint plans.
 - Added reproducible performance run records and topic history using the existing benchmark profile.

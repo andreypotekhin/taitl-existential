@@ -1,9 +1,9 @@
 # Sprint 05: V1 Hardening and Closeout
 
-Status: planned. Dates/capacity: unassigned. Epic: [V1 Hardening and Closeout](../Backlog.md#v1-hardening-and-closeout).
+Status: complete (2026-10-22). Dates/capacity: unassigned. Epic: [V1 Hardening and Closeout](../Backlog.md#v1-hardening-and-closeout).
 Release: [V1](../V1.md).
-Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
-this charter does not promote inherited completion marks.
+Design readiness: complete for the admitted V1 scope. Verification: exit criteria passed; Java 11 runtime compatibility
+and remote publication remain unclaimed.
 
 ## Goal and user outcome
 
@@ -27,13 +27,12 @@ technical dependencies. Select a ready capability using [Process](../../auto/Pro
 Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
 entry.
 
-## Remaining work
+## Completed scope
 
-- Run complete regression and representative acceptance suites; admit no new features.
-- Verify correctness, actionable errors, failure recovery, resource hygiene, and performance against the designs.
-- Check that coverage data/checks execute, required tests are enabled, and both library artifact contents are correct.
-- Rebuild the independent Night City consumer and collect current comparable benchmark/resource evidence.
-- Reconcile V1 requirements, docs, traceability, blockers, deferrals, and the release retrospective.
+- Complete the full regression suite and repair retry after a context factory fails during configuration finalization.
+- Verify all five design obligations against current acceptance, resource, artifact, and performance evidence.
+- Build and install the stable local 0.0.1 library; independently verify Night City and the three-project reactor.
+- Reconcile release requirements, traceability, usage docs, changelog, milestone, and retrospective.
 
 ## Acceptance
 
@@ -50,10 +49,16 @@ Recheck workload/complexity assumptions and baseline comparisons; explain materi
 
 ## Demo and validation
 
-Coding-task closure requires `mvn clean install` and inspection of actual test/coverage/check outputs. The independent
-consumer command is planned as `mvn -f examples/night_city/pom.xml verify` after library installation. It becomes
-runnable when Sprint 04 creates Night City's POM and its executable acceptance demonstration. Run relevant
-benchmark/resource scenarios and record retained-regression, artifact, and consumer evidence.
+The local release and consumer commands are:
+
+    mvn clean install
+    mvn -f examples/night_city/pom.xml clean verify exec:java
+    mvn -f reactor/pom.xml clean install
+    mvn -f examples/night_city/pom.xml org.apache.maven.plugins:maven-dependency-plugin:3.3.0:tree
+
+Three independent consumer workflow benchmark runs use 50 warmups and 250 measured iterations; see the [V1 closeout
+record](../../performance/runs/20261022T205600Z.NightCityV1Closeout.md). Both library artifacts and the dependency tree
+were inspected after installation.
 
 ## Non-goals
 
@@ -61,9 +66,13 @@ All new feature scope and opportunistic API expansion.
 
 ## Plan and review
 
-No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
-obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
+Completed execution plan: [P10222605](../../past/planning/P10222605.V1-hardening-and-closeout.plan.md).
+
+Review complete. On Amazon Corretto 17.0.15, Maven 3.9.10, macOS 15.6.1 arm64, `mvn clean install` passes 455 tests
+with zero failures/errors/skips and passes Checkstyle, PMD, and JaCoCo checks. Standalone consumer verification passes
+1 test and prints all three expected outcomes. The reactor builds and installs the library, consumer, and aggregator.
+Normal and assembled library JARs omit Night City and test libraries; JUnit remains test-scoped in the consumer.
+Configuration-finalization retry has direct acceptance coverage. No remote publication or Java 11 runtime claim is made.
 
 [LibraryAndConfiguration.spec.md]: ../../specifications/LibraryAndConfiguration.spec.md
 [LibraryAndConfiguration.design.md]: ../../design/LibraryAndConfiguration.design.md

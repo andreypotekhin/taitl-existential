@@ -49,15 +49,17 @@ public class FinalizeConfiguration
 
             synchronized (Existential.class)
             {
-                ex.configured(true);
-
-                // Now that we finalized setting up rules and event handlers
-                // create all (parent, intermediate) contexts for all the Contexts
-                // configured so far. This will result in a call to each
-                // and every intent(), effect() method of each custom context,
-                // and therefore will create instances of each Invariant, Intent
-                // provided during setup.
-                buildConfig();
+                if (!ex.configured())
+                {
+                    // Now that we finalized setting up rules and event handlers
+                    // create all (parent, intermediate) contexts for all the Contexts
+                    // configured so far. This will result in a call to each
+                    // and every intent(), effect() method of each custom context,
+                    // and therefore will create instances of each Invariant, Intent
+                    // provided during setup.
+                    buildConfig();
+                    ex.configured(true);
+                }
             }
         }
     }

@@ -19,10 +19,9 @@ and performance guide every release, with a dedicated hardening sprint at each b
 must address correctness, actionable errors, failure recovery, resource hygiene, and performance. Record capability
 readiness separately from verified implementation; existing completion marks are not fresh evidence.
 
-[Night City](../../../examples/night_city/Readme.md) currently supplies shared test sources excluded from library JARs.
-Night City Artifact Consumption and Performance will give it an independent Maven POM consuming the installed artifact;
-that consumer build is planned, not already runnable. The root's shared fixtures remain useful and do not substitute for
-artifact-consumer evidence. [Performance records](../performance/Readme.md) accumulate by topic. Active plans live under
+[Night City](../../../examples/night_city/Readme.md) supplies shared test sources excluded from library JARs and is also
+an independent Maven consumer of the locally installed V1 artifact. Its consumer test and reactor are verified.
+[Performance records](../performance/Readme.md) accumulate by topic. Active plans live under
 `docs/dev/planning/` and completed plans under [past/planning](../past/planning/).
 
 The [initial release baseline](../past/planning/release-baseline-2026-10-20/Readme.md) is superseded planning history,

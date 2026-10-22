@@ -1,6 +1,7 @@
 package com.taitl.specs.library_configuration;
 
 import com.taitl.existential.transactions.Tr;
+import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.logic.library.*;
 import com.taitl.existential.constants.*;
 import com.taitl.specs.*;
@@ -10,6 +11,7 @@ import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.atomic.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.*;
@@ -63,6 +65,32 @@ class UserCanConfigureLibrary extends SpecBase
                 String tran = tranTr.id();
                 ex.update(cat, tran);
             }).getMessage(), containsString("You need to configure at least one context"));
+        }
+
+        @Test
+        @DisplayName("User can retry configuration after a context factory fails")
+        void retryAfterContextFactoryFailure() throws Exception
+        {
+            AtomicInteger attempts = new AtomicInteger();
+            ex.configure()
+                    .context(op)
+                    .contextFactory(() -> {
+                        if (attempts.incrementAndGet() == 1)
+                        {
+                            throw new IllegalStateException("temporary context factory failure");
+                        }
+                        return new com.taitl.existential.configs.Context(op);
+                    })
+                    .invariant(Cat.class)
+                    .all(cat -> true, "cat is accepted");
+
+            assertThrows(IllegalStateException.class, () -> ex.begin(op));
+            assertFalse(ex.configured());
+
+            Tr tr = ex.begin(op);
+            tr.commit();
+            assertTrue(ex.configured());
+            assertEquals(2, attempts.get());
         }
 
         @Test
