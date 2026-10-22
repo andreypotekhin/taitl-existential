@@ -51,7 +51,7 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
     {
         if (!test(t))
         {
-            throw new PredicateFailure(description());
+            throw new PredicateFailure(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
         }
         return null;
     }

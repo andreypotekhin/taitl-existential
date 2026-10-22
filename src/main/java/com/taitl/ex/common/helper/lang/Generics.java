@@ -73,7 +73,7 @@ public class Generics
             String rawType = useFullName ? clz.getCanonicalName() : clz.getSimpleName();
             String arguments = Arrays.stream(pType.getActualTypeArguments())
                     .map(t -> typeName(t, useFullName))
-                    .collect(Collectors.joining(", "));
+                    .collect(Collectors.joining(","));
             return rawType + "<" + arguments + ">";
         }
 

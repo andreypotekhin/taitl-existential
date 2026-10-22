@@ -1,6 +1,6 @@
 # Quantifiers and Indexes Design
 
-Status: current-state design with open decisions; not a declaration that all specified behavior is implemented.
+Status: entity expression dispatch design; broader index capabilities retain their recorded implementation limits.
 
 ## User outcome
 
@@ -25,43 +25,57 @@ select handlers and retain encountered events. Some index tests live under a pac
 Keep business relationship indexes distinct from internal dispatch indexes. Choose collection traversal or indexed
 lookup explicitly; an index is useful only when its maintenance cost and transaction semantics are understood.
 
-These observations retain the existing architecture. They do not approve new public interfaces or resolve the open
-choices below. Record future decisions here, update the normative specification, and reconcile the execution plan.
+## Entity expression dispatch
 
-## Open decisions
+Bare All/Exists expressions are entity rules rather than business event handlers. Configuration indexes them under
+the shared Expression class and their declared TypeKey. Runtime lookup includes this route once per distinct matched
+entity TypeKey alongside the ordinary event keys. Existing ordering merges the selected expressions and handlers in
+declaration order; existing EventField caching stores the merged list. Expression classes do not become business events.
 
-- Reconcile the specification names SetIndex/JoinIndex/Index with the actual public index class names.
-- Specify empty collections, missing keys, multiplicity, conditional All/Exists, and composed All-Exists behavior.
-- Establish ownership, mutation, before/after updates, and failure behavior for application-maintained indexes.
-- Map tests under exlogic/unused to supported behavior before treating their presence as release proof.
+The scope is every reported entity/access event. Ordinary events use their supplied entity; transitions use the
+after-value, falling back to the before-value for deletion. Expressions are evaluated once per matching declaration
+per encountered event and validation attempt, regardless of the number of elementary/compound event splits.
+Unreported entities are not scanned. Event-bound predicates retain their configured event scope.
+
+False quantifiers produce PredicateFailure using the rule description and follow existing validation aggregation and
+transaction recovery. Collection/index ownership and mutation synchronization remain with the application. Dispatch
+does not maintain or undo those sources. The route adds type metadata lookups and cached rule references, not retained
+runtime entities or a new registry. Key construction is proportional to the distinct expanded TypeKeys; lookup merging
+occurs on cache misses, and subsequent lookups reuse the cached list.
+
+This correction preserves existing collection/key matching and endpoint extraction. Quantification over transition
+objects and broader index maintenance semantics require their own design; they are not implied by this route.
 
 ## Evidence and acceptance work
 
 - [quantifier unit tests](../../../src/test/java/com/taitl/existential/quantifiers)
+- [entity dispatch acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanValidateEntityQuantifiers.java)
 - [existing relationship-index tests](../../../src/test/java/com/taitl/exlogic/unused/indexes)
 - [runtime index tests](../../../src/test/java/com/taitl/ex/core/transactions/TransactionIndexesTest.java)
 
-[Relationships and Evolution] owns representative collection relationships; [Indexes and Operational Coverage] owns
-maintained indexes and broader combinations. Add user-facing positive and negative acceptance cases for each unresolved
-behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion marks until a
-requirement-level review changes them.
+Direct collection/index tests and end-to-end expression dispatch tests establish different claims. Passing adjacent
+unit tests does not establish complete transaction validation or maintained-index semantics.
 
-## Required quality analysis
+## Diagnostics, recovery, and concurrency
 
-These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
-and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
-establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
+Exists requires a matching key/entity in its source; empty sources and missing keys reject the evaluated entity.
+Conditional All invokes its predicate only when its condition holds. Reflected generic type names use comma separators
+without spaces, matching runtime type expansion. These rules retain their configured descriptions in PredicateFailure
+and link to [quantifier troubleshooting](../../../Troubleshooting.md#entity-quantifier-validation).
 
-- Correctness: specify empty/missing/multiple matches, conditional/composed quantifiers, and index consistency.
-- Actionable errors: identify the failed relationship or invalid index operation with type/key/context and remedy.
-- Failure recovery: define handling of partially maintained indexes and caller-owned state without implying undo.
-- Resource hygiene: define collection/index ownership, retained entity references, mutation limits, and cleanup.
-- Performance: measure collection traversal and index maintenance plus lookup, stating cardinalities and complexity.
+Rejected validation uses the existing transaction lifecycle: failed commit detaches the handle, and explicit rollback
+runs its callbacks and releases its transaction-local state. Source collections, indexes, and application objects are
+not undone. Checkpoint uses the existing retry path and reevaluates the caller's current source state.
+
+Expression dispatch introduces no mutable invocation state on shared rule objects. Reports remain local to each
+validation attempt; configuration retains its existing metadata caches. Application predicates and source collections
+must support the application's access/concurrency model. The dispatcher neither synchronizes their mutations nor
+introduces an automatic relationship-index maintenance policy.
 
 ## Performance
 
-Compare collection and index paths at stated cardinalities, including index maintenance rather than lookup alone. Use
-the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
-
-[Relationships and Evolution]: ../project/Backlog.md#relationships-and-evolution
-[Indexes and Operational Coverage]: ../project/Backlog.md#indexes-and-operational-coverage
+For E runtime event/type combinations and T distinct expanded types, shared expression dispatch adds O(T) metadata
+keys after O(E) key collection. Cold lookup merges matching configured references; warm lookup reuses the cached list.
+No runtime entity is added to a cache key. Source traversal/index lookup costs belong to the selected quantifier and
+remain distinct from dispatch. The [measurement record](../performance/runs/20261021T223641Z.QuantifierDispatch.md)
+compares the dispatch change using an unchanged transaction workload and states its allocation/cardinality limits.

@@ -88,8 +88,8 @@ public class IndexEvs implements Evaluator
             return typed;
         }
         TypeKey<T> typeKey = currentTypeKey(ev);
-        return useFullEventNames() ? EventKey.valueOfFull(ev.getClass(), typeKey)
-                : EventKey.valueOf(ev.getClass(), typeKey);
+        return useFullEventNames() ? EventKey.valueOfFull(Expression.class, typeKey)
+                : EventKey.valueOf(Expression.class, typeKey);
     }
 
     @SuppressWarnings("unchecked")

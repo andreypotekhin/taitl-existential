@@ -60,7 +60,7 @@ class UserCanCreateAndRelocateCats extends SpecBase
         Tr tr = ex.begin(OP);
         tr.create(cat);
         ValidationStageExceptions violation = assertThrows(ValidationStageExceptions.class, tr::commit);
-        assertTrue(violation.getCause().getMessage().contains("Every new cat must have a dwelling"));
+        assertTrue(violation.getCause().getMessage().contains("Every cat must have a dwelling"));
         tr.rollback();
     }
 
@@ -78,6 +78,34 @@ class UserCanCreateAndRelocateCats extends SpecBase
         Tr tr = ex.begin(OP);
         tr.transit(before, after);
         tr.commit();
+    }
+
+    @Test
+    void rejectsRelocationWithoutDestinationDwelling() throws Exception
+    {
+        Cat before = new Cat("Black", "Park");
+        Cat after = new Cat("Black", "Rooftop");
+        Collection<Dwelling<Cat, ?>> available = List.of(new Dwelling<Cat, Rugs>("Grey", "Park"));
+        new ConfigureCats().configureLifecycle(OP, Map.of(before, available, after, available));
+        Tr tr = ex.begin(OP);
+        tr.transit(before, after);
+        ValidationStageExceptions violation = assertThrows(ValidationStageExceptions.class, tr::commit);
+        assertTrue(violation.getCause().getMessage().contains("Every cat must have a dwelling"));
+        tr.rollback();
+    }
+
+    @Test
+    void rejectsCatWhoseLocationIsClearedAfterConfiguration() throws Exception
+    {
+        Cat cat = new Cat("Black", "Park");
+        new ConfigureCats().configureLifecycle(OP,
+                Map.of(cat, List.of(new Dwelling<Cat, Rugs>("Grey", "Park"))));
+        cat.location = null;
+        Tr tr = ex.begin(OP);
+        tr.create(cat);
+        ValidationStageExceptions violation = assertThrows(ValidationStageExceptions.class, tr::commit);
+        assertTrue(violation.getCause().getMessage().contains("Every reported cat has a location"));
+        tr.rollback();
     }
 
     @Test

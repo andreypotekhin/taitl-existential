@@ -44,4 +44,7 @@ Add cardinality parameters, repeated-versus-unique event workloads, stage/handle
 implementing the relevant feature. Allocation and retained-state measurements need their own methods; throughput cannot
 establish resource safety. Adopt JMH when fork/warmup/statistical control or automated thresholds are required.
 
+The [quantifier dispatch topic](topics/QuantifierDispatch.md) records the shared expression-route repair and its
+before/after dispatch measurements.
+
 [Custom transactions]: topics/CustomTransactions.md

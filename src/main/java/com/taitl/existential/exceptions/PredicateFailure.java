@@ -5,6 +5,8 @@ package com.taitl.existential.exceptions;
  */
 public class PredicateFailure extends ExistentialException
 {
+    public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#entity-quantifier-validation";
+
     /**
      * Creates a predicate failure without a message or cause.
      */

@@ -184,3 +184,15 @@ throws `UnsupportedOperationException`**
 Cause: `CacheHandlers` is a placeholder API and its caching strategies are not implemented yet.
 
 Fix: Avoid using `CacheHandlers` until the caching implementation lands.
+
+## Entity quantifier validation
+
+Fluent `.all(...)` and `.exists(...)` rules validate each reported entity/access event during checkpoint or commit.
+This includes deletion: a transition uses its after-value, while deletion uses its before-value. A missing Exists
+source key or an empty source produces a `PredicateFailure` with the configured rule description.
+
+If validation starts rejecting an operation after the quantifier dispatch repair, inspect its declared rules and
+caller-maintained source collections/indexes: these expressions were previously skipped. Populate the matching source
+before validation, correct the reported entity, or use an event-specific predicate if the rule should apply only to
+creation or another selected event. Conditional All can exclude entities that do not require the constraint.
+After a rejected commit, explicitly roll back the caller-held transaction handle for configured rollback callbacks.

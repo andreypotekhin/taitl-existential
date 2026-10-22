@@ -11,15 +11,15 @@ See the paired [design](../design/QuantifiersAndIndexes.design.md) and [specific
 
 ### All entity invariants
 
-User can create an invariant for an entity class using the 'All' quantifier.
++ User can create an invariant for an entity class using the 'All' quantifier.
 
 ### Conditional All invariants
 
-User can restrict the 'All' quantifier to only apply to certain entities, by specifying a condition.
++ User can restrict the 'All' quantifier to only apply to certain entities, by specifying a condition.
 
 ### All on entity classes
 
-User can define the 'All' quantifier on an entity class.
++ User can define the 'All' quantifier on an entity class.
 
 ### All on entity transitions
 
@@ -27,9 +27,25 @@ User can define the 'All' quantifier on an entity transition class (Transition<T
 
 ## Existence Quantifier
 
+### Entity quantifier validation scope
+
++ Fluent All and Exists rules run during checkpoint and commit validation for each matching reported entity/access
+event. They use the supplied entity for ordinary events, the after-value for transitions, and the before-value for
+deletion. Unreported entities are outside this scope. A rule executes once per encountered event and validation
+attempt, regardless of how many elementary/compound event keys select handlers. Existing event deduplication applies.
+
+Expressions and event handlers preserve declaration order and context/type matching, including full/simple names and
+generic type expansion. Event-bound predicates such as create remain limited to their configured event.
+False All/Exists expressions reject validation with PredicateFailure and their configured description. A conditional
+All skips its predicate when its condition is false. Exists requires a matching source entity/key; a missing key or
+empty source rejects the entity. Sources remain caller-owned; validation neither maintains nor undoes their contents.
+
+Acceptance: [entity quantifier validation](../../../src/test/java/com/taitl/specs/library_usage/UserCanValidateEntityQuantifiers.java)
+and [cat creation and relocation](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java).
+
 ### Exists entity invariants
 
-User can create an invariant on an entity class using the 'Exists' quantifier.
++ User can create an invariant on an entity class using the 'Exists' quantifier.
 
 ### Conditional same-class existence
 
@@ -47,11 +63,11 @@ invariant.
 
 ### Exists on collections
 
-User can define the 'Exists' quantifier on a collection.
++ User can define the 'Exists' quantifier on a collection.
 
 ### Exists on maps
 
-User can define the 'Exists' quantifier on a map (index).
++ User can define the 'Exists' quantifier on a map (index).
 
 ## Indexes
 

@@ -5,6 +5,8 @@ import com.taitl.existential.exceptions.*;
 
 /**
  * Base interface for entity expressions, such as All<T>.
+ * Bare expressions in invariants apply to each matching reported entity/access event during validation.
+ * Transitions use the after-value; deletion uses the before-value.
  *
  * @param <T>
  *            Type of entity

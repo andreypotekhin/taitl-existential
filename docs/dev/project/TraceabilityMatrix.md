@@ -59,7 +59,8 @@ Remaining work: advanced stage and broader event/deduplication claims remain out
 
 Epic: [Relationships and Evolution](Backlog.md#relationships-and-evolution);
 [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
-Design readiness: ready for the representative cat/dwelling slice. Verification: verified for that slice; broader V1 relationship coverage remains partial.
+Design readiness: ready for entity expression dispatch and the representative cat/dwelling slice. Verification:
+fluent All/Exists dispatch, admitted event endpoints, ordering, source matching, and checkpoint/commit rejection are verified.
 
 Requirements: A representative collection-backed relationship.
 
@@ -70,8 +71,13 @@ Requirements: A representative collection-backed relationship.
   [Same-class existence constraints], [Cross-class existence constraints].
 
 Evidence: [cat and dwelling relationship acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java)
-and [quantifier unit cases](../../../src/test/java/com/taitl/existential/quantifiers/).
-Remaining work: broader empty, conditional, and collection-composition cases remain for Sprint 02.
+and [entity quantifier acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanValidateEntityQuantifiers.java),
+plus [quantifier unit cases](../../../src/test/java/com/taitl/existential/quantifiers/).
+The [dispatch defect](../past/todo/T10212601.Quantifier-rules-skipped-by-event-dispatch.md) is repaired; the cat workflow
+uses fluent rules with direct missing-destination and missing-location rejection tests.
+See [dispatch performance evidence](../performance/runs/20261021T223641Z.QuantifierDispatch.md).
+Remaining work: broader relationship composition, maintained-index behavior, and transition-object quantification
+remain for their owning Sprint 02/V2 scope.
 
 ## Explicit entity evolution
 
