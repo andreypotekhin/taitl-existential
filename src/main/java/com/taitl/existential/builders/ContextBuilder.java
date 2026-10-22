@@ -331,38 +331,74 @@ public class ContextBuilder
         return this;
     }
 
+    /**
+     * Sets begin as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public ContextBuilder begin()
     {
+        parent.verifyConfigurable();
         stageCursor = StageName.BEGIN;
         return this;
     }
 
+    /**
+     * Sets immediate as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public ContextBuilder immediate()
     {
+        parent.verifyConfigurable();
         stageCursor = StageName.IMMEDIATE;
         return this;
     }
 
+    /**
+     * Sets validation as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public ContextBuilder validation()
     {
+        parent.verifyConfigurable();
         stageCursor = StageName.VALIDATION;
         return this;
     }
 
+    /**
+     * Sets commit as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public ContextBuilder commit()
     {
+        parent.verifyConfigurable();
         stageCursor = StageName.COMMIT;
         return this;
     }
 
+    /**
+     * Sets checkpoint as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public ContextBuilder checkpoint()
     {
+        parent.verifyConfigurable();
         stageCursor = StageName.CHECKPOINT;
         return this;
     }
 
+    /**
+     * Sets rollback as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public ContextBuilder rollback()
     {
+        parent.verifyConfigurable();
         stageCursor = StageName.ROLLBACK;
         return this;
     }
@@ -410,6 +446,7 @@ public class ContextBuilder
      */
     public TransactionBuilder transaction(String name)
     {
+        parent.verifyConfigurable();
         return Creator.create(TransactionBuilder.class,
                 new Class<?>[] { ContextBuilder.class, String.class },
                 this,
@@ -425,6 +462,7 @@ public class ContextBuilder
      */
     public TransactionBuilder transaction(Supplier<? extends Transaction> supplier)
     {
+        parent.verifyConfigurable();
         sane(supplier, "supplier");
         return Creator.create(TransactionBuilder.class,
                 new Class<?>[] { ContextBuilder.class, Supplier.class },
@@ -432,8 +470,17 @@ public class ContextBuilder
                 supplier);
     }
 
+    /**
+     * Starts configuring a transaction for this operation.
+     *
+     * @param factory
+     *            Factory used to create the configured value.
+     * @return
+     *            This builder for chaining.
+     */
     public TransactionBuilder transaction(BiFunction<String, String, ? extends Transaction> factory)
     {
+        parent.verifyConfigurable();
         sane(factory, "factory");
         return Creator.create(TransactionBuilder.class,
                 new Class<?>[] { ContextBuilder.class, BiFunction.class },
@@ -459,6 +506,7 @@ public class ContextBuilder
      */
     public ContextBuilder contextFactory(Supplier<? extends Context> supplier)
     {
+        parent.verifyConfigurable();
         sane(supplier, "supplier");
         contextFactory = supplier;
         return this;
@@ -471,6 +519,7 @@ public class ContextBuilder
 
     protected void register(Supplier<? extends Evs<?>> supplier, StageName defaultStage)
     {
+        parent.verifyConfigurable();
         sane(supplier, "supplier", defaultStage, "defaultStage");
         evsSuppliers.add(supplier);
         evsStages.add(stageCursor != null ? stageCursor : defaultStage);

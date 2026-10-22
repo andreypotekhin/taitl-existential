@@ -6,6 +6,7 @@ import com.taitl.existential.*;
 import com.taitl.existential.constants.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Behavior flags for configuring Existential library.
@@ -15,7 +16,7 @@ public class ExistentialFlags implements Closeable
     @Up
     protected Existential ex;
 
-    private int flags;
+    private volatile int flags;
 
     public ExistentialFlags(Existential ex)
     {
@@ -24,31 +25,46 @@ public class ExistentialFlags implements Closeable
 
     public void on(int flag)
     {
-        check(flag > 0, "Argument 'flag' must be greater than zero");
-        check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
-        flags |= flag;
+        synchronized (ex)
+        {
+            check(flag > 0, "Argument 'flag' must be greater than zero");
+            check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
+            verify(!ex.configured(), "Cannot change flags after configuration has been finalized. See "
+                    + "/Troubleshooting.md#library-configuration-after-finalization");
+            flags |= flag;
+        }
     }
 
     public void off(int flag)
     {
-        check(flag > 0, "Argument 'flag' must be greater than zero");
-        check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
-        flags &= ~flag;
+        synchronized (ex)
+        {
+            check(flag > 0, "Argument 'flag' must be greater than zero");
+            check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
+            verify(!ex.configured(), "Cannot change flags after configuration has been finalized. See "
+                    + "/Troubleshooting.md#library-configuration-after-finalization");
+            flags &= ~flag;
+        }
     }
 
     public boolean toggle(int flag)
     {
-        check(flag > 0, "Argument 'flag' must be greater than zero");
-        check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
-        if ((flags & flag) != 0)
+        synchronized (ex)
         {
-            off(flag);
+            check(flag > 0, "Argument 'flag' must be greater than zero");
+            check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
+            verify(!ex.configured(), "Cannot change flags after configuration has been finalized. See "
+                    + "/Troubleshooting.md#library-configuration-after-finalization");
+            if ((flags & flag) != 0)
+            {
+                flags &= ~flag;
+            }
+            else
+            {
+                flags |= flag;
+            }
+            return (flags & flag) != 0;
         }
-        else
-        {
-            on(flag);
-        }
-        return (flags & flag) != 0;
     }
 
     public boolean get(int flag)

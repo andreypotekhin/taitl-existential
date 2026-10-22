@@ -40,6 +40,19 @@ class ConfigureLibraryTest extends SpecBase
         class Classpath
         {
             @Test
+            @DisplayName("Invalid source does not apply any values from that source")
+            void invalidSourceIsAtomic()
+            {
+                ConfigureLibrary loader = new ConfigureLibrary(ex,
+                        name -> null,
+                        new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                                "behavior.rules.requireDescriptions=true\nshutdown.timeoutMillis=-1")));
+
+                assertThrows(IllegalStateException.class, loader::configure);
+                assertFalse(ex.get(com.taitl.existential.constants.Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS));
+            }
+
+            @Test
             @DisplayName("Reject unknown key")
             void unknownKey()
             {

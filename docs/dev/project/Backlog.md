@@ -63,7 +63,7 @@ regressions; the new scope changes delivery/evidence priorities, not availabilit
 
 ### Instance Isolation and Configuration
 
-Status: planned. Delivery: [Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
+Status: complete. Delivery: [Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
 
 Use independent instances and the broader documented configuration options without unintended shared state.
 

@@ -144,24 +144,18 @@ public class ConfigureLibrary
 
     protected void apply(java.util.Properties props, String source)
     {
+        Boolean requireDescriptions = null;
+        ShutdownPolicy shutdownPolicy = null;
         for (String key : props.stringPropertyNames())
         {
             String value = props.getProperty(key);
             if ("behavior.rules.requireDescriptions".equals(key))
             {
-                boolean b = parseBoolean(key, value, source);
-                if (b)
-                {
-                    ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
-                }
-                else
-                {
-                    ex.off(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
-                }
+                requireDescriptions = parseBoolean(key, value, source);
             }
             else if ("shutdown.timeoutMillis".equals(key))
             {
-                ex.shutdownPolicy(parseShutdownPolicy(key, value, source));
+                shutdownPolicy = parseShutdownPolicy(key, value, source);
             }
             else
             {
@@ -169,6 +163,22 @@ public class ConfigureLibrary
                         String.format("Invalid configuration key '%s' in '%s'. See %s",
                                 key, source, TROUBLESHOOTING_SECTION));
             }
+        }
+
+        if (requireDescriptions != null)
+        {
+            if (requireDescriptions)
+            {
+                ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+            }
+            else
+            {
+                ex.off(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+            }
+        }
+        if (shutdownPolicy != null)
+        {
+            ex.shutdownPolicy(shutdownPolicy);
         }
     }
 

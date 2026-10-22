@@ -32,8 +32,8 @@ public class ConfigurationLogic implements Closeable
     @Logic
     protected FinalizeConfiguration finalizeConfiguration;
 
-    protected ConfigBuilder configBuilder;
-    protected Config config;
+    protected volatile ConfigBuilder configBuilder;
+    protected volatile Config config;
     public SetMap<String, Context> contexts = new SetMap<>();
 
     public ConfigurationLogic(ExistentialConfigs ec)
@@ -52,9 +52,13 @@ public class ConfigurationLogic implements Closeable
      */
     public ConfigBuilder getBuilder()
     {
-        verify(!ec.ex().configured(),
-                "Cannot call this method because setup has already been finalized");
-        return createBuilders.getCreateBuilder();
+        synchronized (ec.ex())
+        {
+            verify(!ec.ex().configured(),
+                    "Cannot call this method because setup has already been finalized. See "
+                            + "/Troubleshooting.md#library-configuration-after-finalization");
+            return createBuilders.getCreateBuilder();
+        }
     }
 
     /**
@@ -114,7 +118,12 @@ public class ConfigurationLogic implements Closeable
     public void indexConfig(String op)
     {
         sane(op, "op");
-        Config config = getConfig(op);
+        indexConfig(op, getConfig(op));
+    }
+
+    public void indexConfig(String op, Config config)
+    {
+        sane(op, "op", config, "config");
         synchronized (config)
         {
             ConfigurationIndexes validationIndexes = config.indexes(op, StageName.VALIDATION);
@@ -175,8 +184,11 @@ public class ConfigurationLogic implements Closeable
     public void setConfig(Config config)
     {
         sane(config, "config");
-        verify(this.config == null, "Cannot add Config - config already exists");
-        this.config = config;
+        synchronized (ec.ex())
+        {
+            verify(this.config == null, "Cannot add Config - config already exists");
+            this.config = config;
+        }
     }
 
     public ConfigBuilder configBuilder()

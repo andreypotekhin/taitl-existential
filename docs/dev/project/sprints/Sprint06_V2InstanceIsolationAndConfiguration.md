@@ -1,9 +1,9 @@
 # Sprint 06: V2 Instance Isolation and Configuration
 
-Status: planned. Dates/capacity: unassigned. Epic:
+Status: complete. Review date: 2026-10-22. Epic:
 [Instance Isolation and Configuration](../Backlog.md#instance-isolation-and-configuration). Release: [V2](../V2.md).
-Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
-this charter does not promote inherited completion marks.
+Design readiness: ready for instance isolation, prospective flags, source precedence, freezing, and admitted concurrency.
+Verification: complete for the selected Sprint 06 scope; broader runtime support and new source APIs remain deferred.
 
 ## Goal and user outcome
 
@@ -22,33 +22,46 @@ capability using [Process](../../auto/Process.md).
 Link the exact requirement sections and acceptance evidence for the selected slice in the existing plan/traceability
 entry.
 
-## Remaining work
+## Completed work
 
-- Specify isolation boundaries around instance configuration, flags, rules, events, and transactions.
-- Distinguish explicit global facade/injection facilities from per-instance state; test conflicting instances.
-- Specify configuration sources/precedence, freezing, flags, invalid input, and supported concurrency assumptions.
-- Separate tested runtime compatibility from compiler release; retain the V1 consumer and workflow regressions.
+- Implemented independent instance flags, rules, configuration finalization, and transaction/event state while keeping
+  the explicit JVM-wide `Ex` facade and `Creator` injection boundaries.
+- Verified prospective flag changes, first-successful-begin freezing, atomic source application, failure retry, safe
+  thread handoff, simultaneous first transactions, and independent instance finalization.
+- Retained the V1 consumer and workflow regressions and recorded setup-versus-transaction performance evidence.
 
 ## Acceptance
 
-- Independent instances, sources/flags, freeze behavior, and relevant concurrency cases have direct evidence.
-- Errors and cleanup are defined for failed initialization/configuration.
-- Configuration/setup overhead and transaction effects are measured separately.
+- Independent instances, sources/flags, freeze behavior, and relevant concurrency cases have direct evidence in
+  [UserCanAccessLibrary.java] and [UserCanConfigureLibrary.java].
+- Failed finalization remains retryable; finalized instances reject changes with a troubleshooting link. Tests close
+  independent instances and transactions deterministically.
+- Configuration/setup overhead and configured transaction cost have separate three-sample measurements in the
+  [performance record].
 
 ## Quality and performance
 
-The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
-Link decisions and proof obligations for each concern, or justify inapplicability; quality is required in every release.
-Measure setup and instance contention where admitted, without adding avoidable transaction-path work. Use
-[performance records](../../performance/Readme.md), naming workloads and comparable evidence.
+Correctness is covered by conflicting rules/flags across independent instances and by source-atomicity checks.
+Actionable errors explain that finalized configuration cannot change and link to troubleshooting. Failed context
+factory construction remains retryable; a failed attempt does not publish a partial configuration. Acceptance tests
+close each instance and complete or close transactions, including worker cleanup. Performance evidence measures setup
+and steady transactions separately; contention is exercised by deterministic concurrency tests, with no numerical gate
+until a comparable baseline exists. See the [performance record](../../performance/runs/20261022T213148Z.InstanceIsolationAndConfiguration.md).
 
 ## Demo and validation
 
-Existing tests are starting evidence, not proof of all new acceptance cases. From the repository root:
+From the repository root, validation passed:
 
-    mvn -Dtest=UserCanAccessLibrary,UserCanConfigureLibrary test
+    mvn clean install
+    mvn -f examples/night_city/pom.xml clean verify
+    mvn -f reactor/pom.xml clean install
+    mvn -q -Pbenchmarks -Dtest=InstanceConfigurationBenchmark -Dbenchmark.warmup.iterations=50 -Dbenchmark.measure.iterations=250 test
 
-Coding-task closure requires `mvn clean install` and inspection of actual test/coverage/check outputs.
+The root build executed 460 tests with zero failures, errors, or skips; Checkstyle reported zero violations, and PMD,
+Failsafe, and JaCoCo checks passed (234 classes analyzed). The independent Night City consumer test passed (1/1),
+and the three-project reactor install succeeded. The benchmark command ran three times in separate Maven/test JVMs.
+The project-specific `-Dtest=UserCanAccessLibrary,...` selector is not recognized by the current Surefire naming
+conventions; these specifications were exercised by the complete build.
 
 ## Non-goals
 
@@ -56,11 +69,14 @@ Hot reload, new configuration strategy APIs, and untested runtime support promis
 
 ## Plan and review
 
-No feature-delivery execution plan is finalized yet. Follow [Plans](../../auto/Plans.md) when the work is selected.
-Review pending: record completed requirements, actual commands/versions, passed/skipped totals, five quality
-obligations, consumer/benchmark evidence where relevant, blockers, and deferrals. Use the [review template].
+The [execution plan](../../planning/P10222606.Sprint06-instance-isolation-and-configuration.plan.md) records the
+selected behavior and delivery steps. This closes the selected Sprint 06 slice; per-instance configuration source
+APIs, concurrent rule declaration, and broader runtime compatibility claims remain deferred.
 
 [LibraryAndConfiguration.spec.md]: ../../specifications/LibraryAndConfiguration.spec.md
 [LibraryAndConfiguration.design.md]: ../../design/LibraryAndConfiguration.design.md
+[UserCanAccessLibrary.java]: ../../../src/test/java/com/taitl/specs/library/UserCanAccessLibrary.java
+[UserCanConfigureLibrary.java]: ../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java
+[performance record]: ../../performance/runs/20261022T213148Z.InstanceIsolationAndConfiguration.md
 
 [review template]: ../templates/SprintReview.md

@@ -25,6 +25,15 @@ Fix:
 6. Use only `true` or `false` for boolean values.
 7. Unset `EXISTENTIAL_CONFIG_FILE` to fall back to classpath `existential.properties`.
 
+## Library configuration after finalization
+
+**Problem: A flag change or retained configuration builder fails because the library has been finalized**
+
+The first successful `begin()` fixes an instance's flags and rules. Make programmatic flag changes and declare all
+rules before that call. If the application needs a different configuration, create and configure a new `Existential`
+instance, then safely publish it to the threads that will use it. A failed first `begin()` leaves configuration open
+for correction and retry.
+
 ### Library shutdown waits for an active transaction
 
 When: `Existential.close()` or `Ex.close()` is called while a transaction is still active.

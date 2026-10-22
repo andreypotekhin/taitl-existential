@@ -20,7 +20,12 @@ See the paired [design](../design/LibraryAndConfiguration.design.md) and [specif
 
 ### Independent library instances
 
-User can independently configure and use multiple instances of the library.
++ User can independently configure and use multiple instances of the library.
+
+Each instance owns its flags, configured rules, event and transaction state, and shutdown policy. JVM-wide facilities
+such as the static `Ex` facade and `Creator` injection are explicitly shared and are not instance configuration.
+Configure an instance on one thread, safely publish it, and use it on another thread. Concurrent configuration calls
+on the same instance are not supported.
 
 ### Multiple business operations
 
@@ -44,6 +49,15 @@ Within an operation context, the user can configure multiple rules such as invar
 
 + User can affect library behavior by setting behavioral flags.
 
+Flag changes are prospective: they affect subsequent work that consults the flag and never redo work already
+completed. Required rule descriptions are checked when each behavior is added. All flags and rule declarations become
+fixed when the first transaction successfully finalizes configuration. Attempts to change a flag or declare more
+rules afterwards fail with an explanation that the instance has already been configured.
+
+Concurrent first transaction attempts on the same instance wait for one configuration finalization to finish. A
+successful finalization is safely visible to threads that use the instance after normal publication or after waiting
+for that first transaction. Independent instances finalize independently.
+
 ### Configuration before use
 
 + User must configure the library before use.
@@ -56,6 +70,11 @@ Within an operation context, the user can configure multiple rules such as invar
 ### Configuration files
 
 + User can configure library options using a config file.
+
+Configuration sources are applied in order: the bundled classpath properties, the file selected by
+`EXISTENTIAL_CONFIG_FILE`, then programmatic flag changes. Each source is fully validated before any of its values are
+applied. Invalid input leaves the instance's settings unchanged for that source and reports the source and invalid
+key/value.
 
 ### Classpath configuration
 

@@ -47,7 +47,7 @@ public class FinalizeConfiguration
                 throw new IllegalStateException("You need to configure at least one context");
             }
 
-            synchronized (Existential.class)
+            synchronized (ex)
             {
                 if (!ex.configured())
                 {

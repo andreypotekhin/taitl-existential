@@ -1,6 +1,6 @@
 # Library and Configuration Design
 
-Status: current-state design with open decisions; not a declaration that all specified behavior is implemented.
+Status: Sprint 06 isolation and configuration decisions recorded; broader context matching and runtime questions remain open.
 
 ## User outcome
 
@@ -25,18 +25,41 @@ sources of rules. Existing tests cover context factories, parent rules, wildcard
 Keep configuration separate from transaction execution and preserve the small public builder surface. Index shared
 configuration outside repeated event dispatch; independently verify instance isolation before claiming it.
 
-These observations retain the existing architecture. They do not approve new public interfaces or resolve the open
-choices below. Record future decisions here, update the normative specification, and reconcile the execution plan.
+These observations retain the existing architecture. The decisions below and the paired specification define the
+Sprint 06 behavior; they do not resolve the remaining open questions.
 
 Configuration becomes finalized only after context and rule construction completes. A failed build leaves the
 configuration builder available so the caller can retry; the synchronized finalization step rechecks the configured
 state so concurrent first transactions do not build the same configuration twice.
 
+Each `Existential` owns its configuration, flags, rules, event indexes, transactions, and shutdown policy. `Ex` remains
+an explicit JVM-wide facade over one instance, while `Creator` injection remains a JVM-wide construction facility.
+Applications may configure an instance on one thread, publish it with normal Java synchronization, and use it from
+other threads. Concurrent rule declaration on one instance is outside the contract. Concurrent `begin()` calls are
+supported: one call finalizes the instance and the others proceed after successful publication. Finalization locks on
+the instance, so unrelated instances do not block one another.
+
+Flags are prospective. A change affects work that consults the flag after the change; it does not redo prior work.
+Flags and rule declaration freeze together when the first `begin()` successfully completes configuration. A failed
+finalization leaves the instance configurable and retryable. The required-description flag is consulted when each
+behavior rule is added, including through a builder obtained earlier. Type-key naming is read when configuration is
+indexed and remains consistent for the finalized instance. Event-splitting and inferred-type flags are read for each
+new event dispatch. Changes after successful finalization fail with an actionable error.
+
+Configuration sources retain their current order: the bundled classpath properties provide defaults, the path named
+by `EXISTENTIAL_CONFIG_FILE` overrides those defaults, and programmatic flag changes may override either before the
+first transaction. Each source is parsed and validated fully before its values are applied, so an invalid value does
+not leave a partially applied source. Separate instances load the same process-level sources into independent flag and
+shutdown-policy state.
+
 ## Open decisions
 
 - Specify ties among overlapping wildcards, parents, exact contexts, and transaction rules; existing suggestions propose
   different orders. Do not silently turn an implementation detail into a new precedence guarantee.
-- Define configuration freezing and concurrency guarantees, including global Creator injection.
+- Per-instance config source injection is deferred. Sprint 06 keeps the existing classpath/environment sources and
+  does not add a new public source API.
+- Global `Creator` replacement/injection remains configuration-time process state; concurrent replacement is not
+  supported. Further per-instance injection is deferred.
 - Distinguish build-time JDK requirements, compiler release 11, and actually tested runtime compatibility.
 
 ## Evidence and acceptance work

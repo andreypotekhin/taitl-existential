@@ -216,6 +216,16 @@ public class TransactionBuilder
         return this;
     }
 
+    /**
+     * Starts or adds an intent rule in this builder.
+     *
+     * @param cls
+     *            Class of the rule subject.
+     * @param <T>
+     *            Type of the configured rule subject.
+     * @return
+     *            This builder for chaining.
+     */
     public <T> IntentBuilder<T> intent(Class<T> cls)
     {
         sane(cls, "cls");
@@ -271,47 +281,90 @@ public class TransactionBuilder
         return this;
     }
 
+    /**
+     * Adds or selects a context for this configuration.
+     *
+     * @param name
+     *            Business operation name.
+     * @return
+     *            This builder for chaining.
+     */
     public ContextBuilder context(String name)
     {
         sane(name, "name");
         return parent.context(name);
     }
 
+    /**
+     * Adds or selects a context for this configuration.
+     * @return
+     *            This builder for chaining.
+     */
     public ContextBuilder context()
     {
         return parent.context();
     }
 
+    /**
+     * Sets begin as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public TransactionBuilder begin()
     {
         stageCursor = StageName.BEGIN;
         return this;
     }
 
+    /**
+     * Sets immediate as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public TransactionBuilder immediate()
     {
         stageCursor = StageName.IMMEDIATE;
         return this;
     }
 
+    /**
+     * Sets validation as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public TransactionBuilder validation()
     {
         stageCursor = StageName.VALIDATION;
         return this;
     }
 
+    /**
+     * Sets commit as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public TransactionBuilder commit()
     {
         stageCursor = StageName.COMMIT;
         return this;
     }
 
+    /**
+     * Sets checkpoint as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public TransactionBuilder checkpoint()
     {
         stageCursor = StageName.CHECKPOINT;
         return this;
     }
 
+    /**
+     * Sets rollback as the default stage for following rules.
+     * @return
+     *            This builder for chaining.
+     */
     public TransactionBuilder rollback()
     {
         stageCursor = StageName.ROLLBACK;
@@ -549,6 +602,7 @@ public class TransactionBuilder
 
     protected void register(Supplier<? extends Evs<?>> supplier, StageName defaultStage)
     {
+        parent.parent.verifyConfigurable();
         sane(supplier, "supplier", defaultStage, "defaultStage");
         evsSuppliers.add(supplier);
         evsStages.add(stageCursor != null ? stageCursor : defaultStage);
@@ -556,6 +610,7 @@ public class TransactionBuilder
 
     protected void registerAtStage(Supplier<? extends Evs<?>> supplier, StageName stageName)
     {
+        parent.parent.verifyConfigurable();
         sane(supplier, "supplier", stageName, "stageName");
         evsSuppliers.add(supplier);
         evsStages.add(stageName);
@@ -563,6 +618,7 @@ public class TransactionBuilder
 
     protected void installParentTransactionFactory()
     {
+        parent.parent.verifyConfigurable();
         parent.transactionFactory = (transactionOp, transactionName) -> {
             Transaction tr = createInstance(transactionOp, transactionName);
 

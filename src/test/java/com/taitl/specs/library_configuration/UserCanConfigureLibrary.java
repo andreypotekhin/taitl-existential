@@ -1,6 +1,7 @@
 package com.taitl.specs.library_configuration;
 
 import com.taitl.existential.transactions.Tr;
+import com.taitl.existential.builders.*;
 import com.taitl.ex.examples.night_city.model.Cat;
 import com.taitl.ex.logic.library.*;
 import com.taitl.existential.constants.*;
@@ -91,6 +92,26 @@ class UserCanConfigureLibrary extends SpecBase
             tr.commit();
             assertTrue(ex.configured());
             assertEquals(2, attempts.get());
+        }
+
+        @Test
+        @DisplayName("User can change flags prospectively until configuration finalizes")
+        void flagsAffectNewRulesAndFreezeAfterFirstBegin() throws Exception
+        {
+            ConfigBuilder config = ex.configure();
+            InvariantBuilder<Cat> cats = config.context(op).invariant(Cat.class);
+            cats.create(value -> true);
+
+            ex.on(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+            IllegalArgumentException missingDescription =
+                    assertThrows(IllegalArgumentException.class, () -> cats.update(value -> true));
+            assertThat(missingDescription.getMessage(), containsString("require descriptions"));
+            cats.update(value -> true, "update accepted cats");
+
+            ex.begin(op).commit();
+            assertThrows(IllegalStateException.class, () -> cats.create(value -> true, "too late"));
+            assertThrows(IllegalStateException.class, () -> ex.off(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS));
+            assertThrows(IllegalStateException.class, () -> config.context("/another/op"));
         }
 
         @Test

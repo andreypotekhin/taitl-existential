@@ -26,7 +26,6 @@ public class BuildConfig
     {
         sane(configBuilder, "configBuilder");
         Config config = configBuilder.build(cl.ec());
-        cl.setConfig(config);
 
         Set<String> ops = new LinkedHashSet<>();
         for (Context context : config.contexts())
@@ -39,8 +38,9 @@ public class BuildConfig
         }
         for (String op : ops)
         {
-            cl.onFinishConfiguration(op);
+            cl.indexConfig(op, config);
         }
+        cl.setConfig(config);
     }
 
     protected boolean isWildcardContext(Context context)

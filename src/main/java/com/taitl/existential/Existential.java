@@ -13,6 +13,7 @@ import com.taitl.existential.transactions.*;
 import java.io.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 /**
  * Entry point to the Existential library.
@@ -31,7 +32,7 @@ public final class Existential implements Closeable
     private ExistentialFlags flags;
     private ShutdownLogic shutdownLogic;
 
-    private boolean configured = false;
+    private volatile boolean configured = false;
     private volatile ShutdownPolicy shutdownPolicy = ShutdownPolicy.graceful();
 
     public Existential()
@@ -421,7 +422,13 @@ public final class Existential implements Closeable
      */
     public void configured(boolean b)
     {
-        configured = b;
+        synchronized (this)
+        {
+            verify(b || !configured,
+                    "Cannot clear configuration after it has been finalized. See "
+                            + "/Troubleshooting.md#library-configuration-after-finalization");
+            configured = b;
+        }
     }
 
     /**

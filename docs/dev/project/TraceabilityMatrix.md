@@ -183,22 +183,23 @@ different source/build identities and are not a direct comparison. There is no n
 
 Epic: [Instance Isolation and Configuration](Backlog.md#instance-isolation-and-configuration);
 [Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
-Design readiness: open. Verification: partial.
+Design readiness: ready for the Sprint 06 isolation and thread-handoff contract. Verification: acceptance verified.
 
 Requirements: Independent-instance and broader operation/context combinations.
 
 - [LibraryAndConfiguration.spec.md]: [Independent library instances], [Multiple business operations],
   [Multiple operation contexts], [Multiple context rules].
 
-Evidence to review: [UserCanAccessLibrary.java].
-Remaining work: Define per-instance versus global facilities and replace the existing isolation TODOs with direct
-acceptance.
+Evidence: [UserCanAccessLibrary.java](../../../src/test/java/com/taitl/specs/library/UserCanAccessLibrary.java)
+verifies conflicting rules and flags, concurrent first transactions after setup handoff, and independent simultaneous
+finalization. `Ex` and `Creator` remain process-wide by design.
 
 ## Configuration options and guarantees
 
 Epic: [Instance Isolation and Configuration](Backlog.md#instance-isolation-and-configuration);
 [Sprint 06](sprints/Sprint06_V2InstanceIsolationAndConfiguration.md).
-Design readiness: open. Verification: partial.
+Design readiness: ready for prospective flag changes, first-successful-begin freezing, source precedence, and retryable
+finalization. Verification: acceptance verified.
 
 Requirements: Configuration sources/options, plus configuration/injection concurrency and freeze decisions.
 
@@ -207,8 +208,10 @@ Requirements: Configuration sources/options, plus configuration/injection concur
   [Configuration environment variable], [Initial configuration file].
 
 Evidence: [UserCanConfigureLibrary.java](../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java)
-verifies a transient context-factory failure leaves configuration retryable. Broader sources/flags, initialization failures,
-and supported concurrency remain for V2.
+verifies prospective description enforcement, retained-builder freezing, and retry after a context-factory failure.
+[ConfigureLibraryTest.java](../../../src/test/java/com/taitl/ex/logic/library/ConfigureLibraryTest.java) verifies invalid
+source values do not partially apply. The Sprint 06 performance record separates construction/first begin from
+configured transaction cost. New per-instance source APIs and concurrent rule declaration remain deferred.
 
 ## Contexts, factories, and ordering
 

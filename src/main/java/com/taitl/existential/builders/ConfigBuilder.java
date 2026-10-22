@@ -22,7 +22,7 @@ import static com.taitl.ex.common.helper.strings.Text.*;
  */
 public class ConfigBuilder
 {
-    protected boolean requireBehaviorDescriptions;
+    protected Existential ex;
 
     /**
      * Contexts declared for this Existential instance.
@@ -36,10 +36,16 @@ public class ConfigBuilder
     protected Supplier<? extends Context> contextFactory = () -> Creator.create(Context.class);
     protected BiFunction<String, String, ? extends Transaction> transactionFactory = Transaction.FACTORY;
 
+    /**
+     * Creates a configuration builder for one library instance.
+     *
+     * @param ex
+     *            Library instance that owns this configuration.
+     */
     public ConfigBuilder(Existential ex)
     {
         sane(ex, "ex");
-        this.requireBehaviorDescriptions = ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+        this.ex = ex;
     }
 
     /**
@@ -68,6 +74,7 @@ public class ConfigBuilder
      */
     public ContextBuilder context(String name)
     {
+        verifyConfigurable();
         ContextBuilder contextBuilder = Creator.create(ContextBuilder.class,
                 new Class<?>[] { ConfigBuilder.class, String.class },
                 this,
@@ -103,6 +110,7 @@ public class ConfigBuilder
      */
     public ConfigBuilder context(Context context)
     {
+        verifyConfigurable();
         sane(context, "context");
         context.op(contextName(context.name()));
 
@@ -127,6 +135,7 @@ public class ConfigBuilder
      */
     public Config build(ExistentialConfigs ec)
     {
+        verifyConfigurable();
         sane(ec, "ec");
         buildContexts();
         // TODO:
@@ -154,6 +163,7 @@ public class ConfigBuilder
      */
     public ConfigBuilder contextFactory(Supplier<? extends Context> supplier)
     {
+        verifyConfigurable();
         sane(supplier, "supplier");
         contextFactory = supplier;
         return this;
@@ -168,6 +178,7 @@ public class ConfigBuilder
      */
     public ConfigBuilder transactionFactory(Supplier<? extends Transaction> supplier)
     {
+        verifyConfigurable();
         sane(supplier, "supplier");
         transactionFactory = (op, name) -> supplier.get();
         return this;
@@ -181,6 +192,7 @@ public class ConfigBuilder
      */
     public ConfigBuilder transactionFactory(BiFunction<String, String, ? extends Transaction> factory)
     {
+        verifyConfigurable();
         sane(factory, "factory");
         transactionFactory = factory;
         return this;
@@ -207,9 +219,20 @@ public class ConfigBuilder
         return transactionFactory.apply(op, name);
     }
 
+    /**
+     * Returns whether behavior rule descriptions are required.
+     * @return
+     *            True when descriptions are required.
+     */
     public boolean requireBehaviorDescriptions()
     {
-        return requireBehaviorDescriptions;
+        return ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+    }
+
+    void verifyConfigurable()
+    {
+        verify(!ex.configured(), "Cannot change configuration after it has been finalized. See "
+                + "/Troubleshooting.md#library-configuration-after-finalization");
     }
 
     /**
@@ -219,6 +242,7 @@ public class ConfigBuilder
      */
     public void addContext(Context cont)
     {
+        verifyConfigurable();
         sane(cont, "cont");
         verify(!contexts.contains(cont), "This context is already added");
         contexts.add(cont);

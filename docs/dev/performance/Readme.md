@@ -55,4 +55,7 @@ installed library artifact, with configuration/source setup excluded and success
 event cases separated. V1's local `0.0.1` closeout samples are recorded in
 [NightCityV1Closeout](runs/20261022T205600Z.NightCityV1Closeout.md).
 
+The [instance configuration topic](topics/InstanceConfiguration.md) separates fresh-instance construction, rule
+setup, first transaction, and close from transactions on an already configured instance.
+
 [Custom transactions]: topics/CustomTransactions.md

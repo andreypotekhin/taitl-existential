@@ -129,6 +129,12 @@ Constraint violations will be reported as part of thrown exception (ExistentialE
 Library startup loads options in this order:
 - Classpath resource `existential.properties` (default values).
 - If env var `EXISTENTIAL_CONFIG_FILE` is set, load that file next (override defaults).
+- Programmatic flag changes made during setup override file values.
+
+Each `Existential` instance loads its own settings. Flag changes affect subsequent configuration or event work and do
+not redo work already completed. Flags and rule declarations become fixed after the first successful `begin()`; finish
+configuration first, then safely publish the instance to request threads. Use ordinary synchronization, such as a
+latch, future, or synchronized initialization method, when another thread may encounter the instance during startup.
 
 Workflow:
 1. Create a properties file:
