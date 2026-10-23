@@ -55,6 +55,11 @@ public final class Log
         return logLevel.compareTo(LogLevel.LEVEL_DEBUG) <= 0;
     }
 
+    public static boolean isWarnEnabled()
+    {
+        return logLevel.compareTo(LogLevel.LEVEL_WARNING) <= 0;
+    }
+
     public static void error(Class clz, String format, String message, Object... keyValuePairs)
     {
         if (logLevel.compareTo(LogLevel.LEVEL_ERROR) <= 0)

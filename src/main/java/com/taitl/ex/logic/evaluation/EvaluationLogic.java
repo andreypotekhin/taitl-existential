@@ -7,6 +7,7 @@ import com.taitl.ex.logic.evaluation.events.*;
 import com.taitl.ex.logic.evaluation.intents.*;
 import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.ex.logic.transactions.*;
+import com.taitl.ex.logic.types.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.exceptions.*;
@@ -27,6 +28,9 @@ public class EvaluationLogic implements Closeable
 
     @Logic
     protected EvaluateIntents evaluateIntents;
+
+    @Logic
+    protected TypeMatchingLogic typeMatchingLogic = Creator.create(TypeMatchingLogic.class);
 
     public EvaluationLogic(TransactionLogic tl)
     {
@@ -119,6 +123,7 @@ public class EvaluationLogic implements Closeable
             ValidationReport report) throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", tr, "tr", stageName, "stageName", report, "report");
+        warnUnresolvedGenerics(runtimeKey, tr);
         EventField eventField = eventField(tr, stageName);
         evaluateEvents.call(runtimeKey, tr, eventField, report, useFullClassNames(), shouldSplitElementary());
     }
@@ -143,7 +148,18 @@ public class EvaluationLogic implements Closeable
             throws ExistentialException
     {
         EventField field = eventField(tr, StageName.ROLLBACK);
+        warnUnresolvedGenerics(runtimeKey, tr);
         evaluateEvents.callAll(runtimeKey, tr, field, report, useFullClassNames(), shouldSplitElementary());
+    }
+
+    protected void warnUnresolvedGenerics(RuntimeKey<?> runtimeKey, Tr tr)
+    {
+        Object entity = runtimeKey.entity();
+        if (entity != null)
+        {
+            typeMatchingLogic.warnUnresolvedGenerics(tr.op, runtimeKey.typeKey(), entity.getClass(),
+                    warnUnresolvedGenerics());
+        }
     }
 
     protected Throwable append(Throwable failure, Throwable next)
@@ -231,6 +247,11 @@ public class EvaluationLogic implements Closeable
     public boolean shouldSplitElementary()
     {
         return !tl.ex().get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND);
+    }
+
+    public boolean warnUnresolvedGenerics()
+    {
+        return tl.ex().get(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS);
     }
 
     protected void throwIfStageFailed(StageName stageName, ValidationReport report) throws ExistentialException

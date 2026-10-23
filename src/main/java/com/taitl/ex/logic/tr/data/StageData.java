@@ -38,6 +38,11 @@ public class StageData
         return preparedIndexes != null;
     }
 
+    public boolean hasPreparedHandlers()
+    {
+        return preparedIndexes != null && preparedIndexes.hasEventHandlers();
+    }
+
     public EventField eventField(EventField base)
     {
         sane(base, "base");

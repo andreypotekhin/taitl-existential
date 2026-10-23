@@ -21,5 +21,6 @@ public class Look<T>
     public Look(T something, String description)
     {
         this.something = something;
+        this.description = description;
     }
 }

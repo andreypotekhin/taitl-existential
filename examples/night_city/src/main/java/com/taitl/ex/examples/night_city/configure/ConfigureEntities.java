@@ -75,8 +75,9 @@ public class ConfigureEntities
                 .invariant(Mouse.class)
                     .exists(mouseDwelling.left(),
                         "At the end of transaction, every mouse is in a dwelling")
-                .invariant(Being.class)
-                    .exists((Map<Being, Set<Dwelling<Being<?>, ?>>>)(Map<?, ?>)beingDwelling.left(),
+                .invariant(new TypeKey<Being<Muridae>>() {})
+                    .exists((Map<Being<Muridae>, Set<Dwelling<Being<Muridae>, ?>>>)
+                        (Map<?, ?>)beingDwelling.left(),
                         "At the end of transaction, every mouse is in a dwelling")
         ;
 

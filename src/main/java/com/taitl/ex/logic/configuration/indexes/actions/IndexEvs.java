@@ -1,7 +1,9 @@
 package com.taitl.ex.logic.configuration.indexes.actions;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.ex.logic.types.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.events.types.*;
@@ -21,10 +23,14 @@ public class IndexEvs implements Evaluator
     protected TypeKey<?> currentTypeKey;
     protected boolean currentIntent;
 
+    @Logic
+    protected TypeMatchingLogic typeMatchingLogic;
+
     public IndexEvs(ConfigurationIndexes ci)
     {
         sane(ci, "ci");
         this.ci = ci;
+        this.typeMatchingLogic = Creator.create(TypeMatchingLogic.class);
     }
 
     public <T> void call(Evs<T> evs)
@@ -41,6 +47,10 @@ public class IndexEvs implements Evaluator
         currentIntent = evs instanceof Intent<?>;
         try
         {
+            if (currentTypeKey != null)
+            {
+                typeMatchingLogic.validateRuleType(currentTypeKey);
+            }
             Evaluator.super.visit(evs);
         }
         finally

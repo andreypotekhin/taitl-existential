@@ -72,9 +72,14 @@ regressions; the new scope changes delivery/evidence priorities, not availabilit
 
 ### Contexts and Type Matching
 
-Status: planned. Delivery: [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
+Status: delivered. Delivery: [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
 
-Apply parent/wildcard rules and broader generic/subclass matching with deterministic documented semantics.
+Apply parent/wildcard rules and broader generic/subclass/interface matching with deterministic semantics. Compile
+runtime execution plans and extend EventField for validation-only reporting and shared matching across large entity
+populations. Selected behavior and prototype/measurement gates are recorded in the
+[delivery plan](../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md); implementation,
+acceptance, artifact, and exploratory performance evidence are recorded. Byte-level retained-heap profiling remains a
+follow-up limitation.
 
 The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
 regressions; the new scope changes delivery/evidence priorities, not availability of code already present.

@@ -256,6 +256,16 @@ public class Tr
         return concrete.immediateActive();
     }
 
+    public boolean hasPreparedHandlers(StageName stageName)
+    {
+        return concrete.hasPreparedHandlers(stageName);
+    }
+
+    public void activateReportStages(boolean begin, boolean immediate)
+    {
+        concrete.activateReportStages(begin, immediate);
+    }
+
     public <T> boolean shouldEvaluateBegin(RuntimeKey<T> runtimeKey)
     {
         return concrete.shouldEvaluateBegin(runtimeKey);

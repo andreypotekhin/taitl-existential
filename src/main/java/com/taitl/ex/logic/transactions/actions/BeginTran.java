@@ -1,5 +1,8 @@
 package com.taitl.ex.logic.transactions.actions;
 
+import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.execution.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.transactions.*;
@@ -9,6 +12,9 @@ import com.taitl.existential.transactions.*;
  */
 public class BeginTran extends TranAction
 {
+    @Logic
+    protected ExecutionPlanLogic executionPlanLogic = Creator.create(ExecutionPlanLogic.class);
+
     public BeginTran(TransactionLogic tl)
     {
         super(tl);
@@ -18,5 +24,6 @@ public class BeginTran extends TranAction
     {
         tr.onBegin();
         tl.validationLogic.prepareForValidation(tr);
+        executionPlanLogic.bind(tr, tl.ex().configs().executionPlan(tr.op));
     }
 }

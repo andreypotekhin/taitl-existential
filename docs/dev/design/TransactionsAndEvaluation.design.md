@@ -62,6 +62,13 @@ shutdown configuration at the library boundary rather than mixing it into operat
 
 ## Performance
 
+The [runtime execution-plan design](ExecutionPlans.design.md) compiles stage/selection requirements and specializes
+validation-only reporting while retaining lifecycle windows and transaction-local overlays. `ExecutionPlanLogic`
+coordinates `CompileExecutionPlan` and transaction binding; lifecycle actions retain their existing timing. Static
+configuration alone cannot determine a supplied transaction's report-time requirements. Reporting from a begin
+callback stays conservative until the effective plan is prepared. Empty entity stages can skip traversal without
+skipping lifecycle callbacks, admission accounting, or disposal.
+
 Prepared transaction overlays avoid repeatedly merging handler lists during dispatch. The transaction-handle change
 adds no lookup structure: the active registry remains necessary for string-ID event reporting. The benchmark guide and
 measured records live under [performance](../performance/Readme.md).

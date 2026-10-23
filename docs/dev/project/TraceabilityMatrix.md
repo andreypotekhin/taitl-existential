@@ -217,7 +217,8 @@ configured transaction cost. New per-instance source APIs and concurrent rule de
 
 Epic: [Contexts and Type Matching](Backlog.md#contexts-and-type-matching);
 [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
-Design readiness: open. Verification: partial.
+Design readiness: selected parent-level/declaration order recorded. Verification: parent/wildcard rule and factory
+order, including declaration ordering for final-level wildcards, is covered by the context acceptance case.
 
 Requirements: Broader parent/wildcard/factory and ordering combinations.
 
@@ -226,14 +227,20 @@ Requirements: Broader parent/wildcard/factory and ordering combinations.
   [Wildcard context matching], [Matching context rules], [Matching context ordering],
   [Operation configuration builders], [Context configuration classes].
 
-Evidence to review: [configuring_contexts].
-Remaining work: Resolve overlapping wildcard/parent/exact precedence and factory/builder edge cases.
+Evidence: [UserCanConfigureContexts.java][context-order-test]
+verifies root-to-operation context order for both transaction factories and effects, including two final-level
+wildcards in declaration order.
+Selected contract: [deterministic context resolution][resolved-context-order]
+and [wildcard boundaries](../specifications/LibraryAndConfiguration.spec.md#wildcard-boundaries).
+Completed behavior and evidence are tracked in the [Sprint 07 delivery plan].
 
 ## Generic/subclass and constraint breadth
 
 Epic: [Contexts and Type Matching](Backlog.md#contexts-and-type-matching);
 [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
-Design readiness: open. Verification: partial.
+Design readiness: superclass/interface, generic-signature recovery, invariance/upper bounds, and warning behavior
+recorded; broader field/collection combinations retain their limits. Verification: inherited generic substitution,
+interface diamonds, nested invariance, bounds, lower-bound rejection, and raw-type warnings are acceptance-tested.
 
 Requirements: Remaining class/field/collection/generic/subclass combinations beyond V1.
 
@@ -243,7 +250,38 @@ Requirements: Remaining class/field/collection/generic/subclass combinations bey
   [Collection contents constraints], [Inherited class constraints].
 
 Evidence to review: [TypeKeyTest.java](../../../src/test/java/com/taitl/existential/keys/TypeKeyTest.java).
-Remaining work: Specify hierarchy/generic matching and third-party/collection/field combinations beyond the V1 example.
+Selected contracts: [entity type matching](../specifications/EventsAndConstraints.spec.md#entity-type-matching) and
+[unresolved-generic warnings](../specifications/LibraryAndConfiguration.spec.md#unresolved-generic-warnings).
+Matching decisions and evidence are recorded in the [Sprint 07 delivery plan]. Lower bounds remain unsupported with a
+clear configuration diagnostic; no inferred field/collection breadth is promoted. Public string-key equality remains
+the rule-registration contract, so class-loader-distinct registration is not claimed.
+
+## Compiled plans and validation-only reporting
+
+Epic: [Contexts and Type Matching](Backlog.md#contexts-and-type-matching);
+[Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
+Design readiness: behavior and component responsibilities recorded. Verification: ExecutionPlan specialization,
+bounded cache, independent consumer, reactor, artifact hygiene, and exploratory performance samples pass; no numeric
+benchmark improvement or throughput guarantee is asserted.
+
+Requirements: [ExecutionPlans.spec.md](../specifications/ExecutionPlans.spec.md), including
+[effective rule inventory](../specifications/ExecutionPlans.spec.md#effective-rule-inventory),
+[reporting before validation](../specifications/ExecutionPlans.spec.md#reporting-before-validation),
+[rule declaration identity](../specifications/ExecutionPlans.spec.md#rule-declaration-identity), and
+[resources and concurrency](../specifications/ExecutionPlans.spec.md#resources-and-concurrency).
+Architecture: [ExecutionPlans.design.md](../design/ExecutionPlans.design.md).
+
+Retain EventField and transaction-owned overlays. Introduce internal ExecutionPlan, compilation/binding actions, and
+focused business rules. Extend Night City to supply shared large-population fixtures. The
+[performance topic](../performance/topics/ExecutionPlans.md) links representation comparisons, three-process
+10,000-entity/200-descriptor/100-rule workflows, phase and per-thread allocation samples, and upper-cardinality
+smokes. Byte-level retained-heap profiling remains a documented limitation. The [Sprint 07 delivery plan] records
+implementation, failure/cleanup/concurrency acceptance, independent consumer, reactor, and artifact evidence.
+
+[Sprint 07 delivery plan]: ../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md
+[resolved-context-order]: ../specifications/LibraryAndConfiguration.spec.md#deterministic-context-resolution
+[context-order-test]:
+  ../../../src/test/java/com/taitl/specs/configuration_workflow/configuring_contexts/UserCanConfigureContexts.java
 
 ## Custom transactions and access patterns
 

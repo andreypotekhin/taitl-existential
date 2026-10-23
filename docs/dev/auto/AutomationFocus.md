@@ -6,9 +6,11 @@ subsystem-first split with V1 representative core, V2 broader standard usage, an
 
 ## Current priority
 
-V1 is complete as a locally installed `0.0.1` artifact. Sprints 01–05 have current acceptance/build evidence; the
-release remains unpublished remotely. Sprint 06 is the next planned capability and will be discussed separately before
-implementation. Use the [V1 charter](../project/V1.md) and current traceability for release evidence and deferrals.
+V1 is complete as a locally installed `0.0.1` artifact and remains unpublished remotely. Sprint 06's selected instance
+isolation/configuration slice is complete. Sprint 07 now has recorded context/type matching and compiled execution-plan
+designs; its [delivery plan](../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md) begins
+with Night City workload/baseline evidence and a bounded representation/cache/metadata prototype. Production
+integration follows that gate; documents alone are not verification. Use current sprint records and traceability.
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Restore useful verification feedback early and link evidence for each concern. Do not treat inherited marks or
@@ -17,8 +19,9 @@ neighboring tests as proof of the representative workflow.
 ## Subsequent work
 
 The V1 epics now have direct evidence for the selected relationships/evolution, recovery/resource, and independent
-consumer slices. [V1 Hardening and Closeout] completed the local release and closeout checks. Instance
-isolation/configuration breadth belongs to V2; custom events to V3. Sprint 06 design discussion remains separate.
+consumer slices. [V1 Hardening and Closeout] completed the local release and closeout checks. Broader stage policy stays
+in Sprint 08, and custom events belong to V3. The current execution-plan slice preserves lifecycle behavior while
+specializing validation-only reporting; it introduces no hot reload or process-wide programmatic defaults registry.
 
 ## Intake
 

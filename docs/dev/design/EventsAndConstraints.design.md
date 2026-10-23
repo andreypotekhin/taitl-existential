@@ -1,7 +1,5 @@
 # Events and Constraints Design
 
-Status: representative explicit event/evolution design; broader event capabilities retain their recorded limits.
-
 ## User outcome
 
 Report entity creation, modification, access, and evolution, then receive a useful failure when an invariant is false.
@@ -41,15 +39,47 @@ Validation reports preserve rule descriptions and identify the operation. Reject
 explicit rollback runs callbacks and clears transaction runtime event/type indexes, even when the caller retains the
 closed handle or an index reference. This release does not undo caller-owned objects or relationship source contents.
 
+## Type matching
+
+`TypeHierarchyLogic` resolves the entity's concrete class, superclass chain, implemented interfaces, and generic
+substitutions along inheritance edges. `TypeMatchingLogic` compares those descriptors with relevant registered
+patterns. Interface diamonds may discover a declaration several ways; the compiled declaration identity keeps one
+invocation without combining separately registered rules. Context order and within-context declaration order remain
+independent of type specificity.
+
+Retain original reflective Type/Class evidence alongside TypeKey's existing formatted representation. Preserve public
+constructors/factories, string output, and equality compatibility. Type descriptors track actual class identity and
+known arguments, distinguishing separate loaders and unresolved metadata. String-only keys retain symbolic exact
+matching; a simple name does not justify choosing an arbitrary loaded class. Explicit generic evidence supplements
+known runtime inheritance instead of disabling subclass/interface constraints.
+
+Concrete generic arguments remain invariant because predicates/effects can contain arbitrary Java code, including
+mutation. Even a non-collection `Box<Animal>` callback may store a Dog, so invoking it on `Box<Cat>` is unsafe.
+Upper-bounded patterns such as `Box<? extends Animal>` express the supported subtype relationship. Resolve generic
+superclasses/interfaces before testing bounds, and preserve invariance at enclosing concrete arguments when handling
+nested patterns. Raw and unbounded patterns supply intentional broad matching. A class such as
+`CatBox extends Box<Cat>` provides actual arguments that can be recovered without inspecting object contents.
+
+Unknown arguments remain unknown; a type variable's upper bound is not its actual argument. Apply provable matches
+and warn if missing information could prevent intended configured matches. The warning option is owned by
+[library configuration](LibraryAndConfiguration.design.md#type-diagnostics-and-configuration-scope). Unsupported
+lower-bounded rule patterns fail clearly rather than masquerading as a successful no-match.
+
+Prepare raw-type buckets and parsed patterns once, then share structural matching results across entities through
+the [ExecutionPlan/EventField design](ExecutionPlans.design.md). Do not enumerate all possible generic variants per
+entity. Cache selections, including proven empty selections, without retaining reported objects or predicate results.
+Per-event memo and before/after checks still use the actual event payload.
+
 ## Evidence and acceptance work
 
 - [entity events](../../../src/test/java/com/taitl/specs/library_usage/UserCanSendEntityEvents.java)
 - [memo behavior](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java)
 - [event input/equality tests](../../../src/test/java/com/taitl/existential/events)
 
-The [relationship acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
-backs the selected input/evolution/recovery contract. Broader inherited/generic/custom event dispatch and diagnostic
-metadata require their own designs. Passing adjacent unit tests does not establish those capabilities.
+The [relationship acceptance][relationships]
+backs the selected input/evolution/recovery contract. Hierarchy, generic-bound, diamond, loader identity, and
+diagnostic cases need direct acceptance under the type-matching contract. Custom event registration remains a separate
+capability. Passing adjacent unit tests does not establish the new type-matching behavior.
 
 ## Ownership and diagnostics
 
@@ -67,3 +97,4 @@ immediate-stage lookup. Source cardinality and matched-source recovery cost are 
 
 [derived events]:
   ../../../src/main/java/com/taitl/ex/logic/evaluation/events/split_events/event_splitter/EventSplitter.java
+[relationships]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java

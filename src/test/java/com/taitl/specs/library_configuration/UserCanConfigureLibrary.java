@@ -55,6 +55,12 @@ class UserCanConfigureLibrary extends SpecBase
             assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(true));
             ex.off(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND);
             assertThat(ex.get(Flags.EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND), is(false));
+
+            assertThat(ex.get(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS), is(true));
+            ex.off(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS);
+            assertThat(ex.get(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS), is(false));
+            ex.on(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS);
+            assertThat(ex.get(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS), is(true));
         }
 
         @Test
@@ -144,6 +150,19 @@ class UserCanConfigureLibrary extends SpecBase
             loader.configure();
 
             assertThat(ex.get(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS), is(false));
+        }
+
+        @Test
+        @DisplayName("User can disable unresolved generic warnings in a config file")
+        void disableUnresolvedGenericWarnings()
+        {
+            ConfigureLibrary loader = new ConfigureLibrary(ex, name -> null,
+                    new MemoryClassLoader(Map.of(ConfigureLibrary.CLASSPATH_CONFIG_FILE,
+                            "typeMatching.warnUnresolvedGenerics=false")));
+
+            loader.configure();
+
+            assertFalse(ex.get(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS));
         }
 
         @Test

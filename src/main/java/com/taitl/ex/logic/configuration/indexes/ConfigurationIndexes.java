@@ -108,6 +108,11 @@ public class ConfigurationIndexes
         return !intentEventTypes.isEmpty();
     }
 
+    public boolean hasEventHandlers()
+    {
+        return configuredHandlers.hasHandlers();
+    }
+
     public <T> boolean hasBiKey(EventKey<T> eventKey)
     {
         sane(eventKey, "eventKey");

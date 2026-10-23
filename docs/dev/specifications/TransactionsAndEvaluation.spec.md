@@ -227,6 +227,14 @@ The order of execution of rules follows the order of their definition.
 For each event, the order of invocations of its event handlers, if multiple handlers are defined, follows the
 order of their definition
 
+### Compiled execution plans
+
+The [runtime execution-plan contract](ExecutionPlans.spec.md) defines automatic validation-only reporting, complete
+transaction rule inventories, reusable rule selections, and unchanged boundary timing/recovery. Compiled plans follow
+the [context resolution order](LibraryAndConfiguration.spec.md#deterministic-context-resolution) and
+[entity type matching](EventsAndConstraints.spec.md#entity-type-matching) contracts. Compilation does not execute user
+predicates, cache entity validity, or alter configured lifecycle callback order.
+
 ### Separate stage evaluations
 
 + There is a separate evaluation per execution stage: Precondition, Immediate and Validation.

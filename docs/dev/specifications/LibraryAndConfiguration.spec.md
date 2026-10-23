@@ -62,6 +62,26 @@ for that first transaction. Independent instances finalize independently.
 
 + User must configure the library before use.
 
+### Unresolved generic warnings
+
++ The option `typeMatching.warnUnresolvedGenerics` defaults to true. If unresolved type arguments could prevent
+configured rules from matching, the library warns when that resolution is needed and continues with proven matches.
+The warning identifies the operation and reported type, explains supplying an explicit `TypeKey`, and links to
+troubleshooting. It is emitted when a raw runtime type with unresolved signature variables reaches type resolution;
+fully resolved types and reports with an explicit generic `TypeKey` do not produce it.
+
+This option uses the same classpath defaults, environment-selected file, and programmatic override order as other
+options. `Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS` supports the existing on/off APIs on `Ex` and individual
+instances. `Ex` changes its facade instance; global files supply defaults loaded by each instance. There is no new
+programmatic process-wide default registry. Option changes remain prospective and freeze with configuration.
+
+Warning suppression is bounded to 64 operation/type signatures per runtime class within each library instance;
+eviction may allow a later warning. The suppression map uses weak runtime-class keys so it does not retain application
+class loaders after the corresponding classes become otherwise unreachable.
+Invalid property values fail atomically under the normal configuration-source rules. The opt-out disables this
+diagnostic, not rule validation or input checks. `UserCanConfigureLibrary` covers the default and programmatic/file
+opt-outs; `UserCanApplyInheritedRules` covers the raw-signature warning and explicit generic TypeKey path.
+
 ### Configuration build failure recovery
 
 + If configuration finalization fails while constructing contexts or rules, the library remains unconfigured and the
@@ -104,7 +124,29 @@ The rules from parent contexts apply to child contexts.
 
 ### Parent context ordering
 
-The rules from parent contexts execute before the rules of child contexts.
+The rules from parent contexts execute before the rules of child contexts, under
+[deterministic context resolution](#deterministic-context-resolution).
+
+### Deterministic context resolution
+
+Walk the concrete operation's path levels from root to operation. At each level, select matching wildcard contexts in
+their declaration order, then concrete contexts for that level in their declaration order. Each configured context
+participates once, at its earliest matching level, and its rules are inherited by descendant levels. Preserve rule
+declaration order within a selected context, independent of which entity class/interface/type pattern matched it.
+
+For `/api/cats/save`, contexts `/api`, `/api/*`, `/api/cats`, and `/api/cats/save` execute in that order. Wildcards
+matching the final level, such as `/api/*/save` and `/api/cats/*`, execute in their declaration order before the final
+concrete context. Reversing the registration of a concrete parent and child does not reverse their inherited order.
+
++ Overlapping context registrations resolve in path-level order for both indexed rules and context-created transaction
+  factories; a passing specification covers a parent context, a parent wildcard, two declaration-ordered final-level
+  wildcards, and the final concrete context.
+
+Use the same resolved context sequence for rule indexing and context-created transaction/factory participation.
+Transaction-local contributions preserve the existing base-then-local overlay/lifecycle contract. More-specific type
+matches do not acquire an independent priority over declaration order. The
+[rule declaration identity](ExecutionPlans.spec.md#rule-declaration-identity) contract prevents duplicate discovery
+without combining separate registrations.
 
 ### Default context factory
 
@@ -124,6 +166,14 @@ User can't configure a context without defining any rules.
 
 User can define a Context for an operation key with a wildcard in it.
 
+### Wildcard boundaries
+
+An asterisk matches zero or more characters within one path segment and never consumes a slash. Both whole-segment
+and partial-segment patterns are permitted. Concrete operation keys retain their existing nonempty-segment validation.
+An entire wildcard segment requires a present segment: `/*` matches `/api`, not the root `/`.
+Matching a parent context makes its rules applicable to descendants. Consecutive asterisks do not introduce a separate
+recursive `**` operator. Runtime operations remain concrete and do not contain wildcards.
+
 ### Wildcard operation matching
 
 The wildcard contexts whose paths match a concrete op participate in its validation.
@@ -138,7 +188,9 @@ The rules from matching contexts apply to the context.
 
 ### Matching context ordering
 
-The rules from matching contexts execute before the rules of the context.
+The rules from matching contexts execute before that concrete context under
+[deterministic context resolution](#deterministic-context-resolution). Overlapping wildcards at the same level use
+declaration order, without a specificity ranking.
 
 ## Configuring constraints
 

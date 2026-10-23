@@ -145,6 +145,7 @@ public class ConfigureLibrary
     protected void apply(java.util.Properties props, String source)
     {
         Boolean requireDescriptions = null;
+        Boolean warnUnresolvedGenerics = null;
         ShutdownPolicy shutdownPolicy = null;
         for (String key : props.stringPropertyNames())
         {
@@ -156,6 +157,10 @@ public class ConfigureLibrary
             else if ("shutdown.timeoutMillis".equals(key))
             {
                 shutdownPolicy = parseShutdownPolicy(key, value, source);
+            }
+            else if ("typeMatching.warnUnresolvedGenerics".equals(key))
+            {
+                warnUnresolvedGenerics = parseBoolean(key, value, source);
             }
             else
             {
@@ -174,6 +179,17 @@ public class ConfigureLibrary
             else
             {
                 ex.off(Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS);
+            }
+        }
+        if (warnUnresolvedGenerics != null)
+        {
+            if (warnUnresolvedGenerics)
+            {
+                ex.on(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS);
+            }
+            else
+            {
+                ex.off(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS);
             }
         }
         if (shutdownPolicy != null)

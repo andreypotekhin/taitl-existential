@@ -165,6 +165,72 @@ class UserCanConfigureContexts extends SpecBase
         }
 
         @Test
+        @DisplayName("Parent levels run before children and same-level wildcards keep declaration order")
+        void ordersOverlappingContextsByPathLevel() throws Exception
+        {
+            List<String> order = new ArrayList<>();
+            ConfigBuilder builder = Ex.configure();
+            // @formatter:off
+            builder.context("/api/cats/save")
+                    .transaction((op, name) -> {
+                        order.add("factory-leaf");
+                        return new Transaction(op, name);
+                    })
+                    .effect(Cat.class).create(cat -> order.add("leaf"))
+                ;
+            builder.context("/api/cats/*")
+                    .transaction((op, name) -> {
+                        order.add("factory-wildcard-two");
+                        return new Transaction(op, name);
+                    })
+                    .effect(Cat.class).create(cat -> order.add("wildcard-two"))
+                ;
+            builder.context("/api/cats")
+                    .transaction((op, name) -> {
+                        order.add("factory-cats");
+                        return new Transaction(op, name);
+                    })
+                    .effect(Cat.class).create(cat -> order.add("cats"))
+                ;
+            builder.context("/api/*/save")
+                    .transaction((op, name) -> {
+                        order.add("factory-wildcard-one");
+                        return new Transaction(op, name);
+                    })
+                    .effect(Cat.class).create(cat -> order.add("wildcard-one"))
+                ;
+            builder.context("/api")
+                    .transaction((op, name) -> {
+                        order.add("factory-api");
+                        return new Transaction(op, name);
+                    })
+                    .effect(Cat.class).create(cat -> order.add("api"))
+                ;
+            builder.context("/api/*")
+                    .transaction((op, name) -> {
+                        order.add("factory-parent-wildcard");
+                        return new Transaction(op, name);
+                    })
+                    .effect(Cat.class).create(cat -> order.add("parent-wildcard"));
+            // @formatter:on
+
+            Tr tr = ex.begin("/api/cats/save");
+            try
+            {
+                tr.create(cat);
+                tr.commit();
+            }
+            finally
+            {
+                tr.close();
+            }
+
+            assertEquals(List.of("factory-api", "factory-parent-wildcard", "factory-cats", "factory-wildcard-two",
+                    "factory-wildcard-one", "factory-leaf", "api", "parent-wildcard", "cats", "wildcard-two",
+                    "wildcard-one", "leaf"), order);
+        }
+
+        @Test
         @DisplayName("Configuring contexts - child context builder rejects parent context name")
         void parentContextRejectedUnderChild()
         {

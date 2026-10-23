@@ -146,7 +146,8 @@ class EventSplitterTest
                 Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, true, null);
 
                 assertTrue(splitKeys.stream().anyMatch(key -> key.toString().startsWith("Transit<String>+")));
-                assertTrue(splitKeys.stream().allMatch(key -> key.typeKey().toString().equals("String")));
+                assertTrue(splitKeys.stream().anyMatch(key -> key.typeKey().toString().equals("String")));
+                assertTrue(splitKeys.stream().anyMatch(key -> key.typeKey().toString().startsWith("Comparable<")));
             }
 
             @Test
@@ -165,14 +166,11 @@ class EventSplitterTest
                         splitKeys.stream().map(Object::toString).collect(java.util.stream.Collectors.toSet());
 
                 assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B<Y>>>+")));
-                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B<?>>>+")));
-                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B>>+")));
-                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B<Y>>>+")));
-                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B<?>>>+")));
-                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<?>,B>>+")));
-                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B<Y>>>+")));
-                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B<?>>>+")));
-                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A,B>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<?,B<Y>>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,?>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T<?,?>>+")));
+                assertTrue(keys.stream().anyMatch(k -> k.startsWith("Read<T>+")));
+                assertFalse(keys.stream().anyMatch(k -> k.startsWith("Read<T<A<X>,B<?>>>+")));
                 assertTrue(keys.stream().allMatch(k -> k.startsWith("Read<")));
             }
 
@@ -204,7 +202,8 @@ class EventSplitterTest
 
                 Set<RuntimeKey<String>> splitKeys = splitter.split(runtimeKey, false, false, null);
 
-                assertEquals(1, splitKeys.size());
+                assertTrue(splitKeys.size() > 1);
+                assertTrue(splitKeys.stream().anyMatch(key -> key.typeKey().toString().equals("String")));
                 assertTrue(splitKeys.stream().allMatch(key -> key.key().toString().startsWith("Create<")));
             }
 

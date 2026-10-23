@@ -348,6 +348,17 @@ public class ConcreteTr
         return immediateActive;
     }
 
+    public boolean hasPreparedHandlers(StageName stageName)
+    {
+        return stageData(stageName).hasPreparedHandlers();
+    }
+
+    public void activateReportStages(boolean begin, boolean immediate)
+    {
+        beginActive = begin;
+        immediateActive = immediate;
+    }
+
     public <T> boolean shouldEvaluateBegin(RuntimeKey<T> runtimeKey)
     {
         sane(runtimeKey, "runtimeKey");

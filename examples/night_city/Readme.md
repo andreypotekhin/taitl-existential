@@ -7,7 +7,8 @@ operation, begin a transaction, report entity events, and commit to evaluate the
 
 Java sources live in `src/main/java/com/taitl/ex/examples/night_city/`. `model/` defines the entities, `configure/`
 shows fluent and instance-based rules, `commands/` and `access/` illustrate application operations, and `data/` provides
-shared sample data. `app/CityApp` exposes configuration examples as an application entry point. Some examples still contain
+shared sample data. `app/CityApp` exposes configuration examples as an application entry point. Some examples still
+contain
 unfinished illustrations; their presence does not establish supported library behavior.
 
 Maven compiles this tree as additional test sources for the root project. Existing unit tests, specification tests, and
@@ -33,7 +34,8 @@ The consumer acceptance test runs the same story. A separate reactor build is av
 
 Run the consumer-side workflow measurement with setup excluded from the timed section:
 
-    mvn -f examples/night_city/pom.xml -Dbenchmark.warmup.iterations=50 -Dbenchmark.measure.iterations=250 -Dexec.mainClass=com.taitl.ex.examples.night_city.app.NightCityWorkflowBenchmark compile exec:java
+    mvn -f examples/night_city/pom.xml -Dbenchmark.warmup.iterations=50 -Dbenchmark.measure.iterations=250 \
+        -Dexec.mainClass=com.taitl.ex.examples.night_city.app.NightCityWorkflowBenchmark compile exec:java
 
 ## Caller-supplied relationships and evolution
 
@@ -64,7 +66,35 @@ source equality contract. Runtime folding instead identifies repeated events on 
 equal snapshots are separate reports. Predicate-bearing Exists receives the stored matching source object.
 
 Executable positive, negative, empty-source, endpoint, recovery, and source-ownership cases are in
-[UserCanConstrainEntityRelationships.java](../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
+[UserCanConstrainEntityRelationships.java][relationships].
+
+[relationships]: ../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java
+
+## Planned large-transaction workload
+
+The [runtime execution-plan design](../../docs/dev/design/ExecutionPlans.design.md) selects Night City as the shared
+fixture source for 10,000–100,000 reported entities, 20–200 class/generic descriptors, and 100–500 rules. Model,
+data,
+and configuration extensions will be reused by specifications and the independent consumer. Validation-only reporting,
+first validation, warmed transactions, immediate-stage comparisons, and resource evidence are covered by the
+[delivery plan](../../docs/dev/past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md) and
+[performance topic](../../docs/dev/performance/topics/ExecutionPlans.md). `CityWorkload` supplies distinct entities
+across 200 real `Look<T>` descriptors, including beings, buildings, houses, dwellings, and collection projections. The consumer-side
+`NightCityExecutionBenchmark` exercises success, rejection with rollback, and rejection/recovery across that
+population. Setup and fixture creation remain outside timing, and each transaction is closed. The fixture supports up
+to 200 descriptors. Root and independent-consumer acceptance verify all 200 descriptors, deferred callbacks, and
+cleanup. A 100,000-entity/200-descriptor smoke, a 500-rule smoke, three 10,000-entity/200-descriptor workflow samples,
+phase samples, and per-thread allocation samples are recorded in the
+[execution-plan performance topic](../../docs/dev/performance/topics/ExecutionPlans.md). Byte-level retained-heap
+profiling remains uncollected; bounded cache capacity and eviction are verified by tests.
+
+Run it from the repository root with:
+
+    mvn -f examples/night_city/pom.xml \
+        -Dexec.mainClass=com.taitl.ex.examples.night_city.app.NightCityExecutionBenchmark \
+        -Dbenchmark.entities=50000 -Dbenchmark.types=200 -Dbenchmark.rules=256 \
+        -Dbenchmark.warmup.iterations=3 \
+        -Dbenchmark.measure.iterations=5 compile exec:java
 
 ## Run the demonstrated scenarios
 

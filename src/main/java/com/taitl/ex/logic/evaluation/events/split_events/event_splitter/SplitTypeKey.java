@@ -2,26 +2,24 @@ package com.taitl.ex.logic.evaluation.events.split_events.event_splitter;
 
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
-import com.taitl.ex.common.helper.lang.*;
+import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.type_keys.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-/**
- * Splits a type key into a set of less-generic type keys, by reducing generic parameter detail.
- *
- * Examples:
- * <pre>
- * T<A<X>> -> T<A<X>>, T<A<?>>, T<A>
- * T<A<X>,B<Y>> -> T<A<X>,B<Y>>, T<A<?>,B<Y>>, T<A<X>,B<Y>>, T<A<X>,B<?>>, T<A<X>,B>, T<A<?>,B<Y>>, T<A<?>,B<?>>, T<A<?>,B>, , T<A,B<Y>>, T<A,B<?>>, T<A,B>
- * </pre>
- */
+/** Splits reported type keys into the matching generic and inherited type keys. */
 public class SplitTypeKey
 {
     @Logic
-    protected static GenericsVariants genericsVariants = Creator.create(GenericsVariants.class);
+    protected SplitDeclaredTypeKey splitDeclaredTypeKey = Creator.create(SplitDeclaredTypeKey.class);
+
+    @Logic
+    protected SplitInheritedTypeKeys splitInheritedTypeKeys = Creator.create(SplitInheritedTypeKeys.class);
+
+    @Logic
+    protected static TypeDescriptorCache descriptorCache = Creator.create(TypeDescriptorCache.class);
 
     public String root(String key)
     {
@@ -32,20 +30,29 @@ public class SplitTypeKey
 
     public <T> Set<TypeKey<T>> split(TypeKey<T> typeKey)
     {
-        sane(typeKey, "typeKey");
-        String key = typeKey.toString();
-        int left = key.indexOf('<');
-        boolean hasGenerics = left > -1;
-        String root = root(key);
-        Set<TypeKey<T>> result = new LinkedHashSet<>();
-        for (String variant : genericsVariants.call(key))
+        return splitDeclaredTypeKey.call(typeKey);
+    }
+
+    public <T> Set<TypeKey<T>> split(TypeKey<T> typeKey, Class<?> runtimeClass, boolean useFullName)
+    {
+        sane(typeKey, "typeKey", runtimeClass, "runtimeClass");
+        return descriptorCache.resolve(typeKey, runtimeClass, useFullName,
+                () -> resolve(typeKey, runtimeClass, useFullName));
+    }
+
+    protected <T> Set<TypeKey<T>> resolve(TypeKey<T> typeKey, Class<?> runtimeClass, boolean useFullName)
+    {
+        Set<TypeKey<T>> result = new LinkedHashSet<>(split(typeKey));
+        for (TypeKey<?> key : splitInheritedTypeKeys.call(runtimeClass, useFullName))
         {
-            if (hasGenerics && root.equals(variant))
-            {
-                continue;
-            }
-            result.add(TypeKey.valueOf(variant));
+            result.add(cast(key));
         }
         return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <T> TypeKey<T> cast(TypeKey<?> key)
+    {
+        return (TypeKey<T>) key;
     }
 }

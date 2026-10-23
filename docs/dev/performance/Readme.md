@@ -58,4 +58,8 @@ event cases separated. V1's local `0.0.1` closeout samples are recorded in
 The [instance configuration topic](topics/InstanceConfiguration.md) separates fresh-instance construction, rule
 setup, first transaction, and close from transactions on an already configured instance.
 
+The [execution plans and type matching topic](topics/ExecutionPlans.md) defines the planned Night City large-transaction
+workload and cold/warm/allocation comparisons for validation-only reporting and EventField selections. Its baseline
+and representation/cache choices remain unmeasured.
+
 [Custom transactions]: topics/CustomTransactions.md

@@ -9,6 +9,7 @@ and a descriptive heading. Existing `+` marks were preserved; they do not replac
 - [Library and Configuration] · [Design][LibraryAndConfiguration.design.md]
 - [Transactions and Evaluation] · [Design][TransactionsAndEvaluation.design.md]
 - [Events and Constraints] · [Design][EventsAndConstraints.design.md]
+- [Runtime Execution Plans](specifications/ExecutionPlans.spec.md) · [Design](design/ExecutionPlans.design.md)
 - [Quantifiers and Indexes] · [Design][QuantifiersAndIndexes.design.md]
 - [Intents and Effects](specifications/IntentsAndEffects.spec.md) · [Design](design/IntentsAndEffects.design.md)
 - [Housekeeping](specifications/Housekeeping.spec.md) · [Design](design/Housekeeping.design.md)

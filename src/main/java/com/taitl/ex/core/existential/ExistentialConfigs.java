@@ -2,6 +2,7 @@ package com.taitl.ex.core.existential;
 
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.configuration.*;
+import com.taitl.ex.logic.execution.data.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
@@ -62,5 +63,10 @@ public class ExistentialConfigs implements Closeable
     public Config config(String op)
     {
         return configLogic.config(op);
+    }
+
+    public ExecutionPlan executionPlan(String op)
+    {
+        return configLogic.executionPlan(op);
     }
 }

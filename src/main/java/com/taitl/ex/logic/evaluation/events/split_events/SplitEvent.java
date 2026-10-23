@@ -57,8 +57,8 @@ public class SplitEvent
         {
             requireMemoForBiEvents.forHandlers(runtimeKey, eventField, useFullEventNames, tr);
         }
-        Set<RuntimeKey<T>> splitKeys =
-                eventSplitter.split(runtimeKey, useFullEventNames, splitElementaryToCompound, tr);
+        Set<RuntimeKey<T>> splitKeys = eventSplitter.split(runtimeKey, useFullEventNames,
+                splitElementaryToCompound, tr);
         MultiKey<T> multiKey = multiKey(splitKeys, useFullEventNames);
         List<Ev<T>> evaluables = eventField.get(multiKey);
         Event<T> event = tr != null ? toMemo.forExecution(runtimeKey, evaluables, tr) : runtimeKey.event();

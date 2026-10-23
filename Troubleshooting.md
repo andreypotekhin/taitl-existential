@@ -1,5 +1,22 @@
 # Troubleshooting
 
+## Unsupported lower-bounded type rules
+
+**Problem: Configuration fails for a rule key such as `Box<? super Cat>`**
+
+Lower-bounded generic rule patterns are not supported. Use a concrete type argument, an unbounded wildcard, or a
+supported upper bound such as `Box<? extends Animal>`. The library rejects the rule during configuration so it cannot
+silently remain unapplied.
+
+## Unresolved generic types
+
+**Problem: A warning says a reported entity has unresolved generic parameters**
+
+The runtime class does not preserve the generic argument needed to choose a safe rule. Report the event with an
+explicit `TypeKey`, such as `new TypeKey<Box<Cat>>() {}`, or disable `TYPE_MATCHING_WARN_UNRESOLVED_GENERICS` on the
+`Existential` instance if the warning is expected. The warning is enabled by default and can also be controlled with
+`typeMatching.warnUnresolvedGenerics` in the library properties file.
+
 ## Library configuration load failure
 
 **Problem: Startup fails with an IllegalStateException while loading library configuration**
@@ -22,6 +39,7 @@ Fix:
 5. Keep only supported keys:
    - `behavior.rules.requireDescriptions`
    - `shutdown.timeoutMillis` (nonnegative milliseconds; `0` waits without a time limit)
+   - `typeMatching.warnUnresolvedGenerics`
 6. Use only `true` or `false` for boolean values.
 7. Unset `EXISTENTIAL_CONFIG_FILE` to fall back to classpath `existential.properties`.
 

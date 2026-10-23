@@ -21,6 +21,9 @@ public class Flags
      */
     public static final int EVENT_SPLIT_DISABLE_ELEMENTARY_TO_COMPOUND = 64;
 
+    /** Emits a warning when runtime entity metadata contains unresolved generic parameters. */
+    public static final int TYPE_MATCHING_WARN_UNRESOLVED_GENERICS = 128;
+
     /**
      * Highest supported flag value in this registry.
      */

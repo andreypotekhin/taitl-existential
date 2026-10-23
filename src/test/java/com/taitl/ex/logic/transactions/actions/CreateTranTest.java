@@ -50,11 +50,11 @@ class CreateTranTest
 
             assertThat(tr.op, is("/op"));
             assertThat(transactions, hasSize(3));
-            assertThat(transactions.get(0).context, is(c1));
-            assertThat(transactions.get(0).name, is(c1.name()));
+            assertThat(transactions.get(0).context, is(c2));
+            assertThat(transactions.get(0).name, is(c2.name()));
             assertThat(transactions.get(0).op, is("/op"));
-            assertThat(transactions.get(1).context, is(c2));
-            assertThat(transactions.get(1).name, is(c2.name()));
+            assertThat(transactions.get(1).context, is(c1));
+            assertThat(transactions.get(1).name, is(c1.name()));
             assertThat(transactions.get(1).op, is("/op"));
             assertThat(transactions.get(2), sameInstance(custom));
             assertThat(custom.op, is("/op"));

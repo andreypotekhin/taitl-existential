@@ -80,6 +80,11 @@ public class ConfiguredHandlers
         return ready;
     }
 
+    public boolean hasHandlers()
+    {
+        return !handlers.isEmpty();
+    }
+
     public void ready(boolean ready)
     {
         this.ready = ready;

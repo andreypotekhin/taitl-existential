@@ -67,7 +67,10 @@ public class EventSplitter
         Event<T> event = runtimeKey.event();
         sane(event, "event");
         Set<Event<T>> events = splitEvent(event, splitElementaryToCompound);
-        Set<TypeKey<T>> typeKeys = splitTypeKey.split(runtimeKey.typeKey());
+        T entity = runtimeKey.entity();
+        Set<TypeKey<T>> typeKeys = entity != null
+                ? splitTypeKey.split(runtimeKey.typeKey(), entity.getClass(), useFullEventNames)
+                : splitTypeKey.split(runtimeKey.typeKey());
         Set<RuntimeKey<T>> runtimeKeys = new LinkedHashSet<>();
         for (Event<T> splitEvent : events)
         {

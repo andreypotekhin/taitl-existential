@@ -18,6 +18,11 @@ dependencies. Select a ready capability using [Process](../../auto/Process.md).
 
 ## Governing designs and specifications
 
+Sprint 07's [execution-plan delivery plan][execution-plan]
+owns compiled inventories, context/type ordering, and validation-only specialization while preserving current stage
+timing. This sprint owns broader stage terminology/defaults, authorization, and callback semantics; retain the shared
+ExecutionPlan/EventField architecture when those contracts are extended.
+
 - [TransactionsAndEvaluation.spec.md] and [TransactionsAndEvaluation.design.md].
 - [IntentsAndEffects.spec.md] and [IntentsAndEffects.design.md].
 
@@ -67,5 +72,6 @@ obligations, consumer/benchmark evidence where relevant, blockers, and deferrals
 [TransactionsAndEvaluation.design.md]: ../../design/TransactionsAndEvaluation.design.md
 [IntentsAndEffects.spec.md]: ../../specifications/IntentsAndEffects.spec.md
 [IntentsAndEffects.design.md]: ../../design/IntentsAndEffects.design.md
+[execution-plan]: ../../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md
 
 [review template]: ../templates/SprintReview.md

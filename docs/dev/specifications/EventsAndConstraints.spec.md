@@ -136,7 +136,72 @@ User can pass additional values when emitting an event.
 
 ### Inherited class constraints
 
-Constraints on parent class apply to any subclass.
+Constraints on parent classes apply to subclasses under [entity hierarchy matching](#entity-hierarchy-matching).
+
+## Entity type matching
+
+### Entity hierarchy matching
+
++ Event dispatch traverses generic superclass signatures with type-variable substitution and directly or indirectly
+  implemented interfaces. A declaration reached through an interface diamond executes once. `UserCanApplyInheritedRules`
+  covers a multi-edge generic superclass and a diamond interface.
+
+Rules declared for the reported entity class, its superclass chain, and its directly or indirectly implemented
+interfaces participate when compatible. Diamond inheritance does not multiply one declaration's execution. Applicable
+rules retain declaration order inside their resolved context, rather than executing by class/interface specificity.
+An explicit generic key supplements available type evidence; it cannot erase known runtime subclass/interface rules.
+
+### Generic argument matching
+
+An explicitly reported concrete generic type selects compatible exact, raw, and unbounded-wildcard rules. Using an
+illustrative `Box<T>`, `Box<Cat>` can select `Box<Cat>`, raw `Box`, and `Box<?>`, but does not select `Box<Animal>`
+merely because Cat extends Animal. The same restriction applies to non-collection generic classes: a callback typed
+as `Box<Animal>` could otherwise store a different Animal subtype in a Box reserved for cats.
+
+Concrete generic arguments are invariant. Nested wildcard positions follow the same compatibility discipline; a
+wildcard inside a concrete invariant argument does not make its enclosing argument covariant. Preserve symbolic
+exact matching for string-only TypeKeys. Inheritance/bound matching requires reliable metadata, not guessing which
+class an ambiguous simple name denotes.
+
++ Type-key expansion treats only the entity type's direct generic arguments as wildcard positions. For example,
+  reporting `Outer<Box<Cat>>` does not select `Outer<Box<?>>`; only `Outer<?>` and raw `Outer` are compatible.
+  `UserCanApplyInheritedRules` verifies that the nested callback is not invoked.
+
+### Generic signature recovery
+
+Use explicit TypeKey metadata and retained superclass/interface signatures to recover actual arguments where possible,
+including substitution across multiple inheritance edges. For example, `CatBox extends Box<Cat>` provides a known
+Box argument without an explicit key at each report. The library does not infer erased arguments from object contents
+or substitute a declared upper bound as though it were the concrete argument.
+
+Keep unresolved information distinct from a known type. Apply rules whose compatibility is provable, including general
+raw/unbounded rules; unresolved concrete compatibility follows the
+[warning policy](LibraryAndConfiguration.spec.md#unresolved-generic-warnings). Metadata-aware matching preserves
+actual class identity in reflected hierarchy and descriptor-cache keys and does not change existing TypeKey
+printed-key/equality contracts. The bounded dispatch descriptor cache evicts the oldest inserted key after its
+4,096-entry limit; eviction changes recomputation cost only.
+
+### Upper-bounded generic matching
+
+A rule for `Box<? extends Animal>` can select an entity reported as `Box<Cat>` when the Cat-to-Animal relationship is
+known. Apply superclass/interface projection and generic substitution before testing the bound. Multiple/nested generic
+arguments obey the same compatible-bound and concrete-invariance rules; matching does not change callbacks' Java type
+contracts. Lower-bounded rule patterns using `? super` are outside this selected contract and fail with a corrective
+unsupported-pattern diagnostic during configuration rather than silently leaving an intended rule unapplied.
+
++ A rule using a direct upper bound selects a reported generic subclass when its reflected argument signature proves
+  the subtype relationship. `UserCanApplyInheritedRules` verifies `Box<? extends Being>` receives `CatBox` through
+  the resolved `Box<Cat>` signature and a raw `Box` event carrying an explicit anonymous TypeKey.
+
++ `IndexEvs` rejects a configured lower-bound pattern before publishing its indexes and links to the
+  [lower-bound troubleshooting guidance](../../../Troubleshooting.md#unsupported-lower-bounded-type-rules).
+  `UserCanApplyInheritedRules` verifies the failure occurs during configuration finalization.
+
+### Shared type matching
+
+Matching results may be shared across distinct entities with the same relevant type/event signature, but actual rule
+checks still apply to their respective entities. Resource, ordering, concurrent-publication, and validation-only
+requirements are defined in [ExecutionPlans.spec.md](ExecutionPlans.spec.md).
 
 ## Constraint violation reporting
 

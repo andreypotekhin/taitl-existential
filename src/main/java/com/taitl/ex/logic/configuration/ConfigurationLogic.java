@@ -7,6 +7,8 @@ import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.configuration.actions.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.rules.*;
+import com.taitl.ex.logic.execution.*;
+import com.taitl.ex.logic.execution.data.*;
 import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 import com.taitl.existential.configs.*;
@@ -32,9 +34,13 @@ public class ConfigurationLogic implements Closeable
     @Logic
     protected FinalizeConfiguration finalizeConfiguration;
 
+    @Logic
+    protected ExecutionPlanLogic executionPlanLogic = Creator.create(ExecutionPlanLogic.class);
+
     protected volatile ConfigBuilder configBuilder;
     protected volatile Config config;
     public SetMap<String, Context> contexts = new SetMap<>();
+    protected Map<String, ExecutionPlan> executionPlans = new HashMap<>();
 
     public ConfigurationLogic(ExistentialConfigs ec)
     {
@@ -109,6 +115,7 @@ public class ConfigurationLogic implements Closeable
         configBuilder = null;
         config = null;
         contexts.clear();
+        executionPlans.clear();
     }
 
     /**
@@ -135,6 +142,17 @@ public class ConfigurationLogic implements Closeable
             {
                 config.indexes(op, stageName).indexConfig(op, config, stageName);
             }
+            executionPlans.put(op, executionPlanLogic.compile(op, config));
+        }
+    }
+
+    public ExecutionPlan executionPlan(String op)
+    {
+        sane(op, "op");
+        Config current = config(op);
+        synchronized (current)
+        {
+            return executionPlans.computeIfAbsent(op, key -> executionPlanLogic.compile(key, current));
         }
     }
 

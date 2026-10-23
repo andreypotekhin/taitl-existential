@@ -24,17 +24,29 @@ public class GenericsVariants
         List<List<String>> perArg = new ArrayList<>();
         for (Node arg : node.args)
         {
-            LinkedHashSet<String> argVariants = new LinkedHashSet<>(variants(arg));
-            if (arg.args.isEmpty())
-            {
-                argVariants.add("?");
-            }
+            LinkedHashSet<String> argVariants = new LinkedHashSet<>();
+            argVariants.add(render(arg));
+            argVariants.add("?");
             perArg.add(new ArrayList<>(argVariants));
         }
 
         combinations(node.name, perArg, 0, new ArrayList<>(), result);
         result.add(node.name);
         return result;
+    }
+
+    protected String render(Node node)
+    {
+        if (node.args.isEmpty())
+        {
+            return node.name;
+        }
+        List<String> args = new ArrayList<>();
+        for (Node arg : node.args)
+        {
+            args.add(render(arg));
+        }
+        return node.name + "<" + String.join(",", args) + ">";
     }
 
     protected void combinations(String root, List<List<String>> perArg, int i, List<String> current, List<String> out)

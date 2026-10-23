@@ -6,6 +6,7 @@ import com.taitl.existential.indexes.*;
 import com.taitl.existential.quantifiers.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.*;
 
 public class ConfigureCats
 {
@@ -34,6 +35,28 @@ public class ConfigureCats
                 .invariant(Cat.class)
                     .exists(catDwelling.left(), "Every cat must have a dwelling at its location");
         // @formatter:on
+    }
+
+    public void configureWorkload(String context, Map<Cat, ? extends Collection<Dwelling<Cat, ?>>> dwellings,
+            int ruleCount, AtomicLong evaluations)
+    {
+        if (ruleCount < 1)
+        {
+            throw new IllegalArgumentException("Rule count must be positive");
+        }
+        Objects.requireNonNull(evaluations, "evaluations");
+        configureLifecycle(context, dwellings);
+        for (int i = 0; i < ruleCount; i++)
+        {
+            int rule = i;
+            Ex.configure()
+                    .context(context)
+                    .invariant(Cat.class)
+                    .create(cat -> {
+                        evaluations.incrementAndGet();
+                        return true;
+                    }, "Night City workload rule " + rule);
+        }
     }
 
     public void configureMembership(String context, Collection<Cat> cats)

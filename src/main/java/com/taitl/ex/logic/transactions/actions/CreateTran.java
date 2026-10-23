@@ -1,6 +1,8 @@
 package com.taitl.ex.logic.transactions.actions;
 
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.Creator;
+import com.taitl.ex.logic.configuration.ContextResolutionLogic;
 import com.taitl.ex.logic.configuration.rules.MatchParentName;
 import com.taitl.ex.logic.events.EventLogic;
 import com.taitl.ex.logic.transactions.TransactionLogic;
@@ -21,9 +23,13 @@ import static com.taitl.ex.common.helper.Args.sane;
  */
 public class CreateTran extends TranAction
 {
+    @Logic
+    protected ContextResolutionLogic contextResolutionLogic;
+
     public CreateTran(TransactionLogic tl)
     {
         super(tl);
+        this.contextResolutionLogic = Creator.create(ContextResolutionLogic.class);
     }
 
     public Tr forConfig(String op, Config config, Transaction custom)
@@ -46,12 +52,8 @@ public class CreateTran extends TranAction
         OpKey.validate(op);
         // Tr o = new Tr(op, generateId(), tl, tl.ex().events().eventLogic);
         Tr o = trInstance(op);
-        for (Context context : config.contexts())
+        for (Context context : contextResolutionLogic.resolve(op, config.contexts()))
         {
-            if (!MatchParentName.matches(op, context.name()))
-            {
-                continue;
-            }
             o.addTransaction(contextFactory.apply(context));
         }
         if (custom != null)
