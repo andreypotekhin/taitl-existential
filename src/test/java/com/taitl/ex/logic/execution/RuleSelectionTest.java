@@ -62,6 +62,21 @@ class RuleSelectionTest
     }
 
     @Test
+    void sharesOneCompiledRowAcrossDifferentSignatures() throws Exception
+    {
+        OnCreate<Cat> handler = new OnCreate<>(cat -> {
+        }, "Count selected declaration");
+        indexes.addHandler(new EventKey<>(Create.class, type), handler);
+        Cat cat = new Cat("Black", "Park");
+        List<?> elementary = split.call(create(cat), indexes.eventField(), false, true, null).evaluables();
+        RuntimeKey<Cat> port = new RuntimeKey<>(new Port<>(null, cat), type, cat);
+        List<?> compound = split.call(port, indexes.eventField(), false, true, null).evaluables();
+        assertSame(elementary, compound);
+        assertEquals(2, indexes.eventField().cachedSelections());
+        assertEquals(2, split.input.calls.get());
+    }
+
+    @Test
     void retainsSeparateRegistrationsOfTheSameHandler() throws Exception
     {
         OnCreate<Cat> handler = new OnCreate<>(cat -> {

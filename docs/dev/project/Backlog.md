@@ -72,12 +72,13 @@ regressions; the new scope changes delivery/evidence priorities, not availabilit
 
 ### Contexts and Type Matching
 
-Status: complete for the admitted Sprint 07 scope on 2026-10-23.
+Status: complete on 2026-10-23, including the many-row representation follow-up.
 Delivery: [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
 
 Parent/wildcard ordering, supported generic/subclass/interface matching, compiled execution profiles, and pre-expansion
-EventField selections are implemented and verified. Sorted compact declaration arrays and immutable ordered handlers
-were selected using the real-pipeline comparison; caches are bounded with generation, concurrency, failure, and cleanup
+EventField selections are implemented and verified. Compact BitSet membership and precompiled single-row selections
+were selected using real many-row comparisons; warm execution reuses immutable ordered handlers. Caches are bounded with
+generation, concurrency, failure, and cleanup
 coverage. The [archived delivery
 plan](../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md) and
 [performance topic](../performance/topics/ExecutionPlans.md) link passing root/consumer/reactor checks, clean artifacts,

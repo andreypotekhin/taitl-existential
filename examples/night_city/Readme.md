@@ -96,6 +96,24 @@ Run it from the repository root with:
         -Dbenchmark.warmup.iterations=3 \
         -Dbenchmark.measure.iterations=5 compile exec:java
 
+## Many applicable rule patterns
+
+DwellingWorkload supplies distinct Dwelling<Cat,Brick> objects. ConfigureDwellings spreads declarations across
+1–32 real subject/event rows, using concrete, wildcard, raw, and upper-bound dwelling types across
+Create/CU/CUD/Expression. DwellingOperations reports those objects with their explicit TypeKey. The same fixtures
+support root acceptance, standalone NightCityStoryTest, and the many-row performance comparison; entity count,
+declaration count, and distinct applicable-row count are independent.
+
+Run root acceptance with:
+
+    mvn -Dtest=UserCanApplyManyRulePatterns test
+
+The case proves deferred checks, declaration order per entity, sixteen-report folding, rejection with explicit
+rollback, and a fresh successful attempt. The
+[many-row evidence](../../docs/dev/performance/runs/20261023T222929Z.ManyRowBitSet.md)
+compares array, BitSet, and Roaring preparation and complete transactions with cleanup. These measurement helpers
+are test-only; the normal library artifacts exclude the example and benchmark classes.
+
 ## Run the demonstrated scenarios
 
 From the repository root, run the existing context and custom-transaction specifications:

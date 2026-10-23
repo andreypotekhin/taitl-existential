@@ -116,7 +116,12 @@ class MembershipRepresentationBenchmark
             CityWorkload.Report report = workload.looks.get(i);
             RuntimeKey<?> key = new RuntimeKey(new Create(report.entity), report.type, report.entity);
             Set<TypePattern> types = resolver.types(key, false);
-            groups[i] = new ResolveRuleSelection().rows(inventory, types, Set.of("Create")).toArray(new int[0][]);
+            List<RulePattern> patterns = new ResolveRuleSelection().rows(inventory, types, Set.of("Create"));
+            groups[i] = new int[patterns.size()][];
+            for (int j = 0; j < patterns.size(); j++)
+            {
+                groups[i][j] = patterns.get(j).members.stream().toArray();
+            }
             for (int j = 0; j < groups[i].length; j++)
             {
                 int[] ids = groups[i][j].clone();

@@ -112,26 +112,46 @@ fold according to the established runtime identity contract.
 
 ## Membership representation
 
-Configured patterns own sorted integer arrays of compact declaration IDs. Arrays are shared among matching paths;
-they are not allocated per reported entity. `MergeRuleMembership` merges these sorted rows, removes repeated discovery
-of one declaration, and preserves the ID order established during compilation. Separate registrations of the same
-callback remain separate entries. Raw-type buckets restrict matching to relevant configured patterns.
+Configured patterns own pre-sized BitSet membership over compact declaration IDs. These rows are read-only after
+publication. ResolveRuleSelection deduplicates matching pattern identity, avoiding repeated hierarchy discoveries.
+MergeRuleMembership combines several rows with a private inventory-sized accumulator. Enumeration follows ascending
+declaration IDs, preserving execution order and independent registrations without invoking callback equality.
 
-Sorted arrays, JDK BitSet, and test-scoped RoaringBitmap were compared with the same real descriptor/declaration rows,
-construction, combination, and ordered enumeration. The compact synthetic prototype favored BitSet; prepared-row
-measurements favored arrays for time, while BitSet used less memory for broad rows. Broad configured rows are shared
-once per pattern in production, so repeatedly storing one broad row per descriptor overstates that space tradeoff.
-Sorted arrays are the lowest-complexity competitive choice for hundreds of compact declaration IDs. Roaring remains
-a test-only comparator and adds no runtime dependency. Larger synthetic ID gaps do not justify wasting production IDs.
+Each pattern also owns its compiled immutable ordered handler selection. A single applicable pattern reuses that
+selection directly when memo admission permits; no union or per-report handler reconstruction is needed. Empty
+matches remain cacheable. Multiple patterns combine bitmap rows and materialize the final handler array directly,
+without an intermediate identifier array. Missing-memo checks remain per entity and do not share before-state values.
 
-Cold matching produces a `RuleSelection` backed by an immutable handler array. All candidates use that same warm
-execution form; warm dispatch performs no membership union, expanded MultiKey construction, or handler sorting.
-Membership never determines callback order independently of declaration order. The
-[performance topic](../performance/topics/ExecutionPlans.md) links measurements and their limits; no numeric gate or
-application throughput promise follows from the representation choice.
+The initial sparse/broad/clustered Night City fixtures selected zero or one row, whereas the earlier synthetic
+prototype combined twenty. Genuine dwelling configurations select up to 32 distinct rows across generic subjects
+and Create/CU/CUD/Expression families. Their prepared native comparisons favor BitSet for many-row combination and
+materialization at 100–500 declarations. The single-row compiled shortcut avoids the measured cost of re-enumerating
+a bitmap when no combination is necessary. Arrays and test-scoped Roaring remain comparators; BitSet adds no external
+runtime dependency. Two-row array materialization can be faster, but the complete workflow evidence does not
+justify storing a second membership representation and introducing an adaptive threshold. Precompiled single-row
+handlers add storage alongside bitmap rows, slightly increasing measured full multirow holder graphs. Cold-selection
+allocation falls; complete transaction ranges overlap because most entities reuse cached handlers. The internal
+representation choice therefore targets preparation cost rather than claiming universal workflow acceleration.
+
+Warm EventField dispatch reuses immutable ordered handlers regardless of membership representation. It performs no
+union, expanded MultiKey construction, or sorting. Membership never changes declaration order, callback frequency,
+or payload prerequisites. The [performance topic](../performance/topics/ExecutionPlans.md) links append-only
+measurements and their limits; no numerical performance gate or application throughput promise follows.
 
 Avoid full matrices over loaded JVM types, exhaustive generic wildcard combinations, and preallocation for every
 operation/stage/type combination. Compile configured patterns once, then populate observed selections lazily.
+
+Native membership can materialize its final ordered handlers directly. A bitmap need not allocate an intermediate
+integer array, and both alternatives can reuse a single prepared row without union allocation. Prepared bitmap rows
+must never be mutated by concurrent dispatch; accumulators are local to one resolution. Declaration IDs still define
+execution order. A transferred handler array is owned exclusively by the immutable selection; caller collections
+continue to be copied.
+
+Representation evidence must include actual distinct matching-row counts independently of total rules and entities.
+Sparse/broad/clustered labels alone do not identify combination work. Concrete/inherited and generic patterns across
+applicable event families produce genuine many-row dispatch. Synthetic overlapping sets test a separate workload from
+RulePattern partitions. Preserve the simple cases and compare construction, native combination, final selection,
+cache misses/hits, complete transactions, allocation, and shared row graphs without assuming a winner.
 
 ## Ownership, concurrency, and diagnostics
 

@@ -7,6 +7,8 @@ import com.taitl.existential.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
@@ -84,6 +86,43 @@ class NightCityStoryTest
                     assertEquals(0, evaluations.get());
                     tr.commit();
                     assertEquals(200, evaluations.get());
+                }
+                finally
+                {
+                    tr.close();
+                }
+            }
+            finally
+            {
+                Ex.instance(previous);
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = { 1, 20, 32 })
+    void combinesSubjectAndEventRulesInDeclarationOrder(int rows) throws Exception
+    {
+        DwellingWorkload workload = new DwellingWorkload(3);
+        List<Integer> calls = new ArrayList<>();
+        try (Existential ex = new Existential())
+        {
+            Existential previous = Ex.instance(ex);
+            try
+            {
+                String op = "/night-city/dwellings";
+                new ConfigureDwellings().configure(op, 100, rows, false, declaration -> calls.add(declaration));
+                Tr tr = ex.begin(op);
+                try
+                {
+                    new DwellingOperations().report(tr, workload, 16);
+                    assertTrue(calls.isEmpty());
+                    tr.commit();
+                    assertEquals(300, calls.size());
+                    for (int i = 0; i < calls.size(); i++)
+                    {
+                        assertEquals(i % 100, calls.get(i));
+                    }
                 }
                 finally
                 {

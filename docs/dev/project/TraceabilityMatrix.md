@@ -261,9 +261,9 @@ the rule-registration contract, so class-loader-distinct registration is not cla
 Epic: [Contexts and Type Matching](Backlog.md#contexts-and-type-matching);
 [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
 Design readiness: selected behavior, component ownership, representation, and finite cache budgets are resolved.
-Verification: complete for the admitted Sprint 07 slice. Compiled inventories, pre-expansion signature lookup,
+Verification: production integration and many-row representation follow-up pass. Compiled inventories, signature lookup,
 transaction-local overlays, bounded caches, validation-only reporting, and per-entity checks have direct passing
-acceptance. Root 495/consumer 3 tests, reactor, required checks/coverage, and artifact hygiene pass.
+acceptance. Root 509/consumer 6 tests, reactor, required checks/coverage, and artifact hygiene pass.
 
 Requirements: [ExecutionPlans.spec.md](../specifications/ExecutionPlans.spec.md), including
 [effective rule inventory](../specifications/ExecutionPlans.spec.md#effective-rule-inventory),
@@ -279,8 +279,11 @@ has direct positive/negative coverage in `UserCanApplyInheritedRules`. Internal 
 
 The [performance topic](../performance/topics/ExecutionPlans.md) links three-process real-membership comparisons,
 comparable old/new cold/warm and whole-workflow probes, scale/immediate/repeated cases, allocation, reachable graphs,
-and source/artifact identities. Sorted arrays are the competitive simpler cold representation; warm handler arrays
-are immutable. Rejection timing remains inconclusive and no numerical gate is adopted. The [Sprint 07 delivery plan]
+and source/artifact identities. Native BitSet rows and compiled single-row selections replace the earlier array
+choice after proving genuine many-row dispatch. UserCanApplyManyRulePatterns and RuleMembershipTest cover 1–32
+rows, deferred ordered checks, folding, negative rules/recovery, and private concurrent bitmap ownership. Complete
+workflow ranges overlap; warm handler arrays remain immutable and no numerical gate is adopted. The
+[Sprint 07 delivery plan]
 records final evidence and explicit deferrals; stage policy remains owned by Sprint 08.
 
 [Sprint 07 delivery plan]: ../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md

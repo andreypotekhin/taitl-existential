@@ -1,49 +1,56 @@
 # Execution Plans and Type Matching Performance
 
-Sprint 07's production comparison is recorded in [Compiled Rule
-Selections](../runs/20261023T215346Z.CompiledRuleSelections.md). It includes three fresh
-processes per retained scenario, source/JAR identities, individual samples, medians/ranges, timing, allocation, and
-reachable cache graphs. The [design](../../design/ExecutionPlans.design.md) explains the architecture and ownership;
-the [delivery plan](../../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md) records
-implementation and closeout evidence. Measurements establish baselines, with no numerical performance gate.
+Sprint 07's final production decision is recorded in [Many-Row Matching: BitSet Re-evaluation and
+Integration](../runs/20261023T222929Z.ManyRowBitSet.md). Three fresh processes per retained scenario, source/JAR
+identities, individual samples, medians/ranges, timing, allocation, and reachable graphs are retained. The
+[design](../../design/ExecutionPlans.design.md) explains architecture and ownership; the [archived delivery
+plan](../../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md) records implementation
+and closeout. Measurements establish baselines, with no numerical performance gate.
 
 ## Production choice and measured tradeoffs
 
-Cold matching uses sorted arrays of compact declaration IDs, raw-type pattern buckets, and structural generic-bound
-checks. Warm matching reaches EventField's immutable ordered handler selection before event/type expansion. Arrays
-were competitive or faster for primary prepared unions at 100–500 declarations, including overlapping patterns.
-BitSet saves broad-row storage; Roaring can win individual multirow combination phases. Those advantages did not
-justify additional production machinery or a runtime dependency for this workload. All candidates materialize the
-same handler-array form. Production shares each configured pattern row, avoiding the benchmark's deliberate
-per-descriptor row copies. RoaringBitmap 1.6.8 stays test-scoped.
+Cold matching uses compact declaration IDs in native BitSet rows, raw-type pattern buckets, and structural
+upper-bound checks. A single matching pattern reuses its precompiled immutable handler selection. Multiple patterns
+use a private pre-sized bitmap accumulator and direct ordered handler materialization. Warm EventField hits reach
+the same immutable handler-array form before event/type expansion. No runtime dependency or strategy flag is added;
+RoaringBitmap 1.6.8 remains test-scoped.
 
-The primary 10,000-entity/200-descriptor/100-applicable-rule success median changed from 56,888.3 to 26,336.1
-µs/workflow, and allocated bytes fell from 205,599,454 to 49,036,129. Paired dispatch probes changed warm selection
-from 2.9 to 0.2 µs/selection, with smaller reachable warm cache graphs. Setup retains more compiled state. These are
-environment-bound observations; the run record gives ranges and separates setup, report, commit, and full workflows.
-Short rejection batches were slower; a longer paired probe had overlapping ranges and lower allocation, leaving
-rejection latency inconclusive. No rejection speedup is claimed.
+The prior [Compiled Rule Selections](../runs/20261023T215346Z.CompiledRuleSelections.md) fixture selected zero/one
+row for sparse/broad/clustered descriptors and averaged only 1.34 overlapping rows at 256 declarations. Its comparator
+also converted bitmap output through an intermediate ID array. That evidence supported arrays for those cases but
+did not exercise the original twenty-row combination opportunity. Historical records remain unchanged.
 
-Shared selection and transaction-overlay caches each have 1,024-entry budgets, operation inventories and stage
-profiles each have 128 entries, warning suppression has 64 per instance, and legacy descriptor expansion has 4,096.
-Profiles cover 200 and 500 signatures, churn beyond capacity, and zero resident selections after close. Disposed
-transaction event-index graphs release backing tables. Per-thread allocation and reachable holder graphs are separate
-metrics; graphs exclude class/static/JVM metadata and weak referents and are not exclusive retained heap.
+The shared dwelling fixture now proves 1–32 genuine event/type rows using concrete, wildcard, raw, and upper-bound
+subjects across Create/CU/CUD/Expression. At 256 declarations, native union plus final selection takes 278.5 versus
+89.2 µs per 64 selections for arrays versus BitSet at 20 rows, and 406.3 versus 91.3 at 32 rows. Grouped declarations
+and the original labelled synthetic shapes confirm many-row benefits. Two-row array materialization can be faster;
+one-row production dispatch bypasses both materializers. The evidence does not justify a second membership store or
+an invented density threshold.
+
+Paired actual-library probes at 20 rows reduce fresh-cache selection from median 13.6 to 5.3 µs and allocation from
+about 26,027 to 5,560 bytes per selection. Structural bounds dominate more of the 32-row cold resolver. Complete
+10,000-entity workflow ranges overlap: most entities already reuse a cached selection and execute identical rules.
+No universal transaction speedup is claimed. Prepared one-row selections slightly increase full multirow holder
+graphs despite lower combination allocation; the report records that storage tradeoff explicitly.
+
+Shared selection/overlay caches each retain at most 1,024 entries, operation inventories/profiles 128, warnings 64
+per instance, and legacy descriptors 4,096. Correctness tests cover order, independent declarations, memo requirements,
+concurrent ownership, retry, eviction, and cleanup. Reachable graphs exclude class/static/JVM metadata and weak
+referents; they are not exclusive retained heap. Every measured library closes and has zero cached selections.
 
 ## Workloads and reproduction
 
-Night City supplies deterministic fixtures for 10,000, 50,000, and 100,000 entities, up to 200 class/generic
-descriptors,
-and 100, 256, and 500 applicable declarations. The comparison separates construction, prepared union/intersection,
-ordered materialization, cold/warm dispatch, complete success/rejection/recovery, report/commit phases, immediate
-effects, and sixteen repeated reports per entity. Upper bounds and synthetic 128,000-slot ID gaps are separately
-labelled. Exact callback totals, generation invalidation, concurrency, failed misses, eviction, and cleanup have
-assertions. The independent consumer reuses the shared example fixtures through the installed library artifact.
+Night City fixtures cover 10,000–100,000 entities, 20–200 class/generic descriptors, 100–500 declarations, and the new
+1/2/3/4/8/16/20/32 applicable-row matrix. Row count varies independently of entity/rule counts. Native construction,
+union, and final selection are separate. Actual-library probes separate setup, fresh-cache selection, warm hits,
+complete success/rejection/explicit rollback/recovery, repeated reporting, allocation, and reachable storage.
 
-Use the exact commands and environment in [the run record](../runs/20261023T215346Z.CompiledRuleSelections.md) and the
-[agent procedure](../Readme.md#reachable-memory-profiling). Every membership result escapes via volatile publication;
-checksum and equivalence checks sit outside timing. Candidate order rotates across three fresh test JVMs. Performance
-runs do not replace the ordinary root, consumer, or reactor test suites.
+Use exact commands and environment in [the final report](../runs/20261023T222929Z.ManyRowBitSet.md) and the
+[agent procedure](../Readme.md#reachable-memory-profiling). ManyRuleRowsBenchmark uses time-based warmup/measurement,
+volatile result publication, full equivalence assertions, and rotated candidate order. Its small-row selector proves
+2/3 rows; grouped declarations and original synthetic shapes are separate controls. All three alternatives materialize
+the same final handler form. Independent-consumer acceptance uses the same configuration and application operation.
+Performance runs do not replace root, standalone consumer, or reactor verification.
 
 ## Earlier samples
 
@@ -53,7 +60,8 @@ winner. The [200-descriptor workflow run](../runs/20261023T064252Z.ExecutionPlan
 [validation/immediate phase run](../runs/20261023T064507Z.ValidationAndImmediatePhases.md), and
 [allocation run](../runs/20261023T064757Z.ExecutionPlansAllocationAndImmediate.md) established workload/callback runners
 but did not implement pre-expansion selection or measure reachable cache graphs. They remain append-only historical
-evidence and are superseded for the production decision by Compiled Rule Selections above.
+evidence. Compiled Rule Selections established production selection reuse; the many-row follow-up above supersedes
+its membership representation choice.
 
 ## Preliminary existing-workflow baseline
 

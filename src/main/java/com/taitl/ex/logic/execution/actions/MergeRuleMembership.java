@@ -1,61 +1,32 @@
 package com.taitl.ex.logic.execution.actions;
 
+import com.taitl.ex.logic.execution.data.*;
+
 import java.util.*;
 
 /**
- * Unions sorted declaration-membership rows while retaining configured execution order.
- * A declaration reached through several matching type or event paths appears once in the result;
- * distinct declaration identifiers remain independent regardless of callback equality.
+ * Unions compiled membership bitmaps using one private accumulator per multirow resolution.
+ * Compact declaration identifiers preserve configured order when the result is enumerated.
+ * Duplicate discovery cannot multiply a declaration, while separately registered callbacks
+ * retain independent bits even when they reference the same handler object.
  *
- * Two-pointer array merges avoid bitmap allocation for the library's compact rule inventories.
- * Input rows are immutable after compilation, allowing empty merges to reuse an existing row.
- * The result is consumed to materialize an immutable ordered handler selection.
+ * Prepared rows are read-only and safe to share. Zero/one-row cases avoid union allocation;
+ * a multirow result is pre-sized to the inventory to avoid growth and never mutates an input.
+ * The bitmap goes directly to handler materialization without an intermediate identifier array.
  */
 public class MergeRuleMembership
 {
-    public int[] call(List<int[]> rows)
+    public BitSet call(List<RulePattern> rows, int size)
     {
-        int[] result = new int[0];
-        for (int[] row : rows)
+        if (rows.size() == 1)
         {
-            if (result != row)
-            {
-                result = merge(result, row);
-            }
+            return rows.get(0).members;
+        }
+        BitSet result = new BitSet(rows.isEmpty() ? 0 : size);
+        for (RulePattern row : rows)
+        {
+            result.or(row.members);
         }
         return result;
-    }
-
-    protected int[] merge(int[] left, int[] right)
-    {
-        if (left.length == 0)
-        {
-            return right;
-        }
-        if (right.length == 0)
-        {
-            return left;
-        }
-        int[] result = new int[left.length + right.length];
-        int i = 0;
-        int j = 0;
-        int count = 0;
-        while (i < left.length || j < right.length)
-        {
-            if (j == right.length || i < left.length && left[i] < right[j])
-            {
-                result[count++] = left[i++];
-            }
-            else if (i == left.length || right[j] < left[i])
-            {
-                result[count++] = right[j++];
-            }
-            else
-            {
-                result[count++] = left[i++];
-                j++;
-            }
-        }
-        return count == result.length ? result : Arrays.copyOf(result, count);
     }
 }

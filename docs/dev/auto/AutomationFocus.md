@@ -8,15 +8,15 @@ subsystem-first split with V1 representative core, V2 broader standard usage, an
 
 V1 is complete as a locally installed `0.0.1` artifact and remains unpublished remotely. Sprint 06's selected instance
 isolation/configuration slice and Sprint 07's context/type and execution-plan slice are complete, including the
-reopened production matching integration. The [archived delivery
+many-row follow-up. Native BitSet combination, compiled single-row selections, and pre-expansion EventField lookup
+are implemented. The [archived delivery
 plan](../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md)
-and [performance topic](../performance/topics/ExecutionPlans.md) retain actual root/consumer/reactor, artifact,
-correctness, concurrency, resource, and comparative measurement evidence. Sorted arrays and pre-expansion EventField
-lookup are implemented; historical prototypes alone did not establish completion.
+and [performance topic](../performance/topics/ExecutionPlans.md) retain correctness/concurrency/resource checks,
+root/consumer/reactor verification, artifact evidence, and three-process comparisons with explicit limits.
 
-Next discuss/select ready Sprint 08 stage, intent/effect, and transaction-customization capabilities using its charter
-and traceability. Resolve remaining behavioral choices before implementation. Retain the compiled inventory/profile
-and EventField ownership model; this completion adds no numerical performance gate or broader stage-policy contract.
+Discuss/select ready Sprint 08 stage, intent/effect, and transaction-customization capabilities using its charter
+and traceability. Resolve remaining behavioral choices before implementation. Retain compiled inventory/profile
+and EventField ownership; Sprint 07 adds no numerical performance gate or broader stage-policy contract.
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Restore useful verification feedback early and link evidence for each concern. Do not treat inherited marks or

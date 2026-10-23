@@ -7,7 +7,8 @@ import java.util.*;
 
 /**
  * An immutable, array-backed sequence of handlers in execution order.
- * Construction copies the selected handlers and precomputes memo and bi-handler requirements,
+ * Collection construction copies the selected handlers; package materializers transfer exclusive array ownership.
+ * Construction precomputes memo and bi-handler requirements,
  * so warm dispatch need not inspect handler kinds or sort declarations again.
  *
  * The selection describes reusable work and contains no reported entity or memo payload.
@@ -22,7 +23,12 @@ public class RuleSelection
 
     public RuleSelection(Collection<? extends Ev<?>> handlers, boolean memoRequired)
     {
-        Ev<?>[] values = handlers.toArray(new Ev<?>[0]);
+        this(handlers.toArray(new Ev<?>[0]), memoRequired);
+    }
+
+    /** Transfers an exclusively owned array; package callers must not mutate it afterward. */
+    RuleSelection(Ev<?>[] values, boolean memoRequired)
+    {
         this.handlers = Collections.unmodifiableList(Arrays.asList(values));
         this.memoRequired = memoRequired;
         for (Ev<?> handler : values)

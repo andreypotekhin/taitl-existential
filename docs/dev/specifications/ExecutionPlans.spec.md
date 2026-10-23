@@ -149,3 +149,12 @@ Night City supplies large datasets of 10,000–100,000 entity reports, 20–200 
 allocation, and reachable-memory evidence with explicit measurement limits. Delivery status is tracked in the
 [Sprint 07 record](../project/sprints/Sprint07_V2ContextsAndTypeMatching.md). No numerical throughput promise is
 established by this specification.
+
++ A transaction whose entity matches many subject patterns and event families preserves declaration order and invokes
+  each declaration once per folded event evaluation. Concrete/partial-wildcard/raw/upper-bound patterns and
+  Create/CU/CUD/Expression participation must be covered by the shared Night City consumer fixture. Matching
+  representation cannot change negative-rule failure, explicit rollback, or a fresh successful attempt.
+  `UserCanApplyManyRulePatterns` verifies 1/2/3/4/8/16/20/32 actual rows, order per entity, and sixteen-report folding;
+  installed-consumer `NightCityStoryTest` reuses the fixture at 1/20/32 rows. `RuleMembershipTest` verifies private
+  concurrent accumulators and read-only prepared membership; `RuleSelectionTest` verifies cross-signature reuse of
+  a single compiled row without sharing entity outcomes.
