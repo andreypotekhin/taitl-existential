@@ -1,7 +1,7 @@
 # Runtime Execution Plans Specification
 
-These requirements describe the selected compiled-execution behavior. They are not implementation evidence and carry
-no completion marks until direct acceptance tests pass. Rationale and internal concepts are in
+These requirements describe the selected compiled-execution behavior. Leading + paragraphs identify direct
+test-backed acceptance evidence; unmarked prose defines the governing contract. Rationale and internal concepts are in
 [ExecutionPlans.design.md](../design/ExecutionPlans.design.md).
 
 ## Execution plan selection
@@ -64,7 +64,9 @@ Lifecycle callbacks continue to run even when the corresponding stage has no ent
 
 Distinct entities with the same dispatch signature can share an immutable selection in the library's `EventField`.
 A dispatch signature includes all type, event-selection, operation/stage, and rule-source distinctions that can affect
-applicability. Runtime descriptor-cache keys preserve actual class identity across class loaders. Public TypeKey and
+applicability. A resident prepared selection is reached before repeating event/type expansion and ordered handler
+construction for that signature; entity-specific memo and payload prerequisites are still checked where required.
+Runtime descriptor-cache keys preserve actual class identity across class loaders. Public TypeKey and
 EventKey rule-registration equality remains string-based, so same-named classes from different loaders are not
 promised distinct registrations. Entity values and memo snapshots do not become shared selection contents.
 
@@ -123,8 +125,27 @@ generic diagnostics and opt-out, concurrent first use, and cleanup after rejecte
   and same-named classes from distinct class loaders remain separate keys. `SplitTypeKeyTest` verifies reuse, eviction,
   concurrent first use, and class-loader identity.
 
++ `RuleSelectionTest` proves one resident immutable selection is reused before expansion, declaration order and
+  independent registrations are preserved, empty results are bounded/recomputed after eviction, failed resolution
+  is retryable, and concurrent first use publishes a complete selection. Naming/splitting modes, endpoint shapes,
+  local generations, and runtime class-loader identities remain separate.
+
++ `UserCanReuseRuleSelections` verifies fresh entity values at repeated checkpoints and across transactions,
+  per-entity memo requirements and before-state, operation-cache eviction/recomputation, and release on shutdown.
+  Distinct equal deleted entities remain distinct even when their after endpoint is absent.
+
++ `UserCanValidateLargeTransactions` verifies that sixteen repeated Create reports per entity fold while separate
+  equal entity instances still each execute their applicable declarations. `NightCityStoryTest` verifies sparse
+  applicability across 400 entities, 200 descriptors, and 100 declarations using the independently installed artifact.
+
++ Shared EventField selections and transaction overlay merges each have a 1,024-entry budget. Operation inventories
+  and execution profiles each retain at most 128 operation entries. Direct churn and lifecycle tests verify these
+  bounds, recomputation, transaction-local disposal, and library shutdown; `TypeMatchingLogicTest` verifies the
+  separate 64-signature per-instance warning budget and cleanup.
+
 Night City supplies large datasets of 10,000–100,000 entity reports, 20–200 concrete class/generic descriptors, and
-100–500 configured declarations. Tests assert actual callback counts and unique signature counts, not only successful
-termination. Performance records separate reporting, commit, complete workflows, and per-thread allocation where
-measured; cold/warm resolution timings and byte-level retained-heap measurements remain future profiling work. No
-numerical throughput promise is established by this specification.
+100–500 configured declarations. Tests assert actual callback counts and unique signature counts. The
+[performance topic](../performance/topics/ExecutionPlans.md) links setup, cold/warm selection, complete workflow,
+allocation, and reachable-memory evidence with explicit measurement limits. Delivery status is tracked in the
+[Sprint 07 record](../project/sprints/Sprint07_V2ContextsAndTypeMatching.md). No numerical throughput promise is
+established by this specification.

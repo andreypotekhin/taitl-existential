@@ -86,23 +86,23 @@ class CustomTransactionBenchmark
             this.elapsedNanos = elapsedNanos;
         }
 
-        double nanosPerOperation()
+        double microsPerOperation()
         {
-            return (double) elapsedNanos / iterations;
+            return elapsedNanos / 1_000d / iterations;
         }
 
         long opsPerSecond()
         {
-            return Math.round(1_000_000_000d / nanosPerOperation());
+            return Math.round(1_000_000d / microsPerOperation());
         }
 
         public String toString()
         {
             return String.format(Locale.ROOT,
-                    "  %-24s %,10d ops/s  %,12.1f ns/op",
+                    "  %-24s %,10d ops/s  %,12.1f µs/op",
                     name,
                     opsPerSecond(),
-                    nanosPerOperation());
+                    microsPerOperation());
         }
     }
 

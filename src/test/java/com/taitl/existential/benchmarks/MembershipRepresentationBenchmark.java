@@ -1,181 +1,260 @@
 package com.taitl.existential.benchmarks;
 
+import com.taitl.ex.examples.night_city.configure.*;
+import com.taitl.ex.examples.night_city.data.*;
+import com.taitl.ex.logic.execution.actions.*;
+import com.taitl.ex.logic.execution.data.*;
+import com.taitl.ex.logic.types.data.*;
+import com.taitl.existential.*;
+import com.taitl.existential.constants.*;
+import com.taitl.existential.events.*;
+import com.taitl.existential.keys.*;
+import com.taitl.existential.transactions.*;
 import org.junit.jupiter.api.*;
-import org.roaringbitmap.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.*;
+import java.util.function.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Compares sorted arrays, BitSet, and RoaringBitmap using actual rule-selection membership.
+ * Night City descriptors pass through the production inventory and structural matcher before
+ * rows are encoded in each representation. Overlapping fixtures combine broad, exact, clustered,
+ * and upper-bound declarations to exercise merging several applicable rows. Construction, prepared union/intersection, and
+ * ordered handler materialization are measured as separate phases with identical result checks.
+ *
+ * Each measured result escapes through a volatile reference; checksum consumption occurs outside
+ * the timed region. Reported time covers a descriptor batch, while allocation is per selection.
+ * Optional identifier gaps are synthetic stress evidence, separate from compact production IDs.
+ */
 class MembershipRepresentationBenchmark
 {
+    static final String OP = "/night-city/selection";
+    static volatile long consumed;
+    static volatile Object materialized;
+    static final int ID_STRIDE = Integer.getInteger("benchmark.id.stride", 1);
+
     @Test
-    void comparesMembershipRows()
+    void comparesActualDeclarationMembership() throws Exception
     {
-        int warmup = Integer.getInteger("benchmark.warmup.iterations", 3);
-        int iterations = Integer.getInteger("benchmark.measure.iterations", 5);
-        for (String shape : List.of("sparse", "broad", "clustered"))
+        int types = Integer.getInteger("benchmark.types", 200);
+        int rules = Integer.getInteger("benchmark.rules", 256);
+        int rotation = Integer.getInteger("benchmark.sample", 1) - 1;
+        CityWorkload workload = new CityWorkload(types, types);
+        List<String> kinds = new ArrayList<>(List.of("arrays", "bitset", "roaring"));
+        Collections.rotate(kinds, rotation);
+        for (String shape : Boolean.getBoolean("benchmark.bounds") ? List.of("upper-bound")
+                : List.of("sparse", "broad", "clustered", "overlapping"))
         {
-            int[][] expected = rows(shape, 20, 256);
-            int[] reference = unionArrays(shape, 20, 256);
-            int[] bits = unionBits(shape, 20, 256);
-            int[] roaring = unionRoaring(shape, 20, 256);
-            assertArrayEquals(reference, bits);
-            assertArrayEquals(reference, roaring);
-            long arrays = measure(warmup, iterations, () -> unionArrays(shape, 20, 256));
-            long bitsets = measure(warmup, iterations, () -> unionBits(shape, 20, 256));
-            long bitmaps = measure(warmup, iterations, () -> unionRoaring(shape, 20, 256));
-            System.out.printf(Locale.ROOT,
-                    "membership shape=%s rows=%d slots=%d iterations=%d arrays=%d ns/op bitset=%d ns/op "
-                            + "roaring=%d ns/op matches=%d%n",
-                    shape, expected.length, 256, iterations, arrays, bitsets, bitmaps, reference.length);
+            try (Existential ex = new Existential())
+            {
+                Existential previous = Ex.instance(ex);
+                try
+                {
+                    configure(workload, rules, shape);
+                    Tr tr = ex.begin(OP);
+                    tr.close();
+                    RuleInventory inventory =
+                            ex.configs().config(OP).indexes(OP, StageName.VALIDATION).configuredHandlers.inventory();
+                    int[][][] groups = groups(workload, inventory);
+                    int paths = 0;
+                    int multiple = 0;
+                    for (int[][] rows : groups)
+                    {
+                        paths += rows.length;
+                        multiple += rows.length > 1 ? 1 : 0;
+                    }
+                    System.out.printf(Locale.ROOT, "rows shape=%s paths=%d multiple=%d%n", shape, paths, multiple);
+                    if ("overlapping".equals(shape))
+                    {
+                        assertTrue(multiple > 0);
+                    }
+                    if (ID_STRIDE != 1)
+                    {
+                        System.out.printf(Locale.ROOT, "synthetic ID stress stride=%d slots=%d%n",
+                                ID_STRIDE, rules * ID_STRIDE);
+                    }
+                    for (String kind : kinds)
+                    {
+                        compare(kind, shape, groups, inventory);
+                    }
+                }
+                finally
+                {
+                    Ex.instance(previous);
+                }
+            }
+        }
+        assertNotEquals(0, consumed);
+    }
+
+    void configure(CityWorkload workload, int rules, String shape)
+    {
+        ConfigureLooks configure = new ConfigureLooks();
+        if (!"overlapping".equals(shape))
+        {
+            configure.configureSelectionWorkload(OP, workload, rules, shape, new AtomicLong());
+            return;
+        }
+        List<String> shapes = List.of("broad", "sparse", "clustered", "upper-bound");
+        for (int i = 0; i < shapes.size(); i++)
+        {
+            int count = rules / shapes.size() + (i < rules % shapes.size() ? 1 : 0);
+            configure.configureSelectionWorkload(OP, workload, count, shapes.get(i), new AtomicLong());
         }
     }
 
-    protected int[][] rows(String shape, int rowCount, int slots)
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    int[][][] groups(CityWorkload workload, RuleInventory inventory)
     {
-        int[][] result = new int[rowCount][];
-        for (int row = 0; row < rowCount; row++)
+        int[][][] groups = new int[workload.descriptors][][];
+        ResolveSelectionInput resolver = new ResolveSelectionInput();
+        for (int i = 0; i < groups.length; i++)
         {
-            List<Integer> members = new ArrayList<>();
-            for (int id = 0; id < slots; id++)
+            CityWorkload.Report report = workload.looks.get(i);
+            RuntimeKey<?> key = new RuntimeKey(new Create(report.entity), report.type, report.entity);
+            Set<TypePattern> types = resolver.types(key, false);
+            groups[i] = new ResolveRuleSelection().rows(inventory, types, Set.of("Create")).toArray(new int[0][]);
+            for (int j = 0; j < groups[i].length; j++)
             {
-                if (matches(shape, row, id))
+                int[] ids = groups[i][j].clone();
+                for (int k = 0; k < ids.length; k++)
                 {
-                    members.add(id);
+                    ids[k] *= ID_STRIDE;
                 }
+                groups[i][j] = ids;
             }
-            result[row] = members.stream().mapToInt(id -> id).toArray();
+        }
+        return groups;
+    }
+
+    void compare(String kind, String shape, int[][][] groups, RuleInventory inventory)
+    {
+        MembershipRows[] prepared = prepare(kind, groups);
+        int[][] unions = new int[groups.length][];
+        for (int i = 0; i < groups.length; i++)
+        {
+            unions[i] = prepared[i].combine(false);
+            MembershipRows reference = new MembershipRows("arrays", groups[i]);
+            assertArrayEquals(reference.combine(false), unions[i]);
+            assertArrayEquals(reference.combine(true), prepared[i].combine(true));
+        }
+        measure(kind, shape, "construction", groups.length, () -> prepare(kind, groups));
+        measure(kind, shape, "union", groups.length, () -> combine(prepared, false));
+        measure(kind, shape, "intersection", groups.length, () -> combine(prepared, true));
+        measure(kind, shape, "ordered-selection", groups.length, () -> selections(unions, inventory));
+        System.out.printf(Locale.ROOT,
+                "membership shape=%s representation=%s descriptors=%d rules=%d retained=%d bytes%n",
+                shape, kind, groups.length, inventory.size(), BenchmarkMemory.reachable(prepared));
+    }
+
+    MembershipRows[] prepare(String kind, int[][][] groups)
+    {
+        MembershipRows[] result = new MembershipRows[groups.length];
+        for (int i = 0; i < groups.length; i++)
+        {
+            result[i] = new MembershipRows(kind, groups[i]);
         }
         return result;
     }
 
-    protected boolean matches(String shape, int row, int id)
+    int[][] combine(MembershipRows[] prepared, boolean intersection)
     {
-        if ("sparse".equals(shape))
+        int[][] result = new int[prepared.length][];
+        for (int i = 0; i < prepared.length; i++)
         {
-            return (id + row * 7) % 23 == 0;
-        }
-        if ("broad".equals(shape))
-        {
-            return (id + row) % 2 == 0;
-        }
-        int start = row * 8;
-        return id >= start && id < start + 32;
-    }
-
-    protected int[] unionArrays(String shape, int rowCount, int slots)
-    {
-        int[] union = new int[0];
-        for (int row = 0; row < rowCount; row++)
-        {
-            int[] values = new int[slots];
-            int size = 0;
-            for (int id = 0; id < slots; id++)
-            {
-                if (matches(shape, row, id))
-                {
-                    values[size++] = id;
-                }
-            }
-            union = merge(union, Arrays.copyOf(values, size));
-        }
-        return union;
-    }
-
-    protected int[] merge(int[] left, int[] right)
-    {
-        int[] result = new int[left.length + right.length];
-        int i = 0;
-        int j = 0;
-        int size = 0;
-        while (i < left.length && j < right.length)
-        {
-            if (left[i] < right[j])
-            {
-                result[size++] = left[i++];
-            }
-            else if (left[i] > right[j])
-            {
-                result[size++] = right[j++];
-            }
-            else
-            {
-                result[size++] = left[i++];
-                j++;
-            }
-        }
-        while (i < left.length)
-        {
-            result[size++] = left[i++];
-        }
-        while (j < right.length)
-        {
-            result[size++] = right[j++];
-        }
-        return Arrays.copyOf(result, size);
-    }
-
-    protected int[] unionBits(String shape, int rowCount, int slots)
-    {
-        BitSet union = new BitSet(slots);
-        for (int row = 0; row < rowCount; row++)
-        {
-            BitSet bits = new BitSet(slots);
-            for (int id = 0; id < slots; id++)
-            {
-                if (matches(shape, row, id))
-                {
-                    bits.set(id);
-                }
-            }
-            union.or(bits);
-        }
-        int[] result = new int[union.cardinality()];
-        int size = 0;
-        for (int id = union.nextSetBit(0); id >= 0; id = union.nextSetBit(id + 1))
-        {
-            result[size++] = id;
+            result[i] = prepared[i].combine(intersection);
         }
         return result;
     }
 
-    protected int[] unionRoaring(String shape, int rowCount, int slots)
+    RuleSelection[] selections(int[][] unions, RuleInventory inventory)
     {
-        RoaringBitmap union = new RoaringBitmap();
-        for (int row = 0; row < rowCount; row++)
+        RuleSelection[] result = new RuleSelection[unions.length];
+        for (int i = 0; i < unions.length; i++)
         {
-            RoaringBitmap bitmap = new RoaringBitmap();
-            for (int id = 0; id < slots; id++)
+            int[] ids = unions[i];
+            if (ID_STRIDE != 1)
             {
-                if (matches(shape, row, id))
+                ids = ids.clone();
+                for (int j = 0; j < ids.length; j++)
                 {
-                    bitmap.add(id);
+                    ids[j] /= ID_STRIDE;
                 }
             }
-            union.or(bitmap);
-        }
-        int[] result = new int[union.getCardinality()];
-        IntIterator values = union.getIntIterator();
-        int size = 0;
-        while (values.hasNext())
-        {
-            result[size++] = values.next();
+            result[i] = inventory.selection(ids);
         }
         return result;
     }
 
-    protected long measure(int warmup, int iterations, Runnable work)
+    void measure(String kind, String shape, String phase, int types, Supplier<Object> work)
     {
+        int warmup = Integer.getInteger("benchmark.warmup.iterations", 50);
+        int iterations = Integer.getInteger("benchmark.measure.iterations", 500);
         for (int i = 0; i < warmup; i++)
         {
-            work.run();
+            materialized = work.get();
         }
+        long before = BenchmarkMemory.allocated();
         long started = System.nanoTime();
         for (int i = 0; i < iterations; i++)
         {
-            work.run();
+            materialized = work.get();
         }
-        return (System.nanoTime() - started) / iterations;
+        long elapsed = System.nanoTime() - started;
+        long allocated = BenchmarkMemory.allocated() - before;
+        long checksum = checksum(materialized);
+        consumed = checksum;
+        materialized = null;
+        assertTrue(checksum > 0);
+        System.out.printf(Locale.ROOT,
+                "membership shape=%s representation=%s phase=%s selections=%d %.1f µs/batch %.1f bytes/selection checksum=%d%n",
+                shape, kind, phase, types, elapsed / 1_000d / iterations,
+                (double) allocated / iterations / types, checksum);
+    }
+
+    long checksum(Object value)
+    {
+        if (value instanceof int[])
+        {
+            long result = 1;
+            for (int id : (int[]) value)
+            {
+                result += id + 1;
+            }
+            return result;
+        }
+        if (value instanceof MembershipRows)
+        {
+            long count = 1;
+            for (Object row : ((MembershipRows) value).rows)
+            {
+                if (row instanceof int[])
+                {
+                    count += ((int[]) row).length;
+                }
+                else if (row instanceof BitSet)
+                {
+                    count += ((BitSet) row).cardinality();
+                }
+                else
+                {
+                    count += ((org.roaringbitmap.RoaringBitmap) row).getCardinality();
+                }
+            }
+            return count;
+        }
+        if (value instanceof RuleSelection)
+        {
+            return ((RuleSelection) value).handlers().size() + 1;
+        }
+        long result = 1;
+        for (Object item : (Object[]) value)
+        {
+            result += checksum(item);
+        }
+        return result;
     }
 }

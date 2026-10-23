@@ -1,6 +1,9 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.execution.actions.*;
+import com.taitl.ex.logic.execution.data.*;
 import com.taitl.ex.common.helper.collections.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.evaluables.*;
@@ -9,26 +12,33 @@ import com.taitl.existential.keys.*;
 import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
+import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Maps event key to a set of configured event handlers/expressions (Evs)
- * Example: E<Doc<JSON>> -> Set<On[Е]<Doc<JSON>>>
- * where E is one of Create, Update, Delete, Read, Write, Transit, Port.
+ * Stores configured rule occurrences under their rendered event/subject keys.
+ * Each registration receives an OrderlyEv carrying its declaration ordinal; separate
+ * registrations remain separate even when they refer to the same callback object.
  *
- * Example:
- *   To retrieve the event handlers/expressions defined for the type "Create<Doc<JSON>>":
- *   Set<OrderlyEv> handlers = configuredHandlers.get(EventKey.valueOf(new TypeKey<Create<Doc<JSON>>(){}))
+ * After indexing is finalized, a lazily published RuleInventory compiles the occurrences into
+ * compact declaration identifiers and raw-type pattern buckets. Adding a declaration invalidates
+ * that inventory so EventField can replace its selection generation. Legacy key lookup remains
+ * available alongside compiled selection. Clear releases handlers and resets publication state.
  */
 public class ConfiguredHandlers
 {
     @Up
     protected ConfigurationIndexes ci;
 
+    @Logic
+    protected CompileRuleInventory compileRuleInventory = Creator.create(CompileRuleInventory.class);
+
+    protected volatile RuleInventory inventory;
+
     /** EventKey to Set<OrderlyEv<>> **/
     protected SetMap<String, OrderlyEv<?>> handlers = new SetMap<>();
 
     /** Is indexing done? */
-    protected boolean ready = false;
+    protected volatile boolean ready = false;
 
     public ConfiguredHandlers(ConfigurationIndexes ci)
     {
@@ -68,6 +78,7 @@ public class ConfiguredHandlers
         synchronized (this)
         {
             OrderlyEv<T> orderedValue = ci.maintainGlobalOrder.globallyOrdered(value);
+            inventory = null;
             return handlers.add(key.toString(), orderedValue);
         }
     }
@@ -90,8 +101,29 @@ public class ConfiguredHandlers
         this.ready = ready;
     }
 
-    public void clear()
+    public RuleInventory inventory()
     {
+        RuleInventory current = inventory;
+        if (current == null)
+        {
+            synchronized (this)
+            {
+                current = inventory;
+                if (current == null)
+                {
+                    verify(ready, "Configured handlers index is not ready");
+                    current = compileRuleInventory.call(handlers);
+                    inventory = current;
+                }
+            }
+        }
+        return current;
+    }
+
+    public synchronized void clear()
+    {
+        inventory = null;
+        ready = false;
         handlers.clear();
     }
 }

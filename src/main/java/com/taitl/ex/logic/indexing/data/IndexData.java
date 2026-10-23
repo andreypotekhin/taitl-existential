@@ -5,6 +5,8 @@ import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.stages.validation.data.*;
 import com.taitl.existential.transactions.*;
 
+import java.util.*;
+
 /**
  * Stores the results of indexing process for use in rule evaluations
  * by various processing stages (runtime, validation).
@@ -34,5 +36,8 @@ public class IndexData
         encounteredEventKeys.eventKeys.clear();
         encounteredTypeKeys.typeKeys.clear();
         encounteredUniqueEvents.runtimeKeys.clear();
+        encounteredEventKeys.eventKeys = new LinkedHashSet<>();
+        encounteredTypeKeys.typeKeys = new LinkedHashSet<>();
+        encounteredUniqueEvents.runtimeKeys = new LinkedHashSet<>();
     }
 }

@@ -1,6 +1,7 @@
 package com.taitl.ex.logic.tr;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.concrete.*;
 import com.taitl.ex.logic.tr.data.*;
 import com.taitl.ex.logic.tr.keys.*;
@@ -87,8 +88,7 @@ public class IntentLogic
     public void indexIntent(StageName stageName, Intent<?> intent)
     {
         sane(stageName, "stageName", intent, "intent");
-        StageData data = data(stageName);
-        sane(data, "data");
+        StageData data = tr.stageData().computeIfAbsent(stageName, stage -> Creator.create(StageData.class));
         String typeKey = intent.typeKey().toString();
         for (Ev<?> ev : intent.list())
         {

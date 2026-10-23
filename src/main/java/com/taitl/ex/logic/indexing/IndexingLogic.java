@@ -28,27 +28,22 @@ public class IndexingLogic implements Closeable
         this.ec = ex.configs();
     }
 
-    public <T> void indexEvent(Event<T> event, T o, TypeKey<T> type, Tr tr)
+    public <T> void indexEvent(Event<T> event, T entity, TypeKey<T> type, Tr tr)
     {
-        IndexData indexData = tr.runtimeIndexes();
-        boolean fullNames = ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
-        EventKey<T> eventKey = EventKey.valueOf(event, type, fullNames);
-        RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, o, fullNames);
-        indexData.encounteredUniqueEvents.add(runtimeKey);
-        indexData.encounteredEventKeys.add(eventKey);
-        indexData.encounteredTypeKeys.add(type);
+        indexEvent(RuntimeKey.valueOf(event, type, entity, ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES)), tr);
+    }
+
+    public <T> void indexEvent(RuntimeKey<T> key, Tr tr)
+    {
+        IndexData data = tr.runtimeIndexes();
+        data.encounteredUniqueEvents.add(key);
+        data.encounteredEventKeys.add(key.key());
+        data.encounteredTypeKeys.add(key.typeKey());
     }
 
     public <T> void indexEvent(BiEvent<T> event, TypeKey<T> type, Tr tr)
     {
-        IndexData indexData = tr.runtimeIndexes();
-        boolean fullNames = ex.get(Flags.TYPE_KEYS_USE_FULL_CLASS_NAMES);
-        EventKey<T> eventKey = EventKey.valueOf(event, type, fullNames);
-        // TODO: add clarification, perhaps a business rule, around choice of using event.t1
-        RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, event.t1, fullNames);
-        indexData.encounteredUniqueEvents.add(runtimeKey);
-        indexData.encounteredEventKeys.add(eventKey);
-        indexData.encounteredTypeKeys.add(type);
+        indexEvent(event, event.t1 != null ? event.t1 : event.t0, type, tr);
     }
 
     public void close()

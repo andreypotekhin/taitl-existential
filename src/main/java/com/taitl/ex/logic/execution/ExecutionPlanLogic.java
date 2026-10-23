@@ -7,6 +7,14 @@ import com.taitl.ex.logic.execution.data.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.transactions.*;
 
+/**
+ * Coordinates compilation and transaction binding of an operation's execution profile.
+ * Compilation delegates the stage-participation decision to CompileExecutionPlan; binding
+ * combines that profile with the particular transaction's local requirements.
+ *
+ * ConfigurationLogic owns the bounded cache of compiled plans. This delegate retains no
+ * transaction or entity state and can apply one compiled profile to successive transactions.
+ */
 public class ExecutionPlanLogic
 {
     @Logic

@@ -46,8 +46,14 @@ public class ToMemo
     public <T> Event<T> forExecution(RuntimeKey<T> runtimeKey, List<Ev<T>> evs, Tr tr) throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", evs, "evs");
+        return forExecution(runtimeKey, containsBiHandler(evs), tr);
+    }
+
+    public <T> Event<T> forExecution(RuntimeKey<T> runtimeKey, boolean biHandler, Tr tr) throws ExistentialException
+    {
+        sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();
-        if (event instanceof BiEvent<?> || !containsBiHandler(evs))
+        if (event instanceof BiEvent<?> || !biHandler)
         {
             return event;
         }

@@ -72,14 +72,17 @@ regressions; the new scope changes delivery/evidence priorities, not availabilit
 
 ### Contexts and Type Matching
 
-Status: delivered. Delivery: [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
+Status: complete for the admitted Sprint 07 scope on 2026-10-23.
+Delivery: [Sprint 07](sprints/Sprint07_V2ContextsAndTypeMatching.md).
 
-Apply parent/wildcard rules and broader generic/subclass/interface matching with deterministic semantics. Compile
-runtime execution plans and extend EventField for validation-only reporting and shared matching across large entity
-populations. Selected behavior and prototype/measurement gates are recorded in the
-[delivery plan](../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md); implementation,
-acceptance, artifact, and exploratory performance evidence are recorded. Byte-level retained-heap profiling remains a
-follow-up limitation.
+Parent/wildcard ordering, supported generic/subclass/interface matching, compiled execution profiles, and pre-expansion
+EventField selections are implemented and verified. Sorted compact declaration arrays and immutable ordered handlers
+were selected using the real-pipeline comparison; caches are bounded with generation, concurrency, failure, and cleanup
+coverage. The [archived delivery
+plan](../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md) and
+[performance topic](../performance/topics/ExecutionPlans.md) link passing root/consumer/reactor checks, clean artifacts,
+three-process cold/warm and complete workflows, allocation, reachable graphs, and explicit measurement limits.
+Broader stage policy remains in Sprint 08; separate future proposals below still require their own review.
 
 The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
 regressions; the new scope changes delivery/evidence priorities, not availability of code already present.

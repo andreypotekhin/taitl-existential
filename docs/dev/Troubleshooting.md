@@ -78,3 +78,21 @@ then verify that data, a report, and the check are actually produced. Do not inf
 When using `mvn -Dtest=ExistsTest test`, Surefire 2.22.2 may select no tests when the class's tests are all nested.
 Use `mvn '-Dtest=ExistsTest*' test` and inspect the actual count (13 cases at the Sprint 02 baseline). Full-suite discovery
 includes these nested cases. Do not set `failIfNoTests=false` to present an empty focused run as passing evidence.
+
+### Problem (Maven): Local installation denied by the execution sandbox
+
+When: tests and verification pass, but `maven-install-plugin` fails with `Operation not permitted` while writing to
+`~/.m2/repository`.
+Cause: the local Maven repository lies outside the execution sandbox's writable paths.
+Fix: rerun the authorized build with permission to write the local repository, or configure `-Dmaven.repo.local` to
+an allowed writable directory with the needed dependencies available. Confirm that installation completes; passing
+verification alone does not make the failed install successful.
+
+### Problem (Benchmarks): Reachable-memory evidence is unavailable
+
+When: a profile prints `-1` reachable bytes or requests the test-only BenchmarkMemory agent.
+Cause: ordinary benchmark execution measures time/allocation without attaching instrumentation. `-1` means unknown,
+not zero retained memory. Missing module access can also prevent complete graph traversal.
+Fix: follow the [reachable-memory profiling procedure](performance/Readme.md#reachable-memory-profiling), attach the
+agent and required module opens, and set `-Dbenchmark.heap.required=true` when collecting heap evidence. The measured
+reachable graph excludes class/static metadata and weak referents; it is not exclusive dominator retention.

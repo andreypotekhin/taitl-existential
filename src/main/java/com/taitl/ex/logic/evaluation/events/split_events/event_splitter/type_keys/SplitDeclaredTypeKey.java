@@ -10,6 +10,15 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Expands a declared TypeKey for callers of the legacy split-key interface.
+ * Rendered generic variants and captured upper bounds become separate lookup descriptors;
+ * native metadata is available when an anonymous TypeKey subclass captures a parameterized type.
+ *
+ * The compact selection path instead checks structural arguments independently and does not
+ * use this variant expansion. Keeping this adapter preserves existing expanded-key callers
+ * without imposing their allocation cost on warm EventField dispatch.
+ */
 public class SplitDeclaredTypeKey
 {
     @Logic

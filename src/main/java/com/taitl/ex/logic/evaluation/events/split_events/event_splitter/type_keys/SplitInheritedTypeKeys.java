@@ -2,120 +2,48 @@ package com.taitl.ex.logic.evaluation.events.split_events.event_splitter.type_ke
 
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.types.*;
 import com.taitl.existential.keys.*;
 
 import java.lang.reflect.*;
 import java.util.*;
 
+/**
+ * Adapts resolved native hierarchy metadata to the legacy expanded-key interface.
+ * TypeHierarchyLogic performs generic substitution and ClassValue caching; this action renders
+ * each non-Object signature and adds the declared variants and upper-bound lookup keys expected
+ * by existing split-key callers.
+ *
+ * The returned set is immutable and contains descriptors rather than reported entities.
+ * New compact dispatch uses the same hierarchy facts directly through structural TypePatterns,
+ * avoiding expanded wildcard strings on its selection path.
+ */
 public class SplitInheritedTypeKeys
 {
-    private static final ClassValue<Map<Boolean, Set<TypeKey<?>>>> HIERARCHY_TYPES =
-            new ClassValue<Map<Boolean, Set<TypeKey<?>>>>() {
-                protected Map<Boolean, Set<TypeKey<?>>> computeValue(Class<?> runtimeClass)
-                {
-                    SplitInheritedTypeKeys logic = new SplitInheritedTypeKeys();
-                    Map<Boolean, Set<TypeKey<?>>> result = new HashMap<>();
-                    result.put(false, logic.hierarchyTypes(runtimeClass, false));
-                    result.put(true, logic.hierarchyTypes(runtimeClass, true));
-                    return Collections.unmodifiableMap(result);
-                }
-            };
+    @Logic
+    protected TypeHierarchyLogic hierarchy = Creator.create(TypeHierarchyLogic.class);
 
     @Logic
-    protected SplitDeclaredTypeKey splitDeclaredTypeKey = Creator.create(SplitDeclaredTypeKey.class);
+    protected SplitDeclaredTypeKey declared = Creator.create(SplitDeclaredTypeKey.class);
 
     @Logic
-    protected AddUpperBoundTypeKeys addUpperBoundTypeKeys = Creator.create(AddUpperBoundTypeKeys.class);
+    protected AddUpperBoundTypeKeys bounds = Creator.create(AddUpperBoundTypeKeys.class);
 
-    public Set<TypeKey<?>> call(Class<?> runtimeClass, boolean useFullName)
-    {
-        return HIERARCHY_TYPES.get(runtimeClass).get(useFullName);
-    }
-
-    protected Set<TypeKey<?>> hierarchyTypes(Class<?> runtimeClass, boolean useFullName)
+    public Set<TypeKey<?>> call(Class<?> runtimeClass, boolean fullNames)
     {
         Set<TypeKey<?>> result = new LinkedHashSet<>();
-        collect(runtimeClass, Collections.emptyMap(), result, useFullName);
+        for (Type type : hierarchy.types(runtimeClass))
+        {
+            if (type.equals(Object.class))
+            {
+                continue;
+            }
+            result.addAll(declared.call(TypeKey.valueOf(type, fullNames)));
+            if (type instanceof ParameterizedType)
+            {
+                bounds.call((ParameterizedType) type, result, fullNames);
+            }
+        }
         return Collections.unmodifiableSet(result);
-    }
-
-    protected void collect(Type type, Map<TypeVariable<?>, Type> substitutions, Set<TypeKey<?>> result,
-            boolean useFullName)
-    {
-        Type resolved = resolve(type, substitutions);
-        Class<?> raw = rawClass(resolved);
-        if (raw == null)
-        {
-            return;
-        }
-
-        Map<TypeVariable<?>, Type> bindings = bindings(resolved, raw, substitutions);
-        if (!raw.equals(Object.class))
-        {
-            result.addAll(splitDeclaredTypeKey.call(TypeKey.valueOf(resolved, useFullName)));
-            if (resolved instanceof ParameterizedType)
-            {
-                addUpperBoundTypeKeys.call((ParameterizedType) resolved, result, useFullName);
-            }
-        }
-        Type parent = raw.getGenericSuperclass();
-        if (parent != null)
-        {
-            collect(parent, bindings, result, useFullName);
-        }
-        for (Type implemented : raw.getGenericInterfaces())
-        {
-            collect(implemented, bindings, result, useFullName);
-        }
-    }
-
-    protected Map<TypeVariable<?>, Type> bindings(Type resolved, Class<?> raw,
-            Map<TypeVariable<?>, Type> substitutions)
-    {
-        Map<TypeVariable<?>, Type> bindings = new HashMap<>();
-        if (resolved instanceof ParameterizedType)
-        {
-            TypeVariable<?>[] variables = raw.getTypeParameters();
-            Type[] arguments = ((ParameterizedType) resolved).getActualTypeArguments();
-            for (int i = 0; i < variables.length; i++)
-            {
-                bindings.put(variables[i], resolve(arguments[i], substitutions));
-            }
-        }
-        return bindings;
-    }
-
-    protected Type resolve(Type type, Map<TypeVariable<?>, Type> substitutions)
-    {
-        if (type instanceof TypeVariable<?> && substitutions.containsKey(type))
-        {
-            return resolve(substitutions.get(type), substitutions);
-        }
-        if (type instanceof ParameterizedType)
-        {
-            ParameterizedType parameterized = (ParameterizedType) type;
-            Type[] arguments = parameterized.getActualTypeArguments();
-            Type[] resolved = new Type[arguments.length];
-            for (int i = 0; i < arguments.length; i++)
-            {
-                resolved[i] = resolve(arguments[i], substitutions);
-            }
-            return new ResolvedParameterizedType((Class<?>) parameterized.getRawType(), resolved,
-                    parameterized.getOwnerType());
-        }
-        return type;
-    }
-
-    protected Class<?> rawClass(Type type)
-    {
-        if (type instanceof Class<?>)
-        {
-            return (Class<?>) type;
-        }
-        if (type instanceof ParameterizedType && ((ParameterizedType) type).getRawType() instanceof Class<?>)
-        {
-            return (Class<?>) ((ParameterizedType) type).getRawType();
-        }
-        return null;
     }
 }

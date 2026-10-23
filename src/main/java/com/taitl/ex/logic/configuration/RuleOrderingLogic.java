@@ -9,6 +9,15 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Orders applicable contexts from the root toward the concrete operation.
+ * At each path level, matching wildcard contexts precede the concrete context, while configured
+ * order is retained among wildcard matches. A context reached at several levels appears once,
+ * deduplicated by identity rather than user-defined equality.
+ *
+ * The result provides one deterministic traversal for rule indexing and operation selection.
+ * WildcardContextLogic owns pattern matching; this delegate owns traversal and ordering.
+ */
 public class RuleOrderingLogic
 {
     @Logic

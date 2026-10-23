@@ -40,7 +40,7 @@ public class ConfigurationLogic implements Closeable
     protected volatile ConfigBuilder configBuilder;
     protected volatile Config config;
     public SetMap<String, Context> contexts = new SetMap<>();
-    protected Map<String, ExecutionPlan> executionPlans = new HashMap<>();
+    protected BoundedCache<String, ExecutionPlan> executionPlans = new BoundedCache<>(128);
 
     public ConfigurationLogic(ExistentialConfigs ec)
     {
@@ -113,6 +113,14 @@ public class ConfigurationLogic implements Closeable
     public void close()
     {
         configBuilder = null;
+        Config current = config;
+        if (current != null)
+        {
+            for (StageName stage : StageName.values())
+            {
+                current.indexes(stage).close();
+            }
+        }
         config = null;
         contexts.clear();
         executionPlans.clear();
@@ -131,6 +139,11 @@ public class ConfigurationLogic implements Closeable
     public void indexConfig(String op, Config config)
     {
         sane(op, "op", config, "config");
+        ConfigurationIndexes prepared = config.indexes(op, StageName.VALIDATION);
+        if (prepared.configuredHandlers.ready() && prepared.configuredIntents.ready())
+        {
+            return;
+        }
         synchronized (config)
         {
             ConfigurationIndexes validationIndexes = config.indexes(op, StageName.VALIDATION);
@@ -150,10 +163,7 @@ public class ConfigurationLogic implements Closeable
     {
         sane(op, "op");
         Config current = config(op);
-        synchronized (current)
-        {
-            return executionPlans.computeIfAbsent(op, key -> executionPlanLogic.compile(key, current));
-        }
+        return executionPlans.resolve(op, () -> executionPlanLogic.compile(op, current));
     }
 
     /* Attributes */

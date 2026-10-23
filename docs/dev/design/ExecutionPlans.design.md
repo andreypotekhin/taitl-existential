@@ -16,26 +16,29 @@ and type compatibility belongs to
 
 ## Concepts and responsibilities
 
-`ExecutionPlan` is immutable data: the resolved operation, ordered declaration references, stage activity, event
-selection information, and dependencies such as before-state memo requirements. It contains configuration references,
-never reported entities, transaction memo values, or validation results. Each rule registration has its own declaration
-identity; using the same callback in two registrations does not make them one declaration.
+`ExecutionPlan` is an immutable stage-activity profile. Operation/stage indexes also own a compiled `RuleInventory`:
+ordered declaration references, compact IDs, and raw-subject-type pattern buckets. `RulePattern` groups declarations
+with the same event/type pattern without merging their identities. Plans and inventories contain configuration
+references, never reported entities, transaction memo values, or validation results. Registering a callback twice
+creates two declaration IDs.
 
-`ExecutionPlanLogic` coordinates compilation and transaction binding. `CompileExecutionPlan` creates a base plan from
-finalized configuration. `BindExecutionPlan` combines that plan with factory-produced and caller-supplied transaction
-rules. `ResolveRuleSelection` performs a previously unseen dispatch lookup and publishes its ordered result through
-`EventField`. These are internal delegates/actions, constructed through the existing `Creator` and `@Logic` patterns.
-Their concrete signatures and data holders remain internal implementation details.
+`ExecutionPlanLogic`, `CompileExecutionPlan`, and `BindExecutionPlan` select report-time work after transaction
+preparation. `CompileRuleInventory` compiles indexed declarations. `ResolveSelectionInput` resolves event shape and
+per-report prerequisites on a miss; `ResolveReportedTypes` recovers structural descriptors. `ResolveRuleSelection`
+retrieves relevant pattern buckets, delegates compatibility to `TypeMatchingLogic`/`MatchTypePattern`, and uses
+`MergeRuleMembership` to produce the ordered selection. `EventField` owns publication and caching. These are internal
+Creator/Logic delegates; there is no public strategy or execution-mode API.
 
-The existing `ConfigurationLogic` delegates context resolution to `ContextResolutionLogic`. The latter uses
-`WildcardContextLogic` for matching and `RuleOrderingLogic` for parent-level/declaration ordering. `TypeHierarchyLogic`
-resolves class/interface signatures and generic substitutions. `TypeMatchingLogic` tests reported descriptors against
-configured patterns. `ExecutionPlanLogic` composes these results; it does not duplicate their policies.
+`ConfigurationLogic` retains its existing role. `ContextResolutionLogic`, `WildcardContextLogic`, and
+`RuleOrderingLogic` share parent/declaration ordering. `TypeHierarchyLogic` resolves superclass/interface signatures
+and generic substitutions through ClassValue metadata, without rules or instance closures. `TypePattern` holds parsed
+structure and optional known reflection Type metadata. Direct wildcard bounds are tested independently against that
+metadata, including parameterized bounds, rather than generating wildcard products. Plain nested arguments remain
+invariant. Symbolic strings alone do not supply subtype evidence.
 
-Business rules such as `RequiresReportTimeEvaluation`, `RequiresMemo`, and `RequiresStageTraversal` encode decisions
-about required work. They operate on the compiled rule inventory, not on entity values. Actions orchestrate these rules;
-data objects do not grow into general-purpose dispatchers. Keep classes focused and use smaller action/rule delegates
-when a responsibility becomes substantial.
+`RequiresReportTimeEvaluation` and `RequiresStageTraversal` express which work is necessary. `ToMemo` retains memo
+requirements and per-entity payload conversion; another memo-policy class would duplicate that responsibility.
+Actions orchestrate these decisions, and data holders remain focused on structure, indexes, and ordered references.
 
 ## Compilation and binding
 
@@ -92,9 +95,14 @@ needed for elementary/combined events and before/after forms. Per-event memo ava
 still be checked where required; sharing a selection cannot reuse another entity's before-state. Distinguish generic
 instantiations and class loaders. Human-readable type-key strings alone are insufficient for metadata-aware identity.
 
+The existing missing-memo admission policy remains scoped to the declared subject. Available payloads can select
+inherited bi-event rules; explicit endpoints continue to carry their own values. This optimization does not widen
+the stage or memo policy.
+
 On a cache miss, resolve known generic hierarchy information, retrieve relevant raw-type pattern buckets, test the
-candidate patterns, and collect declaration identities. Order the result using `RuleOrderingLogic` and cache a compact
-immutable sequence, including an empty sequence for a proven empty selection. Repeated use should reach that sequence
+candidate patterns, and collect declaration identities. Use declaration IDs established by the resolved context order
+and cache a compact immutable sequence, including an empty sequence for a proven empty selection. Repeated use should
+reach that sequence
 without reconstructing an expanded `MultiKey`, repeating reflection, or sorting handlers again.
 
 For N recorded events, D distinct selection signatures, and A actual applicable callback invocations, the intended
@@ -104,28 +112,26 @@ fold according to the established runtime identity contract.
 
 ## Membership representation
 
-Use compact instance-owned IDs for configured type patterns and declarations. A cached row describes one observed
-type descriptor's matches; it is not allocated per entity. With 200 descriptors and 256 rule slots, a dense row table
-has 6.25 KiB of bit payload before metadata, object overhead, and operation/stage selections.
+Configured patterns own sorted integer arrays of compact declaration IDs. Arrays are shared among matching paths;
+they are not allocated per reported entity. `MergeRuleMembership` merges these sorted rows, removes repeated discovery
+of one declaration, and preserves the ID order established during compilation. Separate registrations of the same
+callback remain separate entries. Raw-type buckets restrict matching to relevant configured patterns.
 
-Compare short sorted integer arrays, JDK `BitSet` rows, and Java `RoaringBitmap` in the initial prototype. Sparse arrays
-suit small matching sets; bitsets can make unions and intersections cheap at hundreds of rule slots. Roaring adapts
-among array, bitmap, and run containers within integer-ID chunks. Its overhead and benefits must be measured on both
-the primary compact-ID workload and larger sparse/dense or clustered sets, rather than inferred from entity count.
-The [Roaring project documentation][roaring] describes those representations and notes that small universes can favor
-uncompressed bitsets.
+Sorted arrays, JDK BitSet, and test-scoped RoaringBitmap were compared with the same real descriptor/declaration rows,
+construction, combination, and ordered enumeration. The compact synthetic prototype favored BitSet; prepared-row
+measurements favored arrays for time, while BitSet used less memory for broad rows. Broad configured rows are shared
+once per pattern in production, so repeatedly storing one broad row per descriptor overstates that space tradeoff.
+Sorted arrays are the lowest-complexity competitive choice for hundreds of compact declaration IDs. Roaring remains
+a test-only comparator and adds no runtime dependency. Larger synthetic ID gaps do not justify wasting production IDs.
 
-Include construction, union/intersection, enumeration into the final selection, allocation, and retained heap in the
-comparison. Serialized bitmap size alone is not retained-heap evidence. Keep Roaring test-scoped during the prototype;
-production adoption requires a measured advantage that justifies its dependency and distribution costs. The selected
-row representation stays internal, and warm EventField selections use the same immutable ordered sequence for all
-candidates. Membership does not determine execution order. Do not substitute callback-object equality for declaration
-identity.
+Cold matching produces a `RuleSelection` backed by an immutable handler array. All candidates use that same warm
+execution form; warm dispatch performs no membership union, expanded MultiKey construction, or handler sorting.
+Membership never determines callback order independently of declaration order. The
+[performance topic](../performance/topics/ExecutionPlans.md) links measurements and their limits; no numeric gate or
+application throughput promise follows from the representation choice.
 
-Avoid a full matrix over all loaded JVM types, exhaustive generic-variant products, and preallocation for every
-operation/stage/type combination. Compile known metadata once and populate observed selections lazily. Representation
-and cache-capacity choices must be justified by comparable time/allocation/retention measurements; they are internal
-choices that do not alter matching semantics.
+Avoid full matrices over loaded JVM types, exhaustive generic wildcard combinations, and preallocation for every
+operation/stage/type combination. Compile configured patterns once, then populate observed selections lazily.
 
 ## Ownership, concurrency, and diagnostics
 
@@ -137,11 +143,22 @@ against concurrent mutation.
 Keep configuration-specific IDs, rows, selections, warning suppression, and closures instance-owned. Shared class
 metadata, if used, contains no library rules or transaction state and must permit class-loader reclamation. Bound
 runtime descriptor/operation cache growth independently of reported entity count; eviction may require recomputation
-but cannot change applicability or ordering. Choose and record concrete bounds using the workload evidence. Retaining
-every historical warning signature in a second unbounded registry is not acceptable.
+but cannot change applicability or ordering. Each EventField retains at most 1,024 combined compact/legacy selections,
+including empty results; transaction overlays retain at most 1,024 merged selections. Operation inventories and stage
+profiles each retain at most 128 operations. FIFO bounds allow hits to avoid the insertion lock. Capacity covers the
+primary
+200-descriptor workload and the measured 500-signature mixed-event workload; churn tests cross both limits.
+
+Unresolved-warning suppression retains 64 signatures for the whole evaluation instance and clears at shutdown. The
+legacy descriptor cache retains at most 4,096 entries; its key holds weak class references so capacity alone does not
+pin a class loader. Shared hierarchy ClassValue entries contain structural metadata only. Object-graph measurements
+exclude JVM/class metadata and weak referents; entry bounds are not byte-level heap limits.
 
 Transaction disposal clears event records, memo values, overlays, and local selections on success/failure according to
-the existing lifecycle contract. Successful library shutdown releases instance-owned caches after active work drains.
+the existing lifecycle contract. Event-index holders replace cleared backing sets so retained terminal handles do not
+keep large empty tables. Memo storage, stage data, and begin encounter tracking are allocated only when needed.
+Bi-events use the available endpoint as entity identity, including deletion ports whose after endpoint is null.
+Successful library shutdown releases instance-owned caches after active work drains.
 Caller-owned relationship sources and object contents remain caller-owned.
 
 Unresolvable generic information is handled under the
@@ -165,8 +182,9 @@ not establish correctness or resource hygiene. Measurement conventions are in th
 ## Documentation discipline
 
 Public API JavaDocs explain supported matching, evaluation timing, warnings, and caller responsibilities where those
-behaviors are exposed. Internal classes receive only necessary rationale for non-obvious ordering, ownership,
-publication, and compatibility constraints. Avoid routine parameter/return boilerplate in implementation packages.
+behaviors are exposed. Non-trivial internal classes explain their purpose, collaborators, ownership,
+publication, and compatibility constraints in class-level JavaDocs, with additional method rationale where needed. Avoid
+routine parameter/return boilerplate in implementation packages.
 Design describes the solution; schedules, milestones, unresolved delivery choices, and evidence status belong in the
 execution plan and project records.
 

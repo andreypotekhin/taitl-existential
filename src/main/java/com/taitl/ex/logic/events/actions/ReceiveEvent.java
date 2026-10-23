@@ -35,19 +35,32 @@ public class ReceiveEvent
     public <T> void event(Event<T> event, T t, TypeKey<T> type, Tr tr) throws ExistentialException
     {
         sane(event, "event", t, "t", type, "type", tr, "tr");
-        RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, t, useFullClassNames());
-        evaluateStages(runtimeKey, tr);
-        // Add event to indexes for late-stage processing
-        indexingLogic.indexEvent(event, t, type, tr);
+        if (tr.beginActive() || tr.immediateActive())
+        {
+            RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, t, useFullClassNames());
+            evaluateStages(runtimeKey, tr);
+            indexingLogic.indexEvent(runtimeKey, tr);
+        }
+        else
+        {
+            indexingLogic.indexEvent(event, t, type, tr);
+        }
     }
 
     public <T> void event(BiEvent<T> event, TypeKey<T> type, Tr tr) throws ExistentialException
     {
         sane(event, "event", type, "type", tr, "tr");
-        T entity = event.t1 != null ? event.t1 : event.t0;
-        RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, entity, useFullClassNames());
-        evaluateStages(runtimeKey, tr);
-        indexingLogic.indexEvent(event, type, tr);
+        if (tr.beginActive() || tr.immediateActive())
+        {
+            T entity = event.t1 != null ? event.t1 : event.t0;
+            RuntimeKey<T> runtimeKey = RuntimeKey.valueOf(event, type, entity, useFullClassNames());
+            evaluateStages(runtimeKey, tr);
+            indexingLogic.indexEvent(runtimeKey, tr);
+        }
+        else
+        {
+            indexingLogic.indexEvent(event, type, tr);
+        }
     }
 
     protected <T> void evaluateStages(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException

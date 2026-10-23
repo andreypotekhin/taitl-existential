@@ -1,6 +1,7 @@
 package com.taitl.ex.concrete;
 
 import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constants.*;
 
@@ -16,7 +17,7 @@ public class ConcreteConfig
 {
     protected List<Context> contexts;
     protected Map<StageName, ConfigurationIndexes> stageIndexes;
-    protected Map<String, Map<StageName, ConfigurationIndexes>> opStageIndexes;
+    protected OperationIndexes operationIndexes;
     protected boolean useFullClassNames;
 
     public void addContext(Context context)
@@ -39,27 +40,12 @@ public class ConcreteConfig
         return indexes;
     }
 
-    public ConfigurationIndexes indexes(String op, StageName stageName)
+    public ConfigurationIndexes indexes(String op, StageName stageName, Config config)
     {
         sane(op, "op", stageName, "stageName");
         String opKey = op.trim();
         verify(!opKey.isEmpty(), "op cannot be blank");
-        Map<StageName, ConfigurationIndexes> opIndexes = opStageIndexes.get(opKey);
-        if (opIndexes == null)
-        {
-            synchronized (opStageIndexes)
-            {
-                opIndexes = opStageIndexes.get(opKey);
-                if (opIndexes == null)
-                {
-                    opIndexes = createOpIndexes();
-                    opStageIndexes.put(opKey, opIndexes);
-                }
-            }
-        }
-        ConfigurationIndexes indexes = opIndexes.get(stageName);
-        verify(indexes != null, "ConfigurationIndexes are missing for op/stage " + opKey + "/" + stageName);
-        return indexes;
+        return operationIndexes.resolve(opKey, config, useFullClassNames).get(stageName);
     }
 
     public boolean useFullClassNames()
@@ -74,7 +60,7 @@ public class ConcreteConfig
         {
             indexes.useFullClassNames(useFullClassNames);
         }
-        for (Map<StageName, ConfigurationIndexes> opIndexes : opStageIndexes.values())
+        for (Map<StageName, ConfigurationIndexes> opIndexes : operationIndexes.values())
         {
             for (ConfigurationIndexes indexes : opIndexes.values())
             {
@@ -83,15 +69,4 @@ public class ConcreteConfig
         }
     }
 
-    protected Map<StageName, ConfigurationIndexes> createOpIndexes()
-    {
-        Map<StageName, ConfigurationIndexes> opIndexes = new EnumMap<>(StageName.class);
-        for (StageName stageName : StageName.values())
-        {
-            ConfigurationIndexes indexes = new ConcreteConfigBuilder()
-                    .createIndexes(useFullClassNames);
-            opIndexes.put(stageName, indexes);
-        }
-        return opIndexes;
-    }
 }

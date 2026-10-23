@@ -61,6 +61,42 @@ class NightCityStoryTest
         }
     }
 
+    @Test
+    void reusesSparseSelectionsAndFoldsRepeatedReports() throws Exception
+    {
+        CityWorkload workload = new CityWorkload(400, 200);
+        AtomicLong evaluations = new AtomicLong();
+        try (Existential ex = new Existential())
+        {
+            Existential previous = Ex.instance(ex);
+            try
+            {
+                new ConfigureLooks().configureSelectionWorkload("/night-city/sparse", workload, 100,
+                        "sparse", evaluations);
+                Tr tr = ex.begin("/night-city/sparse");
+                try
+                {
+                    for (CityWorkload.Report report : workload.looks)
+                    {
+                        create(tr, report);
+                        create(tr, report);
+                    }
+                    assertEquals(0, evaluations.get());
+                    tr.commit();
+                    assertEquals(200, evaluations.get());
+                }
+                finally
+                {
+                    tr.close();
+                }
+            }
+            finally
+            {
+                Ex.instance(previous);
+            }
+        }
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private static void create(Tr tr, CityWorkload.Report report) throws Exception
     {

@@ -1,6 +1,10 @@
 package com.taitl.ex.logic.types;
 
 import com.taitl.ex.cross.logging.*;
+import com.taitl.ex.common.helper.collections.*;
+import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.types.data.*;
 import com.taitl.existential.keys.*;
 
 import java.lang.reflect.*;
@@ -8,10 +12,35 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Coordinates structural type matching and diagnostics for unsupported or erased types.
+ * Compatibility delegates to MatchTypePattern; configuration rejects lower-bounded rules with
+ * an actionable remedy, while reporting can warn when a generic runtime class lacks an explicit
+ * TypeKey. Warning enablement is supplied by the caller's resolved configuration.
+ *
+ * Reflection diagnostics are cached per Class with ClassValue. A bounded per-instance cache
+ * suppresses repeated warning signatures and is cleared on library close, avoiding an
+ * unbounded operation-name or application-class registry.
+ */
 public class TypeMatchingLogic
 {
+    protected static ClassValue<Boolean> unresolvedTypes = new ClassValue<Boolean>() {
+        protected Boolean computeValue(Class<?> type)
+        {
+            return unresolvedClass(type);
+        }
+    };
+
+    @Logic
+    protected MatchTypePattern matchTypePattern = Creator.create(MatchTypePattern.class);
+
     private static final int WARNING_CAPACITY = 64;
-    private final Map<Class<?>, Set<String>> warned = new WeakHashMap<>();
+    protected BoundedCache<List<?>, Boolean> warned = new BoundedCache<>(WARNING_CAPACITY);
+
+    public boolean matches(TypePattern configured, TypePattern reported)
+    {
+        return matchTypePattern.call(configured, reported);
+    }
 
     public void validateRuleType(TypeKey<?> typeKey)
     {
@@ -32,19 +61,14 @@ public class TypeMatchingLogic
         {
             return;
         }
-        String warningKey = op + "|" + typeKey;
+        List<?> warningKey = Arrays.asList(runtimeClass, op, typeKey.toString());
         synchronized (warned)
         {
-            Set<String> warnings = warned.computeIfAbsent(runtimeClass, key -> new LinkedHashSet<>());
-            if (warnings.contains(warningKey))
+            if (warned.get(warningKey) != null)
             {
                 return;
             }
-            if (warnings.size() == WARNING_CAPACITY)
-            {
-                warnings.remove(warnings.iterator().next());
-            }
-            warnings.add(warningKey);
+            warned.put(warningKey, true);
         }
         if (Log.isWarnEnabled())
         {
@@ -57,9 +81,19 @@ public class TypeMatchingLogic
         }
     }
 
+    public void close()
+    {
+        warned.clear();
+    }
+
     public boolean hasUnresolvedGenerics(Class<?> runtimeClass)
     {
         sane(runtimeClass, "runtimeClass");
+        return unresolvedTypes.get(runtimeClass);
+    }
+
+    protected static boolean unresolvedClass(Class<?> runtimeClass)
+    {
         if (runtimeClass.getTypeParameters().length > 0)
         {
             return true;
@@ -79,7 +113,7 @@ public class TypeMatchingLogic
         return false;
     }
 
-    protected boolean unresolved(Type type)
+    protected static boolean unresolved(Type type)
     {
         if (type instanceof TypeVariable<?>)
         {

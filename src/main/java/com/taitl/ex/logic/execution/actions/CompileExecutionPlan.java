@@ -9,6 +9,14 @@ import com.taitl.existential.constants.*;
 
 import java.util.*;
 
+/**
+ * Compiles the shared report-stage profile from an operation's finalized indexes.
+ * BEGIN and IMMEDIATE require report-time work when their indexes contain handlers or intents;
+ * other stages remain controlled by their transaction boundaries.
+ *
+ * The resulting ExecutionPlan contains only stage participation. Handler selection and
+ * transaction-local additions are resolved separately, so compilation retains no payload.
+ */
 public class CompileExecutionPlan
 {
     @Logic

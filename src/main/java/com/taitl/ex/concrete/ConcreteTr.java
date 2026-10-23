@@ -59,7 +59,7 @@ public class ConcreteTr
     protected Map<StageName, StageData> stageData = new EnumMap<>(StageName.class);
     protected List<Transaction> transactions = new ArrayList<>();
     protected Set<Transaction> already = Collections.newSetFromMap(new IdentityHashMap<>());
-    protected Set<String> beginEncounteredEventKeys = new LinkedHashSet<>();
+    protected Set<String> beginEncounteredEventKeys;
     protected boolean beginActive;
     protected boolean immediateActive;
     protected boolean closed;
@@ -77,11 +77,6 @@ public class ConcreteTr
         this.el = el;
         runtimeIndexes = Creator.create(IndexData.class);
         validationData = Creator.create(ValidationData.class, new Class[] { ConcreteTr.class }, this);
-        memoData = Creator.create(MemoData.class);
-        for (StageName stageName : StageName.values())
-        {
-            stageData.put(stageName, Creator.create(StageData.class));
-        }
         intentLogic = Creator.create(IntentLogic.class, new Class[] { ConcreteTr.class }, this);
         indexIntents = Creator.create(IndexIntents.class, new Class[] { ConcreteTr.class, IntentLogic.class },
                 this, intentLogic);
@@ -215,6 +210,10 @@ public class ConcreteTr
     public <T> void memo(T before, T live, TypeKey<T> typeKey) throws ExistentialException
     {
         requireOpen("register memo state");
+        if (memoData == null)
+        {
+            memoData = Creator.create(MemoData.class);
+        }
         memoData.put(live, before, typeKey);
     }
 
@@ -227,13 +226,15 @@ public class ConcreteTr
     public <T> T beforeState(T live, TypeKey<T> typeKey)
     {
         requireMemos();
-        return memoData.get(live, typeKey);
+        sane(live, "live", typeKey, "typeKey");
+        return memoData == null ? null : memoData.get(live, typeKey);
     }
 
     public <T> boolean hasMemo(T live, TypeKey<T> typeKey)
     {
         requireMemos();
-        return memoData.contains(live, typeKey);
+        sane(live, "live", typeKey, "typeKey");
+        return memoData != null && memoData.contains(live, typeKey);
     }
 
     public <T> void write(T entity, TypeKey<T> type) throws ExistentialException
@@ -325,7 +326,8 @@ public class ConcreteTr
     public EventField eventField(StageName stageName, EventField base)
     {
         sane(stageName, "stageName", base, "base");
-        return stageData(stageName).eventField(base);
+        StageData data = stageData.get(stageName);
+        return data == null ? base : data.eventField(base);
     }
 
     public List<EventHandler<?>> intentHandlers(EventType eventType, String typeKey)
@@ -350,7 +352,8 @@ public class ConcreteTr
 
     public boolean hasPreparedHandlers(StageName stageName)
     {
-        return stageData(stageName).hasPreparedHandlers();
+        StageData data = stageData.get(stageName);
+        return data != null && data.hasPreparedHandlers();
     }
 
     public void activateReportStages(boolean begin, boolean immediate)
@@ -363,6 +366,10 @@ public class ConcreteTr
     {
         sane(runtimeKey, "runtimeKey");
         String key = runtimeKey.key().toString();
+        if (beginEncounteredEventKeys == null)
+        {
+            beginEncounteredEventKeys = new LinkedHashSet<>();
+        }
         return beginEncounteredEventKeys.add(key);
     }
 
@@ -389,8 +396,11 @@ public class ConcreteTr
             {
                 data.close();
             }
-            memoData.clear();
-            memoData = null;
+            if (memoData != null)
+            {
+                memoData.clear();
+                memoData = null;
+            }
             transactions = null;
             tr = null;
             tl = null;
@@ -441,14 +451,12 @@ public class ConcreteTr
 
     protected void requireMemos()
     {
-        verify(memoData != null, "Transaction memo state is not available");
+        verify(!closed, "Transaction memo state is not available");
     }
 
     protected StageData stageData(StageName stageName)
     {
         sane(stageName, "stageName");
-        StageData data = stageData.get(stageName);
-        verify(data != null, String.format("No stage data registered for %s", stageName));
-        return data;
+        return stageData.computeIfAbsent(stageName, stage -> Creator.create(StageData.class));
     }
 }

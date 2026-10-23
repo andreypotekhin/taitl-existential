@@ -6,7 +6,16 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 
-/** Keeps a bounded set of resolved descriptors used during event dispatch. */
+/**
+ * Caches immutable expanded descriptor sets for the legacy key-splitting entry point.
+ * The key includes the descriptor text, actual descriptor/runtime Class identities, and naming
+ * mode, preventing same-named types in different class loaders from sharing an entry.
+ *
+ * A fixed FIFO budget limits resident descriptors; hits bypass the insertion lock, while cold
+ * resolution and publication are serialized. Keys use weak class references and values contain
+ * rendered descriptors, allowing application classes to unload without waiting for FIFO eviction.
+ * The compact EventField path performs its own lookup before this expansion is needed.
+ */
 public class TypeDescriptorCache
 {
     public static final int CAPACITY = 4096;

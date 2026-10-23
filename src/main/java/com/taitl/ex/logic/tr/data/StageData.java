@@ -30,6 +30,10 @@ public class StageData
             this.preparedIndexes.close();
         }
         this.preparedIndexes = preparedIndexes;
+        if (overlay != null)
+        {
+            overlay.close();
+        }
         overlay = null;
     }
 

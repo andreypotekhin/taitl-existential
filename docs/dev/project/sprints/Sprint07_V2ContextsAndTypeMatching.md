@@ -1,22 +1,15 @@
 # Sprint 07: V2 Contexts and Type Matching
 
-Status: complete; implementation and acceptance evidence recorded through 2026-10-23. Dates/capacity: unassigned. Epic:
-[Contexts and Type Matching](../Backlog.md#contexts-and-type-matching). Release: [V2](../V2.md).
-Design readiness: selected behavior and integration choices are recorded. Verification: root, standalone consumer, and
-reactor builds pass; context/type selection, warning configuration, execution plans, bounded descriptor caching, and
-representative performance workflows have test-backed evidence. Measurements remain exploratory and establish no
-numeric performance gate.
+Status: complete on 2026-10-23, including the reopened production-matching continuation.
+Epic: [Contexts and Type Matching](../Backlog.md#contexts-and-type-matching). Release: [V2](../V2.md).
+Design readiness: selected behavior and internal ownership are resolved. Verification: direct acceptance, required
+builds/checks, installed-consumer isolation, artifact hygiene, and comparable performance/resource evidence pass.
 
 ## Goal and user outcome
 
-Apply parent/wildcard rules and generic/subclass/interface matching deterministically, using compiled runtime plans
-and EventField selections to support large validation-only transactions efficiently.
-
-## Dependencies and readiness
-
-Review [Sprint 06](Sprint06_V2InstanceIsolationAndConfiguration.md) for actual dependencies and evidence. Allow
-independent investigation and design ahead of later sprints. Select a ready capability using
-[Process](../../auto/Process.md).
+Applications apply parent/wildcard rules and supported generic/subclass/interface rules in deterministic order.
+Large validation-only transactions record/fold events before their boundary checks; entities share handler selection
+without sharing predicate outcomes or memo payloads. Explicit immediate behavior retains its timing.
 
 ## Governing designs and specifications
 
@@ -24,93 +17,92 @@ independent investigation and design ahead of later sprints. Select a ready capa
 - [EventsAndConstraints.spec.md] and [EventsAndConstraints.design.md].
 - [ExecutionPlans.spec.md] and [ExecutionPlans.design.md].
 
-The [delivery plan] links exact requirements, records decisions, and defines acceptance and evidence collection.
+The archived [delivery plan] records decisions, implementation, discoveries, and the earlier reopening. The first
+closeout was premature: stage specialization and a representation prototype had not delivered the agreed matching
+path. This record closes that gap with implemented behavior and final evidence.
 
-## Remaining work
+## Completion of the four agreed actions
 
-- [x] Implement root-to-operation parent-level ordering with wildcards before concrete contexts; share it between
-  rule indexing and transaction/factory selection. Acceptance verifies overlapping wildcard declaration order.
-- [x] Match reflected generic superclass/interface signatures with multi-edge substitution, interface diamonds,
-  direct wildcarding, raw matching, and nested invariance; reject unsupported lower-bounded rules and diagnose
-  unresolved runtime signatures. Runtime descriptor cache identity includes actual `Class` identity. Legacy public
-  TypeKey/EventKey equality and serialized handler keys remain string-based; same-named classes from distinct
-  loaders are not promised distinct rule registrations.
-- [x] Add global-file/Ex/instance configuration for unresolved-generic warnings. Warning suppression is bounded and
-  owned by each evaluation/library instance.
-- [x] Compile and bind internal ExecutionPlan objects, extending EventField rather than replacing its selection cache.
-- [x] Specialize validation-only reporting while preserving immediate behavior, callbacks, folding, and input errors.
-- [x] Build shared Night City workloads up to 100,000 entities, 200 descriptors, and 500 rules.
-- [x] Compare sorted arrays, BitSet, and test-scoped RoaringBitmap; bound descriptor-cache growth and verify immutable
-  publication, concurrent first use, and class-loader-distinct descriptor keys. Collect complete-workflow, report,
-  commit, allocation, callback, and cleanup evidence. Retained heap is constrained structurally by bounded-cache tests;
-  no byte-level retained-heap profile or performance gate is claimed.
+1. Compared actual Night City descriptor/declaration membership using sorted arrays, BitSet, and test-scoped
+   RoaringBitmap 1.6.8. Construction, prepared union/intersection, ordered materialization, allocation, and reachable
+   row graphs are separate. Three fresh processes rotate candidate order; outputs escape and are checked.
+   Sparse, broad, clustered, overlapping, upper-bound, and separately labelled larger-ID stress cases are recorded.
+   Sorted arrays are the competitive simpler choice; every warm path uses immutable ordered handler arrays.
+2. Moved compact-signature EventField lookup ahead of event/type expansion and MultiKey construction. The signature
+   distinguishes class identity, declared descriptor, event shape, naming/splitting mode, and memo availability;
+   the owner supplies operation/stage and inventory generation. Warm hits reuse selections while checking each
+   entity's memo/payload requirements separately.
+3. Integrated compact declaration IDs, raw-type pattern buckets, independent structural upper-bound checks, and
+   ordered merges with EventField and transaction-owned overlays. Local changes replace their generation.
+   Shared/overlay selections are bounded at 1,024, operation inventories/profiles at 128, warning suppression at 64,
+   and legacy descriptor expansion at 4,096. Lazy storage, empty-stage traversal avoidance, and backing-table disposal
+   reduce transaction overhead. Deletion-port identity now uses the available endpoint.
+4. Verified correctness, concurrency, failure retry, recovery, cleanup, cache churn, performance/resources, independent
+   consumption, reactor execution, and artifact hygiene. Expanded class-level JavaDocs across 46 non-trivial internal
+   components and measurement helpers. Final commands and evidence are below.
 
-## Implementation evidence to date
+## Direct behavior evidence
 
-`CityWorkload` provides 200 distinct `Look<T>` descriptors, including domain and collection-projection types.
-`NightCityExecutionBenchmark` runs success, rejection with explicit rollback, and recovery with setup outside timing,
-and can compare validation-only and immediate effects on the same fixture. Root and installed-consumer acceptance
-verify deferred callbacks, exact callback totals, and cleanup. `UserCanApplyInheritedRules` covers generic superclass
-substitution, interface diamonds, nested invariance, upper bounds, raw signatures, and lower-bound rejection.
-`UserCanValidateLargeTransactions` covers 64-entity and 400-entity behavior and stage specialization. The bounded
-4,096-entry descriptor cache verifies immutable reuse, concurrent first publication, eviction, full-name separation,
-and same-named runtime classes from distinct class loaders. The TypeKey/EventKey public string representation is
-preserved, so class-loader distinction is guaranteed for descriptor-cache identity, not for string-keyed rule
-registration.
+`UserCanConfigureContexts` verifies deterministic parent/wildcard/concrete ordering. `UserCanApplyInheritedRules`
+verifies generic superclass/interface substitution, diamond deduplication, nested invariance, independent and
+parameterized upper bounds, lower-bound rejection, and unresolved-generic warning/opt-out behavior. Public TypeKey
+and EventKey registration equality remains string-based; descriptor/signature caches additionally preserve actual
+Class identity across loaders.
 
-Three-process performance samples include 10,000 entities/200 descriptors/100 rules, report and commit phase timing,
-allocation counters, and a same-fixture immediate comparison. Separate smoke runs cover 100,000 entities and 500
-rules. Sorted array, BitSet, and test-scoped RoaringBitmap prototype results are recorded. These are environment-bound
-exploratory samples; retained-heap bytes and numerical performance thresholds were not established. On 2026-10-23,
-`mvn clean install` passed with 477 tests, zero failures/errors/skips, Checkstyle 0, PMD clean, and JaCoCo checks met
-across 248 classes. `mvn -f examples/night_city/pom.xml clean verify` passed its two acceptance tests as a standalone
-consumer; `mvn -f reactor/pom.xml clean install` passed all three reactor projects. Artifact scans found no
-example/spec/test classes or test dependencies in either the normal or assembled library JAR. The consumer dependency
-tree contains the installed library and required AspectJ runtime dependencies, with JUnit test-scoped. The standalone
-consumer compiled its own 40 source files and acceptance test without using root source or root class directories.
+`RuleSelectionTest` verifies warm lookup before expansion, declaration identity/order, immutable reuse, failed misses,
+concurrent first publication, bounded empty selections, mode/endpoint separation, local generation invalidation,
+class-loader identity, and matching without wildcard products. `UserCanReuseRuleSelections` verifies fresh values at
+repeated checkpoints and across transactions, per-entity before-state, operation eviction/recomputation, deletion
+identity, and shutdown release. `TypeMatchingLogicTest` verifies the whole-instance warning budget and close.
 
-## Acceptance
+`UserCanValidateLargeTransactions` verifies validation-only deferral, transaction-local immediate fallback, distinct
+equal entities, sixteen repeated reports, and 400 entities across 200 descriptors. Independent `NightCityStoryTest`
+reuses fixtures through the installed artifact and includes sparse 100-rule applicability across those descriptors.
+Existing transaction failure/recovery, callback, rollback, and shutdown tests remain green.
 
-- Overlapping rules execute in one specified order reproduced by tests.
-- Supported type/hierarchy combinations and unsupported forms have clear positive/negative cases.
-- Retained V1 results, diagnostic context, and matching performance remain sound.
-- Validation-only reporting performs no validation selection/evaluation before the boundary; custom immediate rules
-  still execute while reporting. Selections are shared by signature without caching entity validity.
-- Transaction/library cleanup and bounded cache growth have direct assertions; the independent consumer uses the same
-  Night City fixtures without introducing a library dependency on the example artifact.
+## Build and artifact evidence
 
-## Quality and performance
+Exact commands, from the repository root on Amazon Corretto OpenJDK 17.0.15+6-LTS, Maven 3.9.10, macOS 15.6.1 arm64:
 
-The design addresses correctness, actionable errors, failure recovery, resource hygiene, and performance. The recorded
-samples measure setup outside timed workflows, reporting, commit, allocation, callbacks, and cleanup. Cold/warm cache
-timing and byte-level retained-heap profiling remain limitations; bounded capacity, eviction, concurrency, and
-class-loader-distinct cache identity have deterministic unit coverage. RoaringBitmap remains test-scoped and is not
-adopted by the library. See the [execution-plan performance topic] and
-[performance records](../../performance/Readme.md).
+    mvn -o clean install
+    mvn -o -X -f examples/night_city/pom.xml clean verify
+    mvn -o -f reactor/pom.xml clean install
+    mvn -o -f examples/night_city/pom.xml dependency:tree
 
-## Demo and validation
+Root: 495 tests, zero failures/errors/skips; Checkstyle 0, PMD clean. JaCoCo produced actual execution data, XML/HTML,
+and passing configured checks across 271 classes. Final reactor coverage totals: 27,472 covered instructions of
+38,212 (71.9%), 5,814 lines of 8,128 (71.5%), and 1,685 branches of 2,526 (66.7%). No @Disabled/@Ignore cases were
+found.
+Standalone consumer: 3 tests, zero failures/errors/skips; compiled its own 40 production sources and one test source.
+Debug compiler/test classpaths contain the installed existential JAR and AspectJ 1.9.21, with no root source/class
+folders. Reactor: all three projects pass, repeating the 495 root and 3 consumer tests.
 
-Existing tests are starting evidence, not proof of all new acceptance cases. From the repository root:
+Normal `target/existential-0.0.1.jar` and assembled `existential.jar` contain no Night City, root test/spec/benchmark,
+JUnit, Mockito, RoaringBitmap, or build-tool classes. Dependency-tree inspection shows the library plus required
+AspectJ runtime dependencies, with JUnit test-scoped and no RoaringBitmap transitively. Local installation does not
+publish artifacts externally. The [final run record] retains artifact sizes/digests and focused verification evidence.
 
-    mvn test
-    mvn clean install
-    mvn -f examples/night_city/pom.xml clean verify
-    mvn -f reactor/pom.xml clean install
+## Performance and resource evidence
 
-The [delivery plan] records implementation commands and evidence. Root, independent-consumer, and reactor validation
-passed; see the performance topic for benchmark commands and measured limitations.
+The [execution-plan performance topic] links [the final comparison][final run record], all individual samples, source
+identities, methods, and exact commands. Three-process primary success/recovery comparisons, comparable baseline and
+candidate cold/warm selection probes, 50,000/100,000-entity scale cases, immediate effects, and sixteen-report workflows
+are recorded. Selection profiles assert 200/500 signatures, churn to the finite bound, no fixture payloads in shared
+cache graphs, empty disposed event indexes, and zero cached selections after library close.
 
-## Non-goals
+Arrays are competitive for compact membership; BitSet saves broad-row storage and Roaring wins some combination
+phases. Warm execution is identical across alternatives. Short rejection samples were slower; a longer paired probe
+had overlapping ranges and lower allocation, leaving rejection latency inconclusive. Reachable-object graphs exclude
+class/static/JVM metadata and weak referents; they are not exclusive retained heap. No numerical performance gate or
+application throughput guarantee is established.
 
-Custom event registration, lower-bounded generic matching, hot reload, speculative trie/strategy APIs, a public
-execution-mode API, a process-wide programmatic defaults registry, and theorem-solving behavior. Broader stage policy
-and terminology remain in Sprint 08; this slice preserves existing stage semantics while optimizing their execution.
+## Remaining scope
 
-## Plan and review
-
-The [delivery plan] records accepted behavior, conceptual classes/actions/business rules, staged implementation, and
-prototype results. Final choices and limitations are documented there. Review evidence is complete for this sprint;
-follow-up profiling can extend the append-only performance records.
+No selected Sprint 07 implementation or evidence item remains open. Broader stage policy, defaults, authorization,
+intent/effect ordering, and callback semantics remain in [Sprint 08](Sprint08_V2StagesIntentsAndCustomTransactions.md).
+Custom events belong to V3. Lower bounds, hot reload, speculative strategy/trie APIs, a public execution-mode API,
+and transaction-ID-less/thread-local event APIs remain outside this slice. Existing future proposals retain their
+backlog review status rather than inheriting completion from this sprint.
 
 [LibraryAndConfiguration.spec.md]: ../../specifications/LibraryAndConfiguration.spec.md
 [LibraryAndConfiguration.design.md]: ../../design/LibraryAndConfiguration.design.md
@@ -120,5 +112,4 @@ follow-up profiling can extend the append-only performance records.
 [ExecutionPlans.design.md]: ../../design/ExecutionPlans.design.md
 [delivery plan]: ../../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md
 [execution-plan performance topic]: ../../performance/topics/ExecutionPlans.md
-
-[review template]: ../templates/SprintReview.md
+[final run record]: ../../performance/runs/20261023T215346Z.CompiledRuleSelections.md

@@ -3,6 +3,8 @@ package com.taitl.ex.logic.evaluation.events.split_events;
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
+import com.taitl.ex.logic.execution.actions.*;
+import com.taitl.ex.logic.execution.data.*;
 import com.taitl.ex.logic.evaluation.events.split_events.data.*;
 import com.taitl.ex.logic.evaluation.events.split_events.event_splitter.*;
 import com.taitl.ex.logic.evaluation.events.split_events.maps.*;
@@ -18,28 +20,18 @@ import java.util.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Maps an incoming compound event to a set of basic, fine-grained events
- * for which constraints may have been configured.
+ * Binds a reusable rule selection to the current entity's executable event payload.
+ * A compact DispatchSignature reaches EventField before structural type or event-family
+ * expansion. A miss resolves selection facts; a hit reuses immutable declaration order.
  *
- * Example:
- * Incoming event: ex.transit(null, cat, tr);
- * Resulting events: Port<Cat>, Create<Cat>
- * Incoming event: ex.transit(doc, null, tr); // (doc type: Doc<JSON>)
- * Resulting events: Delete<Doc<JSON>>, Delete<Doc<?>, Delete<Doc>
- *
- * // TODO: also need more general events from elementary:
- * Create -> Create, CUD, CU, Port
- * Update -> Update, CUD, CU, Transit
- * Delete -> Delete, CUD, UD, Port
+ * Memo requirements are checked for every entity even when its selection is already cached.
+ * Before/after payload conversion also occurs per call, so shared selections never cache
+ * entity validity or another transaction's memo values.
  */
 public class SplitEvent
 {
-    // TODO: source from ExistentialEvents instead of singleton
     @Logic
-    protected EventSplitter eventSplitter = Creator.singleton(EventSplitter.class);
-
-    @Logic
-    protected RequireMemoForBiEvents requireMemoForBiEvents = Creator.create(RequireMemoForBiEvents.class);
+    protected ResolveSelectionInput resolveSelectionInput = Creator.create(ResolveSelectionInput.class);
 
     @Logic
     protected ToMemo toMemo = Creator.create(ToMemo.class);
@@ -53,33 +45,19 @@ public class SplitEvent
             throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField");
-        if (tr != null)
+        boolean memo = tr != null && runtimeKey.entity() != null
+                && tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey());
+        DispatchSignature signature = new DispatchSignature(runtimeKey, useFullEventNames,
+                splitElementaryToCompound, tr != null, memo);
+        RuleSelection selection = eventField.select(signature,
+                () -> resolveSelectionInput.call(runtimeKey, useFullEventNames, splitElementaryToCompound, tr));
+        if (selection.memoRequired())
         {
-            requireMemoForBiEvents.forHandlers(runtimeKey, eventField, useFullEventNames, tr);
+            toMemo.requireMemo(runtimeKey, tr);
         }
-        Set<RuntimeKey<T>> splitKeys = eventSplitter.split(runtimeKey, useFullEventNames,
-                splitElementaryToCompound, tr);
-        MultiKey<T> multiKey = multiKey(splitKeys, useFullEventNames);
-        List<Ev<T>> evaluables = eventField.get(multiKey);
-        Event<T> event = tr != null ? toMemo.forExecution(runtimeKey, evaluables, tr) : runtimeKey.event();
+        List<Ev<T>> evaluables = selection.handlers();
+        Event<T> event = tr != null ? toMemo.forExecution(runtimeKey, selection.biHandler(), tr) : runtimeKey.event();
         return new SplitResult<T>(evaluables, event);
     }
 
-    protected <T> MultiKey<T> multiKey(Set<RuntimeKey<T>> splitKeys, boolean useFullEventNames)
-    {
-        sane(splitKeys, "splitKeys");
-        List<EventKey<T>> eventKeys = new ArrayList<>();
-        Set<TypeKey<T>> typeKeys = new LinkedHashSet<>();
-        for (RuntimeKey<T> key : splitKeys)
-        {
-            eventKeys.add(key.key());
-            typeKeys.add(key.typeKey());
-        }
-        for (TypeKey<T> typeKey : typeKeys)
-        {
-            eventKeys.add(useFullEventNames ? EventKey.valueOfFull(Expression.class, typeKey)
-                    : EventKey.valueOf(Expression.class, typeKey));
-        }
-        return MultiKey.valueOf(eventKeys);
-    }
 }

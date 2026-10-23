@@ -9,7 +9,15 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
-/** Splits reported type keys into the matching generic and inherited type keys. */
+/**
+ * Coordinates declared and inherited descriptor expansion for the legacy key interface.
+ * Declared generic variants and runtime hierarchy signatures are resolved by separate actions;
+ * the combined immutable result is cached by descriptor text, class identities, and naming mode.
+ *
+ * The cache has a finite entry budget and weak class keys. Compact EventField dispatch uses
+ * structural type matching directly and probes its selection cache before expansion, while
+ * this adapter preserves existing callers that require explicit expanded TypeKeys.
+ */
 public class SplitTypeKey
 {
     @Logic

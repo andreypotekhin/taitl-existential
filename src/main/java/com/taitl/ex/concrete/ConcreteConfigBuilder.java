@@ -2,6 +2,7 @@ package com.taitl.ex.concrete;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
+import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.existential.constants.*;
 
 import java.util.*;
@@ -15,11 +16,13 @@ public class ConcreteConfigBuilder
         ConcreteConfig result = new ConcreteConfig();
         result.contexts = new ArrayList<>();
         result.stageIndexes = new EnumMap<>(StageName.class);
-        result.opStageIndexes = new LinkedHashMap<>();
+        result.operationIndexes = Creator.create(OperationIndexes.class);
         result.useFullClassNames = useFullClassNames;
         for (StageName stageName : StageName.values())
         {
-            result.stageIndexes.put(stageName, createIndexes(useFullClassNames));
+            ConfigurationIndexes indexes = createIndexes(useFullClassNames);
+            indexes.operations = result.operationIndexes;
+            result.stageIndexes.put(stageName, indexes);
         }
         return result;
     }

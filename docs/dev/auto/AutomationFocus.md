@@ -7,10 +7,16 @@ subsystem-first split with V1 representative core, V2 broader standard usage, an
 ## Current priority
 
 V1 is complete as a locally installed `0.0.1` artifact and remains unpublished remotely. Sprint 06's selected instance
-isolation/configuration slice is complete. Sprint 07 now has recorded context/type matching and compiled execution-plan
-designs; its [delivery plan](../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md) begins
-with Night City workload/baseline evidence and a bounded representation/cache/metadata prototype. Production
-integration follows that gate; documents alone are not verification. Use current sprint records and traceability.
+isolation/configuration slice and Sprint 07's context/type and execution-plan slice are complete, including the
+reopened production matching integration. The [archived delivery
+plan](../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md)
+and [performance topic](../performance/topics/ExecutionPlans.md) retain actual root/consumer/reactor, artifact,
+correctness, concurrency, resource, and comparative measurement evidence. Sorted arrays and pre-expansion EventField
+lookup are implemented; historical prototypes alone did not establish completion.
+
+Next discuss/select ready Sprint 08 stage, intent/effect, and transaction-customization capabilities using its charter
+and traceability. Resolve remaining behavioral choices before implementation. Retain the compiled inventory/profile
+and EventField ownership model; this completion adds no numerical performance gate or broader stage-policy contract.
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Restore useful verification feedback early and link evidence for each concern. Do not treat inherited marks or

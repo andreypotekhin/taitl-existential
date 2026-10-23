@@ -7,6 +7,14 @@ import com.taitl.ex.logic.execution.rules.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.transactions.*;
 
+/**
+ * Applies an operation's compiled report-stage profile to a newly prepared transaction.
+ * A stage is activated when either the shared configuration or transaction-local handlers
+ * and intents require it. Local additions can therefore enable work absent from the shared plan.
+ *
+ * Binding changes the transaction's reporting flags without changing the cached plan.
+ * It runs before reporting begins and does not evaluate rules or lifecycle callbacks.
+ */
 public class BindExecutionPlan
 {
     @Logic

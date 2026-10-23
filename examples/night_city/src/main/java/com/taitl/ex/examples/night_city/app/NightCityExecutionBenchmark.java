@@ -95,8 +95,9 @@ public class NightCityExecutionBenchmark
         if (LOGGER.isLoggable(Level.INFO))
         {
             LOGGER.info(String.format(Locale.ROOT,
-                    "%s: %,d workflows, report=%,d ns/%,d bytes, commit=%,d ns/%,d bytes per workflow",
-                    name, iterations, report / iterations, reportBytes / iterations, commit / iterations,
+                    "%s: %,d workflows, report=%,.1f µs/%,d bytes, commit=%,.1f µs/%,d bytes per workflow",
+                    name, iterations, report / 1_000d / iterations, reportBytes / iterations,
+                    commit / 1_000d / iterations,
                     commitBytes / iterations));
         }
     }
@@ -121,8 +122,8 @@ public class NightCityExecutionBenchmark
         if (LOGGER.isLoggable(Level.INFO))
         {
             LOGGER.info(String.format(Locale.ROOT,
-                    "%s: %,d workflows, %,d ns/workflow, %,d allocated bytes/workflow",
-                    name, iterations, elapsed / iterations, allocated / iterations));
+                    "%s: %,d workflows, %,.1f µs/workflow, %,d allocated bytes/workflow",
+                    name, iterations, elapsed / 1_000d / iterations, allocated / iterations));
         }
     }
 

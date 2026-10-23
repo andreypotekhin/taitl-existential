@@ -1,38 +1,27 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
 import com.taitl.ex.common.annotations.*;
-import com.taitl.ex.common.helper.collections.*;
+import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
-import com.taitl.ex.logic.evaluation.*;
+import com.taitl.ex.logic.execution.actions.*;
+import com.taitl.ex.logic.execution.data.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
-import static com.taitl.ex.common.helper.State.*;
 
 /**
- * Maps event key/event keys (a MultiKey) to a list of configured event handlers.
- * For a MultiKey (e.g. "Create<Doc<JSON>>,Create<Doc<?>>,Create<Doc>")
- * returns a list of event handlers in the order of their declaration.
- * This class scope is a single business operation.
+ * Owns handler selections for one operation, stage, and configured-rule generation.
+ * Dispatch first probes a compact signature; only a miss expands event families and structural
+ * types, then publishes an immutable ordered RuleSelection. Empty matches are cached too.
+ * The legacy MultiKey adapter shares the same bounded entry budget.
  *
- * EventField implementation is 'lazy': it retrieves and sorts handlers for a MultiKey
- * on demand and caches the result for subsequent retrievals.
- *
- * Example:
- * Input: "Create<Doc<JSON>>,Create<Doc<?>>,Create<Doc>"
- * Output: List<EventHandler<T>>: OnCreate<Doc<JSON>>, OnCreate<Doc<?>>, OnCreate<Doc> etc.
- * - list of rules (expressions, event handlers) configured for these events.
- * - the order of rules in the list follows their declaration order.
- * - the returned value is cached to speed up subsequent retrievals.
- *
- * Called by EvaluationLogic.
- *
- * @see MultiKey
- * @see EventKey
- * @see EvaluationLogic
+ * Inventory identity invalidates prepared selections after a rule-source change. Concurrent
+ * readers share published selections without retaining reported payloads or memo values.
+ * Close clears resident selections after the owner's evaluation work has drained.
  */
 public class EventField
 {
@@ -42,8 +31,10 @@ public class EventField
     @Logic
     protected ConfiguredHandlers configured;
 
-    /** MultiKey -> List<Ev<T>> */
-    protected ListMap<String, Ev<?>> map = new ListMap<>();
+    @Logic
+    protected ResolveRuleSelection resolveRuleSelection = Creator.create(ResolveRuleSelection.class);
+
+    protected volatile PreparedSelections prepared;
 
     public EventField(ConfigurationIndexes ci)
     {
@@ -52,8 +43,8 @@ public class EventField
 
     public EventField(ConfigurationIndexes ci, ConfiguredHandlers configured)
     {
-        this.ci = ci;
         sane(configured, "configured");
+        this.ci = ci;
         this.configured = configured;
     }
 
@@ -62,43 +53,57 @@ public class EventField
         return configured;
     }
 
-    /**
-     * For the given multiKey, retrieves handlers from configuredHandlers index,
-     * sorts them by their declaration order and returns as a list of Ev<?>.
-     * Caches the result for subsequent retrievals.
-     */
-    @SuppressWarnings("unchecked")
+    protected PreparedSelections prepared()
+    {
+        RuleInventory inventory = source().inventory();
+        PreparedSelections current = prepared;
+        if (current == null || current.inventory != inventory)
+        {
+            synchronized (this)
+            {
+                current = prepared;
+                if (current == null || current.inventory != inventory)
+                {
+                    current = new PreparedSelections(inventory);
+                    prepared = current;
+                }
+            }
+        }
+        return current;
+    }
+
+    public RuleSelection select(DispatchSignature signature, Supplier<SelectionInput> input)
+    {
+        PreparedSelections current = prepared();
+        return current.entries.resolve(signature, () -> resolveRuleSelection.call(current.inventory, input.get()));
+    }
+
     public <T> List<Ev<T>> get(MultiKey<T> multiKey)
     {
         sane(multiKey, "multiKey");
-        String key = multiKey.toString();
-        List<Ev<?>> cached = map.get(key);
-        if (cached != null)
-        {
-            return (List<Ev<T>>) (List<?>) cached;
-        }
-        ConfiguredHandlers configured = source();
-        verify(configured.ready(), "Configured handlers index is not ready");
-        List<OrderlyEv<?>> handlers = new ArrayList<>();
+        PreparedSelections current = prepared();
+        return current.entries.resolve(multiKey.toString(), () -> legacySelection(multiKey)).handlers();
+    }
+
+    protected <T> RuleSelection legacySelection(MultiKey<T> multiKey)
+    {
+        Set<OrderlyEv<?>> unique = Collections.newSetFromMap(new IdentityHashMap<>());
         for (EventKey<T> eventKey : multiKey.eventKeys())
         {
-            Set<OrderlyEv<?>> set = configured.get(eventKey);
-            if (set != null)
+            Set<OrderlyEv<?>> handlers = source().get(eventKey);
+            if (handlers != null)
             {
-                handlers.addAll(set);
+                unique.addAll(handlers);
             }
         }
-        ci.maintainGlobalOrder.sort(handlers);
-        cached = new LinkedList<>();
-        for (OrderlyEv<?> handler : handlers)
+        List<OrderlyEv<?>> ordered = new ArrayList<>(unique);
+        ci.maintainGlobalOrder.sort(ordered);
+        List<Ev<?>> handlers = new ArrayList<>();
+        for (OrderlyEv<?> handler : ordered)
         {
-            cached.add(handler.ev());
+            handlers.add(handler.ev());
         }
-        synchronized (this)
-        {
-            map.putList(key, cached);
-        }
-        return (List<Ev<T>>) (List<?>) cached;
+        return new RuleSelection(handlers, false);
     }
 
     public <T> boolean hasBiEventKey(EventKey<T> eventKey)
@@ -107,8 +112,19 @@ public class EventField
         return ci.hasBiKey(eventKey);
     }
 
+    public int cachedSelections()
+    {
+        PreparedSelections current = prepared;
+        return current == null ? 0 : current.entries.size();
+    }
+
     public void close()
     {
-        map.clear();
+        PreparedSelections current = prepared;
+        if (current != null)
+        {
+            current.entries.clear();
+        }
+        prepared = null;
     }
 }

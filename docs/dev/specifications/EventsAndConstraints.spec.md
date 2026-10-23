@@ -197,6 +197,10 @@ unsupported-pattern diagnostic during configuration rather than silently leaving
   [lower-bound troubleshooting guidance](../../../Troubleshooting.md#unsupported-lower-bounded-type-rules).
   `UserCanApplyInheritedRules` verifies the failure occurs during configuration finalization.
 
++ `UserCanApplyInheritedRules.appliesIndependentBoundsAndParameterizedBoundsWithoutVariantProducts` verifies
+  simultaneous upper bounds on both Dwelling arguments and a parameterized Being bound. Native TypeKey/hierarchy
+  metadata proves the positive matches; unrelated Muridae arguments do not match the Felidae bound.
+
 ### Shared type matching
 
 Matching results may be shared across distinct entities with the same relevant type/event signature, but actual rule

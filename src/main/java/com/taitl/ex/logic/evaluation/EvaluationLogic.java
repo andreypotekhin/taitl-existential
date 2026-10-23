@@ -3,6 +3,7 @@ package com.taitl.ex.logic.evaluation;
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
+import com.taitl.ex.logic.execution.rules.*;
 import com.taitl.ex.logic.evaluation.events.*;
 import com.taitl.ex.logic.evaluation.intents.*;
 import com.taitl.ex.logic.stages.validation.output.*;
@@ -28,6 +29,9 @@ public class EvaluationLogic implements Closeable
 
     @Logic
     protected EvaluateIntents evaluateIntents;
+
+    @Logic
+    protected RequiresStageTraversal requiresStageTraversal = Creator.create(RequiresStageTraversal.class);
 
     @Logic
     protected TypeMatchingLogic typeMatchingLogic = Creator.create(TypeMatchingLogic.class);
@@ -68,6 +72,10 @@ public class EvaluationLogic implements Closeable
     public void evaluateRollback(Tr tr) throws ExistentialException
     {
         sane(tr, "tr");
+        if (!requiresTraversal(tr, StageName.ROLLBACK))
+        {
+            return;
+        }
         ValidationReport report = Creator.create(ValidationReport.class);
         Throwable failure = null;
         for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
@@ -106,6 +114,10 @@ public class EvaluationLogic implements Closeable
     public void evaluateValidation(Tr tr, ValidationReport report) throws ExistentialException
     {
         sane(tr, "tr", report, "report");
+        if (!requiresTraversal(tr, StageName.VALIDATION))
+        {
+            return;
+        }
         for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
         {
             if (hasIntents(tr, StageName.VALIDATION))
@@ -131,6 +143,10 @@ public class EvaluationLogic implements Closeable
     protected void evaluateEncountered(Tr tr, StageName stageName) throws ExistentialException
     {
         sane(tr, "tr", stageName, "stageName");
+        if (!requiresTraversal(tr, stageName))
+        {
+            return;
+        }
         ValidationReport report = Creator.create(ValidationReport.class);
         for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
         {
@@ -150,6 +166,11 @@ public class EvaluationLogic implements Closeable
         EventField field = eventField(tr, StageName.ROLLBACK);
         warnUnresolvedGenerics(runtimeKey, tr);
         evaluateEvents.callAll(runtimeKey, tr, field, report, useFullClassNames(), shouldSplitElementary());
+    }
+
+    protected boolean requiresTraversal(Tr tr, StageName stage)
+    {
+        return requiresStageTraversal.in(config(tr).indexes(tr.op, stage), tr, stage);
     }
 
     protected void warnUnresolvedGenerics(RuntimeKey<?> runtimeKey, Tr tr)
@@ -212,6 +233,7 @@ public class EvaluationLogic implements Closeable
 
     public void close()
     {
+        typeMatchingLogic.close();
     }
 
     /* Attributes */

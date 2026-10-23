@@ -1,6 +1,9 @@
 package com.taitl.specs.configuration_workflow.configuring_contexts;
 
 import com.taitl.existential.*;
+import com.taitl.ex.examples.night_city.model.*;
+import com.taitl.ex.examples.night_city.model.material.*;
+import com.taitl.ex.examples.night_city.model.taxonomy.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 import com.taitl.specs.*;
@@ -225,4 +228,41 @@ class UserCanApplyInheritedRules extends SpecBase
         IllegalArgumentException failure = assertThrows(IllegalArgumentException.class, () -> ex.begin(op));
         assertTrue(failure.getMessage().contains("unsupported-lower-bounded-type-rules"));
     }
+
+    @Test
+    void appliesIndependentBoundsAndParameterizedBoundsWithoutVariantProducts() throws Exception
+    {
+        AtomicInteger dwellings = new AtomicInteger();
+        AtomicInteger beings = new AtomicInteger();
+        AtomicInteger wrong = new AtomicInteger();
+        // @formatter:off
+        Ex.configure().context(op)
+            .invariant(new TypeKey<Dwelling<? extends Being<?>, ? extends Material>>() {})
+                .create(value -> dwellings.incrementAndGet() > 0, "Bounded dwelling arguments")
+            .invariant(new TypeKey<Box<? extends Being<Felidae>>>() {})
+                .create(value -> beings.incrementAndGet() > 0, "Parameterized feline bound")
+            .invariant(new TypeKey<Box<? extends Being<Muridae>>>() {})
+                .create(value -> wrong.incrementAndGet() > 0, "Parameterized murid bound");
+        // @formatter:on
+        Tr tr = ex.begin(op);
+        try
+        {
+            tr.create(new Dwelling<Cat, Rugs>("Grey", "Park"), new TypeKey<Dwelling<Cat, Rugs>>() {
+            });
+            tr.create(new Box<Cat>(new Cat("Black", "Park")), new TypeKey<Box<Cat>>() {
+            });
+            tr.create(new Box<Being<Felidae>>(new Cat("Black", "Garden")),
+                    new TypeKey<Box<Being<Felidae>>>() {
+                    });
+            tr.commit();
+            assertEquals(1, dwellings.get());
+            assertEquals(2, beings.get());
+            assertEquals(0, wrong.get());
+        }
+        finally
+        {
+            tr.close();
+        }
+    }
+
 }

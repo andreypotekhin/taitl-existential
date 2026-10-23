@@ -1,19 +1,30 @@
 package com.taitl.ex.logic.configuration.indexes.data;
 
+import com.taitl.ex.common.helper.collections.*;
+import com.taitl.ex.logic.execution.data.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
+import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Caches a merged view of static and transaction-local event handlers.
+ * Combines shared operation selections with a transaction's prepared local handlers.
+ * Each source resolves its own generation, then a bounded cache retains the merged immutable
+ * selection in shared-before-local order. Selection identities in the merge key prevent reuse
+ * after local declarations change.
+ *
+ * The overlay belongs to the transaction because merged selections may contain local closures.
+ * Closing it releases its merged cache without closing or mutating the shared base field;
+ * the owning stage separately disposes its local indexes.
  */
 public class EventFieldOverlay extends EventField
 {
-    protected final EventField base;
-    protected final EventField overlay;
+    protected EventField base;
+    protected EventField overlay;
+    protected BoundedCache<SelectionMergeKey, RuleSelection> merged = new BoundedCache<>(PreparedSelections.CAPACITY);
 
     public EventFieldOverlay(EventField base, EventField overlay)
     {
@@ -23,48 +34,35 @@ public class EventFieldOverlay extends EventField
         this.overlay = overlay;
     }
 
-    @SuppressWarnings("unchecked")
+    public RuleSelection select(DispatchSignature signature, Supplier<SelectionInput> input)
+    {
+        RuleSelection shared = base.select(signature, input);
+        RuleSelection local = overlay.select(signature, input);
+        return merged.resolve(new SelectionMergeKey(signature, shared, local), () -> shared.append(local));
+    }
+
     public <T> List<Ev<T>> get(MultiKey<T> multiKey)
     {
-        sane(multiKey, "multiKey");
-        String key = multiKey.toString();
-        List<Ev<?>> cached = map.get(key);
-        if (cached != null)
-        {
-            return (List<Ev<T>>) (List<?>) cached;
-        }
-
-        List<Ev<T>> baseHandlers = base.get(multiKey);
-        List<Ev<T>> overlayHandlers = overlay.get(multiKey);
-        List<Ev<T>> merged = merge(baseHandlers, overlayHandlers);
-        synchronized (this)
-        {
-            map.putList(key, (List<Ev<?>>) (List<?>) merged);
-        }
-        return (List<Ev<T>>) (List<?>) map.get(key);
+        List<Ev<T>> shared = base.get(multiKey);
+        List<Ev<T>> local = overlay.get(multiKey);
+        SelectionMergeKey key = new SelectionMergeKey(multiKey.toString(), shared, local);
+        return merged.resolve(key, () -> new RuleSelection(shared, false).append(new RuleSelection(local, false)))
+                .handlers();
     }
 
     public <T> boolean hasBiEventKey(EventKey<T> eventKey)
     {
-        sane(eventKey, "eventKey");
         return base.hasBiEventKey(eventKey) || overlay.hasBiEventKey(eventKey);
     }
 
-    protected <T> List<Ev<T>> merge(List<Ev<T>> baseHandlers, List<Ev<T>> overlayHandlers)
+    public int cachedSelections()
     {
-        sane(baseHandlers, "baseHandlers", overlayHandlers, "overlayHandlers");
-        if (baseHandlers.isEmpty())
-        {
-            return overlayHandlers;
-        }
-        if (overlayHandlers.isEmpty())
-        {
-            return baseHandlers;
-        }
+        return merged.size();
+    }
 
-        List<Ev<T>> merged = new LinkedList<>();
-        merged.addAll(baseHandlers);
-        merged.addAll(overlayHandlers);
-        return merged;
+    public void close()
+    {
+        merged.clear();
+        super.close();
     }
 }

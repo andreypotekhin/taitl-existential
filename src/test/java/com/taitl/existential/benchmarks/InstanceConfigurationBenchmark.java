@@ -25,8 +25,8 @@ class InstanceConfigurationBenchmark
         System.out.println("Instance configuration benchmark:");
         System.out.println(setup);
         System.out.println(transaction);
-        assertTrue(setup.nanosPerOperation() > 0);
-        assertTrue(transaction.nanosPerOperation() > 0);
+        assertTrue(setup.microsPerOperation() > 0);
+        assertTrue(transaction.microsPerOperation() > 0);
     }
 
     private Result measure(String name, Workflow workflow) throws Exception
@@ -95,14 +95,14 @@ class InstanceConfigurationBenchmark
             this.elapsedNanos = elapsedNanos;
         }
 
-        double nanosPerOperation()
+        double microsPerOperation()
         {
-            return (double) elapsedNanos / iterations;
+            return elapsedNanos / 1_000d / iterations;
         }
 
         public String toString()
         {
-            return String.format(Locale.ROOT, "  %-40s %,12.1f ns/op", name, nanosPerOperation());
+            return String.format(Locale.ROOT, "  %-40s %,12.1f µs/op", name, microsPerOperation());
         }
     }
 }

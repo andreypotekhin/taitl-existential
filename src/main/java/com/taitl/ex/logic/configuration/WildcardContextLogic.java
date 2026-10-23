@@ -2,6 +2,14 @@ package com.taitl.ex.logic.configuration;
 
 import com.taitl.existential.keys.*;
 
+/**
+ * Matches one validated context pattern against one validated operation-path level.
+ * An asterisk can match characters inside a segment, including an empty segment portion,
+ * but cannot cross a slash. Other regular-expression characters are treated literally.
+ *
+ * The match covers the entire level. Ancestor traversal and ordering remain the responsibility
+ * of RuleOrderingLogic, keeping this component focused on context-pattern semantics.
+ */
 public class WildcardContextLogic
 {
     public boolean matches(String pattern, String path)

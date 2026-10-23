@@ -41,6 +41,8 @@ public class ConfigurationIndexes
     @Logic
     public MaintainGlobalOrder maintainGlobalOrder;
 
+    public OperationIndexes operations;
+
     protected EventField eventField;
     protected EventField intentField;
     protected Set<String> biKeys = new LinkedHashSet<>();
@@ -127,6 +129,8 @@ public class ConfigurationIndexes
     {
         configuredHandlers.ready(true);
         configuredIntents.ready(true);
+        configuredHandlers.inventory();
+        configuredIntents.inventory();
     }
 
     /* Attributes */
@@ -159,6 +163,10 @@ public class ConfigurationIndexes
         configuredIntents.clear();
         biKeys.clear();
         intentEventTypes.clear();
+        if (operations != null)
+        {
+            operations.close();
+        }
     }
 
     protected void requireConcreteOp(String op)

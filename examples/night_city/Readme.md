@@ -70,23 +70,23 @@ Executable positive, negative, empty-source, endpoint, recovery, and source-owne
 
 [relationships]: ../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java
 
-## Planned large-transaction workload
+## Large-transaction workload
 
-The [runtime execution-plan design](../../docs/dev/design/ExecutionPlans.design.md) selects Night City as the shared
-fixture source for 10,000–100,000 reported entities, 20–200 class/generic descriptors, and 100–500 rules. Model,
-data,
-and configuration extensions will be reused by specifications and the independent consumer. Validation-only reporting,
-first validation, warmed transactions, immediate-stage comparisons, and resource evidence are covered by the
-[delivery plan](../../docs/dev/past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md) and
-[performance topic](../../docs/dev/performance/topics/ExecutionPlans.md). `CityWorkload` supplies distinct entities
-across 200 real `Look<T>` descriptors, including beings, buildings, houses, dwellings, and collection projections. The consumer-side
-`NightCityExecutionBenchmark` exercises success, rejection with rollback, and rejection/recovery across that
-population. Setup and fixture creation remain outside timing, and each transaction is closed. The fixture supports up
-to 200 descriptors. Root and independent-consumer acceptance verify all 200 descriptors, deferred callbacks, and
-cleanup. A 100,000-entity/200-descriptor smoke, a 500-rule smoke, three 10,000-entity/200-descriptor workflow samples,
-phase samples, and per-thread allocation samples are recorded in the
-[execution-plan performance topic](../../docs/dev/performance/topics/ExecutionPlans.md). Byte-level retained-heap
-profiling remains uncollected; bounded cache capacity and eviction are verified by tests.
+The [runtime execution-plan design](../../docs/dev/design/ExecutionPlans.design.md) uses Night City fixtures for
+10,000–100,000 reported entities, up to 200 class/generic descriptors, and 100–500 applicable rules. `CityWorkload`
+supplies distinct Look entities spanning beings, buildings, houses, dwellings, and collection projections. Shared
+configuration and application operations serve root specifications and the independent consumer through the installed
+library artifact.
+
+`NightCityExecutionBenchmark` exercises success, rejection with explicit rollback, and fresh recovery. Setup stays
+outside timing and every transaction closes. The [performance
+topic](../../docs/dev/performance/topics/ExecutionPlans.md)
+links three-process scale, immediate, repeated-report, cold/warm selection, allocation, and reachable-cache evidence.
+Root and independent-consumer acceptance verify deferred callbacks, exact counts, sparse applicability, and cleanup.
+The [archived delivery
+plan](../../docs/dev/past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-plans.plan.md)
+records Sprint 07 completion and preserves stage-policy deferrals. Cache graphs are measured independently from
+per-thread allocation; no numerical throughput guarantee is established.
 
 Run it from the repository root with:
 

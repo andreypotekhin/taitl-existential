@@ -49,8 +49,8 @@ public final class NightCityWorkflowBenchmark
         long elapsed = System.nanoTime() - started;
         if (LOGGER.isLoggable(Level.INFO))
         {
-            LOGGER.info(String.format(Locale.ROOT, "%-24s %,8d workflows %,12.1f ns/workflow",
-                    name, iterations, (double) elapsed / iterations));
+            LOGGER.info(String.format(Locale.ROOT, "%-24s %,8d workflows %,12.1f µs/workflow",
+                    name, iterations, elapsed / 1_000d / iterations));
         }
     }
 

@@ -297,6 +297,7 @@ public class TransactionLogic implements Closeable
                 }
             }
             registry.clear();
+            evaluationLogic.close();
             state = State.CLOSED;
             lifecycle.notifyAll();
         }

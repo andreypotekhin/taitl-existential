@@ -135,6 +135,32 @@ class UserCanValidateLargeTransactions extends SpecBase
         }
     }
 
+    @Test
+    void foldsRepeatedReportsWhileCheckingDistinctEqualEntities() throws Exception
+    {
+        CityWorkload workload = new CityWorkload(ENTITIES);
+        Cat first = workload.cats.get(0);
+        Cat equal = workload.cats.get(1);
+        assertEquals(first, equal);
+        assertNotSame(first, equal);
+        Tr tr = ex.begin(op);
+        try
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                tr.create(first);
+                tr.create(equal);
+            }
+            assertEquals(0, evaluations.get());
+            tr.commit();
+            assertEquals(2L * RULES, evaluations.get());
+        }
+        finally
+        {
+            tr.close();
+        }
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private static void create(Tr tr, CityWorkload.Report report) throws Exception
     {

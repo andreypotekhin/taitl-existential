@@ -42,9 +42,16 @@ public class Config
         return concrete.indexes(stageName);
     }
 
+    /**
+     * Returns the configured rule indexes for a concrete operation and processing stage.
+     *
+     * @param op concrete operation key
+     * @param stageName processing stage
+     * @return the complete indexes for that operation and stage
+     */
     public ConfigurationIndexes indexes(String op, StageName stageName)
     {
-        return concrete.indexes(op, stageName);
+        return concrete.indexes(op, stageName, this);
     }
 
     public boolean useFullClassNames()
