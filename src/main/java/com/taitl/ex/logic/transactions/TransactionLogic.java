@@ -101,7 +101,7 @@ public class TransactionLogic implements Closeable
         this.validationLogic = Creator.create(ValidationLogic.class, new Class[] { TransactionLogic.class }, this);
     }
 
-    public Tr begin(String op) throws ExistentialException
+    public Tr begin(String op)
     {
         sane(op, "op");
         OpKey.validate(op);
@@ -114,7 +114,7 @@ public class TransactionLogic implements Closeable
             beginTran.call(tr);
             return tr;
         }
-        catch (ExistentialException | RuntimeException | Error failure)
+        catch (RuntimeException | Error failure)
         {
             if (tr != null)
             {
@@ -129,7 +129,7 @@ public class TransactionLogic implements Closeable
         }
     }
 
-    public Tr begin(String op, Transaction custom) throws ExistentialException
+    public Tr begin(String op, Transaction custom)
     {
         sane(op, "op");
         OpKey.validate(op);
@@ -142,7 +142,7 @@ public class TransactionLogic implements Closeable
             beginTran.call(tr);
             return tr;
         }
-        catch (ExistentialException | RuntimeException | Error failure)
+        catch (RuntimeException | Error failure)
         {
             if (tr != null)
             {
@@ -157,7 +157,7 @@ public class TransactionLogic implements Closeable
         }
     }
 
-    public void checkpoint(Tr tr) throws ExistentialException
+    public void checkpoint(Tr tr)
     {
         sane(tr, "tr");
         enter(false);
@@ -171,7 +171,7 @@ public class TransactionLogic implements Closeable
         }
     }
 
-    public void commit(Tr tr) throws ExistentialException
+    public void commit(Tr tr)
     {
         sane(tr, "tr");
         enter(false);
@@ -180,7 +180,7 @@ public class TransactionLogic implements Closeable
             commitTran.call(tr);
             disposeTran.call(tr);
         }
-        catch (ExistentialException | RuntimeException | Error failure)
+        catch (RuntimeException | Error failure)
         {
             registry.removeIfPresent(tr.id.toString());
             throw failure;
@@ -191,7 +191,7 @@ public class TransactionLogic implements Closeable
         }
     }
 
-    public void rollback(Tr tr) throws ExistentialException
+    public void rollback(Tr tr)
     {
         sane(tr, "tr");
         synchronized (lifecycle)
@@ -247,7 +247,7 @@ public class TransactionLogic implements Closeable
         return registry;
     }
 
-    public Tr tr(String tranID) throws ExistentialException
+    public Tr tr(String tranID)
     {
         sane(tranID, "tranID");
         return registry.get(tranID);
@@ -451,7 +451,7 @@ public class TransactionLogic implements Closeable
         }
     }
 
-    private void rethrow(Throwable failure) throws ExistentialException
+    private void rethrow(Throwable failure)
     {
         if (failure instanceof ExistentialException)
         {

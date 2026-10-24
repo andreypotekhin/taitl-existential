@@ -121,6 +121,8 @@ Constraint validation is triggered automatically upon committing a transaction:
     Ex.commit(tr); // Detect and report constraint violations.
 
 Constraint violations will be reported as part of thrown exception (ExistentialException).
+`ExistentialException` is unchecked, so methods that call Existential do not need to declare it in a `throws` clause.
+Catch it at a boundary where the application can recover or translate the failure.
 
 
 ## Configuration

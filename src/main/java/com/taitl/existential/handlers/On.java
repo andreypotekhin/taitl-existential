@@ -89,7 +89,7 @@ public class On<T> implements EventHandler<T>
      * @throws ExistentialException
      *            If handler execution fails
      */
-    public void handle(T t) throws ExistentialException
+    public void handle(T t)
     {
         ExecuteHandler.handle(this, t);
     }

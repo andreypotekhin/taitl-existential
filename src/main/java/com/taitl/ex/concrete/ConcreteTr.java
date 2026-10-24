@@ -97,117 +97,117 @@ public class ConcreteTr
         }
     }
 
-    public void checkpoint() throws ExistentialException
+    public void checkpoint()
     {
         requireOpen("checkpoint");
         tl.checkpoint(tr);
     }
 
-    public void commit() throws ExistentialException
+    public void commit()
     {
         requireOpen("commit");
         try
         {
             tl.commit(tr);
         }
-        catch (ExistentialException | RuntimeException | Error failure)
+        catch (RuntimeException | Error failure)
         {
             rollbackOnly = true;
             throw failure;
         }
     }
 
-    public void rollback() throws ExistentialException
+    public void rollback()
     {
         requireOpen("rollback");
         tl.rollback(tr);
     }
 
-    public <T> void event(Event<T> event, T t, TypeKey<T> type) throws ExistentialException
+    public <T> void event(Event<T> event, T t, TypeKey<T> type)
     {
         requireOpen("send events");
         el.event(event, t, type, tr);
     }
 
-    public <T> void event(BiEvent<T> event, TypeKey<T> type) throws ExistentialException
+    public <T> void event(BiEvent<T> event, TypeKey<T> type)
     {
         requireOpen("send events");
         el.event(event, type, tr);
     }
 
-    public <T> void create(T t, TypeKey<T> type) throws ExistentialException
+    public <T> void create(T t, TypeKey<T> type)
     {
         requireOpen("send events");
         el.create(t, type, tr);
     }
 
-    public <T> void create(T t) throws ExistentialException
+    public <T> void create(T t)
     {
         requireOpen("send events");
         el.create(t, tr);
     }
 
-    public <T> void delete(T t, TypeKey<T> type) throws ExistentialException
+    public <T> void delete(T t, TypeKey<T> type)
     {
         requireOpen("send events");
         el.delete(t, type, tr);
     }
 
-    public <T> void delete(T t) throws ExistentialException
+    public <T> void delete(T t)
     {
         requireOpen("send events");
         el.delete(t, tr);
     }
 
-    public <T> void update(T t, TypeKey<T> type) throws ExistentialException
+    public <T> void update(T t, TypeKey<T> type)
     {
         requireOpen("send events");
         el.update(t, type, tr);
     }
 
-    public <T> void update(T t) throws ExistentialException
+    public <T> void update(T t)
     {
         requireOpen("send events");
         el.update(t, tr);
     }
 
-    public <T> void transit(T t0, T t1, TypeKey<T> type) throws ExistentialException
+    public <T> void transit(T t0, T t1, TypeKey<T> type)
     {
         requireOpen("send events");
         el.transit(t0, t1, type, tr);
     }
 
-    public <T> void transit(T t0, T t1) throws ExistentialException
+    public <T> void transit(T t0, T t1)
     {
         requireOpen("send events");
         el.transit(t0, t1, tr);
     }
 
-    public <T> void port(T t0, T t1, TypeKey<T> type) throws ExistentialException
+    public <T> void port(T t0, T t1, TypeKey<T> type)
     {
         requireOpen("send events");
         el.port(t0, t1, type, tr);
     }
 
-    public <T> void port(T t0, T t1) throws ExistentialException
+    public <T> void port(T t0, T t1)
     {
         requireOpen("send events");
         el.port(t0, t1, tr);
     }
 
-    public <T> void read(T entity, TypeKey<T> type) throws ExistentialException
+    public <T> void read(T entity, TypeKey<T> type)
     {
         requireOpen("send events");
         el.read(entity, type, tr);
     }
 
-    public <T> void read(T entity) throws ExistentialException
+    public <T> void read(T entity)
     {
         requireOpen("send events");
         el.read(entity, tr);
     }
 
-    public <T> void memo(T before, T live, TypeKey<T> typeKey) throws ExistentialException
+    public <T> void memo(T before, T live, TypeKey<T> typeKey)
     {
         requireOpen("register memo state");
         if (memoData == null)
@@ -217,7 +217,7 @@ public class ConcreteTr
         memoData.put(live, before, typeKey);
     }
 
-    public <T> void memo(T before, T live, Class<T> cls) throws ExistentialException
+    public <T> void memo(T before, T live, Class<T> cls)
     {
         sane(cls, "cls");
         memo(before, live, TypeKey.valueOf(cls, false));
@@ -237,40 +237,40 @@ public class ConcreteTr
         return memoData != null && memoData.contains(live, typeKey);
     }
 
-    public <T> void write(T entity, TypeKey<T> type) throws ExistentialException
+    public <T> void write(T entity, TypeKey<T> type)
     {
         requireOpen("send events");
         el.write(entity, type, tr);
     }
 
-    public <T> void write(T entity) throws ExistentialException
+    public <T> void write(T entity)
     {
         requireOpen("send events");
         el.write(entity, tr);
     }
 
-    public void onBegin() throws ExistentialException
+    public void onBegin()
     {
         beginActive = true;
         immediateActive = true;
         executeLifecycle.call(Begin.class, StageName.BEGIN);
     }
 
-    public void onCheckpoint() throws ExistentialException
+    public void onCheckpoint()
     {
         beginActive = false;
         immediateActive = false;
         executeLifecycle.call(Checkpoint.class, StageName.CHECKPOINT);
     }
 
-    public void onCommit() throws ExistentialException
+    public void onCommit()
     {
         beginActive = false;
         immediateActive = false;
         executeLifecycle.call(Commit.class, StageName.COMMIT);
     }
 
-    public void onRollback() throws ExistentialException
+    public void onRollback()
     {
         beginActive = false;
         immediateActive = false;
@@ -430,7 +430,7 @@ public class ConcreteTr
         tl.callbackFinished();
     }
 
-    protected void requireOpen(String action) throws ExistentialException
+    protected void requireOpen(String action)
     {
         if (!closed)
         {

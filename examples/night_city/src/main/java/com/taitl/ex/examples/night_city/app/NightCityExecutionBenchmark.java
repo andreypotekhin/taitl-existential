@@ -222,7 +222,7 @@ public class NightCityExecutionBenchmark
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static void create(Tr tr, CityWorkload.Report report) throws ExistentialException
+    private static void create(Tr tr, CityWorkload.Report report)
     {
         tr.create(report.entity, (com.taitl.existential.keys.TypeKey) report.type);
     }

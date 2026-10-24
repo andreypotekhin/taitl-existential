@@ -11,7 +11,6 @@ import com.taitl.existential.transactions.*;
 public class ValidateTransaction
 {
     public void call(Tr tr, EvaluationLogic el, ValidationReport report)
-            throws ExistentialException
     {
         el.evaluateValidation(tr, report);
         if (!report.isEmpty())

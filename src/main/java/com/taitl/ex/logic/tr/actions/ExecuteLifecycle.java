@@ -30,7 +30,7 @@ public class ExecuteLifecycle
         this.intentLogic = intentLogic;
     }
 
-    public void call(Class<?> eventClass, StageName stageName) throws ExistentialException
+    public void call(Class<?> eventClass, StageName stageName)
     {
         sane(eventClass, "eventClass", stageName, "stageName");
         for (Transaction transaction : tr.transactions())
@@ -39,7 +39,7 @@ public class ExecuteLifecycle
         }
     }
 
-    public void callRollback() throws ExistentialException
+    public void callRollback()
     {
         Throwable failure = null;
         for (Transaction transaction : tr.transactions())
@@ -95,7 +95,7 @@ public class ExecuteLifecycle
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected void execute(On handler, Transaction transaction) throws ExistentialException
+    protected void execute(On handler, Transaction transaction)
     {
         tr.callbackStarted();
         try
@@ -121,7 +121,7 @@ public class ExecuteLifecycle
         return failure;
     }
 
-    protected void rethrow(Throwable failure) throws ExistentialException
+    protected void rethrow(Throwable failure)
     {
         if (failure instanceof ExistentialException)
         {
@@ -143,7 +143,6 @@ public class ExecuteLifecycle
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void call(Class<?> eventClass, StageName stageName, Transaction transaction)
-            throws ExistentialException
     {
         sane(eventClass, "eventClass", stageName, "stageName", transaction, "transaction");
         for (Evs<?> evs : transaction.stage().at(stageName))

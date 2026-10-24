@@ -11,7 +11,7 @@ public class ConcreteAll<T> implements Expression<T>
     Predicate<? super T> predicate;
     String description;
 
-    public Object evaluate(T t) throws ExistentialException
+    public Object evaluate(T t)
     {
         if (condition == null || condition.test(t))
         {

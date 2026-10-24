@@ -56,7 +56,7 @@ public class All<T> implements Expression<T>
                 .build();
     }
 
-    public Object evaluate(T entity) throws ExistentialException
+    public Object evaluate(T entity)
     {
         return concrete.evaluate(entity);
     }

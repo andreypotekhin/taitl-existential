@@ -11,5 +11,5 @@ import com.taitl.existential.exceptions.*;
  */
 public interface BiEventHandler<T> extends EventHandler<T>
 {
-    void handle(T t0, T t1) throws ExistentialException;
+    void handle(T t0, T t1);
 }

@@ -25,25 +25,25 @@ public class ExistentialAccess implements Closeable
         this.typeKeyCache = com.taitl.ex.common.creator.Creator.singleton(TypeKeyCache.class);
     }
 
-    public <T> void read(T entity, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void read(T entity, TypeKey<T> type, String tranID)
     {
         sane(entity, "entity", type, "type", tranID, "tranID");
         eventLogic().read(entity, type, tr(tranID));
     }
 
-    public <T> void read(T entity, String tranID) throws ExistentialException
+    public <T> void read(T entity, String tranID)
     {
         sane(entity, "entity", tranID, "tranID");
         read(entity, typeKey(entity), tranID);
     }
 
-    public <T> void write(T entity, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void write(T entity, TypeKey<T> type, String tranID)
     {
         sane(entity, "entity", type, "type", tranID, "tranID");
         eventLogic().write(entity, type, tr(tranID));
     }
 
-    public <T> void write(T entity, String tranID) throws ExistentialException
+    public <T> void write(T entity, String tranID)
     {
         sane(entity, "entity", tranID, "tranID");
         write(entity, typeKey(entity), tranID);
@@ -58,7 +58,7 @@ public class ExistentialAccess implements Closeable
         return ex.events().eventLogic;
     }
 
-    protected Tr tr(String tranID) throws ExistentialException
+    protected Tr tr(String tranID)
     {
         return ex.transactions().tr(tranID);
     }

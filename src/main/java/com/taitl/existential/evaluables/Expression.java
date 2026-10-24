@@ -20,7 +20,7 @@ public interface Expression<T> extends Ev<T>
      * @return Evaluation result (often boolean for predicates)
      * @throws ExistentialException If evaluation fails
      */
-    Object evaluate(T t) throws ExistentialException;
+    Object evaluate(T t);
 
     /**
      * Returns a short, human-readable description of this expression.

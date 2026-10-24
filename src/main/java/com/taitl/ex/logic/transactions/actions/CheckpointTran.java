@@ -14,7 +14,7 @@ public class CheckpointTran extends TranAction
         super(tl);
     }
 
-    public void call(Tr tr) throws ExistentialException
+    public void call(Tr tr)
     {
         tr.onCheckpoint();
         tl.checkpointLogic.onCheckpoint(tr);

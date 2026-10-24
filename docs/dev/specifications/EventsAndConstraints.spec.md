@@ -212,6 +212,11 @@ requirements are defined in [ExecutionPlans.spec.md](ExecutionPlans.spec.md).
 ### Constraint violation exceptions
 
 User should receive an exception in case of constraint violation, along with the details.
+Existential exceptions are unchecked, so application methods can propagate constraint failures without declaring
+them in `throws` clauses; callers may catch the common base or a specific subtype when they can recover.
+
++ `UserCanPropagateExistentialExceptions.useTransactionApiWithoutThrowsDeclaration` verifies application code can
+  call `begin`, `update`, and `commit` without a `throws` declaration.
 
 ### Constraint descriptions
 

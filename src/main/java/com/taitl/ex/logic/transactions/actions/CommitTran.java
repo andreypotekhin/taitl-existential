@@ -14,7 +14,7 @@ public class CommitTran extends TranAction
         super(tl);
     }
 
-    public void call(Tr tr) throws ExistentialException
+    public void call(Tr tr)
     {
         tr.onCommit();
         tl.commitLogic.onCommit(tr);

@@ -21,7 +21,7 @@ public class BeginLogic
         this.tl = tl;
     }
 
-    public <T> void onEvent(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    public <T> void onEvent(RuntimeKey<T> runtimeKey, Tr tr)
     {
         sane(runtimeKey, "runtimeKey", tr, "tr");
         if (!tr.beginActive() || !tr.shouldEvaluateBegin(runtimeKey))

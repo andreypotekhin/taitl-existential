@@ -17,7 +17,7 @@ public class ToMemo
 {
     public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#memo-state-missing";
 
-    public <T> Event<T> forSplit(Event<T> splitEvent, RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    public <T> Event<T> forSplit(Event<T> splitEvent, RuntimeKey<T> runtimeKey, Tr tr)
     {
         sane(splitEvent, "splitEvent", runtimeKey, "runtimeKey");
         if (!(splitEvent instanceof BiEvent<?>))
@@ -43,13 +43,13 @@ public class ToMemo
         return splitEvent;
     }
 
-    public <T> Event<T> forExecution(RuntimeKey<T> runtimeKey, List<Ev<T>> evs, Tr tr) throws ExistentialException
+    public <T> Event<T> forExecution(RuntimeKey<T> runtimeKey, List<Ev<T>> evs, Tr tr)
     {
         sane(runtimeKey, "runtimeKey", evs, "evs");
         return forExecution(runtimeKey, containsBiHandler(evs), tr);
     }
 
-    public <T> Event<T> forExecution(RuntimeKey<T> runtimeKey, boolean biHandler, Tr tr) throws ExistentialException
+    public <T> Event<T> forExecution(RuntimeKey<T> runtimeKey, boolean biHandler, Tr tr)
     {
         sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();
@@ -92,7 +92,7 @@ public class ToMemo
         return false;
     }
 
-    protected <T> Event<T> transit(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    protected <T> Event<T> transit(RuntimeKey<T> runtimeKey, Tr tr)
     {
         sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();
@@ -112,7 +112,7 @@ public class ToMemo
         return new Transit<>(memo(runtimeKey, tr), runtimeKey.entity());
     }
 
-    protected <T> Event<T> port(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    protected <T> Event<T> port(RuntimeKey<T> runtimeKey, Tr tr)
     {
         sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();

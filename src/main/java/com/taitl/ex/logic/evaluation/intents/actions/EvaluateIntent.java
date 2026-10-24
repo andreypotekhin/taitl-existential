@@ -11,7 +11,7 @@ import static com.taitl.ex.common.helper.Args.*;
 public class EvaluateIntent
 {
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public boolean call(EventHandler<?> intent, Event<?> event) throws ExistentialException
+    public boolean call(EventHandler<?> intent, Event<?> event)
     {
         sane(intent, "intent", event, "event");
         try

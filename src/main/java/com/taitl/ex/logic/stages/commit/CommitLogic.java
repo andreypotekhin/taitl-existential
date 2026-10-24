@@ -19,7 +19,7 @@ public class CommitLogic
         this.tl = tl;
     }
 
-    public void onCommit(Tr tr) throws ExistentialException
+    public void onCommit(Tr tr)
     {
         sane(tr, "tr");
         evaluationLogic().evaluateCommit(tr);

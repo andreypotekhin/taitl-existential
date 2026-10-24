@@ -42,25 +42,25 @@ public class ExistentialEvents implements Closeable
 
     /* Core methods */
 
-    public <T> void event(Event<T> event, T t, TypeKey<T> type, Tr tr) throws ExistentialException
+    public <T> void event(Event<T> event, T t, TypeKey<T> type, Tr tr)
     {
         sane(event, "event", t, "t", type, "type", tr, "tr");
         eventLogic.event(event, t, type, tr);
     }
 
-    public <T> void event(BiEvent<T> event, TypeKey<T> type, Tr tr) throws ExistentialException
+    public <T> void event(BiEvent<T> event, TypeKey<T> type, Tr tr)
     {
         sane(event, "event", type, "type", tr, "tr");
         eventLogic.event(event, type, tr);
     }
 
-    public <T> void event(Event<T> event, T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void event(Event<T> event, T t, TypeKey<T> type, String tranID)
     {
         sane(event, "event", t, "t", type, "type", tranID, "tranID");
         event(event, t, type, tr(tranID));
     }
 
-    public <T> void event(BiEvent<T> event, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void event(BiEvent<T> event, TypeKey<T> type, String tranID)
     {
         sane(event, "event", type, "type", tranID, "tranID");
         event(event, type, tr(tranID));
@@ -68,7 +68,7 @@ public class ExistentialEvents implements Closeable
 
     /* Convenience methods */
 
-    public <T> void create(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void create(T t, TypeKey<T> type, String tranID)
     {
         sane(t, "t", type, "type", tranID, "tranID");
         event(new Create<>(t), t, type, tr(tranID));
@@ -79,13 +79,13 @@ public class ExistentialEvents implements Closeable
      * deducted at run time - that is, if entity class is not generic.
      * Only suitable for non-generic types.
      */
-    public <T> void create(T t, String tranID) throws ExistentialException
+    public <T> void create(T t, String tranID)
     {
         sane(t, "t", tranID, "tranID");
         event(new Create<>(t), t, typeKey(t), tranID);
     }
 
-    public <T> void delete(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void delete(T t, TypeKey<T> type, String tranID)
     {
         sane(t, "t", type, "type", tranID, "tranID");
         event(new Delete<>(t), t, type, tr(tranID));
@@ -96,13 +96,13 @@ public class ExistentialEvents implements Closeable
      * deducted at run time - that is, if entity class is not generic.
      * Only suitable for non-generic types.
      */
-    public <T> void delete(T t, String tranID) throws ExistentialException
+    public <T> void delete(T t, String tranID)
     {
         sane(t, "t", tranID, "tranID");
         event(new Delete<>(t), t, typeKey(t), tranID);
     }
 
-    public <T> void update(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void update(T t, TypeKey<T> type, String tranID)
     {
         sane(t, "t", type, "type", tranID, "tranID");
         event(new Update<>(t), t, type, tr(tranID));
@@ -113,13 +113,13 @@ public class ExistentialEvents implements Closeable
      * deducted at run time - that is, if entity class is not generic.
      * Only suitable for non-generic types.
      */
-    public <T> void update(T t, String tranID) throws ExistentialException
+    public <T> void update(T t, String tranID)
     {
         sane(t, "t", tranID, "tranID");
         event(new Update<>(t), t, typeKey(t), tranID);
     }
 
-    public <T> void transit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void transit(T t0, T t1, TypeKey<T> type, String tranID)
     {
         sane(t0, "t0", t1, "t1", type, "type", tranID, "tranID");
         event(new Transit<>(t0, t1), type, tranID);
@@ -129,14 +129,14 @@ public class ExistentialEvents implements Closeable
      * Variant of transit(t0, t1) without type parameter,
      * only suitable for non-generic types.
      */
-    public <T> void transit(T t0, T t1, String tranID) throws ExistentialException
+    public <T> void transit(T t0, T t1, String tranID)
     {
         sane(tranID, "tranID");
         check(t0 != null && t1 != null, "Both t0 and t1 should not be null.");
         transit(t0, t1, typeKey(t1), tranID);
     }
 
-    public <T> void port(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void port(T t0, T t1, TypeKey<T> type, String tranID)
     {
         sane(type, "type", tranID, "tranID");
         check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
@@ -149,7 +149,7 @@ public class ExistentialEvents implements Closeable
      * Variant of port(t0, t1) without type parameter,
      * only suitable for non-generic types.
      */
-    public <T> void port(T t0, T t1, String tranID) throws ExistentialException
+    public <T> void port(T t0, T t1, String tranID)
     {
         sane(tranID, "tranID");
         check(t0 != null || t1 != null, "One of t0 or t1 should not be null.");
@@ -169,7 +169,7 @@ public class ExistentialEvents implements Closeable
         return ex;
     }
 
-    protected Tr tr(String tranID) throws ExistentialException
+    protected Tr tr(String tranID)
     {
         return ex.transactions().tr(tranID);
     }

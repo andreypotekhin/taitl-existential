@@ -23,7 +23,6 @@ public class EvaluateEvents
 
     public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, EventField eventField, ValidationReport report,
             boolean useFullEventNames, boolean splitElementaryToCompound)
-            throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", tr, "tr", eventField, "eventField", report, "report");
         SplitResult<T> splitResult =
@@ -41,7 +40,6 @@ public class EvaluateEvents
 
     public <T> void callAll(RuntimeKey<T> runtimeKey, Tr tr, EventField eventField, ValidationReport report,
             boolean useFullEventNames, boolean splitElementaryToCompound)
-            throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", tr, "tr", eventField, "eventField", report, "report");
         SplitResult<T> splitResult =

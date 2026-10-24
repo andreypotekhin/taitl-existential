@@ -43,7 +43,7 @@ public class EvaluationLogic implements Closeable
         this.evaluateIntents = Creator.create(EvaluateIntents.class, new Class[] { EvaluationLogic.class }, this);
     }
 
-    public <T> void evaluateBegin(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    public <T> void evaluateBegin(RuntimeKey<T> runtimeKey, Tr tr)
     {
         sane(runtimeKey, "runtimeKey", tr, "tr");
         ValidationReport report = Creator.create(ValidationReport.class);
@@ -51,7 +51,7 @@ public class EvaluationLogic implements Closeable
         throwIfStageFailed(StageName.BEGIN, report);
     }
 
-    public <T> void evaluateImmediate(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    public <T> void evaluateImmediate(RuntimeKey<T> runtimeKey, Tr tr)
     {
         sane(runtimeKey, "runtimeKey", tr, "tr");
         ValidationReport report = Creator.create(ValidationReport.class);
@@ -59,17 +59,17 @@ public class EvaluationLogic implements Closeable
         throwIfStageFailed(StageName.IMMEDIATE, report);
     }
 
-    public void evaluateCommit(Tr tr) throws ExistentialException
+    public void evaluateCommit(Tr tr)
     {
         evaluateEncountered(tr, StageName.COMMIT);
     }
 
-    public void evaluateCheckpoint(Tr tr) throws ExistentialException
+    public void evaluateCheckpoint(Tr tr)
     {
         evaluateEncountered(tr, StageName.CHECKPOINT);
     }
 
-    public void evaluateRollback(Tr tr) throws ExistentialException
+    public void evaluateRollback(Tr tr)
     {
         sane(tr, "tr");
         if (!requiresTraversal(tr, StageName.ROLLBACK))
@@ -111,7 +111,7 @@ public class EvaluationLogic implements Closeable
         rethrow(failure);
     }
 
-    public void evaluateValidation(Tr tr, ValidationReport report) throws ExistentialException
+    public void evaluateValidation(Tr tr, ValidationReport report)
     {
         sane(tr, "tr", report, "report");
         if (!requiresTraversal(tr, StageName.VALIDATION))
@@ -132,7 +132,7 @@ public class EvaluationLogic implements Closeable
             RuntimeKey<T> runtimeKey,
             Tr tr,
             StageName stageName,
-            ValidationReport report) throws ExistentialException
+            ValidationReport report)
     {
         sane(runtimeKey, "runtimeKey", tr, "tr", stageName, "stageName", report, "report");
         warnUnresolvedGenerics(runtimeKey, tr);
@@ -140,7 +140,7 @@ public class EvaluationLogic implements Closeable
         evaluateEvents.call(runtimeKey, tr, eventField, report, useFullClassNames(), shouldSplitElementary());
     }
 
-    protected void evaluateEncountered(Tr tr, StageName stageName) throws ExistentialException
+    protected void evaluateEncountered(Tr tr, StageName stageName)
     {
         sane(tr, "tr", stageName, "stageName");
         if (!requiresTraversal(tr, stageName))
@@ -161,7 +161,6 @@ public class EvaluationLogic implements Closeable
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void evaluateRollbackEvents(RuntimeKey runtimeKey, Tr tr, ValidationReport report)
-            throws ExistentialException
     {
         EventField field = eventField(tr, StageName.ROLLBACK);
         warnUnresolvedGenerics(runtimeKey, tr);
@@ -196,7 +195,7 @@ public class EvaluationLogic implements Closeable
         return failure;
     }
 
-    protected void rethrow(Throwable failure) throws ExistentialException
+    protected void rethrow(Throwable failure)
     {
         if (failure instanceof ExistentialException)
         {
@@ -216,7 +215,7 @@ public class EvaluationLogic implements Closeable
         }
     }
 
-    public <T> void evaluateIntents(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException
+    public <T> void evaluateIntents(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName)
     {
         sane(stageName, "stageName");
         sane(tr, "tr", runtimeKey, "runtimeKey");
@@ -276,7 +275,7 @@ public class EvaluationLogic implements Closeable
         return tl.ex().get(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS);
     }
 
-    protected void throwIfStageFailed(StageName stageName, ValidationReport report) throws ExistentialException
+    protected void throwIfStageFailed(StageName stageName, ValidationReport report)
     {
         sane(stageName, "stageName", report, "report");
         if (report.isEmpty())

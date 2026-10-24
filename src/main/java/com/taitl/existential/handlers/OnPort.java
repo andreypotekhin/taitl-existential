@@ -88,7 +88,7 @@ public class OnPort<T> implements BiEventHandler<T>
      * @throws ExistentialException
      *            If validation fails or action execution errors
      */
-    public void handle(T t0, T t1) throws ExistentialException
+    public void handle(T t0, T t1)
     {
         requireNotBothNull(t0, t1, "Arguments 't0' and 't1' should not be both null");
 

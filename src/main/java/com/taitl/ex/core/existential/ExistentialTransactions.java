@@ -26,39 +26,39 @@ public class ExistentialTransactions implements Closeable
         this.transactionLogic = new TransactionLogic(this);
     }
 
-    public Tr begin(String op) throws ExistentialException
+    public Tr begin(String op)
     {
         sane(op, "op");
         OpKey.validate(op);
         return transactionLogic.begin(op);
     }
 
-    public Tr begin(String op, Transaction custom) throws ExistentialException
+    public Tr begin(String op, Transaction custom)
     {
         sane(op, "op");
         OpKey.validate(op);
         return transactionLogic.begin(op, custom);
     }
 
-    public void commit(Tr tr) throws ExistentialException
+    public void commit(Tr tr)
     {
         sane(tr, "tr");
         tr.commit();
     }
 
-    public void checkpoint(Tr tr) throws ExistentialException
+    public void checkpoint(Tr tr)
     {
         sane(tr, "tr");
         tr.checkpoint();
     }
 
-    public void rollback(Tr tr) throws ExistentialException
+    public void rollback(Tr tr)
     {
         sane(tr, "tr");
         tr.rollback();
     }
 
-    public Tr tr(String tranID) throws ExistentialException
+    public Tr tr(String tranID)
     {
         sane(tranID, "tranID");
         return transactionLogic.tr(tranID);

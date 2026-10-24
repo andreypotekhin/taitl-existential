@@ -566,7 +566,7 @@ public class Exists<T> implements Expression<T>, Predicate<T>
 
     /* Implement Expression interface */
 
-    public Object evaluate(T entity) throws ExistentialException
+    public Object evaluate(T entity)
     {
         return concrete.evaluate(entity);
     }

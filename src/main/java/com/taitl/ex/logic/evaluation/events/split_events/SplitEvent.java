@@ -42,7 +42,6 @@ public class SplitEvent
             boolean useFullEventNames,
             boolean splitElementaryToCompound,
             Tr tr)
-            throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField");
         boolean memo = tr != null && runtimeKey.entity() != null

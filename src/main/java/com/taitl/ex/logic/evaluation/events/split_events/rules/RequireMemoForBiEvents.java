@@ -38,7 +38,6 @@ public class RequireMemoForBiEvents
     }
 
     public <T> void forHandlers(RuntimeKey<T> runtimeKey, EventField eventField, boolean useFullEventNames, Tr tr)
-            throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", eventField, "eventField", tr, "tr");
         if (!toMemo.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))
@@ -56,7 +55,6 @@ public class RequireMemoForBiEvents
     }
 
     public <T> void forIntents(RuntimeKey<T> runtimeKey, ConfigurationIndexes indexes, Tr tr, StageName stageName)
-            throws ExistentialException
     {
         sane(runtimeKey, "runtimeKey", indexes, "indexes", tr, "tr", stageName, "stageName");
         if (!toMemo.memoSensitive(runtimeKey) || tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey()))

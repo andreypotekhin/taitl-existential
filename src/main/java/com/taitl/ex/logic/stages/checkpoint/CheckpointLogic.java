@@ -19,7 +19,7 @@ public class CheckpointLogic
         this.tl = tl;
     }
 
-    public void onCheckpoint(Tr tr) throws ExistentialException
+    public void onCheckpoint(Tr tr)
     {
         sane(tr, "tr");
         evaluationLogic().evaluateCheckpoint(tr);

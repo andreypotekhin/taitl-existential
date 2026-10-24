@@ -47,7 +47,7 @@ public class ValidationLogic
     /**
      * Evaluate validation expressions and call event handlers.
      */
-    public void run(Tr tr) throws ExistentialException
+    public void run(Tr tr)
     {
         if (el == null)
         {

@@ -114,8 +114,10 @@ Requirements: Selected violation paths and the V1 validation-report requirements
 
 Evidence: [cat workflow](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java),
 [operation/rule diagnostics](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java),
-and enabled report cases in [EvaluationLogicTest.java](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java).
-The three report cases pass in the full V1 build.
+enabled report cases in [EvaluationLogicTest.java](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java),
+and [unchecked exception behavior](../../../src/test/java/com/taitl/existential/exceptions/ExistentialExceptionTest.java).
+The [transaction API propagation case](../../../src/test/java/com/taitl/specs/library_usage/UserCanPropagateExistentialExceptions.java)
+also verifies callers need no `throws` declaration. The three report cases and exception behavior pass in the full V1 build.
 
 ## Recovery and resource release
 

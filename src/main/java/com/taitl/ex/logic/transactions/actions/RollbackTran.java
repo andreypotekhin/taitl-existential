@@ -14,7 +14,7 @@ public class RollbackTran extends TranAction
         super(tl);
     }
 
-    public void call(Tr tr) throws ExistentialException
+    public void call(Tr tr)
     {
         Throwable failure = null;
         try

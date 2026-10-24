@@ -46,7 +46,7 @@ public class EvaluateSplitKeys
             List<RuntimeKey<T>> runtimeKeys,
             ConfigurationIndexes indexes,
             Tr tr,
-            StageName stageName) throws ExistentialException
+            StageName stageName)
     {
         sane(eventType, "eventType", runtimeKeys, "runtimeKeys", indexes, "indexes", tr, "tr", stageName,
                 "stageName");

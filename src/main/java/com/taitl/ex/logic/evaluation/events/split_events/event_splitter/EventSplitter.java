@@ -61,7 +61,7 @@ public class EventSplitter
             RuntimeKey<T> runtimeKey,
             boolean useFullEventNames,
             boolean splitElementaryToCompound,
-            Tr tr) throws ExistentialException
+            Tr tr)
     {
         sane(runtimeKey, "runtimeKey");
         Event<T> event = runtimeKey.event();

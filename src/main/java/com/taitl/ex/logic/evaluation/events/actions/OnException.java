@@ -9,7 +9,7 @@ import static com.taitl.ex.common.helper.Args.*;
 
 public class OnException
 {
-    public void call(ExistentialException ex, ValidationReport report) throws ExistentialException
+    public void call(ExistentialException ex, ValidationReport report)
     {
         sane(ex, "ex", report, "report");
         if (constraintViolation(ex))

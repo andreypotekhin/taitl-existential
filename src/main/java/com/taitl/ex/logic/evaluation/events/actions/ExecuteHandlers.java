@@ -21,7 +21,6 @@ public class ExecuteHandlers
     protected OnException onException = Creator.create(OnException.class);
 
     public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report)
-            throws ExistentialException
     {
         sane(evs, "evs", event, "event", report, "report");
         for (Ev<T> ev : evs)
@@ -42,7 +41,6 @@ public class ExecuteHandlers
     }
 
     public <T> void callAll(List<Ev<T>> evs, Event<T> event, ValidationReport report)
-            throws ExistentialException
     {
         sane(evs, "evs", event, "event", report, "report");
         Throwable failure = null;
@@ -67,7 +65,7 @@ public class ExecuteHandlers
         rethrow(failure);
     }
 
-    protected void rethrow(Throwable failure) throws ExistentialException
+    protected void rethrow(Throwable failure)
     {
         if (failure instanceof ExistentialException)
         {
@@ -88,7 +86,6 @@ public class ExecuteHandlers
     }
 
     protected <T> void executeHandler(EventHandler<T> handler, Event<T> event, ValidationReport report)
-            throws ExistentialException
     {
         sane(handler, "handler", event, "event", report, "report");
         try
@@ -102,7 +99,6 @@ public class ExecuteHandlers
     }
 
     protected <T> void executeExpression(Expression<T> expression, Event<T> event, ValidationReport report)
-            throws ExistentialException
     {
         sane(expression, "expression", event, "event", report, "report");
         try
@@ -117,7 +113,6 @@ public class ExecuteHandlers
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected <T> void callEventHandler(EventHandler<T> handler, Event<T> event)
-            throws ExistentialException
     {
         sane(handler, "handler", event, "event");
 
@@ -143,7 +138,7 @@ public class ExecuteHandlers
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected void callBiHandler(BiEventHandler handler, Event<?> event) throws ExistentialException
+    protected void callBiHandler(BiEventHandler handler, Event<?> event)
     {
         sane(handler, "handler", event, "event");
         if (event instanceof BiEvent<?>)
@@ -161,7 +156,7 @@ public class ExecuteHandlers
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected <T> void callExpression(Expression<T> expression, Event<T> event) throws ExistentialException
+    protected <T> void callExpression(Expression<T> expression, Event<T> event)
     {
         sane(expression, "expression", event, "event");
         ((Expression) expression).evaluate(entity(event));
@@ -194,7 +189,7 @@ public class ExecuteHandlers
                 || event instanceof CUD<?>;
     }
 
-    protected void routeHandlerException(ExistentialException ex, ValidationReport report) throws ExistentialException
+    protected void routeHandlerException(ExistentialException ex, ValidationReport report)
     {
         onException.call(ex, report);
     }

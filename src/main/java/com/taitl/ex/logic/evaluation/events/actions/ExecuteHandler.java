@@ -8,7 +8,7 @@ import static com.taitl.ex.common.helper.State.*;
 
 public class ExecuteHandler
 {
-    public static <T> void handle(On<T> handler, T t) throws ExistentialException
+    public static <T> void handle(On<T> handler, T t)
     {
         prepare(handler);
 
@@ -27,7 +27,7 @@ public class ExecuteHandler
     /**
      * Validates an immutable handler by enforcing its condition.
      */
-    private static <T> void validateImmutable(On<T> handler, T t) throws ExistentialException
+    private static <T> void validateImmutable(On<T> handler, T t)
     {
         cool(handler.condition, "condition");
 
@@ -56,7 +56,7 @@ public class ExecuteHandler
     /**
      * Executes the handler action while translating exceptions into library errors.
      */
-    private static <T> void execute(On<T> handler, T t) throws ExistentialException
+    private static <T> void execute(On<T> handler, T t)
     {
         try
         {

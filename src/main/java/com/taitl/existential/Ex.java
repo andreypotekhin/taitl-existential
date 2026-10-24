@@ -69,7 +69,7 @@ public final class Ex
      * @return transaction object
      * @throws ExistentialException when transaction start fails
      */
-    public static Tr begin(String op) throws ExistentialException
+    public static Tr begin(String op)
     {
         return instance().begin(op);
     }
@@ -92,7 +92,7 @@ public final class Ex
      * @return transaction object
      * @throws ExistentialException when transaction start fails
      */
-    public static Tr begin(String op, Transaction custom) throws ExistentialException
+    public static Tr begin(String op, Transaction custom)
     {
         return instance().begin(op, custom);
     }
@@ -105,7 +105,7 @@ public final class Ex
      * @param tr transaction object
      * @throws ExistentialException when validation or commit fails
      */
-    public static void commit(Tr tr) throws ExistentialException
+    public static void commit(Tr tr)
     {
         instance().commit(tr);
     }
@@ -116,7 +116,7 @@ public final class Ex
      * @param tr transaction object
      * @throws ExistentialException when checkpoint fails
      */
-    public static void checkpoint(Tr tr) throws ExistentialException
+    public static void checkpoint(Tr tr)
     {
         instance().checkpoint(tr);
     }
@@ -129,17 +129,17 @@ public final class Ex
      * @param tr transaction object
      * @throws ExistentialException when rollback fails
      */
-    public static void rollback(Tr tr) throws ExistentialException
+    public static void rollback(Tr tr)
     {
         instance().rollback(tr);
     }
 
-    public static <T> void memo(T before, T live, TypeKey<T> type, String tranID) throws ExistentialException
+    public static <T> void memo(T before, T live, TypeKey<T> type, String tranID)
     {
         instance().memo(before, live, type, tranID);
     }
 
-    public static <T> void memo(T before, T live, Class<T> cls, String tranID) throws ExistentialException
+    public static <T> void memo(T before, T live, Class<T> cls, String tranID)
     {
         instance().memo(before, live, cls, tranID);
     }
@@ -155,7 +155,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void event(Event<T> event, T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void event(Event<T> event, T t, TypeKey<T> type, String tranID)
     {
         instance().event(event, t, type, tranID);
     }
@@ -168,7 +168,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void event(BiEvent<T> event, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void event(BiEvent<T> event, TypeKey<T> type, String tranID)
     {
         instance().event(event, type, tranID);
     }
@@ -183,7 +183,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void create(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public static <T> void create(T t, TypeKey<T> type, String tranID)
     {
         instance().create(t, type, tranID);
     }
@@ -195,7 +195,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void create(T t, String tranID) throws ExistentialException
+    public static <T> void create(T t, String tranID)
     {
         instance().create(t, tranID);
     }
@@ -208,7 +208,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void delete(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public static <T> void delete(T t, TypeKey<T> type, String tranID)
     {
         instance().delete(t, type, tranID);
     }
@@ -220,7 +220,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void delete(T t, String tranID) throws ExistentialException
+    public static <T> void delete(T t, String tranID)
     {
         instance().delete(t, tranID);
     }
@@ -233,7 +233,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void update(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public static <T> void update(T t, TypeKey<T> type, String tranID)
     {
         instance().update(t, type, tranID);
     }
@@ -245,7 +245,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void update(T t, String tranID) throws ExistentialException
+    public static <T> void update(T t, String tranID)
     {
         instance().update(t, tranID);
     }
@@ -259,7 +259,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void transit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public static <T> void transit(T t0, T t1, TypeKey<T> type, String tranID)
     {
         instance().transit(t0, t1, type, tranID);
     }
@@ -272,7 +272,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void transit(T t0, T t1, String tranID) throws ExistentialException
+    public static <T> void transit(T t0, T t1, String tranID)
     {
         instance().transit(t0, t1, tranID);
     }
@@ -287,7 +287,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void port(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public static <T> void port(T t0, T t1, TypeKey<T> type, String tranID)
     {
         instance().port(t0, t1, type, tranID);
     }
@@ -300,7 +300,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void port(T t0, T t1, String tranID) throws ExistentialException
+    public static <T> void port(T t0, T t1, String tranID)
     {
         instance().port(t0, t1, tranID);
     }
@@ -313,7 +313,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void read(T entity, TypeKey<T> type, String tranID) throws ExistentialException
+    public static <T> void read(T entity, TypeKey<T> type, String tranID)
     {
         instance().read(entity, type, tranID);
     }
@@ -325,7 +325,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void read(T entity, String tranID) throws ExistentialException
+    public static <T> void read(T entity, String tranID)
     {
         instance().read(entity, tranID);
     }
@@ -338,7 +338,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void write(T entity, TypeKey<T> type, String tranID) throws ExistentialException
+    public static <T> void write(T entity, TypeKey<T> type, String tranID)
     {
         instance().write(entity, type, tranID);
     }
@@ -350,7 +350,7 @@ public final class Ex
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public static <T> void write(T entity, String tranID) throws ExistentialException
+    public static <T> void write(T entity, String tranID)
     {
         instance().write(entity, tranID);
     }

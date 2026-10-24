@@ -88,7 +88,7 @@ public class OnTransit<T> implements BiEventHandler<T>
      * @throws ExistentialException
      *            If validation fails or action execution errors
      */
-    public void handle(T t0, T t1) throws ExistentialException
+    public void handle(T t0, T t1)
     {
         sane(t0, "t0", t1, "t1");
 

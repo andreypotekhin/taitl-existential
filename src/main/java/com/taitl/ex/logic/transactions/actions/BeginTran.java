@@ -20,7 +20,7 @@ public class BeginTran extends TranAction
         super(tl);
     }
 
-    public void call(Tr tr) throws ExistentialException
+    public void call(Tr tr)
     {
         tr.onBegin();
         tl.validationLogic.prepareForValidation(tr);

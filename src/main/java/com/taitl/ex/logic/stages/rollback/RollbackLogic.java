@@ -19,7 +19,7 @@ public class RollbackLogic
         this.tl = tl;
     }
 
-    public void onRollback(Tr tr) throws ExistentialException
+    public void onRollback(Tr tr)
     {
         sane(tr, "tr");
         evaluationLogic().evaluateRollback(tr);

@@ -51,97 +51,97 @@ public class Tr
         concrete.addTransaction(tr);
     }
 
-    public void checkpoint() throws ExistentialException
+    public void checkpoint()
     {
         concrete.checkpoint();
     }
 
-    public void commit() throws ExistentialException
+    public void commit()
     {
         concrete.commit();
     }
 
-    public void rollback() throws ExistentialException
+    public void rollback()
     {
         concrete.rollback();
     }
 
-    public <T> void event(Event<T> event, T t, TypeKey<T> type) throws ExistentialException
+    public <T> void event(Event<T> event, T t, TypeKey<T> type)
     {
         concrete.event(event, t, type);
     }
 
-    public <T> void event(BiEvent<T> event, TypeKey<T> type) throws ExistentialException
+    public <T> void event(BiEvent<T> event, TypeKey<T> type)
     {
         concrete.event(event, type);
     }
 
-    public <T> void create(T t, TypeKey<T> type) throws ExistentialException
+    public <T> void create(T t, TypeKey<T> type)
     {
         concrete.create(t, type);
     }
 
-    public <T> void create(T t) throws ExistentialException
+    public <T> void create(T t)
     {
         concrete.create(t);
     }
 
-    public <T> void delete(T t, TypeKey<T> type) throws ExistentialException
+    public <T> void delete(T t, TypeKey<T> type)
     {
         concrete.delete(t, type);
     }
 
-    public <T> void delete(T t) throws ExistentialException
+    public <T> void delete(T t)
     {
         concrete.delete(t);
     }
 
-    public <T> void update(T t, TypeKey<T> type) throws ExistentialException
+    public <T> void update(T t, TypeKey<T> type)
     {
         concrete.update(t, type);
     }
 
-    public <T> void update(T t) throws ExistentialException
+    public <T> void update(T t)
     {
         concrete.update(t);
     }
 
-    public <T> void transit(T t0, T t1, TypeKey<T> type) throws ExistentialException
+    public <T> void transit(T t0, T t1, TypeKey<T> type)
     {
         concrete.transit(t0, t1, type);
     }
 
-    public <T> void transit(T t0, T t1) throws ExistentialException
+    public <T> void transit(T t0, T t1)
     {
         concrete.transit(t0, t1);
     }
 
-    public <T> void port(T t0, T t1, TypeKey<T> type) throws ExistentialException
+    public <T> void port(T t0, T t1, TypeKey<T> type)
     {
         concrete.port(t0, t1, type);
     }
 
-    public <T> void port(T t0, T t1) throws ExistentialException
+    public <T> void port(T t0, T t1)
     {
         concrete.port(t0, t1);
     }
 
-    public <T> void read(T entity, TypeKey<T> type) throws ExistentialException
+    public <T> void read(T entity, TypeKey<T> type)
     {
         concrete.read(entity, type);
     }
 
-    public <T> void read(T entity) throws ExistentialException
+    public <T> void read(T entity)
     {
         concrete.read(entity);
     }
 
-    public <T> void memo(T before, T live, TypeKey<T> typeKey) throws ExistentialException
+    public <T> void memo(T before, T live, TypeKey<T> typeKey)
     {
         concrete.memo(before, live, typeKey);
     }
 
-    public <T> void memo(T before, T live, Class<T> cls) throws ExistentialException
+    public <T> void memo(T before, T live, Class<T> cls)
     {
         concrete.memo(before, live, cls);
     }
@@ -156,32 +156,32 @@ public class Tr
         return concrete.hasMemo(live, typeKey);
     }
 
-    public <T> void write(T entity, TypeKey<T> type) throws ExistentialException
+    public <T> void write(T entity, TypeKey<T> type)
     {
         concrete.write(entity, type);
     }
 
-    public <T> void write(T entity) throws ExistentialException
+    public <T> void write(T entity)
     {
         concrete.write(entity);
     }
 
-    public void onBegin() throws ExistentialException
+    public void onBegin()
     {
         concrete.onBegin();
     }
 
-    public void onCheckpoint() throws ExistentialException
+    public void onCheckpoint()
     {
         concrete.onCheckpoint();
     }
 
-    public void onCommit() throws ExistentialException
+    public void onCommit()
     {
         concrete.onCommit();
     }
 
-    public void onRollback() throws ExistentialException
+    public void onRollback()
     {
         concrete.onRollback();
     }

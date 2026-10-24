@@ -26,7 +26,7 @@ public class IterateIntents
         this.evaluateIntent = evaluateIntent;
     }
 
-    protected boolean allowed(List<EventHandler<?>> intents, Event<?> event) throws ExistentialException
+    protected boolean allowed(List<EventHandler<?>> intents, Event<?> event)
     {
         sane(intents, "intents", event, "event");
         for (EventHandler<?> intent : intents)

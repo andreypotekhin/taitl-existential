@@ -49,7 +49,7 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
 
     /* Implement Expression interface */
 
-    public Object evaluate(T t) throws ExistentialException
+    public Object evaluate(T t)
     {
         if (!test(t))
         {

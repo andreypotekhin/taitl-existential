@@ -48,7 +48,7 @@ public class EvaluateIntents
         this.requireMemoForBiEvents = Creator.create(RequireMemoForBiEvents.class);
     }
 
-    public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName) throws ExistentialException
+    public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, StageName stageName)
     {
         sane(tr, "tr", runtimeKey, "runtimeKey", stageName, "stageName");
         ConfigurationIndexes indexes = el.config(tr).indexes(tr.op, stageName);
@@ -63,7 +63,6 @@ public class EvaluateIntents
     }
 
     protected <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey, Tr tr)
-            throws ExistentialException
     {
         return toSplitKeys
                 .call(eventSplitter.split(runtimeKey, el.useFullClassNames(), el.shouldSplitElementary(), tr));
@@ -86,7 +85,7 @@ public class EvaluateIntents
             Map<EventType, List<RuntimeKey<T>>> grouped,
             ConfigurationIndexes indexes,
             Tr tr,
-            StageName stageName) throws ExistentialException
+            StageName stageName)
     {
         sane(grouped, "grouped", indexes, "indexes", tr, "tr", stageName, "stageName");
         for (Map.Entry<EventType, List<RuntimeKey<T>>> entry : grouped.entrySet())

@@ -71,7 +71,7 @@ class AllTest
     class Evaluate
     {
         @Test
-        void evaluate() throws ExistentialException
+        void evaluate()
         {
             o.evaluate(house);
 

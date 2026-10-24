@@ -11,5 +11,5 @@ import com.taitl.existential.exceptions.*;
  */
 public interface UniEventHandler<T> extends EventHandler<T>
 {
-    void handle(T t) throws ExistentialException;
+    void handle(T t);
 }

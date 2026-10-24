@@ -32,7 +32,7 @@ public class ReceiveEvent
         this.transactionLogic = el.ev().ex().transactions().logic();
     }
 
-    public <T> void event(Event<T> event, T t, TypeKey<T> type, Tr tr) throws ExistentialException
+    public <T> void event(Event<T> event, T t, TypeKey<T> type, Tr tr)
     {
         sane(event, "event", t, "t", type, "type", tr, "tr");
         if (tr.beginActive() || tr.immediateActive())
@@ -47,7 +47,7 @@ public class ReceiveEvent
         }
     }
 
-    public <T> void event(BiEvent<T> event, TypeKey<T> type, Tr tr) throws ExistentialException
+    public <T> void event(BiEvent<T> event, TypeKey<T> type, Tr tr)
     {
         sane(event, "event", type, "type", tr, "tr");
         if (tr.beginActive() || tr.immediateActive())
@@ -63,7 +63,7 @@ public class ReceiveEvent
         }
     }
 
-    protected <T> void evaluateStages(RuntimeKey<T> runtimeKey, Tr tr) throws ExistentialException
+    protected <T> void evaluateStages(RuntimeKey<T> runtimeKey, Tr tr)
     {
         sane(runtimeKey, "runtimeKey", tr, "tr");
         transactionLogic.beginLogic.onEvent(runtimeKey, tr);

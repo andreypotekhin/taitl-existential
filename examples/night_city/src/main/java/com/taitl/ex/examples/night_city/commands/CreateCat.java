@@ -8,7 +8,6 @@ import com.taitl.existential.exceptions.*;
 public class CreateCat
 {
     public void call()
-            throws ExistentialException
     {
         Tr tr = Ex.begin("/api/cats/create");
         String id = tr.id();

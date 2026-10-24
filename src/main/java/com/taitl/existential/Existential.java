@@ -67,7 +67,7 @@ public final class Existential implements Closeable
      * @return transaction handle
      * @throws ExistentialException when transaction start fails
      */
-    public Tr begin(String op) throws ExistentialException
+    public Tr begin(String op)
     {
         return transactions.begin(op);
     }
@@ -80,7 +80,7 @@ public final class Existential implements Closeable
      * @return transaction handle
      * @throws ExistentialException when transaction start fails
      */
-    public Tr begin(String op, Transaction custom) throws ExistentialException
+    public Tr begin(String op, Transaction custom)
     {
         return transactions.begin(op, custom);
     }
@@ -93,7 +93,7 @@ public final class Existential implements Closeable
      * @param tr transaction object
      * @throws ExistentialException when validation or commit fails
      */
-    public void commit(Tr tr) throws ExistentialException
+    public void commit(Tr tr)
     {
         transactions.commit(tr);
     }
@@ -104,7 +104,7 @@ public final class Existential implements Closeable
      * @param tr transaction object
      * @throws ExistentialException when checkpoint fails
      */
-    public void checkpoint(Tr tr) throws ExistentialException
+    public void checkpoint(Tr tr)
     {
         transactions.checkpoint(tr);
     }
@@ -117,18 +117,18 @@ public final class Existential implements Closeable
      * @param tr transaction object
      * @throws ExistentialException when rollback fails
      */
-    public void rollback(Tr tr) throws ExistentialException
+    public void rollback(Tr tr)
     {
         transactions.rollback(tr);
     }
 
-    public <T> void memo(T before, T live, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void memo(T before, T live, TypeKey<T> type, String tranID)
     {
         sane(before, "before", live, "live", type, "type", tranID, "tranID");
         transactions.tr(tranID).memo(before, live, type);
     }
 
-    public <T> void memo(T before, T live, Class<T> cls, String tranID) throws ExistentialException
+    public <T> void memo(T before, T live, Class<T> cls, String tranID)
     {
         sane(before, "before", live, "live", cls, "cls", tranID, "tranID");
         transactions.tr(tranID).memo(before, live, cls);
@@ -145,7 +145,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void event(Event<T> event, T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void event(Event<T> event, T t, TypeKey<T> type, String tranID)
     {
         sane(event, "event", t, "t", type, "type", tranID, "tranID");
         events.event(event, t, type, tranID);
@@ -159,7 +159,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void event(BiEvent<T> event, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void event(BiEvent<T> event, TypeKey<T> type, String tranID)
     {
         sane(event, "event", type, "type", tranID, "tranID");
         events.event(event, type, tranID);
@@ -175,7 +175,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void create(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void create(T t, TypeKey<T> type, String tranID)
     {
         events.create(t, type, tranID);
     }
@@ -187,7 +187,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void create(T t, String tranID) throws ExistentialException
+    public <T> void create(T t, String tranID)
     {
         events.create(t, tranID);
     }
@@ -200,7 +200,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void delete(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void delete(T t, TypeKey<T> type, String tranID)
     {
         events.delete(t, type, tranID);
     }
@@ -212,7 +212,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void delete(T t, String tranID) throws ExistentialException
+    public <T> void delete(T t, String tranID)
     {
         events.delete(t, tranID);
     }
@@ -225,7 +225,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void update(T t, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void update(T t, TypeKey<T> type, String tranID)
     {
         events.update(t, type, tranID);
     }
@@ -237,7 +237,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void update(T t, String tranID) throws ExistentialException
+    public <T> void update(T t, String tranID)
     {
         events.update(t, tranID);
     }
@@ -251,7 +251,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void transit(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void transit(T t0, T t1, TypeKey<T> type, String tranID)
     {
         events.transit(t0, t1, type, tranID);
     }
@@ -264,7 +264,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void transit(T t0, T t1, String tranID) throws ExistentialException
+    public <T> void transit(T t0, T t1, String tranID)
     {
         events.transit(t0, t1, tranID);
     }
@@ -279,7 +279,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void port(T t0, T t1, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void port(T t0, T t1, TypeKey<T> type, String tranID)
     {
         events.port(t0, t1, type, tranID);
     }
@@ -292,7 +292,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void port(T t0, T t1, String tranID) throws ExistentialException
+    public <T> void port(T t0, T t1, String tranID)
     {
         events.port(t0, t1, tranID);
     }
@@ -308,7 +308,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void read(T entity, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void read(T entity, TypeKey<T> type, String tranID)
     {
         access.read(entity, type, tranID);
     }
@@ -320,7 +320,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void read(T entity, String tranID) throws ExistentialException
+    public <T> void read(T entity, String tranID)
     {
         access.read(entity, tranID);
     }
@@ -333,7 +333,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void write(T entity, TypeKey<T> type, String tranID) throws ExistentialException
+    public <T> void write(T entity, TypeKey<T> type, String tranID)
     {
         access.write(entity, type, tranID);
     }
@@ -345,7 +345,7 @@ public final class Existential implements Closeable
      * @param tranID transaction identifier
      * @throws ExistentialException when event handling fails
      */
-    public <T> void write(T entity, String tranID) throws ExistentialException
+    public <T> void write(T entity, String tranID)
     {
         access.write(entity, tranID);
     }
