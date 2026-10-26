@@ -24,18 +24,30 @@ public class EvaluateEvents
     public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, EventField eventField, ValidationReport report,
             boolean useFullEventNames, boolean splitElementaryToCompound)
     {
+        call(runtimeKey, tr, eventField, report, useFullEventNames, splitElementaryToCompound, false);
+    }
+
+    public <T> void call(RuntimeKey<T> runtimeKey, Tr tr, EventField eventField, ValidationReport report,
+            boolean useFullEventNames, boolean splitElementaryToCompound, boolean stopAfterViolation)
+    {
         sane(runtimeKey, "runtimeKey", tr, "tr", eventField, "eventField", report, "report");
         SplitResult<T> splitResult =
                 splitEvent.call(runtimeKey, eventField, useFullEventNames, splitElementaryToCompound, tr);
         tr.callbackStarted();
         try
         {
-            executeHandlers.call(splitResult.evaluables(), splitResult.event(), report);
+            executeHandlers.call(splitResult.evaluables(), splitResult.event(), report, stopAfterViolation);
         }
         finally
         {
             tr.callbackFinished();
         }
+    }
+
+    public <T> boolean hasEffects(RuntimeKey<T> runtimeKey, EventField eventField,
+            boolean useFullEventNames, boolean splitElementaryToCompound, Tr tr)
+    {
+        return splitEvent.hasEffects(runtimeKey, eventField, useFullEventNames, splitElementaryToCompound, tr);
     }
 
     public <T> void callAll(RuntimeKey<T> runtimeKey, Tr tr, EventField eventField, ValidationReport report,

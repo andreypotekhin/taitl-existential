@@ -144,6 +144,25 @@ class UserCanConfigureCustomTransactions extends SpecBase
         }
 
         @Test
+        @DisplayName("Runtime custom rules stay isolated and are released with their handle")
+        void runtimeCustomRulesStayIsolatedAndAreReleased()
+        {
+            configure();
+            RequestTransaction black = new RequestTransaction(op, "Black").requireColorOnUpdate();
+            Tr accepted = ex.begin(op, black);
+            ex.update(cat, accepted.id());
+            assertDoesNotThrow(accepted::commit);
+
+            RequestTransaction white = new RequestTransaction(op, "White").requireColorOnUpdate();
+            Tr rejected = ex.begin(op, white);
+            ex.update(cat, rejected.id());
+            assertThrows(ValidationStageExceptions.class, rejected::commit);
+            rejected.rollback();
+
+            assertNull(rejected.transactions(), "disposing the handle releases its transaction-local rules");
+        }
+
+        @Test
         @DisplayName("Configuring transactions - custom factory in context")
         void customFactoryInContext()
         {

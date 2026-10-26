@@ -83,15 +83,15 @@ See [Evaluation workflow](specifications/TransactionsAndEvaluation.spec.md#evalu
 
 ##### Preconditions evaluation
 
-See [Preconditions evaluation](specifications/TransactionsAndEvaluation.spec.md#preconditions-evaluation).
+See [evaluation in the begin stage](specifications/TransactionsAndEvaluation.spec.md#evaluation-in-the-begin-stage).
 
 ##### Immediate evaluation
 
-See [Immediate evaluation](specifications/TransactionsAndEvaluation.spec.md#immediate-evaluation).
+See [evaluation in the immediate stage][immediate-evaluation].
 
 ##### Validation evaluation
 
-See [Validation evaluation](specifications/TransactionsAndEvaluation.spec.md#validation-evaluation).
+See [evaluation in the validation stage][validation-evaluation].
 
 ## Concepts
 
@@ -219,3 +219,6 @@ No additional claims were defined here in the original specification.
 [QuantifiersAndIndexes.design.md]: design/QuantifiersAndIndexes.design.md
 [Constraints on evolution of multiple entities]:
   specifications/EventsAndConstraints.spec.md#constraints-on-evolution-of-multiple-entities
+
+[immediate-evaluation]: specifications/TransactionsAndEvaluation.spec.md#evaluation-in-the-immediate-stage
+[validation-evaluation]: specifications/TransactionsAndEvaluation.spec.md#evaluation-in-the-validation-stage

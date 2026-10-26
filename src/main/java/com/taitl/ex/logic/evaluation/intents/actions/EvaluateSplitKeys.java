@@ -42,28 +42,45 @@ public class EvaluateSplitKeys
     }
 
     public <T> void call(
-            EventType eventType,
-            List<RuntimeKey<T>> runtimeKeys,
+            Map<EventType, List<RuntimeKey<T>>> grouped,
             ConfigurationIndexes indexes,
             Tr tr,
             StageName stageName)
     {
-        sane(eventType, "eventType", runtimeKeys, "runtimeKeys", indexes, "indexes", tr, "tr", stageName,
-                "stageName");
-        if (!checkEventType.eventTypeIsGuarded(eventType, indexes, tr, stageName))
+        sane(grouped, "grouped", indexes, "indexes", tr, "tr", stageName, "stageName");
+        List<EventHandler<?>> applicable = new ArrayList<>();
+        Set<EventHandler<?>> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+        RuntimeKey<T> primaryRuntimeKey = null;
+        for (Map.Entry<EventType, List<RuntimeKey<T>>> entry : grouped.entrySet())
         {
-            return;
+            EventType eventType = entry.getKey();
+            List<RuntimeKey<T>> runtimeKeys = entry.getValue();
+            if (!checkEventType.eventTypeIsGuarded(eventType, indexes, tr, stageName))
+            {
+                continue;
+            }
+            if (primaryRuntimeKey == null)
+            {
+                primaryRuntimeKey = primaryRuntimeKey(runtimeKeys);
+            }
+            List<EventHandler<?>> intents = toIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventType,
+                    indexes.intentField(), tr, stageName);
+            if (intents.isEmpty())
+            {
+                throw missingIntent(primaryRuntimeKey(runtimeKeys));
+            }
+            Set<EventHandler<?>> group = Collections.newSetFromMap(new IdentityHashMap<>());
+            for (EventHandler<?> intent : intents)
+            {
+                if (!seen.contains(intent))
+                {
+                    applicable.add(intent);
+                }
+                group.add(intent);
+            }
+            seen.addAll(group);
         }
-
-        RuntimeKey<T> primaryRuntimeKey = primaryRuntimeKey(runtimeKeys);
-        List<EventHandler<?>> intents =
-                toIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventType, indexes.intentField(),
-                        tr, stageName);
-        if (intents.isEmpty())
-        {
-            throw missingIntent(primaryRuntimeKey);
-        }
-        if (!iterateIntents.allowed(intents, primaryRuntimeKey.event()))
+        if (primaryRuntimeKey != null && !iterateIntents.allowed(applicable, primaryRuntimeKey.event()))
         {
             throw notAllowed(primaryRuntimeKey);
         }

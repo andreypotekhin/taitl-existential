@@ -64,6 +64,7 @@ public class ConcreteTr
     protected boolean immediateActive;
     protected boolean closed;
     protected boolean rollbackOnly;
+    protected boolean rollbackProcessing;
 
     protected ConcreteTr(Tr tr, String op, UUID id, TransactionLogic tl,
             EventLogic el)
@@ -100,7 +101,15 @@ public class ConcreteTr
     public void checkpoint()
     {
         requireOpen("checkpoint");
-        tl.checkpoint(tr);
+        try
+        {
+            tl.checkpoint(tr);
+        }
+        catch (RuntimeException | Error failure)
+        {
+            rollbackOnly = true;
+            throw failure;
+        }
     }
 
     public void commit()
@@ -120,7 +129,15 @@ public class ConcreteTr
     public void rollback()
     {
         requireOpen("rollback");
-        tl.rollback(tr);
+        rollbackProcessing = true;
+        try
+        {
+            tl.rollback(tr);
+        }
+        finally
+        {
+            rollbackProcessing = false;
+        }
     }
 
     public <T> void event(Event<T> event, T t, TypeKey<T> type)
@@ -258,8 +275,6 @@ public class ConcreteTr
 
     public void onCheckpoint()
     {
-        beginActive = false;
-        immediateActive = false;
         executeLifecycle.call(Checkpoint.class, StageName.CHECKPOINT);
     }
 
@@ -410,6 +425,7 @@ public class ConcreteTr
             beginEncounteredEventKeys = null;
             beginActive = false;
             immediateActive = false;
+            rollbackProcessing = false;
         }
         finally
         {
@@ -439,7 +455,8 @@ public class ConcreteTr
                 return;
             }
             throw new ExistentialException(String.format(
-                    "Cannot %s because commit failed. Roll back this transaction or abandon it. See %s",
+                    "Cannot %s because a transaction boundary failed. Roll back this transaction or close it before "
+                            + "beginning another transaction. See %s",
                     action, TROUBLESHOOTING_SECTION));
         }
         String verb = action != null ? action : "perform this operation";
@@ -452,6 +469,11 @@ public class ConcreteTr
     protected void requireMemos()
     {
         verify(!closed, "Transaction memo state is not available");
+        if (!closed && rollbackProcessing)
+        {
+            return;
+        }
+        requireOpen("access memo state");
     }
 
     protected StageData stageData(StageName stageName)

@@ -18,7 +18,12 @@ public class MaintainGlobalOrder
 
     public <T> OrderlyEv<T> globallyOrdered(Ev<T> ev)
     {
-        return new OrderlyEv<>(ev, maxCount.getAndIncrement());
+        return globallyOrdered(ev, false);
+    }
+
+    public <T> OrderlyEv<T> globallyOrdered(Ev<T> ev, boolean effect)
+    {
+        return new OrderlyEv<>(ev, maxCount.getAndIncrement(), effect);
     }
 
     public <T> void sort(List<OrderlyEv<?>> handlers)

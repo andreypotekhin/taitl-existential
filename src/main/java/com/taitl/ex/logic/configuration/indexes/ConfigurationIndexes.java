@@ -82,6 +82,11 @@ public class ConfigurationIndexes
         configuredHandlers.put(eventKey, ev);
     }
 
+    public <T> void addHandler(EventKey<T> eventKey, Ev<T> ev, boolean effect)
+    {
+        configuredHandlers.put(eventKey, ev, effect);
+    }
+
     public <T> void addIntent(EventKey<T> eventKey, Ev<T> ev)
     {
         configuredIntents.put(eventKey, ev);

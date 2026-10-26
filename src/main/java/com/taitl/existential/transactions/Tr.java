@@ -51,6 +51,11 @@ public class Tr
         concrete.addTransaction(tr);
     }
 
+    /**
+     * Validates the events reported so far while keeping the handle active after success. A
+     * failed checkpoint makes the handle rollback-only; explicitly call {@link #rollback()} or
+     * {@link #close()} before starting replacement work.
+     */
     public void checkpoint()
     {
         concrete.checkpoint();

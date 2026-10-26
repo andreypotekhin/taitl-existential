@@ -59,7 +59,7 @@ public class EvaluateIntents
 
         requireMemoForBiEvents.forIntents(runtimeKey, indexes, tr, stageName);
         Map<EventType, List<RuntimeKey<T>>> grouped = splitAndGroupByEventType(runtimeKey, tr);
-        iterateSplitKeys(grouped, indexes, tr, stageName);
+        evaluateSplitKeys.call(grouped, indexes, tr, stageName);
     }
 
     protected <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey, Tr tr)
@@ -81,16 +81,4 @@ public class EvaluateIntents
         }
     }
 
-    protected <T> void iterateSplitKeys(
-            Map<EventType, List<RuntimeKey<T>>> grouped,
-            ConfigurationIndexes indexes,
-            Tr tr,
-            StageName stageName)
-    {
-        sane(grouped, "grouped", indexes, "indexes", tr, "tr", stageName, "stageName");
-        for (Map.Entry<EventType, List<RuntimeKey<T>>> entry : grouped.entrySet())
-        {
-            evaluateSplitKeys.call(entry.getKey(), entry.getValue(), indexes, tr, stageName);
-        }
-    }
 }

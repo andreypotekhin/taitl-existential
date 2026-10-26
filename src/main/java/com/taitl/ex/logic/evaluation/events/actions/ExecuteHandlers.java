@@ -15,6 +15,11 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Runs one ordered event selection and routes ordinary constraint failures to its report. When
+ * the caller marks effects as participating, the first newly reported ordinary violation stops
+ * this selection; unexpected callback failures still escape immediately for every policy.
+ */
 public class ExecuteHandlers
 {
     @Logic
@@ -22,22 +27,46 @@ public class ExecuteHandlers
 
     public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report)
     {
+        call(evs, event, report, false);
+    }
+
+    public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report, boolean stopAfterViolation)
+    {
         sane(evs, "evs", event, "event", report, "report");
+        if (stopAfterViolation && !report.isEmpty())
+        {
+            return;
+        }
         for (Ev<T> ev : evs)
         {
             if (ev instanceof EventHandler<?>)
             {
+                int failures = report.exceptions().size();
                 executeHandler((EventHandler<T>) ev, event, report);
+                if (shouldStop(stopAfterViolation, failures, report))
+                {
+                    return;
+                }
             }
             else if (ev instanceof Expression<?>)
             {
+                int failures = report.exceptions().size();
                 executeExpression((Expression<T>) ev, event, report);
+                if (shouldStop(stopAfterViolation, failures, report))
+                {
+                    return;
+                }
             }
             else
             {
                 throw new IllegalStateException("Unsupported evaluable type: " + ev.getClass().getName());
             }
         }
+    }
+
+    protected boolean shouldStop(boolean stopAfterViolation, int previousFailures, ValidationReport report)
+    {
+        return stopAfterViolation && report.exceptions().size() > previousFailures;
     }
 
     public <T> void callAll(List<Ev<T>> evs, Event<T> event, ValidationReport report)

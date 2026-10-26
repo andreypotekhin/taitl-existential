@@ -142,7 +142,7 @@ class UserCanValidateEntityQuantifiers
     }
 
     @Test
-    @DisplayName("Checkpoint rejects missing membership and repeats validation after caller repairs its source")
+    @DisplayName("Failed checkpoint requires explicit cleanup before a fresh validation")
     void checkpoint() throws Exception
     {
         Cat cat = new Cat("Black", "Park");
@@ -155,10 +155,17 @@ class UserCanValidateEntityQuantifiers
                 .exists(cats, "Cat must remain in its collection");
         Tr tr = ex.begin(OP);
         tr.create(cat);
-        assertThrows(ValidationStageExceptions.class, tr::checkpoint);
+        assertThrows(ExistentialExceptions.class, tr::checkpoint);
         cats.add(cat);
-        tr.checkpoint();
-        tr.commit();
+        assertThrows(ExistentialException.class, () -> tr.create(new Cat("Black", "Garden")));
+        assertThrows(ExistentialException.class, tr::checkpoint);
+        assertThrows(ExistentialException.class, tr::commit);
+        tr.rollback();
+
+        Tr accepted = ex.begin(OP);
+        accepted.create(cat);
+        accepted.checkpoint();
+        accepted.commit();
         assertEquals(3, calls.get());
     }
 

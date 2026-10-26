@@ -21,8 +21,9 @@ transaction setup uses the conservative path. Supported changes to local rules c
 ### Failed compilation and resolution
 
 Failed configuration-plan compilation leaves configuration unfinalized and retryable. Failed first-use selection
-resolution does not cache an empty successful result or a partial selection. Existing begin, checkpoint, commit,
-rollback, and shutdown failure/cleanup contracts continue to apply.
+resolution does not cache an empty successful result or a partial selection. The governing
+[checkpoint failure](TransactionsAndEvaluation.spec.md#checkpoint-failure-recovery), commit, rollback, and shutdown
+contracts apply independently of selection caching. A failed checkpoint is not a selection-resolution retry.
 
 ## Validation-only transactions
 
@@ -43,20 +44,22 @@ their needed endpoint payloads under the existing folding contract.
 ### Boundary evaluation and order
 
 Checkpoint and commit perform validation at their established lifecycle positions, preserving operation/context/rule
-order and entity encounter order. Applicable checks execute for each recorded entity/event as required. Sharing a
-selection does not share predicate outcomes or omit checks on distinct entities.
+order and entity encounter order. Applicable checks execute for each recorded entity/event subject to the
+[evaluation failure policy](IntentsAndEffects.spec.md#evaluation-failure-policy). Sharing a selection does not share
+predicate outcomes or skip required checks on distinct entities; stopping after a violation is governed by that policy.
 
 ### Repeat validation
 
-A later checkpoint/commit reuses applicable rule selections, but evaluates the relevant current entity/source values
-again. A previous successful check does not certify later mutations, and an earlier failure does not contaminate a new
-validation report. The specialization adds no new snapshot or automatic compensation guarantees.
+After a successful checkpoint, a later checkpoint/commit reuses applicable rule selections but evaluates current
+entity/source values again. A previous successful check does not certify later mutations. A failed checkpoint is
+rollback-only; a fresh transaction uses a fresh report. The specialization adds no snapshot or compensation guarantee.
 
 ### Explicit report-time behavior
 
-Begin/immediate handlers and intents retain their existing timing/frequency whenever applicable. Adding an immediate
-transaction rule to validation-only context configuration selects a path that executes that rule while reporting.
-Lifecycle callbacks continue to run even when the corresponding stage has no entity-driven rules.
+The begin/immediate handlers and intents follow the selected
+[checkpoint continuation contract](TransactionsAndEvaluation.spec.md#successful-checkpoint-continuation). Adding an
+immediate transaction rule to validation-only context configuration selects a path that executes that rule while
+reporting. Lifecycle callbacks continue to run even when the corresponding stage has no entity-driven rules.
 
 ## Reusable matching
 
@@ -108,6 +111,9 @@ and factories are not invoked while holding a shared matching-cache lock.
 Direct specifications demonstrate validation-only reporting followed by checkpoint/commit, unchanged event folding and
 order, fresh values at repeated checkpoints, custom-transaction immediate fallback, empty selection reuse, unknown
 generic diagnostics and opt-out, concurrent first use, and cleanup after rejected commit/rollback/shutdown.
+The changed checkpoint continuation and effect-aware stopping contracts have separate implementation acceptance in
+[Sprint 08](../project/sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md#acceptance); the evidence below does
+not establish those changes.
 
 + A Night City workload acceptance case reports 64 distinct Cat instances under five validation declarations, observes
   zero declaration callbacks while reporting, then observes exactly 320 callbacks at commit.

@@ -165,6 +165,11 @@ public class TransactionLogic implements Closeable
         {
             checkpointTran.call(tr);
         }
+        catch (RuntimeException | Error failure)
+        {
+            registry.removeIfPresent(tr.id.toString());
+            throw failure;
+        }
         finally
         {
             leave();

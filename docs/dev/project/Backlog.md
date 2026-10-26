@@ -90,12 +90,18 @@ regressions; the new scope changes delivery/evidence priorities, not availabilit
 
 ### Stages, Intents, and Transaction Customization
 
-Status: planned. Delivery: [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
+Status: complete; selected contracts implemented and verified on 2026-10-24.
+Delivery: [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
 
-Use built-in execution stages, intents/effects, and customized transactions with predictable timing and failures.
+Use built-in stages, intents/effects, and runtime custom rule configuration with predictable timing and failures.
+The topic designs/specifications select checkpoint continuation, rollback-only checkpoint failure, conjunctive
+intents, and report collection with effect-aware stopping. The completed acceptance and full-build evidence are in the
+sprint record and execution plan. Mutation after `begin()`, definition reuse, snapshot semantics, and broader
+combinations remain separate readiness work.
 
-The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
-regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
+The [delivery execution plan](../planning/P10232601.Sprint08-stages-intents-custom-transactions.plan.md) and
+[performance evidence](../performance/runs/20261024T061720Z.Sprint08Transactions.md) document the implementation,
+acceptance, and measurement limits. The old checkpoint-retry expectation was replaced with rollback-only coverage.
 
 ### Indexes and Operational Coverage
 

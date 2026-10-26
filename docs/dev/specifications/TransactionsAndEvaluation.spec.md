@@ -1,9 +1,9 @@
 # Transactions and Evaluation Specification
 
-These are the intended behavior claims migrated from the original library specification.
+These requirements describe transaction and evaluation behavior, including the selected Sprint 08 contract.
 Implementation and evidence are tracked separately in the [traceability matrix](../project/TraceabilityMatrix.md).
-Legacy `+` marks are preserved. Add `+` to a requirement only when its current acceptance evidence passes; see the
-traceability matrix.
+Unchanged legacy `+` marks are preserved. Sprint 08 claims marked `+` have direct passing acceptance coverage;
+remaining open semantics and implementation status are recorded in the traceability matrix.
 Reference requirements by their descriptive headings. The claims describe library behavior, not legal commitments.
 
 See the paired [design](../design/TransactionsAndEvaluation.design.md) and [specification index](../Specification.md).
@@ -55,11 +55,13 @@ and [public lifecycle API](../../../src/test/java/com/taitl/specs/library_usage/
 
 ### Checkpoint failure recovery
 
-+ A checkpoint failure leaves the transaction handle available for further application work or explicit rollback. The
-library does not automatically mark it rollback-only. Callers are responsible for effects already performed and for
-callbacks that may run again on a later attempt.
++ A failed checkpoint throws and makes the handle rollback-only. Further entity/access event reporting, memo
+registration, checkpoint, and commit are rejected. The active string-ID entry is removed as for a failed commit;
+string-ID event lookup cannot continue. The caller may explicitly roll back or close the handle, or abandon it without
+an additional library registry retaining it. Rollback callbacks run only on explicit rollback. Neither failure nor
+cleanup undoes application effects already performed. Correction and retry require a fresh transaction.
 
-Acceptance: [checkpoint recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java).
+Acceptance: [checkpoint failure recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java).
 
 ### Rollback callback failure recovery
 
@@ -154,7 +156,10 @@ The validation phase triggers upon transaction commit, or at a checkpoint.
 
 ### Constraint validation and reporting
 
-In the validation phase, the library evaluates all applicable constraints and reports violations.
+The validation evaluation collects ordinary constraint violations into its report under the
+[evaluation failure policy](IntentsAndEffects.spec.md#evaluation-failure-policy). Checkpoint and commit retain their
+exception-based failure signal when violations are reported. A report does not imply that every rule ran: an
+evaluation with effects stops when its first violation is encountered. No public report-returning API is added.
 
 ### Validation-time effects
 
@@ -176,10 +181,20 @@ In the validation phase, the library executes validation-time side effects.
 
 ### Caller-supplied transactions
 
-+ User can specify an instance of Transaction class to use in a library transaction.
-  Rationale: so the users could configure rules based on dynamic information, such as web request parameters passed
-  into an API endpoint handler.
-  Code: This is done by specifying Transaction instance as parameter to Ex.begin() method.
++ User can specify an instance of Transaction class to use in a library transaction through `Ex.begin()` or the
+instance API.
+
++ Custom transactions allow rules to be configured at runtime using dynamically available information, rather than
+requiring all rules upfront at application startup. For example, a method parameter can provide a validation threshold;
+API endpoint processing is one use case, not a restriction on the feature.
+
+### Runtime transaction rule lifetime
+
++ Custom rules and captured values are retained by the active handle's transaction-local binding for evaluation and
+released on disposal. Independent invocation bindings must not leak their dynamic values into one another or retain
+their closures in shared configuration/selection caches. Caller-owned objects are not cleared by the library.
+
+Acceptance: [runtime custom transaction isolation and disposal](../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions/UserCanConfigureCustomTransactions.java).
 
 ## Execution stages
 
@@ -189,16 +204,15 @@ In the validation phase, the library executes validation-time side effects.
 
 ### Built-in execution stages
 
-+ The execution stages include: Precondition (Early), Immediate (Middle) and Validation (Late).
+The stage names are begin, immediate, commit, checkpoint, rollback, and validation. In prose these names are
+lowercase; uppercase is used for constants such as `StageName.BEGIN`. Entity evaluation in the begin stage is distinct
+from a transaction begin lifecycle callback.
 
 ### Default validation stage
 
-+ By default, the rules are assigned to Validation stage.
-- Precondition stage rules execute once per trigger event.
-  They may be used to initialize itermediate data structures, such as indexes, and the like.
-  Subsequent trigger events of same type are ignored for precondition rules.
-- Immediate stage rules execute on each trigger event - at any point during transaction.
-- Validation stage rules execute on transaction commit or checkpoint.
+Invariants and effects default to the validation stage unless explicitly assigned to another stage. Intents default
+to [immediate evaluation](IntentsAndEffects.spec.md#immediate-intent-validation). Explicit stage selection takes
+precedence over the rule category's default.
 
 ## Evaluation workflow
 
@@ -230,26 +244,28 @@ order of their definition
 ### Compiled execution plans
 
 The [runtime execution-plan contract](ExecutionPlans.spec.md) defines automatic validation-only reporting, complete
-transaction rule inventories, reusable rule selections, and unchanged boundary timing/recovery. Compiled plans follow
-the [context resolution order](LibraryAndConfiguration.spec.md#deterministic-context-resolution) and
-[entity type matching](EventsAndConstraints.spec.md#entity-type-matching) contracts. Compilation does not execute user
-predicates, cache entity validity, or alter configured lifecycle callback order.
+transaction rule inventories, and reusable rule selections. Compiled plans follow
+[context resolution order](LibraryAndConfiguration.spec.md#deterministic-context-resolution),
+[entity type matching](EventsAndConstraints.spec.md#entity-type-matching), and the stage/failure contracts in this
+document and [IntentsAndEffects.spec.md](IntentsAndEffects.spec.md#evaluation-failure-policy). Compilation does not
+execute user predicates, cache entity validity, or alter configured lifecycle callback order.
 
 ### Separate stage evaluations
 
-+ There is a separate evaluation per execution stage: Precondition, Immediate and Validation.
++ There is a separate evaluation per execution stage. The begin, immediate, and validation entity evaluations have
+distinct triggers and lifetimes.
 
-### Preconditions evaluation naming
+### Naming the begin evaluation
 
-+ Evaluation of Precondition stage rules is called Preconditions evaluation.
++ Evaluation of begin-stage entity rules is called begin evaluation.
 
-### Immediate evaluation naming
+### Naming the immediate evaluation
 
-+ Evaluation of Immediate stage rules is called Immediate evaluation.
++ Evaluation of immediate-stage rules is called immediate evaluation.
 
-### Validation evaluation naming
+### Naming the validation evaluation
 
-+ Evaluation of Validation stage rules is called Validation evaluation.
++ Evaluation of validation-stage rules is called validation evaluation.
 
 ### Independent transaction evaluations
 
@@ -259,50 +275,62 @@ Evaluations of separate transactions are independent, even if these transactions
 
 Only the events reported during a transaction participate in its evaluations.
 
-## Preconditions evaluation
+## Evaluation in the begin stage
 
-### Assigning precondition rules
+### Assigning rules to begin
 
-+ User can assign any rule to Precondition stage.
++ User can assign rules to the begin stage.
 
-### Preconditions evaluation lifetime
+### Lifetime of begin evaluation
 
-+ Preconditions evaluation becomes active (ready to accept trigger events) on transaction start, and lasts
-until commit/checkpoint/rollback.
++ The begin evaluation becomes active when a transaction starts and remains available while its handle permits
+reporting. A successful checkpoint preserves begin evaluation and its once-per-event/type history. Commit, rollback,
+close, or a checkpoint failure ends further report-time evaluation on that handle.
 
-### Precondition event frequency
+### Frequency of begin events
 
-+ Precondition stage rules are evaluated once per trigger event, as soon as event has been received, at any
-time during transaction.
+The begin-stage entity rules execute upon the first reported event for each event/type key in the transaction,
+independently of entity identity. Subsequent reports with the same key do not repeat begin evaluation. After a
+successful checkpoint an already encountered key stays encountered; a newly reported key may still trigger begin
+rules. Lifecycle begin callbacks execute during transaction creation, rather than once per reported key.
 
-## Immediate evaluation
+## Evaluation in the immediate stage
 
-### Immediate evaluation lifetime
+### Lifetime of immediate evaluation
 
-+ Immediate evaluation becomes active (ready to accept trigger events) on transaction start, and lasts until
-commit/checkpoint/rollback.
++ The immediate evaluation becomes active when a transaction starts and remains active after a successful checkpoint.
+Commit, rollback, close, or a checkpoint failure ends further report-time evaluation on that handle.
 
-### Immediate event frequency
+### Frequency of immediate events
 
-+ Immediate stage rules are evaluated each time per trigger event, as soon as event has been received, at any
-time during transaction.
-Since this may affect performance, using Immediate stage is considered an advanced technique. Normally, if you don't use
-side effects, you should be fine with precondition and validation (default) stages.
++ The immediate evaluation runs on every reported trigger event while reporting is permitted, including repeated
+reports that later fold for boundary validation.
 
-## Validation evaluation
+### Successful checkpoint continuation
+
++ A successful checkpoint leaves the same handle available for new events, further checkpoints, or commit. The immediate
+handlers and intents continue to run on subsequent reports, subject to applicable rules. The begin evaluation retains
+its existing key history. This continuation does not reset the transaction's event-folding identity or certify future
+entity values.
+
+Acceptance: [successful checkpoint continuation](../../../src/test/java/com/taitl/specs/library_usage/UserCanContinueAfterSuccessfulCheckpoint.java).
+
+## Evaluation in the validation stage
 
 ### Commit and checkpoint validation
 
-+ Validation evaluation is triggered on a commit or checkpoint of an existential transaction, ignored on
-rollback.
++ The validation evaluation is triggered on commit or checkpoint and is ignored on rollback.
 
 ### Validation effect dispatch
 
-+ The Effects are evaluated by applying event handlers for each event reported during a transaction to the
-corresponding entity.
++ Effects execute for the folded event/entity evaluations to which they apply, in declaration order with checks and
+subject to the [evaluation failure policy](IntentsAndEffects.spec.md#evaluation-failure-policy). Boundary evaluation
+preserves entity encounter order; it does not regroup entities by type or move effects into a separate final pass.
+
+Acceptance: [ordered effect stopping and collection](../../../src/test/java/com/taitl/specs/library_usage/UserCanStopOrderedEffectsAfterViolation.java).
 
 ### Validation event deduplication
 
-+ Validation stage rules are evaluated once per trigger event, from an in-memory index of such events (a
-runtime index),
-that folds duplicate events of same type into single event.
++ The validation stage evaluates folded event/type/entity records from the runtime event index. Duplicate reports
+fold under the [event identity contract](ExecutionPlans.spec.md#event-identity-and-folding); distinct entities retain
+separate evaluations.

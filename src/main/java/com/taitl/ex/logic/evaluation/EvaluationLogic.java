@@ -118,14 +118,43 @@ public class EvaluationLogic implements Closeable
         {
             return;
         }
+        boolean stopAfterViolation = hasSelectedEffects(tr);
         for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
         {
             if (hasIntents(tr, StageName.VALIDATION))
             {
                 evaluateIntents(runtimeKey, tr, StageName.VALIDATION);
             }
-            evaluateEvents(runtimeKey, tr, StageName.VALIDATION, report);
+            evaluateEvents(runtimeKey, tr, StageName.VALIDATION, report, stopAfterViolation);
+            if (stopAfterViolation && !report.isEmpty())
+            {
+                return;
+            }
         }
+    }
+
+    protected boolean hasSelectedEffects(Tr tr)
+    {
+        if (!eventField(tr, StageName.VALIDATION).hasEffects())
+        {
+            return false;
+        }
+        for (RuntimeKey<?> runtimeKey : tr.runtimeIndexes().encounteredUniqueEvents)
+        {
+            if (hasSelectedEffects(runtimeKey, tr))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected boolean hasSelectedEffects(RuntimeKey runtimeKey, Tr tr)
+    {
+        EventField eventField = eventField(tr, StageName.VALIDATION);
+        return evaluateEvents.hasEffects(runtimeKey, eventField,
+                useFullClassNames(), shouldSplitElementary(), tr);
     }
 
     protected <T> void evaluateEvents(
@@ -134,10 +163,21 @@ public class EvaluationLogic implements Closeable
             StageName stageName,
             ValidationReport report)
     {
+        evaluateEvents(runtimeKey, tr, stageName, report, false);
+    }
+
+    protected <T> void evaluateEvents(
+            RuntimeKey<T> runtimeKey,
+            Tr tr,
+            StageName stageName,
+            ValidationReport report,
+            boolean stopAfterViolation)
+    {
         sane(runtimeKey, "runtimeKey", tr, "tr", stageName, "stageName", report, "report");
         warnUnresolvedGenerics(runtimeKey, tr);
         EventField eventField = eventField(tr, stageName);
-        evaluateEvents.call(runtimeKey, tr, eventField, report, useFullClassNames(), shouldSplitElementary());
+        evaluateEvents.call(runtimeKey, tr, eventField, report, useFullClassNames(), shouldSplitElementary(),
+                stopAfterViolation);
     }
 
     protected void evaluateEncountered(Tr tr, StageName stageName)

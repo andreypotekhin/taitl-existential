@@ -99,11 +99,13 @@ public class EventField
         List<OrderlyEv<?>> ordered = new ArrayList<>(unique);
         ci.maintainGlobalOrder.sort(ordered);
         List<Ev<?>> handlers = new ArrayList<>();
+        boolean effects = false;
         for (OrderlyEv<?> handler : ordered)
         {
             handlers.add(handler.ev());
+            effects |= handler.effect;
         }
-        return new RuleSelection(handlers, false);
+        return new RuleSelection(handlers.toArray(new Ev<?>[0]), false, effects);
     }
 
     public <T> boolean hasBiEventKey(EventKey<T> eventKey)
@@ -116,6 +118,11 @@ public class EventField
     {
         PreparedSelections current = prepared;
         return current == null ? 0 : current.entries.size();
+    }
+
+    public boolean hasEffects()
+    {
+        return source().hasEffects();
     }
 
     public void close()

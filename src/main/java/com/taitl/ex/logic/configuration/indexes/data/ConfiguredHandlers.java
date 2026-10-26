@@ -39,6 +39,7 @@ public class ConfiguredHandlers
 
     /** Is indexing done? */
     protected volatile boolean ready = false;
+    protected volatile boolean effects = false;
 
     public ConfiguredHandlers(ConfigurationIndexes ci)
     {
@@ -71,14 +72,20 @@ public class ConfiguredHandlers
 
     public <T> Set<OrderlyEv<?>> put(EventKey<T> key, Ev<T> value)
     {
+        return put(key, value, false);
+    }
+
+    public <T> Set<OrderlyEv<?>> put(EventKey<T> key, Ev<T> value, boolean effect)
+    {
         sane(key, "key");
         sane(value, "value");
         check(value.single(), "Only single event handlers (Ev<T>) are supported,"
                 + " but the passed-in is a compound one (like Evs<T>).");
         synchronized (this)
         {
-            OrderlyEv<T> orderedValue = ci.maintainGlobalOrder.globallyOrdered(value);
+            OrderlyEv<T> orderedValue = ci.maintainGlobalOrder.globallyOrdered(value, effect);
             inventory = null;
+            effects |= effect;
             return handlers.add(key.toString(), orderedValue);
         }
     }
@@ -94,6 +101,11 @@ public class ConfiguredHandlers
     public boolean hasHandlers()
     {
         return !handlers.isEmpty();
+    }
+
+    public boolean hasEffects()
+    {
+        return effects;
     }
 
     public void ready(boolean ready)
@@ -124,6 +136,7 @@ public class ConfiguredHandlers
     {
         inventory = null;
         ready = false;
+        effects = false;
         handlers.clear();
     }
 }

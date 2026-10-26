@@ -31,11 +31,14 @@ public class ToIntentHandlers
                 "tr", stageName, "stageName");
 
         List<EventHandler<?>> result = new ArrayList<>();
+        Set<EventHandler<?>> shared = Collections.newSetFromMap(new IdentityHashMap<>());
         for (Ev<?> ev : field.get(multiKey))
         {
             if (ev instanceof EventHandler<?>)
             {
-                result.add((EventHandler<?>) ev);
+                EventHandler<?> handler = (EventHandler<?>) ev;
+                result.add(handler);
+                shared.add(handler);
             }
         }
 
@@ -46,7 +49,13 @@ public class ToIntentHandlers
                 List<EventHandler<?>> transactionHandlers = tr.intentHandlers(stageName, eventType, candidate);
                 if (transactionHandlers != null)
                 {
-                    result.addAll(transactionHandlers);
+                    for (EventHandler<?> handler : transactionHandlers)
+                    {
+                        if (shared.add(handler))
+                        {
+                            result.add(handler);
+                        }
+                    }
                 }
             }
         }

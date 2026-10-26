@@ -57,12 +57,17 @@ selection or retain the conservative path; optimization cannot silently omit new
 The plan's configured stage activity is separate from the existing begin/immediate lifecycle-window state. Reporting
 requires both an active window and applicable configured event work. A begin lifecycle callback is not itself a
 begin-stage entity rule. Commit/rollback lifecycle callbacks do not by themselves require per-report evaluation.
+The selected [stage lifetime](TransactionsAndEvaluation.design.md#stage-timing) keeps reporting active after a
+successful checkpoint and preserves begin encounter history; a failed checkpoint makes the handle rollback-only.
+Compiled activity cannot override those lifecycle restrictions. Declaration presence also determines the
+[effect-aware failure policy](IntentsAndEffects.design.md#evaluation-failure-policy) for an evaluation, including
+transaction-local and conditional effects. This describes required participation, not cached predicate outcomes.
 
 ## Validation-only reporting
 
 An effective plan with no begin/immediate entity handlers or intents can collect reports without entering those
-evaluation paths. The stricter validation-only case has entity rules only in VALIDATION. The same reporting principle
-also applies to other boundary-only entity stages when their dependencies permit it.
+evaluation paths. The stricter validation-only case has entity rules only in `StageName.VALIDATION`. The same reporting
+principle also applies to other boundary-only entity stages when their dependencies permit it.
 
 Input checks, transaction state checks, synchronization/admission accounting, event identity, explicit endpoints,
 type information, and caller-supplied memo semantics remain intact. Record a report once and preserve existing
@@ -79,7 +84,8 @@ lookup. This optimization does not defer malformed endpoint errors or change exp
 
 At checkpoint/commit, reuse selections across reported entities while traversing their existing encounter order.
 Do not regroup callback execution by type. At each validation attempt, invoke applicable rules against the relevant
-current values; neither successful predicate results nor earlier failures are cached as entity validity. Empty
+current values, subject to the effect-aware failure policy; neither successful predicate results nor earlier failures
+are cached as entity validity. Failed checkpoints cannot be retried on the same handle. Empty
 boundary stages can skip entity traversal while lifecycle callbacks and disposal still execute as required.
 
 ## EventField and first-use matching

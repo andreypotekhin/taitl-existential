@@ -22,6 +22,7 @@ public class IndexEvs implements Evaluator
 
     protected TypeKey<?> currentTypeKey;
     protected boolean currentIntent;
+    protected boolean currentEffect;
 
     @Logic
     protected TypeMatchingLogic typeMatchingLogic;
@@ -43,8 +44,10 @@ public class IndexEvs implements Evaluator
     {
         TypeKey<?> previous = currentTypeKey;
         boolean previousIntent = currentIntent;
+        boolean previousEffect = currentEffect;
         currentTypeKey = evs.typeKey();
         currentIntent = evs instanceof Intent<?>;
+        currentEffect = evs instanceof Effect<?>;
         try
         {
             if (currentTypeKey != null)
@@ -57,6 +60,7 @@ public class IndexEvs implements Evaluator
         {
             currentTypeKey = previous;
             currentIntent = previousIntent;
+            currentEffect = previousEffect;
         }
     }
 
@@ -83,7 +87,7 @@ public class IndexEvs implements Evaluator
             return;
         }
 
-        ci.addHandler(eventKey, ev);
+        ci.addHandler(eventKey, ev, currentEffect);
         if (biEventType(ev))
         {
             ci.addBiKey(eventKey);

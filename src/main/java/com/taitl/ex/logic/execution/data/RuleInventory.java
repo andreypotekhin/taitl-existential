@@ -57,11 +57,14 @@ public class RuleInventory
     public RuleSelection selection(int[] members, boolean memoRequired)
     {
         Ev<?>[] handlers = new Ev<?>[members.length];
+        boolean effects = false;
         for (int i = 0; i < members.length; i++)
         {
-            handlers[i] = declarations.get(members[i]).handler;
+            RuleDeclaration declaration = declarations.get(members[i]);
+            handlers[i] = declaration.handler;
+            effects |= declaration.effect;
         }
-        return new RuleSelection(handlers, memoRequired);
+        return new RuleSelection(handlers, memoRequired, effects);
     }
 
     /** Materializes native bitmap membership without an intermediate identifier array. */
@@ -69,22 +72,28 @@ public class RuleInventory
     {
         Ev<?>[] handlers = new Ev<?>[members.cardinality()];
         int count = 0;
+        boolean effects = false;
         for (int id = members.nextSetBit(0); id >= 0; id = members.nextSetBit(id + 1))
         {
-            handlers[count++] = declarations.get(id).handler;
+            RuleDeclaration declaration = declarations.get(id);
+            handlers[count++] = declaration.handler;
+            effects |= declaration.effect;
         }
-        return new RuleSelection(handlers, memoRequired);
+        return new RuleSelection(handlers, memoRequired, effects);
     }
 
     /** Adapts an alternative native membership iterator without a runtime dependency on its representation. */
     public RuleSelection selection(PrimitiveIterator.OfInt members, int size, boolean memoRequired)
     {
         Ev<?>[] handlers = new Ev<?>[size];
+        boolean effects = false;
         for (int i = 0; i < size; i++)
         {
-            handlers[i] = declarations.get(members.nextInt()).handler;
+            RuleDeclaration declaration = declarations.get(members.nextInt());
+            handlers[i] = declaration.handler;
+            effects |= declaration.effect;
         }
-        return new RuleSelection(handlers, memoRequired);
+        return new RuleSelection(handlers, memoRequired, effects);
     }
 
     public int size()

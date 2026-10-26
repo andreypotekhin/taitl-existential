@@ -14,9 +14,13 @@ plan](../past/planning/P10222607.Sprint07-contexts-type-matching-and-execution-p
 and [performance topic](../performance/topics/ExecutionPlans.md) retain correctness/concurrency/resource checks,
 root/consumer/reactor verification, artifact evidence, and three-process comparisons with explicit limits.
 
-Discuss/select ready Sprint 08 stage, intent/effect, and transaction-customization capabilities using its charter
-and traceability. Resolve remaining behavioral choices before implementation. Retain compiled inventory/profile
-and EventField ownership; Sprint 07 adds no numerical performance gate or broader stage-policy contract.
+Sprint 08's selected stage/default, checkpoint continuation/failure, intent conjunction, effect-aware report collection,
+and runtime custom rule decisions are implemented and verified against its
+[acceptance](../project/sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md#acceptance). The
+[implementation plan](../planning/P10232601.Sprint08-stages-intents-custom-transactions.plan.md) and
+[performance evidence](../performance/runs/20261024T061720Z.Sprint08Transactions.md) capture the result. Mutation after
+`begin()`, definition reuse, snapshot semantics, and broader combinations remain separate readiness questions.
+Retain compiled inventory/profile and EventField ownership; Sprint 07 adds no numerical gate.
 
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Restore useful verification feedback early and link evidence for each concern. Do not treat inherited marks or

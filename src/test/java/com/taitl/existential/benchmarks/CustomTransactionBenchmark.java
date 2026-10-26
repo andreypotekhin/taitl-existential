@@ -21,18 +21,29 @@ class CustomTransactionBenchmark
     @DisplayName("Custom transaction benchmark")
     void customTransactionBenchmark() throws Exception
     {
-        BenchmarkResult staticContext = measure("static-context", StaticContextScenario::new);
-        BenchmarkResult configuredTransaction = measure("configured-transaction", ConfiguredTransactionScenario::new);
-        BenchmarkResult customTransaction = measure("custom-transaction", CustomTransactionScenario::new);
+        BenchmarkResult noOpDispatch = measure("no-op-dispatch", () -> new NoOpDispatchScenario());
+        BenchmarkResult emptyHandler = measure("empty-handler", () -> new EmptyHandlerScenario());
+        BenchmarkResult staticContext = measure("static-context", () -> new StaticContextScenario());
+        BenchmarkResult configuredTransaction = measure("configured-transaction",
+                () -> new ConfiguredTransactionScenario());
+        BenchmarkResult customPreparation = measure("custom-preparation", () -> new CustomPreparationScenario());
+        BenchmarkResult customTransaction = measure("custom-transaction", () -> new CustomTransactionScenario());
 
         System.out.println();
-        System.out.println("Custom transaction benchmark:");
+        System.out.println("Transaction, dispatch, and custom-rule benchmark, sample "
+                + Integer.getInteger("benchmark.sample", 0) + ":");
+        System.out.println(noOpDispatch);
+        System.out.println(emptyHandler);
         System.out.println(staticContext);
         System.out.println(configuredTransaction);
+        System.out.println(customPreparation);
         System.out.println(customTransaction);
 
+        assertTrue(noOpDispatch.opsPerSecond() > 0);
+        assertTrue(emptyHandler.opsPerSecond() > 0);
         assertTrue(staticContext.opsPerSecond() > 0);
         assertTrue(configuredTransaction.opsPerSecond() > 0);
+        assertTrue(customPreparation.opsPerSecond() > 0);
         assertTrue(customTransaction.opsPerSecond() > 0);
     }
 
@@ -157,6 +168,37 @@ class CustomTransactionBenchmark
         }
     }
 
+    protected static class NoOpDispatchScenario extends BenchmarkScenario
+    {
+        protected void configure()
+        {
+            ex.configure().context(OP).invariant(String.class).all(value -> true, "unmatched benchmark rule");
+        }
+
+        protected Tr begin() throws Exception
+        {
+            return ex.begin(OP);
+        }
+    }
+
+    protected static class EmptyHandlerScenario extends BenchmarkScenario
+    {
+        protected void configure()
+        {
+            // @formatter:off
+            ex.configure()
+                .context(OP)
+                    .effect(Cat.class)
+                        .update(cat -> { });
+            // @formatter:on
+        }
+
+        protected Tr begin() throws Exception
+        {
+            return ex.begin(OP);
+        }
+    }
+
     protected static class ConfiguredTransactionScenario extends BenchmarkScenario
     {
         protected void configure()
@@ -196,6 +238,31 @@ class CustomTransactionBenchmark
         protected Tr begin() throws Exception
         {
             Transaction transaction = new Transaction(OP, "custom-benchmark");
+            Effect<Cat> effect = new Effect<>(Cat.class);
+            effect.update(cat -> updates.incrementAndGet());
+            transaction.effect(effect);
+            return ex.begin(OP, transaction);
+        }
+    }
+
+    protected static class CustomPreparationScenario extends BenchmarkScenario
+    {
+        protected void configure()
+        {
+            ex.configure().context(OP).invariant(String.class).all(value -> true, "unmatched benchmark rule");
+        }
+
+        public void run(int iterations) throws Exception
+        {
+            for (int i = 0; i < iterations; i++)
+            {
+                begin().close();
+            }
+        }
+
+        protected Tr begin() throws Exception
+        {
+            Transaction transaction = new Transaction(OP, "custom-preparation-benchmark");
             Effect<Cat> effect = new Effect<>(Cat.class);
             effect.update(cat -> updates.incrementAndGet());
             transaction.effect(effect);

@@ -31,11 +31,11 @@ public class IterateIntents
         sane(intents, "intents", event, "event");
         for (EventHandler<?> intent : intents)
         {
-            if (evaluateIntent.call(intent, event))
+            if (!evaluateIntent.call(intent, event))
             {
-                return true;
+                return false;
             }
         }
-        return false;
+        return !intents.isEmpty();
     }
 }

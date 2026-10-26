@@ -60,6 +60,11 @@ public class EventFieldOverlay extends EventField
         return merged.size();
     }
 
+    public boolean hasEffects()
+    {
+        return base.hasEffects() || overlay.hasEffects();
+    }
+
     public void close()
     {
         merged.clear();

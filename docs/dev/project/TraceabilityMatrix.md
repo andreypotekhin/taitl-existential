@@ -41,7 +41,7 @@ Requirements: Selected entity/commit paths; broader stage behavior remains in V2
   [Rolling back a transaction], [Reporting entity modifications], [Reporting through transaction objects],
   [Events require a transaction], [Events require configured rules], [Library usage phases], [Configuration phase],
   [Execution phase], [Validation phase triggers], [Constraint validation and reporting], [Default validation stage],
-  [Rule execution order], [Event handler order], [Validation evaluation naming], [Transaction event scope],
+  [Rule execution order], [Event handler order], [Naming the validation evaluation], [Transaction event scope],
   [Commit and checkpoint validation], [Validation event deduplication].
 - [EventsAndConstraints.spec.md]: [Reporting class events], [Equal event deduplication],
   [Events require library configuration], [Events require a started transaction], [Events after transaction completion],
@@ -123,8 +123,9 @@ also verifies callers need no `throws` declaration. The three report cases and e
 
 Epic: [Failure Recovery and Resource Hygiene](Backlog.md#failure-recovery-and-resource-hygiene);
 [Sprint 03](sprints/Sprint03_V1FailureRecoveryAndResourceHygiene.md).
-Design readiness: ready for the selected recovery/shutdown contract. Verification: verified for the selected V1 paths;
-global leak reporting remains in V2.
+Design readiness: the selected recovery/shutdown contracts are implemented, including Sprint 08's rollback-only
+checkpoint failure. The recorded V1 paths remain historical evidence; the revised checkpoint behavior has direct
+Sprint 08 acceptance coverage. Global leak reporting remains in V2.
 
 Requirements: Admitted transaction/library exits; cleanup does not imply undoing caller objects.
 
@@ -137,14 +138,20 @@ Requirements: Admitted transaction/library exits; cleanup does not imply undoing
 Evidence: [transaction recovery tests](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
 and [registry test](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java), plus
 [failed begin](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterBeginFailure.java),
-[checkpoint retry](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java), and
+[historical checkpoint retry][checkpoint-retry-test], and
 [shutdown concurrency](../../../src/test/java/com/taitl/specs/library_usage/UserCanShutdownLibrary.java).
 The [Sprint 02 relationship cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
 also verify all three runtime index collections clear through retained closed handles after commit/explicit rollback.
-Verification: the selected recovery and shutdown behaviors pass direct acceptance tests. Configuration finalization is
-retryable when a context factory fails; see [configuration recovery acceptance](../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java).
-The final root build runs all 455 tests with zero failures/errors/skips and its JaCoCo checks pass. Rejected-commit,
-rollback, and fresh-recovery timings appear in the [Sprint 04 measurement](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md)
+The checkpoint-retry expectation is superseded by
+[rollback-only checkpoint failure](../specifications/TransactionsAndEvaluation.spec.md#checkpoint-failure-recovery);
+[its replacement](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java)
+verifies registry detachment, rejected operations, explicit-only rollback callbacks, cleanup, and fresh recovery.
+Successful checkpoint continuation is covered in
+[UserCanContinueAfterSuccessfulCheckpoint.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanContinueAfterSuccessfulCheckpoint.java).
+The 2026-10-24 root build ran 523 tests with zero failures/errors/skips; Checkstyle and PMD passed and JaCoCo thresholds
+were met. Configuration finalization remains retryable when a context factory fails; see
+[configuration recovery acceptance][UserCanConfigureLibrary.java].
+Rejected-commit, rollback, and fresh-recovery timings appear in the [Sprint 04 measurement](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md)
 and [V1 closeout measurement](../performance/runs/20261022T205600Z.NightCityV1Closeout.md). Broader cache bounds and
 observable leak reporting remain in V2/global scope.
 
@@ -297,39 +304,55 @@ records final evidence and explicit deferrals; stage policy remains owned by Spr
 
 Epic: [Stages, Intents, and Transaction Customization](Backlog.md#stages-intents-and-transaction-customization);
 [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
-Design readiness: open. Verification: partial.
+Design readiness: runtime rule configuration and transaction-local lifetime are selected. Mutation after `begin()`,
+definition reuse, and snapshot semantics remain open. Verification: selected runtime isolation/disposal requirements
+have direct acceptance coverage; broader factory, lifecycle, memo, and additional-value combinations remain open.
 
-Requirements: Factories, supplied instances, access rules, memo behavior, and per-call values.
+Requirements: factories, supplied instances, access rules, memo behavior, and dynamic invocation values.
 
 - [LibraryAndConfiguration.spec.md]: [Transaction lifecycle invariants], [Invocation configuration classes],
   [Transaction interaction classes], [Event reporting classes], [Transaction memo registration].
 - [TransactionsAndEvaluation.spec.md]: [Access rule configuration], [Transaction lifecycle rule configuration],
   [Reporting entity access], [Reporting through transaction objects], [Rules on transaction objects],
-  [Custom transaction factories], [Transaction factory inheritance], [Caller-supplied transactions].
+  [Custom transaction factories], [Transaction factory inheritance], [Caller-supplied transactions],
+  [Runtime transaction rule lifetime].
 - [EventsAndConstraints.spec.md]: [Additional event values].
 
-Evidence to review: [custom_transactions].
-Remaining work: Verify factories, supplied instances, access rules, memo behavior, and per-call values under the full
-contract.
+Evidence: [UserCanConfigureCustomTransactions.java](../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions/UserCanConfigureCustomTransactions.java)
+verifies dynamic values remain isolated and transaction-local references release on disposal. The implementation plan
+and [performance session](../performance/runs/20261024T061720Z.Sprint08Transactions.md) record exact verification and
+separate custom preparation from complete transaction workflows. Mutation/reuse semantics remain deferred.
 
 ## Built-in stages, intents, and effects
 
 Epic: [Stages, Intents, and Transaction Customization](Backlog.md#stages-intents-and-transaction-customization);
 [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
-Design readiness: open. Verification: partial.
+Design readiness: stage/default, successful checkpoint continuation, rollback-only checkpoint failure, conjunctive
+intents, and report collection/effect-aware stopping are selected. Verification: selected requirements have passing
+direct acceptance coverage; the superseded retry expectation has been replaced in the
+[sprint record](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md#implementation-and-superseded-evidence).
 
-Requirements: Broader stage timing and all IntentsAndEffects.spec.md requirements for built-in paths.
+Requirements: built-in stage timing, authorization, ordered effects, reporting, and failure/cleanup behavior.
 
 - [TransactionsAndEvaluation.spec.md]: [Execution-time effects], [Validation-time effects],
-  [Assigning execution stages], [Built-in execution stages], [Participating evaluation rules], [Parent rule precedence],
-  [Rule execution order], [Event handler order], [Separate stage evaluations], [Preconditions evaluation naming],
-  [Immediate evaluation naming], [Assigning precondition rules], [Preconditions evaluation lifetime],
-  [Precondition event frequency], [Immediate evaluation lifetime], [Immediate event frequency],
-  [Commit and checkpoint validation], [Validation effect dispatch], [Validation event deduplication].
-- [IntentsAndEffects.spec.md]: all built-in intent/effect paths.
+  [Assigning execution stages], [Built-in execution stages], [Default validation stage],
+  [Participating evaluation rules],
+  [Parent rule precedence], [Rule execution order], [Event handler order], [Separate stage evaluations],
+  [Naming the begin evaluation], [Naming the immediate evaluation], [Assigning rules to begin],
+  [Lifetime of begin evaluation], [Frequency of begin events], [Lifetime of immediate evaluation],
+  [Frequency of immediate events], [Successful checkpoint continuation], [Checkpoint failure recovery],
+  [Commit and checkpoint validation], [Validation effect dispatch], [Validation event deduplication],
+  [Constraint validation and reporting].
+- [IntentsAndEffects.spec.md]: all built-in intent/effect paths, especially
+  [Intent composition] and [Evaluation failure policy].
 
-Evidence to review: [UserCanConfigureIntents.java].
-Remaining work: Reconcile stage terminology and cover order, partial effects, authorization failures, and recovery.
+Evidence: [UserCanNarrowApplicableIntents.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanNarrowApplicableIntents.java),
+[UserCanStopOrderedEffectsAfterViolation.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanStopOrderedEffectsAfterViolation.java),
+[UserCanContinueAfterSuccessfulCheckpoint.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanContinueAfterSuccessfulCheckpoint.java),
+and [UserCanRecoverAfterCheckpointFailure.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java),
+along with the full library usage suite. The [Sprint 08 performance session](../performance/runs/20261024T061720Z.Sprint08Transactions.md)
+separates dispatch, handler work, and runtime transaction preparation. Mutation/reuse semantics and broader combinations
+remain deferred.
 
 ## Maintained relationships and indexing
 
@@ -488,7 +511,7 @@ records, consumer results, and artifact checks must agree before closure. These 
 [Default validation stage]: ../specifications/TransactionsAndEvaluation.spec.md#default-validation-stage
 [Rule execution order]: ../specifications/TransactionsAndEvaluation.spec.md#rule-execution-order
 [Event handler order]: ../specifications/TransactionsAndEvaluation.spec.md#event-handler-order
-[Validation evaluation naming]: ../specifications/TransactionsAndEvaluation.spec.md#validation-evaluation-naming
+[Naming the validation evaluation]: ../specifications/TransactionsAndEvaluation.spec.md#naming-the-validation-evaluation
 [Transaction event scope]: ../specifications/TransactionsAndEvaluation.spec.md#transaction-event-scope
 [Commit and checkpoint validation]: ../specifications/TransactionsAndEvaluation.spec.md#commit-and-checkpoint-validation
 [Validation event deduplication]: ../specifications/TransactionsAndEvaluation.spec.md#validation-event-deduplication
@@ -574,14 +597,14 @@ records, consumer results, and artifact checks must agree before closure. These 
 [Participating evaluation rules]: ../specifications/TransactionsAndEvaluation.spec.md#participating-evaluation-rules
 [Parent rule precedence]: ../specifications/TransactionsAndEvaluation.spec.md#parent-rule-precedence
 [Separate stage evaluations]: ../specifications/TransactionsAndEvaluation.spec.md#separate-stage-evaluations
-[Preconditions evaluation naming]: ../specifications/TransactionsAndEvaluation.spec.md#preconditions-evaluation-naming
-[Immediate evaluation naming]: ../specifications/TransactionsAndEvaluation.spec.md#immediate-evaluation-naming
-[Assigning precondition rules]: ../specifications/TransactionsAndEvaluation.spec.md#assigning-precondition-rules
-[Preconditions evaluation lifetime]:
-  ../specifications/TransactionsAndEvaluation.spec.md#preconditions-evaluation-lifetime
-[Precondition event frequency]: ../specifications/TransactionsAndEvaluation.spec.md#precondition-event-frequency
-[Immediate evaluation lifetime]: ../specifications/TransactionsAndEvaluation.spec.md#immediate-evaluation-lifetime
-[Immediate event frequency]: ../specifications/TransactionsAndEvaluation.spec.md#immediate-event-frequency
+[Naming the begin evaluation]: ../specifications/TransactionsAndEvaluation.spec.md#naming-the-begin-evaluation
+[Naming the immediate evaluation]: ../specifications/TransactionsAndEvaluation.spec.md#naming-the-immediate-evaluation
+[Assigning rules to begin]: ../specifications/TransactionsAndEvaluation.spec.md#assigning-rules-to-begin
+[Lifetime of begin evaluation]:
+  ../specifications/TransactionsAndEvaluation.spec.md#lifetime-of-begin-evaluation
+[Frequency of begin events]: ../specifications/TransactionsAndEvaluation.spec.md#frequency-of-begin-events
+[Lifetime of immediate evaluation]: ../specifications/TransactionsAndEvaluation.spec.md#lifetime-of-immediate-evaluation
+[Frequency of immediate events]: ../specifications/TransactionsAndEvaluation.spec.md#frequency-of-immediate-events
 [Validation effect dispatch]: ../specifications/TransactionsAndEvaluation.spec.md#validation-effect-dispatch
 [All on entity transitions]: ../specifications/QuantifiersAndIndexes.spec.md#all-on-entity-transitions
 [Exists on maps]: ../specifications/QuantifiersAndIndexes.spec.md#exists-on-maps
@@ -602,3 +625,24 @@ records, consumer results, and artifact checks must agree before closure. These 
   ../specifications/EventsAndConstraints.spec.md#custom-event-transaction-constraints
 [Reporting custom events]: ../specifications/EventsAndConstraints.spec.md#reporting-custom-events
 [Custom event splitting]: ../specifications/EventsAndConstraints.spec.md#custom-event-splitting
+
+[Runtime transaction rule lifetime]:
+  ../specifications/TransactionsAndEvaluation.spec.md#runtime-transaction-rule-lifetime
+[Successful checkpoint continuation]:
+  ../specifications/TransactionsAndEvaluation.spec.md#successful-checkpoint-continuation
+[Intent composition]: ../specifications/IntentsAndEffects.spec.md#intent-composition
+[Evaluation failure policy]: ../specifications/IntentsAndEffects.spec.md#evaluation-failure-policy
+
+[Checkpoint failure recovery]: ../specifications/TransactionsAndEvaluation.spec.md#checkpoint-failure-recovery
+[Rollback callback failure recovery]:
+  ../specifications/TransactionsAndEvaluation.spec.md#rollback-callback-failure-recovery
+[Library shutdown]: ../specifications/TransactionsAndEvaluation.spec.md#library-shutdown
+[Closing a transaction from its callback]:
+  ../specifications/TransactionsAndEvaluation.spec.md#closing-a-transaction-from-its-callback
+[Transaction-local state release]: ../specifications/Housekeeping.spec.md#transaction-local-state-release
+[Graceful library shutdown]: ../specifications/Housekeeping.spec.md#graceful-library-shutdown
+[Configuration build failure recovery]:
+  ../specifications/LibraryAndConfiguration.spec.md#configuration-build-failure-recovery
+
+[checkpoint-retry-test]:
+  ../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java

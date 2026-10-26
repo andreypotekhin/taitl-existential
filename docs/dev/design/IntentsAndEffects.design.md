@@ -1,66 +1,81 @@
 # Intents and Effects Design
 
-Status: current-state design with open decisions; not a declaration that all specified behavior is implemented.
+The [specification](../specifications/IntentsAndEffects.spec.md) defines observable behavior. This document explains
+authorization composition, effect ordering, and failure handling. Implementation evidence and remaining delivery
+decisions belong in [Sprint 08](../project/sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md) and
+[traceability](../project/TraceabilityMatrix.md#built-in-stages-intents-and-effects).
 
 ## User outcome
 
-Authorize entity operations with intents and execute declared effects at a predictable transaction stage.
+Apply general restrictions and more specific restrictions together, then execute declared effects at predictable
+stages without making further changes after an evaluation has failed.
 
-The [specification](../specifications/IntentsAndEffects.spec.md) defines intended behavior. See the
-[assessment](../project/Assessment.md) for release evidence and [agent process](../auto/Process.md) for the next steps.
+## Authorization composition
 
-## Current implementation
+An intent guards an event type at its assigned stage. Once that event type is guarded, an applicable intent must
+cover the reported entity/type. Every applicable intent predicate must pass. Matching follows the existing context
+resolution, type compatibility, and event-family rules; declaration order determines evaluation order, not an override
+priority. Parent, wildcard, concrete-type, inherited-type, and transaction-local predicates all constrain access.
 
-Intent declarations restrict corresponding event types for entities; immediate intent evaluation is the default. Effects
-use event handlers and can be configured in contexts or transaction rules. Existing specifications test combined
-CU/UD/CUD effects and stage-assigned intents, including validation-stage rejection.
+For example, a parent can require membership in the current tenant while a child requires ownership of the entity.
+Both must hold. A passing general predicate cannot bypass a failing specific predicate. The same rule applies to
+multiple intents within one context and to runtime custom transaction rules. Alternative permissions are expressed
+inside a predicate, such as `isOwner(entity) || isAdministrator()`. This keeps narrowing predictable without a second
+implicit permission-combination language.
 
-- [intent enforcement](../../../src/main/java/com/taitl/ex/logic/evaluation/intents/EvaluateIntents.java)
-- [handler execution](../../../src/main/java/com/taitl/ex/logic/evaluation/events/actions/ExecuteHandlers.java)
-- [effect configuration](../../../src/main/java/com/taitl/existential/constraints/Effect.java)
-- [intent configuration](../../../src/main/java/com/taitl/existential/constraints/Intent.java)
+Intents default to immediate evaluation; invariants and effects default to validation. An explicit stage assignment
+controls timing. Entity rules at begin and transaction lifecycle callbacks have different triggers, described in
+[stage timing](TransactionsAndEvaluation.design.md#stage-timing). Stage names are lowercase in prose; uppercase is
+reserved for constants such as `StageName.IMMEDIATE`.
 
-## Approach and tradeoffs
+## Ordered effects
 
-Keep permission checks explicit and effect ordering observable. Do not promise effect rollback or transactional
-atomicity for caller side effects. Reuse indexed rule selection across invariant, intent, and effect evaluation.
+Effects share the resolved declaration order with checks. They are not moved into a separate pass after all checks:
+an effect may prepare state required by a later check. A successful evaluation executes all applicable work in order.
+Boundary evaluation preserves entity encounter order and the existing event-folding contract; it does not regroup
+entities by type to batch effects. Matching a declaration through several paths does not multiply its execution.
 
-These observations retain the existing architecture. They do not approve new public interfaces or resolve the open
-choices below. Record future decisions here, update the normative specification, and reconcile the execution plan.
+## Evaluation failure policy
 
-## Open decisions
+The effective rules for the current evaluation determine whether effects participate, including transaction-local
+rules and conditional actions. An effect in an unrelated stage does not change this evaluation's policy. Declared
+actions determine participation; a predicate is expected to be free of side effects, and the library does not inspect
+arbitrary callback bodies to prove that property.
 
-- Specify how wildcard/context precedence composes with intents and transaction overlays.
-- Reconcile the migrated Early/Middle/Late wording with implemented stage names and lifecycle hooks.
-- Define handler failure propagation, partial effects, and ordering across split events.
-- Specify custom event interactions together with EventsAndConstraints before enabling new dispatch behavior.
+Without effects, ordinary constraint violations accumulate in a report while remaining checks continue across rules
+and entities. This provides multiple useful diagnostics from one validation attempt. With effects, execution remains
+normal until the first violation; that violation is recorded and stops the entire evaluation, including subsequent
+entities and contexts. No later effect or dependent check runs. Effects executed before the failure remain performed.
 
-## Evidence and acceptance work
+For `check A -> effect B -> check C`, a passing A permits B and C to run. A failing A stops both B and C when effects
+participate. If C fails after B runs, B is not undone. Skipping B but continuing C could manufacture another violation;
+continuing B after A failed would perform additional changes in a rejected attempt. Stopping avoids both outcomes.
 
-- [intent specifications](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureIntents.java)
-- [combined effects](../../../src/test/java/com/taitl/specs/library_usage/UserCanHandleCombinedEventEffects.java)
-- [execution unit tests](../../../src/test/java/com/taitl/ex/logic/evaluation/actions/ExecuteHandlersTest.java)
+Unexpected callback failures and authorization denials stop immediately in either mode. They are not ordinary
+constraint violations to collect while proceeding with more work. Checkpoint and commit keep the existing
+exception-based failure signal after report collection; no public report-returning API is introduced. Explicit
+rollback's continue-through-failures cleanup behavior remains separate from this evaluation policy.
 
-[Stages, Intents, and Transaction Customization] owns standard intents/effects/stages; Custom Event Evaluation and
-Extensions owns their integration with custom events. Add user-facing positive and negative acceptance cases for each
-unresolved behavior; passing adjacent unit tests do not establish the full claim. Preserve inherited completion marks
-until a requirement-level review changes them.
+## Ownership, diagnostics, and recovery
 
-## Required quality analysis
+Context rules belong to their configured library instance. Runtime transaction rules, captured values, overlays, and
+reports belong to the active transaction binding and are released on disposal. Shared matching metadata contains no
+reported payloads or runtime custom-rule closures. A single handle is not safe for concurrent mutation; supported
+independent transactions retain separate mutable state. User callbacks run outside shared matching-cache locks.
 
-These obligations must be resolved for each selected capability before its design is ready. Record concrete decisions
-and acceptance/evidence in this design and its specification, or justify inapplicability; this list does not itself
-establish passing evidence. See [Process](../auto/Process.md#required-design-analysis).
-
-- Correctness: specify authorization scope, stage timing, callback order/count, and context/transaction composition.
-- Actionable errors: distinguish authorization denial from callback failure and identify operation/stage/rule/cause.
-- Failure recovery: define partial effects and permitted follow-up actions; caller side effects are not auto-reverted.
-- Resource hygiene: define handler/captured-state and transaction lifetimes, registration scope, and concurrency limits.
-- Performance: isolate dispatch/authorization overhead from callback work and measure stage/event cardinality.
+Diagnostics distinguish missing authorization, a rejected predicate, and an unexpected callback failure. They retain
+the original cause and identify the operation, stage, and rule where available. Failed checkpoint and commit handles
+are rollback-only under the [transaction ownership design](TransactionsAndEvaluation.design.md#lifecycle-ownership).
+Recovery uses explicit rollback or close, correction of caller-owned state, and a fresh transaction. Neither cleanup
+nor effect dispatch promises compensation of external side effects.
 
 ## Performance
 
-Separate predicate/handler cost from dispatch overhead and include denied intents and repeated events. Use the
-[performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
+Retain the compiled inventory and EventField architecture for ordered handler selection. Effect participation can be
+derived from the effective rule inventory rather than rediscovered for every reported entity; local rules must be
+included. Selection caches store applicable work, never authorization outcomes or validation results. Every required
+predicate still evaluates the current entity and invocation values at its configured stage.
 
-[Stages, Intents, and Transaction Customization]: ../project/Backlog.md#stages-intents-and-transaction-customization
+Measure dispatch separately from predicate/action work, including denied intents, multiple reported violations,
+stopping at the first violation with effects, repeated events, and runtime transaction preparation. Use the
+[performance guide](../performance/Readme.md); no numerical gate follows from the selected policy.

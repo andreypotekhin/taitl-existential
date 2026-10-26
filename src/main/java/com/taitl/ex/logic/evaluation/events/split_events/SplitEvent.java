@@ -59,4 +59,21 @@ public class SplitEvent
         return new SplitResult<T>(evaluables, event);
     }
 
+    public <T> boolean hasEffects(
+            RuntimeKey<T> runtimeKey,
+            EventField eventField,
+            boolean useFullEventNames,
+            boolean splitElementaryToCompound,
+            Tr tr)
+    {
+        sane(runtimeKey, "runtimeKey", eventField, "eventField");
+        boolean memo = tr != null && runtimeKey.entity() != null
+                && tr.hasMemo(runtimeKey.entity(), runtimeKey.typeKey());
+        DispatchSignature signature = new DispatchSignature(runtimeKey, useFullEventNames,
+                splitElementaryToCompound, tr != null, memo);
+        RuleSelection selection = eventField.select(signature,
+                () -> resolveSelectionInput.call(runtimeKey, useFullEventNames, splitElementaryToCompound, tr));
+        return selection.hasEffects();
+    }
+
 }

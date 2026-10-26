@@ -8,29 +8,37 @@ import java.util.*;
 /**
  * An immutable, array-backed sequence of handlers in execution order.
  * Collection construction copies the selected handlers; package materializers transfer exclusive array ownership.
- * Construction precomputes memo and bi-handler requirements,
+ * Construction precomputes memo, bi-handler, and effect participation,
  * so warm dispatch need not inspect handler kinds or sort declarations again.
  *
  * The selection describes reusable work and contains no reported entity or memo payload.
  * Appending a local selection preserves shared-before-local order and produces a new value;
- * only the owning transaction may retain a selection containing its local callback closures.
+ * only the owning transaction may retain a selection containing its local callback closures. The
+ * effect marker includes declarations in appended transaction-local selections.
  */
 public class RuleSelection
 {
     protected List<Ev<?>> handlers;
     protected boolean memoRequired;
     protected boolean biHandler;
+    protected boolean effects;
 
     public RuleSelection(Collection<? extends Ev<?>> handlers, boolean memoRequired)
     {
-        this(handlers.toArray(new Ev<?>[0]), memoRequired);
+        this(handlers.toArray(new Ev<?>[0]), memoRequired, false);
     }
 
     /** Transfers an exclusively owned array; package callers must not mutate it afterward. */
     RuleSelection(Ev<?>[] values, boolean memoRequired)
     {
+        this(values, memoRequired, false);
+    }
+
+    public RuleSelection(Ev<?>[] values, boolean memoRequired, boolean effects)
+    {
         this.handlers = Collections.unmodifiableList(Arrays.asList(values));
         this.memoRequired = memoRequired;
+        this.effects = effects;
         for (Ev<?> handler : values)
         {
             biHandler |= handler instanceof BiEventHandler<?>;
@@ -53,10 +61,16 @@ public class RuleSelection
         return biHandler;
     }
 
+    public boolean hasEffects()
+    {
+        return effects;
+    }
+
     public RuleSelection append(RuleSelection local)
     {
         List<Ev<?>> merged = new ArrayList<>(handlers);
         merged.addAll(local.handlers);
-        return new RuleSelection(merged, memoRequired || local.memoRequired);
+        return new RuleSelection(merged.toArray(new Ev<?>[0]), memoRequired || local.memoRequired,
+                effects || local.effects);
     }
 }
