@@ -77,6 +77,12 @@ public class ConfiguredHandlers
 
     public <T> Set<OrderlyEv<?>> put(EventKey<T> key, Ev<T> value, boolean effect)
     {
+        return put(key, value, effect, null);
+    }
+
+    public <T> Set<OrderlyEv<?>> put(EventKey<T> key, Ev<T> value, boolean effect,
+            com.taitl.ex.logic.diagnostics.data.RuleOrigin origin)
+    {
         sane(key, "key");
         sane(value, "value");
         check(value.single(), "Only single event handlers (Ev<T>) are supported,"
@@ -84,6 +90,7 @@ public class ConfiguredHandlers
         synchronized (this)
         {
             OrderlyEv<T> orderedValue = ci.maintainGlobalOrder.globallyOrdered(value, effect);
+            orderedValue.origin = origin;
             inventory = null;
             effects |= effect;
             return handlers.add(key.toString(), orderedValue);

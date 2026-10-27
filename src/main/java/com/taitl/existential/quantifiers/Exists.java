@@ -1,5 +1,7 @@
 package com.taitl.existential.quantifiers;
 
+import com.taitl.ex.logic.diagnostics.actions.*;
+
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.concrete.*;
 import com.taitl.existential.evaluables.*;
@@ -598,7 +600,7 @@ public class Exists<T> implements Expression<T>, TransactionPredicate<T>
     {
         if (!test(entity, tr))
         {
-            throw new PredicateFailure(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
+            throw NewEvaluationFailure.predicate(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
         }
         return null;
     }

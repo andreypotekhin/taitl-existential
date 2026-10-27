@@ -63,8 +63,9 @@ reports belong to the active transaction binding and are released on disposal. S
 reported payloads or runtime custom-rule closures. A single handle is not safe for concurrent mutation; supported
 independent transactions retain separate mutable state. User callbacks run outside shared matching-cache locks.
 
-Diagnostics distinguish missing authorization, a rejected predicate, and an unexpected callback failure. They retain
-the original cause and identify the operation, stage, and rule where available. Failed checkpoint and commit handles
+The [structured diagnostic design](EventsAndConstraints.design.md#structured-violation-diagnostics) distinguishes
+missing authorization, a rejected predicate, and an unexpected callback failure. Diagnostics retain the original cause,
+operation, stage/boundary, and rule/declaration context where available. Failed checkpoint and commit handles
 are rollback-only under the [transaction ownership design](TransactionsAndEvaluation.design.md#lifecycle-ownership).
 Recovery uses explicit rollback or close, correction of caller-owned state, and a fresh transaction. Neither cleanup
 nor effect dispatch promises compensation of external side effects.

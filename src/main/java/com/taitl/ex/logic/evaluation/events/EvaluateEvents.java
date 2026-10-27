@@ -36,7 +36,8 @@ public class EvaluateEvents
         tr.callbackStarted();
         try
         {
-            executeHandlers.call(splitResult.evaluables(), splitResult.event(), report, stopAfterViolation, tr);
+            executeHandlers.call(splitResult.evaluables(), splitResult.event(), report, stopAfterViolation, tr,
+                    splitResult.selection, runtimeKey, report.stage);
         }
         finally
         {
@@ -59,7 +60,8 @@ public class EvaluateEvents
         tr.callbackStarted();
         try
         {
-            executeHandlers.callAll(splitResult.evaluables(), splitResult.event(), report, tr);
+            executeHandlers.callAll(splitResult.evaluables(), splitResult.event(), report, tr, splitResult.selection,
+                    runtimeKey, report.stage);
         }
         finally
         {

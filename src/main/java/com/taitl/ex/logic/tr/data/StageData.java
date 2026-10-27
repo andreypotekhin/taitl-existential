@@ -21,6 +21,7 @@ public class StageData
     public final ListMap<IntentHandlerKey, EventHandler<?>> intentHandlers = new ListMap<>();
     protected ConfigurationIndexes preparedIndexes;
     protected EventField overlay;
+    protected EventField intentOverlay;
 
     public void preparedIndexes(ConfigurationIndexes preparedIndexes)
     {
@@ -35,6 +36,11 @@ public class StageData
             overlay.close();
         }
         overlay = null;
+        if (intentOverlay != null)
+        {
+            intentOverlay.close();
+        }
+        intentOverlay = null;
     }
 
     public boolean hasPreparedIndexes()
@@ -66,6 +72,20 @@ public class StageData
         return overlay;
     }
 
+    public EventField intentField(EventField base)
+    {
+        if (preparedIndexes == null)
+        {
+            return base;
+        }
+        if (intentOverlay == null)
+        {
+            intentOverlay = Creator.create(EventFieldOverlay.class,
+                    new Class[] { EventField.class, EventField.class }, base, preparedIndexes.intentField());
+        }
+        return intentOverlay;
+    }
+
     public void close()
     {
         if (preparedIndexes != null)
@@ -78,6 +98,11 @@ public class StageData
             overlay.close();
         }
         overlay = null;
+        if (intentOverlay != null)
+        {
+            intentOverlay.close();
+        }
+        intentOverlay = null;
         intentEventTypes.clear();
         biIntentKeys.clear();
         intentHandlers.clear();

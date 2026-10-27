@@ -39,6 +39,29 @@ Validation reports preserve rule descriptions and identify the operation. Reject
 explicit rollback runs callbacks and clears transaction runtime event/type indexes, even when the caller retains the
 closed handle or an index reference. This release does not undo caller-owned objects or relationship source contents.
 
+## Access reports across stages
+
+Read and RL describe loaded working objects; RL additionally selects read handlers because a locked read is a read.
+The library does not acquire the application lock. Write describes a save without inventing create/update endpoints;
+Access is a general explicit report rather than a wildcard expansion into all storage accesses. General On and entity
+expressions supply common rules. Selection includes the common Event route used by On, merges declarations in existing
+order, and removes duplicate
+discovery. Intents match concrete and general families, then use the cached shared selection and local declaration
+order rather than event-family discovery order.
+Elementary-to-compound opt-out does not turn off compound-to-elementary RL selection.
+
+Use existing handle/ID event entry points rather than add shortcuts. Retain begin history across checkpoints, immediate
+per-trigger authorization, and identity-folded boundary evaluation. Parent/child/local intent restrictions all apply;
+report-time rejection precedes event recording and automatic enrollment. Managed read opt-out affects Read/RL/Access,
+while Write still performs mutation maintenance. Failed boundaries keep the established rollback-only lifecycle.
+
+Each handle owns its report history and managed contents. Tests must close it even when assertions fail, inspect
+released collections/views, and never imply that explicit rollback undoes application reads, locks, or writes.
+General On dispatch reuses EventField selection ownership rather than adding a new cache. Matching several intent
+families reuses a merged EventField selection and orders remaining local declarations. This adds report-time work when
+intents participate; measure complete workflows against typed-rule controls as well as new general-rule scenarios.
+Acceptance exercises both naming/expansion modes and all built-in event roots without changing their endpoint meaning.
+
 ## Type matching
 
 `TypeHierarchyLogic` resolves the entity's concrete class, superclass chain, implemented interfaces, and generic
@@ -88,6 +111,127 @@ endpoint mistakes before event indexing, validates the selected entity at the co
 rule exceptions under an operation-naming ValidationStageExceptions. A rejected input can be corrected on the current
 transaction; a rejected commit requires a fresh transaction for retry. Explicit rollback releases runtime indexes but
 does not compensate caller-side object/storage changes. Configuration source references remain owned by configuration.
+
+## Structured violation diagnostics
+
+Diagnostics borrow Rust's separation of a primary message, error code, context, notes, and corrective guidance.
+For this runtime library, the useful location is the operation and rule declaration rather than a compiler source
+span. Diagnostic data is available programmatically and drives the readable presentation; callers do not parse text
+to identify a rule or failure category. This extends the existing exception/report flow, not the transaction API.
+
+A library diagnostic code identifies the failure category; the existing description identifies the consumer's rule.
+Consumers choose prose or a short ID-like description without additional metadata arguments, ruleId methods, or
+separate caller rule identifiers. Preserve description text in the structured fields; rendering escapes it only for
+presentation. Codes have no `EX-` prefix; the ExistentialException type supplies library attribution. Neither codes
+nor descriptions have application-model semantics. Descriptions need not be unique and never become selection or
+deduplication keys. RuleInventory's compact integer positions remain internal declaration identities, not external
+diagnostic codes. Optional/missing descriptions retain the existing description policy; do not synthesize a rule ID.
+
+### Presentation and provenance
+
+Library-generated structured failures use detailed multiline `getMessage()` output by default. Fields appear in
+this order when available: operation, rule, context, event, evaluation, then notes and actions. The primary line
+contains the library code and human-readable failure category; the rule field supplies the consumer's description
+without repeating it in the primary line. For example:
+
+```text
+error[RULE-REJECTED]: Rule rejected
+  operation: /records/save
+  rule: Amount must be positive
+  context: /records/
+  event: update<Record>
+  evaluation: validation during checkpoint
+
+  note: transaction is rollback-only
+```
+
+`operation` is the invocation's operation; `context` is the rule's original declaration context, including a parent
+or literal wildcard context. Never substitute the matched operation for that provenance. Transaction-local rules
+identify their transaction-local origin rather than inventing a context declaration. Missing information is omitted
+without guessing. Retain the reported event/type and selected rule event/type separately when expansion or general
+matching makes them differ. Stage and triggering boundary are separate data: validation can run during either
+checkpoint or commit. Source file/line spans are not necessary to this runtime context model.
+
+Notes explain consequences or limitations, such as rollback-only state or evaluation stopped before later work.
+An optional `action` gives a specific correction the library can justify. Omit obvious stock recovery instructions;
+do not infer a remedy from an arbitrary business predicate. Relevant troubleshooting links remain available.
+An aggregate presents shared transaction information once and keeps individual violations distinct. A sibling
+violation is not the underlying cause of another violation, even though existing Throwable cause/suppressed wiring
+is retained for compatibility. Rendering escapes embedded line breaks/control characters without altering raw fields.
+
+### Evaluation and recovery
+
+Declaration provenance travels with each rule occurrence through shared compiled selection and transaction-local
+overlays. Reusing one handler in two contexts must retain both declarations' identities. Intent rejection must keep
+the actual rejected rule and its failure details instead of reducing the result to a boolean with a generic message.
+Missing authorization, a rejected predicate, and an unexpected callback failure remain distinguishable; an absent
+matching intent has no offending declaration to invent.
+
+Keep stock library exception types, underlying causes, aggregate membership, ordering, and the existing effect-aware
+evaluation policy. Checks-only evaluation collects ordinary violations. When participating effects require stopping
+after a violation, diagnostics state that later work was not evaluated rather than implying an exhaustive report.
+Unexpected callback failures and authorization denials still stop immediately. Diagnostic construction must not invoke
+callbacks again, change handle state, execute rollback callbacks, or hide the original failure.
+
+Unexpected RuntimeException from a non-intent callback is normalized into the existing EventHandlerException, retaining
+the original as cause; unexpected intent callback failure retains IntentViolation. This gives callback crashes a
+structured library surface and keeps them distinct from ordinary rejected predicates. Error propagates unchanged.
+Do not mutate callback-supplied exceptions to attach invocation context: retain them as causes of fresh stock failures.
+Stock library-origin failures retain their existing underlying causes/suppressed failures when contextualized.
+
+### Ownership and cost
+
+Prepare/share immutable declaration metadata with its configured owner. Invocation diagnostics copy descriptive
+values on failure; they retain no transaction, reported entity, mutable index/view, or runtime callback merely to
+render later. A user-supplied Throwable cause can itself retain arbitrary user data; this design does not promise
+to sanitize its object graph. Detached diagnostics remain readable after disposal and do not require a failed-handle
+registry. Concurrent transactions do not share mutable diagnostic state.
+
+Keep successful reporting, folding, and cached selection free of per-entity diagnostic allocation and stack walks.
+Allocate failure details only when needed and avoid repeated whole-report rendering while collecting violations.
+Compare complete success, rejection/rollback, recovery, and many-violation workflows, with setup separate. Detailed
+messages trade greater failure-path output for immediate usefulness; measure rendering separately from evaluation.
+
+### Public surface and rendering ownership
+
+ExistentialException.diagnostic() returns a read-only Diagnostic snapshot or null when no structured data is attached.
+Existing constructors retain plain message/cause behavior for undecorated exceptions. Diagnostic is a serializable
+interface under com.taitl.existential.diagnostics; its internal immutable implementation contains descriptive values,
+ordered immutable notes/actions/children, and no Throwable. Causes stay on the exception. No public declaration metadata
+builder is introduced. Code, context, reported/selected event and type, stage/boundary, local origin, and known
+evaluation stopping are inspectable independently of presentation. Diagnostic.message() is the concise primary message;
+getMessage() is detailed by default. Null denotes an unknown optional scalar; absent lists are empty.
+
+DiagnosticCode separates RULE_REJECTED, INTENT_REJECTED, INTENT_MISSING, CALLBACK_FAILED, and EVALUATION_FAILED.
+Its id() returns the corresponding unprefixed hyphenated display code, such as RULE-REJECTED. Missing intent has no
+invented rule but can suggest a matching declaration or reviewing gating. Each code has a stable troubleshooting
+heading. Selection positions and caller descriptions do not replace these library failure categories.
+
+DiagnosticLogic delegates snapshot construction, exception contextualization, rendering, and escaping to small actions.
+Pass evaluation context explicitly, without thread-local ambient state. Classify ordinary failures before decoration
+using types/original text for legacy compatibility, then codes; never depend on formatted output. Capture rollback-only
+notes after the actual boundary state transition. Preserve report siblings and Throwable cause/suppressed relationships
+without confusing them in the diagnostic tree. Shared transaction data is displayed once, but child snapshots retain
+their complete invocation context for independent inspection.
+
+Render lazily and memoize the detailed string per exception. Rendering uses no entity/Throwable toString, callback
+formatters, stack inspection, or live owner. A non-fatal formatting failure returns the original fallback message;
+diagnostic-construction failure leaves the original failure propagating. Neither path retries callbacks or masks a
+business failure. VM errors are not caught for decoration. These guarantees apply to library-generated snapshots,
+not arbitrary user implementations of the public interface.
+
+### Implementation evidence
+
+The selected implementation carries immutable RuleOrigin values alongside RuleDeclaration occurrences, including
+legacy EventField selections and handle-owned local intent overlays. Internal library-failure markers distinguish
+runtime-created exceptions from callback-supplied stock/custom exceptions without stack inspection. FailureSnapshot
+keeps fallback text detached so adding rollback-only state never forces message rendering. DiagnosticLogic delegates
+construction, copying, rendering, and escaping; successful dispatch creates no diagnostic snapshots.
+
+[Acceptance and
+verification](../project/sprints/Sprint09_V2IndexesAndOperationalCoverage.md#structured-diagnostics-verification)
+and [performance evidence](../performance/topics/Diagnostics.md) cover this selected slice. The broader approved
+public-exception suggestion remains open.
 
 ## Performance
 

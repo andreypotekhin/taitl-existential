@@ -31,10 +31,18 @@ matching environment/workload metadata establishes comparability.
 
 ## Timing units
 
-Report elapsed time in microseconds (µs), using `µs/op` or `µs/workflow` and one decimal place for samples, medians,
-and ranges. Keep the monotonic clock's full resolution internally; divide elapsed totals by 1,000 and by the iteration
-count using floating-point arithmetic before formatting. Round only for presentation, so fractional microseconds are
-not truncated. Throughput stays in `ops/s`; allocation and retained memory keep their byte units.
+For complete real workloads and transaction workflows, report milliseconds (`ms/workflow`) and megabytes (`MB`),
+with decimal MB = 1,000,000 bytes. Use one decimal place for samples, medians, and ranges unless it hides a meaningful
+small value. Smaller units remain appropriate for individual operations, itemized phases, per-item allocations, or
+small data structures: label those explicitly as µs/op, bytes/item, and so on. Throughput remains ops/s.
+
+Keep full monotonic-clock and allocation resolution internally. Convert elapsed totals to milliseconds by dividing
+by 1,000,000 and allocated bytes to MB by 1,000,000 using floating-point arithmetic, dividing by iteration count where
+applicable. Round only for presentation; compute relative comparisons from original values. Allocation is not retained
+memory. Identify decimal MB versus binary MiB when a different source uses the latter.
+
+This workload convention starts with the AccessEvents record and subsequent work on 2026-10-26. Older reports retain
+their recorded units; do not convert or rerun them merely to apply the convention. New measured output must label units.
 
 Historical timing tables, prose, and focused output excerpts were converted on 2026-10-23 without rerunning any
 measurements. Each run record identifies this presentation conversion; recorded revisions, source hashes, workload
@@ -81,8 +89,8 @@ intended for tiny operation benchmarks are unsuitable for every workload.
 
 ## Interpret measurements
 
-The current harness reports average elapsed microseconds (µs) per transaction operation and derived operations per
-second.
+The harnesses report average elapsed time per operation/workflow, with the units named in each record, and may derive
+operations per second.
 These are not latency percentiles. Three samples supply a descriptive median/range, not a confidence interval. Scenarios
 run in a fixed order within one JVM; startup/JIT, allocation/GC, thermal state, and background activity can influence
 the results. The positive-throughput assertions detect gross failure, not performance regression.
@@ -130,3 +138,9 @@ paired library probes, workload sizes, source identities, and all retained sampl
 
 The [managed-index topic](topics/ManagedIndexes.md) records folded maintenance, explicit eager comparisons,
 complete workflows, allocation, and deterministic storage release.
+
+The [access-event topic](topics/AccessEvents.md) records typed-workflow comparisons and restored general On dispatch,
+authorization, and ordering, with complete workflows, allocation, and deterministic cleanup checks.
+
+The [structured diagnostics topic](topics/Diagnostics.md) compares successful and failing complete workflows,
+first/repeated message rendering, allocation, and detached-failure cleanup against the preserved dirty baseline.

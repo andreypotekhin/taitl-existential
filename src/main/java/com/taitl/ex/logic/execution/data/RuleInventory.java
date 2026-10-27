@@ -56,44 +56,38 @@ public class RuleInventory
 
     public RuleSelection selection(int[] members, boolean memoRequired)
     {
-        Ev<?>[] handlers = new Ev<?>[members.length];
-        boolean effects = false;
+        RuleDeclaration[] handlers = new RuleDeclaration[members.length];
         for (int i = 0; i < members.length; i++)
         {
             RuleDeclaration declaration = declarations.get(members[i]);
-            handlers[i] = declaration.handler;
-            effects |= declaration.effect;
+            handlers[i] = declaration;
         }
-        return new RuleSelection(handlers, memoRequired, effects);
+        return new RuleSelection(handlers, memoRequired);
     }
 
     /** Materializes native bitmap membership without an intermediate identifier array. */
     public RuleSelection selection(BitSet members, boolean memoRequired)
     {
-        Ev<?>[] handlers = new Ev<?>[members.cardinality()];
+        RuleDeclaration[] handlers = new RuleDeclaration[members.cardinality()];
         int count = 0;
-        boolean effects = false;
         for (int id = members.nextSetBit(0); id >= 0; id = members.nextSetBit(id + 1))
         {
             RuleDeclaration declaration = declarations.get(id);
-            handlers[count++] = declaration.handler;
-            effects |= declaration.effect;
+            handlers[count++] = declaration;
         }
-        return new RuleSelection(handlers, memoRequired, effects);
+        return new RuleSelection(handlers, memoRequired);
     }
 
     /** Adapts an alternative native membership iterator without a runtime dependency on its representation. */
     public RuleSelection selection(PrimitiveIterator.OfInt members, int size, boolean memoRequired)
     {
-        Ev<?>[] handlers = new Ev<?>[size];
-        boolean effects = false;
+        RuleDeclaration[] handlers = new RuleDeclaration[size];
         for (int i = 0; i < size; i++)
         {
             RuleDeclaration declaration = declarations.get(members.nextInt());
-            handlers[i] = declaration.handler;
-            effects |= declaration.effect;
+            handlers[i] = declaration;
         }
-        return new RuleSelection(handlers, memoRequired, effects);
+        return new RuleSelection(handlers, memoRequired);
     }
 
     public int size()

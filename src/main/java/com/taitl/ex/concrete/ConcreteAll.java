@@ -1,5 +1,7 @@
 package com.taitl.ex.concrete;
 
+import com.taitl.ex.logic.diagnostics.actions.*;
+
 import java.util.function.*;
 import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.evaluables.*;
@@ -18,7 +20,8 @@ public class ConcreteAll<T> implements Expression<T>
         {
             if (!predicate.test(t))
             {
-                throw new PredicateFailure(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
+                throw NewEvaluationFailure
+                        .predicate(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
             }
         }
         return null;
@@ -28,7 +31,7 @@ public class ConcreteAll<T> implements Expression<T>
     {
         if ((condition == null || test(condition, entity, tr)) && !test(predicate, entity, tr))
         {
-            throw new PredicateFailure(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
+            throw NewEvaluationFailure.predicate(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
         }
         return null;
     }

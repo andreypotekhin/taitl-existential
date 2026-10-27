@@ -59,7 +59,7 @@ public class EvaluateIntents
 
         requireMemoForBiEvents.forIntents(runtimeKey, indexes, tr, stageName);
         Map<EventType, List<RuntimeKey<T>>> grouped = splitAndGroupByEventType(runtimeKey, tr);
-        evaluateSplitKeys.call(grouped, indexes, tr, stageName);
+        evaluateSplitKeys.call(grouped, indexes, tr, stageName, runtimeKey);
     }
 
     protected <T> Map<EventType, List<RuntimeKey<T>>> splitAndGroupByEventType(RuntimeKey<T> runtimeKey, Tr tr)

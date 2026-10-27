@@ -18,6 +18,8 @@ public class OrderlyEv<T>
     public Ev<T> ev;
     public long ordinal;
     public boolean effect;
+    public com.taitl.ex.logic.execution.data.RuleDeclaration declaration;
+    public com.taitl.ex.logic.diagnostics.data.RuleOrigin origin;
 
     public OrderlyEv(Ev<T> ev, long ordinal)
     {

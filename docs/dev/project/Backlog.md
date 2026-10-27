@@ -222,7 +222,9 @@ action IDs collide, so links use full filenames. Do not renumber historical reco
 - [Transaction lifecycle state]: proposal; Failure Recovery and Resource Hygiene; design/evidence review required.
 - [Specify context matching and rule ordering semantics]: proposal; Contexts and Type Matching; design/evidence review
   required.
-- [Error metadata for public exceptions]: approved; Indexes and Operational Coverage; design/evidence review required.
+- [Error metadata for public exceptions]: approved; Indexes and Operational Coverage;
+  [finalized rule-diagnostics plan](../past/planning/P10262602.Sprint09-structured-diagnostics.plan.md) records settled
+  behavior/interfaces; implementation/evidence and broader exception coverage remain open.
 - [Key Naming Strategy Injection]: approved; Contexts and Type Matching; design/evidence review required.
 - [Child context builder support]: approved; Contexts and Type Matching; design/evidence review required.
 - [Argument wording consistency]: approved; Failure Recovery and Resource Hygiene; design/evidence review required.

@@ -1,7 +1,10 @@
 package com.taitl.ex.concrete;
 
-import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.logic.diagnostics.*;
 import com.taitl.ex.common.creator.*;
+import com.taitl.existential.constants.*;
+
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.events.*;
 import com.taitl.ex.logic.managed_indexes.*;
 import com.taitl.existential.indexes.*;
@@ -15,7 +18,6 @@ import com.taitl.ex.logic.tr.data.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.transactions.data.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.constants.*;
 import com.taitl.existential.events.transaction_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
@@ -70,6 +72,7 @@ public class ConcreteTr
     protected boolean closed;
     protected boolean rollbackOnly;
     protected boolean rollbackProcessing;
+    public String boundary = "report";
 
     protected ConcreteTr(Tr tr, String op, UUID id, TransactionLogic tl,
             EventLogic el)
@@ -106,6 +109,7 @@ public class ConcreteTr
     public void checkpoint()
     {
         requireOpen("checkpoint");
+        boundary = "checkpoint";
         try
         {
             tl.checkpoint(tr);
@@ -113,13 +117,19 @@ public class ConcreteTr
         catch (RuntimeException | Error failure)
         {
             rollbackOnly = true;
-            throw failure;
+            throw Creator.singleton(DiagnosticLogic.class)
+                    .boundaryFailure(failure);
+        }
+        finally
+        {
+            boundary = "report";
         }
     }
 
     public void commit()
     {
         requireOpen("commit");
+        boundary = "commit";
         try
         {
             tl.commit(tr);
@@ -127,7 +137,12 @@ public class ConcreteTr
         catch (RuntimeException | Error failure)
         {
             rollbackOnly = true;
-            throw failure;
+            throw Creator.singleton(DiagnosticLogic.class)
+                    .boundaryFailure(failure);
+        }
+        finally
+        {
+            boundary = "report";
         }
     }
 
@@ -135,6 +150,7 @@ public class ConcreteTr
     {
         requireOpen("rollback");
         rollbackProcessing = true;
+        boundary = "rollback";
         try
         {
             tl.rollback(tr);
@@ -142,6 +158,7 @@ public class ConcreteTr
         finally
         {
             rollbackProcessing = false;
+            boundary = "report";
         }
     }
 
@@ -341,6 +358,12 @@ public class ConcreteTr
     {
         sane(stageName, "stageName", indexes, "indexes");
         stageData(stageName).preparedIndexes(indexes);
+    }
+
+    public EventField intentField(EventField base, StageName stage)
+    {
+        StageData data = stageData.get(stage);
+        return data == null ? base : data.intentField(base);
     }
 
     public EventField eventField(StageName stageName, EventField base)

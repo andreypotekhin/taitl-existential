@@ -10,7 +10,11 @@ import java.util.function.*;
 import static com.taitl.ex.common.helper.Args.*;
 
 /**
- * Builds {@link Effect} rules.
+ * Builds effect declarations owned by one context or configured transaction.
+ * Each mutation checks that its library remains configurable and refreshes the target effect's
+ * required-description policy from that instance. Builders obtained before a flag change therefore
+ * apply the new setting to subsequent declarations without revisiting earlier handlers.
+ * Failed declarations leave the builder available for correction; execution remains delegated to Effect.
  *
  * @param <T> Type to apply the effects
  */
@@ -1285,10 +1289,12 @@ public class EffectBuilder<T> implements EvsBuilder<T>
         if (parent != null)
         {
             parent.parent.verifyConfigurable();
+            target.requireDescriptions(parent.parent.requireBehaviorDescriptions());
         }
         else
         {
             parent2.parent.parent.verifyConfigurable();
+            target.requireDescriptions(parent2.parent.parent.requireBehaviorDescriptions());
         }
     }
 

@@ -1,11 +1,14 @@
 package com.taitl.ex.logic.tr.actions;
 
+import com.taitl.ex.logic.diagnostics.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.existential.constants.*;
+
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.concrete.*;
 import com.taitl.ex.logic.evaluation.events.actions.*;
 import com.taitl.ex.logic.tr.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.exceptions.*;
@@ -82,7 +85,7 @@ public class ExecuteLifecycle
                     }
                     try
                     {
-                        execute((On<?>) handler, transaction);
+                        execute((On<?>) handler, transaction, StageName.ROLLBACK);
                     }
                     catch (Throwable caught)
                     {
@@ -95,12 +98,18 @@ public class ExecuteLifecycle
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected void execute(On handler, Transaction transaction)
+    protected void execute(On handler, Transaction transaction, StageName stage)
     {
         tr.callbackStarted();
         try
         {
             ExecuteHandler.handle(handler, transaction);
+        }
+        catch (RuntimeException failure)
+        {
+            String boundary = stage == StageName.BEGIN ? "begin" : tr.boundary;
+            throw Creator.singleton(DiagnosticLogic.class)
+                    .failure(failure, tr.op, null, null, stage, boundary, false, stage != StageName.ROLLBACK);
         }
         finally
         {
@@ -172,7 +181,7 @@ public class ExecuteLifecycle
                     throw new IllegalStateException("Lifecycle handler must extend On, got "
                             + eventHandler.getClass().getName());
                 }
-                execute((On) eventHandler, transaction);
+                execute((On) eventHandler, transaction, stageName);
             }
         }
     }

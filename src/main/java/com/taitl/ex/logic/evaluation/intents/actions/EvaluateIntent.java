@@ -16,24 +16,8 @@ public class EvaluateIntent
         sane(intent, "intent", event, "event");
         try
         {
-            if (intent instanceof On<?>)
-            {
-                ExecuteHandler.handle((On) intent, entity(event));
-                return true;
-            }
-
-            if (intent instanceof BiEventHandler<?>)
-            {
-                if (!(event instanceof BiEvent<?>))
-                {
-                    return false;
-                }
-                BiEvent<?> biEvent = (BiEvent<?>) event;
-                ((BiEventHandler) intent).handle(biEvent.t0, biEvent.t1);
-                return true;
-            }
-
-            throw new IllegalStateException("Unsupported intent handler type: " + intent.getClass().getName());
+            require(intent, event);
+            return true;
         }
         catch (ExistentialException ex)
         {
@@ -47,6 +31,29 @@ public class EvaluateIntent
         {
             throw new IntentViolation("Intent evaluation failed. See /Troubleshooting.md#intent-violation", ex);
         }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void require(EventHandler<?> intent, Event<?> event)
+    {
+        if (intent instanceof On<?>)
+        {
+            ExecuteHandler.handle((On) intent, entity(event));
+            return;
+        }
+
+        if (intent instanceof BiEventHandler<?>)
+        {
+            if (!(event instanceof BiEvent<?>))
+            {
+                throw new ConditionNotMetException("Intent requires a before/after event");
+            }
+            BiEvent<?> biEvent = (BiEvent<?>) event;
+            ((BiEventHandler) intent).handle(biEvent.t0, biEvent.t1);
+            return;
+        }
+
+        throw new IllegalStateException("Unsupported intent handler type: " + intent.getClass().getName());
     }
 
     protected Object entity(Event<?> event)

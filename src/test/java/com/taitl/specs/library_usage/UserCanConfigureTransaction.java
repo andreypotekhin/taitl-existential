@@ -48,12 +48,19 @@ class UserCanConfigureTransaction extends SpecBase
             // @formatter:on
 
             Tr tranTr = ex.begin(op);
-            String tran = tranTr.id();
-            ex.write(cat, tran);
-            IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> UserCanConfigureTransaction.this.ex.write("other", tran));
-            assertTrue(ex.getMessage().contains("No intent is configured"));
-            tranTr.rollback();
+            try
+            {
+                String tran = tranTr.id();
+                ex.write(cat, tran);
+                IntentViolation ex = assertThrows(IntentViolation.class,
+                        () -> UserCanConfigureTransaction.this.ex.write("other", tran));
+                assertEquals(com.taitl.existential.diagnostics.DiagnosticCode.INTENT_MISSING, ex.diagnostic().code());
+                tranTr.rollback();
+            }
+            finally
+            {
+                tranTr.close();
+            }
         }
     }
 }

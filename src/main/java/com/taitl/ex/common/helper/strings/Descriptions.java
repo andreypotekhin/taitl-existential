@@ -39,6 +39,10 @@ public class Descriptions
         return base + ": " + description;
     }
 
+    /**
+     * Enforces the declaration-time option without revisiting rules accepted under earlier settings.
+     * Missing text leaves the caller's builder available for a corrected declaration.
+     */
     public static void require(boolean requireDescriptions, String description)
     {
         if (!requireDescriptions)
@@ -46,7 +50,9 @@ public class Descriptions
             return;
         }
         check(description != null && !description.isEmpty(),
-                "Behavior rules require descriptions when Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS is enabled.");
+                "Behavior rules require descriptions when Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS is enabled. "
+                        + "Add a description or disable the flag before declaring this rule. "
+                        + "See /Troubleshooting.md#required-rule-descriptions");
     }
 
     public static void require(boolean requireDescriptions, Ev<?> ev)

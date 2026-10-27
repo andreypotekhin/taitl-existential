@@ -50,10 +50,83 @@ Standalone SingleIndex/MultiIndex/SingleJoin/MultiJoin remain the compatibility 
 do not become managed by being passed to Exists. Shared persistent indexes, general Transaction definition reuse and
 post-begin mutation semantics, richer violation metadata, and remote publication are not settled by this slice.
 
+## Access-event coverage and general On correction
+
+The second selected slice verifies read, read-and-lock, write, and explicit access across stages, policy modes, entry
+points, and recovery. The [delivery plan](../../past/planning/P10262601.Sprint09-access-event-acceptance.plan.md)
+records
+completed verification. Acceptance exposed missing general On dispatch/authorization and event-family intent
+ordering; the correction reuses EventField ownership. All 54 direct cases and final verification pass.
+No new public APIs, storage locks, or inferred mutation events are added.
+
+Verification on 2026-10-26: `mvn clean install` passes 605 tests, no failures/errors/skips, zero Checkstyle violations,
+and passing PMD. `mvn -f examples/night_city/pom.xml clean verify` passes seven tests; the reactor clean install passes
+all modules and the same root/consumer counts. Normal and assembled artifacts exclude examples, specs, benchmarks,
+JUnit, Mockito, RoaringBitmap, and Maven classes. Actual final reactor JaCoCo coverage is 7,027/9,239 lines (76.06%) and
+2,136/2,992 branches (71.39%); existing zero thresholds are unchanged. No disabled tests were found; Failsafe selected
+zero cases, with acceptance running in Surefire. Local Markdown targets/anchors and whitespace pass.
+
+The [access-event comparison](../../performance/runs/20261027T050744Z.AccessEvents.md) compares three fresh-JVM typed
+controls against the prior revision and separately measures corrected general rules. Restoring skipped callbacks is
+not a comparable speed measurement. Repeated-report intent ordering adds measured overhead and remains a target;
+no numerical gate is introduced. See
+[T10262601](../../past/todo/T10262601.General-on-rules-skipped-by-event-dispatch.md).
+
+## Required-description option coverage
+
+Selected next on 2026-10-26: verify the settled prospective flag behavior across fluent context/transaction builders,
+event checks, intents, effects, and caller-owned/managed quantifiers. Add correction guidance to configuration errors.
+Acceptance exposed missing effect enforcement and rejected optional quantifier descriptions, tracked in
+[T10262602](../../past/todo/T10262602.Required-description-policy-gaps.md). Effect now has the same prospective
+requireDescriptions control as other rule sets. The fixes preserve flag timing and add no runtime hot-path checks.
+All 33 targeted cases pass. Root `mvn clean install` passes 638 tests, standalone consumer clean verify passes seven,
+and the reactor clean install passes all modules, with zero failures/errors/skips. Checkstyle reports zero violations
+and PMD passes. Final reactor JaCoCo has 7,068/9,245 lines (76.45%) and 2,152/2,992 branches (71.93%); configured zero
+thresholds are unchanged and do not establish full-repository coverage closure. Failsafe selects zero integration
+cases; acceptance runs in Surefire. No disabled tests were found. Both library artifacts pass hygiene checks, and
+Markdown links/anchors and whitespace pass. Standalone-object ownership and
+structured-diagnostic implementation remain separate.
+
+The workload evidence convention now uses ms/workflow and decimal MB, beginning with the access-event record. The
+harness
+prints those units for future runs and the guide/template use them. Earlier
+reports remain unchanged; the current report was converted without rerunning measurements.
+
+## Structured diagnostics delivery
+
+Selected on 2026-10-26: Rust-inspired rule diagnostics with structured fields and detailed multiline getMessage()
+by default. The [design](../../design/EventsAndConstraints.design.md#structured-violation-diagnostics) and
+[specification](../../specifications/EventsAndConstraints.spec.md#structured-violation-diagnostics) identify rules by
+their existing descriptions, with unprefixed library codes identifying failure categories. Field order is operation,
+rule, context, event, evaluation, then optional notes/actions. Context preserves parent/wildcard declaration origins.
+Shared report state appears once; obvious stock recovery advice is omitted.
+
+The [delivery plan](../../past/planning/P10262602.Sprint09-structured-diagnostics.plan.md) now implements immutable
+Diagnostic snapshots, five stable categories, occurrence-based provenance in shared/local selections, actual rejected
+intent details, callback normalization, lazy multiline rendering, and aggregate state notes. Caller-supplied exceptions
+remain causes of fresh stock exceptions; library failures preserve underlying causes/stacks/suppressed members.
+No separate caller IDs or new declaration syntax was added.
+
+UserCanDiagnoseRuleViolations supplies 29 direct cases; DiagnosticLogicTest adds eight focused cases. Checks include
+combined selections and full names, reused local handlers, stage/boundary distinctions, explicit rollback semantics,
+concurrent reuse of a supplied exception, detached local capture/index cleanup, serializable snapshots, immutable
+lists, escaped raw descriptions, no entity rendering, fallback, and memoization.
+
+[Performance evidence](../../performance/topics/Diagnostics.md) retains three independent JVM samples per variant
+with identical harnesses and source hashes. All 336 measured scenario samples assert callbacks, violations, folding,
+and cleanup. Initial smaller repeated-report medians were about 15% slower; interleaved follow-ups show common timing
+drift,
+so a small success-path time cost remains possible. Warm allocation falls about 2.4 MB per 50,000-entity workflow.
+Detailed failure output has an explicit allocation/rendering tradeoff. No speedup, numerical gate, or arbitrary
+leak-detection guarantee is claimed.
+
+Design readiness and selected implementation verification are complete. Broader Sprint 09 work remains open.
+
 ## Remaining work
 
-- Retain Sprint 08 checkpoint continuation/failure; resolve remaining access events and broader combinations.
-- Complete richer violation metadata, description options, cache ownership/invalidation, and global close behavior.
+- Additional event values and remaining broader combinations beyond the verified access/general-rule slice.
+- Extend metadata to remaining public-exception paths and settle supplied-rule binding, cache ownership/invalidation,
+  and global close behavior.
 - Record optional remote-publication readiness separately; remote availability is claimed only after actual evidence.
 
 ## Acceptance
@@ -147,3 +220,15 @@ listed above; the whole sprint and V2 release remain open. Use the [review templ
 [review template]: ../templates/SprintReview.md
 [managed-plan]: ../../past/planning/P10252601.Sprint09-managed-indexes-and-diagnostics.plan.md
 [managed-spec]: ../../specifications/QuantifiersAndIndexes.spec.md#managed-transaction-local-indexes
+
+## Structured diagnostics verification
+
+On 2026-10-27, `mvn clean install` passed 676 root tests with no failures/errors/skips; Checkstyle and PMD passed.
+The independent `mvn -f examples/night_city/pom.xml clean verify` passed seven tests against the installed artifact.
+The final reactor result and coverage/artifact inspection are recorded in the archived delivery plan. JaCoCo data is
+present; the new diagnostics implementation has 95.2% instruction coverage and the public diagnostic catalog 100%.
+Overall coverage remains lower, so passing zero-threshold checks is not treated as repository-wide coverage closure.
+No disabled test annotations were found. The normal/assembled JAR inspections exclude application fixtures, test
+frameworks, test/benchmark suites, and build-tool packages; legitimate AspectJ runtime AST types named Test are
+retained.
+The consumer dependency tree remains scoped to the library, AspectJ runtime/weaver, and test-scoped JUnit.

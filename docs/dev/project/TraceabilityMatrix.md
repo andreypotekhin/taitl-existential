@@ -411,7 +411,10 @@ and remaining combinations are not established by this slice.
 
 Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
 [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
-Design readiness: open. Verification: partial.
+Design readiness: access-event slice finalized in the
+[delivery plan](../past/planning/P10262601.Sprint09-access-event-acceptance.plan.md). Other combinations remain open.
+Verification: all 54 new access/general-rule cases and root/consumer/reactor builds pass.
+[Paired performance evidence](../performance/runs/20261027T050744Z.AccessEvents.md) records allocation and timing limits.
 
 Requirements: Remaining lifecycle/event combinations beyond the V1 slice.
 
@@ -424,27 +427,53 @@ Requirements: Remaining lifecycle/event combinations beyond the V1 slice.
 
 Evidence to review: [UserCanInitiateTransactions.java].
 Checkpoint continuation/failure is settled and verified in Sprint 08. Remaining work: additional values and broad
-event combinations; managed-index enrollment/admission is finalized without claiming all remaining access-event
-combinations.
+event combinations; managed-index enrollment/admission and the selected access-event combinations are verified, with
+additional values and other combinations still open. UserCanValidateAccessEvents covers 45 combinations;
+UserCanApplyGeneralEventRules covers general
+constraints/effects/intents on all built-in event roots and preserves declaration order across matching families.
 
 ## Richer reports, caching, and global hygiene
 
 Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
 [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
-Design readiness: open. Verification: partial.
+Design readiness: selected diagnostics slice finalized and verified; broader cache/global contracts remain open.
+Verification: partial across the whole capability, complete for the selected diagnostics slice.
 
 Requirements: Broader reporting, cache, global cleanup, and leak-reporting guarantees.
 
-- [EventsAndConstraints.spec.md]: [Constraint error numbers], [Required constraint descriptions].
+- [EventsAndConstraints.spec.md]: [Constraint descriptions], [Required constraint descriptions],
+  [structured violation diagnostics](../specifications/EventsAndConstraints.spec.md#structured-violation-diagnostics),
+  [diagnostic access and compatibility][diagnostic-api].
 - [Housekeeping.spec.md]: [Caching between transactions], [Caching between contexts], [Transaction resource release],
   [Reported event resource release], [Transaction recycling], [Rule recycling], [Memory leak reporting].
+
+Required-description options are verified for fluent context/transaction builders across checks, intents, effects,
+All/Exists, and managed sources. UserCanRequireRuleDescriptions supplies 33 direct cases for prospective changes,
+rejection/correction, no partial append, freeze, and retained validation text. Effect enforcement and optional
+quantifier text were corrected; standalone explicit-null constructor contracts remain unchanged. Full root/consumer/
+reactor builds pass (638 root/seven consumer tests). Broader supplied-rule ownership/binding remains separate.
+
+Structured diagnostics are implemented under the
+[design](../design/EventsAndConstraints.design.md#structured-violation-diagnostics) and
+[delivery plan](../past/planning/P10262602.Sprint09-structured-diagnostics.plan.md). UserCanDiagnoseRuleViolations supplies
+29 direct cases for raw fields/default messages, declaration occurrences, parent/wildcard/local origins,
+reported/selected event/type, stage/boundary, intent rejection/missing intent, callbacks, ordering/stopping,
+concurrency, serialization, and detached ownership. DiagnosticLogicTest supplies eight focused fallback, memoization,
+classification, immutable-copy, and cause/subclass cases. Default messages are lazy and preserve stock exception
+classification; caller exceptions remain causes without mutation. No new declaration syntax was introduced.
+
+Root clean install passes 676 tests with no failures/skips; the independent consumer passes seven. Full reactor,
+artifact/dependency, static-analysis, and actual coverage evidence are recorded in Sprint 09. The
+[diagnostics performance topic](../performance/topics/Diagnostics.md) links three fresh JVM samples per variant,
+comparing success, rejection/rollback/recovery, collection, and effect stopping against the preserved dirty baseline.
+Broader public-exception metadata, supplied-rule binding, and cache/global contracts remain open.
 
 Evidence to review: [TypeKeyCacheTest.java](../../../src/test/java/com/taitl/ex/logic/events/TypeKeyCacheTest.java).
 The [managed relationship release](../specifications/Housekeeping.spec.md#managed-relationship-index-release) and
 [memory leak reporting](../specifications/Housekeeping.spec.md#memory-leak-reporting) sections now define the selected
 resource contract: deterministic ownership release and bounded diagnostics of known outstanding shutdown resources,
 without GC-based tracking or retaining detached failures. UserCanReleaseManagedIndexes and
-UserCanDiagnoseOutstandingResources provide direct passing evidence. Other metadata, description,
+UserCanDiagnoseOutstandingResources provide direct passing evidence. Other metadata, supplied-rule description binding,
 invalidation, and cache/global-close gaps remain separately tracked.
 
 ## Publication readiness
@@ -657,8 +686,8 @@ records, consumer results, and artifact checks must agree before closure. These 
 [Transaction checkpoints]: ../specifications/TransactionsAndEvaluation.spec.md#transaction-checkpoints
 [Independent transaction evaluations]:
   ../specifications/TransactionsAndEvaluation.spec.md#independent-transaction-evaluations
-[Constraint error numbers]: ../specifications/EventsAndConstraints.spec.md#constraint-error-numbers
 [Required constraint descriptions]: ../specifications/EventsAndConstraints.spec.md#required-constraint-descriptions
+[diagnostic-api]: ../specifications/EventsAndConstraints.spec.md#diagnostic-access-and-compatibility
 [Caching between transactions]: ../specifications/Housekeeping.spec.md#caching-between-transactions
 [Caching between contexts]: ../specifications/Housekeeping.spec.md#caching-between-contexts
 [Memory leak reporting]: ../specifications/Housekeeping.spec.md#memory-leak-reporting

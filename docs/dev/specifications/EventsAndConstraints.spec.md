@@ -18,6 +18,37 @@ The original specification left this section empty. Its missing decisions are tr
 
 User can emit (record) a class event, such as accessing or modifying entity.
 
+### Access event selection
+
++ Read selects read handlers; RL selects read-and-lock and read handlers. Write selects write handlers without inferring
+creation or update. Explicit Access reports general access without inferring read, lock, or write. General On handlers
+and entity expressions can observe all four. General On declarations also apply to other built-in event reports;
+bi-events supply the after-value, or the before-value for deletion. Selected declarations run once in declaration order,
+even when a report
+selects several event forms. Disabling elementary-to-compound expansion does not disable RL-to-read selection.
+These are reports of application actions; no storage access or lock is acquired by the library.
+
+### Access event stages and recovery
+
++ Access reports retain begin-stage once-per-event/type history across successful checkpoints. Immediate processing
+runs for every accepted trigger; boundary validation folds repeated same-event/type/object reports, retains distinct
+object identities, and reevaluates retained events at subsequent boundaries. A successful checkpoint permits more
+reports. A failed checkpoint or commit detaches ID lookup and permits only explicit rollback or close. Rollback
+callbacks remain explicit-only. A fresh transaction can perform a corrected operation.
+
+### Access authorization and managed enrollment
+
++ Applicable parent, child, and transaction-local intents compose conjunctively for access reports, in resolved
+context/declaration order across read, lock, and general event families. A denied candidate
+is not recorded or enrolled in managed indexes. Default read enrollment covers Read/RL/Access; disabling it does not
+disable Write maintenance. Fully manual indexes remain unchanged by reports. Handle and string-ID event entry points
+retain equivalent selection/authorization semantics. Explicit Access/RL use the existing typed event API.
+
+Acceptance: [access stages, policies, and
+recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanValidateAccessEvents.java)
+and [general rules and intent
+ordering](../../../src/test/java/com/taitl/specs/library_usage/UserCanApplyGeneralEventRules.java).
+
 ### Equal event deduplication
 
 Multiple equal events (e.g. same entity + event type) (successive or not) are considered to be (have same
@@ -123,7 +154,8 @@ both endpoints null are rejected immediately. An invalid event does not enter va
 available for a corrected event. Failed commit identifies the operation and violated rule descriptions, detaches
 active transaction lookup, and permits explicit rollback. Source collections and caller-owned snapshots are not undone.
 
-Acceptance: [relationships and endpoint validation](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
+Acceptance: [relationships and endpoint
+validation](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
 and [cat relocation](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java).
 
 ## Constraints on evolution of multiple entities
@@ -220,20 +252,110 @@ them in `throws` clauses; callers may catch the common base or a specific subtyp
 
 ### Constraint descriptions
 
-User can pass a human-readable description when creating a constraint, to help with reporting.
++ User can pass a human-readable description when creating a constraint, to help with reporting.
 
-### Constraint error numbers
+Acceptance:
+[policy tests](../../../src/test/java/com/taitl/specs/library_configuration/UserCanRequireRuleDescriptions.java)
+checks ordinary, universal, existence, and managed-source validation failures. Structured diagnostics remain a separate
+requirement.
 
-User can specify an error number when creating a constraint, to help with reporting.
+The existing description identifies the rule in structured diagnostics. Callers choose prose, concise text, or an
+ID-like description through existing declaration methods; no separate caller rule ID or metadata argument is required.
+Descriptions are preserved as raw field values and need not be unique. Equal descriptions do not merge declarations
+or change execution order. Missing descriptions follow the existing optional/required policy, without a generated ID.
 
 ### Violation details
 
 Constraint violation exception contains details about the violation, such as human description of violated
 rule.
 
+### Structured violation diagnostics
+
++ Library-generated structured failures expose diagnostic fields programmatically and render a detailed multiline
+message through `getMessage()` by default. The primary line identifies the library diagnostic code and failure
+category; the rule field supplies the existing consumer description without repeating it in the primary line. Library
+codes have no `EX-` prefix and remain separate from descriptions. Callers can inspect fields without parsing text.
+
++ Available context fields render in this order: operation, rule, context, event, evaluation, followed by optional notes
+and actions. `context` names the original declaration context, including a parent or wildcard, while `operation`
+names the invocation. Transaction-local rules identify that origin without claiming a context declaration. Missing
+values are omitted rather than inferred. The diagnostic distinguishes the reported event/type from the selected
+rule event/type where they differ, and the evaluation stage from its triggering boundary, such as checkpoint or
+commit. Stage names in prose are lowercase.
+
++ Notes explain actual consequences or incomplete evaluation. Actions provide specific, justified corrections and
+are omitted when no useful correction is known. Arbitrary predicate failures do not automatically receive generic
+rollback/retry advice or inferred business remedies. Relevant troubleshooting references remain accessible. Rendered
+caller text cannot inject additional diagnostic lines through embedded control characters; raw fields stay intact.
+
++ Reports retain separate violations and present common transaction information once. Ordinary checks-only failures
+are collected under the existing evaluation policy. When effects participate and a violation stops later work, the
+report identifies that limitation. Authorization denial and unexpected callback failure remain immediate failures;
+their diagnostics distinguish missing intent, rejected intent, and callback failure, retaining the offending rule
+when one exists and the original cause when present. No synthetic rule is reported for a missing intent.
+
++ Existing exception subtypes, aggregate membership, cause/suppressed relationships, and explicit-only rollback
+callbacks remain available. Rendering never reruns rules or changes cleanup behavior. Diagnostic fields remain
+usable after disposal without retaining handles, entities, indexes, or callback closures for presentation. This
+does not constrain references held by a caller-provided Throwable cause.
+
+Required acceptance covers parent/wildcard/local provenance, general and expanded event matching, checkpoint versus
+commit, prose/ID-like/duplicate/missing descriptions, intent rejection and missing intent, callback causes, multiple
+violations, effect-induced stopping, rendering order and escaping, concurrent isolation, and post-disposal access.
+Direct evidence: UserCanDiagnoseRuleViolations supplies 29 cases; DiagnosticLogicTest supplies eight focused
+compatibility, ownership, classification, and fallback cases. See [performance
+evidence](../performance/topics/Diagnostics.md).
+
+### Diagnostic access and compatibility
+
++ ExistentialException.diagnostic() exposes a read-only com.taitl.existential.diagnostics.Diagnostic or null when
+absent.
+Library-generated snapshots are immutable and serializable, with nullable optional scalar values and non-null immutable
+ordered lists. Diagnostic.message() provides the concise primary message; exception getMessage() renders the detailed
+diagnostic lazily and memoizes the result. Caller-created exceptions using existing constructors retain their current
+plain behavior when not contextualized by library evaluation. No rule-ID/metadata declaration API is added.
+
++ Diagnostic exposes code/message, operation, rule description, original context/local origin, reported event/type,
+selected rule event/type, configured StageName, triggering boundary, known evaluation stopping, notes/actions,
+troubleshooting reference, and aggregate children. Boundary values are report, begin, checkpoint, commit, or rollback
+where known. Context is null for transaction-local declarations, whose local-origin flag is true. Children retain
+full fields and correspond to the aggregate's multiple() order, even when common fields are shown once in rendering.
+
++ DiagnosticCode constants and their id() display values are RULE_REJECTED (RULE-REJECTED), INTENT_REJECTED
+(INTENT-REJECTED), INTENT_MISSING (INTENT-MISSING), CALLBACK_FAILED (CALLBACK-FAILED), and EVALUATION_FAILED
+(EVALUATION-FAILED). Each has a stable diagnostic-specific troubleshooting heading. Codes classify failures, not
+consumer rules. Classification does not depend on the rendered message.
+
++ Existing stock library exception types, aggregate stage()/multiple(), defensive copying, and original underlying
+cause/suppressed relationships remain supported. Unexpected non-intent RuntimeException from invoked callbacks is
+wrapped in EventHandlerException; unexpected intent callback failure uses IntentViolation. Both expose CALLBACK_FAILED,
+retain the original as cause, and stop immediately. Callback-supplied/custom exception objects are not mutated to add
+invocation data; their exact instance remains available as cause under a fresh stock failure. Error propagates
+unchanged.
+
++ Rollback-only notes reflect the state after a failed checkpoint/commit boundary. A report-time rejection does not
+imply that state. Known early stopping is inspectable; absence of the stopping flag does not promise that every
+possible violation was found. Required-description timing and transaction cleanup behavior remain unchanged.
++ Rendering performs no callback, entity/Throwable toString, stack scan, or live-handle access. If formatting fails with
+a RuntimeException, getMessage() returns the original fallback message; diagnostic construction failure does not
+replace the original business failure. These fallbacks do not catch VM errors or retry evaluation.
+
 ### Required constraint descriptions
 
 Optionally, user can configure the library to require a description for each constraint.
+
++ For fluent context and transaction builders, BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS rejects missing/empty descriptions
+  when
+a rule is added, covering event checks, intents, effects, All, and Exists including managed sources. Each declaration
+uses the current owning-instance flag even through a previously obtained builder. Failed declarations add no rule and
+can be corrected on that builder. Enabling the flag does not invalidate earlier optional declarations; disabling it
+permits subsequent optional declarations. Configuration freezes at the established first successful begin boundary.
+
+Acceptance: [required-description policy and
+quantifiers](../../../src/test/java/com/taitl/specs/library_configuration/UserCanRequireRuleDescriptions.java)
+covers 33 cases. Standalone rule objects/runtime definitions have their explicit policy; no retroactive validation or
+implicit instance binding is promised by this selected contract. Explicit standalone constructor argument contracts
+remain unchanged; use the corresponding overload to omit optional text.
 
 ## Custom Event Types
 

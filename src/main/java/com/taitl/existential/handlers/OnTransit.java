@@ -1,5 +1,7 @@
 package com.taitl.existential.handlers;
 
+import com.taitl.ex.logic.diagnostics.actions.*;
+
 import com.taitl.ex.common.helper.*;
 import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.events.*;
@@ -98,7 +100,7 @@ public class OnTransit<T> implements BiEventHandler<T>
             {
                 if (!bicondition.test(t0, t1))
                 {
-                    throw new EventHandlerException(handlerMessage("The specified condition is not met"));
+                    throw NewEvaluationFailure.handler(handlerMessage("The specified condition is not met"));
                 }
                 return;
             }
@@ -107,7 +109,7 @@ public class OnTransit<T> implements BiEventHandler<T>
 
             if (!condition.test(t1))
             {
-                throw new EventHandlerException(handlerMessage("The specified condition is not met"));
+                throw NewEvaluationFailure.handler(handlerMessage("The specified condition is not met"));
             }
 
             return;
@@ -121,7 +123,7 @@ public class OnTransit<T> implements BiEventHandler<T>
             }
             catch (Exception e)
             {
-                throw new EventHandlerException(handlerMessage("Event handler execution failed"), e);
+                throw NewEvaluationFailure.handler(handlerMessage("Event handler execution failed"), e);
             }
         }
     }

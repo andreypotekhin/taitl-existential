@@ -1,6 +1,11 @@
 package com.taitl.ex.logic.evaluation.events.actions;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.logic.diagnostics.*;
+import com.taitl.ex.logic.diagnostics.data.*;
+import com.taitl.ex.logic.execution.data.*;
+import com.taitl.existential.keys.*;
+import com.taitl.existential.constants.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.existential.evaluables.*;
@@ -26,6 +31,9 @@ public class ExecuteHandlers
     @Logic
     protected OnException onException = Creator.create(OnException.class);
 
+    @Logic
+    protected DiagnosticLogic diagnostics = Creator.singleton(DiagnosticLogic.class);
+
     public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report)
     {
         call(evs, event, report, false);
@@ -39,34 +47,72 @@ public class ExecuteHandlers
     public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report,
             boolean stopAfterViolation, Tr tr)
     {
+        call(evs, event, report, stopAfterViolation, tr, null, null, null);
+    }
+
+    public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report,
+            boolean stopAfterViolation, Tr tr, RuleSelection selection, RuntimeKey<?> key, StageName stage)
+    {
         sane(evs, "evs", event, "event", report, "report");
         if (stopAfterViolation && !report.isEmpty())
         {
             return;
         }
-        for (Ev<T> ev : evs)
+        for (int i = 0; i < evs.size(); i++)
+        {
+            int failures = report.exceptions().size();
+            RuleDeclaration declaration = selection == null ? null : selection.declaration(i);
+            execute(evs.get(i), event, report, tr, declaration == null ? null : declaration.origin, key, stage,
+                    stopAfterViolation);
+            if (shouldStop(stopAfterViolation, failures, report))
+            {
+                report.evaluationStopped = true;
+                return;
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> void execute(Ev<T> ev, Event<T> event, ValidationReport report, Tr tr, RuleOrigin origin,
+            RuntimeKey<?> key, StageName stage, boolean stopAfterViolation)
+    {
+        try
         {
             if (ev instanceof EventHandler<?>)
             {
-                int failures = report.exceptions().size();
-                executeHandler((EventHandler<T>) ev, event, report);
-                if (shouldStop(stopAfterViolation, failures, report))
-                {
-                    return;
-                }
+                callEventHandler((EventHandler<T>) ev, event);
             }
             else if (ev instanceof Expression<?>)
             {
-                int failures = report.exceptions().size();
-                executeExpression((Expression<T>) ev, event, report, tr);
-                if (shouldStop(stopAfterViolation, failures, report))
+                if (tr == null)
                 {
-                    return;
+                    callExpression((Expression<T>) ev, event);
+                }
+                else
+                {
+                    ((Expression<T>) ev).evaluate((T) entity(event), tr);
                 }
             }
             else
             {
                 throw new IllegalStateException("Unsupported evaluable type: " + ev.getClass().getName());
+            }
+        }
+        catch (RuntimeException failure)
+        {
+            boolean ordinary = failure instanceof ExistentialException
+                    && OnException.constraintViolation((ExistentialException) failure);
+            RuntimeException diagnosed = tr == null ? failure
+                    : diagnostics.failure(failure, tr.op, origin, key,
+                            stage, tr.evaluationBoundary(), false,
+                            stage != StageName.ROLLBACK && (!ordinary || stopAfterViolation));
+            if (ordinary && diagnosed instanceof ExistentialException)
+            {
+                routeHandlerException((ExistentialException) diagnosed, report);
+            }
+            else
+            {
+                throw diagnosed;
             }
         }
     }
@@ -83,13 +129,21 @@ public class ExecuteHandlers
 
     public <T> void callAll(List<Ev<T>> evs, Event<T> event, ValidationReport report, Tr tr)
     {
+        callAll(evs, event, report, tr, null, null, null);
+    }
+
+    public <T> void callAll(List<Ev<T>> evs, Event<T> event, ValidationReport report, Tr tr,
+            RuleSelection selection, RuntimeKey<?> key, StageName stage)
+    {
         sane(evs, "evs", event, "event", report, "report");
         Throwable failure = null;
-        for (Ev<T> ev : evs)
+        for (int i = 0; i < evs.size(); i++)
         {
             try
             {
-                call(Collections.singletonList(ev), event, report, false, tr);
+                RuleDeclaration declaration = selection == null ? null : selection.declaration(i);
+                execute(evs.get(i), event, report, tr, declaration == null ? null : declaration.origin, key, stage,
+                        false);
             }
             catch (Throwable caught)
             {
@@ -123,40 +177,6 @@ public class ExecuteHandlers
         if (failure != null)
         {
             throw new ExistentialException("Event handler failed", failure);
-        }
-    }
-
-    protected <T> void executeHandler(EventHandler<T> handler, Event<T> event, ValidationReport report)
-    {
-        sane(handler, "handler", event, "event", report, "report");
-        try
-        {
-            callEventHandler(handler, event);
-        }
-        catch (ExistentialException ex)
-        {
-            routeHandlerException(ex, report);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected <T> void executeExpression(Expression<T> expression, Event<T> event, ValidationReport report, Tr tr)
-    {
-        sane(expression, "expression", event, "event", report, "report");
-        try
-        {
-            if (tr == null)
-            {
-                callExpression(expression, event);
-            }
-            else
-            {
-                expression.evaluate((T) entity(event), tr);
-            }
-        }
-        catch (ExistentialException ex)
-        {
-            routeHandlerException(ex, report);
         }
     }
 

@@ -23,6 +23,8 @@ public class IndexEvs implements Evaluator
     protected TypeKey<?> currentTypeKey;
     protected boolean currentIntent;
     protected boolean currentEffect;
+    protected String context;
+    protected boolean transactionLocal;
 
     @Logic
     protected TypeMatchingLogic typeMatchingLogic;
@@ -32,6 +34,21 @@ public class IndexEvs implements Evaluator
         sane(ci, "ci");
         this.ci = ci;
         this.typeMatchingLogic = Creator.create(TypeMatchingLogic.class);
+    }
+
+    public <T> void call(Evs<T> evs, String context, boolean transactionLocal)
+    {
+        this.context = context;
+        this.transactionLocal = transactionLocal;
+        try
+        {
+            call(evs);
+        }
+        finally
+        {
+            this.context = null;
+            this.transactionLocal = false;
+        }
     }
 
     public <T> void call(Evs<T> evs)
@@ -76,9 +93,14 @@ public class IndexEvs implements Evaluator
         }
 
         EventKey<T> eventKey = eventKey(ev);
+        String description = ev instanceof EventHandler<?> ? ((EventHandler<?>) ev).description()
+                : ((Expression<?>) ev).description();
+        com.taitl.ex.logic.diagnostics.data.RuleOrigin origin =
+                new com.taitl.ex.logic.diagnostics.data.RuleOrigin(description, context, transactionLocal,
+                        eventKey.toString());
         if (currentIntent)
         {
-            ci.addIntent(eventKey, ev);
+            ci.configuredIntents.put(eventKey, ev, false, origin);
             ci.addIntentEventType(eventType(ev));
             if (biEventType(ev))
             {
@@ -87,7 +109,7 @@ public class IndexEvs implements Evaluator
             return;
         }
 
-        ci.addHandler(eventKey, ev, currentEffect);
+        ci.configuredHandlers.put(eventKey, ev, currentEffect, origin);
         if (biEventType(ev))
         {
             ci.addBiKey(eventKey);

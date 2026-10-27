@@ -44,10 +44,17 @@ class UserCanConfigureIntents extends SpecBase
             // @formatter:on
 
             Tr tranTr = ex.begin(op);
-            String tran = tranTr.id();
-            ex.read(cat, tran);
-            ex.write(cat, tran);
-            tranTr.commit();
+            try
+            {
+                String tran = tranTr.id();
+                ex.read(cat, tran);
+                ex.write(cat, tran);
+                tranTr.commit();
+            }
+            finally
+            {
+                tranTr.close();
+            }
         }
 
         @Test
@@ -62,12 +69,19 @@ class UserCanConfigureIntents extends SpecBase
             // @formatter:on
 
             Tr tranTr = ex.begin(op);
-            String tran = tranTr.id();
-            IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> UserCanConfigureIntents.this.ex.read("guest", tran));
-            assertTrue(ex.getMessage().contains("No intent is configured"));
-            assertTrue(ex.getMessage().contains("/Troubleshooting.md#intent-violation"));
-            tranTr.rollback();
+            try
+            {
+                String tran = tranTr.id();
+                IntentViolation ex = assertThrows(IntentViolation.class,
+                        () -> UserCanConfigureIntents.this.ex.read("guest", tran));
+                assertEquals(com.taitl.existential.diagnostics.DiagnosticCode.INTENT_MISSING, ex.diagnostic().code());
+                assertTrue(ex.getMessage().contains("/Troubleshooting.md#diagnostic-intent-missing"));
+                tranTr.rollback();
+            }
+            finally
+            {
+                tranTr.close();
+            }
         }
 
         @Test
@@ -84,12 +98,19 @@ class UserCanConfigureIntents extends SpecBase
             // @formatter:on
 
             Tr tranTr = ex.begin(op);
-            String tran = tranTr.id();
-            ex.write(cat, tran);
-            IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> UserCanConfigureIntents.this.ex.write(cat, tran));
-            assertTrue(ex.getMessage().contains("Intent condition is not met"));
-            tranTr.rollback();
+            try
+            {
+                String tran = tranTr.id();
+                ex.write(cat, tran);
+                IntentViolation ex = assertThrows(IntentViolation.class,
+                        () -> UserCanConfigureIntents.this.ex.write(cat, tran));
+                assertEquals(com.taitl.existential.diagnostics.DiagnosticCode.INTENT_REJECTED, ex.diagnostic().code());
+                tranTr.rollback();
+            }
+            finally
+            {
+                tranTr.close();
+            }
         }
 
         @Test
@@ -106,12 +127,19 @@ class UserCanConfigureIntents extends SpecBase
             // @formatter:on
 
             Tr tranTr = ex.begin(op);
-            String tran = tranTr.id();
-            ex.read(cat, tran);
-            IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> UserCanConfigureIntents.this.ex.read("guest", tran));
-            assertTrue(ex.getMessage().contains("No intent is configured"));
-            tranTr.rollback();
+            try
+            {
+                String tran = tranTr.id();
+                ex.read(cat, tran);
+                IntentViolation ex = assertThrows(IntentViolation.class,
+                        () -> UserCanConfigureIntents.this.ex.read("guest", tran));
+                assertEquals(com.taitl.existential.diagnostics.DiagnosticCode.INTENT_MISSING, ex.diagnostic().code());
+                tranTr.rollback();
+            }
+            finally
+            {
+                tranTr.close();
+            }
         }
 
         @Test
@@ -127,9 +155,16 @@ class UserCanConfigureIntents extends SpecBase
             // @formatter:on
 
             Tr tranTr = ex.begin(op);
-            String tran = tranTr.id();
-            ex.write(cat, tran);
-            assertDoesNotThrow(() -> tranTr.commit());
+            try
+            {
+                String tran = tranTr.id();
+                ex.write(cat, tran);
+                assertDoesNotThrow(() -> tranTr.commit());
+            }
+            finally
+            {
+                tranTr.close();
+            }
         }
 
         @Test
@@ -145,12 +180,19 @@ class UserCanConfigureIntents extends SpecBase
             // @formatter:on
 
             Tr tranTr = ex.begin(op);
-            String tran = tranTr.id();
-            ex.write("guest", tran);
-            IntentViolation ex = assertThrows(IntentViolation.class,
-                    () -> tranTr.commit());
-            assertTrue(ex.getMessage().contains("No intent is configured"));
-            tranTr.rollback();
+            try
+            {
+                String tran = tranTr.id();
+                ex.write("guest", tran);
+                IntentViolation ex = assertThrows(IntentViolation.class,
+                        () -> tranTr.commit());
+                assertEquals(com.taitl.existential.diagnostics.DiagnosticCode.INTENT_MISSING, ex.diagnostic().code());
+                tranTr.rollback();
+            }
+            finally
+            {
+                tranTr.close();
+            }
         }
 
         @Test
@@ -168,12 +210,19 @@ class UserCanConfigureIntents extends SpecBase
             // @formatter:on
 
             Tr tranTr = ex.begin(op);
-            String tran = tranTr.id();
-            ex.write(cat, tran);
-            ex.write(cat, tran);
-            tranTr.commit();
+            try
+            {
+                String tran = tranTr.id();
+                ex.write(cat, tran);
+                ex.write(cat, tran);
+                tranTr.commit();
 
-            assertEquals(1, checks.get());
+                assertEquals(1, checks.get());
+            }
+            finally
+            {
+                tranTr.close();
+            }
         }
     }
 }

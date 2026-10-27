@@ -221,6 +221,28 @@ public class Tr
         concrete.onRollback();
     }
 
+    /**
+     * Returns the currently executing boundary for runtime diagnostics.
+     *
+     * @return current report, checkpoint, commit or rollback boundary
+     */
+    public String evaluationBoundary()
+    {
+        return concrete.boundary;
+    }
+
+    /**
+     * Resolves the handle-owned intent overlay for runtime evaluation.
+     *
+     * @param base shared configured intents
+     * @param stage evaluation stage
+     * @return shared intents combined with transaction-local declarations
+     */
+    public EventField intentField(EventField base, StageName stage)
+    {
+        return concrete.intentField(base, stage);
+    }
+
     public void preparedIndexes(StageName stageName, ConfigurationIndexes indexes)
     {
         concrete.preparedIndexes(stageName, indexes);

@@ -36,7 +36,7 @@ public class PrepareTransaction
         {
             for (Evs<?> evs : transaction.stage().at(stageName))
             {
-                if (!(evs instanceof Invariant<?> || evs instanceof Effect<?>))
+                if (!(evs instanceof Invariant<?> || evs instanceof Effect<?> || evs instanceof Intent<?>))
                 {
                     continue;
                 }
@@ -45,7 +45,7 @@ public class PrepareTransaction
                     indexes = createIndexes(evaluationLogic);
                     indexEvs = Creator.create(IndexEvs.class, new Class[] { ConfigurationIndexes.class }, indexes);
                 }
-                indexEvs.call(evs);
+                indexEvs.call(evs, null, true);
             }
         }
         if (indexes == null)

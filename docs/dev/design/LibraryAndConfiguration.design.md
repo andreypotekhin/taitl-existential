@@ -87,6 +87,21 @@ Global `Creator` replacement/injection remains configuration-time process state;
 the supported contract. Source streams are loader-owned and closed after reading; configured rule/source references
 remain owned by their instance configuration.
 
+## Required rule descriptions
+
+The required-description flag is prospective, including builders acquired before it changes. Each fluent declaration
+consults its owning instance's current flag before appending the rule. Null and empty descriptions fail at declaration
+when required; disabled mode permits omission through the corresponding overloads. Rejected declarations add no rule,
+and the builder remains usable for a
+corrected declaration. Earlier optional declarations remain valid when the flag is enabled later. All and Exists,
+including managed-source forms, follow the same builder policy as event checks, intents, and effects.
+
+This is a configuration-time check, with no repeated description validation during event execution. Diagnostics name
+the flag, explain supplying a description or disabling it before declaration, and link to the remedy. Configuration
+ownership/freeze and declaration threading remain unchanged. Supplied standalone rule objects and independently built
+runtime transaction definitions retain their own explicit description policy; this builder contract does not imply
+retroactive scanning or a new instance binding protocol for them.
+
 ## Managed indexing policy
 
 Managed indexing uses a scoped IndexingPolicy rather than unrelated boolean fields spread across components. Its two

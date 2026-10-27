@@ -1,5 +1,7 @@
 package com.taitl.existential.quantifiers;
 
+import com.taitl.ex.logic.diagnostics.actions.*;
+
 import java.util.function.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.concrete.*;
@@ -79,7 +81,7 @@ public class All<T> implements Expression<T>
         }
         if (!boundPredicate.test(entity, tr))
         {
-            throw new PredicateFailure(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
+            throw NewEvaluationFailure.predicate(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
         }
         return null;
     }

@@ -55,7 +55,8 @@ class UserCanValidateEntityQuantifiers
         ValidationStageExceptions failure = assertThrows(ValidationStageExceptions.class, tr::commit);
         assertInstanceOf(PredicateFailure.class, failure.getCause());
         assertTrue(failure.getCause().getMessage().contains("Cat must have a location"));
-        assertTrue(failure.getCause().getMessage().contains(PredicateFailure.TROUBLESHOOTING_SECTION));
+        assertEquals(com.taitl.existential.diagnostics.DiagnosticCode.RULE_REJECTED,
+                ((ExistentialException) failure.getCause()).diagnostic().code());
         assertEquals(1, seen.size());
         assertSame(reported.deleted() ? before : after, seen.get(0));
         tr.rollback();

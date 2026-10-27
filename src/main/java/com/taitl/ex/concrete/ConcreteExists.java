@@ -1,5 +1,7 @@
 package com.taitl.ex.concrete;
 
+import com.taitl.ex.logic.diagnostics.actions.*;
+
 import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
@@ -53,7 +55,7 @@ public class ConcreteExists<T, K> implements Expression<T>, Predicate<T>
     {
         if (!test(t))
         {
-            throw new PredicateFailure(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
+            throw NewEvaluationFailure.predicate(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
         }
         return null;
     }

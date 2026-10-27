@@ -1,10 +1,24 @@
 package com.taitl.existential.exceptions;
 
+import com.taitl.existential.diagnostics.*;
+
 /**
  * Signals that a configured invariant has been violated during validation.
  */
 public class InvariantViolation extends ExistentialException
 {
+    /**
+     * Creates a contextualized failure without changing the underlying cause.
+     *
+     * @param message original fallback message
+     * @param cause original cause, possibly null
+     * @param diagnostic detached structured diagnostic
+     */
+    public InvariantViolation(String message, Throwable cause, Diagnostic diagnostic)
+    {
+        super(message, cause, diagnostic);
+    }
+
     /**
      * Creates an invariant violation without a message.
      */

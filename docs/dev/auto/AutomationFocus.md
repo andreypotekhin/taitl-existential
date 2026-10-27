@@ -29,6 +29,23 @@ cleanup. Shared entity indexes remain deferred. Select the next ready broader ev
 Sprint 09; settle its contract before implementation. Automatic routing allocation is a measured optimization target,
 not an established speed gate. Do not mark the whole sprint complete from this selected slice.
 
+Sprint 09 access-event coverage and the general On dispatch/authorization correction are complete in the
+[delivery plan](../past/planning/P10262601.Sprint09-access-event-acceptance.plan.md). Preserve explicit access reports,
+RL-to-read selection, generic and specific intent conjunction/order, successful-checkpoint history, and explicit
+cleanup.
+Required-description builder coverage now passes 33 new cases, with effect policy enforcement and optional quantifier
+text corrected. Preserve prospective flag timing and standalone explicit-null constructor contracts. Root/consumer/
+reactor verification is recorded in Sprint 09. Real-workload evidence from the access-event record onward uses ms and
+decimal MB; earlier reports retain their units, and no measurements were rerun for the presentation change.
+Structured diagnostics are delivered in the selected Sprint 09 slice. Preserve the
+[design](../design/EventsAndConstraints.design.md#structured-violation-diagnostics),
+[delivery plan](../past/planning/P10262602.Sprint09-structured-diagnostics.plan.md), and
+[performance evidence](../performance/topics/Diagnostics.md): lazy default multiline messages, immutable detached
+fields, occurrence-based declaration provenance, actual intent rejection details, callback causes, and shared boundary
+notes. Root/consumer/reactor evidence belongs in Sprint 09; no caller rule-ID/metadata declaration API was added.
+Next work remains the broader public-exception scope, supplied-rule binding, and unresolved cache/global contracts.
+Do not close Sprint 09 from this selected delivery alone.
+
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Restore useful verification feedback early and link evidence for each concern. Do not treat inherited marks or
 neighboring tests as proof of the representative workflow.

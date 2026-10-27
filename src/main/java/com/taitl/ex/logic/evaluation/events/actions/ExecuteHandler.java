@@ -1,5 +1,7 @@
 package com.taitl.ex.logic.evaluation.events.actions;
 
+import com.taitl.ex.logic.diagnostics.actions.*;
+
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;
 
@@ -33,7 +35,7 @@ public class ExecuteHandler
 
         if (!handler.condition.test(t))
         {
-            throw new ConditionNotMetException(handler.description());
+            throw NewEvaluationFailure.condition(handler.description());
         }
     }
 
@@ -64,7 +66,7 @@ public class ExecuteHandler
         }
         catch (Exception e)
         {
-            throw new EventHandlerException(e);
+            throw NewEvaluationFailure.handler("Event handler execution failed", e);
         }
     }
 }

@@ -28,6 +28,7 @@ public class SplitResult<T>
 {
     protected final List<Ev<T>> evaluables;
     protected final Event<T> event;
+    public com.taitl.ex.logic.execution.data.RuleSelection selection;
 
     public SplitResult(List<Ev<T>> evaluables, Event<T> event)
     {

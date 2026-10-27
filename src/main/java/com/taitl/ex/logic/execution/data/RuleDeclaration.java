@@ -19,6 +19,7 @@ public class RuleDeclaration
     public TypePattern type;
     public Ev<?> handler;
     public boolean effect;
+    public com.taitl.ex.logic.diagnostics.data.RuleOrigin origin;
 
     public RuleDeclaration(int id, String key, Ev<?> handler)
     {

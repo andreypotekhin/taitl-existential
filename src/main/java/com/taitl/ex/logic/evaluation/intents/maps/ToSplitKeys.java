@@ -10,6 +10,11 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 
+/**
+ * Groups concrete event families for authorization and supplies the common Event route for On intents.
+ * The common route reuses the original event's type candidates and payload; it does not invent an
+ * Access or mutation event. One handler reached through several candidates is still evaluated once.
+ */
 public class ToSplitKeys
 {
     @Logic
@@ -32,6 +37,11 @@ public class ToSplitKeys
         for (RuntimeKey<T> runtimeKey : runtimeKeys)
         {
             grouped.computeIfAbsent(eventType(runtimeKey), ignored -> new ArrayList<>()).add(runtimeKey);
+        }
+        if (!grouped.isEmpty())
+        {
+            List<RuntimeKey<T>> primary = grouped.values().iterator().next();
+            grouped.putIfAbsent(EventType.valueOf(Event.class), primary);
         }
         return grouped;
     }

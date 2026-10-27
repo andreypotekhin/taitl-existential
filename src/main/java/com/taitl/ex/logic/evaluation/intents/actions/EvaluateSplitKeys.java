@@ -1,6 +1,10 @@
 package com.taitl.ex.logic.evaluation.intents.actions;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.logic.configuration.indexes.data.*;
+import com.taitl.ex.logic.execution.data.*;
+import com.taitl.ex.logic.diagnostics.*;
+import com.taitl.ex.logic.evaluation.events.split_events.maps.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.existential.constants.*;
@@ -18,28 +22,19 @@ import static com.taitl.ex.common.helper.Args.*;
 public class EvaluateSplitKeys
 {
     @Logic
-    protected final ToIntentHandlers toIntentHandlers;
+    protected CheckEventType checkEventType = Creator.create(CheckEventType.class);
 
     @Logic
-    protected final IterateIntents iterateIntents;
+    protected DiagnosticLogic diagnostics = Creator.singleton(DiagnosticLogic.class);
 
     @Logic
-    protected final CheckEventType checkEventType;
+    protected EvaluateIntent evaluateIntent = Creator.create(EvaluateIntent.class);
 
-    public EvaluateSplitKeys()
-    {
-        this(Creator.create(ToIntentHandlers.class), Creator.create(IterateIntents.class));
-    }
+    @Logic
+    protected IntentTypeCandidates intentTypeCandidates = Creator.create(IntentTypeCandidates.class);
 
-    protected EvaluateSplitKeys(
-            ToIntentHandlers toIntentHandlers,
-            IterateIntents iterateIntents)
-    {
-        sane(toIntentHandlers, "resolveIntentHandlers", iterateIntents, "evaluateIntentHandlers");
-        this.toIntentHandlers = toIntentHandlers;
-        this.iterateIntents = iterateIntents;
-        this.checkEventType = Creator.create(CheckEventType.class);
-    }
+    @Logic
+    protected ToMemo toMemo = Creator.create(ToMemo.class);
 
     public <T> void call(
             Map<EventType, List<RuntimeKey<T>>> grouped,
@@ -47,80 +42,69 @@ public class EvaluateSplitKeys
             Tr tr,
             StageName stageName)
     {
+        RuntimeKey<T> original = grouped.isEmpty() ? null : grouped.values().iterator().next().get(0);
+        call(grouped, indexes, tr, stageName, original);
+    }
+
+    public <T> void call(Map<EventType, List<RuntimeKey<T>>> grouped, ConfigurationIndexes indexes, Tr tr,
+            StageName stageName, RuntimeKey<T> original)
+    {
         sane(grouped, "grouped", indexes, "indexes", tr, "tr", stageName, "stageName");
-        List<EventHandler<?>> applicable = new ArrayList<>();
-        Set<EventHandler<?>> seen = Collections.newSetFromMap(new IdentityHashMap<>());
-        RuntimeKey<T> primaryRuntimeKey = null;
+        EventField field = tr.intentField(indexes.intentField(), stageName);
+        List<EventKey<T>> matchedKeys = new ArrayList<>();
         for (Map.Entry<EventType, List<RuntimeKey<T>>> entry : grouped.entrySet())
         {
             EventType eventType = entry.getKey();
-            List<RuntimeKey<T>> runtimeKeys = entry.getValue();
             if (!checkEventType.eventTypeIsGuarded(eventType, indexes, tr, stageName))
             {
                 continue;
             }
-            if (primaryRuntimeKey == null)
+            MultiKey<T> keys = toMultiKey(entry.getValue(), eventType);
+            if (field.selection(keys).handlers().isEmpty())
             {
-                primaryRuntimeKey = primaryRuntimeKey(runtimeKeys);
+                throw diagnostics.missing(tr.op, original, stageName, tr.evaluationBoundary());
             }
-            List<EventHandler<?>> intents = toIntentHandlers.call(toMultiKey(runtimeKeys), runtimeKeys, eventType,
-                    indexes.intentField(), tr, stageName);
-            if (intents.isEmpty())
-            {
-                throw missingIntent(primaryRuntimeKey(runtimeKeys));
-            }
-            Set<EventHandler<?>> group = Collections.newSetFromMap(new IdentityHashMap<>());
-            for (EventHandler<?> intent : intents)
-            {
-                if (!seen.contains(intent))
-                {
-                    applicable.add(intent);
-                }
-                group.add(intent);
-            }
-            seen.addAll(group);
+            matchedKeys.addAll(keys.eventKeys());
         }
-        if (primaryRuntimeKey != null && !iterateIntents.allowed(applicable, primaryRuntimeKey.event()))
+        if (matchedKeys.isEmpty())
         {
-            throw notAllowed(primaryRuntimeKey);
+            return;
         }
-    }
-
-    protected <T> RuntimeKey<T> primaryRuntimeKey(List<RuntimeKey<T>> runtimeKeys)
-    {
-        sane(runtimeKeys, "runtimeKeys");
-        if (runtimeKeys.isEmpty())
+        RuleSelection selected = field.selection(MultiKey.valueOf(matchedKeys));
+        for (int i = 0; i < selected.handlers().size(); i++)
         {
-            throw new IllegalStateException("Runtime key group should not be empty");
+            RuleDeclaration declaration = selected.declaration(i);
+            EventHandler<?> handler = (EventHandler<?>) selected.handlers().get(i);
+            Event<?> event = toMemo.forExecution(original, handler instanceof BiEventHandler<?>, tr);
+            try
+            {
+                evaluateIntent.require(handler, event);
+            }
+            catch (RuntimeException failure)
+            {
+                throw diagnostics.failure(failure, tr.op, declaration == null ? null : declaration.origin,
+                        original, stageName, tr.evaluationBoundary(), true, true);
+            }
         }
-        return runtimeKeys.get(0);
     }
 
     protected <T> MultiKey<T> toMultiKey(List<RuntimeKey<T>> runtimeKeys)
+    {
+        return toMultiKey(runtimeKeys, null);
+    }
+
+    protected <T> MultiKey<T> toMultiKey(List<RuntimeKey<T>> runtimeKeys, EventType eventType)
     {
         sane(runtimeKeys, "runtimeKeys");
         List<EventKey<T>> eventKeys = new ArrayList<>(runtimeKeys.size());
         for (RuntimeKey<T> runtimeKey : runtimeKeys)
         {
-            eventKeys.add(runtimeKey.key());
+            for (String candidate : intentTypeCandidates.call(runtimeKey))
+            {
+                eventKeys.add(eventType != null ? new EventKey<>(eventType.eventClass(), candidate) : runtimeKey.key());
+            }
         }
         return MultiKey.valueOf(eventKeys);
     }
 
-    protected <T> IntentViolation missingIntent(RuntimeKey<T> runtimeKey)
-    {
-        sane(runtimeKey, "runtimeKey");
-        String message = "No intent is configured for event '" + runtimeKey.key() + "'. "
-                + "Define an intent for this event and type key, or remove event-type intent gating. "
-                + "See /Troubleshooting.md#intent-violation";
-        return new IntentViolation(message);
-    }
-
-    protected <T> IntentViolation notAllowed(RuntimeKey<T> runtimeKey)
-    {
-        sane(runtimeKey, "runtimeKey");
-        String message = "Intent condition is not met for event '" + runtimeKey.key() + "'. "
-                + "See /Troubleshooting.md#intent-violation";
-        return new IntentViolation(message);
-    }
 }

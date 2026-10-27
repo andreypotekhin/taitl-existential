@@ -62,7 +62,7 @@ public class IndexConfig
         {
             for (Evs<?> evs : context.stage().at(stageName))
             {
-                indexEvs.call(evs);
+                indexEvs.call(evs, context.name(), false);
             }
         }
         ci.doneIndexing();

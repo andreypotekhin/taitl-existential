@@ -1,0 +1,46 @@
+SETUP sample=6 scenario=success entities=10000 checks=1 repeats=1 ms=37.965708 MB=2.606752
+DIAGNOSTICS sample=6 scenario=success entities=10000 checks=1 repeats=1 render=false ms=35.548392 MB=44.600795 first-us=0.000000 repeated-us=0.000000 callbacks=10000 violations=0 folded=10000 cleanup=true
+SETUP sample=6 scenario=success entities=10000 checks=100 repeats=1 ms=4.773959 MB=0.878936
+DIAGNOSTICS sample=6 scenario=success entities=10000 checks=100 repeats=1 render=false ms=29.993767 MB=45.274710 first-us=0.000000 repeated-us=0.000000 callbacks=1000000 violations=0 folded=10000 cleanup=true
+SETUP sample=6 scenario=rejection entities=10000 checks=1 repeats=1 ms=1.786375 MB=0.688392
+DIAGNOSTICS sample=6 scenario=rejection entities=10000 checks=1 repeats=1 render=false ms=20.802450 MB=43.203840 first-us=0.000000 repeated-us=0.000000 callbacks=10000 violations=1 folded=10000 cleanup=true
+DIAGNOSTICS sample=6 scenario=rejection entities=10000 checks=1 repeats=1 render=true ms=21.461500 MB=43.220182 first-us=54.033600 repeated-us=0.191600 callbacks=10000 violations=1 folded=10000 cleanup=true
+SETUP sample=6 scenario=recovery entities=10000 checks=1 repeats=1 ms=1.281792 MB=0.688544
+DIAGNOSTICS sample=6 scenario=recovery entities=10000 checks=1 repeats=1 render=false ms=29.324425 MB=86.406350 first-us=0.000000 repeated-us=0.000000 callbacks=20000 violations=1 folded=10000 cleanup=true
+DIAGNOSTICS sample=6 scenario=recovery entities=10000 checks=1 repeats=1 render=true ms=29.220700 MB=86.410574 first-us=29.091600 repeated-us=0.141400 callbacks=20000 violations=1 folded=10000 cleanup=true
+SETUP sample=6 scenario=success entities=10000 checks=1 repeats=8 ms=1.123709 MB=0.688544
+DIAGNOSTICS sample=6 scenario=success entities=10000 checks=1 repeats=8 render=false ms=18.041758 MB=53.270232 first-us=0.000000 repeated-us=0.000000 callbacks=10000 violations=0 folded=10000 cleanup=true
+SETUP sample=6 scenario=success entities=10000 checks=100 repeats=8 ms=1.776375 MB=0.801920
+DIAGNOSTICS sample=6 scenario=success entities=10000 checks=100 repeats=8 render=false ms=28.460875 MB=53.270232 first-us=0.000000 repeated-us=0.000000 callbacks=1000000 violations=0 folded=10000 cleanup=true
+SETUP sample=6 scenario=rejection entities=10000 checks=1 repeats=8 ms=0.926042 MB=0.688544
+DIAGNOSTICS sample=6 scenario=rejection entities=10000 checks=1 repeats=8 render=false ms=17.790950 MB=53.296118 first-us=0.000000 repeated-us=0.000000 callbacks=10000 violations=1 folded=10000 cleanup=true
+DIAGNOSTICS sample=6 scenario=rejection entities=10000 checks=1 repeats=8 render=true ms=16.388867 MB=53.299888 first-us=22.400200 repeated-us=0.099800 callbacks=10000 violations=1 folded=10000 cleanup=true
+SETUP sample=6 scenario=recovery entities=10000 checks=1 repeats=8 ms=0.709750 MB=0.688544
+DIAGNOSTICS sample=6 scenario=recovery entities=10000 checks=1 repeats=8 render=false ms=32.701500 MB=106.566949 first-us=0.000000 repeated-us=0.000000 callbacks=20000 violations=1 folded=10000 cleanup=true
+DIAGNOSTICS sample=6 scenario=recovery entities=10000 checks=1 repeats=8 render=true ms=29.893617 MB=106.570974 first-us=14.708600 repeated-us=0.091800 callbacks=20000 violations=1 folded=10000 cleanup=true
+SETUP sample=6 scenario=success entities=50000 checks=1 repeats=1 ms=0.999000 MB=2.973672
+DIAGNOSTICS sample=6 scenario=success entities=50000 checks=1 repeats=1 render=false ms=57.398242 MB=216.267944 first-us=0.000000 repeated-us=0.000000 callbacks=50000 violations=0 folded=50000 cleanup=true
+SETUP sample=6 scenario=success entities=50000 checks=100 repeats=1 ms=1.272958 MB=3.087064
+DIAGNOSTICS sample=6 scenario=success entities=50000 checks=100 repeats=1 render=false ms=98.493333 MB=216.267944 first-us=0.000000 repeated-us=0.000000 callbacks=5000000 violations=0 folded=50000 cleanup=true
+SETUP sample=6 scenario=rejection entities=50000 checks=1 repeats=1 ms=0.754334 MB=2.973608
+DIAGNOSTICS sample=6 scenario=rejection entities=50000 checks=1 repeats=1 render=false ms=55.715808 MB=216.294819 first-us=0.000000 repeated-us=0.000000 callbacks=50000 violations=1 folded=50000 cleanup=true
+DIAGNOSTICS sample=6 scenario=rejection entities=50000 checks=1 repeats=1 render=true ms=59.318967 MB=216.299043 first-us=24.524800 repeated-us=0.108400 callbacks=50000 violations=1 folded=50000 cleanup=true
+SETUP sample=6 scenario=recovery entities=50000 checks=1 repeats=1 ms=0.762250 MB=2.973728
+DIAGNOSTICS sample=6 scenario=recovery entities=50000 checks=1 repeats=1 render=false ms=119.301792 MB=432.563416 first-us=0.000000 repeated-us=0.000000 callbacks=100000 violations=1 folded=50000 cleanup=true
+DIAGNOSTICS sample=6 scenario=recovery entities=50000 checks=1 repeats=1 render=true ms=129.815533 MB=432.567640 first-us=22.667000 repeated-us=0.158200 callbacks=100000 violations=1 folded=50000 cleanup=true
+SETUP sample=6 scenario=success entities=50000 checks=1 repeats=8 ms=0.743000 MB=2.969000
+DIAGNOSTICS sample=6 scenario=success entities=50000 checks=1 repeats=8 render=false ms=90.046033 MB=266.667816 first-us=0.000000 repeated-us=0.000000 callbacks=50000 violations=0 folded=50000 cleanup=true
+SETUP sample=6 scenario=success entities=50000 checks=100 repeats=8 ms=1.109875 MB=3.082456
+DIAGNOSTICS sample=6 scenario=success entities=50000 checks=100 repeats=8 render=false ms=147.777692 MB=266.667816 first-us=0.000000 repeated-us=0.000000 callbacks=5000000 violations=0 folded=50000 cleanup=true
+SETUP sample=6 scenario=rejection entities=50000 checks=1 repeats=8 ms=0.816708 MB=2.969000
+DIAGNOSTICS sample=6 scenario=rejection entities=50000 checks=1 repeats=8 render=false ms=97.836417 MB=266.694691 first-us=0.000000 repeated-us=0.000000 callbacks=50000 violations=1 folded=50000 cleanup=true
+DIAGNOSTICS sample=6 scenario=rejection entities=50000 checks=1 repeats=8 render=true ms=98.057742 MB=266.698915 first-us=21.633200 repeated-us=0.133400 callbacks=50000 violations=1 folded=50000 cleanup=true
+SETUP sample=6 scenario=recovery entities=50000 checks=1 repeats=8 ms=0.933709 MB=3.022264
+DIAGNOSTICS sample=6 scenario=recovery entities=50000 checks=1 repeats=8 render=false ms=183.881200 MB=533.363416 first-us=0.000000 repeated-us=0.000000 callbacks=100000 violations=1 folded=50000 cleanup=true
+DIAGNOSTICS sample=6 scenario=recovery entities=50000 checks=1 repeats=8 render=true ms=183.171342 MB=533.367640 first-us=21.316800 repeated-us=0.141600 callbacks=100000 violations=1 folded=50000 cleanup=true
+SETUP sample=6 scenario=collection entities=1000 checks=3 repeats=1 ms=0.368458 MB=0.171992
+DIAGNOSTICS sample=6 scenario=collection entities=1000 checks=3 repeats=1 render=false ms=68.597142 MB=40.500310 first-us=0.000000 repeated-us=0.000000 callbacks=3000 violations=3000 folded=1000 cleanup=true
+DIAGNOSTICS sample=6 scenario=collection entities=1000 checks=3 repeats=1 render=true ms=71.009483 MB=44.927216 first-us=1621.774800 repeated-us=0.008200 callbacks=3000 violations=3000 folded=1000 cleanup=true
+SETUP sample=6 scenario=effects entities=1000 checks=3 repeats=1 ms=0.898917 MB=0.205776
+DIAGNOSTICS sample=6 scenario=effects entities=1000 checks=3 repeats=1 render=false ms=0.224258 MB=0.254472 first-us=0.000000 repeated-us=0.000000 callbacks=1 violations=1 folded=1000 cleanup=true
+DIAGNOSTICS sample=6 scenario=effects entities=1000 checks=3 repeats=1 render=true ms=0.281825 MB=0.258774 first-us=16.808200 repeated-us=0.042000 callbacks=1 violations=1 folded=1000 cleanup=true

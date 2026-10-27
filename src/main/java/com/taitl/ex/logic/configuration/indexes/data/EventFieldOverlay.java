@@ -43,11 +43,15 @@ public class EventFieldOverlay extends EventField
 
     public <T> List<Ev<T>> get(MultiKey<T> multiKey)
     {
-        List<Ev<T>> shared = base.get(multiKey);
-        List<Ev<T>> local = overlay.get(multiKey);
+        return selection(multiKey).handlers();
+    }
+
+    public <T> RuleSelection selection(MultiKey<T> multiKey)
+    {
+        RuleSelection shared = base.selection(multiKey);
+        RuleSelection local = overlay.selection(multiKey);
         SelectionMergeKey key = new SelectionMergeKey(multiKey.toString(), shared, local);
-        return merged.resolve(key, () -> new RuleSelection(shared, false).append(new RuleSelection(local, false)))
-                .handlers();
+        return merged.resolve(key, () -> shared.append(local));
     }
 
     public <T> boolean hasBiEventKey(EventKey<T> eventKey)

@@ -22,6 +22,7 @@ public class RuleSelection
     protected boolean memoRequired;
     protected boolean biHandler;
     protected boolean effects;
+    protected RuleDeclaration[] declarations;
 
     public RuleSelection(Collection<? extends Ev<?>> handlers, boolean memoRequired)
     {
@@ -43,6 +44,25 @@ public class RuleSelection
         {
             biHandler |= handler instanceof BiEventHandler<?>;
         }
+    }
+
+    public RuleSelection(RuleDeclaration[] declarations, boolean memoRequired)
+    {
+        this.declarations = declarations.clone();
+        Ev<?>[] values = new Ev<?>[declarations.length];
+        for (int i = 0; i < values.length; i++)
+        {
+            values[i] = declarations[i].handler;
+            effects |= declarations[i].effect;
+            biHandler |= values[i] instanceof BiEventHandler<?>;
+        }
+        handlers = Collections.unmodifiableList(Arrays.asList(values));
+        this.memoRequired = memoRequired;
+    }
+
+    public RuleDeclaration declaration(int index)
+    {
+        return declarations == null ? null : declarations[index];
     }
 
     @SuppressWarnings("unchecked")
@@ -68,6 +88,12 @@ public class RuleSelection
 
     public RuleSelection append(RuleSelection local)
     {
+        if (declarations != null && local.declarations != null)
+        {
+            RuleDeclaration[] merged = Arrays.copyOf(declarations, declarations.length + local.declarations.length);
+            System.arraycopy(local.declarations, 0, merged, declarations.length, local.declarations.length);
+            return new RuleSelection(merged, memoRequired || local.memoRequired);
+        }
         List<Ev<?>> merged = new ArrayList<>(handlers);
         merged.addAll(local.handlers);
         return new RuleSelection(merged.toArray(new Ev<?>[0]), memoRequired || local.memoRequired,

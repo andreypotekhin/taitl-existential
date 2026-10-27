@@ -281,3 +281,50 @@ On timeout or interruption, shutdown errors include active-transaction/in-flight
 IDs and operation names. Operation details are truncated to keep diagnostics bounded. Finish or explicitly close those
 handles, then retry library close. Counts describe library-known owners at observation time; detached failed handles
 are deliberately absent. These diagnostics neither detect arbitrary application leaks nor rely on garbage collection.
+
+### General On rules are not invoked
+
+General On constraints, effects, and intents apply to matching reported entity types for every built-in event.
+If a previously built artifact skips these declarations, rebuild/install a version containing the
+[T10262601 correction](docs/dev/past/todo/T10262601.General-on-rules-skipped-by-event-dispatch.md). The missing common Event
+route affected dispatch and authorization; direct On.handle calls were unaffected. Check the operation/context and
+explicit TypeKey naming as well. An explicit Access report does not substitute for read/read-and-lock/write reports.
+
+### Required rule descriptions
+
+When BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS is enabled, fluent rule declarations require non-null, non-empty descriptions.
+Add a description to the rejected check, intent, effect, All, or Exists declaration and retry it on the same builder.
+Alternatively disable the flag before adding that rule, or use behavior.rules.requireDescriptions=false in the normal
+configuration sources. Earlier declarations are not revalidated when the flag changes. Flags and declarations freeze
+when the first begin successfully finalizes configuration. The option does not run another description check per event.
+
+## Diagnostic RULE-REJECTED
+
+A check or expression rejected the reported entity. Inspect `exception.diagnostic()` for the rule description,
+original context, reported event/type, and evaluation stage/boundary. Correct the data or the declared predicate.
+Descriptions are consumer text; `RULE-REJECTED` is the stable library category.
+
+## Diagnostic INTENT-REJECTED
+
+A matching intent denied this event. Inspect the rule and its declaration context, including narrower child or
+transaction-local permissions. Every matching intent must pass. The original rejection remains in the cause chain.
+
+## Diagnostic INTENT-MISSING
+
+The event family is guarded but no intent matches the reported type. Define a matching intent for this event/type
+or review intent gating. This failure has no rule or declaration context to report.
+
+## Diagnostic CALLBACK-FAILED
+
+An invoked rule or lifecycle callback threw unexpectedly. Inspect the cause for the original application failure.
+Unexpected non-intent RuntimeException now uses EventHandlerException; intent callbacks use IntentViolation.
+Caller-supplied exceptions remain causes of fresh stock exceptions and are never mutated with invocation metadata.
+Error propagates unchanged. These failures stop evaluation immediately.
+
+## Diagnostic EVALUATION-FAILED
+
+An evaluation stage collected rule failures. Inspect `multiple()` or `diagnostic().children()` in evaluation order.
+Checks-only validation collects ordinary violations. When effects participate, the first violation stops later work;
+the diagnostic records that limitation. A failed checkpoint/commit makes the handle rollback-only and detaches
+string-ID lookup. Explicit rollback runs rollback callbacks; close only releases resources. Correct application
+state before beginning a fresh transaction. Diagnostic snapshots remain readable after cleanup.

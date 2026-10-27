@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * Builds the event-family and structural-type facts needed after a selection cache miss.
  * Event splitting and memo availability determine which families can execute for this shape;
- * Expression remains a candidate alongside concrete event families.
+ * General Event handlers and Expression remain candidates alongside concrete event families.
  *
  * Missing-memo admission retains the existing declared-subject scope, while available payloads
  * can select inherited rules. Type resolution delegates to ResolveReportedTypes rather than
@@ -49,6 +49,7 @@ public class ResolveSelectionInput
                 events.add(name(event.getClass(), fullNames));
             }
         }
+        events.add(name(Event.class, fullNames));
         events.add(name(Expression.class, fullNames));
         Set<String> memoEvents = new LinkedHashSet<>();
         if (tr != null && toMemo.memoSensitive(key) && !tr.hasMemo(key.entity(), key.typeKey()))

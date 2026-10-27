@@ -1,7 +1,10 @@
 package com.taitl.ex.logic.evaluation;
 
-import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.logic.diagnostics.*;
 import com.taitl.ex.common.creator.*;
+import com.taitl.existential.constants.*;
+
+import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.execution.rules.*;
 import com.taitl.ex.logic.evaluation.events.*;
@@ -10,7 +13,6 @@ import com.taitl.ex.logic.stages.validation.output.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.types.*;
 import com.taitl.existential.configs.*;
-import com.taitl.existential.constants.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -48,7 +50,7 @@ public class EvaluationLogic implements Closeable
         sane(runtimeKey, "runtimeKey", tr, "tr");
         ValidationReport report = Creator.create(ValidationReport.class);
         evaluateEvents(runtimeKey, tr, StageName.BEGIN, report);
-        throwIfStageFailed(StageName.BEGIN, report);
+        throwIfStageFailed(tr, StageName.BEGIN, report);
     }
 
     public <T> void evaluateImmediate(RuntimeKey<T> runtimeKey, Tr tr)
@@ -56,7 +58,7 @@ public class EvaluationLogic implements Closeable
         sane(runtimeKey, "runtimeKey", tr, "tr");
         ValidationReport report = Creator.create(ValidationReport.class);
         evaluateEvents(runtimeKey, tr, StageName.IMMEDIATE, report);
-        throwIfStageFailed(StageName.IMMEDIATE, report);
+        throwIfStageFailed(tr, StageName.IMMEDIATE, report);
     }
 
     public void evaluateCommit(Tr tr)
@@ -102,7 +104,7 @@ public class EvaluationLogic implements Closeable
         }
         try
         {
-            throwIfStageFailed(StageName.ROLLBACK, report);
+            throwIfStageFailed(tr, StageName.ROLLBACK, report);
         }
         catch (Throwable caught)
         {
@@ -174,6 +176,7 @@ public class EvaluationLogic implements Closeable
             boolean stopAfterViolation)
     {
         sane(runtimeKey, "runtimeKey", tr, "tr", stageName, "stageName", report, "report");
+        report.stage = stageName;
         warnUnresolvedGenerics(runtimeKey, tr);
         EventField eventField = eventField(tr, stageName);
         evaluateEvents.call(runtimeKey, tr, eventField, report, useFullClassNames(), shouldSplitElementary(),
@@ -196,12 +199,13 @@ public class EvaluationLogic implements Closeable
             }
             evaluateEvents(runtimeKey, tr, stageName, report);
         }
-        throwIfStageFailed(stageName, report);
+        throwIfStageFailed(tr, stageName, report);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void evaluateRollbackEvents(RuntimeKey runtimeKey, Tr tr, ValidationReport report)
     {
+        report.stage = StageName.ROLLBACK;
         EventField field = eventField(tr, StageName.ROLLBACK);
         warnUnresolvedGenerics(runtimeKey, tr);
         evaluateEvents.callAll(runtimeKey, tr, field, report, useFullClassNames(), shouldSplitElementary());
@@ -315,15 +319,16 @@ public class EvaluationLogic implements Closeable
         return tl.ex().get(Flags.TYPE_MATCHING_WARN_UNRESOLVED_GENERICS);
     }
 
-    protected void throwIfStageFailed(StageName stageName, ValidationReport report)
+    protected void throwIfStageFailed(Tr tr, StageName stageName, ValidationReport report)
     {
         sane(stageName, "stageName", report, "report");
         if (report.isEmpty())
         {
             return;
         }
-        throw new ExistentialExceptions(stageName.label(),
-                report.exceptions().toArray(new ExistentialException[] {}));
+        throw Creator.singleton(DiagnosticLogic.class)
+                .aggregate(
+                        tr.op, stageName, tr.evaluationBoundary(), report.exceptions(), report.evaluationStopped);
     }
 
     protected boolean hasIntents(Tr tr, StageName stageName)

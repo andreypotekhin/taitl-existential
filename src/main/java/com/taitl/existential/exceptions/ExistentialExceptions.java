@@ -1,5 +1,7 @@
 package com.taitl.existential.exceptions;
 
+import com.taitl.existential.diagnostics.*;
+
 /**
  * Groups multiple {@link ExistentialException} instances under a single error.
  *
@@ -18,10 +20,29 @@ public class ExistentialExceptions extends ExistentialException
 
     public ExistentialExceptions(String stage, String message, ExistentialException... multiple)
     {
-        super(resolveMessage(stage, message, multiple), resolveCause(multiple));
+        this(stage, message, null, multiple);
+    }
+
+    protected ExistentialExceptions(String stage, String message, Diagnostic diagnostic,
+            ExistentialException... multiple)
+    {
+        super(resolveMessage(stage, message, multiple), resolveCause(multiple), diagnostic);
         this.stage = stage;
         this.multiple = multiple != null ? multiple.clone() : new ExistentialException[] {};
         addSuppressedExceptions(this.multiple);
+    }
+
+    /**
+     * Creates a diagnosed aggregate preserving sibling order, cause and suppressed failures.
+     *
+     * @param stage stage label
+     * @param diagnostic detached aggregate diagnostic
+     * @param multiple sibling failures
+     * @return diagnosed aggregate
+     */
+    public static ExistentialExceptions diagnosed(String stage, Diagnostic diagnostic, ExistentialException... multiple)
+    {
+        return new ExistentialExceptions(stage, null, diagnostic, multiple);
     }
 
     public String stage()

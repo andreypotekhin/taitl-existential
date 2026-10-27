@@ -1,6 +1,7 @@
 package com.taitl.existential.constraints;
 
 import com.taitl.ex.common.helper.*;
+import com.taitl.ex.common.helper.strings.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.handlers.*;
@@ -25,6 +26,8 @@ import static com.taitl.ex.common.helper.lang.Generics.*;
  * stage, every trigger event causes execution of the effect, 
  * whereas during validation stage, equal events are 'folded' into a
  * single event, evaluated once.
+ * The owning fluent builder applies its current required-description option before each new
+ * declaration. Standalone effects can set that prospective requirement explicitly.
  * 
  * @param <T>
  *            Entity type the effect applies to
@@ -43,6 +46,7 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
      * Entity event handlers
      */
     List<Ev<T>> evs = new ArrayList<>();
+    boolean requireDescriptions;
 
     /**
      * Creates effects for the entity type inferred from an anonymous subclass.
@@ -719,8 +723,21 @@ public class Effect<T> implements Evs<T>, Immediate<T>, SideEffects<T>
     public Effect<T> add(Ev<T> ev)
     {
         sane(ev, "eh");
+        Descriptions.require(requireDescriptions, ev);
         evs.add(ev);
         return this;
+    }
+
+    /**
+     * Sets the description requirement for subsequent effect declarations.
+     * Fluent builders refresh this value from their owning instance before each mutation;
+     * earlier declarations are not revalidated when the requirement changes.
+     *
+     * @param required whether newly added handlers need a non-empty description
+     */
+    public void requireDescriptions(boolean required)
+    {
+        requireDescriptions = required;
     }
 
     /**

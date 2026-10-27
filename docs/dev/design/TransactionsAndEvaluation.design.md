@@ -76,9 +76,11 @@ state then prevents further business work. Neither rollback nor close automatica
 Ordinary violations are collected into a per-evaluation report under the
 [effect-aware failure policy](IntentsAndEffects.design.md#evaluation-failure-policy). Checkpoint and commit retain
 their exception-based failure signal after collection; this design adds no public report-returning API. Unexpected
-callback failures and authorization denials stop evaluation immediately. Diagnostics should identify the operation,
-stage, offending rule where available, and original cause, and direct callers to explicit rollback or close followed
-by a fresh transaction.
+callback failures and authorization denials stop evaluation immediately. The
+[structured diagnostic design](EventsAndConstraints.design.md#structured-violation-diagnostics) identifies the
+operation, stage/boundary, offending rule/declaration context where available, and original cause. Shared consequences
+appear once; optional actions supply useful specific corrections rather than stock rollback/retry advice. Recovery
+still uses explicit rollback or close followed by a fresh transaction.
 
 Explicit rollback retains its cleanup behavior: lifecycle callbacks precede rollback-stage handlers, each phase
 continues after callback failures, and later failures are suppressed under the first. Disposal runs regardless of

@@ -9,6 +9,9 @@ import java.util.*;
  */
 public class ValidationReport
 {
+    public com.taitl.existential.constants.StageName stage;
+    public boolean evaluationStopped;
+
     List<ExistentialException> exceptions = new ArrayList<>();
 
     public void addException(ExistentialException ex)

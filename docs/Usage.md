@@ -134,6 +134,35 @@ an effect participates, the first ordinary violation stops later checks/effects 
 count; effects in another stage do not. Unexpected failures and denials always stop immediately. Inspect the existing
 exception cause and `multiple()` results; a stopped evaluation does not mean every rule ran.
 
+### Required rule descriptions
+
+Enable `Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS` on the instance, or set
+`behavior.rules.requireDescriptions=true` in the usual configuration files, to require non-empty rule descriptions.
+The fluent context/transaction builders apply it to checks, intents, effects, All, and Exists, including managed
+sources.
+A rejected declaration adds no rule: supply its description and retry on the same builder.
+
+The flag applies when each rule is added, including through an already obtained builder. Earlier optional declarations
+remain valid. Disable it before adding a subsequent undescribed rule if appropriate; changes freeze with configuration.
+Standalone rule sets expose `requireDescriptions(boolean)` for their subsequent additions. There is no implicit
+instance binding or retroactive scan of supplied runtime definitions.
+
+### Reporting access
+
+Use `tr.read(cat)` or `tr.write(cat)` to report loaded or saved objects. For explicit read-and-lock or general access,
+use the existing typed event API:
+
+    TypeKey<Cat> cats = new TypeKey<>(Cat.class);
+    tr.event(new RL<>(cat), cat, cats);
+    tr.event(new Access<>(cat), cat, cats);
+
+Use the TypeKey naming appropriate to your configured mode. Equivalent event methods on `ex` accept the transaction ID
+for nested application calls. Reporting RL also selects read handlers; Write does not invent create/update events,
+and Access does not expand into storage reads, locks, or writes. The application performs the actual storage/locking.
+General On rules apply alongside the selected event-specific rules, in resolved declaration order. All matching intents
+must pass, including general, read, lock, and transaction-local restrictions. Repeated reports still run immediate
+checks, while boundary work folds matching event/type/object identities and successful checkpoints preserve history.
+
 ### Managed indexes
 
 A definition is reusable configuration metadata. Its bound contents belong to one active Tr. For example, this groups
@@ -312,3 +341,40 @@ features or features that are not guaranteed to survive multiple versions.
 ### Development
 See /docs/dev/ for development documentation.  
 [Development.md](dev/Development.md) is the starting point.
+
+## Structured rule diagnostics
+
+Existing descriptions identify rules in both readable exceptions and structured diagnostics:
+
+```java
+ex.configure().context("/cats").invariant(new Invariant<>(Cat.class)
+        .on(cat -> "Black".equals(cat.color), "Only black cats may enter"));
+Tr tr = ex.begin("/cats/save");
+try {
+    tr.read(cat);
+    tr.commit();
+} catch (ValidationStageExceptions failure) {
+    System.err.println(failure.getMessage());
+    Diagnostic first = failure.diagnostic().children().get(0);
+    String description = first.rule();
+    String declaration = first.context();
+    DiagnosticCode category = first.code();
+} finally {
+    tr.close();
+}
+```
+
+Import diagnostics from `com.taitl.existential.diagnostics`. `getMessage()` renders detailed plain text lazily;
+`diagnostic().message()` is the concise category message. Optional fields are null and lists are immutable snapshots.
+Descriptions remain unchanged in raw fields; rendering escapes control characters. Parent/wildcard declaration
+contexts remain distinct from the invocation operation. Transaction-local rules have `transactionLocal() == true`
+and null context. Reported event/type can differ from the selected rule event/type; stage and boundary are separate.
+
+Aggregates keep the existing `multiple()`, cause, and suppressed failures. Children retain full fields even when
+common transaction context is printed once. `evaluationStopped()` records known early termination; false does not
+promise exhaustive validation. Snapshots remain usable after rollback/close and retain no entities or handles.
+
+Unexpected callback RuntimeException is wrapped in EventHandlerException, or IntentViolation for an intent callback,
+with code CALLBACK-FAILED and the original exception in its cause chain. Caller-supplied exception objects are not
+mutated. Error propagates unchanged. Undecorated caller-created exceptions keep their original message/cause behavior.
+See [diagnostic categories and remedies](../Troubleshooting.md#diagnostic-evaluation-failed).

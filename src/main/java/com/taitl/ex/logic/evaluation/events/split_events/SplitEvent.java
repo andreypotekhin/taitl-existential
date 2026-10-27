@@ -56,7 +56,9 @@ public class SplitEvent
         }
         List<Ev<T>> evaluables = selection.handlers();
         Event<T> event = tr != null ? toMemo.forExecution(runtimeKey, selection.biHandler(), tr) : runtimeKey.event();
-        return new SplitResult<T>(evaluables, event);
+        SplitResult<T> result = new SplitResult<>(evaluables, event);
+        result.selection = selection;
+        return result;
     }
 
     public <T> boolean hasEffects(

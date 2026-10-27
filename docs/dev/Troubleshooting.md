@@ -96,3 +96,22 @@ not zero retained memory. Missing module access can also prevent complete graph 
 Fix: follow the [reachable-memory profiling procedure](performance/Readme.md#reachable-memory-profiling), attach the
 agent and required module opens, and set `-Dbenchmark.heap.required=true` when collecting heap evidence. The measured
 reachable graph excludes class/static metadata and weak referents; it is not exclusive dominator retention.
+
+## Focused nested acceptance discovery
+
+With the current Surefire 2.22.2 setup, an exact `-Dtest=UserCanDiagnoseRuleViolations` filter selects only methods
+on the outer class. Use `-Dtest='UserCanDiagnoseRuleViolations*'` to include its nested acceptance classes, and inspect
+the reported test count. An outer class containing only nested tests can otherwise report no executed tests.
+
+## Test cleanup waits after a failed assertion
+
+Library close waits for active transactions. A test that asserts before disposing its handle can hide the original
+assertion behind an indefinite shutdown wait. Always close the handle in `finally`, including tests of report-time
+intent rejection. `Tr` has an explicit close method and does not implement AutoCloseable.
+
+## Local installation from a restricted runner
+
+If `mvn clean install` passes tests and analysis but fails writing a temporary artifact under the local Maven
+repository with Operation not permitted, allow the authorized build to write that repository and rerun the exact
+command. Do not count a successful test/verify phase as a successful install. Verify the independent consumer against
+the newly installed artifact afterward.

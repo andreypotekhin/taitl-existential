@@ -80,9 +80,14 @@ public class EventField
 
     public <T> List<Ev<T>> get(MultiKey<T> multiKey)
     {
+        return selection(multiKey).handlers();
+    }
+
+    public <T> RuleSelection selection(MultiKey<T> multiKey)
+    {
         sane(multiKey, "multiKey");
         PreparedSelections current = prepared();
-        return current.entries.resolve(multiKey.toString(), () -> legacySelection(multiKey)).handlers();
+        return current.entries.resolve(multiKey.toString(), () -> legacySelection(multiKey));
     }
 
     protected <T> RuleSelection legacySelection(MultiKey<T> multiKey)
@@ -98,14 +103,12 @@ public class EventField
         }
         List<OrderlyEv<?>> ordered = new ArrayList<>(unique);
         ci.maintainGlobalOrder.sort(ordered);
-        List<Ev<?>> handlers = new ArrayList<>();
-        boolean effects = false;
+        List<RuleDeclaration> handlers = new ArrayList<>();
         for (OrderlyEv<?> handler : ordered)
         {
-            handlers.add(handler.ev());
-            effects |= handler.effect;
+            handlers.add(handler.declaration);
         }
-        return new RuleSelection(handlers.toArray(new Ev<?>[0]), false, effects);
+        return new RuleSelection(handlers.toArray(new RuleDeclaration[0]), false);
     }
 
     public <T> boolean hasBiEventKey(EventKey<T> eventKey)

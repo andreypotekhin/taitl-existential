@@ -1,10 +1,24 @@
 package com.taitl.existential.exceptions;
 
+import com.taitl.existential.diagnostics.*;
+
 /**
  * Signals a failed predicate evaluation inside a rule or constraint.
  */
 public class PredicateFailure extends ExistentialException
 {
+    /**
+     * Creates a contextualized failure without changing the underlying cause.
+     *
+     * @param message original fallback message
+     * @param cause original cause, possibly null
+     * @param diagnostic detached structured diagnostic
+     */
+    public PredicateFailure(String message, Throwable cause, Diagnostic diagnostic)
+    {
+        super(message, cause, diagnostic);
+    }
+
     public static final String TROUBLESHOOTING_SECTION = "/Troubleshooting.md#entity-quantifier-validation";
 
     /**

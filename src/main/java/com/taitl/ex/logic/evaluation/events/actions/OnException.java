@@ -23,6 +23,10 @@ public class OnException
     public static boolean constraintViolation(ExistentialException ex)
     {
         sane(ex, "ex");
+        if (ex.diagnostic() != null)
+        {
+            return ex.diagnostic().code() == com.taitl.existential.diagnostics.DiagnosticCode.RULE_REJECTED;
+        }
         if (ex instanceof ConditionNotMetException
                 || ex instanceof InvariantViolation
                 || ex instanceof PredicateFailure)

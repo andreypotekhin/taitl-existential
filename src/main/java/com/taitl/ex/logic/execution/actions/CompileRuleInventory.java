@@ -34,7 +34,11 @@ public class CompileRuleInventory
         List<RuleDeclaration> declarations = new ArrayList<>();
         for (OrderlyEv<?> handler : ordered)
         {
-            declarations.add(new RuleDeclaration(declarations.size(), keys.get(handler), handler.ev(), handler.effect));
+            RuleDeclaration declaration =
+                    new RuleDeclaration(declarations.size(), keys.get(handler), handler.ev(), handler.effect);
+            declaration.origin = handler.origin;
+            handler.declaration = declaration;
+            declarations.add(declaration);
         }
         return new RuleInventory(declarations);
     }

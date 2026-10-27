@@ -16,8 +16,9 @@ Record exact commands from the repository root and sample count. Each baseline s
 ## Samples and focused output
 
 Keep actual per-scenario values with units for each independent sample and the focused benchmark output.
-Use microseconds (µs/op or µs/workflow), rounded to one decimal, for timings, medians, and ranges. Keep throughput
-in ops/s and allocation/retained memory in bytes. Identify any historical unit conversion and preserve the measured
+Use ms/workflow and decimal MB for real workloads, with one decimal for samples, medians, and ranges. Individual
+operations/phases or per-item allocations can use smaller explicitly named units. Keep throughput in ops/s. Identify any
+historical unit conversion and preserve the measured
 source identity; converting a report does not constitute a new measurement session.
 Record failures, skips, and unexpected conditions rather than silently dropping them.
 
