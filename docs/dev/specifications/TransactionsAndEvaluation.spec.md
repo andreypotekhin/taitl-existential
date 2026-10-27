@@ -53,6 +53,39 @@ Acceptance: [lifecycle and failure recovery](../../../src/test/java/com/taitl/sp
 and [public lifecycle API](../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java), plus
 [failed begin recovery](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterBeginFailure.java).
 
+### Transaction state diagnostics
+
++ Direct closed-handle and rollback-only rejections from the transaction operation guard expose structured diagnostics
+through the existing exact ExistentialException type. Unknown, completed, and detached string-ID lookup expose
+TRANSACTION_NOT_FOUND through the existing exact NotFoundException type. Codes display as TRANSACTION-CLOSED,
+TRANSACTION-ROLLBACK-ONLY and TRANSACTION-NOT-FOUND. Each has a stable diagnostic-specific troubleshooting heading.
+No declaration API or public Diagnostic field is added.
+
++ Guard diagnostics retain the known operation and detached string notes for requested action and transaction ID.
+Retained disposed managed views report TRANSACTION-CLOSED with their already retained operation and requested
+index access, omitting the transaction ID because their owner guard has been released.
+They have no rule/context, event/type, stage, or children. Commit/checkpoint/rollback requests name that boundary;
+entity/access reporting and memo registration use report; query actions leave boundary unknown. ID lookup misses
+leave operation and boundary unknown and record only the requested ID. They never reconstruct an operation by
+retaining detached handles. evaluationStopped is false because no rule evaluation started at that guard.
+
++ Closed state takes precedence after disposal, even when the handle was previously rollback-only. A failed checkpoint
+or commit still permits only explicit rollback or close; a guard rejection does not run callbacks or change state.
+Messages give the specific remedy for the state. Existing constructor-only exceptions remain undecorated, and original
+fallback messages remain available if diagnostic construction/rendering fails. Snapshots use the existing immutable,
+serializable, escaped, lazy-rendering and ownership contract; causes of prior lifecycle failure are not inferred.
+
+Covered entry points are those already routed through the operation guard, including memo registration and live
+managed-view access, plus the separate disposed-view rejection. Independent memo-query IllegalStateException guards,
+shutdown/configuration failures, invalid input, and memo validation/admission remain outside this selected contract.
+Within rule callbacks, existing callback-failure
+classification and cause preservation still apply to any exception the callback propagates.
+
+Acceptance: [transaction state
+diagnostics](../../../src/test/java/com/taitl/specs/library_usage/UserCanDiagnoseTransactionState.java)
+and [construction/fallback](../../../src/test/java/com/taitl/ex/logic/diagnostics/TransactionDiagnosticLogicTest.java).
+Performance: [transaction diagnostics](../performance/topics/TransactionDiagnostics.md).
+
 ### Checkpoint failure recovery
 
 + A failed checkpoint throws and makes the handle rollback-only. Further entity/access event reporting, memo

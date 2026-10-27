@@ -110,3 +110,33 @@ skipping lifecycle callbacks, admission accounting, or disposal.
 Prepared transaction overlays avoid repeatedly merging handler lists during dispatch. The transaction-handle change
 adds no lookup structure: the active registry remains necessary for string-ID event reporting. The benchmark guide and
 measured records live under [performance](../performance/Readme.md).
+
+## Transaction state diagnostics
+
+The next selected approved metadata slice lets an application distinguish invalid handle state from an unknown active
+ID without parsing messages. The
+[contract](../specifications/TransactionsAndEvaluation.spec.md#transaction-state-diagnostics)
+preserves existing guards and catch types. Closed takes precedence over rollback-only, and a detached ID has unknown
+operation. Requested action/ID are copied as strings into notes; absent rule, event, stage and provenance stay absent.
+Disposed managed views already retain an operation string but clear the owner guard; they use TRANSACTION-CLOSED
+with that operation, omitting the unknown ID. This adds no owner reference. These failures are admission/state
+rejections, so evaluationStopped is false and no prior Throwable is attached.
+
+TransactionDiagnosticLogic delegates detached construction to BuildTransactionDiagnostic and is acquired only in
+existing failure branches. It keeps stock fallback messages and catches only RuntimeException during decoration.
+The factory builds a snapshot before constructing one stock exception, avoiding a second Throwable and stack copy.
+If construction fails, it uses the original plain constructor. No prior guard Throwable needs preservation.
+Existing lazy rendering reads snapshots, never owners, callbacks, entity toString or stack traces. No additional
+registry or shared mutable diagnostic state is introduced. Concurrent independent handles cannot share invocation data.
+Retention after disposal is limited to immutable descriptive strings/lists/enums, with no owner/entity/index references.
+
+Recovery is unchanged: completed handles require fresh transactions; rollback-only handles permit explicit rollback
+or close; missing IDs require checking active ownership rather than resurrecting detached handles. A guard rejection
+runs no rule/rollback callback. Independent memo-query guards, memo admission, configuration/shutdown and other public
+failures stay separate so their existing exception hierarchies are not silently changed.
+
+Successful branches retain their existing checks/returns and allocate no diagnostic data. Failure costs include
+snapshot/exception construction and optional rendering. Compare complete success and rejection/cleanup/fresh-recovery
+workflows in three fresh JVMs, with setup/rendering separate and exact callback/cleanup assertions. Timing cannot
+prove ownership or arbitrary leak detection, and no numerical gate is introduced. Deterministic inspection,
+serialization, concurrency and public-API acceptance independently verify the selected guarantees.

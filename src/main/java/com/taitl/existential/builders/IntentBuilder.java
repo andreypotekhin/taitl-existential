@@ -29,8 +29,10 @@ public class IntentBuilder<T> implements EvsBuilder<T>
     public IntentBuilder(ContextBuilder parent)
     {
         sane(parent, "parent");
-        throw new IllegalStateException("IntentBuilder requires a TypeKey. Use ContextBuilder.intent(Class<T>) "
-                + "or ContextBuilder.intent(TypeKey<T>).");
+        throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.state(
+                com.taitl.existential.diagnostics.DiagnosticCode.CONFIGURATION_INVALID,
+                "IntentBuilder requires a TypeKey. Use ContextBuilder.intent(Class<T>) "
+                        + "or ContextBuilder.intent(TypeKey<T>).");
     }
 
     /**
@@ -57,8 +59,10 @@ public class IntentBuilder<T> implements EvsBuilder<T>
     public IntentBuilder(TransactionBuilder parent2)
     {
         sane(parent2, "parent2");
-        throw new IllegalStateException("IntentBuilder requires a TypeKey. Use TransactionBuilder.intent(Class<T>) "
-                + "or TransactionBuilder.intent(TypeKey<T>).");
+        throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.state(
+                com.taitl.existential.diagnostics.DiagnosticCode.CONFIGURATION_INVALID,
+                "IntentBuilder requires a TypeKey. Use TransactionBuilder.intent(Class<T>) "
+                        + "or TransactionBuilder.intent(TypeKey<T>).");
     }
 
     /**

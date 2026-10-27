@@ -72,3 +72,11 @@ Track consumer startup only when a specific startup goal exists; transaction ben
 the [performance guide](../performance/Readme.md) and link records from the owning sprint and execution plan.
 
 [Night City Artifact Consumption and Performance]: ../project/Backlog.md#night-city-artifact-consumption-and-performance
+
+## Sprint 09 publication readiness
+
+Local artifact/consumer acceptance remains the supported distribution evidence. Remote readiness requires a confirmed
+namespace/account and repository, authorized credentials/signing, source/Javadoc artifacts and metadata/license review,
+a tested staging/release procedure, and independent resolution of the published coordinates. None is inferred from
+local install. No destination or credential setup is authorized by a request to finish this functional sprint. Record
+these as prerequisites for an explicitly authorized release action; V2 hardening still owns its release review.

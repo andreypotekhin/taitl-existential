@@ -1,7 +1,6 @@
 package com.taitl.ex.common.helper.strings;
 
-import com.taitl.existential.evaluables.Ev;
-import com.taitl.existential.evaluables.Expression;
+import com.taitl.existential.evaluables.*;
 import com.taitl.existential.interfaces.Describable;
 
 import static com.taitl.ex.common.helper.Args.check;
@@ -49,10 +48,32 @@ public class Descriptions
         {
             return;
         }
-        check(description != null && !description.isEmpty(),
-                "Behavior rules require descriptions when Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS is enabled. "
-                        + "Add a description or disable the flag before declaring this rule. "
-                        + "See /Troubleshooting.md#required-rule-descriptions");
+        if (description == null || description.isEmpty())
+        {
+            throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.argument(
+                    "Behavior rules require descriptions when Flags.BEHAVIOR_RULES_REQUIRE_DESCRIPTIONS is enabled. "
+                            + "Add a description or disable the flag before declaring this rule. "
+                            + "See /Troubleshooting.md#required-rule-descriptions");
+        }
+    }
+
+    /** Validates supplied leaves without mutating their declaration-time policy. */
+    public static void require(boolean requireDescriptions, Evs<?> supplied)
+    {
+        if (requireDescriptions)
+        {
+            for (Ev<?> ev : supplied.list())
+            {
+                if (ev instanceof Evs<?>)
+                {
+                    require(true, (Evs<?>) ev);
+                }
+                else
+                {
+                    require(true, ev);
+                }
+            }
+        }
     }
 
     public static void require(boolean requireDescriptions, Ev<?> ev)

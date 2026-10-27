@@ -252,3 +252,35 @@ User can send messages to library using Ex, Existential and Tr classes.
 ### Transaction memo registration
 
 + User can register memo state for a transaction entity so bi-event rules receive before-state snapshots.
+
+## Operational error metadata
+
++ Library-generated semantic configuration, lifecycle, memo, index-maintenance and cleanup failures carry stable
+  category
+identifiers and diagnostic-specific troubleshooting remedies. Existing ExistentialException subtypes expose immutable
+detached Diagnostic snapshots. Existing Java IllegalStateException/IllegalArgumentException guards preserve their exact
+catch types and include category/remedy text in getMessage(); they do not acquire a new exception hierarchy.
+Caller-created exceptions keep constructor behavior. Ordinary programmer preconditions and internal unsupported stubs
+retain Java errors; this catalog is not a promise to classify every Java Throwable.
+
++ CONFIGURATION-INVALID covers invalid property sources/values, missing contexts and unsupported rule configuration;
+CONFIGURATION-FROZEN covers attempts to change finalized configuration. LIBRARY-CLOSED identifies shutdown admission
+rejection; SHUTDOWN-TIMEOUT/SHUTDOWN-INTERRUPTED retain draining state, bounded outstanding-resource details and
+explicit
+retry after cleanup. REENTRANT-LIFECYCLE rejects callback close before acquiring shutdown locks. Causes, interrupt
+status
+and existing explicit-only rollback remain unchanged. Java messages retain original explanatory text as escaped detail.
+
++ MEMO-INVALID identifies identical live/before objects or duplicate registration, leaving accepted memo state intact.
+MEMO-MISSING identifies required absent before-state. INDEX-MAINTENANCE-FAILED preserves extractor cause and existing
+rollback-only/detachment. CLEANUP-FAILED preserves original failure/suppressed order. Snapshots do not retain entities,
+callbacks, indexes or Throwable objects; unknown stage/rule/context are omitted. Rendering uses existing escaping and
+fallback policy, does not inspect arbitrary causes, catches only RuntimeException and allows Error to propagate.
+
+
+Acceptance: [operational failure
+diagnosis](../../../src/test/java/com/taitl/specs/library_usage/UserCanDiagnoseOperationalFailures.java),
+[transaction-state guards](../../../src/test/java/com/taitl/specs/library_usage/UserCanDiagnoseTransactionState.java),
+[required
+descriptions](../../../src/test/java/com/taitl/specs/library_configuration/UserCanRequireRuleDescriptions.java), and
+[configuration loading](../../../src/test/java/com/taitl/ex/logic/library/ConfigureLibraryTest.java).

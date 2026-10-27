@@ -47,7 +47,7 @@ public class TypeMatchingLogic
         sane(typeKey, "typeKey");
         if (typeKey.toString().contains("? super "))
         {
-            throw new IllegalArgumentException(String.format(
+            throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.argument(String.format(
                     "Lower-bounded rule type '%s' is not supported. Use an upper bound or an unbounded wildcard. "
                             + "See /Troubleshooting.md#unsupported-lower-bounded-type-rules",
                     typeKey));

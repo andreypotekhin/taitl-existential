@@ -12,6 +12,7 @@ import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.exceptions.*;
+import com.taitl.existential.diagnostics.*;
 import com.taitl.existential.events.transaction_events.Rollback;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
@@ -146,7 +147,8 @@ public class ExecuteLifecycle
         }
         if (failure != null)
         {
-            throw new ExistentialException("Rollback callback failed", failure);
+            throw OperationalDiagnostics.failure(DiagnosticCode.CLEANUP_FAILED, "Rollback callback failed", null,
+                    failure);
         }
     }
 

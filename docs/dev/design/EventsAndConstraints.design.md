@@ -242,3 +242,21 @@ immediate-stage lookup. Source cardinality and matched-source recovery cost are 
 [derived events]:
   ../../../src/main/java/com/taitl/ex/logic/evaluation/events/split_events/event_splitter/EventSplitter.java
 [relationships]: ../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java
+
+## Supplied rules and additional values
+
+Use standard events over a typed application envelope, such as Relocation(cat, actor, destination), to pass additional
+values to ordinary checks/intents/effects. The envelope is the event subject: identity folding and TypeKey matching
+apply to that envelope, and nested values are neither separately enrolled nor deep-copied. This is independent of V3
+custom event registration/splitting. Rejecting a rule has the existing explicit-cleanup/fresh-recovery contract. Runtime
+indexes release the envelope on disposal; metadata caches never own reported payloads. No new dispatch path is needed.
+
+Supplied rule definitions are borrowed read-only configuration after binding. Arbitrary subclasses, predicates and
+captured collections cannot be safely cloned; no deep callback/source snapshot is promised. Provenance belongs to each
+registration occurrence. Differing explicit intent TypeKeys use a shallow binding copy of the current leaves so another
+binding
+cannot rewrite the supplied definition's type. Fluent required-description policy validates supplied leaves at
+attachment before registration and leaves the source's own option unchanged. Missing text can be corrected and retried.
+Post-binding mutation is unsupported; no cache invalidation or hot reload is triggered by arbitrary public field edits.
+Configured rule/callback owners remain responsible for any shared mutable state and concurrency. Binding work happens
+at declaration time, not during every report. Existing real-workload records cover unchanged standard dispatch.

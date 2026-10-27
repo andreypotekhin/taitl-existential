@@ -1,0 +1,11 @@
+STATE-SETUP sample=3 scenario=SUCCESS ms=14.041500 MB=2.063656
+TRANSACTION-DIAGNOSTICS sample=3 scenario=SUCCESS attempts=1000 render=false ms=14.852333 MB=25.363579 checks=1000 rollbacks=0 rejections=0 registry=0 cleanup=true
+STATE-SETUP sample=3 scenario=CLOSED ms=0.956667 MB=0.197248
+TRANSACTION-DIAGNOSTICS sample=3 scenario=CLOSED attempts=1000 render=false ms=14.242017 MB=11.359504 checks=1 rollbacks=0 rejections=1000 registry=0 cleanup=true
+TRANSACTION-DIAGNOSTICS sample=3 scenario=CLOSED attempts=1000 render=true ms=15.227442 MB=14.638800 checks=1 rollbacks=0 rejections=1000 registry=0 cleanup=true
+STATE-SETUP sample=3 scenario=ROLLBACK_ONLY ms=0.280833 MB=0.113848
+TRANSACTION-DIAGNOSTICS sample=3 scenario=ROLLBACK_ONLY attempts=1000 render=false ms=13.452675 MB=11.605576 checks=2 rollbacks=1 rejections=1000 registry=0 cleanup=true
+TRANSACTION-DIAGNOSTICS sample=3 scenario=ROLLBACK_ONLY attempts=1000 render=true ms=13.674608 MB=15.094590 checks=2 rollbacks=1 rejections=1000 registry=0 cleanup=true
+STATE-SETUP sample=3 scenario=MISSING ms=0.232334 MB=0.113888
+TRANSACTION-DIAGNOSTICS sample=3 scenario=MISSING attempts=1000 render=false ms=13.102842 MB=11.019293 checks=1 rollbacks=0 rejections=1000 registry=0 cleanup=true
+TRANSACTION-DIAGNOSTICS sample=3 scenario=MISSING attempts=1000 render=true ms=12.483283 MB=13.183912 checks=1 rollbacks=0 rejections=1000 registry=0 cleanup=true

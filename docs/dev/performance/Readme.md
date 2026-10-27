@@ -144,3 +144,11 @@ authorization, and ordering, with complete workflows, allocation, and determinis
 
 The [structured diagnostics topic](topics/Diagnostics.md) compares successful and failing complete workflows,
 first/repeated message rendering, allocation, and detached-failure cleanup against the preserved dirty baseline.
+
+
+The [transaction-state diagnostics topic](topics/TransactionDiagnostics.md) compares successful transactions and
+closed/rollback-only/missing-ID rejection, explicit cleanup and fresh recovery, with optional message rendering.
+
+
+The [Sprint 09 closeout topic](topics/Sprint09Closeout.md) compares standard typed values, shared inferred-type cache
+hits and memo-error cleanup/recovery with exact counters and deterministic ownership acceptance.

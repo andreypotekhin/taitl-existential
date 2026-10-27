@@ -1,6 +1,8 @@
 package com.taitl.existential.builders;
 
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.common.helper.strings.*;
+import com.taitl.ex.logic.configuration.actions.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.*;
 import com.taitl.existential.indexes.*;
@@ -152,6 +154,8 @@ public class ContextBuilder
     public <T> ContextBuilder invariant(Invariant<T> invariant)
     {
         sane(invariant, "invariant");
+        parent.verifyConfigurable();
+        Descriptions.require(parent.requireBehaviorDescriptions(), invariant);
         register(() -> invariant, StageName.VALIDATION);
         return this;
     }
@@ -237,6 +241,8 @@ public class ContextBuilder
     public <T> ContextBuilder effect(Effect<T> effect)
     {
         sane(effect, "effect");
+        parent.verifyConfigurable();
+        Descriptions.require(parent.requireBehaviorDescriptions(), effect);
         register(() -> effect, StageName.VALIDATION);
         return this;
     }
@@ -354,8 +360,10 @@ public class ContextBuilder
     public <T> ContextBuilder intent(Intent<T> intent, TypeKey<T> typeKey)
     {
         sane(intent, "intent", typeKey, "typeKey");
-        intent.typeKey(typeKey);
-        register(() -> intent, StageName.IMMEDIATE);
+        parent.verifyConfigurable();
+        Descriptions.require(parent.requireBehaviorDescriptions(), intent);
+        Intent<T> bound = BindSuppliedRules.intent(intent, typeKey);
+        register(() -> bound, StageName.IMMEDIATE);
         return this;
     }
 

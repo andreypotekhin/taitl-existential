@@ -5,6 +5,8 @@ import com.taitl.existential.events.combined_events.*;
 import com.taitl.existential.events.types.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.exceptions.*;
+import com.taitl.ex.logic.diagnostics.*;
+import com.taitl.existential.diagnostics.*;
 import com.taitl.existential.handlers.types.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
@@ -146,9 +148,11 @@ public class ToMemo
         {
             return memo;
         }
-        throw new MemoException("Memo state not present for event '" + runtimeKey.key()
-                + "'. Use memo() to register the before-state for this entity before mutating it. See "
-                + TROUBLESHOOTING_SECTION);
+        throw OperationalDiagnostics.memo(DiagnosticCode.MEMO_MISSING,
+                "Memo state not present for event '" + runtimeKey.key()
+                        + "'. Use memo() to register the before-state for this entity before mutating it. See "
+                        + TROUBLESHOOTING_SECTION,
+                tr.op);
     }
 
     public <T> void requireMemo(RuntimeKey<T> runtimeKey, Tr tr) throws MemoException

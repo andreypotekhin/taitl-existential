@@ -8,6 +8,7 @@ import com.taitl.existential.*;
 import com.taitl.existential.builders.*;
 
 import static com.taitl.ex.common.helper.State.*;
+import static com.taitl.ex.logic.diagnostics.OperationalDiagnostics.*;
 
 public class FinalizeConfiguration
 {
@@ -44,7 +45,9 @@ public class FinalizeConfiguration
         {
             if (cl.isEmpty() && cl.configBuilder() == null)
             {
-                throw new IllegalStateException("You need to configure at least one context");
+                throw state(
+                        com.taitl.existential.diagnostics.DiagnosticCode.CONFIGURATION_INVALID,
+                        "You need to configure at least one context");
             }
 
             synchronized (ex)

@@ -2,6 +2,8 @@ package com.taitl.ex.logic.transactions;
 
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.diagnostics.*;
+import com.taitl.existential.diagnostics.*;
 import com.taitl.ex.core.existential.*;
 import com.taitl.ex.logic.evaluation.*;
 import com.taitl.ex.logic.stages.begin.*;
@@ -216,9 +218,10 @@ public class TransactionLogic implements Closeable
             if (state == State.CLOSED)
             {
                 tr.close();
-                throw new IllegalStateException("Cannot run rollback callbacks after library shutdown. "
-                        + "Complete rollback before closing the library. See "
-                        + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
+                throw OperationalDiagnostics.state(DiagnosticCode.LIBRARY_CLOSED,
+                        "Cannot run rollback callbacks after library shutdown. "
+                                + "Complete rollback before closing the library. See "
+                                + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
             }
             inFlight++;
             callbackDepth.set(callbackDepth.get() + 1);
@@ -307,10 +310,11 @@ public class TransactionLogic implements Closeable
                 catch (InterruptedException interrupted)
                 {
                     Thread.currentThread().interrupt();
-                    throw new IllegalStateException("Interrupted while waiting for active transactions to finish. "
-                            + "The library remains in shutdown; retry close() after transactions complete. See "
-                            + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction"
-                            + describeOutstandingResources.call(registry, inFlight),
+                    throw OperationalDiagnostics.state(DiagnosticCode.SHUTDOWN_INTERRUPTED,
+                            "Interrupted while waiting for active transactions to finish. "
+                                    + "The library remains in shutdown; retry close() after transactions complete. See "
+                                    + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction"
+                                    + describeOutstandingResources.call(registry, inFlight),
                             interrupted);
                 }
             }
@@ -331,9 +335,10 @@ public class TransactionLogic implements Closeable
     {
         if (callbackDepth.get() > 0)
         {
-            throw new IllegalStateException("Cannot close the library from a transaction callback. "
-                    + "Close it after the transaction call returns. See "
-                    + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
+            throw OperationalDiagnostics.state(DiagnosticCode.REENTRANT_LIFECYCLE,
+                    "Cannot close the library from a transaction callback. "
+                            + "Close it after the transaction call returns. See "
+                            + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
         }
     }
 
@@ -343,9 +348,10 @@ public class TransactionLogic implements Closeable
         {
             if (handlerDepth.get() > 0)
             {
-                throw new IllegalStateException("Cannot close a transaction from one of its callbacks. "
-                        + "Close it after the callback returns. See "
-                        + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
+                throw OperationalDiagnostics.state(DiagnosticCode.REENTRANT_LIFECYCLE,
+                        "Cannot close a transaction from one of its callbacks. "
+                                + "Close it after the callback returns. See "
+                                + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
             }
             registry.removeIfPresent(tr.id.toString());
             if (state == State.CLOSED)
@@ -374,7 +380,8 @@ public class TransactionLogic implements Closeable
         {
             if (state == State.CLOSED)
             {
-                throw new IllegalStateException("Cannot execute callbacks after library shutdown.");
+                throw OperationalDiagnostics.state(DiagnosticCode.LIBRARY_CLOSED,
+                        "Cannot execute callbacks after library shutdown.");
             }
             inFlight++;
             callbackDepth.set(callbackDepth.get() + 1);
@@ -405,12 +412,14 @@ public class TransactionLogic implements Closeable
         {
             if (state != State.OPEN && beginning)
             {
-                throw new IllegalStateException("Cannot begin a transaction because library shutdown has started. "
-                        + "See /Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
+                throw OperationalDiagnostics.state(DiagnosticCode.LIBRARY_CLOSED,
+                        "Cannot begin a transaction because library shutdown has started. "
+                                + "See /Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
             }
             if (state == State.CLOSED)
             {
-                throw new IllegalStateException("Cannot use a transaction after library shutdown.");
+                throw OperationalDiagnostics.state(DiagnosticCode.LIBRARY_CLOSED,
+                        "Cannot use a transaction after library shutdown.");
             }
             inFlight++;
             callbackDepth.set(callbackDepth.get() + 1);
@@ -449,10 +458,11 @@ public class TransactionLogic implements Closeable
 
     private IllegalStateException shutdownTimeout()
     {
-        return new IllegalStateException("Timed out waiting for active transactions to finish. "
-                + "The library remains in shutdown; finish or close active transactions, then retry close(). See "
-                + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction"
-                + describeOutstandingResources.call(registry, inFlight));
+        return OperationalDiagnostics.state(DiagnosticCode.SHUTDOWN_TIMEOUT,
+                "Timed out waiting for active transactions to finish. "
+                        + "The library remains in shutdown; finish or close active transactions, then retry close(). See "
+                        + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction"
+                        + describeOutstandingResources.call(registry, inFlight));
     }
 
     private void closeAfterFailure(Tr tr, Throwable failure)
@@ -486,7 +496,8 @@ public class TransactionLogic implements Closeable
         }
         if (failure != null)
         {
-            throw new ExistentialException("Transaction cleanup failed", failure);
+            throw OperationalDiagnostics.failure(DiagnosticCode.CLEANUP_FAILED, "Transaction cleanup failed", null,
+                    failure);
         }
     }
 }

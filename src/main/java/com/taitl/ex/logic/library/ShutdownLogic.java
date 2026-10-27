@@ -73,6 +73,7 @@ public class ShutdownLogic
         {
             throw (Error) failure;
         }
-        throw new IllegalStateException("Library cleanup failed", failure);
+        throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.state(
+                com.taitl.existential.diagnostics.DiagnosticCode.CLEANUP_FAILED, "Library cleanup failed", failure);
     }
 }

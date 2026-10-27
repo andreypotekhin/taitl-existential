@@ -2,6 +2,8 @@ package com.taitl.ex.logic.transactions.actions;
 
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.existential.exceptions.*;
+import com.taitl.existential.diagnostics.*;
+import com.taitl.ex.logic.diagnostics.*;
 import com.taitl.existential.transactions.*;
 
 /**
@@ -54,7 +56,8 @@ public class RollbackTran extends TranAction
         }
         if (failure != null)
         {
-            throw new ExistentialException("Rollback callback failed", failure);
+            throw OperationalDiagnostics.failure(DiagnosticCode.CLEANUP_FAILED, "Rollback callback failed", null,
+                    failure);
         }
     }
 }

@@ -13,6 +13,7 @@ import java.util.function.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
+import static com.taitl.ex.logic.diagnostics.OperationalDiagnostics.*;
 import static com.taitl.ex.common.helper.strings.Text.*;
 
 /**
@@ -231,7 +232,7 @@ public class ConfigBuilder
 
     void verifyConfigurable()
     {
-        verify(!ex.configured(), "Cannot change configuration after it has been finalized. See "
+        requireMutable(!ex.configured(), "Cannot change configuration after it has been finalized. See "
                 + "/Troubleshooting.md#library-configuration-after-finalization");
     }
 

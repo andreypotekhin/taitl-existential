@@ -105,7 +105,7 @@ acceptance, and measurement limits. The old checkpoint-retry expectation was rep
 
 ### Indexes and Operational Coverage
 
-Status: in progress. Delivery: [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Status: complete on 2026-10-27. Delivery: [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
 
 Use maintained relationships and broader lifecycle/reporting/resource behavior with measured scaling.
 
@@ -113,7 +113,9 @@ The selected transaction-local managed-index contract includes automatic/read op
 seeding, object identity, single-valued replacement, and folded/on-demand maintenance. Known-resource diagnostics
 replace the universal leak-reporting claim. Shared mutable indexes remain deferred. The
 [completed delivery plan](../past/planning/P10252601.Sprint09-managed-indexes-and-diagnostics.plan.md) records verified
-interfaces, admission, acceptance, consumer, and performance evidence. Broader report/event/cache work remains open.
+interfaces, admission, acceptance, consumer, and performance evidence. The
+[operational closeout review](reviews/Sprint09_OperationalCoverage.review.md) completes typed values, supplied-rule
+binding, semantic diagnostics and cache/global ownership. V2 release hardening remains separate.
 Standalone compatibility is retained.
 
 ### V2 Hardening and Closeout
@@ -222,9 +224,13 @@ action IDs collide, so links use full filenames. Do not renumber historical reco
 - [Transaction lifecycle state]: proposal; Failure Recovery and Resource Hygiene; design/evidence review required.
 - [Specify context matching and rule ordering semantics]: proposal; Contexts and Type Matching; design/evidence review
   required.
-- [Error metadata for public exceptions]: approved; Indexes and Operational Coverage;
+- [Error metadata for public exceptions]: implemented; Indexes and Operational Coverage;
   [finalized rule-diagnostics plan](../past/planning/P10262602.Sprint09-structured-diagnostics.plan.md) records settled
-  behavior/interfaces; implementation/evidence and broader exception coverage remain open.
+  rule-evaluation delivery; the [transaction-state
+  delivery](../past/planning/P10272601.Sprint09-transaction-state-diagnostics.plan.md)
+  adds guarded handles and missing active IDs. The [operational
+  closeout](reviews/Sprint09_OperationalCoverage.review.md)
+  completes the finalized semantic public-error scope and archives the suggestion/TODO.
 - [Key Naming Strategy Injection]: approved; Contexts and Type Matching; design/evidence review required.
 - [Child context builder support]: approved; Contexts and Type Matching; design/evidence review required.
 - [Argument wording consistency]: approved; Failure Recovery and Resource Hygiene; design/evidence review required.
@@ -278,7 +284,7 @@ current release evidence. New optional enhancements require their usual suggesti
 [Context resolution and ordering pipeline]: ../suggestions/S03102601.Context-resolution-ordering.md
 [Transaction lifecycle state]: ../suggestions/S03102601.Transaction-Lifecycle-State.md
 [Specify context matching and rule ordering semantics]: ../suggestions/S03102602.Context-ordering-spec.md
-[Error metadata for public exceptions]: ../suggestions/approved/S02222601.error-metadata.md
+[Error metadata for public exceptions]: ../past/suggestions/S02222601.error-metadata.md
 [Key Naming Strategy Injection]: ../suggestions/approved/S02222605.md
 [Child context builder support]: ../suggestions/approved/S02222614.md
 [Argument wording consistency]: ../suggestions/approved/S02242601.argument-wording-consistency.md

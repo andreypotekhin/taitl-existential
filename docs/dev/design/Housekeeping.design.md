@@ -1,6 +1,6 @@
 # Housekeeping Design
 
-Status: selected transaction-index release design; broader cleanup/cache capabilities retain their recorded limits.
+Status: finalized Sprint 09 ownership contracts; verification and bounded guarantees are linked below.
 
 ## User outcome
 
@@ -96,3 +96,23 @@ Runtime-index clearing is proportional to the recorded event/key/type collection
 the selected reference-release contract; throughput cannot prove absence of memory leaks. The
 [relationship measurement record](../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md) separates timing
 from deterministic runtime-state checks and states the limits of both.
+
+## Final cache and global ownership
+
+The normative [cache/global contract](../specifications/Housekeeping.spec.md#cache-ownership-and-global-close) uses the
+existing per-configuration bounded operations/plans and per-inventory bounded selections. Negative results share the
+same budget. Inventory identity, rather than mutable callback equality, selects a new generation. Evicted indexes may
+still belong to an active handle and must not be destructively closed on eviction. Shutdown drains first, then clears
+resident owners. No hot reload is admitted. Existing selection tests and new public-owner acceptance inspect counts,
+identity changes and release directly; timing alone cannot establish ownership.
+
+Replace TypeKeyCache's unbounded strong Class maps with two ClassValue associations. Each value may refer to its key
+Class without an external map rooting application classes. Class identity and naming-mode separation remain exact;
+concurrent hits share published TypeKeys. Do not clear this shared metadata on one instance's close. Legacy descriptor
+keys remain weak with a fixed 4096-entry budget; no reported entity/callback enters either shared metadata cache.
+
+Ex.close remains terminal for its installed instance, with no implicit singleton resurrection or global cache flush.
+Independent instances are isolated. Caller-retained definitions/configurations remain valid application-owned objects;
+shutdown drops library ownership rather than mutating those objects. Correctness, failed-drain retry and lifecycle
+concurrency retain existing shutdown acceptance. Measure successful complete workflows and type-cache hot hits against
+the preserved tree; no GC timing or numerical performance gate is introduced.

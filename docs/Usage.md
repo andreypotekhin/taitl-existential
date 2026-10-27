@@ -378,3 +378,78 @@ Unexpected callback RuntimeException is wrapped in EventHandlerException, or Int
 with code CALLBACK-FAILED and the original exception in its cause chain. Caller-supplied exception objects are not
 mutated. Error propagates unchanged. Undecorated caller-created exceptions keep their original message/cause behavior.
 See [diagnostic categories and remedies](../Troubleshooting.md#diagnostic-evaluation-failed).
+
+
+## Transaction state diagnostics
+
+Direct rejected handle operations and missing string-ID lookups expose stable codes through the existing exception
+hierarchy. These describe rejected access; the evaluation that first failed keeps its original diagnostic.
+Inspect `diagnostic().code()` rather than parsing a message:
+
+```java
+try {
+    tr.commit();
+} catch (ExistentialException failure) {
+    Diagnostic diagnostic = failure.diagnostic();
+    if (diagnostic != null && diagnostic.code() == DiagnosticCode.TRANSACTION_ROLLBACK_ONLY) {
+        tr.rollback();
+    }
+    throw failure;
+} finally {
+    tr.close();
+}
+```
+
+TRANSACTION-CLOSED requires a fresh transaction. TRANSACTION-ROLLBACK-ONLY allows explicit rollback or close before
+fresh work; the guard itself runs no callbacks. TRANSACTION-NOT-FOUND is a NotFoundException for an ID without an
+active registry entry, including a completed or detached ID. Correct the ID or begin a fresh transaction.
+
+Handle diagnostics include known operation, requested action and transaction ID; a disposed managed view keeps its
+operation but has released its owner and omits the ID. Lookup failures know only the requested ID. These snapshots
+have no rule, event or evaluation stage. A callback that propagates a state error retains the existing CALLBACK-FAILED
+classification with the state error as its cause. See [state
+remedies](../Troubleshooting.md#diagnostic-transaction-closed).
+
+
+## Additional application values
+
+Use a typed application value when a standard event needs an actor, destination or other request data:
+
+```java
+record Relocation(Cat cat, String actor, String destination) {}
+
+ex.configure().context("/cats/relocate").invariant(Relocation.class)
+        .read(request -> request.actor().equals("Keeper"), "A keeper authorizes relocation");
+Tr tr = ex.begin("/cats/relocate");
+try {
+    tr.read(new Relocation(cat, "Keeper", "Garden"));
+    tr.commit();
+} finally {
+    tr.close();
+}
+```
+
+Rules receive the envelope unchanged. Its identity determines folding; nested objects are not separately enrolled or
+copied. Use an explicit matching TypeKey for generic payloads or full class names. These are ordinary standard events.
+
+Supplied Invariant/Intent/Effect definitions can be reused read-only across contexts and instances. Complete them before
+binding and keep them unchanged afterward; callbacks remain responsible for synchronizing shared application state.
+A differing explicit intent TypeKey creates a shallow binding of current leaves without rewriting the supplied intent.
+Fluent required-description policy checks supplied leaves at attachment without changing their own policy. Correcting a
+rejected attachment and retrying adds one registration. Arbitrary callback and source snapshots are not promised.
+
+## Operational errors and global ownership
+
+Library-generated memo, maintenance and cleanup failures expose detached Diagnostic snapshots. Semantic configuration
+and shutdown Java guards keep their existing IllegalStateException/IllegalArgumentException catch types and include
+stable category/remedy text in getMessage(). Ordinary argument preconditions and caller-created exceptions keep their
+Java behavior. Direct low-level handler/quantifier failures without an indexed declaration preserve available detail
+without inventing an operation, stage or declaration context. See [operational
+remedies](../Troubleshooting.md#diagnostic-configuration-invalid).
+
+Configuration caches reuse metadata and immutable selections, including empty matches, with fixed resident budgets.
+They never cache entity validation results. Closing an instance drains work and clears its own caches; it does not
+clear application-owned sources or another instance's configuration. Shared inferred type metadata uses ClassValue
+associations rather than an unbounded global map of application classes. No GC deadline or arbitrary leak detection is
+promised. Ex.close is idempotent and terminal for its current instance; install/configure a fresh instance explicitly
+for new global work. Independent Existential instances remain usable.

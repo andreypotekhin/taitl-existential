@@ -48,7 +48,8 @@ public class IndexConfiguration
     {
         if (frozen)
         {
-            throw new IllegalStateException(
+            throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.state(
+                    com.taitl.existential.diagnostics.DiagnosticCode.CONFIGURATION_INVALID,
                     "Managed indexing configuration is already bound; configure before begin().");
         }
     }

@@ -527,21 +527,18 @@ public class ConcreteTr
             {
                 return;
             }
-            throw new ExistentialException(String.format(
-                    "Cannot %s because evaluation or index maintenance failed. Roll back this transaction or close it before "
-                            + "beginning another transaction. See %s",
-                    action, TROUBLESHOOTING_SECTION));
+            throw Creator.singleton(TransactionDiagnosticLogic.class).rollbackOnly(op, id.toString(), action);
         }
-        String verb = action != null ? action : "perform this operation";
-        throw new ExistentialException(String.format(
-                "Cannot %s because the transaction is closed. Begin a new transaction for additional work. See %s",
-                verb,
-                TROUBLESHOOTING_SECTION));
+        throw Creator.singleton(TransactionDiagnosticLogic.class).closed(op, id.toString(), action);
     }
 
     protected void requireMemos()
     {
-        verify(!closed, "Transaction memo state is not available");
+        if (closed)
+        {
+            throw OperationalDiagnostics.state(com.taitl.existential.diagnostics.DiagnosticCode.TRANSACTION_CLOSED,
+                    "Transaction memo state is not available. Begin a new transaction.");
+        }
         if (!closed && rollbackProcessing)
         {
             return;

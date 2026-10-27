@@ -1,6 +1,9 @@
 package com.taitl.ex.logic.managed_indexes.data;
 
 import com.taitl.existential.exceptions.*;
+import com.taitl.existential.diagnostics.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.diagnostics.*;
 import java.util.function.*;
 
 /** Guards escaped views without retaining transaction callbacks after disposal. */
@@ -21,8 +24,7 @@ public class ManagedAccess
     {
         if (check == null)
         {
-            throw new ExistentialException("Managed index view is disposed. Begin a new transaction. "
-                    + "See /Troubleshooting.md#managed-index-maintenance");
+            throw Creator.singleton(TransactionDiagnosticLogic.class).disposedView(operation);
         }
         check.run();
     }
@@ -33,9 +35,10 @@ public class ManagedAccess
         {
             failed.accept(cause);
         }
-        return new ExistentialException("Managed index '" + name + "' failed for operation '" + operation
+        return OperationalDiagnostics.failure(DiagnosticCode.INDEX_MAINTENANCE_FAILED, "Managed index '" + name
+                + "' failed for operation '" + operation
                 + "'. Check its subject types, non-null stable keys, and key extractor; rollback or close this handle. "
-                + "See /Troubleshooting.md#managed-index-maintenance", cause);
+                + "See /Troubleshooting.md#managed-index-maintenance", operation, cause);
     }
 
     public void close()

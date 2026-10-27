@@ -7,6 +7,8 @@ import java.util.function.*;
 import java.time.Duration;
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.diagnostics.*;
+import com.taitl.existential.diagnostics.*;
 import com.taitl.ex.common.helper.security.FileSecurity;
 import com.taitl.ex.common.helper.io.LimitedInputStream;
 import com.taitl.ex.common.helper.Properties;
@@ -64,6 +66,18 @@ public class ConfigureLibrary
 
     public void fromFile(String path)
     {
+        try
+        {
+            readFile(path);
+        }
+        catch (IllegalStateException failure)
+        {
+            throw OperationalDiagnostics.configuration(failure);
+        }
+    }
+
+    protected void readFile(String path)
+    {
         String trimmed = trimmed(path, "path");
         Path file = Paths.get(trimmed);
         verify(Files.exists(file),
@@ -98,6 +112,18 @@ public class ConfigureLibrary
     }
 
     public void fromClasspath(String resource)
+    {
+        try
+        {
+            readClasspath(resource);
+        }
+        catch (IllegalStateException failure)
+        {
+            throw OperationalDiagnostics.configuration(failure);
+        }
+    }
+
+    protected void readClasspath(String resource)
     {
         sane(resource, "resource");
         try (InputStream opened = loadProperties.openResource(resource))

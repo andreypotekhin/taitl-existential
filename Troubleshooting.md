@@ -328,3 +328,92 @@ Checks-only validation collects ordinary violations. When effects participate, t
 the diagnostic records that limitation. A failed checkpoint/commit makes the handle rollback-only and detaches
 string-ID lookup. Explicit rollback runs rollback callbacks; close only releases resources. Correct application
 state before beginning a fresh transaction. Diagnostic snapshots remain readable after cleanup.
+
+## Diagnostic TRANSACTION-CLOSED
+
+The handle has completed or was explicitly closed. Begin a new transaction for additional work. The diagnostic records
+the original operation, requested action, and transaction ID as detached text; it remains readable after disposal.
+Repeated rollback/commit/checkpoint or memo registration does not reopen a completed handle. An escaped disposed
+managed-index view includes its retained operation but omits the transaction ID after releasing its owner.
+
+## Diagnostic TRANSACTION-ROLLBACK-ONLY
+
+A prior checkpoint/commit or index-maintenance failure rejected further work on this still-open handle. Explicitly roll
+back to run rollback callbacks, or close to release resources without those callbacks, before beginning a fresh attempt.
+The guard itself runs no callbacks and does not attach or retain the earlier failure. Read the earlier exception to
+diagnose the original rejection. The requested action and transaction ID are included without retaining the handle.
+
+## Diagnostic TRANSACTION-NOT-FOUND
+
+The requested ID has no active transaction. Check the ID and its lifecycle: completed or detached IDs cannot be reused.
+After a failed boundary, use the retained rollback-only handle for explicit cleanup; ID lookup cannot recover it.
+No former operation is inferred when lookup fails. The diagnostic preserves the requested ID as escaped text in its
+message and raw text in notes, with no failed-handle registry or entity references.
+
+
+## Diagnostic CONFIGURATION-INVALID
+
+Correct the named property source, value, context, type, index declaration or required description before retrying.
+Configuration errors preserve their Java catch type and original I/O cause; a failed begin does not leave an active
+transaction. A partially applied caller configuration is not undone automatically. Reuse the builder for a supported
+correction, or configure a fresh instance if the declaration itself cannot be revised.
+
+
+## Diagnostic CONFIGURATION-FROZEN
+
+Configuration freezes at first begin. Apply options and declarations before that point, or configure a new instance.
+Changing flags, builders or indexing defaults cannot hot-reload compiled rule selections.
+
+
+## Diagnostic LIBRARY-CLOSED
+
+Shutdown has started or completed, so the instance cannot admit new transactions. Finish active work or explicitly
+close its handles, then retry close if draining failed. Create and configure a new instance for new work. Ex.close does
+not replace the facade instance and does not close independent instances.
+
+
+## Diagnostic SHUTDOWN-TIMEOUT
+
+The configured deadline expired while transactions or callbacks were still active. The library remains draining and
+reports bounded known-resource details. Finish or explicitly clean up those handles, then retry close. Shutdown never
+runs rollback callbacks on your behalf or undoes application effects. Detached failed handles are not tracked for logs.
+
+
+## Diagnostic SHUTDOWN-INTERRUPTED
+
+Waiting for active work was interrupted; the interrupt flag and original interruption cause are preserved. The library
+remains draining. Complete or close active handles and retry close under the caller's interruption policy.
+
+
+## Diagnostic REENTRANT-LIFECYCLE
+
+A callback attempted to close its own transaction or library. Return from the callback first, then close from the
+caller. This rejection prevents a shutdown wait from depending on the callback that is currently making the call.
+
+
+## Diagnostic MEMO-INVALID
+
+Register one detached before-state per live entity and TypeKey before mutation. The live object itself is not a
+snapshot, and a second registration cannot replace the first. Correct a rejected registration before continuing; the
+accepted memo remains unchanged. The library never clones or renders your entity to repair this error.
+
+
+## Diagnostic MEMO-MISSING
+
+The selected two-state rule requires a before-state. Call memo(before, live, type) before mutating/reporting the live
+entity, or supply explicit before/after values with transit/port. A rejected immediate report can be corrected where
+the handle is still usable; a failed checkpoint/commit requires explicit cleanup and a fresh transaction.
+
+
+## Diagnostic INDEX-MAINTENANCE-FAILED
+
+Inspect the original extractor failure in the cause chain. Fix subject types, non-null stable keys or the extractor,
+then explicitly roll back or close the failed handle before retrying with a fresh transaction. The diagnostic retains
+detached index/operation detail, while disposal releases transaction contents and callbacks.
+
+
+## Diagnostic CLEANUP-FAILED
+
+Inspect the original cause and suppressed failures in order. Explicit rollback/cleanup attempts retain their existing
+release behavior, and the library cannot undo external side effects or repair arbitrary application resources. Release
+remaining application resources explicitly before retrying at the appropriate owner boundary.

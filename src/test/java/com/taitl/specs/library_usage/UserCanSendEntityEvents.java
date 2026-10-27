@@ -131,7 +131,7 @@ class UserCanSendEntityEvents extends SpecBase
             Tr tr = ex.begin(op);
             tr.commit();
             assertThat(assertThrows(ExistentialException.class, () -> tr.create(cat)).getMessage(),
-                    containsString("/Troubleshooting.md#transaction-closed"));
+                    containsString("/Troubleshooting.md#diagnostic-transaction-closed"));
         }
     }
 }

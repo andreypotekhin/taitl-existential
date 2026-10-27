@@ -33,8 +33,10 @@ public class EffectBuilder<T> implements EvsBuilder<T>
     public EffectBuilder(ContextBuilder parent)
     {
         sane(parent, "parent");
-        throw new IllegalStateException("EffectBuilder requires a TypeKey. Use ContextBuilder.effect(Class<T>) "
-                + "or ContextBuilder.effect(TypeKey<T>).");
+        throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.state(
+                com.taitl.existential.diagnostics.DiagnosticCode.CONFIGURATION_INVALID,
+                "EffectBuilder requires a TypeKey. Use ContextBuilder.effect(Class<T>) "
+                        + "or ContextBuilder.effect(TypeKey<T>).");
     }
 
     /**
@@ -61,8 +63,10 @@ public class EffectBuilder<T> implements EvsBuilder<T>
     public EffectBuilder(TransactionBuilder parent2)
     {
         sane(parent2, "parent2");
-        throw new IllegalStateException("EffectBuilder requires a TypeKey. Use TransactionBuilder.effect(Class<T>) "
-                + "or TransactionBuilder.effect(TypeKey<T>).");
+        throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.state(
+                com.taitl.existential.diagnostics.DiagnosticCode.CONFIGURATION_INVALID,
+                "EffectBuilder requires a TypeKey. Use TransactionBuilder.effect(Class<T>) "
+                        + "or TransactionBuilder.effect(TypeKey<T>).");
     }
 
     /**

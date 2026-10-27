@@ -74,8 +74,9 @@ public class IndexMaintenanceLogic
         ManagedBinding binding = bindings.get(definition);
         if (binding == null)
         {
-            throw new IllegalArgumentException("Register the managed index definition in this context or transaction "
-                    + "before begin(). See /Troubleshooting.md#managed-index-maintenance");
+            throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics
+                    .argument("Register the managed index definition in this context or transaction "
+                            + "before begin(). See /Troubleshooting.md#managed-index-maintenance");
         }
         return (I) binding.view();
     }

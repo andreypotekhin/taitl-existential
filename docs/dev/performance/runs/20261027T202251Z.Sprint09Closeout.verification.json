@@ -1,0 +1,367 @@
+{
+  "root": {
+    "surefire_files": 119,
+    "tests": 759,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "consumer": {
+    "surefire_files": 1,
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failsafe_tests": 0,
+  "checkstyle_errors": 0,
+  "pmd_violations": 0,
+  "coverage_overall": {
+    "INSTRUCTION": {
+      "missed": 10456,
+      "covered": 35540,
+      "percent": 77.27
+    },
+    "BRANCH": {
+      "missed": 924,
+      "covered": 2344,
+      "percent": 71.73
+    },
+    "LINE": {
+      "missed": 2234,
+      "covered": 7501,
+      "percent": 77.05
+    },
+    "COMPLEXITY": {
+      "missed": 1407,
+      "covered": 3010,
+      "percent": 68.15
+    },
+    "METHOD": {
+      "missed": 694,
+      "covered": 2080,
+      "percent": 74.98
+    },
+    "CLASS": {
+      "missed": 37,
+      "covered": 283,
+      "percent": 88.44
+    }
+  },
+  "coverage_selected": {
+    "com/taitl/ex/logic/diagnostics/OperationalDiagnostics": {
+      "INSTRUCTION": {
+        "missed": 15,
+        "covered": 106,
+        "percent": 87.6
+      },
+      "BRANCH": {
+        "missed": 1,
+        "covered": 7,
+        "percent": 87.5
+      },
+      "LINE": {
+        "missed": 4,
+        "covered": 21,
+        "percent": 84.0
+      },
+      "COMPLEXITY": {
+        "missed": 2,
+        "covered": 13,
+        "percent": 86.67
+      },
+      "METHOD": {
+        "missed": 1,
+        "covered": 10,
+        "percent": 90.91
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/existential/diagnostics/DiagnosticCode": {
+      "INSTRUCTION": {
+        "missed": 0,
+        "covered": 117,
+        "percent": 100.0
+      },
+      "LINE": {
+        "missed": 0,
+        "covered": 20,
+        "percent": 100.0
+      },
+      "COMPLEXITY": {
+        "missed": 0,
+        "covered": 2,
+        "percent": 100.0
+      },
+      "METHOD": {
+        "missed": 0,
+        "covered": 2,
+        "percent": 100.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/ex/cross/caching/TypeKeyCache": {
+      "INSTRUCTION": {
+        "missed": 0,
+        "covered": 47,
+        "percent": 100.0
+      },
+      "BRANCH": {
+        "missed": 0,
+        "covered": 2,
+        "percent": 100.0
+      },
+      "LINE": {
+        "missed": 0,
+        "covered": 10,
+        "percent": 100.0
+      },
+      "COMPLEXITY": {
+        "missed": 0,
+        "covered": 6,
+        "percent": 100.0
+      },
+      "METHOD": {
+        "missed": 0,
+        "covered": 5,
+        "percent": 100.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/ex/cross/caching/TypeKeyCache$1": {
+      "INSTRUCTION": {
+        "missed": 0,
+        "covered": 16,
+        "percent": 100.0
+      },
+      "LINE": {
+        "missed": 0,
+        "covered": 2,
+        "percent": 100.0
+      },
+      "COMPLEXITY": {
+        "missed": 0,
+        "covered": 2,
+        "percent": 100.0
+      },
+      "METHOD": {
+        "missed": 0,
+        "covered": 2,
+        "percent": 100.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/existential/exceptions/MemoException": {
+      "INSTRUCTION": {
+        "missed": 19,
+        "covered": 13,
+        "percent": 40.62
+      },
+      "BRANCH": {
+        "missed": 3,
+        "covered": 1,
+        "percent": 25.0
+      },
+      "LINE": {
+        "missed": 6,
+        "covered": 4,
+        "percent": 40.0
+      },
+      "COMPLEXITY": {
+        "missed": 5,
+        "covered": 2,
+        "percent": 28.57
+      },
+      "METHOD": {
+        "missed": 3,
+        "covered": 2,
+        "percent": 40.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/ex/logic/diagnostics/actions/BuildOperationalDiagnostic": {
+      "INSTRUCTION": {
+        "missed": 2,
+        "covered": 89,
+        "percent": 97.8
+      },
+      "BRANCH": {
+        "missed": 1,
+        "covered": 15,
+        "percent": 93.75
+      },
+      "LINE": {
+        "missed": 0,
+        "covered": 30,
+        "percent": 100.0
+      },
+      "COMPLEXITY": {
+        "missed": 1,
+        "covered": 14,
+        "percent": 93.33
+      },
+      "METHOD": {
+        "missed": 0,
+        "covered": 2,
+        "percent": 100.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/ex/logic/diagnostics/actions/NewEvaluationFailure": {
+      "INSTRUCTION": {
+        "missed": 5,
+        "covered": 37,
+        "percent": 88.1
+      },
+      "BRANCH": {
+        "missed": 1,
+        "covered": 1,
+        "percent": 50.0
+      },
+      "LINE": {
+        "missed": 1,
+        "covered": 6,
+        "percent": 85.71
+      },
+      "COMPLEXITY": {
+        "missed": 2,
+        "covered": 5,
+        "percent": 71.43
+      },
+      "METHOD": {
+        "missed": 1,
+        "covered": 5,
+        "percent": 83.33
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/ex/logic/configuration/actions/BindSuppliedRules": {
+      "INSTRUCTION": {
+        "missed": 3,
+        "covered": 30,
+        "percent": 90.91
+      },
+      "BRANCH": {
+        "missed": 0,
+        "covered": 4,
+        "percent": 100.0
+      },
+      "LINE": {
+        "missed": 1,
+        "covered": 7,
+        "percent": 87.5
+      },
+      "COMPLEXITY": {
+        "missed": 1,
+        "covered": 3,
+        "percent": 75.0
+      },
+      "METHOD": {
+        "missed": 1,
+        "covered": 1,
+        "percent": 50.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    }
+  },
+  "target/existential-0.0.1.jar": {
+    "entries": 455,
+    "sha256": "ed6137bce36faab27a07f8686bcb0802225349172045f03e1dc21d6d6fa96594",
+    "forbidden": []
+  },
+  "existential.jar": {
+    "entries": 1477,
+    "sha256": "dd57b25f9e85c0aca7c723c6be60d7bc61f0f92c8b37bd5d9ed01c0ec85183bc",
+    "forbidden": []
+  },
+  "root_summaries": [
+    [
+      "2",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "7",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "759",
+      "0",
+      "0",
+      "0"
+    ]
+  ],
+  "consumer_summaries": [
+    [
+      "7",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "7",
+      "0",
+      "0",
+      "0"
+    ]
+  ],
+  "reactor_summaries": [
+    [
+      "759",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "7",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "7",
+      "0",
+      "0",
+      "0"
+    ]
+  ],
+  "demo_summaries": [],
+  "disabled_annotations": "",
+  "verified_source_hashes_match_after_reactor": true,
+  "post_measurement_changes": "Final review separated the closed memo-query remedy from library shutdown and added one direct recovery test. Benchmark scenarios do not close then query memo state. No measured path or harness changed."
+}

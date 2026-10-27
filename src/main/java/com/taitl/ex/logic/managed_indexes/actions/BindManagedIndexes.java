@@ -42,7 +42,8 @@ public class BindManagedIndexes
             IndexDefinition<?> previous = names.putIfAbsent(definition.name(), definition);
             if (previous != null && previous != definition)
             {
-                throw new IllegalArgumentException("Managed index name '" + definition.name()
+                throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.argument("Managed index name '"
+                        + definition.name()
                         + "' has conflicting definitions for operation '" + tr.op
                         + "'. Use unique names or reuse one definition. See /Troubleshooting.md#managed-index-maintenance");
             }

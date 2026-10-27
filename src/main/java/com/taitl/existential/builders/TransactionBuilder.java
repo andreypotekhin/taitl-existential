@@ -1,6 +1,8 @@
 package com.taitl.existential.builders;
 
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.common.helper.strings.*;
+import com.taitl.ex.logic.configuration.actions.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.*;
 import com.taitl.existential.indexes.*;
@@ -163,6 +165,8 @@ public class TransactionBuilder
     public <T> TransactionBuilder invariant(Invariant<T> invariant)
     {
         sane(invariant, "invariant");
+        parent.parent.verifyConfigurable();
+        Descriptions.require(parent.parent.requireBehaviorDescriptions(), invariant);
         register(() -> invariant, StageName.VALIDATION);
         return this;
     }
@@ -214,6 +218,8 @@ public class TransactionBuilder
     public <T> TransactionBuilder effect(Effect<T> effect)
     {
         sane(effect, "effect");
+        parent.parent.verifyConfigurable();
+        Descriptions.require(parent.parent.requireBehaviorDescriptions(), effect);
         register(() -> effect, StageName.VALIDATION);
         return this;
     }
@@ -304,8 +310,10 @@ public class TransactionBuilder
     public <T> TransactionBuilder intent(Intent<T> intent, TypeKey<T> typeKey)
     {
         sane(intent, "intent", typeKey, "typeKey");
-        intent.typeKey(typeKey);
-        register(() -> intent, StageName.IMMEDIATE);
+        parent.parent.verifyConfigurable();
+        Descriptions.require(parent.parent.requireBehaviorDescriptions(), intent);
+        Intent<T> bound = BindSuppliedRules.intent(intent, typeKey);
+        register(() -> bound, StageName.IMMEDIATE);
         return this;
     }
 

@@ -257,7 +257,7 @@ as current release evidence. New optional enhancements require their usual sugge
 [intake-38]: ../../../suggestions/S03102601.Context-resolution-ordering.md
 [intake-39]: ../../../suggestions/S03102601.Transaction-Lifecycle-State.md
 [intake-40]: ../../../suggestions/S03102602.Context-ordering-spec.md
-[intake-41]: ../../../suggestions/approved/S02222601.error-metadata.md
+[intake-41]: ../../suggestions/S02222601.error-metadata.md
 [intake-42]: ../../../suggestions/approved/S02222605.md
 [intake-43]: ../../../suggestions/approved/S02222614.md
 [intake-44]: ../../../suggestions/approved/S02242601.argument-wording-consistency.md

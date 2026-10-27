@@ -37,7 +37,7 @@ class ConfigurationLogicTest
         void rejectsMissingConfig()
         {
             RuntimeException error = assertThrows(RuntimeException.class, () -> ex.configs().config("/app/orders"));
-            assertThat(error.getMessage(), is("Config not found for op '/app/orders'"));
+            assertThat(error.getMessage(), containsString("Config not found for op '/app/orders'"));
         }
 
         @Test
@@ -45,7 +45,7 @@ class ConfigurationLogicTest
         void removeRejectsMissingConfig()
         {
             RuntimeException error = assertThrows(RuntimeException.class, () -> logic.removeConfig("/app/orders"));
-            assertThat(error.getMessage(), is("Config not found for op '/app/orders'"));
+            assertThat(error.getMessage(), containsString("Config not found for op '/app/orders'"));
         }
 
         @Test

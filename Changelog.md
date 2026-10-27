@@ -6,6 +6,14 @@ This project follows Semantic Versioning. See [Readme.md](Readme.md) for the rel
 
 ## Unreleased
 
+- Added transaction-local managed indexes/joins, scoped maintenance policies, access-event coverage and explicit
+  cleanup.
+- Added immutable structured diagnostics, lazy multiline messages and semantic transaction/memo/maintenance error codes.
+- Added code-bearing configuration/shutdown errors while retaining their Java catch types and recovery behavior.
+- Prevented supplied-intent type bindings from rewriting reused definitions; validated supplied description policy.
+- Replaced the global inferred-type Class maps with ClassValue associations and verified cache/global ownership.
+- Verified additional application values through standard typed events. V2 release hardening remains separate.
+
 ## 0.0.1 - 2026-10-22
 - Completed the V1 representative workflow with relationship/evolution rules and retryable recovery after transaction or configuration failure.
 - Released the library as a locally installed Maven artifact and verified Night City as an independent consumer and reactor module.

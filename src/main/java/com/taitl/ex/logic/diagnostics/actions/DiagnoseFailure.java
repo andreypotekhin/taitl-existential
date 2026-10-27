@@ -9,7 +9,11 @@ public class DiagnoseFailure
 {
     public ExistentialException call(RuntimeException failure, Diagnostic diagnostic)
     {
-        String fallback = failure.getMessage();
+        Diagnostic previous =
+                failure instanceof ExistentialException ? ((ExistentialException) failure).diagnostic() : null;
+        String fallback = failure instanceof LibraryFailure && previous instanceof FailureSnapshot
+                ? ((FailureSnapshot) previous).fallback
+                : failure.getMessage();
         return copy(failure, new FailureSnapshot(diagnostic, fallback), fallback,
                 failure instanceof LibraryFailure ? failure.getCause() : failure);
     }
@@ -18,7 +22,18 @@ public class DiagnoseFailure
             Throwable cause)
     {
         ExistentialException result;
-        if (failure instanceof IntentViolation)
+        if (failure instanceof MemoException && (diagnostic.code() == DiagnosticCode.MEMO_INVALID
+                || diagnostic.code() == DiagnosticCode.MEMO_MISSING))
+        {
+            result = new MemoException(fallback, cause, diagnostic);
+        }
+        else if (failure.getClass() == ExistentialException.class
+                && (diagnostic.code() == DiagnosticCode.INDEX_MAINTENANCE_FAILED
+                        || diagnostic.code() == DiagnosticCode.CLEANUP_FAILED))
+        {
+            result = new ExistentialException(fallback, cause, diagnostic);
+        }
+        else if (failure instanceof IntentViolation)
         {
             result = new IntentViolation(fallback, cause, diagnostic);
         }

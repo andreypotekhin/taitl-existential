@@ -1,6 +1,8 @@
 package com.taitl.ex.logic.transactions.data;
 
 import com.taitl.ex.common.annotations.*;
+import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.diagnostics.*;
 import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.transactions.actions.*;
 import com.taitl.existential.configs.*;
@@ -52,8 +54,7 @@ public class TrRegistry
         Tr o = reg.get(id);
         if (o == null)
         {
-            throw new NotFoundException(String.format("Transaction not found, id=%s. See %s",
-                    id, TROUBLESHOOTING_SECTION));
+            throw Creator.singleton(TransactionDiagnosticLogic.class).missing(id);
         }
         return o;
     }

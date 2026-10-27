@@ -7,6 +7,7 @@ import com.taitl.existential.constants.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
+import static com.taitl.ex.logic.diagnostics.OperationalDiagnostics.*;
 
 /**
  * Behavior flags for configuring Existential library.
@@ -29,7 +30,7 @@ public class ExistentialFlags implements Closeable
         {
             check(flag > 0, "Argument 'flag' must be greater than zero");
             check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
-            verify(!ex.configured(), "Cannot change flags after configuration has been finalized. See "
+            requireMutable(!ex.configured(), "Cannot change flags after configuration has been finalized. See "
                     + "/Troubleshooting.md#library-configuration-after-finalization");
             flags |= flag;
         }
@@ -41,7 +42,7 @@ public class ExistentialFlags implements Closeable
         {
             check(flag > 0, "Argument 'flag' must be greater than zero");
             check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
-            verify(!ex.configured(), "Cannot change flags after configuration has been finalized. See "
+            requireMutable(!ex.configured(), "Cannot change flags after configuration has been finalized. See "
                     + "/Troubleshooting.md#library-configuration-after-finalization");
             flags &= ~flag;
         }
@@ -53,7 +54,7 @@ public class ExistentialFlags implements Closeable
         {
             check(flag > 0, "Argument 'flag' must be greater than zero");
             check(flag <= Flags.MAX_FLAG, "Argument 'flag' must be no greater than max flag");
-            verify(!ex.configured(), "Cannot change flags after configuration has been finalized. See "
+            requireMutable(!ex.configured(), "Cannot change flags after configuration has been finalized. See "
                     + "/Troubleshooting.md#library-configuration-after-finalization");
             if ((flags & flag) != 0)
             {

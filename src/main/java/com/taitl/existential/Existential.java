@@ -419,7 +419,8 @@ public final class Existential implements Closeable
     public synchronized void indexingPolicy(IndexingPolicy policy)
     {
         sane(policy, "policy");
-        verify(!configured, "Library configuration is already finalized; set indexing policy before begin().");
+        com.taitl.ex.logic.diagnostics.OperationalDiagnostics.requireMutable(!configured,
+                "Library configuration is already finalized; set indexing policy before begin().");
         indexingPolicy = policy.over(indexingPolicy);
     }
 
@@ -439,7 +440,7 @@ public final class Existential implements Closeable
     {
         synchronized (this)
         {
-            verify(b || !configured,
+            com.taitl.ex.logic.diagnostics.OperationalDiagnostics.requireMutable(b || !configured,
                     "Cannot clear configuration after it has been finalized. See "
                             + "/Troubleshooting.md#library-configuration-after-finalization");
             configured = b;

@@ -1,0 +1,8 @@
+CLASS-INFERENCE sample=6 attempts=100000 ms=0.707442 MB=0.000058
+CLOSEOUT-SETUP sample=6 scenario=SUCCESS ms=15.497750 MB=2.067856
+SPRINT09-CLOSEOUT sample=6 scenario=SUCCESS attempts=1000 render=false ms=12.658733 MB=25.465573 checks=1000 effects=0 registry=0 cleanup=true
+CLOSEOUT-SETUP sample=6 scenario=VALUES ms=0.892708 MB=0.201480
+SPRINT09-CLOSEOUT sample=6 scenario=VALUES attempts=1000 render=false ms=12.403792 MB=30.456958 checks=2000 effects=0 registry=0 cleanup=true
+CLOSEOUT-SETUP sample=6 scenario=MEMO_ERROR ms=1.112500 MB=0.230512
+SPRINT09-CLOSEOUT sample=6 scenario=MEMO_ERROR attempts=1000 render=false ms=7.548667 MB=8.875541 checks=1 effects=1 registry=0 cleanup=true
+SPRINT09-CLOSEOUT sample=6 scenario=MEMO_ERROR attempts=1000 render=true ms=9.566267 MB=12.449493 checks=1 effects=1 registry=0 cleanup=true

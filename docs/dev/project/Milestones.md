@@ -10,7 +10,8 @@ A leading `+` marks an evidenced completed planning milestone, not completion of
   complete on 2026-10-22 (Sprints 01–04); see [traceability](TraceabilityMatrix.md).
 + V1 hardening exit criteria satisfied and local 0.0.1 artifact installed on 2026-10-22 (Sprint 05); see [V1](V1.md#exit-criteria).
 - V2 standard configuration/context/type/stage/transaction breadth complete (Sprints 06–08).
-- V2 maintained relationships and operational/resource breadth complete (Sprint 09).
++ V2 maintained relationships and operational/resource breadth complete on 2026-10-27 (Sprint 09); see the
+  [closeout review](reviews/Sprint09_OperationalCoverage.review.md).
 - V2 hardening exit criteria satisfied (Sprint 10); see [V2](V2.md#exit-criteria).
 - V3 custom-event registration/evaluation and extension evidence complete (Sprints 11–12).
 - V3 hardening exit criteria satisfied (Sprint 13); see [V3](V3.md#exit-criteria).

@@ -19,6 +19,7 @@ import java.util.*;
 
 import static com.taitl.ex.common.helper.Args.*;
 import static com.taitl.ex.common.helper.State.*;
+import static com.taitl.ex.logic.diagnostics.OperationalDiagnostics.*;
 
 public class ConfigurationLogic implements Closeable
 {
@@ -60,7 +61,7 @@ public class ConfigurationLogic implements Closeable
     {
         synchronized (ec.ex())
         {
-            verify(!ec.ex().configured(),
+            requireMutable(!ec.ex().configured(),
                     "Cannot call this method because setup has already been finalized. See "
                             + "/Troubleshooting.md#library-configuration-after-finalization");
             return createBuilders.getCreateBuilder();
@@ -191,16 +192,16 @@ public class ConfigurationLogic implements Closeable
     public Config getConfig(String op)
     {
         sane(op, "op");
-        verify(config != null, String.format("Config not found for op '%s'", op));
-        verify(hasMatchingContext(op), String.format("Config not found for op '%s'", op));
+        requireConfiguration(config != null, String.format("Config not found for op '%s'", op));
+        requireConfiguration(hasMatchingContext(op), String.format("Config not found for op '%s'", op));
         return config;
     }
 
     public Config removeConfig(String op)
     {
         sane(op, "op");
-        verify(config != null, String.format("Config not found for op '%s'", op));
-        verify(hasMatchingContext(op), String.format("Config not found for op '%s'", op));
+        requireConfiguration(config != null, String.format("Config not found for op '%s'", op));
+        requireConfiguration(hasMatchingContext(op), String.format("Config not found for op '%s'", op));
         synchronized (this)
         {
             Config prev = config;

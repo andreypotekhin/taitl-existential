@@ -31,8 +31,10 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     public InvariantBuilder(ContextBuilder parent)
     {
         sane(parent, "parent");
-        throw new IllegalStateException("InvariantBuilder requires a TypeKey. Use ContextBuilder.invariant(Class<T>) "
-                + "or ContextBuilder.invariant(TypeKey<T>).");
+        throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.state(
+                com.taitl.existential.diagnostics.DiagnosticCode.CONFIGURATION_INVALID,
+                "InvariantBuilder requires a TypeKey. Use ContextBuilder.invariant(Class<T>) "
+                        + "or ContextBuilder.invariant(TypeKey<T>).");
     }
 
     /**
@@ -59,7 +61,8 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
     public InvariantBuilder(TransactionBuilder parent2)
     {
         sane(parent2, "parent2");
-        throw new IllegalStateException(
+        throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.state(
+                com.taitl.existential.diagnostics.DiagnosticCode.CONFIGURATION_INVALID,
                 "InvariantBuilder requires a TypeKey. Use TransactionBuilder.invariant(Class<T>) "
                         + "or TransactionBuilder.invariant(TypeKey<T>).");
     }

@@ -24,3 +24,11 @@ library artifacts exclude Night City and test classes, and the consumer dependen
 dependencies plus consumer-scoped test dependencies.
 
 Acceptance: [Night City consumer workflow](../../../examples/night_city/src/test/java/com/taitl/ex/examples/night_city/NightCityStoryTest.java).
+
+
+### Remote publication prerequisites
+
+Remote publication remains a separate authorized release action. Before publication, establish destination/account
+namespace, credentials/signing, source/Javadoc packaging, license/metadata review, staging/release procedure and an
+independent remote-resolution check. Sprint 09 records these prerequisites; local installation and an independent
+consumer do not establish remote availability. V2 hardening/release evidence must name the actual chosen channel.

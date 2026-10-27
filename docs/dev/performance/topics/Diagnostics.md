@@ -13,3 +13,7 @@ Allocation describes bytes created, not retained memory. There is no numerical p
 
 Related evidence: [access events](AccessEvents.md), [managed indexes](ManagedIndexes.md),
 [custom transactions](CustomTransactions.md), and [execution plans](ExecutionPlans.md).
+
+
+The [transaction-state follow-up](TransactionDiagnostics.md) measures closed/rollback-only guarded operations and
+missing active IDs separately, including explicit disposal and fresh successful work.

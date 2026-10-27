@@ -1,6 +1,8 @@
 package com.taitl.ex.logic.transactions.data;
 
 import com.taitl.existential.exceptions.*;
+import com.taitl.ex.logic.diagnostics.*;
+import com.taitl.existential.diagnostics.*;
 import com.taitl.existential.keys.*;
 
 import java.util.*;
@@ -22,15 +24,19 @@ public class MemoData
         sane(live, "live", before, "before", typeKey, "typeKey");
         if (live == before)
         {
-            throw new MemoException("Argument 'before' must be a detached snapshot, not the same instance as 'live'. "
-                    + "Use clone(), copy construction, or another snapshot strategy. See "
-                    + TROUBLESHOOTING_SECTION);
+            throw OperationalDiagnostics.memo(DiagnosticCode.MEMO_INVALID,
+                    "Argument 'before' must be a detached snapshot, not the same instance as 'live'. "
+                            + "Use clone(), copy construction, or another snapshot strategy. See "
+                            + TROUBLESHOOTING_SECTION,
+                    null);
         }
         if (contains(live, typeKey))
         {
-            throw new MemoException("Memo state is already registered for this entity and type key. "
-                    + "Use the first registered before-state for the transaction. See "
-                    + TROUBLESHOOTING_SECTION);
+            throw OperationalDiagnostics.memo(DiagnosticCode.MEMO_INVALID,
+                    "Memo state is already registered for this entity and type key. "
+                            + "Use the first registered before-state for the transaction. See "
+                            + TROUBLESHOOTING_SECTION,
+                    null);
         }
         byType(typeKey).put(live, before);
     }

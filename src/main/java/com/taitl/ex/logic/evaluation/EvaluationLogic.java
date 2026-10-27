@@ -14,6 +14,7 @@ import com.taitl.ex.logic.transactions.*;
 import com.taitl.ex.logic.types.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.exceptions.*;
+import com.taitl.existential.diagnostics.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.transactions.*;
 
@@ -255,7 +256,8 @@ public class EvaluationLogic implements Closeable
         }
         if (failure != null)
         {
-            throw new ExistentialException("Rollback evaluation failed", failure);
+            throw OperationalDiagnostics.failure(DiagnosticCode.CLEANUP_FAILED, "Rollback evaluation failed", null,
+                    failure);
         }
     }
 

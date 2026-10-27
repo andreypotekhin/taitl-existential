@@ -162,7 +162,12 @@ and [cat relocation](../../../src/test/java/com/taitl/specs/library_usage/UserCa
 
 ### Additional event values
 
-User can pass additional values when emitting an event.
++ User can report a typed application envelope containing an entity and additional values (for example, actor and
+destination) through standard create/read/write/transit events. Rules receive that exact envelope; explicit generic
+TypeKeys retain its payload type. Distinct envelope identities remain distinct, while repeated reports of the same
+identity follow existing folding. Nested values are not independently enrolled or deep-copied. Checkpoint continuation,
+explicit rollback/fresh recovery and transaction disposal apply normally. Custom event registration/splitting remains
+V3.
 
 ## Constraints on subclasses
 
@@ -321,10 +326,12 @@ troubleshooting reference, and aggregate children. Boundary values are report, b
 where known. Context is null for transaction-local declarations, whose local-origin flag is true. Children retain
 full fields and correspond to the aggregate's multiple() order, even when common fields are shown once in rendering.
 
-+ DiagnosticCode constants and their id() display values are RULE_REJECTED (RULE-REJECTED), INTENT_REJECTED
++ Rule-evaluation DiagnosticCode constants and their id() display values are RULE_REJECTED (RULE-REJECTED),
+  INTENT_REJECTED
 (INTENT-REJECTED), INTENT_MISSING (INTENT-MISSING), CALLBACK_FAILED (CALLBACK-FAILED), and EVALUATION_FAILED
 (EVALUATION-FAILED). Each has a stable diagnostic-specific troubleshooting heading. Codes classify failures, not
-consumer rules. Classification does not depend on the rendered message.
+consumer rules. Classification does not depend on the rendered message. Additional state/admission codes belong to
+[transaction state diagnostics](TransactionsAndEvaluation.spec.md#transaction-state-diagnostics).
 
 + Existing stock library exception types, aggregate stage()/multiple(), defensive copying, and original underlying
 cause/suppressed relationships remain supported. Unexpected non-intent RuntimeException from invoked callbacks is
@@ -383,3 +390,23 @@ User can customize event splitter to emit events of custom event type.
 
 User can send/record custom event from application code.
 The system invokes custom event handler upon encountering the custom event.
+
+### Supplied rule binding
+
++ Supplied Invariant/Intent/Effect definitions remain caller-owned. Configure them fully before first begin and keep
+them read-only after binding. Read-only reuse across contexts/instances preserves independent declaration origins and
+registration order; callbacks must synchronize any shared mutable application state. Post-binding mutation and deep
+snapshots of arbitrary callbacks/quantifier sources are unsupported. An explicit intent TypeKey applies to its binding
+without rewriting the supplied intent; a differing type captures its current leaf list while an equal type reuses the
+read-only definition. Required-description policy at
+fluent attachment validates all existing leaves prospectively without changing the supplied set's own option. Rejected
+attachment adds nothing, so correction and retry are supported. Earlier optional registrations are not rechecked.
+
+
+Acceptance for supplied binding: [supplied-rule
+reuse](../../../src/test/java/com/taitl/specs/library_usage/UserCanReuseSuppliedRules.java).
+Acceptance for additional values: [typed
+envelopes](../../../src/test/java/com/taitl/specs/library_usage/UserCanPassAdditionalValues.java).
+Direct low-level handler/quantifier failures without indexed declaration provenance retain available explanatory text
+without inventing operation, type, stage or context. Indexed evaluation replaces those provisional facts with its
+actual declaration snapshot and preserves ordinary rejection versus callback-failure classification.

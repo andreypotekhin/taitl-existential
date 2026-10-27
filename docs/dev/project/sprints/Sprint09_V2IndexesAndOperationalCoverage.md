@@ -1,9 +1,11 @@
 # Sprint 09: V2 Indexes and Operational Coverage
 
-Status: in progress; selected managed-index and known-resource slice complete on 2026-10-25. Epic:
-[Indexes and Operational Coverage](../Backlog.md#indexes-and-operational-coverage). Release: [V2](../V2.md).
-Design readiness: selected contracts and interfaces finalized. Verification: direct acceptance, installed consumer,
-reactor, artifact/resource checks, and three-process performance baseline pass. Broader scope below remains open.
+Status: complete on 2026-10-27. Epic: [Indexes and Operational
+Coverage](../Backlog.md#indexes-and-operational-coverage).
+Release: [V2](../V2.md). Design readiness and implementation verification are complete for the admitted sprint scope.
+The [closeout review](../reviews/Sprint09_OperationalCoverage.review.md) records direct acceptance, full builds,
+actual coverage, artifact/consumer boundaries, resource guarantees and measured performance limits. V2 release
+hardening remains in Sprint 10; local installation is not remote publication.
 
 ## Goal and user outcome
 
@@ -120,14 +122,41 @@ so a small success-path time cost remains possible. Warm allocation falls about 
 Detailed failure output has an explicit allocation/rendering tradeoff. No speedup, numerical gate, or arbitrary
 leak-detection guarantee is claimed.
 
-Design readiness and selected implementation verification are complete. Broader Sprint 09 work remains open.
+Design readiness and selected implementation verification were complete at this delivery; operational closeout follows
+below.
 
-## Remaining work
+## Transaction-state diagnostics delivery
 
-- Additional event values and remaining broader combinations beyond the verified access/general-rule slice.
-- Extend metadata to remaining public-exception paths and settle supplied-rule binding, cache ownership/invalidation,
-  and global close behavior.
-- Record optional remote-publication readiness separately; remote availability is claimed only after actual evidence.
+On 2026-10-27, the selected approved metadata follow-up adds TRANSACTION-CLOSED, TRANSACTION-ROLLBACK-ONLY and
+TRANSACTION-NOT-FOUND. The
+[contract](../../specifications/TransactionsAndEvaluation.spec.md#transaction-state-diagnostics)
+and [design](../../design/TransactionsAndEvaluation.design.md#transaction-state-diagnostics) preserve catch types,
+explicit rollback and closed-state precedence. Guard snapshots retain known detached facts; disposed managed views
+release their owner and omit its ID, while missing active IDs have no inferred operation. Construction occurs only
+inside existing failure branches. No rule, event, stage or prior lifecycle cause is invented.
+
+The [completed plan](../../past/planning/P10272601.Sprint09-transaction-state-diagnostics.plan.md) records 43 direct
+consumer acceptance cases plus three construction/fallback cases. The
+[performance topic](../../performance/topics/TransactionDiagnostics.md) retains three fresh JVM samples per final
+variant, exact cleanup/callback counts and allocation. Investigation removed redundant Throwable creation and stack
+copying; richer snapshots/rendering still have explicit failure-path costs. Broader public metadata was still open at
+that slice and is completed by the final operational closeout.
+
+## Scope disposition at closeout
+
+Additional application values are verified through typed standard-event envelopes. Supplied-rule policy/reuse and
+non-mutating explicit intent binding have direct acceptance. Semantic public-error metadata includes configuration,
+shutdown, memo, maintenance, cleanup and standalone evaluation paths with existing catch types. Cache bounds,
+invalidation, class ownership and terminal facade close have settled contracts and deterministic acceptance.
+
+The [closeout plan](../../past/planning/P10272602.Sprint09-closeout.plan.md) and
+[review](../reviews/Sprint09_OperationalCoverage.review.md) map each acceptance item to evidence. Existing standard
+access/general-event, transition/port, lifecycle/checkpoint and managed-index suites cover admitted V2 combinations;
+custom event registration/splitting remains V3. Read-only supplied definitions do not imply arbitrary mutation/hot
+reload.
+Shared mutable entity indexes remain the already recorded non-goal. Remote publication prerequisites are documented
+under [distribution](../../design/Distribution.design.md#sprint-09-publication-readiness); external publication remains
+a separate authorized action. No admitted Sprint 09 acceptance item remains open.
 
 ## Acceptance
 
@@ -203,8 +232,9 @@ Unapproved dashboard, hot-reload, or specialized optimization features; actual r
 
 ## Plan and review
 
-The [archived execution plan][managed-plan] records the selected delivery and verification. Remaining sprint work is
-listed above; the whole sprint and V2 release remain open. Use the [review template] for their eventual closeout.
+The [archived execution plan][managed-plan] records the selected delivery and verification. The final closeout review
+resolves the remaining sprint scope; the V2 release still requires Sprint 10 hardening. Use the [review template] for
+their eventual closeout.
 
 [QuantifiersAndIndexes.spec.md]: ../../specifications/QuantifiersAndIndexes.spec.md
 [QuantifiersAndIndexes.design.md]: ../../design/QuantifiersAndIndexes.design.md
@@ -232,3 +262,38 @@ No disabled test annotations were found. The normal/assembled JAR inspections ex
 frameworks, test/benchmark suites, and build-tool packages; legitimate AspectJ runtime AST types named Test are
 retained.
 The consumer dependency tree remains scoped to the library, AspectJ runtime/weaver, and test-scoped JUnit.
+
+
+## Transaction-state diagnostics verification
+
+On 2026-10-27, root `mvn clean install` passed 722 tests; the independent Night City clean verify passed seven.
+`mvn -f reactor/pom.xml clean install` passed both modules with the same counts. Failures, errors and skips are zero;
+no disabled test annotations were found. Failsafe selects zero cases; acceptance runs in Surefire. Checkstyle reports
+zero errors and PMD zero violations. Actual JaCoCo XML is present: overall instruction coverage is 77.08%, branches
+71.90%, lines 76.81%; the new builder has 100% instruction/branch coverage, and the factory has 99.24% instructions,
+87.50% branches and 100% lines. The catalog has 100% instruction coverage. Passing zero-threshold checks does not
+establish repository-wide coverage closure.
+
+The normal and assembled JARs contain both new delegates and exclude examples, specifications, benchmarks, test
+frameworks and build-tool packages. The independent consumer compile tree contains only Existential and its two
+AspectJ runtime dependencies. [Verification
+details](../../performance/runs/20261027T192137Z.TransactionDiagnostics.verification.json)
+retain exact counters, coverage and artifact hashes. The initial sandbox install denial was resolved by rerunning the
+authorized install with local Maven repository access, as documented in development troubleshooting. Markdown links,
+anchors and whitespace are checked at closeout. No remote publication was claimed; these checks preceded the final
+closeout below.
+
+
+## Final operational closeout
+
+The [review](../reviews/Sprint09_OperationalCoverage.review.md) and
+[archived plan](../../past/planning/P10272602.Sprint09-closeout.plan.md) record completion on 2026-10-27.
+The final 37 new direct cases cover typed values (nine), supplied rules (nine), cache/global ownership (four), and
+operational diagnostics (15). Root and reactor pass 759 tests; the independent consumer passes seven. Static checks,
+actual coverage and artifact inspection pass with their limits recorded. The
+[performance record](../../performance/runs/20261027T202251Z.Sprint09Closeout.md) retains 12 fresh-JVM runs and all 48
+measured workflow rows.
+ClassValue inference avoids strong global Class maps and measured hit allocation. Successful workflow timing varies;
+a small cost remains possible. Richer memo failures have explicit allocation/rendering costs. The shared managed demo
+passes expected rejection/explicit rollback/fresh recovery/seeded relocation. The semantic metadata TODO and approved
+suggestion are archived as implemented. Sprint 10 owns V2 release hardening, with no feature work silently moved there.

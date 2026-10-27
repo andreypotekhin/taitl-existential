@@ -1,0 +1,194 @@
+{
+  "baseline_head": "3e05e36366572ce83ac9e031db9b49f1e0a250da",
+  "baseline_state": "prior unstaged transaction-state diagnostics plus committed structured diagnostics",
+  "baseline_copy": "/private/tmp/s09-closeout-baseline-vkoghs2v",
+  "baseline_original_files": 776,
+  "baseline_original_manifest_sha256": "600bf6a906cef53742c0ecf42dc77bb15a18bf25e5b203af28b76f9e7b7c2ec1",
+  "baseline_original_files_unchanged": true,
+  "candidate": "unstaged Sprint 09 closeout including preserved prior work",
+  "sources": {
+    "examples/night_city/src/main/java/com/taitl/ex/examples/night_city/model/Cat.java": {
+      "baseline": "e8163b58930c96c3d7610ec2cca7ebf9d1adf695f66ba571b3f2d5fe0010a189",
+      "candidate": "e8163b58930c96c3d7610ec2cca7ebf9d1adf695f66ba571b3f2d5fe0010a189"
+    },
+    "pom.xml": {
+      "baseline": "6eb6799cc3ab472e40ea02dc1f52dc74f54052eaac3c413beb975fa032587e08",
+      "candidate": "6eb6799cc3ab472e40ea02dc1f52dc74f54052eaac3c413beb975fa032587e08"
+    },
+    "src/main/java/com/taitl/ex/common/helper/strings/Descriptions.java": {
+      "baseline": "17595fb9975af4be0b92c50e785a71ae8c5dc2707222b935ca7f72140045aaaa",
+      "candidate": "9764a22492edd780e7f23bef1ea0b259c48f17eae9b5d9fcf804871db2dc9310"
+    },
+    "src/main/java/com/taitl/ex/concrete/ConcreteTr.java": {
+      "baseline": "d1a8c6418269f4c1285fec9b17d1a1aed0c4152f8c3caba10784344de4bc4936",
+      "candidate": "e87943328b3d4b561638002782f6b3317613ecfe3c3e4ba334e331da4f7b986c"
+    },
+    "src/main/java/com/taitl/ex/core/existential/ExistentialFlags.java": {
+      "baseline": "9b0b044ba5fa314a9a8d28a69b83c353e2bcf33f126eab94e38afa8019356260",
+      "candidate": "07808d016b8056a919fc0462a42bcec30be11581bcbc50a239119167b966b2f3"
+    },
+    "src/main/java/com/taitl/ex/cross/caching/TypeKeyCache.java": {
+      "baseline": "3add24298ce142db83ed34855d65b4f3a6218da90aa93de04a0fd91c3e3603ec",
+      "candidate": "ffa2624c42ec5130d295767e8b2d45dde5d5c2a1b1ad2bcada7895b19d48df92"
+    },
+    "src/main/java/com/taitl/ex/logic/configuration/ConfigurationLogic.java": {
+      "baseline": "0438a2032ebc07f806ec6372c1a9b5c1cf887fdfab9dc9512112e85682ffd0c8",
+      "candidate": "b567cec63c3f9902f12a4e64560d7cef8539fc0819a3c20152eb51064896ad11"
+    },
+    "src/main/java/com/taitl/ex/logic/configuration/actions/BindSuppliedRules.java": {
+      "baseline": null,
+      "candidate": "0c3dd517300c550d390eeca27a8eb3679e51c3ff4b6d298772ab643b7984394a"
+    },
+    "src/main/java/com/taitl/ex/logic/configuration/actions/FinalizeConfiguration.java": {
+      "baseline": "51cf4b239c04abe38b43e80b6e179211704c7bd07e35475797e01c7064eee554",
+      "candidate": "dc98ea5d026875586f7caa978789b377768eab15a5e7ce5f2e19ac3da8240b96"
+    },
+    "src/main/java/com/taitl/ex/logic/configuration/indexes/data/EventField.java": {
+      "baseline": "8e9cb90a174a4a3bea38cb48feec92b5e18978bc13df0b547cb790e44c651669",
+      "candidate": "8e9cb90a174a4a3bea38cb48feec92b5e18978bc13df0b547cb790e44c651669"
+    },
+    "src/main/java/com/taitl/ex/logic/configuration/indexes/data/OperationIndexes.java": {
+      "baseline": "1fac0942c0b979f67c8032841e849d39f6250ca9cc16c31a2045c75fe88ca39b",
+      "candidate": "1fac0942c0b979f67c8032841e849d39f6250ca9cc16c31a2045c75fe88ca39b"
+    },
+    "src/main/java/com/taitl/ex/logic/diagnostics/OperationalDiagnostics.java": {
+      "baseline": null,
+      "candidate": "42e5a91e8c32bc6941b9b29dc1ce5137bdfde6740e0a1823ec21e5e625539589"
+    },
+    "src/main/java/com/taitl/ex/logic/diagnostics/actions/BuildOperationalDiagnostic.java": {
+      "baseline": null,
+      "candidate": "df591dbe8c3cfe6176daf1a4dd72e749ff41bafcceb3951cf00410fa87b2fcc8",
+      "verified_candidate": "fd86e267498bb16e50df3d3a4ae3027e987613ff1579afba85663f1d2ef25716"
+    },
+    "src/main/java/com/taitl/ex/logic/diagnostics/actions/DiagnoseFailure.java": {
+      "baseline": "da3469e43364dbbad901520c37bc336876be586d012fefa674973092594e5a90",
+      "candidate": "afcf39b7293d1536d748ca045ccde48c3cb106bd02707e7d2867c21294dc0eb7"
+    },
+    "src/main/java/com/taitl/ex/logic/diagnostics/actions/NewEvaluationFailure.java": {
+      "baseline": "dc8ca382db18b02de0bcd604412f0581e4e6d8bf0d2cc4c2d704273614a4cd3e",
+      "candidate": "f0263d57390bd2058c7cdfe6c5df2f5b04a5ddb6d5a75c1faed0aaebbc2ec6db"
+    },
+    "src/main/java/com/taitl/ex/logic/evaluation/EvaluationLogic.java": {
+      "baseline": "c4915f3d2ea78a5a29ff0145a0edee67ff726e057683a95d7ead149549268104",
+      "candidate": "f89b2b2f594e084258f5c4e41890c089776ee181bf57d62f7c055de84ce74f12"
+    },
+    "src/main/java/com/taitl/ex/logic/evaluation/events/split_events/maps/ToMemo.java": {
+      "baseline": "c732207386b270848ffd91da586592df787d89d4a63b99c842f504bb06f50542",
+      "candidate": "c65c881a036dabb796418823dd145fa5acffa8978be9878d209b677ac78a7a66"
+    },
+    "src/main/java/com/taitl/ex/logic/execution/data/PreparedSelections.java": {
+      "baseline": "10f8749f03a276cae49e24db95137f3e25d89b386d6b90ebb37ac65395a6b162",
+      "candidate": "10f8749f03a276cae49e24db95137f3e25d89b386d6b90ebb37ac65395a6b162"
+    },
+    "src/main/java/com/taitl/ex/logic/library/ConfigureLibrary.java": {
+      "baseline": "a203ebdd49e960473d3b32dd4770beb7a601564eef3db9550f8bb714bf9fa1de",
+      "candidate": "7ff70a2009f70c004a49dde01599547e780798709d4475ad58ed589cfc604969"
+    },
+    "src/main/java/com/taitl/ex/logic/library/ShutdownLogic.java": {
+      "baseline": "9a5b08249d60cf453e9af5507902dd97e7dd6254d85e69e6684618721aad5910",
+      "candidate": "b8336e0578b5cd3a7e7f3d68ae8689d8dea700706a5c05551afc87ddf465302e"
+    },
+    "src/main/java/com/taitl/ex/logic/managed_indexes/IndexMaintenanceLogic.java": {
+      "baseline": "6a2c5f7c735a89048519939ac1a4f91240d9114beb031ab0ea56b11b07bf17c6",
+      "candidate": "7e47cd281dd4822f4ab4dcb3a4b6e8c5f7e77d8a2989271e0f50d82951f719a1"
+    },
+    "src/main/java/com/taitl/ex/logic/managed_indexes/actions/BindManagedIndexes.java": {
+      "baseline": "65bebb79cb626abdc7b0256c916393a4a853fe77485e895505a5876a508f9867",
+      "candidate": "be91efd27b57e208b8bdfe9a5025f447e0ab2d20969a416ea4c7edc65f6608f0"
+    },
+    "src/main/java/com/taitl/ex/logic/managed_indexes/data/IndexConfiguration.java": {
+      "baseline": "bdb0fd8a95f712b4f0247b86d2e7d93775d82487f0d9882590a6772c7ce5674c",
+      "candidate": "b59d3fe2e4101a55a4240f1c5f5a4045f0925deb7111ea46a48dfde6422e7174"
+    },
+    "src/main/java/com/taitl/ex/logic/managed_indexes/data/ManagedAccess.java": {
+      "baseline": "88cd9d2a61d242d83753bc0b5a1684f5221a4ec3e8e9cfd262f19c1bba5d44f0",
+      "candidate": "15856b4754bf722d7e03e0c2ed891e1c450b9e38d4119399da5a6d98dd75f1ce"
+    },
+    "src/main/java/com/taitl/ex/logic/tr/actions/ExecuteLifecycle.java": {
+      "baseline": "b9ebb790a32719ba930f2d72e518cf7d94d0d45f2a01469fa7374461086dc1f5",
+      "candidate": "3c5b1d76939c421b25708d0630fa31cb94d9d6ccfd46fbf8a17b031521cecf34"
+    },
+    "src/main/java/com/taitl/ex/logic/transactions/TransactionLogic.java": {
+      "baseline": "34ea1db2f0442e0c70bdf6199fa927c825971667291bd79a592c86bfb6267aac",
+      "candidate": "0a092706f411a34c4569f9280d8e4629de4c97ecc61455035371881ef67712a9"
+    },
+    "src/main/java/com/taitl/ex/logic/transactions/actions/RollbackTran.java": {
+      "baseline": "3d33fc46d8d29ff6d581819d9d95b245c1bb918d3e032864924b0ffd4407379e",
+      "candidate": "33c339ce6d16cc5bb495d7fac42f6ad75b2e42e5499a2fbe071d80f1acbdabb3"
+    },
+    "src/main/java/com/taitl/ex/logic/transactions/data/MemoData.java": {
+      "baseline": "7d3bf4094c6fd5a7d877ca7f34a4a20e48882616a430e011ac57cb4c38412b1f",
+      "candidate": "e44f7c4e304f417f2245cba2d923b499b2787abcf04e062733d480d4ffa8a7f9"
+    },
+    "src/main/java/com/taitl/ex/logic/types/TypeMatchingLogic.java": {
+      "baseline": "186c8b4524842ee1cb1fa5b41dbb2aff8dac112182098b19a204a3f70d1503d5",
+      "candidate": "306f9e8a288b051490926c97177932c5fcaf729d6484b9256627daa553f6db8c"
+    },
+    "src/main/java/com/taitl/existential/Existential.java": {
+      "baseline": "572bcb04c7cb2b2eb2b77ce75a533e58c6be977b900812f2261e385222653706",
+      "candidate": "96c21b9236e62bd02ab54292058c255faff1f51955ace190b1d91f42081a7ad6"
+    },
+    "src/main/java/com/taitl/existential/builders/ConfigBuilder.java": {
+      "baseline": "95f4a887174884a253f987efea99489ee01e3f5ef64e43840e98548465188ef8",
+      "candidate": "0754f4dbef04b96b163b5095826e3549bb1971749b238a719f6775daaf4d8238"
+    },
+    "src/main/java/com/taitl/existential/builders/ContextBuilder.java": {
+      "baseline": "90dcc8b501d834498f202f9f145b7f8d46b2d5c72180e1a2a0e17ba5ced51825",
+      "candidate": "5d13ceb1ab33616e85862b8bc9c6315d26dbe3e77e34d4945853d61be6dcc78b"
+    },
+    "src/main/java/com/taitl/existential/builders/EffectBuilder.java": {
+      "baseline": "959841c5830e80083447c301f53d071d9954a75af45dec4cfe7f23275ad3a758",
+      "candidate": "a2d628ae4ac1d75a6db77ce33299500893b79b0fc6484cf5994d9e86224098fd"
+    },
+    "src/main/java/com/taitl/existential/builders/IntentBuilder.java": {
+      "baseline": "e6ed309ae7ef960028717231765132de5869838b5f84c2ee1114926f6201930d",
+      "candidate": "a7bdccc19c64a4bdc7e726925edb5b079fe0a6c0aacd194a8da5623016f5cd2b"
+    },
+    "src/main/java/com/taitl/existential/builders/InvariantBuilder.java": {
+      "baseline": "945150ced622fb4f693c25df3a444de8172829f30df8b315e1b8e6a24da08d51",
+      "candidate": "9d8016c55c964d3e1b9dc7b8d32fbdc7d16c461bf13608d23a7f926a44ef6027"
+    },
+    "src/main/java/com/taitl/existential/builders/TransactionBuilder.java": {
+      "baseline": "b973ff0dc72d4fb36bb647c7b3763aefc95413f4f4e728f7c5457481741e8f62",
+      "candidate": "2d95f7c0566f698b7abbfd8e2110d0407cfba7ccc11445e59ff3a1093a418369"
+    },
+    "src/main/java/com/taitl/existential/diagnostics/DiagnosticCode.java": {
+      "baseline": "85fd4a38c3fdad64e76b407c743fa9c341f6387de0e861fc4af0939208baeb3c",
+      "candidate": "c072aebfa8349958b44e1a3aa9ed0c12273844f033435a56299da3e3bc77b42d"
+    },
+    "src/main/java/com/taitl/existential/exceptions/MemoException.java": {
+      "baseline": "1fed270d460383a4c2e894675353f959217e19ed9c6957a4f3f6ffe0256045d3",
+      "candidate": "6438323defe2481bb0156467b553be422322f6431ffea6f098133c379aad0366"
+    },
+    "src/test/java/com/taitl/ex/logic/configuration/ConfigurationLogicTest.java": {
+      "baseline": "61a2269a5f0d553ac76d79db56fe3309ce6e5a4f5b88d01bb92c42804f51a5c1",
+      "candidate": "7bc59e0fbf053f5c67b7106b565e00e40c4cc0db6048627e9f45ee887ea2f89f"
+    },
+    "src/test/java/com/taitl/existential/benchmarks/BenchmarkMemory.java": {
+      "baseline": "f80d2b3af4f612211914c164b0dd13dee5e8713bfeee1592a56d6bb9e2129404",
+      "candidate": "f80d2b3af4f612211914c164b0dd13dee5e8713bfeee1592a56d6bb9e2129404"
+    },
+    "src/test/java/com/taitl/existential/benchmarks/Sprint09CloseoutBenchmark.java": {
+      "baseline": "595f512d3a95b129482ced86c454d8cb8f18425dcbd70a02dcf402f020ca9341",
+      "candidate": "595f512d3a95b129482ced86c454d8cb8f18425dcbd70a02dcf402f020ca9341"
+    },
+    "src/test/java/com/taitl/specs/library_usage/UserCanDiagnoseOperationalFailures.java": {
+      "baseline": null,
+      "candidate": "f9563bb71d6c79caf431968f9dea55ce71cfd6948cb7bb2ede4d9b1386d6d202",
+      "verified_candidate": "e546dfe203e77f61793632a2e8311339f12c25a7a2492f9d9f928cbbb3e9fc3e"
+    },
+    "src/test/java/com/taitl/specs/library_usage/UserCanPassAdditionalValues.java": {
+      "baseline": null,
+      "candidate": "1a503101ea91631b598ac1e4187f08e8834db1a28010fa8509b4d09320bc6723"
+    },
+    "src/test/java/com/taitl/specs/library_usage/UserCanReleaseSharedCaches.java": {
+      "baseline": null,
+      "candidate": "d7d73f985394cc38ea8a5000c04a83661a4957d34a6c1f2ef932184986ceea56"
+    },
+    "src/test/java/com/taitl/specs/library_usage/UserCanReuseSuppliedRules.java": {
+      "baseline": null,
+      "candidate": "18e18f52068a86e8ff5e8c040b0f55a44423e8e5db92f092b0aba88dcbd9f688"
+    }
+  },
+  "post_measurement_changes": "Final review separated the closed memo-query remedy from library shutdown and added one direct recovery test. Benchmark scenarios do not close then query memo state. No measured path or harness changed."
+}

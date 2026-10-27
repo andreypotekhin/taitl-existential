@@ -1,0 +1,206 @@
+{
+  "root": {
+    "surefire_files": 115,
+    "tests": 722,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "failsafe_files": 0,
+  "checkstyle_errors": 0,
+  "pmd_violations": 0,
+  "consumer": {
+    "surefire_files": 1,
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "coverage_overall": {
+    "INSTRUCTION": {
+      "missed": 10430,
+      "covered": 35079,
+      "percent": 77.08
+    },
+    "BRANCH": {
+      "missed": 903,
+      "covered": 2311,
+      "percent": 71.9
+    },
+    "LINE": {
+      "missed": 2229,
+      "covered": 7383,
+      "percent": 76.81
+    },
+    "COMPLEXITY": {
+      "missed": 1395,
+      "covered": 2968,
+      "percent": 68.03
+    },
+    "METHOD": {
+      "missed": 695,
+      "covered": 2057,
+      "percent": 74.75
+    },
+    "CLASS": {
+      "missed": 37,
+      "covered": 279,
+      "percent": 88.29
+    }
+  },
+  "coverage_selected": {
+    "com/taitl/ex/logic/diagnostics/TransactionDiagnosticLogic": {
+      "INSTRUCTION": {
+        "missed": 1,
+        "covered": 130,
+        "percent": 99.24
+      },
+      "BRANCH": {
+        "missed": 1,
+        "covered": 7,
+        "percent": 87.5
+      },
+      "LINE": {
+        "missed": 0,
+        "covered": 21,
+        "percent": 100.0
+      },
+      "COMPLEXITY": {
+        "missed": 1,
+        "covered": 9,
+        "percent": 90.0
+      },
+      "METHOD": {
+        "missed": 0,
+        "covered": 6,
+        "percent": 100.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/existential/diagnostics/DiagnosticCode": {
+      "INSTRUCTION": {
+        "missed": 0,
+        "covered": 57,
+        "percent": 100.0
+      },
+      "LINE": {
+        "missed": 0,
+        "covered": 10,
+        "percent": 100.0
+      },
+      "COMPLEXITY": {
+        "missed": 0,
+        "covered": 2,
+        "percent": 100.0
+      },
+      "METHOD": {
+        "missed": 0,
+        "covered": 2,
+        "percent": 100.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/existential/exceptions/NotFoundException": {
+      "INSTRUCTION": {
+        "missed": 9,
+        "covered": 23,
+        "percent": 71.88
+      },
+      "BRANCH": {
+        "missed": 0,
+        "covered": 4,
+        "percent": 100.0
+      },
+      "LINE": {
+        "missed": 4,
+        "covered": 6,
+        "percent": 60.0
+      },
+      "COMPLEXITY": {
+        "missed": 2,
+        "covered": 5,
+        "percent": 71.43
+      },
+      "METHOD": {
+        "missed": 2,
+        "covered": 3,
+        "percent": 60.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    },
+    "com/taitl/ex/logic/diagnostics/actions/BuildTransactionDiagnostic": {
+      "INSTRUCTION": {
+        "missed": 0,
+        "covered": 102,
+        "percent": 100.0
+      },
+      "BRANCH": {
+        "missed": 0,
+        "covered": 18,
+        "percent": 100.0
+      },
+      "LINE": {
+        "missed": 0,
+        "covered": 25,
+        "percent": 100.0
+      },
+      "COMPLEXITY": {
+        "missed": 0,
+        "covered": 13,
+        "percent": 100.0
+      },
+      "METHOD": {
+        "missed": 0,
+        "covered": 3,
+        "percent": 100.0
+      },
+      "CLASS": {
+        "missed": 0,
+        "covered": 1,
+        "percent": 100.0
+      }
+    }
+  },
+  "target/existential-0.0.1.jar": {
+    "entries": 450,
+    "sha256": "f24e348a8ce9ac35ce97076eefc1295aee7198620146a20596bfde40ce88f7f5",
+    "forbidden_entries": []
+  },
+  "existential.jar": {
+    "entries": 1472,
+    "sha256": "bc78b8e7e63f9960f7236c8e757ff231ed3adb4d3a6e245eb7270053756b2e45",
+    "forbidden_entries": []
+  },
+  "reactor_summaries": [
+    [
+      "722",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "7",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "7",
+      "0",
+      "0",
+      "0"
+    ]
+  ]
+}

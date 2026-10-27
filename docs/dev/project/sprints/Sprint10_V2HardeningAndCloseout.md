@@ -2,8 +2,8 @@
 
 Status: planned. Dates/capacity: unassigned. Epic: [V2 Hardening and Closeout](../Backlog.md#v2-hardening-and-closeout).
 Release: [V2](../V2.md).
-Design readiness: open for the remaining capability decisions. Verification: existing evidence is partial or absent;
-this charter does not promote inherited completion marks.
+Design readiness: Sprint 09 admitted contracts are complete; select a feature-free V2 hardening plan from actual
+release-wide evidence. Verification: pending for the release audit; functional sprint evidence is not release closeout.
 
 ## Goal and user outcome
 
@@ -51,8 +51,8 @@ Review comparable topic baselines and resource results; investigate material reg
 ## Demo and validation
 
 Coding-task closure requires `mvn clean install` and inspection of actual test/coverage/check outputs. The independent
-consumer command is planned as `mvn -f examples/night_city/pom.xml verify` after library installation. It becomes
-runnable when Sprint 04 creates Night City's POM and its executable acceptance demonstration. Run relevant
+consumer command is planned as `mvn -f examples/night_city/pom.xml verify` after library installation. The independent
+consumer and managed demo are already runnable and verified by Sprint 09. Run relevant
 benchmark/resource scenarios and record retained-regression, artifact, and consumer evidence.
 
 ## Non-goals

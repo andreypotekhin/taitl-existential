@@ -1,0 +1,64 @@
+{
+  "baseline_head": "3e05e36366572ce83ac9e031db9b49f1e0a250da",
+  "baseline_copy": "/private/tmp/sprint09-transaction-diagnostics-baseline-j_h5zgog",
+  "baseline_original_files": 757,
+  "baseline_original_manifest_sha256": "e5a4353a3f97a743cb078cc92736e3f9422648e769a427e0cc5e37f077769e61",
+  "baseline_original_files_unchanged": true,
+  "candidate": "unstaged transaction-state changes in shared checkout",
+  "final_harness_identical": true,
+  "runtime": "Corretto 17.0.15+6-LTS; Maven 3.9.10; Darwin 24.6.0 arm64; macOS 15.6.1; 10 logical CPUs",
+  "sources": {
+    "examples/night_city/src/main/java/com/taitl/ex/examples/night_city/model/Cat.java": {
+      "baseline": "e8163b58930c96c3d7610ec2cca7ebf9d1adf695f66ba571b3f2d5fe0010a189",
+      "candidate": "e8163b58930c96c3d7610ec2cca7ebf9d1adf695f66ba571b3f2d5fe0010a189"
+    },
+    "pom.xml": {
+      "baseline": "6eb6799cc3ab472e40ea02dc1f52dc74f54052eaac3c413beb975fa032587e08",
+      "candidate": "6eb6799cc3ab472e40ea02dc1f52dc74f54052eaac3c413beb975fa032587e08"
+    },
+    "src/main/java/com/taitl/ex/concrete/ConcreteTr.java": {
+      "baseline": "cd50f2ff65af0a46e47e2fc8e62009a12110e778ebe39d171760a0b9cdbc8f3d",
+      "candidate": "d1a8c6418269f4c1285fec9b17d1a1aed0c4152f8c3caba10784344de4bc4936"
+    },
+    "src/main/java/com/taitl/ex/logic/diagnostics/TransactionDiagnosticLogic.java": {
+      "baseline": null,
+      "candidate": "e7f8dcac4b65db6dd90de7b297fe022c059c600e49e86572fb2ce2793633581c"
+    },
+    "src/main/java/com/taitl/ex/logic/diagnostics/actions/BuildTransactionDiagnostic.java": {
+      "baseline": null,
+      "candidate": "d256c38df1756486ddb20a05318b496375aac8bf06688fe1febede7bedcb56e3"
+    },
+    "src/main/java/com/taitl/ex/logic/diagnostics/data/DiagnosticSnapshot.java": {
+      "baseline": "5e0e735342e2ec896c0de41e2ef2ba0515a03a1902320703d1428f0b8af2f2fc",
+      "candidate": "5e0e735342e2ec896c0de41e2ef2ba0515a03a1902320703d1428f0b8af2f2fc"
+    },
+    "src/main/java/com/taitl/ex/logic/managed_indexes/data/ManagedAccess.java": {
+      "baseline": "79226b432b841db96dc0b08218d7dd97b1ca033218784843abb2693988b68bdc",
+      "candidate": "88cd9d2a61d242d83753bc0b5a1684f5221a4ec3e8e9cfd262f19c1bba5d44f0"
+    },
+    "src/main/java/com/taitl/ex/logic/transactions/data/TrRegistry.java": {
+      "baseline": "02d877bbb1c3a2df112ec34a9356805c7cfc216d57f998879276d0709925191c",
+      "candidate": "e0d52648124ed34fc3e450f731c42a53f0c72e323700211bf62f8358d66692db"
+    },
+    "src/main/java/com/taitl/existential/diagnostics/DiagnosticCode.java": {
+      "baseline": "a404a99bec50010769ef769623ec8ff4beca7bb90c67189789f5f1dd4e575d8a",
+      "candidate": "85fd4a38c3fdad64e76b407c743fa9c341f6387de0e861fc4af0939208baeb3c"
+    },
+    "src/main/java/com/taitl/existential/exceptions/ExistentialException.java": {
+      "baseline": "5490b817046a1a69a34c4c7dba85a3ea2c2cccff11c6f5f741c17860f19044fa",
+      "candidate": "5490b817046a1a69a34c4c7dba85a3ea2c2cccff11c6f5f741c17860f19044fa"
+    },
+    "src/main/java/com/taitl/existential/exceptions/NotFoundException.java": {
+      "baseline": "ed7ea106885c2dc95e49b82fdfdd3d18a05736465ee576932e75aa028c3de700",
+      "candidate": "9c7a34e53e5bcd0c3f3d6757b53066748da08eb39f15071e9d3fe54c11dd6bdd"
+    },
+    "src/test/java/com/taitl/existential/benchmarks/BenchmarkMemory.java": {
+      "baseline": "f80d2b3af4f612211914c164b0dd13dee5e8713bfeee1592a56d6bb9e2129404",
+      "candidate": "f80d2b3af4f612211914c164b0dd13dee5e8713bfeee1592a56d6bb9e2129404"
+    },
+    "src/test/java/com/taitl/existential/benchmarks/TransactionDiagnosticsBenchmark.java": {
+      "baseline": "0c7951c61546a9c3fbcced16b8dc3deca1c3dc86fc5877b3b80133a5c90f9118",
+      "candidate": "0c7951c61546a9c3fbcced16b8dc3deca1c3dc86fc5877b3b80133a5c90f9118"
+    }
+  }
+}

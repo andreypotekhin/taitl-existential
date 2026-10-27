@@ -140,3 +140,21 @@ matching strategy APIs. Use the [performance guide](../performance/Readme.md); p
 
 [Night City Core Workflow]: ../project/Backlog.md#night-city-core-workflow
 [Instance Isolation and Configuration]: ../project/Backlog.md#instance-isolation-and-configuration
+
+
+## Semantic operational errors
+
+The [operational error contract](../specifications/LibraryAndConfiguration.spec.md#operational-error-metadata) keeps
+Java guard catch types while routing their failure-only messages through detached diagnostic construction/rendering.
+Memo, maintenance, cleanup and indexed evaluation use the existing library diagnostic API; caller-created constructors
+remain plain. This avoids a parallel hierarchy of Java argument/state exception subclasses or a global Throwable
+registry. Unknown facts stay absent. Direct low-level failures preserve available detail until indexed evaluation
+supplies occurrence provenance; ordinary two-state rejection is explicitly classified rather than inferred from its
+handler exception type. Classifying a callback failure does not replace its underlying cause.
+
+Configuration wrappers copy original stack/suppressed members and retain underlying I/O causes. Rejected memo admission
+leaves accepted state intact; failed boundaries keep rollback-only behavior, and shutdown keeps draining/retry and
+interruption semantics. Metadata construction/rendering catches only RuntimeException; Error propagates. Snapshot
+strings are escaped on rendering and retain no entity, callback, live owner or Throwable. Extra work is restricted to
+failure branches; startup configuration validation is outside reporting loops. The Sprint 09 closeout measurements
+include unrendered/rendered memo-error cleanup and fresh recovery with exact counters.

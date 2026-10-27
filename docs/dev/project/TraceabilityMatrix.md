@@ -329,7 +329,9 @@ Epic: [Stages, Intents, and Transaction Customization](Backlog.md#stages-intents
 [Sprint 08](sprints/Sprint08_V2StagesIntentsAndCustomTransactions.md).
 Design readiness: runtime rule configuration and transaction-local lifetime are selected. Mutation after `begin()`,
 definition reuse, and snapshot semantics remain open. Verification: selected runtime isolation/disposal requirements
-have direct acceptance coverage; broader factory, lifecycle, memo, and additional-value combinations remain open.
+have direct acceptance coverage. Sprint 09 closes the admitted access/lifecycle/memo/additional-value combinations
+under its [review](reviews/Sprint09_OperationalCoverage.review.md); general Transaction-definition mutation/snapshot
+questions remain distinct from read-only supplied Evs binding.
 
 Requirements: factories, supplied instances, access rules, memo behavior, and dynamic invocation values.
 
@@ -388,7 +390,8 @@ Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-cove
 Design readiness: selected managed-index and diagnostics contracts finalized in the
 [completed plan](../past/planning/P10252601.Sprint09-managed-indexes-and-diagnostics.plan.md#finalized-interfaces-and-admission-contract).
 Verification: selected slice passes direct acceptance, root/consumer/reactor builds, and resource/performance evidence.
-Broader combinations remain open.
+Admitted combinations are complete under the [Sprint 09 review](reviews/Sprint09_OperationalCoverage.review.md);
+shared mutable contents retain their recorded non-goal.
 
 Requirements: Maintained indexes and remaining All/Exists combinations; retain internal indexing needed by V1.
 
@@ -412,8 +415,10 @@ and remaining combinations are not established by this slice.
 Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
 [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
 Design readiness: access-event slice finalized in the
-[delivery plan](../past/planning/P10262601.Sprint09-access-event-acceptance.plan.md). Other combinations remain open.
-Verification: all 54 new access/general-rule cases and root/consumer/reactor builds pass.
+[delivery plan](../past/planning/P10262601.Sprint09-access-event-acceptance.plan.md). The [Sprint 09 closeout
+review](reviews/Sprint09_OperationalCoverage.review.md) finalizes the remaining admitted
+standard-event/value contracts. Verification: all 54 access/general-rule cases, nine typed-envelope cases and retained
+transition/lifecycle/recovery suites pass, with full root/consumer/reactor evidence.
 [Paired performance evidence](../performance/runs/20261027T050744Z.AccessEvents.md) records allocation and timing limits.
 
 Requirements: Remaining lifecycle/event combinations beyond the V1 slice.
@@ -425,10 +430,11 @@ Requirements: Remaining lifecycle/event combinations beyond the V1 slice.
   [Configuration after the first event], [Port event type inference], [Transit event endpoints],
   [Entity transition invariants], [Entity porting invariants], [Additional event values].
 
-Evidence to review: [UserCanInitiateTransactions.java].
-Checkpoint continuation/failure is settled and verified in Sprint 08. Remaining work: additional values and broad
-event combinations; managed-index enrollment/admission and the selected access-event combinations are verified, with
-additional values and other combinations still open. UserCanValidateAccessEvents covers 45 combinations;
+Evidence: [UserCanInitiateTransactions.java], existing transition/port/checkpoint recovery suites, and
+[typed additional values](../../../src/test/java/com/taitl/specs/library_usage/UserCanPassAdditionalValues.java).
+Checkpoint continuation/failure is settled and verified in Sprint 08. Managed-index enrollment/admission, access/general
+events and standard typed-envelope values complete the admitted Sprint 09 combinations; custom event splitting is V3.
+UserCanValidateAccessEvents covers 45 combinations;
 UserCanApplyGeneralEventRules covers general
 constraints/effects/intents on all built-in event roots and preserves declaration order across matching families.
 
@@ -436,8 +442,8 @@ constraints/effects/intents on all built-in event roots and preserves declaratio
 
 Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
 [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
-Design readiness: selected diagnostics slice finalized and verified; broader cache/global contracts remain open.
-Verification: partial across the whole capability, complete for the selected diagnostics slice.
+Design readiness: admitted Sprint 09 diagnostics, supplied-rule, cache/global contracts are finalized.
+Verification: complete for that scope under the [closeout review](reviews/Sprint09_OperationalCoverage.review.md).
 
 Requirements: Broader reporting, cache, global cleanup, and leak-reporting guarantees.
 
@@ -466,29 +472,47 @@ Root clean install passes 676 tests with no failures/skips; the independent cons
 artifact/dependency, static-analysis, and actual coverage evidence are recorded in Sprint 09. The
 [diagnostics performance topic](../performance/topics/Diagnostics.md) links three fresh JVM samples per variant,
 comparing success, rejection/rollback/recovery, collection, and effect stopping against the preserved dirty baseline.
-Broader public-exception metadata, supplied-rule binding, and cache/global contracts remain open.
+The [transaction-state follow-up](../past/planning/P10272601.Sprint09-transaction-state-diagnostics.plan.md) adds
+TRANSACTION-CLOSED, TRANSACTION-ROLLBACK-ONLY and TRANSACTION-NOT-FOUND under
+[TransactionsAndEvaluation.spec.md](../specifications/TransactionsAndEvaluation.spec.md#transaction-state-diagnostics).
+[state acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanDiagnoseTransactionState.java)
+supplies 43 direct cases; TransactionDiagnosticLogicTest supplies three fallback/construction cases. Exact catch types,
+explicit cleanup, released view ownership, concurrency, escaping and serialization have passing evidence. Final
+root/consumer/reactor counts and coverage are recorded in Sprint 09, with
+[performance evidence](../performance/topics/TransactionDiagnostics.md) for complete rejection/recovery workflows.
+Operational configuration/shutdown/memo/maintenance/cleanup metadata, supplied-rule binding, and bounded cache/global
+ownership are completed in the [Sprint 09 review](reviews/Sprint09_OperationalCoverage.review.md), with 37 direct new
+cases and 759-root/seven-consumer verification. Java semantic guards keep exact catch types; caller constructors and
+ordinary programmer preconditions stay plain.
+[Housekeeping](../specifications/Housekeeping.spec.md#cache-ownership-and-global-close)
+defines budgets, invalidation and deterministic ownership; ClassValue replaces strong global inferred-Class maps.
 
 Evidence to review: [TypeKeyCacheTest.java](../../../src/test/java/com/taitl/ex/logic/events/TypeKeyCacheTest.java).
 The [managed relationship release](../specifications/Housekeeping.spec.md#managed-relationship-index-release) and
 [memory leak reporting](../specifications/Housekeeping.spec.md#memory-leak-reporting) sections now define the selected
 resource contract: deterministic ownership release and bounded diagnostics of known outstanding shutdown resources,
 without GC-based tracking or retaining detached failures. UserCanReleaseManagedIndexes and
-UserCanDiagnoseOutstandingResources provide direct passing evidence. Other metadata, supplied-rule description binding,
-invalidation, and cache/global-close gaps remain separately tracked.
+UserCanDiagnoseOutstandingResources provide direct passing evidence. The remaining admitted metadata, supplied-rule
+policy,
+invalidation and cache/global-close work is verified in the operational closeout review. No universal leak detection
+or arbitrary post-binding mutation is implied.
 
 ## Publication readiness
 
 Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
 [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
-Design readiness: open. Verification: missing.
+Design readiness: prerequisite boundary recorded for Sprint 09; actual publication remains a separate release action.
+Verification: installed local consumer complete; remote availability unclaimed.
 
 Requirements: Remote distribution prerequisites; remote availability requires its own evidence.
 
 - [Distribution.spec.md]: [Maven dependency consumption].
 
-Evidence to review: not yet available.
-Remaining work: Record artifacts/destination/account/signing prerequisites; do not block an unclaimed local-only channel
-on publication.
+Evidence: [prerequisites](../design/Distribution.design.md#sprint-09-publication-readiness),
+[local consumer contract](../specifications/Distribution.spec.md#maven-dependency-consumption), and
+[Sprint 09 review](reviews/Sprint09_OperationalCoverage.review.md). Destination/account/signing, source/Javadoc and
+staging/remote-resolution checks are named prerequisites for a separately authorized publication; they do not establish
+remote availability or block the explicitly local channel.
 
 ## Custom event contracts and registration
 
