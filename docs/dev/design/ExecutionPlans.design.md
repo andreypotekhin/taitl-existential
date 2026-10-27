@@ -90,6 +90,14 @@ boundary stages can skip entity traversal while lifecycle callbacks and disposal
 
 ## EventField and first-use matching
 
+Managed relationship indexes extend this compilation model under
+[QuantifiersAndIndexes.design.md](QuantifiersAndIndexes.design.md#construction-access-and-folded-maintenance).
+Their definition metadata can be shared, but their contents and pending maintenance belong to Tr. Empty index objects
+may be created at transaction start. When index consumers are proven boundary-only, defer population/maintenance and
+leverage folded events; an early query instead flushes folded changes before returning. Unknown callback dependencies
+must not be classified as boundary-only by inspecting or guessing lambda behavior. Preserve the existing event/rule
+folding contract and keep library maintenance separate from user Effect declarations.
+
 Retain `EventField` as the owner of prepared, ordered handler/expression selections. Extend its existing lazy cache
 rather than introducing a competing handler cache. Preserve transaction overlays through `EventFieldOverlay`, with
 transaction-owned references released on transaction disposal. Existing entry points can adapt to a more compact

@@ -1,6 +1,9 @@
 package com.taitl.existential.configs;
 
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.managed_indexes.data.*;
+import com.taitl.existential.*;
+import com.taitl.existential.indexes.*;
 import com.taitl.ex.concrete.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -34,6 +37,7 @@ public class Transaction implements Configurable, Evaluable
     public static BiFunction<String, String, ? extends Transaction> FACTORY = (op, name) -> new Transaction(op, name);
 
     protected final ConcreteTransaction concrete;
+    private final IndexConfiguration indexConfiguration = new IndexConfiguration();
     public final UUID id;
     public String op;
     public String name;
@@ -53,6 +57,44 @@ public class Transaction implements Configurable, Evaluable
     public <K, V> MultiIndex<K, V> index(String name, Function<V, K> getKey)
     {
         return concrete.index(name, getKey);
+    }
+
+    /**
+     * Registers a typed managed index declaration for this transaction.
+     *
+     * @param <I> index facade type
+     * @param definition registered immutable definition token
+     * @return this scope for further configuration
+     */
+    public <I> Transaction index(IndexDefinition<I> definition)
+    {
+        indexConfiguration.add(definition);
+        return this;
+    }
+
+    /** Sets independent managed-index defaults for this scope before binding. */
+    public Transaction indexingPolicy(IndexingPolicy policy)
+    {
+        indexConfiguration.policy(policy);
+        return this;
+    }
+
+    /** Returns this scope's inheritable managed-index overrides. */
+    public IndexingPolicy indexingPolicy()
+    {
+        return indexConfiguration.policy();
+    }
+
+    /** Returns registered immutable tokens; their mutable contents belong to active handles. */
+    public List<IndexDefinition<?>> indexes()
+    {
+        return indexConfiguration.definitions();
+    }
+
+    /** Freezes managed declarations when this scope is bound to an active handle. */
+    public void freezeIndexes()
+    {
+        indexConfiguration.freeze();
     }
 
     public <T> void invariant(Invariant<T> invariant)

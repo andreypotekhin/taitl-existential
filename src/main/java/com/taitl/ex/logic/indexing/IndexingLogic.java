@@ -35,6 +35,10 @@ public class IndexingLogic implements Closeable
 
     public <T> void indexEvent(RuntimeKey<T> key, Tr tr)
     {
+        if (tr.indexMaintenance() != null)
+        {
+            tr.indexMaintenance().accept(key);
+        }
         IndexData data = tr.runtimeIndexes();
         data.encounteredUniqueEvents.add(key);
         data.encounteredEventKeys.add(key.key());

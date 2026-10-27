@@ -43,6 +43,13 @@ their needed endpoint payloads under the existing folding contract.
 
 ### Boundary evaluation and order
 
+Declared managed relationship indexes follow
+[construction and boundary folding](QuantifiersAndIndexes.spec.md#construction-and-boundary-folding) and
+[early access](QuantifiersAndIndexes.spec.md#early-access-and-pending-changes). Their maintenance summary may retain
+necessary ordering/key metadata without changing validation event folding. Uniform empty-index construction at begin
+does not require eager population or replaying every report into the physical index. Managed maintenance does not
+convert a checks-only evaluation into one with declared effects.
+
 Checkpoint and commit perform validation at their established lifecycle positions, preserving operation/context/rule
 order and entity encounter order. Applicable checks execute for each recorded entity/event subject to the
 [evaluation failure policy](IntentsAndEffects.spec.md#evaluation-failure-policy). Sharing a selection does not share

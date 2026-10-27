@@ -233,14 +233,16 @@ If validation starts rejecting an operation after the quantifier dispatch repair
 caller-maintained source collections/indexes: these expressions were previously skipped. Populate the matching source
 before validation, correct the reported entity, or use an event-specific predicate if the rule should apply only to
 creation or another selected event. Conditional All can exclude entities that do not require the constraint.
-After a rejected commit, explicitly roll back the caller-held transaction handle for configured rollback callbacks.
+After a rejected commit or checkpoint, explicitly roll back the caller-held transaction handle for configured rollback
+callbacks.
 
 ## Validation failure
 
 `ValidationStageExceptions` identifies the operation and contains the individual rule failures through its cause,
 suppressed exceptions, and `multiple()` accessor. Inspect those descriptions to correct the reported entity or its
 caller-owned relationship source. An All/Exists source is read during validation; the library does not fill it or undo
-caller changes. After a rejected commit, use the original transaction handle for explicit rollback, then begin a fresh
+caller changes. After a rejected commit or checkpoint, use the original transaction handle for explicit rollback, then
+begin a fresh
 transaction for another attempt. Retaining the closed handle does not retain its cleared runtime event indexes.
 
 ## Event endpoints
@@ -249,3 +251,33 @@ Transit requires both before and after values. Use `tr.transit(before, after)` f
 explicit snapshots. Use `tr.port(null, after)` for creation and `tr.port(before, null)` for deletion. Port rejects two
 null endpoints. Endpoint errors occur before the event is indexed; correct the values and report the intended event
 on the same transaction, or explicitly roll back. Keep snapshots and hash-source keys stable until validation ends.
+
+
+## Managed index maintenance
+
+A managed index token must be registered in the operation's context or transaction before begin. Use the same token
+for Tr.index; a withPolicy call returns another token. Give distinct effective definitions unique names. Use Class for
+non-generic subjects and TypeKey for generic subjects; do not infer missing arguments from an erased value.
+
+If a key extractor fails or returns null, inspect the named index, operation, subject side, and original cause. Report
+relevant changes, return stable non-null keys, and avoid mutating or querying the same index from its extractor.
+Single-valued bookkeeping may detect errors during reporting; deferred multi-valued work may detect them at first query
+or a boundary. Failed maintenance rejects further work on that handle: explicitly rollback or close, fix the input,
+and begin a fresh transaction. The library does not undo application objects or effects.
+
+An absent entry can reflect disabled automatic maintenance/read enrollment, an unreported mutation, retirement by a
+before/after transition, or single-valued replacement. Removing a replacement does not resurrect an earlier snapshot.
+Use a multi-valued index for legitimate duplicate keys. Seed already loaded data with bulk-add methods; seeds do not
+emit access events. Join map/set query views are protected; use the facade's explicit maintenance methods. Retained
+views reject use after disposal.
+
+Index retirement does not erase earlier reported events from validation. If a managed Exists intentionally requires
+current membership, an earlier Read of a retired snapshot can fail that rule. Seed the prior snapshot without emitting
+a read event when only its replacement should participate, or express the rule against the intended source scope.
+
+## Known resources during shutdown
+
+On timeout or interruption, shutdown errors include active-transaction/in-flight counts and up to eight transaction
+IDs and operation names. Operation details are truncated to keep diagnostics bounded. Finish or explicitly close those
+handles, then retry library close. Counts describe library-known owners at observation time; detached failed handles
+are deliberately absent. These diagnostics neither detect arbitrary application leaks nor rely on garbage collection.

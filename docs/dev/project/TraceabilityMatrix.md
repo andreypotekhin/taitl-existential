@@ -25,15 +25,18 @@ Requirements: Selected ordinary configuration and class-rule cases.
 - [EventsAndConstraints.spec.md]: [Internal field constraints], [External field constraints],
   [Third-party field constraints], [Two-field constraints], [Multiple-field constraints].
 
-Evidence: [UserCanConfigureEntities.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
-and [creating and relocating cats](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java).
+Evidence:
+[UserCanConfigureEntities.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
+and [creating and relocating
+cats](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java).
 Remaining work: broader configuration options remain in their later V1/V2 scope.
 
 ## Reported events and commit validation
 
 Epic: [Night City Core Workflow](Backlog.md#night-city-core-workflow);
 [Sprint 01](sprints/Sprint01_V1NightCityCoreWorkflow.md).
-Design readiness: ready for selected scope. Verification: verified for Sprint 01 paths; broader stage behavior remains partial.
+Design readiness: ready for selected scope. Verification: verified for Sprint 01 paths; broader stage behavior remains
+partial.
 
 Requirements: Selected entity/commit paths; broader stage behavior remains in V2.
 
@@ -49,10 +52,12 @@ Requirements: Selected entity/commit paths; broader stage behavior remains in V2
 - [QuantifiersAndIndexes.spec.md]: [Configuration finalization], [Configuration rule indexing],
   [Runtime event indexing].
 
-Evidence: [UserCanInitiateTransactions.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java),
+Evidence:
+[UserCanInitiateTransactions.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanInitiateTransactions.java),
 [UserCanSendEntityEvents.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanSendEntityEvents.java),
 [UserCanConfigureEntities.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java),
-and [UserCanUseAnnotatedOperations.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseAnnotatedOperations.java).
+and
+[UserCanUseAnnotatedOperations.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseAnnotatedOperations.java).
 Remaining work: advanced stage and broader event/deduplication claims remain outside Sprint 01.
 
 ## Basic All/Exists relationship
@@ -60,7 +65,8 @@ Remaining work: advanced stage and broader event/deduplication claims remain out
 Epic: [Relationships and Evolution](Backlog.md#relationships-and-evolution);
 [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
 Design readiness: ready for entity expression dispatch and the representative cat/dwelling slice. Verification:
-fluent All/Exists dispatch, admitted event endpoints, ordering, source matching, and checkpoint/commit rejection are verified.
+fluent All/Exists dispatch, admitted event endpoints, ordering, source matching, and checkpoint/commit rejection are
+verified.
 
 Requirements: A representative collection-backed relationship.
 
@@ -70,15 +76,20 @@ Requirements: A representative collection-backed relationship.
 - [EventsAndConstraints.spec.md]: [Same-class entity relationships], [Cross-class entity relationships],
   [Same-class existence constraints], [Cross-class existence constraints].
 
-Evidence: [cat and dwelling relationship acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java)
-and [entity quantifier acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanValidateEntityQuantifiers.java),
+Evidence: [cat and dwelling relationship
+acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java)
+and [entity quantifier
+acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanValidateEntityQuantifiers.java),
 plus [quantifier unit cases](../../../src/test/java/com/taitl/existential/quantifiers/).
-The [Sprint 02 collection/map composition cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
+The [Sprint 02 collection/map composition
+cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
 verify caller sources, conditional membership, missing/empty/null/mismatched relations, and source-object semantics.
-The [dispatch defect](../past/todo/T10212601.Quantifier-rules-skipped-by-event-dispatch.md) is repaired; the cat workflow
+The [dispatch defect](../past/todo/T10212601.Quantifier-rules-skipped-by-event-dispatch.md) is repaired; the cat
+workflow
 uses fluent rules with direct missing-destination and missing-location rejection tests.
 See [dispatch performance evidence](../performance/runs/20261021T223641Z.QuantifierDispatch.md).
-See [Sprint 02 cardinality evidence](../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md) for pure membership
+See [Sprint 02 cardinality evidence](../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md) for pure
+membership
 scan elimination and the retained predicate-source scan. Sprint 02's selected V1 relationship scope is complete.
 Remaining work: broader multiplicity, maintained-index behavior, and transition-object quantification remain in V2.
 
@@ -86,7 +97,8 @@ Remaining work: broader multiplicity, maintained-index behavior, and transition-
 
 Epic: [Relationships and Evolution](Backlog.md#relationships-and-evolution);
 [Sprint 02](sprints/Sprint02_V1RelationshipsAndEvolution.md).
-Design readiness: ready for the explicit Cat transit slice. Verification: verified for allowed and rejected color changes;
+Design readiness: ready for the explicit Cat transit slice. Verification: verified for allowed and rejected color
+changes;
 broader type and memo combinations remain partial.
 
 Requirements: Explicit before/after values; broader memo/type/subclass combinations remain in V2.
@@ -94,7 +106,8 @@ Requirements: Explicit before/after values; broader memo/type/subclass combinati
 - [EventsAndConstraints.spec.md]: [Port event type inference], [Transit event endpoints],
   [Entity transition invariants], [Entity porting invariants].
 
-Evidence: [cat relocation acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java)
+Evidence: [cat relocation
+acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java)
 and [memo-based bi-events](../../../src/test/java/com/taitl/specs/library_usage/UserCanUseMemoForBiEvents.java).
 Explicit create/delete/relocation and invalid-null endpoint recovery are verified by
 [relationship evolution acceptance](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
@@ -114,10 +127,14 @@ Requirements: Selected violation paths and the V1 validation-report requirements
 
 Evidence: [cat workflow](../../../src/test/java/com/taitl/specs/library_usage/UserCanCreateAndRelocateCats.java),
 [operation/rule diagnostics](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java),
-enabled report cases in [EvaluationLogicTest.java](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java),
-and [unchecked exception behavior](../../../src/test/java/com/taitl/existential/exceptions/ExistentialExceptionTest.java).
-The [transaction API propagation case](../../../src/test/java/com/taitl/specs/library_usage/UserCanPropagateExistentialExceptions.java)
-also verifies callers need no `throws` declaration. The three report cases and exception behavior pass in the full V1 build.
+enabled report cases in
+[EvaluationLogicTest.java](../../../src/test/java/com/taitl/ex/logic/evaluation/EvaluationLogicTest.java),
+and [unchecked exception
+behavior](../../../src/test/java/com/taitl/existential/exceptions/ExistentialExceptionTest.java).
+The [transaction API propagation
+case](../../../src/test/java/com/taitl/specs/library_usage/UserCanPropagateExistentialExceptions.java)
+also verifies callers need no `throws` declaration. The three report cases and exception behavior pass in the full V1
+build.
 
 ## Recovery and resource release
 
@@ -135,12 +152,14 @@ Requirements: Admitted transaction/library exits; cleanup does not imply undoing
 - [Housekeeping.spec.md]: [Transaction resource release], [Reported event resource release],
   [Transaction-local state release], [Graceful library shutdown], [Transaction recycling], [Rule recycling].
 
-Evidence: [transaction recovery tests](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
+Evidence: [transaction recovery
+tests](../../../src/test/java/com/taitl/specs/library_usage/UserCanConfigureEntities.java)
 and [registry test](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java), plus
 [failed begin](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterBeginFailure.java),
 [historical checkpoint retry][checkpoint-retry-test], and
 [shutdown concurrency](../../../src/test/java/com/taitl/specs/library_usage/UserCanShutdownLibrary.java).
-The [Sprint 02 relationship cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
+The [Sprint 02 relationship
+cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
 also verify all three runtime index collections clear through retained closed handles after commit/explicit rollback.
 The checkpoint-retry expectation is superseded by
 [rollback-only checkpoint failure](../specifications/TransactionsAndEvaluation.spec.md#checkpoint-failure-recovery);
@@ -151,7 +170,8 @@ Successful checkpoint continuation is covered in
 The 2026-10-24 root build ran 523 tests with zero failures/errors/skips; Checkstyle and PMD passed and JaCoCo thresholds
 were met. Configuration finalization remains retryable when a context factory fails; see
 [configuration recovery acceptance][UserCanConfigureLibrary.java].
-Rejected-commit, rollback, and fresh-recovery timings appear in the [Sprint 04 measurement](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md)
+Rejected-commit, rollback, and fresh-recovery timings appear in the [Sprint 04
+measurement](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md)
 and [V1 closeout measurement](../performance/runs/20261022T205600Z.NightCityV1Closeout.md). Broader cache bounds and
 observable leak reporting remain in V2/global scope.
 
@@ -166,7 +186,8 @@ Requirements: Local Maven dependency consumption.
 
 - [Distribution.spec.md]: [Maven dependency consumption].
 
-Evidence: [independent consumer acceptance](../../../examples/night_city/src/test/java/com/taitl/ex/examples/night_city/NightCityStoryTest.java),
+Evidence: [independent consumer
+acceptance](../../../examples/night_city/src/test/java/com/taitl/ex/examples/night_city/NightCityStoryTest.java),
 [runnable story](../../../examples/night_city/src/main/java/com/taitl/ex/examples/night_city/app/NightCityStory.java),
 and [consumer performance record](../performance/runs/20261022T205600Z.NightCityV1Closeout.md). Root install,
 standalone consumer verification, reactor installation, artifact inspection, and dependency-tree checks passed for the
@@ -182,7 +203,8 @@ releases.
 Requirements: All V1 capabilities and their five quality design obligations; final gate V1 Hardening and Closeout.
 Topics: [LibraryAndConfiguration.spec.md], [TransactionsAndEvaluation.spec.md], [QuantifiersAndIndexes.spec.md],
 [Housekeeping.spec.md], [Distribution.spec.md].
-Evidence: [consumer workflow benchmark](../../../examples/night_city/src/main/java/com/taitl/ex/examples/night_city/app/NightCityWorkflowBenchmark.java),
+Evidence: [consumer workflow
+benchmark](../../../examples/night_city/src/main/java/com/taitl/ex/examples/night_city/app/NightCityWorkflowBenchmark.java),
 [Sprint 04 three-sample record](../performance/runs/20261022T183337Z.NightCityConsumerWorkflows.md), the [V1 closeout
 record](../performance/runs/20261022T205600Z.NightCityV1Closeout.md), and earlier [relationship cardinality
 record](../performance/runs/20261022T013657Z.RelationshipsAndEvolution.md). The two full-workflow sessions have
@@ -216,7 +238,8 @@ Requirements: Configuration sources/options, plus configuration/injection concur
   [Configuration build failure recovery], [Configuration files], [Classpath configuration],
   [Configuration environment variable], [Initial configuration file].
 
-Evidence: [UserCanConfigureLibrary.java](../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java)
+Evidence:
+[UserCanConfigureLibrary.java](../../../src/test/java/com/taitl/specs/library_configuration/UserCanConfigureLibrary.java)
 verifies prospective description enforcement, retained-builder freezing, and retry after a context-factory failure.
 [ConfigureLibraryTest.java](../../../src/test/java/com/taitl/ex/logic/library/ConfigureLibraryTest.java) verifies invalid
 source values do not partially apply. The Sprint 06 performance record separates construction/first begin from
@@ -318,7 +341,8 @@ Requirements: factories, supplied instances, access rules, memo behavior, and dy
   [Runtime transaction rule lifetime].
 - [EventsAndConstraints.spec.md]: [Additional event values].
 
-Evidence: [UserCanConfigureCustomTransactions.java](../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions/UserCanConfigureCustomTransactions.java)
+Evidence:
+[UserCanConfigureCustomTransactions.java](../../../src/test/java/com/taitl/specs/configuration_workflow/custom_transactions/UserCanConfigureCustomTransactions.java)
 verifies dynamic values remain isolated and transaction-local references release on disposal. The implementation plan
 and [performance session](../performance/runs/20261024T061720Z.Sprint08Transactions.md) record exact verification and
 separate custom preparation from complete transaction workflows. Mutation/reuse semantics remain deferred.
@@ -346,11 +370,14 @@ Requirements: built-in stage timing, authorization, ordered effects, reporting, 
 - [IntentsAndEffects.spec.md]: all built-in intent/effect paths, especially
   [Intent composition] and [Evaluation failure policy].
 
-Evidence: [UserCanNarrowApplicableIntents.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanNarrowApplicableIntents.java),
+Evidence:
+[UserCanNarrowApplicableIntents.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanNarrowApplicableIntents.java),
 [UserCanStopOrderedEffectsAfterViolation.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanStopOrderedEffectsAfterViolation.java),
 [UserCanContinueAfterSuccessfulCheckpoint.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanContinueAfterSuccessfulCheckpoint.java),
-and [UserCanRecoverAfterCheckpointFailure.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java),
-along with the full library usage suite. The [Sprint 08 performance session](../performance/runs/20261024T061720Z.Sprint08Transactions.md)
+and
+[UserCanRecoverAfterCheckpointFailure.java](../../../src/test/java/com/taitl/specs/library_usage/UserCanRecoverAfterCheckpointFailure.java),
+along with the full library usage suite. The [Sprint 08 performance
+session](../performance/runs/20261024T061720Z.Sprint08Transactions.md)
 separates dispatch, handler work, and runtime transaction preparation. Mutation/reuse semantics and broader combinations
 remain deferred.
 
@@ -358,15 +385,27 @@ remain deferred.
 
 Epic: [Indexes and Operational Coverage](Backlog.md#indexes-and-operational-coverage);
 [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
-Design readiness: open. Verification: partial.
+Design readiness: selected managed-index and diagnostics contracts finalized in the
+[completed plan](../past/planning/P10252601.Sprint09-managed-indexes-and-diagnostics.plan.md#finalized-interfaces-and-admission-contract).
+Verification: selected slice passes direct acceptance, root/consumer/reactor builds, and resource/performance evidence.
+Broader combinations remain open.
 
 Requirements: Maintained indexes and remaining All/Exists combinations; retain internal indexing needed by V1.
 
 - [QuantifiersAndIndexes.spec.md]: [All on entity transitions], [Exists on maps], [Indexed existence lookup],
   [Indexes between rules], [Configuration finalization], [Configuration rule indexing], [Runtime event indexing].
 
-Evidence to review: [indexes](../../../src/test/java/com/taitl/exlogic/unused/indexes/).
-Remaining work: Reconcile public index names and verify maintenance plus lookup/scaling and transaction-level results.
+The new [managed-index requirements](../specifications/QuantifiersAndIndexes.spec.md#managed-transaction-local-indexes)
+cover transaction-local ownership, policy scopes, automatic/read/manual/seed behavior, identity, replacement, folded
+maintenance, early queries, rule visibility, and release. Shared mutable entity contents remain deferred.
+
+Evidence: UserCanUseManagedIndexes, UserCanUseManagedJoins, UserCanConfigureManagedIndexPolicies,
+UserCanQueryManagedIndexesDuringTransaction, UserCanMaintainManagedIndexesExplicitly, UserCanReleaseManagedIndexes,
+and UserCanMaintainWorkingRelationships under src/test/java/com/taitl/specs/library_usage. The shared Night City story
+also passes against the installed artifact in an isolated consumer checkout. Existing standalone tests remain passing.
+[Managed-index baseline](../performance/runs/20261026T062911Z.ManagedIndexes.md) records scaling and explicit-maintenance
+comparisons; automatic report allocation remains a target, with no numerical gate. General transition quantification
+and remaining combinations are not established by this slice.
 
 ## Broader lifecycle and event combinations
 
@@ -384,7 +423,8 @@ Requirements: Remaining lifecycle/event combinations beyond the V1 slice.
   [Entity transition invariants], [Entity porting invariants], [Additional event values].
 
 Evidence to review: [UserCanInitiateTransactions.java].
-Remaining work: Specify checkpoint reset/continuation, additional values, and broad event
+Checkpoint continuation/failure is settled and verified in Sprint 08. Remaining work: additional values and broad
+event combinations; managed-index enrollment/admission is finalized without claiming all remaining access-event
 combinations.
 
 ## Richer reports, caching, and global hygiene
@@ -400,8 +440,12 @@ Requirements: Broader reporting, cache, global cleanup, and leak-reporting guara
   [Reported event resource release], [Transaction recycling], [Rule recycling], [Memory leak reporting].
 
 Evidence to review: [TypeKeyCacheTest.java](../../../src/test/java/com/taitl/ex/logic/events/TypeKeyCacheTest.java).
-Remaining work: Verify metadata, description options, invalidation, boundedness, global close, and admitted leak
-reporting.
+The [managed relationship release](../specifications/Housekeeping.spec.md#managed-relationship-index-release) and
+[memory leak reporting](../specifications/Housekeeping.spec.md#memory-leak-reporting) sections now define the selected
+resource contract: deterministic ownership release and bounded diagnostics of known outstanding shutdown resources,
+without GC-based tracking or retaining detached failures. UserCanReleaseManagedIndexes and
+UserCanDiagnoseOutstandingResources provide direct passing evidence. Other metadata, description,
+invalidation, and cache/global-close gaps remain separately tracked.
 
 ## Publication readiness
 

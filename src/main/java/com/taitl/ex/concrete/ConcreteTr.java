@@ -3,6 +3,8 @@ package com.taitl.ex.concrete;
 import com.taitl.ex.common.annotations.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.events.*;
+import com.taitl.ex.logic.managed_indexes.*;
+import com.taitl.existential.indexes.*;
 import com.taitl.ex.logic.configuration.indexes.*;
 import com.taitl.ex.logic.configuration.indexes.data.*;
 import com.taitl.ex.logic.indexing.data.*;
@@ -50,6 +52,9 @@ public class ConcreteTr
 
     @Logic
     protected ExecuteLifecycle executeLifecycle;
+
+    @Logic
+    protected IndexMaintenanceLogic indexMaintenance;
 
     public final UUID id;
     public String op;
@@ -404,6 +409,10 @@ public class ConcreteTr
         closed = true;
         try
         {
+            if (indexMaintenance != null)
+            {
+                indexMaintenance.close();
+            }
             runtimeIndexes.close();
             validationData.close();
             validationData = null;
@@ -436,6 +445,47 @@ public class ConcreteTr
         }
     }
 
+    public void bindManagedIndexes()
+    {
+        boolean declared = false;
+        for (Transaction transaction : transactions)
+        {
+            declared |= !transaction.indexes().isEmpty();
+            transaction.freezeIndexes();
+            if (transaction.context() != null)
+            {
+                declared |= !transaction.context().indexes().isEmpty();
+                transaction.context().freezeIndexes();
+            }
+        }
+        if (!declared)
+        {
+            return;
+        }
+        indexMaintenance = Creator.create(IndexMaintenanceLogic.class,
+                new Class<?>[] { String.class, Runnable.class, java.util.function.Consumer.class },
+                op, (Runnable) () -> requireIndexAccess(),
+                (java.util.function.Consumer<Throwable>) failure -> {
+                    rollbackOnly = true;
+                    tl.registry().removeIfPresent(id.toString());
+                });
+        indexMaintenance.bind(tr, tl.ex());
+    }
+
+    public IndexMaintenanceLogic indexMaintenance()
+    {
+        return indexMaintenance;
+    }
+
+    protected void requireIndexAccess()
+    {
+        if (!closed && rollbackProcessing)
+        {
+            return;
+        }
+        requireOpen("access managed indexes");
+    }
+
     public void callbackStarted()
     {
         tl.callbackStarted();
@@ -455,7 +505,7 @@ public class ConcreteTr
                 return;
             }
             throw new ExistentialException(String.format(
-                    "Cannot %s because a transaction boundary failed. Roll back this transaction or close it before "
+                    "Cannot %s because evaluation or index maintenance failed. Roll back this transaction or close it before "
                             + "beginning another transaction. See %s",
                     action, TROUBLESHOOTING_SECTION));
         }

@@ -2,6 +2,8 @@ package com.taitl.existential.builders;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.*;
+import com.taitl.existential.indexes.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
@@ -30,6 +32,8 @@ public class ContextBuilder
     BiFunction<String, String, ? extends Transaction> transactionFactory;
     StageName stageCursor;
     boolean built;
+    List<IndexDefinition<?>> indexes = new ArrayList<>();
+    IndexingPolicy indexingPolicy = IndexingPolicy.inherit();
 
     /**
      * Creates a context builder for a specific operation name.
@@ -45,6 +49,30 @@ public class ContextBuilder
         this.op = op;
         this.evsSuppliers = new ArrayList<>();
         this.evsStages = new ArrayList<>();
+    }
+
+    /**
+     * Registers an immutable managed index token; binding creates independent contents per Tr.
+     *
+     * @param <I> index facade type
+     * @param definition registered immutable definition token
+     * @return this scope for further configuration
+     */
+    public <I> ContextBuilder index(IndexDefinition<I> definition)
+    {
+        parent.verifyConfigurable();
+        sane(definition, "definition");
+        indexes.add(definition);
+        return this;
+    }
+
+    /** Sets inheritable indexing defaults for this context. */
+    public ContextBuilder indexingPolicy(IndexingPolicy policy)
+    {
+        parent.verifyConfigurable();
+        sane(policy, "policy");
+        indexingPolicy = policy;
+        return this;
     }
 
     /**
@@ -409,11 +437,17 @@ public class ContextBuilder
         {
             return;
         }
-        verify(!evsSuppliers.isEmpty() || transactionFactory != null,
+        verify(!evsSuppliers.isEmpty() || transactionFactory != null || !indexes.isEmpty()
+                || indexingPolicy.automatic() != null || indexingPolicy.enrollReads() != null,
                 "Cannot configure context without defining rules");
 
         Context context = createInstance();
         context.op(op);
+        context.indexingPolicy(indexingPolicy.over(context.indexingPolicy()));
+        for (IndexDefinition<?> definition : indexes)
+        {
+            context.index(definition);
+        }
 
         for (int i = 0; i < evsSuppliers.size(); i++)
         {
@@ -527,6 +561,7 @@ public class ContextBuilder
 
     protected boolean hasPendingConfiguration()
     {
-        return !built && (!evsSuppliers.isEmpty() || transactionFactory != null);
+        return !built && (!evsSuppliers.isEmpty() || transactionFactory != null || !indexes.isEmpty()
+                || indexingPolicy.automatic() != null || indexingPolicy.enrollReads() != null);
     }
 }

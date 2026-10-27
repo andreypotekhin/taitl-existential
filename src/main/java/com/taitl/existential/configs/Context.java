@@ -1,6 +1,9 @@
 package com.taitl.existential.configs;
 
 import com.taitl.ex.common.creator.*;
+import com.taitl.ex.logic.managed_indexes.data.*;
+import com.taitl.existential.*;
+import com.taitl.existential.indexes.*;
 import com.taitl.ex.concrete.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
@@ -27,6 +30,7 @@ public class Context implements Configurable, Evaluable
     public static Supplier<? extends Context> FACTORY = () -> Creator.create(Context.class);
 
     protected final ConcreteContext concrete;
+    private final IndexConfiguration indexConfiguration = new IndexConfiguration();
     protected String name;
     protected Context parent;
 
@@ -45,6 +49,44 @@ public class Context implements Configurable, Evaluable
         this.concrete = createBuilder()
                 .inheritedTransactionFactory()
                 .build();
+    }
+
+    /**
+     * Registers a typed managed index declaration for this context.
+     *
+     * @param <I> index facade type
+     * @param definition registered immutable definition token
+     * @return this scope for further configuration
+     */
+    public <I> Context index(IndexDefinition<I> definition)
+    {
+        indexConfiguration.add(definition);
+        return this;
+    }
+
+    /** Sets independent managed-index defaults for this scope before binding. */
+    public Context indexingPolicy(IndexingPolicy policy)
+    {
+        indexConfiguration.policy(policy);
+        return this;
+    }
+
+    /** Returns this scope's inheritable managed-index overrides. */
+    public IndexingPolicy indexingPolicy()
+    {
+        return indexConfiguration.policy();
+    }
+
+    /** Returns registered immutable tokens; their mutable contents belong to active handles. */
+    public List<IndexDefinition<?>> indexes()
+    {
+        return indexConfiguration.definitions();
+    }
+
+    /** Freezes managed declarations when this scope is bound to an active handle. */
+    public void freezeIndexes()
+    {
+        indexConfiguration.freeze();
     }
 
     public <T> void invariant(Invariant<T> invariant)

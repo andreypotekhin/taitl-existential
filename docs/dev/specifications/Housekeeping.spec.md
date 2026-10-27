@@ -34,13 +34,23 @@ The above applies to the transaction resources as well as all reported events.
 collections, including when a caller retains the closed handle or index reference. Failed commit vacates active ID
 lookup and leaves explicit rollback available through the handle. This does not undo caller-owned relationship sources.
 
-Acceptance: [relationship lifecycle cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
+Acceptance: [relationship lifecycle
+cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java).
 
 ### Transaction-local state release
 
 Closing a transaction clears transaction-owned memo values, prepared indexes, prepared event overlays, and cached
 event handlers in addition to runtime event indexes. Shared configured rules and caller-owned relationship sources
 remain owned by their existing configuration or application owners.
+
+### Managed relationship index release
+
++ Transaction-local managed contents, pending changes, seed references, identity/key/supersession records, and
+  bound-view
+storage are released on disposal even if a closed handle or view is retained. Successful checkpoints retain them for
+the continuing transaction. Failed checkpoints/commits use the existing detach/rollback-only contract, without a
+secondary retention registry. Shared configuration caches retain no managed runtime entities. Acceptance: [managed
+release](../../../src/test/java/com/taitl/specs/library_usage/UserCanReleaseManagedIndexes.java).
 
 ### Graceful library shutdown
 
@@ -50,7 +60,8 @@ interruption leave the library draining and allow a later close attempt. Shutdow
 forces caller-owned effects to be undone. A close call from a transaction callback fails promptly, even when another
 thread has already started shutdown, so the callback can return and allow that shutdown to proceed.
 
-Acceptance: [shutdown policy and concurrency](../../../src/test/java/com/taitl/specs/library_usage/UserCanShutdownLibrary.java).
+Acceptance: [shutdown policy and
+concurrency](../../../src/test/java/com/taitl/specs/library_usage/UserCanShutdownLibrary.java).
 
 ## Global Cleanup
 
@@ -64,4 +75,12 @@ System ensures that rules, such as constraints, invariants, intents are recycled
 
 ### Memory leak reporting
 
-System ensures that any memory leaks are reported (Log memory leaks, e.g. when the calling app shuts down).
++ The library reports known outstanding resources when shutdown fails because of timeout or interruption. Diagnostics
+identify known active transactions and in-flight work, include a total count and bounded detail, and explain completing
+or cleaning up those resources before retrying close. Details use operation/transaction metadata rather than entity
+payloads. Reporting is based on library-owned registries and accounting, not deterministic garbage collection.
+
+This is not a guarantee to detect arbitrary application leaks or enumerate detached failed handles. No secondary
+registry retains failed handles solely for reporting, and no rollback callback is invoked automatically. The narrower
+known-resource contract replaces the historical universal leak-detection claim; it is backed by [shutdown
+diagnostics](../../../src/test/java/com/taitl/specs/library_usage/UserCanDiagnoseOutstandingResources.java).

@@ -23,6 +23,15 @@ public interface Expression<T> extends Ev<T>
     Object evaluate(T t);
 
     /**
+     * Evaluates with the active handle; legacy expressions retain their existing evaluation.
+     * Managed sources resolve transaction-local contents through this explicit argument.
+     */
+    default Object evaluate(T entity, com.taitl.existential.transactions.Tr tr)
+    {
+        return evaluate(entity);
+    }
+
+    /**
      * Returns a short, human-readable description of this expression.
      */
     String description();

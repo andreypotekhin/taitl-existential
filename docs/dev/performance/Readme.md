@@ -111,7 +111,8 @@ setup, first transaction, and close from transactions on an already configured i
 
 The [execution plans and type matching topic](topics/ExecutionPlans.md) links the real Night City representation
 comparison and production selection integration: native BitSet rows, compiled one-row selection, EventField lookup,
-bounded caches, and comparable baseline/candidate cold/warm, complete-workflow, allocation, and reachable-memory evidence.
+bounded caches, and comparable baseline/candidate cold/warm, complete-workflow, allocation, and reachable-memory
+evidence.
 Earlier prototype records remain historical; no numerical performance gate is established.
 
 [Custom transactions]: topics/CustomTransactions.md
@@ -126,3 +127,6 @@ Repeat with sample=1,2,3 and rules=100,256,500. Optional controls use benchmark.
 benchmark.grouped=true, or benchmark.synthetic=true. Logs assert actual row cardinalities. Graph collection requires
 the agent and module opens above; the [many-row record](runs/20261023T222929Z.ManyRowBitSet.md) gives exact methods,
 paired library probes, workload sizes, source identities, and all retained samples.
+
+The [managed-index topic](topics/ManagedIndexes.md) records folded maintenance, explicit eager comparisons,
+complete workflows, allocation, and deterministic storage release.

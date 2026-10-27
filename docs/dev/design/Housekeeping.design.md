@@ -41,7 +41,8 @@ from clearing every live transaction on library close or proving arbitrary callb
 - [registry tests](../../../src/test/java/com/taitl/ex/logic/transactions/data/TrRegistryTest.java)
 - [type cache tests](../../../src/test/java/com/taitl/ex/logic/events/TypeKeyCacheTest.java)
 
-The [relationship lifecycle cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
+The [relationship lifecycle
+cases](../../../src/test/java/com/taitl/specs/library_usage/UserCanConstrainEntityRelationships.java)
 retain closed handles and inspect runtime state after commit/rollback. This evidence is limited to the selected
 transaction paths; it does not establish global cache bounds, leak reporting, or all library-close behavior.
 
@@ -62,6 +63,32 @@ immutable `ShutdownPolicy` configures the drain timeout, with zero meaning unlim
 leave the library draining so the caller can finish work and retry. The coordinator never runs rollback callbacks or
 forces application effects to be undone. Detailed observable behavior is in the
 [transactions specification](../specifications/TransactionsAndEvaluation.spec.md#library-shutdown).
+
+## Managed relationship resources
+
+Each Tr owns the mutable managed relationship indexes described in
+[QuantifiersAndIndexes.design.md](QuantifiersAndIndexes.design.md#managed-index-ownership). Success, explicit rollback,
+or close releases contents, pending maintenance, retained seed references, identity/old-key/supersession metadata, and
+bound views. A successful checkpoint retains these resources because the transaction continues. Failed checkpoints
+and commits detach registry lookup without adding a secondary retention registry; explicit cleanup releases state,
+and abandonment allows ordinary reclamation. Caller-owned objects and seed collections are never cleared by disposal.
+
+Shared definition and routing caches contain configuration metadata only. Managed contents must not escape through
+shared definitions, quantifier closures bound to another handle, or cached query results. A retained closed handle/view
+must not retain former entity collections through backing storage aliases. Deterministic inspection of these owners
+establishes the release contract; it does not require collecting weak references or forcing the garbage collector.
+
+## Known-resource shutdown diagnostics
+
+Report resources the library can actually identify, rather than promise detection of arbitrary memory leaks. Existing
+admission and transaction registries are the sources of truth. When shutdown fails because of timeout or interruption,
+diagnostics describe known outstanding transactions and in-flight work, with operation/transaction identifiers where
+available, a total count, and a bounded detail sample. Include the remedy: finish or explicitly clean up those handles
+and retry close. Do not retain payloads solely to improve a log message.
+
+This design does not introduce a GC callback, phantom-reference tracker, or registry of failed/abandoned handles.
+Once a failed handle is detached, diagnostics cannot claim to enumerate it. Shutdown does not roll back business work
+or treat caller-owned data as a leak. Successful draining and release do not prove absence of every application leak.
 
 ## Performance
 

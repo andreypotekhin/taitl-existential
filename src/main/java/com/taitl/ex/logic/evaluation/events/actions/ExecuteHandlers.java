@@ -10,6 +10,7 @@ import com.taitl.existential.events.types.*;
 import com.taitl.existential.exceptions.*;
 import com.taitl.existential.handlers.*;
 import com.taitl.existential.handlers.types.*;
+import com.taitl.existential.transactions.*;
 
 import java.util.*;
 
@@ -32,6 +33,12 @@ public class ExecuteHandlers
 
     public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report, boolean stopAfterViolation)
     {
+        call(evs, event, report, stopAfterViolation, null);
+    }
+
+    public <T> void call(List<Ev<T>> evs, Event<T> event, ValidationReport report,
+            boolean stopAfterViolation, Tr tr)
+    {
         sane(evs, "evs", event, "event", report, "report");
         if (stopAfterViolation && !report.isEmpty())
         {
@@ -51,7 +58,7 @@ public class ExecuteHandlers
             else if (ev instanceof Expression<?>)
             {
                 int failures = report.exceptions().size();
-                executeExpression((Expression<T>) ev, event, report);
+                executeExpression((Expression<T>) ev, event, report, tr);
                 if (shouldStop(stopAfterViolation, failures, report))
                 {
                     return;
@@ -71,13 +78,18 @@ public class ExecuteHandlers
 
     public <T> void callAll(List<Ev<T>> evs, Event<T> event, ValidationReport report)
     {
+        callAll(evs, event, report, null);
+    }
+
+    public <T> void callAll(List<Ev<T>> evs, Event<T> event, ValidationReport report, Tr tr)
+    {
         sane(evs, "evs", event, "event", report, "report");
         Throwable failure = null;
         for (Ev<T> ev : evs)
         {
             try
             {
-                call(Collections.singletonList(ev), event, report);
+                call(Collections.singletonList(ev), event, report, false, tr);
             }
             catch (Throwable caught)
             {
@@ -127,12 +139,20 @@ public class ExecuteHandlers
         }
     }
 
-    protected <T> void executeExpression(Expression<T> expression, Event<T> event, ValidationReport report)
+    @SuppressWarnings("unchecked")
+    protected <T> void executeExpression(Expression<T> expression, Event<T> event, ValidationReport report, Tr tr)
     {
         sane(expression, "expression", event, "event", report, "report");
         try
         {
-            callExpression(expression, event);
+            if (tr == null)
+            {
+                callExpression(expression, event);
+            }
+            else
+            {
+                expression.evaluate((T) entity(event), tr);
+            }
         }
         catch (ExistentialException ex)
         {

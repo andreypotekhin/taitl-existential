@@ -4,6 +4,7 @@ import com.taitl.ex.common.creator.*;
 import com.taitl.existential.configs.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.keys.*;
+import com.taitl.existential.indexes.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -509,6 +510,24 @@ public class InvariantBuilder<T> implements EvsBuilder<T>
         sane(condition, "condition");
         checkBuilder();
         target.ud(condition, description);
+        return this;
+    }
+
+    /** Adds an All rule that resolves this transaction's bound managed index. */
+    public <I> InvariantBuilder<T> all(IndexDefinition<I> definition,
+            BiPredicate<? super T, ? super I> predicate, String description)
+    {
+        checkBuilder();
+        target.all(definition, predicate, description);
+        return this;
+    }
+
+    /** Adds an Exists rule over a transaction-local map or join projection. */
+    public <I, D> InvariantBuilder<T> exists(IndexDefinition<I> definition, Function<I, Map<T, D>> source,
+            String description)
+    {
+        checkBuilder();
+        target.exists(definition, source, description);
         return this;
     }
 

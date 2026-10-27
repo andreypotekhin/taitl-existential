@@ -2,6 +2,8 @@ package com.taitl.existential.builders;
 
 import com.taitl.ex.common.creator.*;
 import com.taitl.existential.configs.*;
+import com.taitl.existential.*;
+import com.taitl.existential.indexes.*;
 import com.taitl.existential.constants.*;
 import com.taitl.existential.constraints.*;
 import com.taitl.existential.evaluables.*;
@@ -28,6 +30,8 @@ public class TransactionBuilder
     List<StageName> evsStages;
     BiFunction<String, String, ? extends Transaction> transactionFactory;
     StageName stageCursor;
+    List<IndexDefinition<?>> indexes = new ArrayList<>();
+    IndexingPolicy indexingPolicy = IndexingPolicy.inherit();
 
     /**
      * Creates a transaction builder for a concrete operation name.
@@ -46,6 +50,30 @@ public class TransactionBuilder
         this.transactionFactory =
                 (transactionOp, transactionName) -> parent.createTransactionInstance(transactionOp, transactionName);
         installParentTransactionFactory();
+    }
+
+    /**
+     * Registers a managed declaration on each transaction produced by this builder.
+     *
+     * @param <I> index facade type
+     * @param definition registered immutable definition token
+     * @return this scope for further configuration
+     */
+    public <I> TransactionBuilder index(IndexDefinition<I> definition)
+    {
+        parent.parent.verifyConfigurable();
+        sane(definition, "definition");
+        indexes.add(definition);
+        return this;
+    }
+
+    /** Sets independent transaction-level managed indexing overrides. */
+    public TransactionBuilder indexingPolicy(IndexingPolicy policy)
+    {
+        parent.parent.verifyConfigurable();
+        sane(policy, "policy");
+        indexingPolicy = policy;
+        return this;
     }
 
     /**
@@ -621,6 +649,11 @@ public class TransactionBuilder
         parent.parent.verifyConfigurable();
         parent.transactionFactory = (transactionOp, transactionName) -> {
             Transaction tr = createInstance(transactionOp, transactionName);
+            tr.indexingPolicy(indexingPolicy.over(tr.indexingPolicy()));
+            for (IndexDefinition<?> definition : indexes)
+            {
+                tr.index(definition);
+            }
 
             for (int i = 0; i < this.evsSuppliers.size(); i++)
             {

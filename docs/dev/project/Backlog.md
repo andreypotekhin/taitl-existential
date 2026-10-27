@@ -105,12 +105,16 @@ acceptance, and measurement limits. The old checkpoint-retry expectation was rep
 
 ### Indexes and Operational Coverage
 
-Status: planned. Delivery: [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
+Status: in progress. Delivery: [Sprint 09](sprints/Sprint09_V2IndexesAndOperationalCoverage.md).
 
 Use maintained relationships and broader lifecycle/reporting/resource behavior with measured scaling.
 
-The sprint defines requirements, dependencies, quality obligations, and acceptance. Retain existing functionality and
-regressions; the new scope changes delivery/evidence priorities, not availability of code already present.
+The selected transaction-local managed-index contract includes automatic/read opt-outs at all requested scopes,
+seeding, object identity, single-valued replacement, and folded/on-demand maintenance. Known-resource diagnostics
+replace the universal leak-reporting claim. Shared mutable indexes remain deferred. The
+[completed delivery plan](../past/planning/P10252601.Sprint09-managed-indexes-and-diagnostics.plan.md) records verified
+interfaces, admission, acceptance, consumer, and performance evidence. Broader report/event/cache work remains open.
+Standalone compatibility is retained.
 
 ### V2 Hardening and Closeout
 

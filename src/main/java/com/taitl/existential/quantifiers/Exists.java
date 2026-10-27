@@ -4,6 +4,9 @@ import com.taitl.ex.common.creator.*;
 import com.taitl.ex.concrete.*;
 import com.taitl.existential.evaluables.*;
 import com.taitl.existential.exceptions.*;
+import com.taitl.existential.indexes.*;
+import com.taitl.existential.transactions.*;
+import com.taitl.ex.common.helper.strings.*;
 
 import java.util.*;
 import java.util.function.*;
@@ -14,14 +17,20 @@ import static com.taitl.ex.common.helper.Args.*;
  * Existential quantifier over a collection or set, evaluated in the scope of a transaction.
  * Used within invariants to assert that a predicate holds for at least one value.
  * Membership-only forms delegate to the source membership lookup. Predicate-bearing forms retain the
- * actual matching source objects for predicates that inspect them.
+ * actual matching source objects for predicates that inspect them. Managed forms resolve an
+ * immutable definition token and map projection for each explicit transaction evaluation.
+ * Ordinary collections remain caller-owned; selecting a source does not enroll or manage it.
+ * A managed predicate used outside explicit transaction evaluation fails rather than guessing
+ * a thread-local current transaction.
  *
  * @param <T>
  *            Element type in the examined source
  */
-public class Exists<T> implements Expression<T>, Predicate<T>
+public class Exists<T> implements Expression<T>, TransactionPredicate<T>
 {
     ConcreteExists<T, ?> concrete;
+    BiPredicate<T, Tr> boundPredicate;
+    String boundDescription;
 
     /**
      * Builds a map-based exists predicate that uses source membership.
@@ -564,22 +573,65 @@ public class Exists<T> implements Expression<T>, Predicate<T>
                 .build();
     }
 
+    /**
+     * Resolves a managed source map for each evaluation, without retaining an active handle.
+     * The source projection can select a join direction, such as join -> join.left().
+     */
+    public <I, D> Exists(IndexDefinition<I> definition, Function<I, Map<T, D>> source, String description)
+    {
+        this(definition, source, (entity, value) -> true, description);
+    }
+
+    /** Builds managed membership with an additional predicate over the matched value. */
+    public <I, D> Exists(IndexDefinition<I> definition, Function<I, Map<T, D>> source,
+            BiPredicate<T, D> predicate, String description)
+    {
+        sane(definition, "definition", source, "source", predicate, "predicate");
+        boundDescription = description;
+        boundPredicate = (entity, tr) -> {
+            Map<T, D> values = source.apply(tr.index(definition));
+            return values.containsKey(entity) && predicate.test(entity, values.get(entity));
+        };
+    }
+
+    public Object evaluate(T entity, Tr tr)
+    {
+        if (!test(entity, tr))
+        {
+            throw new PredicateFailure(description() + " See " + PredicateFailure.TROUBLESHOOTING_SECTION);
+        }
+        return null;
+    }
+
+    public boolean test(T entity, Tr tr)
+    {
+        return boundPredicate == null ? concrete.test(entity) : boundPredicate.test(entity, tr);
+    }
+
     /* Implement Expression interface */
 
     public Object evaluate(T entity)
     {
+        if (concrete == null)
+        {
+            throw new IllegalStateException("Managed Exists requires explicit transaction evaluation");
+        }
         return concrete.evaluate(entity);
     }
 
     public String description()
     {
-        return concrete.description();
+        return concrete == null ? Descriptions.text(boundDescription) : concrete.description();
     }
 
     /* Implement Predicate interface */
 
     public boolean test(T entity)
     {
+        if (concrete == null)
+        {
+            throw new IllegalStateException("Managed Exists requires explicit transaction evaluation");
+        }
         return concrete.test(entity);
     }
 

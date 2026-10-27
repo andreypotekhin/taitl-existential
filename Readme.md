@@ -133,6 +133,35 @@ The library also allows defining constraints based on entity lifecycle and acces
     write(x -> predicate(x)) # holds for any written/saved object
     (as well as variants with condition())
 
+## Transaction stages and recovery
+
+Invariants and effects default to validation at checkpoint or commit; intents default to immediate authorization.
+Every applicable intent must pass, including parent-context and transaction-local restrictions. Express alternative
+permissions inside one predicate with `||`.
+
+Successful checkpoints keep reporting and immediate checks active and preserve begin-stage once-per-key history.
+Failed checkpoints and commits make the handle rollback-only and detach string-ID event lookup. Explicit rollback
+runs rollback callbacks; close releases resources without running them. Correct the application data and begin a fresh
+transaction for another attempt. Previously performed application effects are not automatically undone.
+
+Checks-only validation collects ordinary violations. When declared effects participate, checks and effects run in
+order until the first violation, then all remaining evaluation stops. Unexpected failures and authorization denials
+stop immediately. See the [usage guide](docs/Usage.md#checkpoints-authorization-and-effects) for details.
+
+## Automatic transaction-local indexes
+
+Declare a typed `IndexDefinition` in a context or transaction and access its independent contents through
+`tr.index(definition)`. SingleIndex/MultiIndex support key lookups; SingleJoin/MultiJoin support relationships.
+Read events enroll loaded objects by default; create/update/delete and before/after reports maintain the index.
+Bulk-add methods seed data without generating read events. Uniform construction at begin does not force eager
+population: multi-valued maintenance folds enrollment and extracts keys when needed; single-valued indexes preserve
+replacement history. Earlier queries flush pending changes before returning.
+
+Automatic maintenance and read enrollment have independent overrides at app/instance, context, transaction, and index
+levels. Manual mode skips automatic routing and extraction. Contents use object identity, are isolated per handle,
+and release on disposal. Shared persistent entity indexes remain outside this feature. See
+[managed indexing](docs/Usage.md#managed-indexes) and the [runnable example](examples/night_city/Readme.md#managed-relationships).
+
 ## Library shutdown
 
 `close()` stops new transactions, waits for active transactions to complete, and releases library resources. The default
@@ -146,7 +175,9 @@ or in `existential.properties`:
     shutdown.timeoutMillis=30000
 
 Zero means unlimited waiting. If the wait times out or is interrupted, finish active transactions and call `close()`
-again. Shutdown does not run rollback callbacks for abandoned transactions. Do not call `close()` from a transaction
+again. Failed shutdown diagnostics include bounded operation/transaction metadata and known resource counts; they do
+not claim to detect arbitrary application leaks. Shutdown does not run rollback callbacks for abandoned transactions. Do
+not call `close()` from a transaction
 callback; close the library after that transaction call returns.
 
 ## Performance
@@ -160,8 +191,10 @@ To facilitate performance, the library:
   The user can override this behaviour.
 - During a transaction, the user sends 'events' into the library, notifying on object changes. 
   Only those objects participate in evaluation for which events have been issued.  
-- Multiple events of same type issued for same object are 'folded' into a single event, reducing the number of evaluations.
-- User can configure the rules globally or within the context of a specific business operation (for example, an API endpoint),
+- Multiple events of same type issued for same object are 'folded' into a single event, reducing the number of
+  evaluations.
+- User can configure the rules globally or within the context of a specific business operation (for example, an API
+  endpoint),
   thus reducing the number of rules to apply.
 
 ## Documentation

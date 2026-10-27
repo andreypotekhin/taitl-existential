@@ -147,6 +147,7 @@ public class ConfigureLibrary
         Boolean requireDescriptions = null;
         Boolean warnUnresolvedGenerics = null;
         ShutdownPolicy shutdownPolicy = null;
+        IndexingPolicy indexingPolicy = IndexingPolicy.inherit();
         for (String key : props.stringPropertyNames())
         {
             String value = props.getProperty(key);
@@ -162,6 +163,14 @@ public class ConfigureLibrary
             {
                 warnUnresolvedGenerics = parseBoolean(key, value, source);
             }
+            else if ("indexing.automatic".equals(key))
+            {
+                indexingPolicy = indexingPolicy.automatic(parseBoolean(key, value, source));
+            }
+            else if ("indexing.enrollReads".equals(key))
+            {
+                indexingPolicy = indexingPolicy.enrollReads(parseBoolean(key, value, source));
+            }
             else
             {
                 throw new IllegalStateException(
@@ -170,6 +179,7 @@ public class ConfigureLibrary
             }
         }
 
+        ex.indexingPolicy(indexingPolicy);
         if (requireDescriptions != null)
         {
             if (requireDescriptions)

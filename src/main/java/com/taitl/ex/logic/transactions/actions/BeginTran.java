@@ -22,6 +22,7 @@ public class BeginTran extends TranAction
 
     public void call(Tr tr)
     {
+        tr.bindManagedIndexes();
         tr.onBegin();
         tl.validationLogic.prepareForValidation(tr);
         executionPlanLogic.bind(tr, tl.ex().configs().executionPlan(tr.op));

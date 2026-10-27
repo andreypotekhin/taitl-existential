@@ -212,7 +212,7 @@ public class EvaluationLogic implements Closeable
         return requiresStageTraversal.in(config(tr).indexes(tr.op, stage), tr, stage);
     }
 
-    protected void warnUnresolvedGenerics(RuntimeKey<?> runtimeKey, Tr tr)
+    public void warnUnresolvedGenerics(RuntimeKey<?> runtimeKey, Tr tr)
     {
         Object entity = runtimeKey.entity();
         if (entity != null)

@@ -153,6 +153,9 @@ See [Existence Quantifier](specifications/QuantifiersAndIndexes.spec.md#existenc
 
 See [Indexes](specifications/QuantifiersAndIndexes.spec.md#indexes).
 
+The selected [managed transaction-local index contract][managed-indexes] covers automatic maintenance, policy scopes,
+identity, replacement, and folded access. Its implementation/readiness status is tracked in the Sprint 09 plan.
+
 ### Effects
 
 See [Effects](specifications/IntentsAndEffects.spec.md#effects).
@@ -222,3 +225,4 @@ No additional claims were defined here in the original specification.
 
 [immediate-evaluation]: specifications/TransactionsAndEvaluation.spec.md#evaluation-in-the-immediate-stage
 [validation-evaluation]: specifications/TransactionsAndEvaluation.spec.md#evaluation-in-the-validation-stage
+[managed-indexes]: specifications/QuantifiersAndIndexes.spec.md#managed-transaction-local-indexes

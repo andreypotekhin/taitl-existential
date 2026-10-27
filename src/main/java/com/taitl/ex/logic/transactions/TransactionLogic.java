@@ -64,6 +64,10 @@ public class TransactionLogic implements Closeable
     public EvaluationLogic evaluationLogic;
 
     @Logic
+    protected DescribeOutstandingResources describeOutstandingResources =
+            Creator.create(DescribeOutstandingResources.class);
+
+    @Logic
     public BeginLogic beginLogic;
 
     @Logic
@@ -163,6 +167,10 @@ public class TransactionLogic implements Closeable
         enter(false);
         try
         {
+            if (tr.indexMaintenance() != null)
+            {
+                tr.indexMaintenance().prepare();
+            }
             checkpointTran.call(tr);
         }
         catch (RuntimeException | Error failure)
@@ -182,6 +190,10 @@ public class TransactionLogic implements Closeable
         enter(false);
         try
         {
+            if (tr.indexMaintenance() != null)
+            {
+                tr.indexMaintenance().prepare();
+            }
             commitTran.call(tr);
             disposeTran.call(tr);
         }
@@ -297,7 +309,8 @@ public class TransactionLogic implements Closeable
                     Thread.currentThread().interrupt();
                     throw new IllegalStateException("Interrupted while waiting for active transactions to finish. "
                             + "The library remains in shutdown; retry close() after transactions complete. See "
-                            + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction",
+                            + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction"
+                            + describeOutstandingResources.call(registry, inFlight),
                             interrupted);
                 }
             }
@@ -438,7 +451,8 @@ public class TransactionLogic implements Closeable
     {
         return new IllegalStateException("Timed out waiting for active transactions to finish. "
                 + "The library remains in shutdown; finish or close active transactions, then retry close(). See "
-                + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction");
+                + "/Troubleshooting.md#library-shutdown-waits-for-an-active-transaction"
+                + describeOutstandingResources.call(registry, inFlight));
     }
 
     private void closeAfterFailure(Tr tr, Throwable failure)

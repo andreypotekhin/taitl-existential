@@ -18,6 +18,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class NightCityStoryTest
 {
     @Test
+    void consumesManagedIndexApiUsingSharedApplicationOperations()
+    {
+        assertEquals(List.of("Rejected a non-black cat and rolled back explicitly.",
+                "Created a cat using seeded transaction-local dwellings.",
+                "Maintained relocation relationships through checkpoint and commit."), ManagedCityStory.run());
+    }
+
+    @Test
     void demonstratesRejectionRecoveryCreationAndRelocation() throws Exception
     {
         assertEquals(List.of("Rejected a non-black cat and rolled back explicitly.",

@@ -22,6 +22,13 @@ and runtime custom rule decisions are implemented and verified against its
 `begin()`, definition reuse, snapshot semantics, and broader combinations remain separate readiness questions.
 Retain compiled inventory/profile and EventField ownership; Sprint 07 adds no numerical gate.
 
+Sprint 09's transaction-local managed indexes and known-resource shutdown diagnostics are implemented and verified in
+[the completed delivery plan](../past/planning/P10252601.Sprint09-managed-indexes-and-diagnostics.plan.md). Preserve scoped
+policy opt-outs, explicit Tr access, replacement without resurrection, folded multi-valued extraction, and deterministic
+cleanup. Shared entity indexes remain deferred. Select the next ready broader event/report/cache capability from
+Sprint 09; settle its contract before implementation. Automatic routing allocation is a measured optimization target,
+not an established speed gate. Do not mark the whole sprint complete from this selected slice.
+
 The design must explicitly address correctness, actionable errors, failure recovery, resource hygiene, and performance.
 Restore useful verification feedback early and link evidence for each concern. Do not treat inherited marks or
 neighboring tests as proof of the representative workflow.

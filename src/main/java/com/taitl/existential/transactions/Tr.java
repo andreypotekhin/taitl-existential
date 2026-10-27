@@ -1,6 +1,8 @@
 package com.taitl.existential.transactions;
 
 import com.taitl.ex.concrete.*;
+import com.taitl.ex.logic.managed_indexes.*;
+import com.taitl.existential.indexes.*;
 import com.taitl.ex.common.creator.*;
 import com.taitl.ex.logic.events.*;
 import com.taitl.ex.logic.configuration.indexes.*;
@@ -44,6 +46,34 @@ public class Tr
                 .tl(tl)
                 .el(el)
                 .build();
+    }
+
+    /**
+     * Resolves a registered immutable token to this handle's independently owned index facade.
+     *
+     * @param <I> index facade type
+     * @param definition registered immutable definition token
+     * @return this handle's bound facade
+     */
+    public <I> I index(IndexDefinition<I> definition)
+    {
+        if (concrete.indexMaintenance() == null)
+        {
+            throw new IllegalArgumentException("Register a managed index definition before begin().");
+        }
+        return concrete.indexMaintenance().index(definition);
+    }
+
+    /** Binds managed definitions before begin callbacks; ordinary transactions allocate no index state. */
+    public void bindManagedIndexes()
+    {
+        concrete.bindManagedIndexes();
+    }
+
+    /** Supplies the transaction-owned maintenance delegate to event and boundary integration. */
+    public IndexMaintenanceLogic indexMaintenance()
+    {
+        return concrete.indexMaintenance();
     }
 
     public void addTransaction(Transaction tr)

@@ -32,6 +32,7 @@ public final class Existential implements Closeable
     private ExistentialFlags flags;
     private ShutdownLogic shutdownLogic;
 
+    private volatile IndexingPolicy indexingPolicy = IndexingPolicy.defaults();
     private volatile boolean configured = false;
     private volatile ShutdownPolicy shutdownPolicy = ShutdownPolicy.graceful();
 
@@ -406,6 +407,20 @@ public final class Existential implements Closeable
     public ShutdownPolicy shutdownPolicy()
     {
         return shutdownPolicy;
+    }
+
+    /** Returns defaults used when binding transaction-local managed indexes. */
+    public IndexingPolicy indexingPolicy()
+    {
+        return indexingPolicy;
+    }
+
+    /** Changes defaults before configuration freezes; unspecified properties preserve current defaults. */
+    public synchronized void indexingPolicy(IndexingPolicy policy)
+    {
+        sane(policy, "policy");
+        verify(!configured, "Library configuration is already finalized; set indexing policy before begin().");
+        indexingPolicy = policy.over(indexingPolicy);
     }
 
     /** Sets the policy used by the next library shutdown attempt. */

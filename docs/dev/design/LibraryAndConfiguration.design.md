@@ -87,6 +87,16 @@ Global `Creator` replacement/injection remains configuration-time process state;
 the supported contract. Source streams are loader-owned and closed after reading; configured rule/source references
 remain owned by their instance configuration.
 
+## Managed indexing policy
+
+Managed indexing uses a scoped IndexingPolicy rather than unrelated boolean fields spread across components. Its two
+independent settings, inheritance, and override order are defined in
+[QuantifiersAndIndexes.design.md](QuantifiersAndIndexes.design.md#enrollment-and-explicit-maintenance).
+The same choices must be available in global source files, app/instance APIs, context and transaction configuration,
+and individual definitions. Typed index policy registration preserves normal source validation, prospective behavior,
+and configuration freezing.
+It does not introduce a general context property framework.
+
 ## Evidence and acceptance work
 
 - [facade tests](../../../src/test/java/com/taitl/specs/library)

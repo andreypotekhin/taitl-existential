@@ -81,7 +81,8 @@ such as "creating an order" or "updating an account".
               .update(a -> !a.locked(), "Can't update a locked account")
               .delete(a -> !balancePresent(a), "Can't delete an account with a balance");
 
-Constraints can apply to entity creation, deletion, modification, entity access (such as loading the entity from storage).
+Constraints can apply to entity creation, deletion, modification, entity access (such as loading the entity from
+storage).
 They can also involve multiple entities, such as all entities in a collection (All<> quantifier).
 
 ### Sending an event to the library
@@ -103,17 +104,9 @@ This is done by sending an event to the library.
 
     (1) Send an Update<Account> event to the library    
 
-This can be simplified using @Op annotation:
-
-    @Op("/api/accounts/update")
-    public void updateAccount(Account account)
-    {
-        // ...update Account...
-        Ex.update(account, tr.id());
-    }
-
-With annotation, begin/commit calls are made automatically before and after
-the annotated method, and rollback is called in case of an exception or error.   
+With AspectJ weaving, `@Op` owns a fresh handle for each annotated invocation, commits on normal return, and attempts
+explicit rollback on method/commit failure. Event reporting still requires an explicit active handle or string ID;
+use the manual pattern above when passing that ID through nested application helpers.
 
 ### Constraint validation
 Constraint validation is triggered automatically upon committing a transaction:
@@ -124,6 +117,103 @@ Constraint violations will be reported as part of thrown exception (ExistentialE
 `ExistentialException` is unchecked, so methods that call Existential do not need to declare it in a `throws` clause.
 Catch it at a boundary where the application can recover or translate the failure.
 
+
+### Checkpoints, authorization, and effects
+
+Call `tr.checkpoint()` to validate without completing the transaction. Success keeps begin/immediate processing active;
+begin rules still run only once per event/type key. Current entity values are checked again at later boundaries.
+Failure makes the handle rollback-only, as does failed commit: further reports, checkpoints, commits, and managed-index
+queries are rejected. The active string-ID entry is removed. Use explicit rollback for its callbacks, or close for
+resource release, then start a fresh transaction. Neither cleanup path undoes caller-owned objects or prior effects.
+
+Every applicable intent must pass across matching contexts, types, and runtime transaction rules. A general grant
+cannot bypass a narrower restriction. Write alternatives explicitly, for example `entity -> owns(entity) || isAdmin()`.
+
+Checks and effects retain declaration order. Checks-only validation collects ordinary failures into its report. If
+an effect participates, the first ordinary violation stops later checks/effects and later entities. Conditional effects
+count; effects in another stage do not. Unexpected failures and denials always stop immediately. Inspect the existing
+exception cause and `multiple()` results; a stopped evaluation does not mean every rule ran.
+
+### Managed indexes
+
+A definition is reusable configuration metadata. Its bound contents belong to one active Tr. For example, this groups
+reported strings by length and checks their enrolled membership:
+
+    IndexDefinition<MultiIndex<Integer, String>> words =
+            IndexDefinition.multi("words", String.class, value -> value.length());
+    try (Existential ex = new Existential())
+    {
+        ex.configure().context("/words/save").index(words)
+                .invariant(String.class)
+                    .all(words, (value, index) -> index.contains(value), "Value belongs to the working set");
+        Tr tr = ex.begin("/words/save");
+        try
+        {
+            tr.index(words).addAll(List.of("seed"));
+            tr.create("new");
+            Set<String> lengthThree = tr.index(words).get(3);
+            tr.checkpoint();
+            tr.commit();
+        }
+        finally
+        {
+            tr.close();
+        }
+    }
+
+Use imports from `com.taitl.existential`, `com.taitl.existential.indexes`,
+`com.taitl.existential.transactions`, and `java.util`. Class overloads suit non-generic subjects; TypeKey overloads
+retain generic arguments. Register the same definition token used for `tr.index`; names must be unique among distinct
+effective definitions. Existing standalone indexes and `Transaction.index(name, extractor)` remain manual APIs.
+
+Factories `single`, `multi`, `singleJoin`, and `multiJoin` return the corresponding existing facade shapes. A managed
+Exists can project a join direction without streams:
+
+    ex.configure().context(op).index(homes).invariant(Cat.class)
+            .exists(homes, join -> join.left(), "Every reported cat has a dwelling");
+
+The [Night City configuration][managed-config] supplies the complete generic declaration and shared runnable operations.
+Reported reads, read-and-lock, and general access enroll loaded objects by default; Write and concrete mutation events
+maintain them. Explicit combined-event markers do not guess whether a deletion occurred: report Create/Update/Delete
+or explicit before/after endpoints. Both matching sides of a join are maintained once each. Seeding with addAll or
+addAllLeft/addAllRight creates no synthetic events. Earlier report-time rules see accepted prior reports and seeds;
+the candidate event is enrolled after those rules and authorization pass.
+
+Membership uses object identity, so equal-but-distinct objects remain independent in multi-valued indexes. Report
+relevant mutations; keep extracted key objects stable and extractors free of side effects/reentrant index access.
+Single-valued indexes replace the previous value at a key. Removing or moving that replacement does not restore an old
+snapshot. Explicit transitions retire the before object and enroll the after object. Index retirement does not erase
+previous validation event records: a class-wide Exists rule still checks its reported subjects. Seed a loaded prior
+snapshot when only its replacement should be reported, or configure a predicate with the intended source scope.
+
+Empty holders may be constructed at begin. Multi-valued enrollment folds repeated reports before key extraction and
+group maintenance; single-valued bookkeeping captures keys when necessary to preserve destructive replacement.
+Queries flush pending changes, with only changed members updated in large groups. Join views avoid storing every
+pair of matching objects. Returned map/set query views protect their structure; use explicit facade methods to mutate.
+Do not capture an active handle or bound view in shared rule configuration. Managed All/Exists resolve it per
+evaluation.
+
+Both automatic maintenance and read enrollment default to true. Supply partial overrides with
+`IndexingPolicy.inherit()`:
+
+    ex.indexingPolicy(IndexingPolicy.inherit().enrollReads(false));
+    ex.configure().context(op).indexingPolicy(IndexingPolicy.inherit().automatic(false));
+    customTransaction.indexingPolicy(IndexingPolicy.inherit().automatic(true));
+    IndexDefinition<MultiIndex<Integer, String>> manual = words.withPolicy(
+            IndexingPolicy.inherit().automatic(false));
+
+Register and access the returned `manual` token when using withPolicy. Resolve each property independently, from index
+overrides to transaction overrides, then contexts in reverse resolved order, then app/instance defaults. `Ex` changes
+its facade instance. Global classpath/environment-selected files accept `indexing.automatic` and `indexing.enrollReads`;
+normal source precedence and atomic validation apply. Settings bind before processing and freeze with their scopes.
+Manual mode bypasses automatic event work for that index; seeds and explicit add/remove/reindex remain available.
+
+Dispose every handle. Success, rollback, and close clear transaction-owned contents and invalidate bound views. Failed
+maintenance can make the handle rollback-only, with extractor errors appearing at event capture or deferred access,
+according to the index shape. Caller-owned seed collections and entities are never cleared. See
+[managed-index troubleshooting](../Troubleshooting.md#managed-index-maintenance).
+
+[managed-config]: ../examples/night_city/src/main/java/com/taitl/ex/examples/night_city/configure/ConfigureManagedRelationships.java
 
 ## Configuration
 

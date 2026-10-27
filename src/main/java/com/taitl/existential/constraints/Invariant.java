@@ -9,6 +9,7 @@ import com.taitl.existential.handlers.combined_event_handlers.*;
 import com.taitl.existential.interfaces.*;
 import com.taitl.existential.keys.*;
 import com.taitl.existential.quantifiers.*;
+import com.taitl.existential.indexes.*;
 
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -330,6 +331,23 @@ public class Invariant<T> implements Evs<T>, Constraints<T>
     }
 
     /* Expression methods */
+
+    /** Evaluates a managed index predicate against this rule's active transaction binding. */
+    public <I> Invariant<T> all(IndexDefinition<I> definition, BiPredicate<? super T, ? super I> predicate,
+            String description)
+    {
+        sane(definition, "definition", predicate, "predicate");
+        validateDescription(description);
+        return add(new All<T>((entity, tr) -> predicate.test(entity, tr.index(definition)), description));
+    }
+
+    /** Requires membership in a transaction-local map or projected join source. */
+    public <I, D> Invariant<T> exists(IndexDefinition<I> definition, java.util.function.Function<I, Map<T, D>> source,
+            String description)
+    {
+        validateDescription(description);
+        return add(new Exists<T>(definition, source, description));
+    }
 
     public Invariant<T> all(Predicate<? super T> predicate)
     {

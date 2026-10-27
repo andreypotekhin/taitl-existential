@@ -58,6 +58,13 @@ Concurrent first transaction attempts on the same instance wait for one configur
 successful finalization is safely visible to threads that use the instance after normal publication or after waiting
 for that first transaction. Independent instances finalize independently.
 
+### Managed indexing options
+
++ Managed-index settings have the independent scopes and precedence defined by
+[managed indexing policy scopes](QuantifiersAndIndexes.spec.md#managed-indexing-policy-scopes), including context,
+transaction, and individual-index overrides. Acceptance covers source validation and scoped overrides; these are typed
+policy settings, not Flags constants.
+
 ### Configuration before use
 
 + User must configure the library before use.

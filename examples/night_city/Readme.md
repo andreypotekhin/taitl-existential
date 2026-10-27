@@ -129,3 +129,22 @@ complete clean build is `mvn clean install`.
 
 See [usage](../../docs/Usage.md), the [specification index](../../docs/dev/Specification.md), and
 [performance guidance](../../docs/dev/performance/Readme.md) for the supported workflow and measurement details.
+
+
+## Managed relationships
+
+ManagedCityStory reuses ConfigureManagedRelationships and the normal cat rules to demonstrate seeded dwellings,
+automatically maintained relationships, explicit rejection/rollback, fresh success, and relocation through checkpoint
+and commit. Every handle and library instance closes on success and failure. Root and independent-consumer acceptance
+run the same application operations.
+
+After installing the library, run:
+
+    mvn -f examples/night_city/pom.xml \
+        -Dexec.mainClass=com.taitl.ex.examples.night_city.app.ManagedCityStory compile exec:java
+
+ManagedRelationshipWorkload supplies equal-but-distinct cats and dwelling groups for maintenance measurements. The
+root ManagedIndexBenchmark separates construction, folded reporting, population, warm queries, incremental maintenance,
+commit/disposal, success, rejection/rollback, recovery, and a manual control. Setup is excluded; counts and
+deterministic
+release are checked separately from timing. See the [performance guide](../../docs/dev/performance/Readme.md).

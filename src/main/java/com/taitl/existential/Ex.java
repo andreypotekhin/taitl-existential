@@ -74,6 +74,18 @@ public final class Ex
         return instance().begin(op);
     }
 
+    /** Returns the facade instance's managed-index defaults. */
+    public static IndexingPolicy indexingPolicy()
+    {
+        return instance().indexingPolicy();
+    }
+
+    /** Changes the facade instance's defaults before configuration finalization. */
+    public static void indexingPolicy(IndexingPolicy policy)
+    {
+        instance().indexingPolicy(policy);
+    }
+
     public static ShutdownPolicy shutdownPolicy()
     {
         return instance().shutdownPolicy();

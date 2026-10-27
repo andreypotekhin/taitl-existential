@@ -69,6 +69,22 @@ public class TrRegistry
         reg.clear();
     }
 
+    /** Snapshots bounded owner metadata without inspecting or retaining entity payloads. */
+    public List<String> descriptions(int limit)
+    {
+        List<String> descriptions = new ArrayList<>();
+        for (Tr tr : reg.values())
+        {
+            if (descriptions.size() >= limit)
+            {
+                break;
+            }
+            String op = tr.op;
+            descriptions.add(tr.id.toString() + "@" + (op.length() > 120 ? op.substring(0, 120) + "..." : op));
+        }
+        return descriptions;
+    }
+
     public int size()
     {
         return reg.size();
