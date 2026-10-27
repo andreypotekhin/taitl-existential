@@ -176,7 +176,9 @@ public class ExecuteHandlers
         }
         if (failure != null)
         {
-            throw new ExistentialException("Event handler failed", failure);
+            throw com.taitl.ex.logic.diagnostics.OperationalDiagnostics.failure(
+                    com.taitl.existential.diagnostics.DiagnosticCode.CLEANUP_FAILED, "Event handler failed", null,
+                    failure);
         }
     }
 

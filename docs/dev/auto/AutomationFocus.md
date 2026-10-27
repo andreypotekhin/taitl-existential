@@ -31,7 +31,7 @@ provenance. The final follow-up adds semantic operational-error metadata, non-mu
 prospective supplied-rule checks, typed standard-event values and ClassValue inferred metadata. Read-only supplied
 reuse, cache budgets/generation invalidation, independent ownership and terminal/idempotent facade close are supported.
 
-Root/reactor pass 759 tests and the independent consumer seven, with no failures/skips, actual coverage/static checks
+Root/reactor pass 760 tests and the independent consumer seven, with no failures/skips, actual coverage/static checks
 and artifact hygiene. The [closeout performance topic](../performance/topics/Sprint09Closeout.md) retains required and
 investigation pairs, exact counters and explicit failure rendering costs. A small successful-path cost remains possible;
 no numerical speed gate or arbitrary leak-detection/GC deadline is claimed. The public semantic metadata TODO/suggestion

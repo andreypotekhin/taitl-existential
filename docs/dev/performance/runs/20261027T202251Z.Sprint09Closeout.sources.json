@@ -175,7 +175,7 @@
     "src/test/java/com/taitl/specs/library_usage/UserCanDiagnoseOperationalFailures.java": {
       "baseline": null,
       "candidate": "f9563bb71d6c79caf431968f9dea55ce71cfd6948cb7bb2ede4d9b1386d6d202",
-      "verified_candidate": "e546dfe203e77f61793632a2e8311339f12c25a7a2492f9d9f928cbbb3e9fc3e"
+      "verified_candidate": "0ea603ce6d38ab203dbb1534867a682936966e61ebbb84a1ac6d30ec9bd4beb2"
     },
     "src/test/java/com/taitl/specs/library_usage/UserCanPassAdditionalValues.java": {
       "baseline": null,
@@ -188,7 +188,14 @@
     "src/test/java/com/taitl/specs/library_usage/UserCanReuseSuppliedRules.java": {
       "baseline": null,
       "candidate": "18e18f52068a86e8ff5e8c040b0f55a44423e8e5db92f092b0aba88dcbd9f688"
+    },
+    "src/main/java/com/taitl/ex/logic/evaluation/events/actions/ExecuteHandlers.java": {
+      "baseline": "3a78e5d743c43b93bac3aece92f68fcfc5e7918251f798429766478a7beb8e5c",
+      "candidate": "3a78e5d743c43b93bac3aece92f68fcfc5e7918251f798429766478a7beb8e5c",
+      "verified_candidate": "bef2cb93cc274adfc228562c3905a2b1045ae604386814c641912a1f68754e11"
     }
   },
-  "post_measurement_changes": "Final review separated the closed memo-query remedy from library shutdown and added one direct recovery test. Benchmark scenarios do not close then query memo state. No measured path or harness changed."
+  "post_measurement_changes": "Final review corrected the closed memo-query remedy and added a recovery test, then classified the defensive checked rollback-handler wrapper as CLEANUP_FAILED with a cause/release regression. The harness requests neither closed memo queries nor rollback callbacks. Measured paths and harness behavior are unchanged; measured and final verified hashes are distinct where needed.",
+  "hash_roles": "candidate identifies measured source; verified_candidate identifies final source where review corrections followed measurement. Other measured/final files remain identical.",
+  "implementation_commit_at_first_review": "abe3882"
 }

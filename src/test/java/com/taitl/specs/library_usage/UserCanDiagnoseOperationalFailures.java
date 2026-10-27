@@ -257,6 +257,55 @@ class UserCanDiagnoseOperationalFailures
     }
 
     @Test
+    void checkedRollbackHandlerFailureKeepsItsCauseAndReleasesTheHandle()
+    {
+        IOException original = new IOException("Checked custom handler failure");
+        com.taitl.existential.handlers.types.UniEventHandler<Cat> custom =
+                new com.taitl.existential.handlers.types.UniEventHandler<Cat>() {
+                    public void handle(Cat cat)
+                    {
+                        UserCanDiagnoseOperationalFailures.<RuntimeException> raise(original);
+                    }
+
+                    public String description()
+                    {
+                        return "Custom rollback handler";
+                    }
+
+                    public com.taitl.existential.events.types.EventType eventType()
+                    {
+                        return com.taitl.existential.events.types.EventType.valueOf(
+                                com.taitl.existential.events.access_events.Read.class);
+                    }
+                };
+        ex.configure()
+                .context(OP)
+                .rollback()
+                .effect(new com.taitl.existential.constraints.Effect<>(Cat.class).add(custom));
+        Tr tr = ex.begin(OP);
+        try
+        {
+            tr.read(new Cat("Black", "Park"));
+            ExistentialException failure = assertThrows(ExistentialException.class, () -> tr.rollback());
+            assertEquals(ExistentialException.class, failure.getClass());
+            assertSame(original, failure.getCause());
+            assertEquals(DiagnosticCode.CLEANUP_FAILED, failure.diagnostic().code());
+            assertEquals(0, ex.transactions().logic().registry().size());
+            assertFalse(tr.runtimeIndexes().encounteredUniqueEvents.iterator().hasNext());
+        }
+        finally
+        {
+            tr.close();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    static <E extends Throwable> void raise(Throwable failure) throws E
+    {
+        throw (E) failure;
+    }
+
+    @Test
     void standaloneLibraryFailuresAndCleanupKeepCodesAndOriginalCauses()
     {
         com.taitl.existential.handlers.On<Cat> check = new com.taitl.existential.handlers.On<>(cat -> false, null,

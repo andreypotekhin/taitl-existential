@@ -1,7 +1,7 @@
 {
   "root": {
     "surefire_files": 119,
-    "tests": 759,
+    "tests": 760,
     "failures": 0,
     "errors": 0,
     "skipped": 0
@@ -18,24 +18,24 @@
   "pmd_violations": 0,
   "coverage_overall": {
     "INSTRUCTION": {
-      "missed": 10456,
-      "covered": 35540,
-      "percent": 77.27
+      "missed": 10447,
+      "covered": 35549,
+      "percent": 77.29
     },
     "BRANCH": {
-      "missed": 924,
-      "covered": 2344,
-      "percent": 71.73
+      "missed": 921,
+      "covered": 2347,
+      "percent": 71.82
     },
     "LINE": {
-      "missed": 2234,
-      "covered": 7501,
-      "percent": 77.05
+      "missed": 2232,
+      "covered": 7503,
+      "percent": 77.07
     },
     "COMPLEXITY": {
-      "missed": 1407,
-      "covered": 3010,
-      "percent": 68.15
+      "missed": 1405,
+      "covered": 3012,
+      "percent": 68.19
     },
     "METHOD": {
       "missed": 694,
@@ -298,12 +298,12 @@
   },
   "target/existential-0.0.1.jar": {
     "entries": 455,
-    "sha256": "ed6137bce36faab27a07f8686bcb0802225349172045f03e1dc21d6d6fa96594",
+    "sha256": "31666477ba78103b26a8c7570c1217a84408ba0239126930311448da76373289",
     "forbidden": []
   },
   "existential.jar": {
     "entries": 1477,
-    "sha256": "dd57b25f9e85c0aca7c723c6be60d7bc61f0f92c8b37bd5d9ed01c0ec85183bc",
+    "sha256": "79bc110f94b44f679a16ccaea39ffdd7cadc626074e41879d9c652f3c4cff6fd",
     "forbidden": []
   },
   "root_summaries": [
@@ -320,7 +320,7 @@
       "0"
     ],
     [
-      "759",
+      "760",
       "0",
       "0",
       "0"
@@ -342,7 +342,7 @@
   ],
   "reactor_summaries": [
     [
-      "759",
+      "760",
       "0",
       "0",
       "0"
@@ -363,5 +363,5 @@
   "demo_summaries": [],
   "disabled_annotations": "",
   "verified_source_hashes_match_after_reactor": true,
-  "post_measurement_changes": "Final review separated the closed memo-query remedy from library shutdown and added one direct recovery test. Benchmark scenarios do not close then query memo state. No measured path or harness changed."
+  "post_measurement_changes": "Final review corrected the closed memo-query remedy and added a recovery test, then classified the defensive checked rollback-handler wrapper as CLEANUP_FAILED with a cause/release regression. The harness requests neither closed memo queries nor rollback callbacks. Measured paths and harness behavior are unchanged; measured and final verified hashes are distinct where needed."
 }

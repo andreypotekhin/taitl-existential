@@ -288,8 +288,8 @@ closeout below.
 
 The [review](../reviews/Sprint09_OperationalCoverage.review.md) and
 [archived plan](../../past/planning/P10272602.Sprint09-closeout.plan.md) record completion on 2026-10-27.
-The final 37 new direct cases cover typed values (nine), supplied rules (nine), cache/global ownership (four), and
-operational diagnostics (15). Root and reactor pass 759 tests; the independent consumer passes seven. Static checks,
+The final 38 new direct cases cover typed values (nine), supplied rules (nine), cache/global ownership (four), and
+operational diagnostics (16). Root and reactor pass 760 tests; the independent consumer passes seven. Static checks,
 actual coverage and artifact inspection pass with their limits recorded. The
 [performance record](../../performance/runs/20261027T202251Z.Sprint09Closeout.md) retains 12 fresh-JVM runs and all 48
 measured workflow rows.

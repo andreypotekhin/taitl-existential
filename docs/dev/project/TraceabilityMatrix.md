@@ -481,8 +481,8 @@ explicit cleanup, released view ownership, concurrency, escaping and serializati
 root/consumer/reactor counts and coverage are recorded in Sprint 09, with
 [performance evidence](../performance/topics/TransactionDiagnostics.md) for complete rejection/recovery workflows.
 Operational configuration/shutdown/memo/maintenance/cleanup metadata, supplied-rule binding, and bounded cache/global
-ownership are completed in the [Sprint 09 review](reviews/Sprint09_OperationalCoverage.review.md), with 37 direct new
-cases and 759-root/seven-consumer verification. Java semantic guards keep exact catch types; caller constructors and
+ownership are completed in the [Sprint 09 review](reviews/Sprint09_OperationalCoverage.review.md), with 38 direct new
+cases and 760-root/seven-consumer verification. Java semantic guards keep exact catch types; caller constructors and
 ordinary programmer preconditions stay plain.
 [Housekeeping](../specifications/Housekeeping.spec.md#cache-ownership-and-global-close)
 defines budgets, invalidation and deterministic ownership; ClassValue replaces strong global inferred-Class maps.

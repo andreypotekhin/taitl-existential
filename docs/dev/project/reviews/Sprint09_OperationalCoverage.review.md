@@ -2,16 +2,17 @@
 
 Sprint/epic: [Sprint 09](../sprints/Sprint09_V2IndexesAndOperationalCoverage.md) /
 [Indexes and Operational Coverage](../Backlog.md#indexes-and-operational-coverage). Review date: 2026-10-27.
-Status: complete for admitted Sprint 09 scope. Revision: HEAD 3e05e36366572ce83ac9e031db9b49f1e0a250da, with prior
-transaction-state diagnostics and this closeout unstaged/uncommitted. V2 is not released; Sprint 10 hardening remains.
+Status: complete for admitted Sprint 09 scope. Implementation was committed in the shared workspace as abe3882
+during final review. The defensive rollback metadata correction/test and final evidence reconciliation follow that
+commit and are included in this checkout. V2 is not released; Sprint 10 hardening remains.
 
 ## Outcome and acceptance evidence
 
 The [completed closeout plan](../../past/planning/P10272602.Sprint09-closeout.plan.md) finishes the remaining
 operational
 contracts. The earlier managed/index/access/diagnostic plans linked from Sprint 09 remain historical delivery evidence.
-The new 37 direct cases cover nine typed-value scenarios, nine supplied-rule cases, four shared/global ownership cases
-and 15 operational error cases. Existing V1 and Sprint 06–09 suites still pass.
+The new 38 direct cases cover nine typed-value scenarios, nine supplied-rule cases, four shared/global ownership cases
+and 16 operational error cases. Existing V1 and Sprint 06–09 suites still pass.
 
 | Sprint acceptance | Evidence and disposition |
 | --- | --- |
@@ -39,14 +40,14 @@ root:
     mvn -f reactor/pom.xml clean install
     mvn -f examples/night_city/pom.xml exec:java -Dexec.mainClass=com.taitl.ex.examples.night_city.app.ManagedCityStory
 
-Root and reactor each pass 759 root tests; independent and reactor consumers each pass seven. All failures, errors and
+Root and reactor each pass 760 root tests; independent and reactor consumers each pass seven. All failures, errors and
 skips are zero. No disabled/ignored annotations or disabled boolean tests were found. Failsafe selects zero cases;
 acceptance runs in Surefire. Benchmark tests remain explicitly profile-selected, not silently disabled acceptance.
-Checkstyle reports zero errors; PMD reports zero violations. Actual JaCoCo XML is present: instructions 35,541/45,993
-(77.27%), branches 2,344/3,267 (71.75%), lines 7,500/9,733 (77.06%). Zero configured thresholds and these overall
+Checkstyle reports zero errors; PMD reports zero violations. Actual JaCoCo XML is present: instructions 35,549/45,996
+(77.29%), branches 2,347/3,268 (71.82%), lines 7,503/9,735 (77.07%). Zero configured thresholds and these overall
 results
 do not establish the aspirational 89% repository coverage target. ClassValue implementation is 100% instruction/branch
-covered; binding is 90.91% instruction/100% branch; operational builder 97.73% instruction/93.33% branch; factory 87.60%
+covered; binding is 90.91% instruction/100% branch; operational builder 97.80% instruction/93.75% branch; factory 87.60%
 instruction/87.50% branch. The new MemoException snapshot constructor is covered, while its unchanged legacy
 constructors
 have lower overall coverage. [Exact verification data][verification] retains counters, selected-class coverage and JAR
@@ -87,10 +88,14 @@ limits.
 
 ## Handoff and retrospective
 
+Final producer audit adds metadata to the defensive checked rollback-handler wrapper and directly verifies its stock
+catch type, original cause and released handle. This rollback-only branch is outside the benchmark scenarios; the
+manifest preserves measured source hashes separately from final verified hashes. Full builds were rerun after review.
+
 The metadata TODO and approved suggestion are archived as implemented for the finalized public-library semantic scope.
 The backlog, normative topic marks, traceability, AutomationFocus and V2 handoff reflect completion. V2 still needs its
 separate feature-free Sprint 10 audit, runtime/dependency/coverage review and actual release decision. No remote
-publication, new branch, commit or staging was performed. The main lesson is to preserve occurrence/owner boundaries:
+publication or new branch was created. The agent did not stage or commit; the shared workspace commit is preserved. The main lesson is to preserve occurrence/owner boundaries:
 metadata must not rewrite a shared definition or root a reported payload, and exception class alone cannot distinguish
 ordinary two-state rejection from callback failure.
 
